@@ -28,8 +28,9 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
 import {
-  currentSafeWithNames,
+  currentSafe,
   latestMasterContractVersion as latestMasterContractVersionSelector,
+  safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
@@ -56,10 +57,12 @@ const SafeDetails = (): ReactElement => {
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
   const {
     address: safeAddress,
-    name: safeName,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
-  } = useSelector(currentSafeWithNames)
+  } = useSelector(currentSafe)
+  const safeNamesMap = useSelector(safesWithNamesAsMap)
+  const safeName = safeNamesMap[safeAddress]?.name
+
   const dispatch = useDispatch()
   const { trackEvent } = useAnalytics()
 
@@ -150,25 +153,27 @@ const SafeDetails = (): ReactElement => {
               </Row>
             ) : null}
           </Block>
-          <Block className={classes.formContainer}>
-            <Heading tag="h2">Modify Safe name</Heading>
-            <Paragraph>
-              You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or any
-              third parties.
-            </Paragraph>
-            <Block className={classes.root}>
-              <Field
-                component={TextField}
-                defaultValue={safeName}
-                name="safeName"
-                placeholder="Safe name*"
-                testId={SAFE_NAME_INPUT_TEST_ID}
-                text="Safe name*"
-                type="text"
-                validate={composeValidators(required, validAddressBookName)}
-              />
+          {safeName != null && (
+            <Block className={classes.formContainer}>
+              <Heading tag="h2">Modify Safe name</Heading>
+              <Paragraph>
+                You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
+                any third parties.
+              </Paragraph>
+              <Block className={classes.root}>
+                <Field
+                  component={TextField}
+                  defaultValue={safeName}
+                  name="safeName"
+                  placeholder="Safe name*"
+                  testId={SAFE_NAME_INPUT_TEST_ID}
+                  text="Safe name*"
+                  type="text"
+                  validate={composeValidators(required, validAddressBookName)}
+                />
+              </Block>
             </Block>
-          </Block>
+          )}
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
               <Button

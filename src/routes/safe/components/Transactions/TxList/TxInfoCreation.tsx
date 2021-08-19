@@ -41,10 +41,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           </Text>
           <InlineEthHashInfo
             textSize="xl"
-            hash={txInfo.creator}
+            hash={txInfo.creator.value}
             shortenHash={4}
             showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.creator)}
+            explorerUrl={getExplorerInfo(txInfo.creator.value)}
           />
         </div>
         <div className="tx-factory">
@@ -54,10 +54,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           {txInfo.factory ? (
             <InlineEthHashInfo
               textSize="xl"
-              hash={txInfo.factory}
+              hash={txInfo.factory.value}
               shortenHash={4}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.factory)}
+              explorerUrl={getExplorerInfo(txInfo.factory.value)}
             />
           ) : (
             <Text size="xl" as="span">
@@ -72,10 +72,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           {txInfo.implementation ? (
             <InlineEthHashInfo
               textSize="xl"
-              hash={txInfo.implementation}
+              hash={txInfo.implementation.value}
               shortenHash={4}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.implementation)}
+              explorerUrl={getExplorerInfo(txInfo.implementation.value)}
             />
           ) : (
             <Text size="xl" as="span">

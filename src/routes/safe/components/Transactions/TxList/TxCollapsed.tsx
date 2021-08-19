@@ -47,7 +47,7 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
         const disableInfo = (info as SettingsChange).settingsInfo as DisableModule
         return (
           <Text size="xl" as="span">
-            {KNOWN_MODULES[disableInfo.module] ?? UNKNOWN_MODULE}
+            {KNOWN_MODULES[disableInfo.module.value] ?? UNKNOWN_MODULE}
           </Text>
         )
     }
@@ -131,7 +131,7 @@ export const TxCollapsed = ({
   const txCollapsedType = (
     <div className={'tx-type' + willBeReplaced + onChainRejection}>
       <CustomIconText
-        address={toAddress || '0x'}
+        address={toAddress?.value || '0x'}
         iconUrl={type.icon}
         iconUrlFallback={type.fallbackIcon}
         text={type.text}

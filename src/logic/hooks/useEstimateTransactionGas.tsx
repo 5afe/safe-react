@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -12,7 +13,6 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { CALL } from 'src/logic/safe/transactions'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 
@@ -150,7 +150,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txRecipient,
             txAmount: txAmount || '0',
-            operation: operation || CALL,
+            operation: operation || Operation.CALL,
           })
         }
         if (isExecution || approvalAndExecution) {
@@ -163,7 +163,7 @@ export const useEstimateTransactionGas = ({
             txConfirmations,
             isExecution,
             isOffChainSignature,
-            operation: operation || CALL,
+            operation: operation || Operation.CALL,
             from,
             safeTxGas: safeTxGasEstimation,
             approvalAndExecution,
@@ -185,7 +185,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txAmount: txAmount || '0',
             txConfirmations,
-            operation: operation || CALL,
+            operation: operation || Operation.CALL,
             from,
             gasPrice: '0',
             gasToken: ZERO_ADDRESS,

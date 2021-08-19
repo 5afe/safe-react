@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
@@ -9,7 +10,7 @@ import { TxCollapsed } from './TxCollapsed'
 
 export type CalculatedVotes = { votes: string; submitted: number; required: number }
 
-const calculateVotes = (executionInfo: Transaction['executionInfo']): CalculatedVotes | undefined => {
+const calculateVotes = (executionInfo: MultisigExecutionInfo): CalculatedVotes | undefined => {
   if (!executionInfo) {
     return
   }
@@ -31,10 +32,11 @@ type TxQueuedCollapsedProps = {
 }
 
 export const TxQueueCollapsed = ({ isGrouped = false, transaction, actions }: TxQueuedCollapsedProps): ReactElement => {
-  const nonce = transaction.executionInfo?.nonce
+  const executionInfo = transaction.executionInfo as MultisigExecutionInfo
+  const nonce = executionInfo?.nonce
   const type = useTransactionType(transaction)
   const info = useAssetInfo(transaction.txInfo)
-  const votes = calculateVotes(transaction.executionInfo)
+  const votes = calculateVotes(executionInfo)
   const status = useTransactionStatus(transaction)
 
   return (

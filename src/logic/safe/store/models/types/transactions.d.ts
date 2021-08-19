@@ -1,8 +1,3 @@
-export enum TxConstants {
-  MULTI_SEND = 'multiSend',
-  UNKNOWN = 'UNKNOWN',
-}
-
 export enum Operation {
   CALL,
   DELEGATE_CALL,
@@ -58,62 +53,6 @@ export type Parameter = MultiSendMethodParameter | SingleTransactionMethodParame
 export interface DataDecoded {
   method: DataDecodedMethod
   parameters: Parameter[]
-}
-
-export enum ConfirmationType {
-  CONFIRMATION = 'CONFIRMATION',
-  EXECUTION = 'EXECUTION',
-}
-
-export enum SignatureType {
-  CONTRACT_SIGNATURE = 'CONTRACT_SIGNATURE',
-  APPROVED_HASH = 'APPROVED_HASH',
-  EOA = 'EOA',
-  ETH_SIGN = 'ETH_SIGN',
-}
-
-export interface Confirmation {
-  owner: string
-  submissionDate: string
-  transactionHash: string | null
-  confirmationType: ConfirmationType
-  signature: string
-  signatureType: SignatureType
-}
-
-export enum TokenType {
-  ERC20 = 'ERC20',
-  ERC721 = 'ERC721',
-  OTHER = 'OTHER',
-}
-
-export interface TokenInfo {
-  type: TokenType
-  address: string
-  name: string
-  symbol: string
-  decimals: number
-  logoUri: string
-}
-
-export enum TransferType {
-  ETHER_TRANSFER = 'ETHER_TRANSFER',
-  ERC20_TRANSFER = 'ERC20_TRANSFER',
-  ERC721_TRANSFER = 'ERC721_TRANSFER',
-  UNKNOWN = 'UNKNOWN',
-}
-
-export interface Transfer {
-  type: TransferType
-  executionDate: string
-  blockNumber: number
-  transactionHash: string | null
-  to: string
-  value: string | null
-  tokenId: string | null
-  tokenAddress: string
-  tokenInfo: TokenInfo | null
-  from: string
 }
 
 // SAFE METHODS TO ITS ID

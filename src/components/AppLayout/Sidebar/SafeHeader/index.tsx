@@ -146,7 +146,9 @@ const SafeHeader = ({
         </IdenticonContainer>
 
         {/* SafeInfo */}
-        <Text size="xl">{safeName}</Text>
+        <Text size="lg" center>
+          {safeName}
+        </Text>
         <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <ButtonHelper onClick={onReceiveClick}>

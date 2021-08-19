@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
@@ -7,7 +8,7 @@ import { useTransactionType } from './hooks/useTransactionType'
 import { TxCollapsed } from './TxCollapsed'
 
 export const TxHistoryCollapsed = ({ transaction }: { transaction: Transaction }): ReactElement => {
-  const nonce = transaction.executionInfo?.nonce
+  const nonce = (transaction.executionInfo as MultisigExecutionInfo)?.nonce
   const type = useTransactionType(transaction)
   const info = useAssetInfo(transaction.txInfo)
   const status = useTransactionStatus(transaction)

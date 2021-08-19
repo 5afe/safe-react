@@ -11,9 +11,9 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
   useEffect(() => {
     if (assetInfo && assetInfo.type === 'Transfer') {
       if (txInfo.direction === 'INCOMING') {
-        setDetails({ title: `Received ${assetInfo.amountWithSymbol} from:`, address: txInfo.sender })
+        setDetails({ title: `Received ${assetInfo.amountWithSymbol} from:`, address: txInfo.sender.value })
       } else {
-        setDetails({ title: `Send ${assetInfo.amountWithSymbol} to:`, address: txInfo.recipient })
+        setDetails({ title: `Send ${assetInfo.amountWithSymbol} to:`, address: txInfo.recipient.value })
       }
     }
   }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender])

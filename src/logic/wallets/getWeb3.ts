@@ -101,5 +101,5 @@ export const setWeb3 = (provider: Provider): void => {
 
 export const isTxPendingError = (err: Error): boolean => {
   const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
-  return err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
+  return (err.message || '').startsWith(WEB3_TX_NOT_MINED_ERROR)
 }

@@ -14,7 +14,7 @@ import {
   getSafeCreationSaltFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
 
-import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
+import { FIELD_CONFIRMATIONS, FIELD_CUSTOM_SAFE_NAME, FIELD_SAFE_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
@@ -61,11 +61,11 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
                 className={classes.name}
                 color="primary"
                 noMargin
-                size="lg"
+                size="md"
                 weight="bolder"
                 data-testid="create-safe-review-name"
               >
-                {values[FIELD_NAME]}
+                {values[FIELD_CUSTOM_SAFE_NAME] || values[FIELD_SAFE_NAME]}
               </Paragraph>
             </Block>
             <Block margin="lg">
@@ -75,7 +75,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
               <Paragraph
                 color="primary"
                 noMargin
-                size="lg"
+                size="md"
                 weight="bolder"
                 data-testid={`create-safe-review-req-owners-${values[FIELD_CONFIRMATIONS]}`}
               >
