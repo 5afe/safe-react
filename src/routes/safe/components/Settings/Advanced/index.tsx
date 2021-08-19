@@ -10,6 +10,7 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { ModulePair } from 'src/logic/safe/store/models/safe'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -25,10 +26,20 @@ const NoModuleLegend = (): ReactElement => (
   </InfoText>
 )
 
+const NoTransactionGuardLegend = (): ReactElement => (
+  <InfoText color="secondaryLight" size="xl">
+    No transaction guard set
+  </InfoText>
+)
+
 const Advanced = (): ReactElement => {
   const classes = useStyles()
   const { nonce, modules } = useSelector(currentSafe) ?? {}
   const moduleData = modules ? getModuleData(modules) ?? null : null
+  const transactionGuard: ModulePair[] = [
+    ['0xc9479981BC50b7389A71E8783306c2Cb913159E9', '0xc9479981BC50b7389A71E8783306c2Cb913159E9'],
+  ]
+  const transactionGuardData = getModuleData(transactionGuard) ?? null
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
@@ -70,6 +81,32 @@ const Advanced = (): ReactElement => {
         </InfoText>
 
         {!moduleData || !moduleData.length ? <NoModuleLegend /> : <ModulesTable moduleData={moduleData} />}
+      </Block>
+
+      {/* Transaction guard */}
+      <Block className={classes.container}>
+        <Title size="xs" withoutMargin>
+          Transaction guard
+        </Title>
+        <InfoText size="lg">
+          Transaction guards impose additional constraints that are checked prior to executing a Safe transaction.
+          Transaction guards are potentially risky, so make sure to only use modules from trusted sources. Learn more
+          about transaction guards{' '}
+          <a
+            href="https://help.gnosis-safe.io/en/articles/5324092-what-is-a-transaction-guard"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            here
+          </a>
+          .
+        </InfoText>
+
+        {!transactionGuardData || !transactionGuardData.length ? (
+          <NoTransactionGuardLegend />
+        ) : (
+          <ModulesTable moduleData={transactionGuardData} />
+        )}
       </Block>
     </>
   )
