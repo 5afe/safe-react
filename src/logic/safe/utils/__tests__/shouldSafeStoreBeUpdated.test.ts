@@ -14,6 +14,7 @@ const getMockedOldSafe = ({
   nonce,
   modules,
   spendingLimits,
+  guard,
 }: Partial<SafeRecordProps>): SafeRecordProps => {
   const owner1 = '0x3bE3c2dE077FBC409ae50AFFA66a94a9aE669A8d'
   const owner2 = '0xA2366b0c2607de70777d87aCdD1D22F0708fA6a3'
@@ -38,6 +39,7 @@ const getMockedOldSafe = ({
     featuresEnabled: featuresEnabled || [],
     totalFiatBalance: '110',
     loadedViaUrl: false,
+    guard: guard || '0xAE173F30ec9A293d37c44BA68d3fCD35F989Ce9F', // TODO replace with real transaction guard
   }
 }
 

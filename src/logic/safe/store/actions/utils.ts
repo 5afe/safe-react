@@ -90,7 +90,9 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.currentVersion = remoteSafeInfo.version
   safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, LATEST_SAFE_VERSION)
   safeInfo.featuresEnabled = enabledFeatures(safeInfo.currentVersion)
-  safeInfo.guard = remoteSafeInfo.guard ? remoteSafeInfo.guard.value : ''
+  if (remoteSafeInfo.guard) {
+    safeInfo.guard = remoteSafeInfo.guard.value
+  }
 
   return safeInfo
 }
