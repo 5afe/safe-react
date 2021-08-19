@@ -1,6 +1,7 @@
 import crypto from 'crypto'
+import '@testing-library/jest-dom/extend-expect'
 
-function getRandomValues(buf) {
+function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
     throw new TypeError('expected Uint8Array')
   }
@@ -19,4 +20,12 @@ function getRandomValues(buf) {
   buf.set(bytes)
 }
 
-global.crypto = { getRandomValues }
+// to avoid failing tests in some environments
+const NumberFormat = Intl.NumberFormat
+const englishTestLocale = 'en'
+
+jest.spyOn(Intl, 'NumberFormat').mockImplementation((locale, ...rest) => new NumberFormat([englishTestLocale], ...rest))
+
+Object.defineProperty(window, 'crypto', {
+  value: { getRandomValues: mockedGetRandomValues },
+})
