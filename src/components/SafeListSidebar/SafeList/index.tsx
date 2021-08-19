@@ -99,14 +99,12 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
         <ListItem classes={{ root: classes.listItemCollapse }}>
           <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
             {ownedSafes.map((address: string) => (
-              <OwnedAddress
-                address={address}
-                key={address}
-                onClick={onSafeClick}
-                isAdded={isAddressAdded(safes, address)}
-              >
-                {getLink(address)}
-              </OwnedAddress>
+              <React.Fragment key={address}>
+                <OwnedAddress address={address} onClick={onSafeClick} isAdded={isAddressAdded(safes, address)}>
+                  {getLink(address)}
+                </OwnedAddress>
+                <Hairline />
+              </React.Fragment>
             ))}
           </Collapse>
         </ListItem>

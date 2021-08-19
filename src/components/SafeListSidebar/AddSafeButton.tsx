@@ -35,7 +35,7 @@ const StyledLink = styled(Link)`
 const AddSafeButton = ({ onAdd }: Props): ReactElement => {
   return (
     <StyledLink onClick={onAdd} to={OPEN_ADDRESS}>
-      <Fab color="secondary" size="small" aria-label="add">
+      <Fab color="secondary" size="small" aria-label="Add Safe">
         <AddIcon />
 
         <Text color="primary" size="xl" strong>
