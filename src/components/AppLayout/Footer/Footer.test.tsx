@@ -130,4 +130,36 @@ describe('<Footer>', () => {
 
     expect(screen.queryByTestId('cookies-banner-form')).toBeInTheDocument()
   })
+
+  it('Should show the current Safe React version if its defined in environment variables', () => {
+    process.env.REACT_APP_APP_VERSION = '1.1.1'
+
+    render(
+      <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
+        <Footer />
+      </Providers>,
+    )
+
+    const safeReactVersionNode = screen.getByText('v1.1.1')
+
+    expect(safeReactVersionNode).toBeInTheDocument()
+    expect(safeReactVersionNode).toHaveAttribute('href', 'https://github.com/gnosis/safe-react/releases')
+    expect(safeReactVersionNode).toHaveAttribute('target', '_blank')
+  })
+
+  it('should show Versions text if no version of Safe React is defined', () => {
+    process.env.REACT_APP_APP_VERSION = undefined
+
+    render(
+      <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
+        <Footer />
+      </Providers>,
+    )
+
+    const safeReactVersionNode = screen.getByText('Versions')
+
+    expect(safeReactVersionNode).toBeInTheDocument()
+    expect(safeReactVersionNode).toHaveAttribute('href', 'https://github.com/gnosis/safe-react/releases')
+    expect(safeReactVersionNode).toHaveAttribute('target', '_blank')
+  })
 })

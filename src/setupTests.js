@@ -29,3 +29,9 @@ jest.spyOn(Intl, 'NumberFormat').mockImplementation((locale, ...rest) => new Num
 Object.defineProperty(window, 'crypto', {
   value: { getRandomValues: mockedGetRandomValues },
 })
+
+const DEFAULT_ENV = { ...process.env }
+
+afterEach(() => {
+  process.env = { ...DEFAULT_ENV } // Restore default environment variables
+})
