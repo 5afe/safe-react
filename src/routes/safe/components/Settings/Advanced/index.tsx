@@ -34,11 +34,9 @@ const NoTransactionGuardLegend = (): ReactElement => (
 
 const Advanced = (): ReactElement => {
   const classes = useStyles()
-  const { nonce, modules } = useSelector(currentSafe) ?? {}
+  const { nonce, modules, guard } = useSelector(currentSafe) ?? {}
   const moduleData = modules ? getModuleData(modules) ?? null : null
-  const transactionGuard: ModulePair[] = [
-    ['0xc9479981BC50b7389A71E8783306c2Cb913159E9', '0xc9479981BC50b7389A71E8783306c2Cb913159E9'],
-  ]
+  const transactionGuard: ModulePair[] | null = guard ? [[guard, guard]] : null
   const transactionGuardData = getModuleData(transactionGuard) ?? null
   const { trackEvent } = useAnalytics()
 
