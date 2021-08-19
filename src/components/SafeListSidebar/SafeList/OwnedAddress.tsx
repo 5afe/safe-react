@@ -19,18 +19,19 @@ const Wrapper = styled.div`
     flex: 1;
   }
 
-  & > a:last-of-type {
+  & > a:nth-of-type(2) {
     text-decoration: underline;
   }
 `
 
 type Props = {
   address: string
+  isAdded: boolean
   onClick: () => unknown
   children: ReactElement
 }
 
-export const UnsavedAddress = ({ address, onClick, children }: Props): ReactElement => {
+export const OwnedAddress = ({ address, isAdded, onClick, children }: Props): ReactElement => {
   const name = useSelector((state) => addressBookName(state, { address }))
 
   return (
@@ -46,11 +47,13 @@ export const UnsavedAddress = ({ address, onClick, children }: Props): ReactElem
         <EthHashInfo hash={address} name={name} showAvatar shortenHash={4} />
       </Link>
 
-      <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onClick}>
-        <Text size="sm" color="primary">
-          Add Safe
-        </Text>
-      </Link>
+      {!isAdded && (
+        <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onClick}>
+          <Text size="sm" color="primary">
+            Add Safe
+          </Text>
+        </Link>
+      )}
     </Wrapper>
   )
 }
