@@ -10,7 +10,7 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { ModulePair } from 'src/logic/safe/store/models/safe'
+import { TransactionGuard } from './TransactionGuard'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -35,9 +35,8 @@ const NoTransactionGuardLegend = (): ReactElement => (
 const Advanced = (): ReactElement => {
   const classes = useStyles()
   const { nonce, modules, guard } = useSelector(currentSafe) ?? {}
+
   const moduleData = modules ? getModuleData(modules) ?? null : null
-  const transactionGuard: ModulePair[] | null = guard ? [[guard, guard]] : null
-  const transactionGuardData = getModuleData(transactionGuard) ?? null
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
@@ -100,11 +99,7 @@ const Advanced = (): ReactElement => {
           .
         </InfoText>
 
-        {!transactionGuardData || !transactionGuardData.length ? (
-          <NoTransactionGuardLegend />
-        ) : (
-          <ModulesTable moduleData={transactionGuardData} />
-        )}
+        {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
       </Block>
     </>
   )
