@@ -20,13 +20,16 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
-import { ensureOnce } from 'src/utils/singleton'
 
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
+let networkId = NETWORK
+export const setNetworkId = (id: string): void => {
+  networkId = id
+}
+export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
-export const getNetworkName = (): string => {
+export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
-  const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == getNetworkId())
+  const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == networkId)
   return name || ''
 }
 
@@ -57,13 +60,13 @@ const getCurrentEnvironment = (): string => {
   }
 }
 
-type NetworkSpecificConfiguration = EnvironmentSettings & {
+export type NetworkSpecificConfiguration = EnvironmentSettings & {
   network: NetworkSettings
   disabledFeatures?: SafeFeatures
   disabledWallets?: Wallets
 }
 
-const configuration = (): NetworkSpecificConfiguration => {
+export const getConfig = (): NetworkSpecificConfiguration => {
   const currentEnvironment = getCurrentEnvironment()
 
   // special case for test environment
@@ -89,8 +92,6 @@ const configuration = (): NetworkSpecificConfiguration => {
     disabledWallets: configFile.disabledWallets,
   }
 }
-
-export const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
 export const getNetworks = (): NetworkInfo[] => {
   const { local, ...usefulNetworks } = networks

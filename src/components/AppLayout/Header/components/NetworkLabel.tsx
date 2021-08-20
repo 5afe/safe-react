@@ -6,8 +6,6 @@ import { getNetworkInfo } from 'src/config'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
 import { NetworkInfo, NetworkSettings } from 'src/config/networks/network'
 
-const currentNetworkInfo = getNetworkInfo()
-
 const StyledCol = styled(Col)`
   flex-grow: 0;
   padding: 0 ${sm};
@@ -29,7 +27,7 @@ const StyledParagraph = styled(Paragraph)<{ network: Partial<NetworkSettings> }>
 `
 
 const NetworkLabel = ({ networkInfo }: { networkInfo?: NetworkInfo }): React.ReactElement => {
-  const selectedNetwork = networkInfo || currentNetworkInfo
+  const selectedNetwork = networkInfo || getNetworkInfo()
 
   return (
     <StyledCol middle="xs" start="xs">

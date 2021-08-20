@@ -16,8 +16,8 @@ import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
@@ -55,12 +55,11 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const desiredNetwork = getNetworkId()
-
 const useStyles = makeStyles(notificationStyles)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
+  const desiredNetwork = useSelector(currentChainId)
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
