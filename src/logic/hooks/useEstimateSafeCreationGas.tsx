@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { userAccountSelector } from '../wallets/store/selectors'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getNetworkInfo } from 'src/config'
-import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { useGasPrice } from './useGasPrice'
+
+import { userAccountSelector } from '../wallets/store/selectors'
 
 type EstimateSafeCreationGasProps = {
   addresses: string[]
@@ -31,16 +32,16 @@ export const useEstimateSafeCreationGas = ({
     gasCostFormatted: '< 0.001',
     gasLimit: 0,
   })
+  const [gasPrice, gasPriceLoaded] = useGasPrice()
   const userAccount = useSelector(userAccountSelector)
 
   useEffect(() => {
     const estimateGas = async () => {
-      if (!addresses.length || !numOwners || !userAccount) {
+      if (!addresses.length || !numOwners || !userAccount || !gasPriceLoaded) {
         return
       }
 
       const gasEstimation = await estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt)
-      const gasPrice = await calculateGasPrice()
       const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
       const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const gasCostFormatted = formatAmount(gasCost)
@@ -53,7 +54,7 @@ export const useEstimateSafeCreationGas = ({
     }
 
     estimateGas()
-  }, [numOwners, userAccount, safeCreationSalt, addresses])
+  }, [numOwners, userAccount, safeCreationSalt, addresses, gasPriceLoaded, gasPrice])
 
   return gasEstimation
 }
