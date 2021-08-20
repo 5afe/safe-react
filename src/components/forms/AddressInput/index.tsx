@@ -9,6 +9,7 @@ import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -57,6 +58,7 @@ const AddressInput = ({
     <OnChange name={name}>
       {async (value: string) => {
         const address = trimSpaces(value)
+        // A crypto domain name
         if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
           try {
             const resolverAddr = await getAddressFromDomain(address)
@@ -66,7 +68,17 @@ const AddressInput = ({
             logError(Errors._101, err.message)
           }
         } else {
-          fieldMutator(address)
+          // A regular address hash
+          let checkedAddress = address
+          // Automatically checksum valid (either already checksummed, or lowercase addresses)
+          if (isValidAddress(address)) {
+            try {
+              checkedAddress = checksumAddress(address)
+            } catch (err) {
+              // ignore
+            }
+          }
+          fieldMutator(checkedAddress)
         }
       }}
     </OnChange>

@@ -1,9 +1,20 @@
+import { Loader } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 
-import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
+import {
+  LOAD_ADDRESS,
+  OPEN_ADDRESS,
+  SAFELIST_ADDRESS,
+  SAFE_PARAM_ADDRESS,
+  SAFE_ROUTES,
+  WELCOME_ADDRESS,
+} from 'src/routes/routes'
 
+import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
+import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 const Open = React.lazy(() => import('./open/container/Open'))
@@ -19,6 +30,7 @@ const Routes = (): React.ReactElement => {
     path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
   })
 
+  const defaultSafe: string | null = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
@@ -50,6 +62,25 @@ const Routes = (): React.ReactElement => {
           if (!isInitialLoad) {
             return <Redirect to={WELCOME_ADDRESS} />
           }
+
+          if (defaultSafe === null) {
+            return (
+              <LoadingContainer>
+                <Loader size="md" />
+              </LoadingContainer>
+            )
+          }
+
+          if (defaultSafe) {
+            return (
+              <Redirect
+                to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                  safeAddress: defaultSafe,
+                })}
+              />
+            )
+          }
+
           return <Redirect to={WELCOME_ADDRESS} />
         }}
       />
