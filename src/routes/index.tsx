@@ -30,7 +30,7 @@ const Routes = (): React.ReactElement => {
     path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
   })
 
-  const defaultSafe: string | null = useSelector(lastViewedSafe)
+  const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
   useEffect(() => {

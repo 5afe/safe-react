@@ -6,7 +6,7 @@ import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 import { AppReduxState } from 'src/store'
 
 export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
-const maxViewedSafes = 10
+const MAX_VIEWED_SAFES = 10
 
 export type CurrentSessionState = {
   viewedSafes: string[]
@@ -32,7 +32,7 @@ export default handleActions<AppReduxState['currentSession'], CurrentSessionPayl
       const viewedSafes = state.viewedSafes.filter((item) => item !== safeAddress)
       const newState = {
         ...state,
-        viewedSafes: [safeAddress].concat(viewedSafes).slice(0, maxViewedSafes),
+        viewedSafes: [safeAddress].concat(viewedSafes).slice(0, MAX_VIEWED_SAFES),
       }
 
       saveCurrentSessionToStorage(newState)
