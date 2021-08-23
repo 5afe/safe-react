@@ -11,9 +11,11 @@ import { addressBookName } from 'src/logic/addressBook/store/selectors'
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: 5px 0;
-  margin-right: 28px;
-  border-bottom: 1px solid #e8e7e6;
+  padding: 5px 16px;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.background};
+  }
 
   & > a:first-of-type {
     flex: 1;
