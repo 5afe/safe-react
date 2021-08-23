@@ -154,7 +154,6 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
           }
 
           const disabled = disabledWhenValidating ? submitting || validating : submitting
-
           const controls = (
             <>
               <Hairline />

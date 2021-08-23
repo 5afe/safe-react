@@ -4,8 +4,8 @@ import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getNetworkInfo } from 'src/config'
-import { useGasPrice } from './useGasPrice'
 
+import { useGasPrice } from './useGasPrice'
 import { userAccountSelector } from '../wallets/store/selectors'
 
 type EstimateSafeCreationGasProps = {
