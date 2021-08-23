@@ -2,12 +2,19 @@ import React, { ReactElement } from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { theme as styledTheme } from '@gnosis.pm/safe-react-components'
 import Providers from 'src/components/Providers'
-import { history, store } from 'src/store'
+import { createCustomStore, history, store } from 'src/store'
 import theme from 'src/theme/mui'
+import { makeProvider } from 'src/logic/wallets/store/model/provider'
 
-function renderWithProviders(Components: ReactElement): RenderResult {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function renderWithProviders(Components: ReactElement, customState?: any): RenderResult {
+  const customStore = {
+    ...customState,
+    providers: makeProvider(customState?.providers),
+  }
+  const testStore = customState ? createCustomStore(customStore) : store
   return render(
-    <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
+    <Providers store={testStore} history={history} styledTheme={styledTheme} muiTheme={theme}>
       {Components}
     </Providers>,
   )

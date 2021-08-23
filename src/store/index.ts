@@ -97,5 +97,7 @@ migrateAddressBook(localStorageConfig)
 
 export const store: any = createStore(reducers, load(localStorageConfig), finalCreateStore)
 
+export const createCustomStore: any = (customStore: any) => createStore(reducers, { ...customStore }, finalCreateStore)
+
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)

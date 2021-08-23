@@ -20,6 +20,16 @@ function mockedGetRandomValues(buf) {
   buf.set(bytes)
 }
 
+jest.mock('bnc-onboard', () =>
+  jest.fn(() => ({
+    config: jest.fn(),
+    getState: jest.fn(),
+    walletCheck: jest.fn(),
+    walletReset: jest.fn(),
+    walletSelect: jest.fn(), // returns true or false
+  })),
+)
+
 // to avoid failing tests in some environments
 const NumberFormat = Intl.NumberFormat
 const englishTestLocale = 'en'
@@ -34,4 +44,9 @@ const DEFAULT_ENV = { ...process.env }
 
 afterEach(() => {
   process.env = { ...DEFAULT_ENV } // Restore default environment variables
+})
+
+beforeEach(() => {
+  delete window.location
+  window.location = new URL('http://localhost/') // Restore default location
 })
