@@ -57,7 +57,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
 
     // Delete empty rows
     slicedData.forEach((row) => {
-      if (!(row.data.length == 1 && !row.data[0])) {
+      if (!(row.data.length === 1 && !row.data[0])) {
         trimmedData.push(row)
       }
     })
@@ -68,14 +68,14 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
       return
     }
 
-    const formatedList = trimmedData.map(({ data }) => {
+    const formattedList = trimmedData.map(({ data }) => {
       return {
         address: checksumAddress(data[0].trim()),
         name: data[1].trim(),
         chainId: data[2].trim() as ETHEREUM_NETWORK,
       }
     })
-    setEntryList(formatedList)
+    setEntryList(formattedList)
     setImportError('')
     setCsvLoaded(true)
   }
