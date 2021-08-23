@@ -8,7 +8,7 @@ import {
 import { loadHistoryTransactions, loadQueuedTransactions } from './loadGatewayTransactions'
 import { AppReduxState } from 'src/store'
 
-export default (safeAddress: string) =>
+export default (chainId: string, safeAddress: string) =>
   async (dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>): Promise<void> => {
     const loadTxs = async (
       loadFn: typeof loadHistoryTransactions | typeof loadQueuedTransactions,
@@ -16,7 +16,7 @@ export default (safeAddress: string) =>
     ) => {
       try {
         const values = (await loadFn(safeAddress)) as any[]
-        dispatch(actionFn({ safeAddress, values }))
+        dispatch(actionFn({ chainId, safeAddress, values }))
       } catch (e) {
         e.log()
       }

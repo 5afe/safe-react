@@ -1,4 +1,5 @@
 import { List } from 'immutable'
+import { useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -12,6 +13,7 @@ import {
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { tryOffChainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
@@ -74,6 +76,7 @@ export const processTransaction =
     const state = getState()
 
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
+    const chainId = useSelector(currentChainId)
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
@@ -123,11 +126,17 @@ export const processTransaction =
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
           dispatch(
-            updateTransactionStatus({ txStatus: TransactionStatus.PENDING, safeAddress, nonce: tx.nonce, id: tx.id }),
+            updateTransactionStatus({
+              chainId,
+              txStatus: TransactionStatus.PENDING,
+              safeAddress,
+              nonce: tx.nonce,
+              id: tx.id,
+            }),
           )
           await saveTxToHistory({ ...txArgs, signature })
 
-          dispatch(fetchTransactions(safeAddress))
+          dispatch(fetchTransactions(chainId, safeAddress))
           return
         }
       }
@@ -150,6 +159,7 @@ export const processTransaction =
 
           dispatch(
             updateTransactionStatus({
+              chainId,
               txStatus: TransactionStatus.PENDING,
               safeAddress,
               nonce: tx.nonce,
@@ -165,7 +175,7 @@ export const processTransaction =
             // store the pending transaction's nonce
             isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
-            dispatch(fetchTransactions(safeAddress))
+            dispatch(fetchTransactions(chainId, safeAddress))
           } catch (e) {
             logError(Errors._804, e.message)
           }
@@ -173,6 +183,7 @@ export const processTransaction =
         .on('error', () => {
           dispatch(
             updateTransactionStatus({
+              chainId,
               txStatus: TransactionStatus.PENDING_FAILED,
               safeAddress,
               nonce: tx.nonce,
@@ -181,7 +192,7 @@ export const processTransaction =
           )
         })
         .then(async (receipt) => {
-          dispatch(fetchTransactions(safeAddress))
+          dispatch(fetchTransactions(chainId, safeAddress))
 
           if (isExecution) {
             dispatch(fetchSafe(safeAddress))
@@ -202,6 +213,7 @@ export const processTransaction =
 
       dispatch(
         updateTransactionStatus({
+          chainId,
           txStatus: TransactionStatus.PENDING_FAILED,
           safeAddress,
           nonce: tx.nonce,

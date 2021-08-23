@@ -83,7 +83,7 @@ export type AppReduxState = CombinedState<{
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
-  [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
+  [GATEWAY_TRANSACTIONS_ID]: Record<string, Record<string, StoreStructure>>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>

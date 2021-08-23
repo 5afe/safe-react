@@ -34,6 +34,8 @@ import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 's
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -92,6 +94,7 @@ export const createTransaction =
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+    const chainId = useSelector(currentChainId)
     const lastTx = await getLastTx(safeAddress)
     const nextNonce = await getNewTxNonce(lastTx, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
@@ -135,7 +138,7 @@ export const createTransaction =
 
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-          dispatch(fetchTransactions(safeAddress))
+          dispatch(fetchTransactions(chainId, safeAddress))
 
           await saveTxToHistory({ ...txArgs, signature, origin })
           onUserConfirm?.(safeTxHash)
@@ -174,10 +177,10 @@ export const createTransaction =
           // store the pending transaction's nonce
           isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
-          dispatch(fetchTransactions(safeAddress))
+          dispatch(fetchTransactions(chainId, safeAddress))
         })
         .then(async (receipt) => {
-          dispatch(fetchTransactions(safeAddress))
+          dispatch(fetchTransactions(chainId, safeAddress))
 
           return receipt.transactionHash
         })
