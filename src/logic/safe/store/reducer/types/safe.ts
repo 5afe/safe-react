@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 
 export type SafesMap = Map<string, SafeRecord>
 
-export interface SafeReducerState {
+interface SafeReducerState {
   safes: SafesMap
   latestMasterContractVersion: string
   selectedCurrency: string
