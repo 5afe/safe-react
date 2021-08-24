@@ -1,17 +1,18 @@
 import React, { ReactNode } from 'react'
-import { MuiThemeProvider } from '@material-ui/core/styles'
+import { MuiThemeProvider, Theme as MuiTheme } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { Store } from 'redux'
 import { History } from 'history'
+import { Theme } from '@gnosis.pm/safe-react-components/dist/theme'
 
 type ProvidersProps = {
   children: ReactNode
   store: Store
   history: History
-  styledTheme: any
-  muiTheme: any
+  styledTheme: Theme
+  muiTheme: MuiTheme
 }
 
 function Providers({ children, store, styledTheme, muiTheme, history }: ProvidersProps): React.ReactElement {
