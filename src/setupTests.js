@@ -88,10 +88,6 @@ afterEach(() => {
 })
 
 beforeEach(() => {
-  const location = { ...window.location }
   delete window.location
-  window.location = {
-    ...location,
-    ...new URL('http://localhost/'), // Restore default location}
-  }
+  window.location = new URL('http://localhost/') // Restore default location
 })
