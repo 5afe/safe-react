@@ -58,14 +58,17 @@ export const useEstimateSafeCreationGas = ({
     gasLimit: 0,
   })
   const userAccount = useSelector(userAccountSelector)
+  // Serialize the addresses array so that it doesn't trigger the effect due to the dependencies
+  const addressesSerialized = JSON.stringify(addresses)
 
   useEffect(() => {
-    if (!addresses.length || !numOwners || !userAccount) {
+    const addressesList = JSON.parse(addressesSerialized)
+    if (!addressesList.length || !numOwners || !userAccount) {
       return
     }
 
-    estimateGas(userAccount, numOwners, safeCreationSalt, addresses)?.then(setGasEstimation)
-  }, [numOwners, safeCreationSalt, addresses.join()])
+    estimateGas(userAccount, numOwners, safeCreationSalt, addressesList)?.then(setGasEstimation)
+  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount])
 
   return gasEstimation
 }
