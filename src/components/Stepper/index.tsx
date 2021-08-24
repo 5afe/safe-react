@@ -149,10 +149,6 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
         validation={validate}
       >
         {(submitting, validating, ...rest) => {
-          // if (submitting) {
-          //   return null
-          // }
-
           const disabled = disabledWhenValidating ? submitting || validating : submitting
           const controls = (
             <>
