@@ -1,14 +1,12 @@
-// import { getGuardInstance } from 'src/logic/contracts/safeContracts'
-// import { GUARD_ADDRESS } from 'src/utils/constants'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
-const ADDRESS_ZERO = '0x0'
+export const getSetGuardTxData = (guardAddress: string, safeAddress: string, safeVersion: string): string => {
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
-export const getSetGuardTxData = (address: string): string => {
-  //const guardInstance = getGuardInstance(GUARD_ADDRESS)
-
-  return address // guardInstance.methods.setGuard(address).encodeABI()
+  return safeInstance.methods.setGuard(guardAddress).encodeABI()
 }
 
-export const getRemoveGuardTxData = (): string => {
-  return getSetGuardTxData(ADDRESS_ZERO)
+export const getRemoveGuardTxData = (safeAddress: string, safeVersion: string): string => {
+  return getSetGuardTxData(ZERO_ADDRESS, safeAddress, safeVersion)
 }

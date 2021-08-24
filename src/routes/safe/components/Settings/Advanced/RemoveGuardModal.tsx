@@ -34,7 +34,7 @@ interface RemoveGuardModalProps {
 export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProps): ReactElement => {
   const classes = useStyles()
 
-  const { address: safeAddress = '' } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
@@ -62,9 +62,10 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const txData = getRemoveGuardTxData()
+    const txData = getRemoveGuardTxData(safeAddress, safeVersion)
+    console.log(txData)
     setTxData(txData)
-  }, [])
+  }, [guardAddress, safeAddress, safeVersion])
 
   const removeTransactionGuard = async (txParameters: TxParameters): Promise<void> => {
     try {
