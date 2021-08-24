@@ -6,7 +6,6 @@ import { Integrations } from '@sentry/tracing'
 
 import Root from 'src/components/Root'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
-import loadDefaultSafe from 'src/logic/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { loadConfig } from 'src/logic/config/store/actions'
 import { store } from 'src/store'
@@ -19,7 +18,6 @@ BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 
 store.dispatch(loadConfig)
 store.dispatch(loadSafesFromStorage())
-store.dispatch(loadDefaultSafe())
 store.dispatch(loadCurrentSessionFromStorage())
 
 Sentry.init({
