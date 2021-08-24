@@ -89,8 +89,9 @@ afterEach(() => {
   clearAllMockRequest()
 })
 
+const originalLocationHref = window.location.href
+
 beforeEach(() => {
   mockAllEndpointsByDefault()
-  delete window.location
-  window.location = new URL('http://localhost/') // Restore default location
+  window.location.href = originalLocationHref // Restore the url to http://localhost/
 })
