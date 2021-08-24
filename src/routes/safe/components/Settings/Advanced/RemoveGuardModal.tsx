@@ -63,7 +63,6 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
 
   useEffect(() => {
     const txData = getRemoveGuardTxData(safeAddress, safeVersion)
-    console.log(txData)
     setTxData(txData)
   }, [guardAddress, safeAddress, safeVersion])
 
