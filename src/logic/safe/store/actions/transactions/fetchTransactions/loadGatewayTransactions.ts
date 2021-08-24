@@ -66,7 +66,7 @@ export const loadHistoryTransactions = async (safeAddress: string): Promise<Hist
 /************/
 /*  QUEUED  */
 /************/
-const queuedPointers: { [safeAddress: string]: { next?: string; previous?: string } } = {}
+const queuedPointers: { [chainId: string]: { [safeAddress: string]: { next?: string; previous?: string } } } = {}
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -93,7 +93,7 @@ export const loadPagedQueuedTransactions = async (
 
     queuedPointers[chainId][safeAddress] = { next, previous }
 
-    return { values: results, next: queuedPointers[safeAddress].next }
+    return { values: results, next: queuedPointers[chainId][safeAddress].next }
   } catch (e) {
     throw new CodedException(Errors._603, e.message)
   }
@@ -108,8 +108,8 @@ export const loadQueuedTransactions = async (safeAddress: string): Promise<Queue
       checksumAddress(safeAddress),
     )
 
-    if (!historyPointers[chainId]) {
-      historyPointers[chainId] = {}
+    if (!queuedPointers[chainId]) {
+      queuedPointers[chainId] = {}
     }
 
     if (!queuedPointers[chainId][safeAddress] || queuedPointers[chainId][safeAddress].next === null) {
