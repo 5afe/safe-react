@@ -6,13 +6,11 @@ export type SafesMap = Map<string, SafeRecord>
 interface SafeReducerState {
   safes: SafesMap
   latestMasterContractVersion: string
-  selectedCurrency: string
 }
 
 interface SafeReducerStateJSON {
   safes: Record<string, SafeRecordProps>
   latestMasterContractVersion: string
-  selectedCurrency: string
 }
 
 export interface SafeReducerMap extends Map<string, any> {

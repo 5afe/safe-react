@@ -96,5 +96,5 @@ export default handleActions<AppReduxState['safes'], Payloads>(
   Map({
     safes: Map(),
     latestMasterContractVersion: '',
-  }) as unknown as AppReduxState['safes'],
+  }) as AppReduxState['safes'],
 )
