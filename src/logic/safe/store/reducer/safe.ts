@@ -2,7 +2,6 @@ import { Map, List } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
 import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
-import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
@@ -12,7 +11,6 @@ import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 
 export const SAFE_REDUCER_ID = 'safes'
-export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
 
 export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
   const owners = storedSafe.owners.map(checksumAddress)
@@ -99,12 +97,10 @@ export default handleActions<AppReduxState['safes'], Payloads>(
 
       return newState
     },
-    [SET_DEFAULT_SAFE]: (state, action: Action<SafeRecord>) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>
       state.set('latestMasterContractVersion', action.payload),
   },
   Map({
-    defaultSafe: DEFAULT_SAFE_INITIAL_STATE,
     safes: Map(),
     latestMasterContractVersion: '',
   }) as unknown as AppReduxState['safes'],

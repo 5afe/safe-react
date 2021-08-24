@@ -13,9 +13,8 @@ import {
 } from 'src/routes/routes'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
-import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
+import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 const Open = React.lazy(() => import('./open/container/Open'))
@@ -31,7 +30,7 @@ const Routes = (): React.ReactElement => {
     path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
   })
 
-  const defaultSafe = useSelector(defaultSafeSelector)
+  const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
@@ -64,7 +63,7 @@ const Routes = (): React.ReactElement => {
             return <Redirect to={WELCOME_ADDRESS} />
           }
 
-          if (defaultSafe === DEFAULT_SAFE_INITIAL_STATE) {
+          if (defaultSafe === null) {
             return (
               <LoadingContainer>
                 <Loader size="md" />

@@ -19,7 +19,7 @@ const Container = styled.div`
 const HeaderWrapper = styled.nav`
   height: 52px;
   width: 100%;
-  z-index: 2;
+  z-index: 1299;
 
   background-color: white;
   box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
