@@ -10,7 +10,7 @@ export const configMiddleware = (store) => (next) => async (action) => {
   if (watchedActions.includes(action.type)) {
     const { dispatch } = store
     switch (action.type) {
-      case CONFIG_ACTIONS.CONFIG_SET_CHAIN_ID: {
+      case CONFIG_ACTIONS.CONFIG_STORE: {
         dispatch(clearSafeList())
         dispatch(loadSafesFromStorage())
         dispatch(loadCurrentSessionFromStorage())
