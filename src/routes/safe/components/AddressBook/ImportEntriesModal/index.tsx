@@ -48,27 +48,34 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
   const handleOnDrop = (parseResults: ParseResult<string>[], file: File) => {
     // Remove the header row
     const slicedData = parseResults.slice(1)
-
     const fileError = validateFile(file)
     if (fileError) {
       setImportError(fileError)
       return
     }
+    const trimmedData: ParseResult<string>[] = []
 
-    const dataError = validateCsvData(slicedData)
+    // Delete empty rows
+    slicedData.forEach((row) => {
+      if (!(row.data.length === 1 && !row.data[0])) {
+        trimmedData.push(row)
+      }
+    })
+
+    const dataError = validateCsvData(trimmedData)
     if (dataError) {
       setImportError(dataError)
       return
     }
 
-    const formatedList = slicedData.map(({ data }) => {
+    const formattedList = trimmedData.map(({ data }) => {
       return {
         address: checksumAddress(data[0].trim()),
         name: data[1].trim(),
         chainId: data[2].trim() as ETHEREUM_NETWORK,
       }
     })
-    setEntryList(formatedList)
+    setEntryList(formattedList)
     setImportError('')
     setCsvLoaded(true)
   }
