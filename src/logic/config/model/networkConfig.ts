@@ -9,6 +9,13 @@ type GasPriceOracle = {
   gweiFactor: string
 }
 
+export type NativeCurrency = {
+  name: string
+  symbol: string
+  decimals: number
+  logoUri?: string
+}
+
 export type NetworkConfig = {
   chainId: ETHEREUM_NETWORK
   chainName: string
@@ -24,12 +31,7 @@ export type NetworkConfig = {
     address: string
     txHash: string
   }
-  nativeCurrency: {
-    name: string
-    symbol: string
-    decimals: number
-    logoUri?: string
-  }
+  nativeCurrency: NativeCurrency
   transactionService: string
   theme: {
     textColor: string
@@ -44,19 +46,14 @@ export type NetworkConfig = {
 export type NetworkState = {
   chainId: ETHEREUM_NETWORK
   chainName: string
-  nativeCurrency?: {
-    name: string
-    symbol: string
-    decimals: number
-    logoUri?: string
-  }
+  nativeCurrency: NativeCurrency
   theme?: {
     textColor: string
     backgroundColor: string
   }
 }
 
-export const makeNetworkConfigFromSpecificConfiguration = (config: NetworkSpecificConfiguration): NetworkState => {
+export const makeNetworkConfig = (config: NetworkSpecificConfiguration): NetworkState => {
   const { network } = config
   return {
     chainId: network.id,

@@ -19,13 +19,12 @@ type SafeCreationEstimationResult = {
   gasLimit: number // Minimum gas requited to execute the Tx
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const useEstimateSafeCreationGas = ({
   addresses,
   numOwners,
   safeCreationSalt,
 }: EstimateSafeCreationGasProps): SafeCreationEstimationResult => {
+  const { nativeCoin } = getNetworkInfo()
   const [gasEstimation, setGasEstimation] = useState<SafeCreationEstimationResult>({
     gasEstimation: 0,
     gasCostFormatted: '< 0.001',

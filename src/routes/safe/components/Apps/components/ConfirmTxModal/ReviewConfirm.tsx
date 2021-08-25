@@ -29,8 +29,6 @@ import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 
-const { nativeCoin } = getNetworkInfo()
-
 const Container = styled.div`
   max-width: 480px;
   padding: ${md} ${lg} 0;
@@ -85,6 +83,7 @@ export const ReviewConfirm = ({
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
+  const { nativeCoin } = getNetworkInfo()
   const explorerUrl = getExplorerInfo(safeAddress)
 
   const txRecipient: string | undefined = useMemo(
