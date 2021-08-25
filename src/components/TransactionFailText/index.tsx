@@ -8,6 +8,7 @@ import InfoIcon from 'src/assets/icons/info_red.svg'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const styles = createStyles({
   executionWarningRow: {
@@ -32,8 +33,9 @@ export const TransactionFailText = ({
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
   const threshold = useSelector(currentSafeThreshold)
+  const isOwner = useSelector(grantedSelector)
 
-  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE) {
+  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE && isOwner) {
     return null
   }
 
@@ -49,7 +51,12 @@ export const TransactionFailText = ({
     <Row align="center">
       <Paragraph color="error" className={classes.executionWarningRow}>
         <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-        This transaction will most likely fail. {errorMessage}
+
+        {isOwner ? (
+          <>This transaction will most likely fail. {errorMessage}</>
+        ) : (
+          <>You are currently not an owner of this Safe and won&apos;t be able to submit this tx.</>
+        )}
       </Paragraph>
     </Row>
   )

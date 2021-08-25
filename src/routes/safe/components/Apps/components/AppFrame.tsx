@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
+import { Loader, Title, Card } from '@gnosis.pm/safe-react-components'
 import {
   GetBalanceParams,
   GetTxBySafeTxHashParams,
@@ -14,7 +14,6 @@ import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
@@ -33,14 +32,6 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-
-const OwnerDisclaimer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 476px;
-`
 
 const AppWrapper = styled.div`
   display: flex;
@@ -93,7 +84,6 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 })
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
-  const granted = useSelector(grantedSelector)
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
@@ -289,15 +279,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   if (consentReceived === false) {
     return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
-  }
-
-  if (NETWORK_NAME === 'UNKNOWN' || !granted) {
-    return (
-      <OwnerDisclaimer>
-        <FixedIcon type="notOwner" />
-        <Title size="xs">To use apps, you must be an owner of this Safe</Title>
-      </OwnerDisclaimer>
-    )
   }
 
   return (
