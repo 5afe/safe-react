@@ -1937,15 +1937,15 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0.tgz#0f90185c3693f2683322d275e796e61ff99ce87d"
   integrity sha512-dLCSlniYnxEqCglx4XdhByvi7KKuSYRWJKm1lVXAc4oJqwwVkoCwp0bFIejLZ/dnf7cQSBUUVsTGWhvSda511w==
 
-"@gnosis.pm/safe-apps-sdk@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-4.1.0.tgz#95187bba585836a8f02d4eaa88c65568e8b51ef7"
-  integrity sha512-j9soWW1BeKtSQpyRr5ZeidEV1owuqEZvZkV1Vg7D8zlTmV5N72PJHnLUn7k7KzUDGxzicVuvEE7Wqkc7AWrc/Q==
+"@gnosis.pm/safe-apps-sdk@4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-4.2.0.tgz#77069de1b4f3db724d1ded1fab39e1feacc7bc05"
+  integrity sha512-GpaxIbi658+KLtJpTGq6qdpVkbW7OQUKh8i0uhZ04SiAoIAtR9QNbP7V04OvvuqhKjhvCnvh37mJH2RZ2zZHDA==
 
-"@gnosis.pm/safe-deployments@^1.0.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.1.0.tgz#63133f4576c5d5f2779f61d322e1e449fb701b1c"
-  integrity sha512-eIH4gvBQLEksQXFN2vOG+JZpdSCR+q6uoZD7n8Jx/PF2nIaWVYV1CWo6kbWDwfwzgAQkDddM+8WBjnc84fbB+Q==
+"@gnosis.pm/safe-deployments@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.2.0.tgz#cf3aa9c2c15ca49459e5a90cbe702127528bbacd"
+  integrity sha512-xvfIhpOrCsdN7pkTtq6xl8pYbwXdkx3MTRh4cq3ucNDyw2dPJCYDr7gI6FPJ79jZiUkWwQzXzlxiEieuv6Dhpw==
 
 "@gnosis.pm/safe-react-components@^0.7.0":
   version "0.7.0"
