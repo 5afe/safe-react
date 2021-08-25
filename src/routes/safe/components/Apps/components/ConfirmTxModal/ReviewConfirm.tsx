@@ -242,7 +242,7 @@ export const ReviewConfirm = ({
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <TransactionFeesWrapper>
               <TransactionFees
-                gasCostFormatted={gasCostFormatted}
+                gasCostFormatted={isOwner ? gasCostFormatted : undefined}
                 isExecution={isExecution}
                 isCreation={isCreation}
                 isOffChainSignature={isOffChainSignature}
