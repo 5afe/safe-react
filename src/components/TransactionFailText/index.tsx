@@ -35,7 +35,7 @@ export const TransactionFailText = ({
   const threshold = useSelector(currentSafeThreshold)
   const isOwner = useSelector(grantedSelector)
 
-  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE) {
+  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE && isOwner) {
     return null
   }
 
