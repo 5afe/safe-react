@@ -17,6 +17,8 @@ export const configSetChainId = createAction<ETHEREUM_NETWORK>(CONFIG_ACTIONS.CO
 
 export const loadConfig = async (dispatch: Dispatch): Promise<void> => {
   try {
+    // FIXME when changing to the config service we should start using this function
+    // instead of fetching from static files configuration
     // const chainId = getNetworkId()
     // const safeConfigService = await fetchSafeConfig(chainId)
     const safeConfig = getConfig()
