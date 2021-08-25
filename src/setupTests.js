@@ -74,6 +74,9 @@ beforeAll(() => {
     if (/Warning.*not wrapped in act/.test(args[0])) {
       return
     }
+    if (/Code 101: Failed to resolve the address \(Given address \"notExistingENSDomain.eth\" /.test(args[0])) {
+      return
+    }
     originalError.call(console, ...args)
   }
 })
