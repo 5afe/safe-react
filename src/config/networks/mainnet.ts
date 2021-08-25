@@ -1,9 +1,9 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.mainnet.staging.gnosisdev.com/v1',
+  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://gnosis-safe.io/app',
   gasPriceOracles: [
@@ -37,7 +37,7 @@ const mainnet: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.mainnet.gnosis.io/v1',
+      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
       txServiceUrl: 'https://safe-transaction.mainnet.gnosis.io/api/v1',
     },
   },
@@ -47,6 +47,7 @@ const mainnet: NetworkConfig = {
     textColor: '#001428',
     label: 'Mainnet',
     isTestNet: false,
+    ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Ether',

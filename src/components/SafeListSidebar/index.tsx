@@ -1,37 +1,22 @@
-import React, { useEffect, useMemo, useState, ReactElement } from 'react'
+import React, { useState, ReactElement } from 'react'
 import Drawer from '@material-ui/core/Drawer'
-import SearchIcon from '@material-ui/icons/Search'
-import SearchBar from 'material-ui-search-bar'
 import { useSelector } from 'react-redux'
 
 import { SafeList } from './SafeList'
 import { sortedSafeListSelector } from './selectors'
 import useSidebarStyles from './style'
 
-import Spacer from 'src/components/Spacer'
-import Button from 'src/components/layout/Button'
-import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
-import Link from 'src/components/layout/Link'
-import Row from 'src/components/layout/Row'
-import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-import { safeAddressFromUrl, defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
+import AddSafeButton from 'src/components/SafeListSidebar/AddSafeButton'
 
 export const SafeListSidebarContext = React.createContext({
   isOpen: false,
   toggleSidebar: () => {},
 })
-
-const filterBy = (filter, safes) =>
-  safes.filter(
-    (safe) =>
-      !filter ||
-      safe.address.toLowerCase().includes(filter.toLowerCase()) ||
-      safe.name.toLowerCase().includes(filter.toLowerCase()),
-  )
 
 type Props = {
   children: ReactElement
@@ -39,21 +24,12 @@ type Props = {
 
 export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
-  const [filter, setFilter] = useState('')
   const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
-  const ownerSafes = useOwnerSafes()
-  const defaultSafe = useSelector(defaultSafeSelector)
+  const ownedSafes = useOwnerSafes()
   const safeAddress = useSelector(safeAddressFromUrl)
 
   const classes = useSidebarStyles()
   const { trackEvent } = useAnalytics()
-
-  const searchClasses = {
-    input: classes.searchInput,
-    root: classes.searchRoot,
-    iconButton: classes.searchIconInput,
-    searchContainer: classes.searchContainer,
-  }
 
   const toggleSidebar = () => {
     if (!isOpen) {
@@ -62,76 +38,26 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 
-  const handleFilterChange = (value) => {
-    setFilter(value)
-  }
-
-  const handleFilterCancel = () => {
-    setFilter('')
-  }
-
-  const handleEsc = (e) => {
-    if (e.keyCode === 27) {
+  const handleEsc = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
       toggleSidebar()
     }
   }
-
-  const filteredSafes = useMemo(() => filterBy(filter, safes), [safes, filter])
-  const filteredOwnerSafes = useMemo(
-    () => ownerSafes.filter((address) => new RegExp(filter, 'i').test(address)),
-    [ownerSafes, filter],
-  )
-
-  useEffect(() => {
-    setTimeout(() => {
-      setFilter('')
-    }, 300)
-  }, [isOpen])
 
   return (
     <SafeListSidebarContext.Provider value={{ isOpen, toggleSidebar }}>
       <Drawer
         classes={{ paper: classes.sidebarPaper }}
         className={classes.sidebar}
-        ModalProps={{ onBackdropClick: toggleSidebar }}
+        ModalProps={{ onClose: toggleSidebar }}
         onKeyDown={handleEsc}
         open={isOpen}
       >
-        <Row align="center" className={classes.topComponents}>
-          <Row align="center" className={classes.searchWrapper}>
-            <SearchIcon className={classes.searchIcon} />
-            <SearchBar
-              classes={searchClasses}
-              onCancelSearch={handleFilterCancel}
-              onChange={handleFilterChange}
-              placeholder="Search by name or address"
-              searchIcon={<div />}
-              value={filter}
-            />
-          </Row>
-          <Divider className={classes.divider} />
-          <Spacer className={classes.spacer} />
-          <Button
-            className={classes.addSafeBtn}
-            color="primary"
-            component={Link}
-            onClick={toggleSidebar}
-            size="small"
-            to={WELCOME_ADDRESS}
-            variant="contained"
-          >
-            + Add Safe
-          </Button>
-          <Spacer />
-        </Row>
+        <AddSafeButton onAdd={toggleSidebar} />
+
         <Hairline />
-        <SafeList
-          currentSafeAddress={safeAddress}
-          defaultSafeAddress={defaultSafe}
-          onSafeClick={toggleSidebar}
-          safes={filteredSafes}
-          otherSafes={filteredOwnerSafes}
-        />
+
+        <SafeList currentSafeAddress={safeAddress} onSafeClick={toggleSidebar} safes={safes} ownedSafes={ownedSafes} />
       </Drawer>
       {children}
     </SafeListSidebarContext.Provider>

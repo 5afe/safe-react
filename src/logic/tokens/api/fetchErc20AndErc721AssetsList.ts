@@ -1,7 +1,7 @@
+import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import axios, { AxiosResponse } from 'axios'
 
 import { getTokensServiceBaseUrl } from 'src/config'
-import { TokenType } from 'src/logic/safe/store/models/types/gateway'
 
 export type TokenResult = {
   address: string

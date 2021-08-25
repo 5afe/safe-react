@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import { headerHeight, md, mediumFontSize, screenSm, secondaryText, xs } from 'src/theme/variables'
 
 const sidebarWidth = '400px'
-const sidebarMarginLeft = '12px'
-const sidebarMarginTop = '12px'
-const sidebarMarginBottom = '12px'
-const sidebarBorderRadius = '8px'
+const sidebarMarginLeft = '0px'
+const sidebarMarginTop = '0px'
+const sidebarMarginBottom = '0px'
+const sidebarBorderRadius = '0px'
 
 const useSidebarStyles = makeStyles({
   sidebar: {
@@ -14,6 +14,7 @@ const useSidebarStyles = makeStyles({
     marginLeft: sidebarMarginLeft,
     top: sidebarMarginTop,
     width: sidebarWidth,
+    zIndex: '1298 !important',
   },
   sidebarPaper: {
     borderRadius: sidebarBorderRadius,

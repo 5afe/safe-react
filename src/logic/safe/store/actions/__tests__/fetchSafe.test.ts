@@ -7,7 +7,6 @@ import { buildSafe, fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import * as storageUtils from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
-import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
 import { inMemoryPartialSafeInformation, localSafesInfo, remoteSafeInfoWithoutModules } from '../mocks/safeInformation'
 import * as gateway from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -130,7 +129,6 @@ describe('fetchSafe', () => {
 
     const store = mockStore(
       Map({
-        defaultSafe: DEFAULT_SAFE_INITIAL_STATE,
         safes: Map(),
         latestMasterContractVersion: '',
       }),
@@ -148,7 +146,6 @@ describe('fetchSafe', () => {
 
     const store = mockStore(
       Map({
-        defaultSafe: DEFAULT_SAFE_INITIAL_STATE,
         safes: Map(),
         latestMasterContractVersion: '',
       }),

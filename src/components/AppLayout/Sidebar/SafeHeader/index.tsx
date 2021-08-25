@@ -42,6 +42,11 @@ const StyledIcon = styled(Icon)`
   svg {
     height: 26px;
     width: 26px;
+    transform: rotateZ(-90deg);
+
+    path:nth-child(2) {
+      display: none;
+    }
   }
 `
 
@@ -119,7 +124,7 @@ const SafeHeader = ({
           <FlexSpacer />
           <FixedIcon type="notConnected" />
           <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
-            <Icon size="md" type="circleDropdown" />
+            <StyledIcon size="md" type="circleDropdown" />
           </ButtonHelper>
         </IdenticonContainer>
       </Container>
@@ -146,7 +151,9 @@ const SafeHeader = ({
         </IdenticonContainer>
 
         {/* SafeInfo */}
-        <Text size="xl">{safeName}</Text>
+        <Text size="lg" center>
+          {safeName}
+        </Text>
         <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <ButtonHelper onClick={onReceiveClick}>

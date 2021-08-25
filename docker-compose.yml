@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+  safe-react:
+    build: ./
+    volumes:
+      - /app/node_modules
+      - ./:/app
+    ports:
+      - 3000:3000

@@ -1,4 +1,4 @@
-name: Run app tests
+name: Unit tests & coverage
 on:
   pull_request:
   push:
@@ -36,11 +36,10 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - run: yarn test:coverage
-
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@master
+      - name: Run tests
+        uses: mattallty/jest-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        if: success()
-
+          test-command: "npm run test:ci -- --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json"
+          coverage-comment: false
