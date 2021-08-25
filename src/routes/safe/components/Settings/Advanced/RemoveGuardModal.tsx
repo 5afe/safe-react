@@ -150,7 +150,8 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                 </Row>
                 <Row className={classes.modalDescription}>
                   <Paragraph noMargin size="lg">
-                    TODO: Add description
+                    After removing this transaction guard, won´t be checks that are being done by the guard before and
+                    after a transaction
                   </Paragraph>
                 </Row>
               </Block>
