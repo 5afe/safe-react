@@ -25,6 +25,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 interface RemoveGuardModalProps {
   onClose: () => void
@@ -34,7 +35,7 @@ interface RemoveGuardModalProps {
 export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProps): ReactElement => {
   const classes = useStyles()
 
-  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -77,7 +78,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
         }),
       )
     } catch (e) {
-      console.error(`failed to remove the transaction ${guardAddress}`, e.message)
+      logError(Errors._807, `${guardAddress} – ${e.message}`)
     }
   }
 
