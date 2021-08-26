@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
 
-import { currentSafeFeaturesEnabled, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafeOwners, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
@@ -26,6 +26,8 @@ const AddressBookTable = React.lazy(() => import('src/routes/safe/components/Add
 const Container = (): React.ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
+  const owners = useSelector(currentSafeOwners)
+  const isSafeLoaded = owners.length > 0
   const balancesBaseRoute = generatePath(SAFE_ROUTES.ASSETS_BASE_ROUTE, {
     safeAddress,
   })
@@ -40,7 +42,7 @@ const Container = (): React.ReactElement => {
     onClose: () => {},
   })
 
-  if (!featuresEnabled) {
+  if (!isSafeLoaded) {
     return (
       <LoadingContainer>
         <Loader size="md" />

@@ -1,7 +1,7 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import ModalTitle from 'src/components/ModalTitle'
@@ -28,6 +28,7 @@ import Divider from 'src/components/Divider'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const Container = styled.div`
   max-width: 480px;
@@ -85,6 +86,7 @@ export const ReviewConfirm = ({
   const dispatch = useDispatch()
   const { nativeCoin } = getNetworkInfo()
   const explorerUrl = getExplorerInfo(safeAddress)
+  const isOwner = useSelector(grantedSelector)
 
   const txRecipient: string | undefined = useMemo(
     () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
@@ -239,7 +241,7 @@ export const ReviewConfirm = ({
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <TransactionFeesWrapper>
               <TransactionFees
-                gasCostFormatted={gasCostFormatted}
+                gasCostFormatted={isOwner ? gasCostFormatted : undefined}
                 isExecution={isExecution}
                 isCreation={isCreation}
                 isOffChainSignature={isOffChainSignature}
@@ -254,7 +256,7 @@ export const ReviewConfirm = ({
               cancelButtonProps={{ onClick: handleTxRejection }}
               confirmButtonProps={{
                 onClick: () => confirmTransactions(txParameters),
-                disabled: areTxsMalformed,
+                disabled: !isOwner || areTxsMalformed,
                 status: buttonStatus,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
               }}
