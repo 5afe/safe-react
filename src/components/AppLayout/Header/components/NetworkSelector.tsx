@@ -1,5 +1,6 @@
 import React, { ReactElement, useRef, Fragment, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -22,6 +23,7 @@ import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
 import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
 import { configStore } from 'src/logic/config/store/actions'
 import { APP_ENV } from 'src/utils/constants'
+import { WELCOME_ADDRESS } from 'src/routes/routes'
 
 const styles = {
   root: {
@@ -86,6 +88,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
   const networkRef = useRef(null)
   const classes = useStyles()
   const dispatch = useDispatch()
+  const history = useHistory()
   const networkName = getNetworkName().toLowerCase()
 
   const onNetworkSwitch = useCallback(
@@ -99,6 +102,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
         setNetworkId(getNetworkName(networkId))
         const safeConfig = makeNetworkConfig(getConfig())
         dispatch(configStore(safeConfig))
+        history.push(WELCOME_ADDRESS)
       }
     },
     [dispatch],
