@@ -20,6 +20,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -35,7 +36,7 @@ interface RemoveModuleModalProps {
 export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): ReactElement => {
   const classes = useStyles()
 
-  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
@@ -84,7 +85,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         }),
       )
     } catch (e) {
-      console.error(`failed to remove the module ${selectedModulePair}`, e.message)
+      logError(Errors._806, `${selectedModulePair} – ${e.message}`)
     }
   }
 

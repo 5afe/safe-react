@@ -2,20 +2,22 @@ import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { generateColumns } from './dataFetcher'
-import { RemoveModuleModal } from './RemoveModuleModal'
+import { RemoveGuardModal } from './RemoveGuardModal'
 import { useStyles } from './style'
 
 import ButtonHelper from 'src/components/ButtonHelper'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import { getExplorerInfo } from 'src/config'
 
-const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
-const MODULES_ROW_TEST_ID = 'owners-row'
+const REMOVE_GUARD_BTN_TEST_ID = 'remove-guard-btn'
+const GUARDS_ROW_TEST_ID = 'guards-row'
 
 interface TransactionGuardProps {
   address: string
@@ -27,11 +29,13 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
-  const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
+  const granted = useSelector(grantedSelector)
 
-  const triggerRemoveSelectedModule = (): void => {
-    setViewRemoveModuleModal(true)
+  const [viewRemoveGuardModal, setViewRemoveGuardModal] = React.useState(false)
+  const hideRemoveGuardModal = () => setViewRemoveGuardModal(false)
+
+  const triggerRemoveSelectedGuard = (): void => {
+    setViewRemoveGuardModal(true)
   }
 
   return (
@@ -42,7 +46,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
             sortedData.map((row, index) => (
               <TableRow
                 className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
-                data-testid={MODULES_ROW_TEST_ID}
+                data-testid={GUARDS_ROW_TEST_ID}
                 key={index}
                 tabIndex={-1}
               >
@@ -57,12 +61,11 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                       </TableCell>
                       <TableCell component="td">
                         <Row align="end" className={classes.actions}>
-                          <ButtonHelper
-                            onClick={() => triggerRemoveSelectedModule()}
-                            data-testid={REMOVE_MODULE_BTN_TEST_ID}
-                          >
-                            <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
-                          </ButtonHelper>
+                          {granted && (
+                            <ButtonHelper onClick={triggerRemoveSelectedGuard} data-testid={REMOVE_GUARD_BTN_TEST_ID}>
+                              <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
+                            </ButtonHelper>
+                          )}
                         </Row>
                       </TableCell>
                     </React.Fragment>
@@ -73,9 +76,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
           }
         </Table>
       </TableContainer>
-      {viewRemoveModuleModal && address && (
-        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModulePair={[address, address]} />
-      )}
+      {viewRemoveGuardModal && address && <RemoveGuardModal onClose={hideRemoveGuardModal} guardAddress={address} />}
     </>
   )
 }
