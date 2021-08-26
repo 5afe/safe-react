@@ -1,7 +1,7 @@
 import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { generateColumns } from './dataFetcher'
 import { RemoveModuleModal } from './RemoveModuleModal'
@@ -27,7 +27,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
+  const [viewRemoveModuleModal, setViewRemoveModuleModal] = useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
   const triggerRemoveSelectedModule = (): void => {
@@ -57,10 +57,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                       </TableCell>
                       <TableCell component="td">
                         <Row align="end" className={classes.actions}>
-                          <ButtonHelper
-                            onClick={() => triggerRemoveSelectedModule()}
-                            data-testid={REMOVE_MODULE_BTN_TEST_ID}
-                          >
+                          <ButtonHelper onClick={triggerRemoveSelectedModule} data-testid={REMOVE_MODULE_BTN_TEST_ID}>
                             <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
                           </ButtonHelper>
                         </Row>

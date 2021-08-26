@@ -2,7 +2,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -35,11 +35,12 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
   const classes = useStyles()
 
   const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
-  const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+
+  const txData = useMemo(() => getRemoveGuardTxData(safeAddress, safeVersion), [safeAddress, safeVersion])
 
   const {
     gasCostFormatted,
@@ -60,11 +61,6 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
   })
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
-
-  useEffect(() => {
-    const txData = getRemoveGuardTxData(safeAddress, safeVersion)
-    setTxData(txData)
-  }, [guardAddress, safeAddress, safeVersion])
 
   const removeTransactionGuard = async (txParameters: TxParameters): Promise<void> => {
     try {
@@ -150,8 +146,8 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                 </Row>
                 <Row className={classes.modalDescription}>
                   <Paragraph noMargin size="lg">
-                    After removing this transaction guard, won´t be checks that are being done by the guard before and
-                    after a transaction
+                    Once the transaction guard has been removed, checks by the transaction guard will not be conducted
+                    before or after any subsequent transactions.
                   </Paragraph>
                 </Row>
               </Block>
