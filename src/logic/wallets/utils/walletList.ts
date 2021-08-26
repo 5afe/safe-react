@@ -4,9 +4,6 @@ import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 
 import { WALLETS } from 'src/config/networks/network.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
-const networkId = getNetworkId()
-const disabledWallets = getNetworkConfigDisabledWallets()
-
 type Wallet = WalletInitOptions & {
   desktop: boolean
   walletName: WALLETS
@@ -19,7 +16,7 @@ const wallets: Wallet[] = [
     walletName: WALLETS.WALLET_CONNECT,
     preferred: true,
     // as stated in the documentation, `infuraKey` is not mandatory if rpc is provided
-    rpc: { [networkId]: rpcUrl },
+    rpc: { [getNetworkId()]: rpcUrl },
     desktop: true,
     bridge: 'https://safe-walletconnect.gnosis.io/',
   },
@@ -64,6 +61,8 @@ const wallets: Wallet[] = [
 ]
 
 export const getSupportedWallets = (): WalletInitOptions[] => {
+  const disabledWallets = getNetworkConfigDisabledWallets()
+
   const { isDesktop } = window
   /* eslint-disable no-unused-vars */
   if (isDesktop) {

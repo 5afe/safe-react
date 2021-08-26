@@ -10,17 +10,14 @@ import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
-const networkId = getNetworkId()
-const networkName = getNetworkName()
-
 let lastUsedAddress = ''
 let providerName
 
 const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
-  networkId: parseInt(networkId, 10),
-  networkName,
+  networkId: parseInt(getNetworkId(), 10),
+  networkName: getNetworkName(),
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {
