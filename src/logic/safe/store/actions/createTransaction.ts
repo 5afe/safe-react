@@ -35,7 +35,6 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { useSelector } from 'react-redux'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -94,7 +93,7 @@ export const createTransaction =
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-    const chainId = useSelector(currentChainId)
+    const chainId = currentChainId(state)
     const lastTx = await getLastTx(safeAddress)
     const nextNonce = await getNewTxNonce(lastTx, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce

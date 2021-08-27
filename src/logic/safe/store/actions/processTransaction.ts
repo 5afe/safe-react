@@ -1,5 +1,4 @@
 import { List } from 'immutable'
-import { useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -76,7 +75,7 @@ export const processTransaction =
     const state = getState()
 
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const chainId = useSelector(currentChainId)
+    const chainId = currentChainId(state)
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
