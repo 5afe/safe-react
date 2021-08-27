@@ -28,7 +28,7 @@ export const remoteSafeInfoWithModules = {
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
   guard: {
-    guard: '0x4f8a82d73729A33E0165aDeF3450A7F85f007528',
+    value: '0x4f8a82d73729A33E0165aDeF3450A7F85f007528',
   },
   modules: [
     {
