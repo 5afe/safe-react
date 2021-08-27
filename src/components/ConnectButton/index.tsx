@@ -9,13 +9,12 @@ import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 let lastUsedAddress = ''
 let providerName
 
-const wallets = getSupportedWallets()
-
-export const onboard = Onboard({
+const onboardConfiguration = {
   networkId: parseInt(getNetworkId(), 10),
   networkName: getNetworkName(),
   subscriptions: {
@@ -43,7 +42,7 @@ export const onboard = Onboard({
   },
   walletSelect: {
     description: 'Please select a wallet to connect to Gnosis Safe',
-    wallets,
+    wallets: getSupportedWallets(),
   },
   walletCheck: [
     { checkName: 'derivationPath' },
@@ -52,7 +51,9 @@ export const onboard = Onboard({
     { checkName: 'network' },
     transactionDataCheck(),
   ],
-})
+}
+
+export const onboard = Onboard(onboardConfiguration)
 
 const checkWallet = async (): Promise<boolean> => {
   const ready = onboard.walletCheck()
@@ -68,6 +69,12 @@ const checkWallet = async (): Promise<boolean> => {
   }
 
   return await ready
+}
+
+export const setOnboardNetworkId = (networkId: ETHEREUM_NETWORK): void => {
+  onboard.config({
+    networkId: parseInt(networkId, 10),
+  })
 }
 
 export const onboardUser = async (): Promise<boolean> => {
