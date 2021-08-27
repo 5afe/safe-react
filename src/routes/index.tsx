@@ -19,7 +19,8 @@ import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 const Welcome = React.lazy(() => import('./welcome/container'))
 const Open = React.lazy(() => import('./open/container/Open'))
 const Safe = React.lazy(() => import('./safe/container'))
-const Load = React.lazy(() => import('./load/container/Load'))
+const LoadOld = React.lazy(() => import('./load/container/Load'))
+const LoadNew = React.lazy(() => import('./new-load/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
@@ -87,7 +88,8 @@ const Routes = (): React.ReactElement => {
       <Route component={Welcome} exact path={WELCOME_ADDRESS} />
       <Route component={Open} exact path={OPEN_ADDRESS} />
       <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
+      <Route component={LoadNew} path={`${LOAD_ADDRESS}/:safeAddress?`} />
+      <Route component={LoadOld} path={`${LOAD_ADDRESS}-old/:safeAddress?`} />
       <Redirect to="/" />
     </Switch>
   )
