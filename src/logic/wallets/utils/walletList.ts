@@ -10,7 +10,7 @@ type Wallet = WalletInitOptions & {
 }
 
 const rpcUrl = getRpcServiceUrl()
-const wallets: Wallet[] = [
+const wallets = (): Wallet[] => [
   { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
   {
     walletName: WALLETS.WALLET_CONNECT,
@@ -66,8 +66,12 @@ export const getSupportedWallets = (): WalletInitOptions[] => {
   const { isDesktop } = window
   /* eslint-disable no-unused-vars */
   if (isDesktop) {
-    return wallets.filter((wallet) => wallet.desktop).map(({ desktop, ...rest }) => rest)
+    return wallets()
+      .filter((wallet) => wallet.desktop)
+      .map(({ desktop, ...rest }) => rest)
   }
 
-  return wallets.map(({ desktop, ...rest }) => rest).filter((w) => !disabledWallets.includes(w.walletName))
+  return wallets()
+    .map(({ desktop, ...rest }) => rest)
+    .filter((w) => !disabledWallets.includes(w.walletName))
 }

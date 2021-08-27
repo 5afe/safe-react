@@ -1,4 +1,5 @@
 import Onboard from 'bnc-onboard'
+import { API } from 'bnc-onboard/dist/src/interfaces'
 import React, { ReactElement } from 'react'
 
 import Button from 'src/components/layout/Button'
@@ -9,12 +10,11 @@ import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 let lastUsedAddress = ''
 let providerName
 
-const onboardConfiguration = {
+const getOnboardConfiguration = () => ({
   networkId: parseInt(getNetworkId(), 10),
   networkName: getNetworkName(),
   subscriptions: {
@@ -51,16 +51,24 @@ const onboardConfiguration = {
     { checkName: 'network' },
     transactionDataCheck(),
   ],
+})
+
+let currentOnboardInstance
+export const onboard = (): API => {
+  const chainId = getNetworkId()
+  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId !== parseInt(chainId, 10)) {
+    currentOnboardInstance = Onboard(getOnboardConfiguration())
+  }
+
+  return currentOnboardInstance
 }
 
-export const onboard = Onboard(onboardConfiguration)
-
 const checkWallet = async (): Promise<boolean> => {
-  const ready = onboard.walletCheck()
+  const ready = onboard().walletCheck()
 
   if (shouldSwitchNetwork()) {
     try {
-      await switchNetwork(onboard.getState().wallet, getNetworkId())
+      await switchNetwork(onboard().getState().wallet, getNetworkId())
       return true
     } catch (e) {
       e.log()
@@ -71,23 +79,17 @@ const checkWallet = async (): Promise<boolean> => {
   return await ready
 }
 
-export const setOnboardNetworkId = (networkId: ETHEREUM_NETWORK): void => {
-  onboard.config({
-    networkId: parseInt(networkId, 10),
-  })
-}
-
 export const onboardUser = async (): Promise<boolean> => {
   // before calling walletSelect you want to check if web3 has been instantiated
   // which indicates that a wallet has already been selected
   // and web3 has been instantiated with that provider
   const web3 = getWeb3()
-  const walletSelected = web3 ? true : await onboard.walletSelect()
+  const walletSelected = web3 ? true : await onboard().walletSelect()
   return walletSelected && checkWallet()
 }
 
 export const onConnectButtonClick = async (): Promise<void> => {
-  const walletSelected = await onboard.walletSelect()
+  const walletSelected = await onboard().walletSelect()
 
   // perform wallet checks only if user selected a wallet
   if (walletSelected) {

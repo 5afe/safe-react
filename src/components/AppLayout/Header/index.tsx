@@ -32,7 +32,7 @@ const HeaderComponent = (): React.ReactElement => {
     const tryToConnectToLastUsedProvider = async () => {
       const lastUsedProvider = await loadLastUsedProvider()
       if (lastUsedProvider) {
-        await onboard.walletSelect(lastUsedProvider)
+        await onboard().walletSelect(lastUsedProvider)
       }
     }
 
@@ -40,7 +40,7 @@ const HeaderComponent = (): React.ReactElement => {
   }, [])
 
   const openDashboard = () => {
-    const { wallet } = onboard.getState()
+    const { wallet } = onboard().getState()
     return wallet.type === 'sdk' && wallet.dashboard
   }
 
@@ -49,14 +49,14 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const onNetworkChange = async () => {
-    const { wallet } = onboard.getState()
+    const { wallet } = onboard().getState()
     const desiredNetwork = getNetworkId()
     try {
       await switchNetwork(wallet, desiredNetwork)
     } catch (e) {
       e.log()
       // Fallback to the onboard popup if switching isn't supported
-      await onboard.walletCheck()
+      await onboard().walletCheck()
     }
   }
 

@@ -24,7 +24,6 @@ import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
 import { configStore } from 'src/logic/config/store/actions'
 import { APP_ENV } from 'src/utils/constants'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
-import { setOnboardNetworkId } from 'src/components/ConnectButton'
 
 const styles = {
   root: {
@@ -101,7 +100,6 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
         window.location.href = safeUrl
       } else {
         setNetworkId(getNetworkName(networkId))
-        setOnboardNetworkId(networkId)
         const safeConfig = makeNetworkConfig(getConfig())
         dispatch(configStore(safeConfig))
         history.push(WELCOME_ADDRESS)
