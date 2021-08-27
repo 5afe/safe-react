@@ -5,9 +5,9 @@ import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
 import { getEntryIndex, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { AppReduxState } from 'src/store'
 
-export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
-
 type Payloads = AddressBookEntry | AddressBookState
+
+export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
 const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
@@ -60,6 +60,7 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
     },
     [ADDRESS_BOOK_ACTIONS.SAFE_LOAD]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.IMPORT]: batchLoadEntries,
+    [ADDRESS_BOOK_ACTIONS.SYNC]: (_, action: Action<AddressBookState>): AddressBookState => action.payload,
   },
   [],
 )
