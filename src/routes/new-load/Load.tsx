@@ -63,10 +63,14 @@ function Load(): ReactElement {
             <StepFormElement label={loadSafeAddressStepLabel} validate={loadSafeAddressStepValidations}>
               <LoadSafeAddressStep />
             </StepFormElement>
-            <StepFormElement label={loadSafeOwnersStepLabel} validate={loadSafeOwnersStepValidation}>
+            <StepFormElement
+              label={loadSafeOwnersStepLabel}
+              validate={loadSafeOwnersStepValidation}
+              nextButtonLabel="Review"
+            >
               <LoadSafeOwnersStep />
             </StepFormElement>
-            <StepFormElement label={reviewLoadStepLabel} validate={reviewLoadStepValidations}>
+            <StepFormElement label={reviewLoadStepLabel} validate={reviewLoadStepValidations} nextButtonLabel="Add">
               <ReviewLoadStep />
             </StepFormElement>
           </StepperForm>
