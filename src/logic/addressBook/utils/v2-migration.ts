@@ -5,11 +5,28 @@ import { getNetworkName } from 'src/config'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 import { getEntryIndex, isValidAddressBookName } from '.'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 interface StorageConfig {
   states: string[]
   namespace: string
   namespaceSeparator: string
+}
+
+const migrateChainId = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
+  const [state] = states
+  const addressBookKey = `${namespace}${namespaceSeparator}${state}`
+  const storedAddressBook = localStorage.getItem(addressBookKey)
+  let addressBookToStore: AddressBookState = storedAddressBook ? JSON.parse(storedAddressBook) : []
+
+  // TODO check if already migrated do not try again
+
+  addressBookToStore = addressBookToStore.map((entry) => {
+    return { ...entry, chainId: entry.chainId.toString() as ETHEREUM_NETWORK }
+  })
+
+  // store the mutated address book
+  localStorage.setItem(addressBookKey, JSON.stringify(addressBookToStore))
 }
 
 /**
@@ -126,6 +143,7 @@ const migrate = (storageConfig: StorageConfig): void => {
   try {
     migrateAddressBook(storageConfig)
     migrateSafeNames(storageConfig)
+    migrateChainId(storageConfig)
   } catch (e) {
     trackError(Errors._200, e.message)
   }
