@@ -28,12 +28,7 @@ const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const owners = useSelector(currentSafeOwners)
   const isSafeLoaded = owners.length > 0
-  const balancesBaseRoute = generatePath(SAFE_ROUTES.ASSETS_BASE_ROUTE, {
-    safeAddress,
-  })
-  const settingsBaseRoute = generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
-    safeAddress,
-  })
+
   const [modal, setModal] = useState({
     isOpen: false,
     title: null,
@@ -49,6 +44,13 @@ const Container = (): React.ReactElement => {
       </LoadingContainer>
     )
   }
+
+  const balancesBaseRoute = generatePath(SAFE_ROUTES.ASSETS_BASE_ROUTE, {
+    safeAddress,
+  })
+  const settingsBaseRoute = generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
+    safeAddress,
+  })
 
   const closeGenericModal = () => {
     if (modal.onClose) {
