@@ -23,6 +23,8 @@ import LoadSafeOwnersStep, { loadSafeOwnersStepLabel, loadSafeOwnersStepValidati
 import ReviewLoadStep, { reviewLoadStepLabel, reviewLoadStepValidations } from './steps/ReviewLoadStep'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
+import { APP_ENV } from 'src/utils/constants'
+import SelectNetworkStep, { selectNetworkStepLabel, selectNetworkStepValidations } from './steps/SelectNetworkStep'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -40,6 +42,8 @@ function Load(): ReactElement {
   const onSubmitLoadSafe = (values) => {
     console.log('SUBMIT LOAD SAFE', values)
   }
+
+  const isProductionEnv = APP_ENV === 'production'
   return (
     <Page>
       {provider ? (
@@ -50,8 +54,12 @@ function Load(): ReactElement {
             </IconButton>
             <Heading tag="h2">Add existing Safe</Heading>
           </Row>
-
           <StepperForm initialValues={initialValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
+            {!isProductionEnv && (
+              <StepFormElement label={selectNetworkStepLabel} validate={selectNetworkStepValidations}>
+                <SelectNetworkStep />
+              </StepFormElement>
+            )}
             <StepFormElement label={loadSafeAddressStepLabel} validate={loadSafeAddressStepValidations}>
               <LoadSafeAddressStep />
             </StepFormElement>

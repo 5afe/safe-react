@@ -8,7 +8,7 @@ type StepperFormProps = {
   testId: string
   onSubmit: (values) => void
   initialValues?: any
-  children: JSX.Element[]
+  children: (JSX.Element | false)[]
 }
 
 function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormProps): ReactElement {
