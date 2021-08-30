@@ -19,8 +19,6 @@ type StepperProviderTypes = {
   onFinish?: () => void
   store?: any
   disableNextButton?: boolean
-  nextButtonType?: string
-  nextButtonLabel?: string
   stepsComponents: ReactElement[]
   children: ReactElement
 }
@@ -29,15 +27,16 @@ function StepperProvider({
   onFinish,
   store,
   disableNextButton,
-  nextButtonType,
-  nextButtonLabel,
   stepsComponents,
   children,
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
   const steps = useMemo(() => React.Children.toArray(stepsComponents), [stepsComponents])
-  const CurrentStepComponent = steps[currentStep]
+  const CurrentStepComponent: any = steps[currentStep]
+
+  const nextButtonType = CurrentStepComponent.props.nextButtonType
+  const nextButtonLabel = CurrentStepComponent.props.nextButtonLabel
 
   const isSubmitButton = nextButtonType === 'submit'
   const isFirstStep = currentStep === 0

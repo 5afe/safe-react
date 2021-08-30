@@ -128,6 +128,8 @@ const useStyles = makeStyles((theme) => ({
 export type StepElementProps = {
   label: string
   children: JSX.Element
+  nextButtonLabel?: string
+  nextButtonType?: string
 }
 
 export type StepElementType = (props: StepElementProps) => ReactElement

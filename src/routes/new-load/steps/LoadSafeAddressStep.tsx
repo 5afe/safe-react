@@ -1,5 +1,9 @@
-import { makeStyles } from '@material-ui/core'
 import React, { ReactElement } from 'react'
+import { makeStyles } from '@material-ui/core'
+import CheckCircle from '@material-ui/icons/CheckCircle'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import { useField, useForm } from 'react-final-form'
+
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -7,9 +11,8 @@ import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import AddressInput from 'src/components/forms/AddressInput'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { useParams } from 'react-router-dom'
-import { useForm } from 'react-final-form'
-import { useStepper } from 'src/components/NewStepper/stepperContext'
+import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import { memoizedGetSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 export const FIELD_LOAD_CUSTOM_SAFE_NAME = 'customSafeName'
 export const FIELD_LOAD_SUGGESTED_SAFE_NAME = 'suggestedSafeName'
@@ -21,24 +24,21 @@ function LoadSafeAddressStep(): ReactElement {
   const classes = useStyles()
 
   const loadSafeForm = useForm()
-  const loadSafeStepper = useStepper()
+
+  const {
+    meta: { error: safeAddressError },
+  } = useField(FIELD_LOAD_SAFE_ADDRESS)
+
+  const handleScan = (value: string, closeQrModal: () => void): void => {
+    loadSafeForm.change(FIELD_LOAD_SAFE_ADDRESS, value)
+    closeQrModal()
+  }
 
   const formValues = loadSafeForm.getState().values
-
-  console.log('FORM VALUES !', formValues)
-  console.log('STEPPER VALUES', loadSafeStepper)
-
-  // TODO: handleScan
-  const handleScan = () => {}
-
   const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
-
-  // TODO: safeAddress
-  const { safeAddress } = useParams<{ safeAddress?: string }>()
 
   return (
     <>
-      {/* TODO: add more options to StepFormElementProps */}
       <Block margin="md">
         <Paragraph color="primary" noMargin size="md">
           You are about to add an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
@@ -73,24 +73,25 @@ function LoadSafeAddressStep(): ReactElement {
       </Block>
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
-          {/* TODO: configure AddressInput */}
           <AddressInput
-            defaultValue={safeAddress}
-            fieldMutator={() => {
-              // fieldMutator={(val) => {
-              // form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
+            fieldMutator={(val) => {
+              loadSafeForm.change(FIELD_LOAD_SAFE_ADDRESS, val)
             }}
             // eslint-disable-next-line
             // @ts-ignore
-            // inputAdornment={
-            //   noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
-            //     endAdornment: (
-            //       <InputAdornment position="end">
-            //         <CheckCircle className={classes.check} data-testid="valid-address" />
-            //       </InputAdornment>
-            //     ),
-            //   }
-            // }
+            inputAdornment={
+              !safeAddressError &&
+              !mustBeEthereumAddress(formValues[FIELD_LOAD_SAFE_ADDRESS]) && {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <CheckCircle
+                      className={classes.check}
+                      data-testid={`${FIELD_LOAD_SAFE_ADDRESS}-valid-address-adornment`}
+                    />
+                  </InputAdornment>
+                ),
+              }
+            }
             name={FIELD_LOAD_SAFE_ADDRESS}
             placeholder="Safe Address*"
             text="Safe Address"
@@ -106,8 +107,8 @@ function LoadSafeAddressStep(): ReactElement {
           By continuing you consent to the{' '}
           <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
-          </a>{' '}
-          and{' '}
+          </a>
+          {' and '}
           <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
@@ -120,15 +121,30 @@ function LoadSafeAddressStep(): ReactElement {
 
 export default LoadSafeAddressStep
 
-export const loadSafeAddressStepValidations = (values) => {
-  const errors = {}
+export const loadSafeAddressStepValidations = async (values: {
+  [FIELD_LOAD_SAFE_ADDRESS]: string
+}): Promise<Record<string, string>> => {
+  let errors = {}
 
-  if (!values.safeAddress) {
-    return {
-      safeAddress: 'safeAddress Required',
+  const safeAddress = values[FIELD_LOAD_SAFE_ADDRESS]
+
+  if (!safeAddress) {
+    errors = {
+      ...errors,
+      [FIELD_LOAD_SAFE_ADDRESS]: 'Required',
+    }
+    return errors
+  }
+
+  const isValidSafeAddress = mustBeEthereumAddress(safeAddress) || (await memoizedGetSafeInfo(safeAddress))
+
+  if (!isValidSafeAddress) {
+    errors = {
+      ...errors,
+      [FIELD_LOAD_SAFE_ADDRESS]: 'Address given is not a valid Safe address',
     }
   }
-  console.log('Validations of LoadSafeAddressStep', values, errors)
+
   return errors
 }
 

@@ -1,6 +1,7 @@
 import React, { JSXElementConstructor, ReactElement, useMemo, useState } from 'react'
 import { useEffect } from 'react'
 import { Form } from 'react-final-form'
+import { Validator } from '../forms/validator'
 import Stepper, { StepElement, StepElementType } from '../NewStepper/Stepper'
 import { useStepper } from '../NewStepper/stepperContext'
 
@@ -12,16 +13,15 @@ type StepperFormProps = {
 }
 
 function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormProps): ReactElement {
-  const formSteps: any = useMemo(() => React.Children.toArray(children), [children])
-  const [validate, setValidate] = useState(() => formSteps[0].props.validate)
+  const [validate, setValidate] = useState<(values) => Validator>()
   const [onSubmitForm, setOnSubmitForm] = useState<(values) => void>()
   const steps = useMemo(
     () =>
-      formSteps.map(function Step(step: any, index) {
+      React.Children.toArray(children).map(function Step(step: any, index) {
         function ComponentStep() {
           const { setCurrentStep } = useStepper()
           useEffect(() => {
-            const isLastStep = index === formSteps.length - 1
+            const isLastStep = index === React.Children.toArray(children).length - 1
             setValidate(() => step.props.validate)
             if (isLastStep) {
               setOnSubmitForm(() => (values) => onSubmit(values))
@@ -34,12 +34,17 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
           return step.props.children
         }
         return (
-          <StepElement key={step.props.label} label={step.props.label}>
+          <StepElement
+            key={step.props.label}
+            label={step.props.label}
+            nextButtonLabel={step.props.nextButtonLabel}
+            nextButtonType={'submit'}
+          >
             <ComponentStep />
           </StepElement>
         )
       }),
-    [formSteps, onSubmit],
+    [children, onSubmit],
   )
   return (
     <Form
@@ -62,7 +67,7 @@ export default StepperForm
 
 export type StepFormElementProps = {
   label: string
-  validate?: (values) => Record<string, unknown>
+  validate?: (values) => Record<string, unknown> | Promise<Record<string, string>>
   nextButtonLabel?: string
   children: ReactElement<any, string | JSXElementConstructor<any>>
 }

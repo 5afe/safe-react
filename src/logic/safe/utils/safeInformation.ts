@@ -11,3 +11,16 @@ export const getSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
     throw new CodedException(Errors._605, e.message)
   }
 }
+
+const cachedSafeInfo = {}
+
+export const memoizedGetSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
+  const safeAddressKey = safeAddress.toLocaleLowerCase?.()
+  const hasMemoizedValue = cachedSafeInfo[safeAddressKey] !== undefined
+
+  cachedSafeInfo[safeAddressKey] = hasMemoizedValue
+    ? cachedSafeInfo[safeAddressKey]
+    : await getSafeInfo(safeAddress).catch(() => null)
+
+  return cachedSafeInfo[safeAddressKey]
+}
