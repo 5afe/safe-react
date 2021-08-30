@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import StepperMUI from '@material-ui/core/Stepper'
 import StepMUI from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
@@ -12,52 +12,41 @@ import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { boldFont, lg, sm } from 'src/theme/variables'
-import { history } from 'src/store'
-
-export type StepProps = {
-  component: () => ReactElement
-  label: string
-  nextButtonLabel?: string
-}
+import { StepperProvider, useStepper } from './stepperContext'
 
 type StepperProps = {
-  steps: Array<StepProps>
-  onFinish: () => void
+  children: ReactElement[]
+  onFinish?: () => void
   disableNextButton?: boolean
+  nextButtonType?: string
 }
 
-function Stepper({ steps, onFinish, disableNextButton }: StepperProps): ReactElement {
-  const [currentStep, setCurrentStep] = useState(0)
-  const isFirstStep = currentStep === 0
-  const isLastStep = currentStep > steps.length - 2
+function StepperComponent(): ReactElement {
+  const {
+    currentStep,
+    setCurrentStep,
+    steps,
 
-  const classes = useStyles()
+    isFirstStep,
 
-  const { component: CurrentStepComponent, nextButtonLabel: customNextButtonLabel } = steps[currentStep]
+    onClickPreviousStep,
+    onClickNextStep,
 
-  const onClickPreviousStep = () => {
-    if (isFirstStep) {
-      history.goBack()
-    } else {
-      setCurrentStep((step) => step - 1)
-    }
-  }
+    disableNextButton,
+    nextButtonType,
+    customNextButtonLabel,
 
-  const onClickNextStep = () => {
-    if (isLastStep) {
-      onFinish()
-    } else {
-      setCurrentStep((step) => step + 1)
-    }
-  }
+    CurrentStepComponent,
+  } = useStepper()
 
   const backButtonLabel = isFirstStep ? 'Cancel' : 'Back'
-  const nextButtonLabel = customNextButtonLabel || 'next'
+  const nextButtonLabel = customNextButtonLabel || 'Next'
 
   return (
     <StepperMUI activeStep={currentStep} orientation="vertical">
-      {steps.map((step, index) => {
+      {steps.map(function Step(step, index) {
         const isStepLabelClickable = currentStep > index
+        const classes = useStyles({ isStepLabelClickable })
 
         function onClickLabel() {
           if (isStepLabelClickable) {
@@ -65,20 +54,14 @@ function Stepper({ steps, onFinish, disableNextButton }: StepperProps): ReactEle
           }
         }
 
-        const stepLabelStyles = {
-          cursor: isStepLabelClickable ? 'pointer' : 'inherit',
-        }
-
         return (
-          <StepMUI key={step.label}>
-            <StepLabel onClick={onClickLabel} style={stepLabelStyles}>
-              {step.label}
+          <StepMUI key={step.props.label}>
+            <StepLabel onClick={onClickLabel} className={classes.stepLabel}>
+              {step.props.label}
             </StepLabel>
             <StepContent>
               <Paper className={classes.root} elevation={1}>
-                <Block className={classes.padding}>
-                  <CurrentStepComponent />
-                </Block>
+                <Block className={classes.padding}>{CurrentStepComponent}</Block>
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
@@ -88,6 +71,7 @@ function Stepper({ steps, onFinish, disableNextButton }: StepperProps): ReactEle
                     <Button
                       onClick={onClickNextStep}
                       color="primary"
+                      type={nextButtonType || 'button'}
                       disabled={disableNextButton}
                       size="small"
                       className={classes.nextButton}
@@ -106,7 +90,13 @@ function Stepper({ steps, onFinish, disableNextButton }: StepperProps): ReactEle
   )
 }
 
-export default Stepper
+export default function Stepper(props: StepperProps): ReactElement {
+  return (
+    <StepperProvider stepsComponents={props.children} {...props}>
+      <StepperComponent />
+    </StepperProvider>
+  )
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -130,4 +120,18 @@ const useStyles = makeStyles((theme) => ({
   nextButton: {
     fontWeight: boldFont,
   },
+  stepLabel: {
+    cursor: ({ isStepLabelClickable }: any) => (isStepLabelClickable ? 'pointer' : 'inherit'),
+  },
 }))
+
+export type StepElementProps = {
+  label: string
+  children: JSX.Element
+}
+
+export type StepElementType = (props: StepElementProps) => ReactElement
+
+export function StepElement({ children }: StepElementProps): ReactElement {
+  return children
+}
