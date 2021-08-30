@@ -62,7 +62,7 @@ export default StepperForm
 
 export type StepFormElementProps = {
   label: string
-  validate: (values) => Record<string, unknown>
+  validate?: (values) => Record<string, unknown>
   nextButtonLabel?: string
   children: ReactElement<any, string | JSXElementConstructor<any>>
 }
