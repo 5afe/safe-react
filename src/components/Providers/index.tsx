@@ -5,7 +5,9 @@ import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { Store } from 'redux'
 import { History } from 'history'
-import { Theme } from '@gnosis.pm/safe-react-components/dist/theme'
+import { theme } from '@gnosis.pm/safe-react-components'
+
+declare type Theme = typeof theme
 
 type ProvidersProps = {
   children: ReactNode
