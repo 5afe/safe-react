@@ -1,11 +1,10 @@
-import { fireEvent, screen } from '@testing-library/react'
 import Footer from './index'
 import CookiesBanner from 'src/components/CookiesBanner'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { render, fireEvent, screen } from 'src/utils/test-utils'
 
 describe('<Footer>', () => {
   it('Should render Footer component', () => {
-    const { container } = renderWithProviders(<Footer />)
+    const { container } = render(<Footer />)
 
     const footerNode = container.querySelector('footer')
 
@@ -13,7 +12,7 @@ describe('<Footer>', () => {
   })
 
   it('Should show footer links', () => {
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const gnosisCopyrightNode = screen.getByText(/©\d{4} Gnosis/)
 
@@ -39,7 +38,7 @@ describe('<Footer>', () => {
   })
 
   it('Should redirect to Terms and Conditions page in a new tab', () => {
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const termsLinkNode = screen.getByText('Terms')
 
@@ -48,7 +47,7 @@ describe('<Footer>', () => {
   })
 
   it('Should redirect to Privacy Policy page in a new tab', () => {
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const privacyLinkNode = screen.getByText('Privacy')
 
@@ -57,7 +56,7 @@ describe('<Footer>', () => {
   })
 
   it('Should redirect to Licenses page in a new tab', () => {
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const LicensesLinkNode = screen.getByText('Licenses')
 
@@ -66,7 +65,7 @@ describe('<Footer>', () => {
   })
 
   it('Should redirect to Imprint page in a new tab', () => {
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const imprintLinkNode = screen.getByText('Imprint')
 
@@ -75,7 +74,7 @@ describe('<Footer>', () => {
   })
 
   it('Should redirect to Cookie Policy page in a new tab', () => {
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const cookiePolicyLinkNode = screen.getByText('Cookie Policy')
 
@@ -84,7 +83,7 @@ describe('<Footer>', () => {
   })
 
   it('Should show preference cookies banner form when clicks on Preferences Link', () => {
-    renderWithProviders(
+    render(
       <>
         <Footer />
         <CookiesBanner />
@@ -103,7 +102,7 @@ describe('<Footer>', () => {
   it('Should show the current Safe React version if its defined in environment variables', () => {
     process.env.REACT_APP_APP_VERSION = '1.1.1'
 
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const safeReactVersionNode = screen.getByText('v1.1.1')
 
@@ -115,7 +114,7 @@ describe('<Footer>', () => {
   it('should show Versions text if no version of Safe React is defined', () => {
     process.env.REACT_APP_APP_VERSION = undefined
 
-    renderWithProviders(<Footer />)
+    render(<Footer />)
 
     const safeReactVersionNode = screen.getByText('Versions')
 

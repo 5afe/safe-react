@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, fireEvent, screen } from 'src/utils/test-utils'
 import GnoButton from './index'
 
 describe('<GnoButton>', () => {

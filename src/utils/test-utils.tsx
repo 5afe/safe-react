@@ -20,4 +20,5 @@ function renderWithProviders(Components: ReactElement, customState?: any): Rende
   )
 }
 
-export { renderWithProviders }
+export * from '@testing-library/react'
+export { renderWithProviders as render }

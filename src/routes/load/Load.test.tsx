@@ -1,8 +1,7 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { getClientGatewayUrl } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { mockedEndpoints } from 'src/setupTests'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { render, fireEvent, screen, waitFor } from 'src/utils/test-utils'
 import Load from './container/Load'
 
 const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
@@ -21,14 +20,14 @@ describe('<Load>', () => {
       },
     }
 
-    renderWithProviders(<Load />, customState)
+    render(<Load />, customState)
 
     expect(screen.getByText('Add existing Safe', { selector: 'h2' })).toBeInTheDocument()
     expect(screen.getByTestId('load-safe-form')).toBeInTheDocument()
   })
 
   it('Should show a No account detected error message if no wallet is connected', () => {
-    renderWithProviders(<Load />)
+    render(<Load />)
 
     expect(screen.getByText('No account detected')).toBeInTheDocument()
   })
@@ -51,7 +50,7 @@ describe('<Load>', () => {
 
       const validSafeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
 
-      renderWithProviders(<Load />, customState)
+      render(<Load />, customState)
 
       expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(0)
 
@@ -79,7 +78,7 @@ describe('<Load>', () => {
         },
       }
 
-      renderWithProviders(<Load />, customState)
+      render(<Load />, customState)
 
       const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
 
@@ -117,7 +116,7 @@ describe('<Load>', () => {
 
       const validSafeAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
 
-      renderWithProviders(<Load />, customState)
+      render(<Load />, customState)
 
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
 
@@ -155,7 +154,7 @@ describe('<Load>', () => {
         (validSafeENSNameDomain) => new Promise((resolve) => resolve(ensDomains[validSafeENSNameDomain])),
       )
 
-      renderWithProviders(<Load />, customState)
+      render(<Load />, customState)
 
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field') as HTMLInputElement
 
@@ -189,7 +188,7 @@ describe('<Load>', () => {
         (notExistingENSNameDomain) => new Promise((reject) => reject(notExistingENSNameDomain)),
       )
 
-      renderWithProviders(<Load />, customState)
+      render(<Load />, customState)
 
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field') as HTMLInputElement
 
@@ -236,7 +235,7 @@ describe('<Load>', () => {
         (inValidSafeAddress) => new Promise((resolve) => resolve(ensDomains[inValidSafeAddress])),
       )
 
-      renderWithProviders(<Load />, customState)
+      render(<Load />, customState)
 
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field') as HTMLInputElement
 

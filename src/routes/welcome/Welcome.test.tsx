@@ -1,17 +1,16 @@
-import { fireEvent, screen } from '@testing-library/react'
 import { onboard } from 'src/components/ConnectButton'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { render, fireEvent, screen } from 'src/utils/test-utils'
 import Welcome from './container'
 
 describe('<Welcome>', () => {
   it('Should render Welcome container', () => {
-    renderWithProviders(<Welcome />)
+    render(<Welcome />)
 
     expect(screen.getByText('Welcome to Gnosis Safe.')).toBeInTheDocument()
   })
 
   it('Connect wallet button should not be disabled if no wallet is selected', () => {
-    renderWithProviders(<Welcome />)
+    render(<Welcome />)
 
     const connectWalletButton = screen.getByTestId('connect-btn') as HTMLButtonElement
 
@@ -21,7 +20,7 @@ describe('<Welcome>', () => {
   it('Should prompt user to select a wallet when clicks on Connect wallet button', () => {
     const showSelectWalletPromptSpy = jest.spyOn(onboard, 'walletSelect')
 
-    renderWithProviders(<Welcome />)
+    render(<Welcome />)
 
     expect(showSelectWalletPromptSpy).not.toHaveBeenCalled()
 
@@ -49,7 +48,7 @@ describe('<Welcome>', () => {
       },
     }
 
-    renderWithProviders(<Welcome />, customState)
+    render(<Welcome />, customState)
 
     const connectWalletButton = screen.getByTestId('connect-btn') as HTMLButtonElement
 
@@ -71,7 +70,7 @@ describe('<Welcome>', () => {
 
     expect(window.location.href).toBe('http://localhost/')
 
-    renderWithProviders(<Welcome />, customState)
+    render(<Welcome />, customState)
 
     const createNewSafeLinkNode = screen.getByText('+ Create new Safe')
 
@@ -95,7 +94,7 @@ describe('<Welcome>', () => {
 
     expect(window.location.href).toBe('http://localhost/')
 
-    renderWithProviders(<Welcome />, customState)
+    render(<Welcome />, customState)
 
     const addExistingSafeLinkNode = screen.getByRole('button', {
       name: 'Add existing Safe',
