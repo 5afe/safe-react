@@ -12,10 +12,11 @@ export const getSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
   }
 }
 
+// FIXME: DO NOT store cache in this way!!!
 const cachedSafeInfo = {}
 
-export const memoizedGetSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
-  const safeAddressKey = safeAddress.toLocaleLowerCase?.()
+export const memoizedGetSafeInfo = async (safeAddress = ''): Promise<SafeInfo> => {
+  const safeAddressKey = safeAddress.toLocaleLowerCase()
   const hasMemoizedValue = cachedSafeInfo[safeAddressKey] !== undefined
 
   cachedSafeInfo[safeAddressKey] = hasMemoizedValue

@@ -19,7 +19,7 @@ import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
   loadSafeAddressStepValidations,
 } from './steps/LoadSafeAddressStep'
-import LoadSafeOwnersStep, { loadSafeOwnersStepLabel, loadSafeOwnersStepValidation } from './steps/LoadSafeOwnersStep'
+import LoadSafeOwnersStep, { loadSafeOwnersStepLabel } from './steps/LoadSafeOwnersStep'
 import ReviewLoadStep, { reviewLoadStepLabel, reviewLoadStepValidations } from './steps/ReviewLoadStep'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
@@ -63,11 +63,7 @@ function Load(): ReactElement {
             <StepFormElement label={loadSafeAddressStepLabel} validate={loadSafeAddressStepValidations}>
               <LoadSafeAddressStep />
             </StepFormElement>
-            <StepFormElement
-              label={loadSafeOwnersStepLabel}
-              validate={loadSafeOwnersStepValidation}
-              nextButtonLabel="Review"
-            >
+            <StepFormElement label={loadSafeOwnersStepLabel} nextButtonLabel="Review">
               <LoadSafeOwnersStep />
             </StepFormElement>
             <StepFormElement label={reviewLoadStepLabel} validate={reviewLoadStepValidations} nextButtonLabel="Add">

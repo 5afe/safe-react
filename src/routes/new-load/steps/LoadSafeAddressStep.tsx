@@ -13,6 +13,7 @@ import AddressInput from 'src/components/forms/AddressInput'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { memoizedGetSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { lg } from 'src/theme/variables'
 
 export const FIELD_LOAD_CUSTOM_SAFE_NAME = 'customSafeName'
 export const FIELD_LOAD_SUGGESTED_SAFE_NAME = 'suggestedSafeName'
@@ -38,7 +39,7 @@ function LoadSafeAddressStep(): ReactElement {
   const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
 
   return (
-    <>
+    <Block className={classes.padding}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="md">
           You are about to add an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
@@ -115,7 +116,7 @@ function LoadSafeAddressStep(): ReactElement {
           .
         </Paragraph>
       </Block>
-    </>
+    </Block>
   )
 }
 
@@ -153,6 +154,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     maxWidth: '460px',
     marginTop: '12px',
+  },
+  padding: {
+    padding: lg,
   },
   check: {
     color: '#03AE60',
