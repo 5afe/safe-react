@@ -14,6 +14,7 @@ import Providers from '../Providers'
 import './index.module.scss'
 import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
+import StoreMigrator from '../StoreMigrator'
 
 const Root = (): React.ReactElement => (
   <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
@@ -25,6 +26,7 @@ const Root = (): React.ReactElement => (
             <Loader size="md" />
           </LoadingContainer>,
         )}
+        <StoreMigrator />
       </App>
     </Sentry.ErrorBoundary>
   </Providers>
