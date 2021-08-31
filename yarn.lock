@@ -2549,12 +2549,11 @@
   resolved "https://registry.npmjs.org/@gnosis.pm/safe-deployments/-/safe-deployments-1.1.0.tgz"
   integrity sha512-eIH4gvBQLEksQXFN2vOG+JZpdSCR+q6uoZD7n8Jx/PF2nIaWVYV1CWo6kbWDwfwzgAQkDddM+8WBjnc84fbB+Q==
 
-"@gnosis.pm/safe-react-components@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.npmjs.org/@gnosis.pm/safe-react-components/-/safe-react-components-0.7.0.tgz"
-  integrity sha512-e2cON1P61parOGxvtIlQH3CqxpSFzK8nKOBKh4XPm2FIoH1lCanf3EUjWdvdNE2EAsgn33T5ErsC3R+pPywISQ==
+"@gnosis.pm/safe-react-components@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.0.tgz#1c957f53c08833f9c8f2f2908c19b6823f573578"
+  integrity sha512-IZy1Mv3y93QBi0Edph85mhKnndc4Uo6uHe5dmz8MHe3htNWa0JxwsI3Afrzqqidvx+LLNsfguNvpu/ZRHbycvw==
   dependencies:
-    classnames "^2.2.6"
     react-media "^1.10.0"
 
 "@gnosis.pm/safe-react-gateway-sdk@^2.2.1":
