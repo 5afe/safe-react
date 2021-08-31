@@ -55,7 +55,7 @@ type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
-export const isKeystoneError = (err: Error) => {
+export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
