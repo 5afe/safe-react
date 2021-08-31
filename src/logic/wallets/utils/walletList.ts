@@ -35,6 +35,12 @@ const wallets = (): Wallet[] => [
     rpcUrl,
     LedgerTransport: (window as any).TransportNodeHid,
   },
+  {
+    walletName: WALLETS.KEYSTONE,
+    desktop: false,
+    rpcUrl,
+    appName: 'Gnosis Safe',
+  },
   { walletName: WALLETS.TRUST, preferred: true, desktop: false },
   {
     walletName: WALLETS.LATTICE,
