@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { makeStyles } from '@material-ui/core'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -12,8 +12,14 @@ import TextField from 'src/components/forms/TextField'
 import AddressInput from 'src/components/forms/AddressInput'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
-import { memoizedGetSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { lg } from 'src/theme/variables'
+import { useEffect } from 'react'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { useSelector } from 'react-redux'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { FIELD_SAFE_THRESHOLD } from './ReviewLoadStep'
+import { FIELD_SAFE_OWNER_LIST } from './LoadSafeOwnersStep'
 
 export const FIELD_LOAD_CUSTOM_SAFE_NAME = 'customSafeName'
 export const FIELD_LOAD_SUGGESTED_SAFE_NAME = 'suggestedSafeName'
@@ -22,13 +28,60 @@ export const FIELD_LOAD_SAFE_ADDRESS = 'safeAddress'
 export const loadSafeAddressStepLabel = 'Name and address'
 
 function LoadSafeAddressStep(): ReactElement {
+  const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
+  const [threshold, setThreshold] = useState<number>()
+  const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
+
   const classes = useStyles()
 
   const loadSafeForm = useForm()
+  const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   const {
+    input: { value: safeAddress },
     meta: { error: safeAddressError },
   } = useField(FIELD_LOAD_SAFE_ADDRESS)
+
+  useEffect(() => {
+    setOwnersWithName([])
+    setThreshold(undefined)
+    setIsValidSafeAddress(false)
+  }, [safeAddress])
+
+  useEffect(() => {
+    async function checkSafeAddress() {
+      const isValidSafeAddress = safeAddress && !mustBeEthereumAddress(safeAddress)
+      if (isValidSafeAddress) {
+        try {
+          const { owners, threshold }: SafeInfo = await getSafeInfo(safeAddress)
+          const ownersWithName = owners.map(({ value: address }) =>
+            makeAddressBookEntry(addressBook[address] || { address, name: '' }),
+          )
+          setOwnersWithName(ownersWithName)
+          setThreshold(threshold)
+          setIsValidSafeAddress(true)
+        } catch (error) {
+          setOwnersWithName([])
+          setThreshold(undefined)
+          setIsValidSafeAddress(false)
+        }
+      }
+    }
+
+    checkSafeAddress()
+  }, [safeAddress, addressBook])
+
+  useEffect(() => {
+    if (threshold) {
+      loadSafeForm.change(FIELD_SAFE_THRESHOLD, threshold)
+    }
+  }, [threshold, loadSafeForm])
+
+  useEffect(() => {
+    if (ownersWithName) {
+      loadSafeForm.change(FIELD_SAFE_OWNER_LIST, ownersWithName)
+    }
+  }, [ownersWithName, loadSafeForm])
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
     loadSafeForm.change(FIELD_LOAD_SAFE_ADDRESS, value)
@@ -81,8 +134,8 @@ function LoadSafeAddressStep(): ReactElement {
             // eslint-disable-next-line
             // @ts-ignore
             inputAdornment={
-              !safeAddressError &&
-              !mustBeEthereumAddress(formValues[FIELD_LOAD_SAFE_ADDRESS]) && {
+              isValidSafeAddress &&
+              !safeAddressError && {
                 endAdornment: (
                   <InputAdornment position="end">
                     <CheckCircle
@@ -122,12 +175,14 @@ function LoadSafeAddressStep(): ReactElement {
 
 export default LoadSafeAddressStep
 
-export const loadSafeAddressStepValidations = async (values: {
+export const loadSafeAddressStepValidations = (values: {
   [FIELD_LOAD_SAFE_ADDRESS]: string
-}): Promise<Record<string, string>> => {
+  [FIELD_SAFE_OWNER_LIST]: string
+}): Record<string, string> => {
   let errors = {}
 
   const safeAddress = values[FIELD_LOAD_SAFE_ADDRESS]
+  const ownerList = values[FIELD_SAFE_OWNER_LIST]
 
   if (!safeAddress) {
     errors = {
@@ -137,7 +192,11 @@ export const loadSafeAddressStepValidations = async (values: {
     return errors
   }
 
-  const isValidSafeAddress = mustBeEthereumAddress(safeAddress) || (await memoizedGetSafeInfo(safeAddress))
+  const hasOwners = ownerList.length > 0
+
+  const isValidSafeAddress = safeAddress && !mustBeEthereumAddress(safeAddress) && hasOwners
+
+  // TODO: Create a isLoading in the form and return a isLoading error instead of a SafeAddress error
 
   if (!isValidSafeAddress) {
     errors = {

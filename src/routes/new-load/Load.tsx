@@ -19,12 +19,13 @@ import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
   loadSafeAddressStepValidations,
 } from './steps/LoadSafeAddressStep'
-import LoadSafeOwnersStep, { loadSafeOwnersStepLabel } from './steps/LoadSafeOwnersStep'
-import ReviewLoadStep, { reviewLoadStepLabel, reviewLoadStepValidations } from './steps/ReviewLoadStep'
+import LoadSafeOwnersStep, { FIELD_SAFE_OWNER_LIST, loadSafeOwnersStepLabel } from './steps/LoadSafeOwnersStep'
+import ReviewLoadStep, { reviewLoadStepLabel } from './steps/ReviewLoadStep'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import { APP_ENV } from 'src/utils/constants'
 import SelectNetworkStep, { selectNetworkStepLabel, selectNetworkStepValidations } from './steps/SelectNetworkStep'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -36,11 +37,35 @@ function Load(): ReactElement {
   const initialValues = {
     [FIELD_LOAD_SUGGESTED_SAFE_NAME]: getRandomName('safe'),
     [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
+    [FIELD_SAFE_OWNER_LIST]: [],
   }
 
   // TODO: onsubmit
-  const onSubmitLoadSafe = (values) => {
+  const onSubmitLoadSafe = async (values) => {
     console.log('SUBMIT LOAD SAFE', values)
+
+    const safeAddress = values[FIELD_LOAD_SAFE_ADDRESS]
+
+    if (!isValidAddress(safeAddress)) {
+      return
+    }
+
+    //TODO: update addressBook
+    // dispatch(addressBookSafeLoad([...owners, safe]))
+
+    //TODO: Load Safe
+    // const safeProps = await buildSafe(safeAddress)
+    // const storedSafes = (await loadStoredSafes()) || {}
+    // storedSafes[safeAddress] = safeProps
+    // await saveSafes(storedSafes)
+    // await  dispatch(addOrUpdateSafe(safeProps)
+
+    //TODO: Redirect to your new Safe!
+    // history.push(
+    //   generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+    //     safeAddress,
+    //   }),
+    // )
   }
 
   const isProductionEnv = APP_ENV === 'production'
@@ -66,7 +91,7 @@ function Load(): ReactElement {
             <StepFormElement label={loadSafeOwnersStepLabel} nextButtonLabel="Review">
               <LoadSafeOwnersStep />
             </StepFormElement>
-            <StepFormElement label={reviewLoadStepLabel} validate={reviewLoadStepValidations} nextButtonLabel="Add">
+            <StepFormElement label={reviewLoadStepLabel} nextButtonLabel="Add">
               <ReviewLoadStep />
             </StepFormElement>
           </StepperForm>

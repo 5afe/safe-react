@@ -1,9 +1,6 @@
 import { makeStyles, TableContainer } from '@material-ui/core'
 import React, { ReactElement } from 'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
 import { useForm } from 'react-final-form'
-import { useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -12,45 +9,21 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
-import { memoizedGetSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
-import { FIELD_LOAD_SAFE_ADDRESS } from './LoadSafeAddressStep'
 import { minMaxLength } from 'src/components/forms/validator'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
-import { FIELD_SAFE_THRESHOLD } from './ReviewLoadStep'
 
 export const loadSafeOwnersStepLabel = 'Owners'
 
+export const FIELD_SAFE_OWNER_LIST = 'safeOwnerList'
+
 function LoadSafeOwnersStep(): ReactElement {
   const loadSafeForm = useForm()
-  const safeAddress = loadSafeForm.getState().values[FIELD_LOAD_SAFE_ADDRESS]
-  const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
-  const [threshold, setThreshold] = useState<number>()
-  const addressBook = useSelector(currentNetworkAddressBookAsMap)
+
+  const ownersWithName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_LIST]
 
   const classes = useStyles()
-
-  useEffect(() => {
-    async function setSafeOwners() {
-      const { owners, threshold }: SafeInfo = await memoizedGetSafeInfo(safeAddress)
-      const ownersWithName = owners.map(({ value: address }) =>
-        makeAddressBookEntry(addressBook[address] || { address, name: '' }),
-      )
-      setOwnersWithName(ownersWithName)
-      setThreshold(threshold)
-    }
-
-    setSafeOwners()
-  }, [safeAddress, addressBook])
-
-  useEffect(() => {
-    if (threshold) {
-      loadSafeForm.change(FIELD_SAFE_THRESHOLD, threshold)
-    }
-  }, [threshold, loadSafeForm])
 
   return (
     <>
