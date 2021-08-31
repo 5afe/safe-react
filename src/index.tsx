@@ -6,7 +6,6 @@ import { Integrations } from '@sentry/tracing'
 
 import Root from 'src/components/Root'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
-import loadDefaultSafe from 'src/logic/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { store } from 'src/store'
 import { SENTRY_DSN } from './utils/constants'
@@ -17,7 +16,6 @@ disableMMAutoRefreshWarning()
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 
 store.dispatch(loadSafesFromStorage())
-store.dispatch(loadDefaultSafe())
 store.dispatch(loadCurrentSessionFromStorage())
 
 Sentry.init({

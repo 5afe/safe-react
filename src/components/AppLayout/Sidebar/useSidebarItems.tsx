@@ -58,7 +58,7 @@ const useSidebarItems = (): ListItemType[] => {
   )
 
   return useMemo((): ListItemType[] => {
-    if (!matchSafe || !matchSafeWithAction || !featuresEnabled) {
+    if (!matchSafe || !matchSafeWithAction || !featuresEnabled || !safeAddress) {
       return []
     }
 
@@ -145,6 +145,7 @@ const useSidebarItems = (): ListItemType[] => {
     matchSafe,
     matchSafeWithAction,
     needsUpdate,
+    safeAddress,
     safeAppsEnabled,
   ])
 }

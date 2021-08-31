@@ -13,6 +13,7 @@ import Providers from '../Providers'
 
 import './index.module.scss'
 import './OnboardCustom.module.scss'
+import './KeystoneCustom.module.scss'
 
 const Root = (): React.ReactElement => (
   <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
