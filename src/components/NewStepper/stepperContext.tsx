@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, useContext, useMemo, useState } from 'react'
+import React, { createContext, ReactElement, useContext, useState } from 'react'
 import { history } from 'src/store'
 
 const stepperContext = createContext({})
@@ -32,7 +32,7 @@ function StepperProvider({
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
-  const steps = useMemo(() => React.Children.toArray(stepsComponents), [stepsComponents])
+  const steps = stepsComponents
   const CurrentStepComponent: any = steps[currentStep]
 
   const nextButtonType = CurrentStepComponent.props.nextButtonType

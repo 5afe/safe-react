@@ -17,11 +17,11 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
   const [onSubmitForm, setOnSubmitForm] = useState<(values) => void>()
   const steps = useMemo(
     () =>
-      React.Children.toArray(children).map(function Step(step: any, index) {
+      children.map(function Step(step: any, index) {
         function ComponentStep() {
           const { setCurrentStep } = useStepper()
           useEffect(() => {
-            const isLastStep = index === React.Children.toArray(children).length - 1
+            const isLastStep = index === children.length - 1
             setValidate(() => step.props.validate)
             if (isLastStep) {
               setOnSubmitForm(() => (values) => onSubmit(values))
