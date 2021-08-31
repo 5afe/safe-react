@@ -2,6 +2,8 @@ import React, { ReactElement } from 'react'
 
 export const reviewLoadStepLabel = 'Review'
 
+export const FIELD_SAFE_THRESHOLD = 'safeThreshold'
+
 function ReviewLoadStep(): ReactElement {
   return (
     <div>

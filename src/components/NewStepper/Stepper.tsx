@@ -6,7 +6,6 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/'
 
-import Block from '../layout/Block'
 import Hairline from '../layout/Hairline'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -61,7 +60,7 @@ function StepperComponent(): ReactElement {
             </StepLabel>
             <StepContent>
               <Paper className={classes.root} elevation={1}>
-                <Block className={classes.padding}>{CurrentStepComponent}</Block>
+                {CurrentStepComponent}
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
@@ -103,9 +102,6 @@ const useStyles = makeStyles((theme) => ({
     margin: '10px 0 10px 10px',
     maxWidth: '770px',
     boxShadow: '0 0 10px 0 rgba(33,48,77,0.10)',
-  },
-  padding: {
-    padding: lg,
   },
   controlStyle: {
     backgroundColor: 'white',
