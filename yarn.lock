@@ -2557,12 +2557,12 @@
     classnames "^2.2.6"
     react-media "^1.10.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.0.1.tgz#e97a8f5aa3ffb90848e72c6d5a38984c07e3debb"
-  integrity sha512-4nX/yj1Qj4zIxryzW4QDFQXAzY8AV8DxwrP7Y1ZPYH/XZh+wTFTd5h5fYizcQhI51Pou2Th9tZekMqbNTGoJOw==
+"@gnosis.pm/safe-react-gateway-sdk@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.2.1.tgz#5dbd41358c3266f13da2f3e83fce535e68876e76"
+  integrity sha512-RmZ+ymOwH3cRlPnIH8HgU10bqV9RtxyuliIff0/ncLO/Q5H0e3mC9sCAmA7yTizrj+Dhr00OVo87ckRZA/m49Q==
   dependencies:
-    unfetch "^4.2.0"
+    isomorphic-unfetch "^3.1.0"
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -13210,6 +13210,14 @@ isobject@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/isobject/-/isobject-4.0.0.tgz"
   integrity sha512-S/2fF5wH8SJA/kmwr6HYhK/RI/OkhD84k8ntalo0iJjZikgq1XFvR5M8NPT1x5F7fBwCG3qHfnzeP/Vh/ZxCUA==
+
+isomorphic-unfetch@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-unfetch/-/isomorphic-unfetch-3.1.0.tgz#87341d5f4f7b63843d468438128cb087b7c3e98f"
+  integrity sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==
+  dependencies:
+    node-fetch "^2.6.1"
+    unfetch "^4.2.0"
 
 isstream@~0.1.2:
   version "0.1.2"
