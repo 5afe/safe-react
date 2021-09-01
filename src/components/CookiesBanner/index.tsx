@@ -189,7 +189,7 @@ const CookiesBanner = (): ReactElement => {
   const CookiesBannerForm = (props: CookiesBannerFormProps) => {
     const { alertMessage } = props
     return (
-      <div className={classes.container}>
+      <div data-testid="cookies-banner-form" className={classes.container}>
         <div className={classes.content}>
           {alertMessage && (
             <div className={classes.intercomAlert}>

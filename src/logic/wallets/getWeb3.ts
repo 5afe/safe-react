@@ -26,6 +26,7 @@ export enum WALLET_PROVIDER {
   LEDGER = 'LEDGER',
   TREZOR = 'TREZOR',
   LATTICE = 'LATTICE',
+  KEYSTONE = 'KEYSTONE',
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
