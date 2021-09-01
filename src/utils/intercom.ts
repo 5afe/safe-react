@@ -5,7 +5,7 @@ import { INTERCOM_ID } from 'src/utils/constants'
 
 let intercomLoaded = false
 
-export const isIntercomLoaded = () => intercomLoaded
+export const isIntercomLoaded = (): boolean => intercomLoaded
 
 const getIntercomUserId = async () => {
   const cookiesState = await loadFromCookie(COOKIES_KEY_INTERCOM)
