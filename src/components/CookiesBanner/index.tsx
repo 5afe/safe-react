@@ -112,6 +112,12 @@ const CookiesBanner = (): ReactElement => {
   const isSafeAppView = newAppUrl !== null
 
   useEffect(() => {
+    if (showIntercom && !isSafeAppView) {
+      loadIntercom()
+    }
+  }, [showIntercom, isSafeAppView])
+
+  useEffect(() => {
     if (intercomLoaded && isSafeAppView) {
       closeIntercom()
     }
@@ -180,10 +186,6 @@ const CookiesBanner = (): ReactElement => {
       closeIntercom()
     }
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
-  }
-
-  if (showIntercom && !isSafeAppView) {
-    loadIntercom()
   }
 
   const CookiesBannerForm = (props: CookiesBannerFormProps) => {
