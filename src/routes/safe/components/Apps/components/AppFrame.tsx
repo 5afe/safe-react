@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
+import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { Loader, Title, Card } from '@gnosis.pm/safe-react-components'
 import {
@@ -7,6 +7,7 @@ import {
   MethodToResponse,
   RPCPayload,
   Methods,
+  SignMessageParams,
 } from '@gnosis.pm/safe-apps-sdk'
 import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -32,6 +33,8 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { useSignMessageModal } from '../hooks/useSignMessageModal'
+import { SignMessageModal } from './SignMessageModal'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -95,6 +98,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
+  const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
 
   const redirectToBalance = () =>
     history.push(
@@ -222,7 +226,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold])
+
+    communicator?.on(Methods.signMessage, async (msg) => {
+      const { message } = msg.data.params as SignMessageParams
+
+      openSignMessageModal(message, msg.data.id)
+    })
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     // Safe Apps SDK V1 Handler
@@ -318,6 +328,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
       />
+
+      <SignMessageModal isOpen={confirmTransactionModal.isOpen} />
     </AppWrapper>
   )
 }

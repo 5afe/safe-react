@@ -38,7 +38,7 @@ const isTxValid = (t: Transaction): boolean => {
 
 export type DecodedTxDetail = DecodedDataParameterValue | DecodedData | undefined
 
-export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null => {
+export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
   const [decodedTxDetails, setDecodedTxDetails] = useState<DecodedTxDetail>()
   const areTxsMalformed = props.txs.some((t) => !isTxValid(t))
 
