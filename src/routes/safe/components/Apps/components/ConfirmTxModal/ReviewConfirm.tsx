@@ -81,6 +81,7 @@ export const ReviewConfirm = ({
   onClose,
   onTxReject,
   areTxsMalformed,
+  requestId,
   showDecodedTxData,
 }: Props): ReactElement => {
   const isMultiSend = txs.length > 1
@@ -138,12 +139,12 @@ export const ReviewConfirm = ({
   }, [txData])
 
   const handleTxRejection = () => {
-    onTxReject()
+    onTxReject(requestId)
     onClose()
   }
 
   const handleUserConfirmation = (safeTxHash: string): void => {
-    onUserConfirm(safeTxHash)
+    onUserConfirm(safeTxHash, requestId)
     onClose()
   }
 

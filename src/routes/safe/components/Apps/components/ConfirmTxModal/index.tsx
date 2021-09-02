@@ -1,5 +1,6 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
+import { RequestId } from '@gnosis.pm/safe-apps-sdk'
 
 import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
@@ -17,9 +18,10 @@ export type ConfirmTxModalProps = {
   params?: TransactionParams
   safeAddress: string
   safeName: string
+  requestId: RequestId
   ethBalance: string
-  onUserConfirm: (safeTxHash: string) => void
-  onTxReject: () => void
+  onUserConfirm: (safeTxHash: string, requestId: RequestId) => void
+  onTxReject: (requestId: RequestId) => void
   onClose: () => void
 }
 

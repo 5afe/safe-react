@@ -8,10 +8,11 @@ import {
   RPCPayload,
   Methods,
   SignMessageParams,
+  RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
 import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
+import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -234,7 +235,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     })
   }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
 
-  const onUserTxConfirm = (safeTxHash: string) => {
+  const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_CONFIRMED, data: { safeTxHash } },
@@ -242,10 +243,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId as string)
+    communicator?.send({ safeTxHash }, requestId as string)
   }
 
-  const onTxReject = () => {
+  const onTxReject = (requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
@@ -253,7 +254,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId as string, true)
+    communicator?.send('Transaction was rejected', requestId as string, true)
   }
 
   useEffect(() => {
@@ -324,12 +325,24 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         safeName={safeName as string}
         txs={confirmTransactionModal.txs}
         onClose={closeConfirmationModal}
+        requestId={confirmTransactionModal.requestId}
         onUserConfirm={onUserTxConfirm}
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
       />
 
-      <SignMessageModal isOpen={confirmTransactionModal.isOpen} />
+      <SignMessageModal
+        isOpen={signMessageModalState.isOpen}
+        app={safeApp as SafeApp}
+        safeAddress={safeAddress}
+        ethBalance={ethBalance as string}
+        safeName={safeName as string}
+        onClose={closeSignMessageModal}
+        requestId={signMessageModalState.requestId}
+        message={signMessageModalState.message}
+        onUserConfirm={onUserTxConfirm}
+        onTxReject={onTxReject}
+      />
     </AppWrapper>
   )
 }
