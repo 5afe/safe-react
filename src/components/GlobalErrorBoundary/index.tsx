@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import styled from 'styled-components'
 import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
 
 import { IS_PRODUCTION } from 'src/utils/constants'
+import { getLocalStorageWithExpiry, setLocalStorageWithExpiry } from 'src/utils/storage'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -49,7 +50,20 @@ type Props = {
   resetError: () => void
 }
 
-const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.ReactElement => {
+const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.ReactElement | null => {
+  // When loading app during release, chunk load failure may occur
+  useEffect(() => {
+    const chunkFailedMessage = /Loading chunk [\d]+ failed/
+    const isChunkError = error?.message && chunkFailedMessage.test(error.message)
+
+    // Reload page and set chunk error flag to prevent infinite reload loop
+    if (isChunkError && !getLocalStorageWithExpiry('chunk_failed')) {
+      // Expires after 10 seconds
+      setLocalStorageWithExpiry('chunk_failed', 'true', 10000)
+      window.location.reload()
+    }
+  }, [error])
+
   return (
     <Wrapper>
       <Content>

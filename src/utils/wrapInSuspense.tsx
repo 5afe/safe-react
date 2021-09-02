@@ -1,5 +1,5 @@
-import React from 'react'
+import React, { SuspenseProps } from 'react'
 
-export const wrapInSuspense = (component: any, fallback?: any) => (
+export const wrapInSuspense = (component: Required<SuspenseProps['children']>, fallback: SuspenseProps['fallback'] = null) => (
   <React.Suspense fallback={fallback}>{component}</React.Suspense>
 )

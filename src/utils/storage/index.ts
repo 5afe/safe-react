@@ -41,3 +41,29 @@ export const removeFromStorage = async (key: string): Promise<void> => {
     logError(Errors._702, `key ${key} – ${err.message}`)
   }
 }
+
+export const setLocalStorageWithExpiry = <T = unknown>(key: string, value: T, expireAfter: number) => {
+  const item = {
+    value,
+    expiry: new Date().getTime() + expireAfter,
+  }
+
+  localStorage.setItem(key, JSON.stringify(item))
+}
+
+export const getLocalStorageWithExpiry = (key: string) => {
+  const itemString = window.localStorage.getItem(key)
+
+  if (!itemString) return null
+
+  const item = JSON.parse(itemString)
+
+  const isExpired = new Date().getTime() > item.expiry
+
+  if (isExpired) {
+    localStorage.removeItem(key)
+    return null
+  }
+
+  return item.value
+}
