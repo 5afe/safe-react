@@ -33,6 +33,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import StoreMigrator from '../StoreMigrator'
+import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 
 const notificationStyles = {
   success: {
@@ -81,6 +82,7 @@ const App: React.FC = ({ children }) => {
   // Temp information will be built from `addressFromUrl`
   const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
   useSafeScheduledUpdates(safeLoaded, safeAddress)
+  useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
