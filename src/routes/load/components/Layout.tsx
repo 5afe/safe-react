@@ -46,7 +46,6 @@ interface LayoutProps {
 
 const Layout = ({ onLoadSafeSubmit, provider, userAddress }: LayoutProps): ReactElement => {
   const { safeAddress } = useParams<{ safeAddress?: string }>()
-  // TODO: create a custom selector for this?
   const savedName = useSelector((state) => (safeAddress ? addressBookName(state, { address: safeAddress }) : ''))
   const randomName = useMnemonicSafeName()
 
