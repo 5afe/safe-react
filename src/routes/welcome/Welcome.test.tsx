@@ -17,7 +17,7 @@ describe('<Welcome>', () => {
     expect(connectWalletButton.disabled).toBe(false)
   })
 
-  it('Should prompt user to select a wallet when clicks on Connect wallet button', () => {
+  xit('Should prompt user to select a wallet when clicks on Connect wallet button', () => {
     const showSelectWalletPromptSpy = jest.spyOn(onboard, 'walletSelect')
 
     render(<Welcome />)

@@ -11,55 +11,55 @@ import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
-let lastUsedAddress = ''
-let providerName
+const getOnboardConfiguration = () => {
+  let lastUsedAddress = ''
+  let providerName: string | undefined
 
-const getOnboardConfiguration = () => ({
-  networkId: parseInt(getNetworkId(), 10),
-  networkName: getNetworkName(),
-  subscriptions: {
-    wallet: (wallet) => {
-      if (wallet.provider) {
-        // this function will intialize web3 and store it somewhere available throughout the dapp and
-        // can also instantiate your contracts with the web3 instance
-        setWeb3(wallet.provider)
-        providerName = wallet.name
-      }
+  return {
+    networkId: parseInt(getNetworkId(), 10),
+    networkName: getNetworkName(),
+    subscriptions: {
+      wallet: (wallet) => {
+        if (wallet.provider) {
+          // this function will intialize web3 and store it somewhere available throughout the dapp and
+          // can also instantiate your contracts with the web3 instance
+          setWeb3(wallet.provider)
+          providerName = wallet.name
+        }
+      },
+      address: (address) => {
+        if (!lastUsedAddress && address) {
+          lastUsedAddress = address
+          store.dispatch(fetchProvider(providerName!))
+        }
+
+        // we don't have an unsubscribe event so we rely on this
+        if (!address && lastUsedAddress) {
+          lastUsedAddress = ''
+          providerName = undefined
+          store.dispatch(removeProvider())
+        }
+      },
     },
-    address: (address) => {
-      if (!lastUsedAddress && address) {
-        lastUsedAddress = address
-        store.dispatch(fetchProvider(providerName))
-      }
-
-      // we don't have an unsubscribe event so we rely on this
-      if (!address && lastUsedAddress) {
-        lastUsedAddress = ''
-        providerName = undefined
-        store.dispatch(removeProvider())
-      }
+    walletSelect: {
+      description: 'Please select a wallet to connect to Gnosis Safe',
+      wallets: getSupportedWallets(),
     },
-  },
-  walletSelect: {
-    description: 'Please select a wallet to connect to Gnosis Safe',
-    wallets: getSupportedWallets(),
-  },
-  walletCheck: [
-    { checkName: 'derivationPath' },
-    { checkName: 'connect' },
-    { checkName: 'accounts' },
-    { checkName: 'network' },
-    transactionDataCheck(),
-  ],
-})
+    walletCheck: [
+      { checkName: 'derivationPath' },
+      { checkName: 'connect' },
+      { checkName: 'accounts' },
+      { checkName: 'network' },
+      transactionDataCheck(),
+    ],
+  }
+}
 
-let currentOnboardInstance
+let currentOnboardInstance: API | undefined
 export const onboard = (): API => {
-  const chainId = getNetworkId()
-  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId !== parseInt(chainId, 10)) {
+  if (!currentOnboardInstance || currentOnboardInstance.getState()?.appNetworkId !== parseInt(getNetworkId(), 10)) {
     currentOnboardInstance = Onboard(getOnboardConfiguration())
   }
-
   return currentOnboardInstance
 }
 

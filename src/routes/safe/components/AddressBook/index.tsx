@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -74,7 +74,7 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
+const initialEntryState: Entry = { entry: { address: '', name: '', chainId: getNetworkId(), isNew: true } }
 
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
