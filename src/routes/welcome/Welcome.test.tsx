@@ -18,7 +18,7 @@ describe('<Welcome>', () => {
   })
 
   xit('Should prompt user to select a wallet when clicks on Connect wallet button', () => {
-    const showSelectWalletPromptSpy = jest.spyOn(onboard, 'walletSelect')
+    const showSelectWalletPromptSpy = jest.spyOn(onboard(), 'walletSelect')
 
     render(<Welcome />)
 
