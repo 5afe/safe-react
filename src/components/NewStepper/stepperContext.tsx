@@ -21,6 +21,7 @@ type StepperProviderTypes = {
   disableNextButton?: boolean
   stepsComponents: ReactElement[]
   children: ReactElement
+  testId?: string
 }
 
 function StepperProvider({
@@ -29,6 +30,7 @@ function StepperProvider({
   disableNextButton,
   stepsComponents,
   children,
+  testId,
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
@@ -80,6 +82,8 @@ function StepperProvider({
     disableNextButton,
     nextButtonType,
     customNextButtonLabel,
+
+    testId,
 
     ...store,
   }
