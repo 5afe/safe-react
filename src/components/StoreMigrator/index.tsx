@@ -26,28 +26,28 @@ const StoreMigrator: React.FC = () => {
 
   // Migrate local storage
   useEffect(() => {
-    window.addEventListener(
-      'message',
-      (event) => {
-        if (event.data.migrateReady) {
-          const iframeWindow = (document.getElementById('targetWindow') as any).contentWindow
-          if (iframeWindow) {
-            iframeWindow.postMessage(
-              {
-                migrate: true,
-                payload: JSON.stringify(localStorage),
-              },
-              MIGRATION_PATH_BASE_URL, // TODO Replace with target origin
-            )
-          }
+    const migrateLocalStorage = (event) => {
+      if (event.data.migrateReady) {
+        const iframeWindow = (document.getElementById('targetWindow') as any).contentWindow
+        if (iframeWindow) {
+          iframeWindow.postMessage(
+            {
+              migrate: true,
+              payload: JSON.stringify(localStorage),
+            },
+            MIGRATION_PATH_BASE_URL, // TODO Replace with target origin
+          )
         }
-        if (event.data.migrateDone) {
-          saveToStorage(APPS_STORAGE_MIGRATION_DONE, true)
-          setMigrationDone(true)
-        }
-      },
-      false,
-    )
+      }
+      if (event.data.migrateDone) {
+        saveToStorage(APPS_STORAGE_MIGRATION_DONE, true)
+        setMigrationDone(true)
+      }
+    }
+
+    window.addEventListener('message', migrateLocalStorage, false)
+
+    return window.removeEventListener('message', migrateLocalStorage)
   }, [])
 
   // Load migration target
