@@ -28,9 +28,9 @@ const getOnboardConfiguration = () => {
         }
       },
       address: (address) => {
-        if (!lastUsedAddress && address) {
+        if (!lastUsedAddress && address && providerName) {
           lastUsedAddress = address
-          store.dispatch(fetchProvider(providerName!))
+          store.dispatch(fetchProvider(providerName))
         }
 
         // we don't have an unsubscribe event so we rely on this

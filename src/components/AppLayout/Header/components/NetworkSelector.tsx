@@ -23,7 +23,7 @@ import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
 import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
 import { configStore } from 'src/logic/config/store/actions'
 import { APP_ENV } from 'src/utils/constants'
-import { WELCOME_ADDRESS } from 'src/routes/routes'
+import { ROOT_ADDRESS } from 'src/routes/routes'
 
 const styles = {
   root: {
@@ -102,7 +102,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
         setNetworkId(getNetworkName(networkId))
         const safeConfig = makeNetworkConfig(getConfig())
         dispatch(configStore(safeConfig))
-        history.push(WELCOME_ADDRESS)
+        history.push(ROOT_ADDRESS)
       }
     },
     [dispatch, history],
