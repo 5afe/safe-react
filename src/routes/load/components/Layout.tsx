@@ -55,29 +55,33 @@ const Layout = ({ onLoadSafeSubmit, provider, userAddress }: LayoutProps): React
     [FIELD_LOAD_ADDRESS]: safeAddress,
   }
 
-  return provider ? (
-    <Block>
-      <Row align="center">
-        <IconButton disableRipple onClick={back} style={iconStyle}>
-          <ChevronLeft />
-        </IconButton>
-        <Heading tag="h2">Add existing Safe</Heading>
-      </Row>
-      <Stepper<LoadFormValues>
-        initialValues={initialValues}
-        buttonLabels={buttonLabels}
-        mutators={formMutators}
-        onSubmit={onLoadSafeSubmit}
-        steps={steps}
-        testId="load-safe-form"
-      >
-        <StepperPage validate={safeFieldsValidation} component={DetailsForm} />
-        <StepperPage component={OwnerList} />
-        <StepperPage userAddress={userAddress} component={ReviewInformation} />
-      </Stepper>
-    </Block>
-  ) : (
-    <div>No account detected</div>
+  return (
+    <>
+      {provider ? (
+        <Block>
+          <Row align="center">
+            <IconButton disableRipple onClick={back} style={iconStyle}>
+              <ChevronLeft />
+            </IconButton>
+            <Heading tag="h2">Add existing Safe</Heading>
+          </Row>
+          <Stepper<LoadFormValues>
+            initialValues={initialValues}
+            buttonLabels={buttonLabels}
+            mutators={formMutators}
+            onSubmit={onLoadSafeSubmit}
+            steps={steps}
+            testId="load-safe-form"
+          >
+            <StepperPage validate={safeFieldsValidation} component={DetailsForm} />
+            <StepperPage component={OwnerList} />
+            <StepperPage userAddress={userAddress} component={ReviewInformation} />
+          </Stepper>
+        </Block>
+      ) : (
+        <div>No account detected</div>
+      )}
+    </>
   )
 }
 
