@@ -57,7 +57,7 @@ describe('handleChunkError', () => {
   })
 
   it('reload if the reload was more than 10 seconds ago', () => {
-    const expiredTime = new Date().getTime() - 11e3
+    const expiredTime = new Date().getTime() - 11_000
     const expiredTimeString = expiredTime.toString()
 
     sessionStorage.setItem(lastFallbackReloadKey, expiredTimeString)
