@@ -18,12 +18,15 @@ import { useEffect } from 'react'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { useSelector } from 'react-redux'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
-import { FIELD_SAFE_THRESHOLD } from './ReviewLoadStep'
-import { FIELD_SAFE_OWNER_LIST } from './LoadSafeOwnersStep'
-
-export const FIELD_LOAD_CUSTOM_SAFE_NAME = 'customSafeName'
-export const FIELD_LOAD_SUGGESTED_SAFE_NAME = 'suggestedSafeName'
-export const FIELD_LOAD_SAFE_ADDRESS = 'safeAddress'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useStepper } from 'src/components/NewStepper/stepperContext'
+import {
+  FIELD_LOAD_CUSTOM_SAFE_NAME,
+  FIELD_LOAD_SAFE_ADDRESS,
+  FIELD_LOAD_SUGGESTED_SAFE_NAME,
+  FIELD_SAFE_OWNER_LIST,
+  FIELD_SAFE_THRESHOLD,
+} from '../fields/loadFields'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -31,6 +34,15 @@ function LoadSafeAddressStep(): ReactElement {
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
+
+  const provider = useSelector(providerNameSelector)
+  const { setCurrentStep } = useStepper()
+
+  useEffect(() => {
+    if (!provider) {
+      setCurrentStep(0)
+    }
+  }, [provider, setCurrentStep])
 
   const classes = useStyles()
 

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement } from 'react'
+import React, { Fragment, ReactElement, useEffect } from 'react'
 import { makeStyles, TableContainer } from '@material-ui/core'
 import Block from 'src/components/layout/Block'
 import { border, lg, screenSm, sm, xs } from 'src/theme/variables'
@@ -6,22 +6,21 @@ import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { useForm } from 'react-final-form'
-// TODO: MOVE FIELD CONSTANT TO A FILE fields.js
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { getExplorerInfo } from 'src/config'
+import { useSelector } from 'react-redux'
+import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import Hairline from 'src/components/layout/Hairline'
+import { useStepper } from 'src/components/NewStepper/stepperContext'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
-} from './LoadSafeAddressStep'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { getExplorerInfo } from 'src/config'
-import { useSelector } from 'react-redux'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { FIELD_SAFE_OWNER_LIST } from './LoadSafeOwnersStep'
-import Hairline from 'src/components/layout/Hairline'
+  FIELD_SAFE_OWNER_LIST,
+  FIELD_SAFE_THRESHOLD,
+} from '../fields/loadFields'
 
 export const reviewLoadStepLabel = 'Review'
-
-export const FIELD_SAFE_THRESHOLD = 'safeThreshold'
 
 function ReviewLoadStep(): ReactElement {
   const classes = useStyles()
@@ -29,12 +28,30 @@ function ReviewLoadStep(): ReactElement {
   const loadSafeForm = useForm()
   const userAddress = useSelector(userAccountSelector)
 
+  const provider = useSelector(providerNameSelector)
+  const { setCurrentStep } = useStepper()
+
+  useEffect(() => {
+    if (!provider) {
+      setCurrentStep(0)
+    }
+  }, [provider, setCurrentStep])
+
   const formValues = loadSafeForm.getState().values
 
   const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
   const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS]
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
+
+  const ownerListWithNames = ownerList.map((owner) => {
+    const ownerFieldName = `owner-address-${owner.address}`
+    const ownerNameValue = formValues[ownerFieldName]
+    return {
+      ...owner,
+      name: ownerNameValue,
+    }
+  })
 
   const isUserConnectedWalletASAfeOwner = checkIfUserAddressIsAnOwner(ownerList, userAddress)
 
@@ -102,7 +119,7 @@ function ReviewLoadStep(): ReactElement {
             </Paragraph>
           </Block>
           <Hairline />
-          {ownerList.map((owner, index) => (
+          {ownerListWithNames.map((owner, index) => (
             <Fragment key={owner.address}>
               <Row className={classes.owner} testId={'load-safe-review-owner-name-' + index}>
                 <Col align="center" xs={12}>

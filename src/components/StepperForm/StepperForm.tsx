@@ -17,7 +17,7 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
   const [onSubmitForm, setOnSubmitForm] = useState<(values) => void>()
   const steps = useMemo(
     () =>
-      children.map(function Step(step: any, index) {
+      React.Children.toArray(children).map(function Step(step: any, index) {
         function ComponentStep() {
           const { setCurrentStep } = useStepper()
           useEffect(() => {
