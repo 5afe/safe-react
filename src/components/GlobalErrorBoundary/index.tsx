@@ -43,15 +43,16 @@ const LinkContent = styled.div`
   }
 `
 
-export const lastFallbackReloadKey = 'SAFE__lastFallbackReload'
-
 //  When loading app during release, chunk load failure may occur
 export const handleChunkError = (error: Error): boolean => {
+  const MIN_RELOAD_TIME = 10_000
+
   const chunkFailedMessage = /Loading chunk [\d]+ failed/
   const isChunkError = error?.message && chunkFailedMessage.test(error.message)
 
   if (!isChunkError) return false
 
+  const lastFallbackReloadKey = 'SAFE__lastFallbackReload'
   const lastReloadString = sessionStorage.getItem(lastFallbackReloadKey)
   const lastReload = lastReloadString ? +lastReloadString : 0
 
@@ -62,7 +63,6 @@ export const handleChunkError = (error: Error): boolean => {
   }
 
   const now = new Date().getTime()
-  const MIN_RELOAD_TIME = 10_000
 
   const hasJustReloaded = lastReload + MIN_RELOAD_TIME > now
 

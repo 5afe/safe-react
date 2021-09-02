@@ -1,4 +1,4 @@
-import { handleChunkError, lastFallbackReloadKey } from '..'
+import { handleChunkError } from '..'
 
 describe('handleChunkError', () => {
   beforeEach(() => {
@@ -11,6 +11,7 @@ describe('handleChunkError', () => {
     window.sessionStorage.clear()
   })
 
+  const lastFallbackReloadKey = 'SAFE__lastFallbackReload'
   const createTestErrorObject = (message: string) => ({ name: 'Test', message })
 
   it('does not handle non-chunk loading failure errors', () => {
