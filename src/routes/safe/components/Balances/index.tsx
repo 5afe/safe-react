@@ -13,7 +13,6 @@ import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
 import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
@@ -45,8 +44,6 @@ const Balances = (): ReactElement => {
   }
 
   const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
-
-  useFetchTokens(safeAddress)
 
   useEffect(() => {
     const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))

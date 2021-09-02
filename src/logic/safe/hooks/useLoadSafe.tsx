@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
-import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchLatestMasterContractVersion from 'src/logic/safe/store/actions/fetchLatestMasterContractVersion'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
@@ -21,7 +20,6 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
         await dispatch(fetchLatestMasterContractVersion())
         await dispatch(fetchSafe(safeAddress))
         setIsSafeLoaded(true)
-        await dispatch(fetchSafeTokens(safeAddress))
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(chainId, safeAddress))
         dispatch(addViewedSafe(safeAddress))

@@ -23,7 +23,7 @@ type AddressBookMap = {
 }
 
 type AddressBookMapByChain = {
-  [chainId: number]: AddressBookMap
+  [chainId: string]: AddressBookMap
 }
 
 export const addressBookAsMap = createSelector([addressBookState], (addressBook): AddressBookMapByChain => {
@@ -83,7 +83,7 @@ export const addressBookName = createSelector(
 export const currentNetworkAddressBook = createSelector(
   [addressBookState],
   (addressBook): AppReduxState['addressBook'] => {
-    return addressBook.filter(({ chainId }) => chainId === getNetworkId())
+    return addressBook.filter(({ chainId }) => chainId.toString() === getNetworkId())
   },
 )
 
