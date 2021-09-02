@@ -1,4 +1,3 @@
-import { act } from 'react-dom/test-utils'
 import { getClientGatewayUrl } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { mockedEndpoints } from 'src/setupTests'
