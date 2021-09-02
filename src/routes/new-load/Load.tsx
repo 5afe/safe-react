@@ -32,7 +32,12 @@ import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { SAFE_ROUTES } from '../routes'
-import { FIELD_LOAD_SAFE_ADDRESS, FIELD_LOAD_SUGGESTED_SAFE_NAME, FIELD_SAFE_OWNER_LIST } from './fields/loadFields'
+import {
+  FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
+  FIELD_LOAD_SAFE_ADDRESS,
+  FIELD_LOAD_SUGGESTED_SAFE_NAME,
+  FIELD_SAFE_OWNER_LIST,
+} from './fields/loadFields'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -46,6 +51,7 @@ function Load(): ReactElement {
   const initialValues = {
     [FIELD_LOAD_SUGGESTED_SAFE_NAME]: getRandomName('safe'),
     [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
+    [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
     [FIELD_SAFE_OWNER_LIST]: [],
   }
 

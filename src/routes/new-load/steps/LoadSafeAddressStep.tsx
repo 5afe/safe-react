@@ -22,6 +22,7 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { useStepper } from 'src/components/NewStepper/stepperContext'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
+  FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
@@ -34,6 +35,7 @@ function LoadSafeAddressStep(): ReactElement {
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
+  const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
 
   const provider = useSelector(providerNameSelector)
   const { setCurrentStep } = useStepper()
@@ -65,6 +67,7 @@ function LoadSafeAddressStep(): ReactElement {
       const isValidSafeAddress = safeAddress && !mustBeEthereumAddress(safeAddress)
       if (isValidSafeAddress) {
         try {
+          setIsSafeInfoLoading(true)
           const { owners, threshold }: SafeInfo = await getSafeInfo(safeAddress)
           const ownersWithName = owners.map(({ value: address }) =>
             makeAddressBookEntry(addressBook[address] || { address, name: '' }),
@@ -77,6 +80,7 @@ function LoadSafeAddressStep(): ReactElement {
           setThreshold(undefined)
           setIsValidSafeAddress(false)
         }
+        setIsSafeInfoLoading(false)
       }
     }
 
@@ -88,6 +92,10 @@ function LoadSafeAddressStep(): ReactElement {
       loadSafeForm.change(FIELD_SAFE_THRESHOLD, threshold)
     }
   }, [threshold, loadSafeForm])
+
+  useEffect(() => {
+    loadSafeForm.change(FIELD_LOAD_IS_LOADING_SAFE_ADDRESS, isSafeInfoLoading)
+  }, [isSafeInfoLoading, loadSafeForm])
 
   useEffect(() => {
     if (ownersWithName) {
@@ -208,7 +216,15 @@ export const loadSafeAddressStepValidations = (values: {
 
   const isValidSafeAddress = safeAddress && !mustBeEthereumAddress(safeAddress) && hasOwners
 
-  // TODO: Create a isLoading in the form and return a isLoading error instead of a SafeAddress error
+  const isLoadingSafeAddress = values[FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]
+
+  // this is to prevent show and error in the safe address field while is loading...
+  if (isLoadingSafeAddress) {
+    return {
+      ...errors,
+      [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: 'loading...',
+    }
+  }
 
   if (!isValidSafeAddress) {
     errors = {
