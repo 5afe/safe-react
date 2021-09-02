@@ -42,7 +42,12 @@ export const history = createHashHistory()
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const localStorageConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'SAFE', namespaceSeparator: '__' }
+const localStorageConfig = {
+  states: [ADDRESS_BOOK_REDUCER_ID],
+  namespace: 'SAFE',
+  namespaceSeparator: '__',
+  disableWarnings: true,
+}
 
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
@@ -91,6 +96,8 @@ export type AppReduxState = CombinedState<{
 migrateAddressBook(localStorageConfig)
 
 export const store: any = createStore(reducers, load(localStorageConfig), finalCreateStore)
+
+export const createCustomStore: any = (customStore: any) => createStore(reducers, { ...customStore }, finalCreateStore)
 
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)
