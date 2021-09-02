@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -48,6 +48,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -73,7 +74,6 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const chainId = getNetworkId()
 const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
 
 const AddressBookTable = (): ReactElement => {
@@ -84,6 +84,7 @@ const AddressBookTable = (): ReactElement => {
   const safesList = useSelector(safesAsList)
   const entryAddressToEditOrCreateNew = useSelector(addressBookFromQueryParams)
   const addressBook = useSelector(currentNetworkAddressBook)
+  const networkId = useSelector(networkSelector)
   const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
@@ -117,7 +118,7 @@ const AddressBookTable = (): ReactElement => {
           entry: {
             name: '',
             address,
-            chainId,
+            chainId: networkId,
             isNew: true,
           },
         })

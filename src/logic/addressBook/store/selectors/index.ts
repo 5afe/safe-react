@@ -8,8 +8,6 @@ import { Overwrite } from 'src/types/helpers'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
 
-const networkId = getNetworkId()
-
 export const addressBookFromQueryParams = (state: AppReduxState): string | undefined => {
   return state.router.location?.query?.entryAddress
 }
@@ -55,7 +53,7 @@ type GetNameParams = Overwrite<Partial<AddressBookEntry>, { address: string }>
 export const addressBookEntryName = createSelector(
   [
     addressBookAsMap,
-    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: ETHEREUM_NETWORK } => ({
+    (_, { address, chainId = getNetworkId() }: GetNameParams): { address: string; chainId: ETHEREUM_NETWORK } => ({
       address,
       chainId,
     }),
@@ -68,7 +66,7 @@ export const addressBookEntryName = createSelector(
 export const addressBookName = createSelector(
   [
     addressBookAsMap,
-    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: ETHEREUM_NETWORK } => ({
+    (_, { address, chainId = getNetworkId() }: GetNameParams): { address: string; chainId: ETHEREUM_NETWORK } => ({
       address,
       chainId,
     }),
@@ -85,7 +83,7 @@ export const addressBookName = createSelector(
 export const currentNetworkAddressBook = createSelector(
   [addressBookState],
   (addressBook): AppReduxState['addressBook'] => {
-    return addressBook.filter(({ chainId }) => chainId === networkId)
+    return addressBook.filter(({ chainId }) => chainId === getNetworkId())
   },
 )
 

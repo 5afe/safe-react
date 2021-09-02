@@ -14,7 +14,7 @@ import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
@@ -32,6 +32,7 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -69,9 +70,6 @@ type Props = {
   appUrl: string
 }
 
-const NETWORK_NAME = getNetworkName()
-const NETWORK_ID = getNetworkId()
-
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
   txs: [],
@@ -85,6 +83,7 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
+  const networkId = useSelector(networkSelector)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const history = useHistory()
@@ -153,7 +152,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
+        network: getNetworkName().toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
@@ -176,8 +175,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: NETWORK_NAME,
-      chainId: parseInt(NETWORK_ID, 10),
+      network: getNetworkName(),
+      chainId: parseInt(networkId, 10),
       owners,
       threshold,
     }))
@@ -222,7 +221,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, networkId])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     // Safe Apps SDK V1 Handler
