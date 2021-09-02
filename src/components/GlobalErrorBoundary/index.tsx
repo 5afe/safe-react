@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
 
 import { IS_PRODUCTION } from 'src/utils/constants'
-import { getLocalStorageWithExpiry, setLocalStorageWithExpiry } from 'src/utils/storage'
+import { ErrorBoundaryProps, FallbackRender } from '@sentry/react/dist/errorboundary'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -44,25 +44,27 @@ const LinkContent = styled.div`
   }
 `
 
-type Props = {
-  error: Error
-  componentStack: string | null
-  resetError: () => void
-}
+const GlobalErrorBoundaryFallback = ({ error, componentStack }: any) => {
+  //  When loading app during release, chunk load failure may occur
+  const chunkFailedMessage = /Loading chunk [\d]+ failed/
+  const isChunkError = error?.message && chunkFailedMessage.test(error.message)
 
-const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.ReactElement | null => {
-  // When loading app during release, chunk load failure may occur
-  useEffect(() => {
-    const chunkFailedMessage = /Loading chunk [\d]+ failed/
-    const isChunkError = error?.message && chunkFailedMessage.test(error.message)
+  const time = new Date().getTime()
+  const key = 'lastReload'
+  const lastReloadString = localStorage.getItem(key)
+  const lastReload = lastReloadString && JSON.parse(lastReloadString)
 
-    // Reload page and set chunk error flag to prevent infinite reload loop
-    if (isChunkError && !getLocalStorageWithExpiry('chunk_failed')) {
-      // Expires after 10 seconds
-      setLocalStorageWithExpiry('chunk_failed', 'true', 10000)
-      window.location.reload()
-    }
-  }, [error])
+  // Expires 10 secs after last chunk failure reload
+  const isExpired = time > +lastReload + 10000
+
+  if (isChunkError && isExpired) {
+    localStorage.setItem(key, JSON.stringify(time))
+    window.location.reload()
+
+    return null
+  } else {
+    localStorage.removeItem(key)
+  }
 
   return (
     <Wrapper>
