@@ -43,28 +43,34 @@ const LinkContent = styled.div`
   }
 `
 
-const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) => {
-  //  When loading app during release, chunk load failure may occur
+export const lastFallbackReloadKey = 'SAFE__lastFallbackReload'
+
+//  When loading app during release, chunk load failure may occur
+export const handleChunkError = (error: Error): boolean | void => {
   const chunkFailedMessage = /Loading chunk [\d]+ failed/
   const isChunkError = error?.message && chunkFailedMessage.test(error.message)
 
-  const time = new Date().getTime()
+  const lastReloadString = sessionStorage.getItem(lastFallbackReloadKey)
+  const lastReload = lastReloadString ? +lastReloadString : 0
 
-  const lastReloadKey = 'lastReload'
-  const lastReloadString = localStorage.getItem(lastReloadKey)
-  const lastReload = lastReloadString && JSON.parse(lastReloadString)
+  if (isNaN(lastReload)) return
 
-  // Expires 10 secs after last chunk failure reload
-  const isExpired = time > +lastReload + 10000
+  const now = new Date().getTime()
+  const MIN_RELOAD_TIME = 10e3
 
-  if (isChunkError && isExpired) {
-    localStorage.setItem(lastReloadKey, JSON.stringify(time))
+  const hasJustReloaded = lastReload + MIN_RELOAD_TIME > now
+
+  if (isChunkError && !hasJustReloaded) {
+    sessionStorage.setItem(lastFallbackReloadKey, now.toString())
     window.location.reload()
+    return true
+  }
+}
 
+const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) => {
+  if (handleChunkError(error)) {
     return null
   }
-
-  localStorage.removeItem(lastReloadKey)
 
   return (
     <Wrapper>
