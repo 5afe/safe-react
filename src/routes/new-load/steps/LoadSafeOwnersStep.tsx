@@ -1,5 +1,5 @@
 import { makeStyles, TableContainer } from '@material-ui/core'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useForm } from 'react-final-form'
 
 import Block from 'src/components/layout/Block'
@@ -13,17 +13,27 @@ import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/va
 import { minMaxLength } from 'src/components/forms/validator'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
+import { useSelector } from 'react-redux'
+import { useStepper } from 'src/components/NewStepper/stepperContext'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
 
 export const loadSafeOwnersStepLabel = 'Owners'
 
-export const FIELD_SAFE_OWNER_LIST = 'safeOwnerList'
-
 function LoadSafeOwnersStep(): ReactElement {
-  const loadSafeForm = useForm()
-
-  const ownersWithName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_LIST]
-
   const classes = useStyles()
+
+  const provider = useSelector(providerNameSelector)
+  const { setCurrentStep } = useStepper()
+
+  useEffect(() => {
+    if (!provider) {
+      setCurrentStep(0)
+    }
+  }, [provider, setCurrentStep])
+
+  const loadSafeForm = useForm()
+  const ownersWithName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_LIST]
 
   return (
     <>
@@ -41,6 +51,7 @@ function LoadSafeOwnersStep(): ReactElement {
         <Hairline />
         <Block margin="md" padding="md">
           {ownersWithName.map(({ address, name }, index) => {
+            const ownerFieldName = `owner-address-${address}`
             return (
               <Row className={classes.owner} key={address} data-testid="owner-row">
                 <Col className={classes.ownerName} xs={4}>
@@ -48,7 +59,7 @@ function LoadSafeOwnersStep(): ReactElement {
                     className={classes.name}
                     component={TextField}
                     initialValue={name}
-                    name={`owner-address-${address}`}
+                    name={ownerFieldName}
                     placeholder="Owner Name"
                     text="Owner Name"
                     type="text"

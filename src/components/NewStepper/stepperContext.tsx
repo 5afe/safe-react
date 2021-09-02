@@ -32,7 +32,7 @@ function StepperProvider({
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
-  const steps = stepsComponents
+  const steps = React.Children.toArray(stepsComponents)
   const CurrentStepComponent: any = steps[currentStep]
 
   const nextButtonType = CurrentStepComponent.props.nextButtonType

@@ -71,7 +71,7 @@ function StepperComponent(): ReactElement {
                       onClick={onClickNextStep}
                       color="primary"
                       type={nextButtonType || 'button'}
-                      disabled={disableNextButton}
+                      disabled={disableNextButton || step.props.disableNextButton}
                       size="small"
                       className={classes.nextButton}
                       variant="contained"
@@ -126,6 +126,7 @@ export type StepElementProps = {
   children: JSX.Element
   nextButtonLabel?: string
   nextButtonType?: string
+  disableNextButton?: boolean
 }
 
 export type StepElementType = (props: StepElementProps) => ReactElement

@@ -17,7 +17,7 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
   const [onSubmitForm, setOnSubmitForm] = useState<(values) => void>()
   const steps = useMemo(
     () =>
-      children.map(function Step(step: any, index) {
+      React.Children.toArray(children).map(function Step(step: any, index) {
         function ComponentStep() {
           const { setCurrentStep } = useStepper()
           useEffect(() => {
@@ -34,12 +34,7 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
           return step.props.children
         }
         return (
-          <StepElement
-            key={step.props.label}
-            label={step.props.label}
-            nextButtonLabel={step.props.nextButtonLabel}
-            nextButtonType={'submit'}
-          >
+          <StepElement key={step.props.label} nextButtonType={'submit'} {...step.props}>
             <ComponentStep />
           </StepElement>
         )
@@ -70,6 +65,7 @@ export type StepFormElementProps = {
   validate?: (values) => Record<string, unknown> | Promise<Record<string, string>>
   nextButtonLabel?: string
   children: ReactElement<any, string | JSXElementConstructor<any>>
+  disableNextButton?: boolean
 }
 export type StepFormElementType = (props: StepFormElementProps) => StepElementType[]
 
