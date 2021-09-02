@@ -28,9 +28,9 @@ describe('handleChunkError', () => {
   it('handles no sessionStorage value existence', () => {
     const isChunkError = handleChunkError(testChunkErrorObj)
 
-    expect(sessionStorage.getItem(lastFallbackReloadKey)).toBeNull()
-    expect(isChunkError).not.toBeTruthy()
-    expect(window.location.reload).not.toHaveBeenCalled()
+    expect(sessionStorage.getItem(lastFallbackReloadKey)).not.toBeNull()
+    expect(isChunkError).toBeTruthy()
+    expect(window.location.reload).toHaveBeenCalled()
   })
 
   it('handles malformed sessionStorage values', () => {

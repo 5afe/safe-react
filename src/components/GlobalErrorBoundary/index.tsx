@@ -50,17 +50,23 @@ export const handleChunkError = (error: Error): boolean | void => {
   const chunkFailedMessage = /Loading chunk [\d]+ failed/
   const isChunkError = error?.message && chunkFailedMessage.test(error.message)
 
+  if (!isChunkError) return
+
   const lastReloadString = sessionStorage.getItem(lastFallbackReloadKey)
   const lastReload = lastReloadString ? +lastReloadString : 0
 
-  if (isNaN(lastReload)) return
+  // Not a time value - remove it
+  if (isNaN(lastReload)) {
+    sessionStorage.removeItem(lastFallbackReloadKey)
+    return
+  }
 
   const now = new Date().getTime()
   const MIN_RELOAD_TIME = 10e3
 
   const hasJustReloaded = lastReload + MIN_RELOAD_TIME > now
 
-  if (isChunkError && !hasJustReloaded) {
+  if (!hasJustReloaded) {
     sessionStorage.setItem(lastFallbackReloadKey, now.toString())
     window.location.reload()
     return true
