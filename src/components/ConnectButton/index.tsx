@@ -45,7 +45,7 @@ export const onboard = Onboard({
     },
   },
   walletSelect: {
-    description: 'Please select a wallet to connect to Gnosis Safe',
+    description: 'Please select a wallet to connect to Moonbeam Safe',
     wallets,
   },
   walletCheck: [

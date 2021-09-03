@@ -77,7 +77,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
     <Block>
       {/* Title */}
       <Title size="md" strong>
-        Welcome to Gnosis Safe.
+        Welcome to Moonbeam Safe.
       </Title>
 
       {/* Subtitle */}
