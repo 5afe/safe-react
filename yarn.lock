@@ -2775,9 +2775,10 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0.tgz#0f90185c3693f2683322d275e796e61ff99ce87d"
   integrity sha512-dLCSlniYnxEqCglx4XdhByvi7KKuSYRWJKm1lVXAc4oJqwwVkoCwp0bFIejLZ/dnf7cQSBUUVsTGWhvSda511w==
 
-"@gnosis.pm/safe-apps-sdk@https://gitpkg.now.sh/gnosis/safe-apps-sdk/packages/safe-apps-sdk?c93e38108641ee5abf0602162e8bb7c6b87c03f7":
-  version "4.2.0"
-  resolved "https://gitpkg.now.sh/gnosis/safe-apps-sdk/packages/safe-apps-sdk?c93e38108641ee5abf0602162e8bb7c6b87c03f7#c7161b2ea25373252be0e7770ee179e2e6dda6b4"
+"@gnosis.pm/safe-apps-sdk@4.3.0-next.0":
+  version "4.3.0-next.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-4.3.0-next.0.tgz#86f119577aca28627fa77c03a7e7e734f46611a7"
+  integrity sha512-AetPDLXyPtnUER9bwewmNL9mkdE6TtEqp6uU/4LJ0FfY/reao+rWHcU1PcLXIrHFA9vmHxUMZJvDHnYVMF08dQ==
   dependencies:
     "@changesets/cli" "^2.16.0"
     ethers "^5.4.5"
