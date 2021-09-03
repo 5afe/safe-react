@@ -1,8 +1,16 @@
 import React, { useEffect } from 'react'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { useDispatch } from 'react-redux'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 // import { getNetworks } from 'src/config'
+
+const mergeAddressBooks = (addressBookEntries: AddressBookEntry[], dispatch) => {
+  addressBookEntries.forEach((addressBookEntry) => {
+    // Save addressBookEntries
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(addressBookEntry)))
+  })
+}
 
 const MigrationScreen: React.FC = () => {
   const dispatch = useDispatch()
@@ -18,25 +26,27 @@ const MigrationScreen: React.FC = () => {
         */
       // Also add isTrustedOrigin to the if clause
       if (event.data.migrate && event.origin !== self.origin) {
-        const payload = JSON.parse(event.data.payload)
-        Object.keys(payload).forEach((key) => {
-          const payloadEntry = JSON.parse(payload[key])
-          if (key === 'SAFE__addressBook') {
-            payloadEntry.forEach((addressBookEntry) => {
-              // Save addressBookEntries
-              dispatch(addressBookAddOrUpdate(makeAddressBookEntry(addressBookEntry)))
-            })
-          } else if (key !== 'intercom.intercom-state') {
-            // Save entry in localStorage
-            localStorage.setItem(key, payloadEntry)
-          }
-        })
-        window.parent.postMessage(
-          {
-            migrateDone: true,
-          },
-          event.origin,
-        )
+        try {
+          const payload = JSON.parse(event.data.payload)
+          Object.keys(payload).forEach((key) => {
+            const payloadEntry = JSON.parse(payload[key])
+            if (key === 'SAFE__addressBook') {
+              mergeAddressBooks(payloadEntry, dispatch)
+            } else if (key.startsWith('_immortal|v2_')) {
+              // Save entry in localStorage
+              localStorage.setItem(key, payloadEntry)
+            }
+          })
+          // Commented until we expose the unified app
+          /*window.parent.postMessage(
+            {
+              migrateDone: true,
+            },
+            event.origin,
+          )*/
+        } catch (error) {
+          logError(Errors._612, error.message)
+        }
       }
     }
 

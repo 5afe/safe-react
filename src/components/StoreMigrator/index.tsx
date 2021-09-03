@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
-import { saveToStorage, loadFromStorage } from 'src/utils/storage'
+import { saveToStorage } from 'src/utils/storage'
 
 const MIGRATION_PATH_BASE_URL = 'http://localhost:3001/#'
 const MIGRATION_PATH = `${MIGRATION_PATH_BASE_URL}${MIGRATION_ADDRESS}`
@@ -8,10 +8,11 @@ const APPS_STORAGE_MIGRATION_DONE = 'APPS_STORAGE_MIGRATION_DONE'
 
 const StoreMigrator: React.FC = () => {
   const [migrationDone, setMigrationDone] = useState(false)
-  const [checkMigrationDone, setCheckMigrationDone] = useState(false)
+  const [checkMigrationDone] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
-  // Redirect if migration already happened
+  // Redirect if migration already happened -- Commented until we expose the unified app
+  /*
   useEffect(() => {
     const loadStorageMigrationDone = async () => {
       const storageMigrationDone = await loadFromStorage(APPS_STORAGE_MIGRATION_DONE)
@@ -23,14 +24,15 @@ const StoreMigrator: React.FC = () => {
 
     loadStorageMigrationDone()
   }, [])
+  */
 
   // Migrate local storage
   useEffect(() => {
     const migrateLocalStorage = (event) => {
       if (event.data.migrateReady) {
-        const iframeWindow = (document.getElementById('targetWindow') as any).contentWindow
-        if (iframeWindow) {
-          iframeWindow.postMessage(
+        const migrationIframe = (document.getElementById('targetWindow') as any).contentWindow
+        if (migrationIframe) {
+          migrationIframe.postMessage(
             {
               migrate: true,
               payload: JSON.stringify(localStorage),
@@ -53,8 +55,8 @@ const StoreMigrator: React.FC = () => {
   // Load migration target
   useEffect(() => {
     if (!loaded && checkMigrationDone && !MIGRATION_PATH_BASE_URL.includes(self.origin)) {
-      const w = window.open(MIGRATION_PATH, 'targetWindow')
-      if (w) {
+      const migrationIframe = window.open(MIGRATION_PATH, 'targetWindow')
+      if (migrationIframe) {
         setLoaded(true)
       }
     }
