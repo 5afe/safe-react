@@ -1,6 +1,7 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
-import { ReactElement, useEffect, useMemo, useState } from 'react'
+import MuiTextField from '@material-ui/core/TextField'
+import { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -49,6 +50,12 @@ const StyledBlock = styled(Block)`
 
   > :nth-child(1) {
     margin-right: 5px;
+  }
+`
+
+const MessageTextArea = styled(MuiTextField)`
+  &.MuiFormControl-root {
+    padding-bottom: ${({ theme }) => theme.margin.md};
   }
 `
 
@@ -179,8 +186,28 @@ export const ReviewMessage = ({
 
             <Divider withArrow />
 
-            {/* Txs decoded */}
             <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue={'0'} />
+
+            <Text size="lg" strong>
+              Signing message:
+            </Text>
+            <MessageTextArea
+              rows="2"
+              multiline
+              disabled
+              fullWidth
+              label="Message to sign"
+              inputProps={{
+                type: 'text',
+                value: message.toString(),
+                name: 'Message to sign',
+                onChange: () => {},
+                placeholder: '',
+              }}
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
 
             <TxParametersDetail
               txParameters={txParameters}
