@@ -128,9 +128,26 @@ const getMultiSendContractInstance = (web3: Web3, networkId: ETHEREUM_NETWORK): 
 }
 
 /**
+ * Returns an address of SignMessageLib for passed chainId
+ * @param {ETHEREUM_NETWORK} chainId
+ * @returns {string}
+ */
+export const getSignMessageLibAddress = (chainId: ETHEREUM_NETWORK): string | undefined => {
+  const signMessageLibDeployment =
+    getSignMessageLibDeployment({
+      network: chainId.toString(),
+    }) || getSignMessageLibDeployment()
+
+  const contractAddress =
+    signMessageLibDeployment?.networkAddresses[chainId] ?? signMessageLibDeployment?.defaultAddress
+
+  return contractAddress
+}
+
+/**
  * Returns a Web3 Contract instance of the SignMessageLib contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {ETHEREUM_NETWORK} chainId
  * @returns {SignMessageLib}
  */
 export const getSignMessageLibContractInstance = (web3: Web3, chainId: ETHEREUM_NETWORK): SignMessageLib => {

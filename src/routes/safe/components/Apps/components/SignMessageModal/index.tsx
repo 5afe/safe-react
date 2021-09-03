@@ -1,9 +1,9 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { BytesLike, RequestId } from '@gnosis.pm/safe-apps-sdk'
 
 import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
-import { ReviewConfirm } from './ReviewConfirm'
+import { ReviewMessage } from './ReviewMessage'
 
 export type ConfirmTxModalProps = {
   isOpen: boolean
@@ -19,14 +19,11 @@ export type ConfirmTxModalProps = {
 }
 
 export const SignMessageModal = (props: ConfirmTxModalProps): ReactElement => {
+  console.log(props.isOpen)
+
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
-      {/* <ReviewConfirm
-        {...props}
-        areTxsMalformed={areTxsMalformed}
-        showDecodedTxData={showDecodedTxData}
-        hidden={areTxsMalformed || !!decodedTxDetails}
-      /> */}
+      <ReviewMessage {...props} />
     </Modal>
   )
 }
