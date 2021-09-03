@@ -4,8 +4,8 @@ import { useState, useCallback } from 'react'
 type StateType = { isOpen: boolean; message: BytesLike; requestId: string }
 
 const INITIAL_MODAL_STATE: StateType = {
-  isOpen: true,
-  message: 'hello how are you doing?',
+  isOpen: false,
+  message: '',
   requestId: '',
 }
 
