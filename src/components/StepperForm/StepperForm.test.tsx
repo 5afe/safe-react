@@ -71,6 +71,16 @@ describe('<StepperForm>', () => {
     expect(stepOneInputNode.value).toBe('initial value of stepOneTextfield')
   })
 
+  it('renders <StepFormElement>', () => {
+    render(
+      <StepFormElement label={'Step form label'}>
+        <div>Step form content</div>
+      </StepFormElement>,
+    )
+
+    expect(screen.getByText('Step form content')).toBeInTheDocument()
+  })
+
   describe('Form navigation', () => {
     it('Renders next form step when clicks on next button', async () => {
       const onSubmitSpy = jest.fn()
