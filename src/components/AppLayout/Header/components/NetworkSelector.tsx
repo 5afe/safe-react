@@ -22,7 +22,7 @@ import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
 import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
 import { configStore } from 'src/logic/config/store/actions'
-import { IS_PRODUCTION } from 'src/utils/constants'
+import { APP_ENV } from 'src/utils/constants'
 import { ROOT_ADDRESS } from 'src/routes/routes'
 
 const styles = {
@@ -96,7 +96,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
       // FIXME remove navigation when L2-UX completes
       // This was added in order to switch network using navigation on prod
       // but be able to check chain swapping on dev environments and PRs
-      if (IS_PRODUCTION) {
+      if (APP_ENV === 'production') {
         window.location.href = safeUrl
       } else {
         clickAway()
