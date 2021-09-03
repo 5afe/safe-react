@@ -37,7 +37,7 @@ export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | unde
   return Object.values(networks).find((cfg) => cfg.network.id === id)
 }
 
-export const getNetworkLabel = (id: ETHEREUM_NETWORK): string => {
+export const getNetworkLabel = (id: ETHEREUM_NETWORK = getNetworkId()): string => {
   const cfg = getNetworkConfigById(id)
   return cfg ? cfg.network.label : ''
 }
