@@ -94,7 +94,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
       txData: tx.data ? tx.data.trim() : '',
     })
-  }, [tx.contractAddress, tx.value, tx.data, safeAddress])
+  }, [tx.contractAddress, tx.value, tx.data, safeAddress, nativeCoin.decimals])
 
   const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {

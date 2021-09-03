@@ -99,6 +99,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
       if (IS_PRODUCTION) {
         window.location.href = safeUrl
       } else {
+        clickAway()
         setNetworkId(getNetworkName(networkId))
         const safeConfig = makeNetworkConfig(getConfig())
         dispatch(configStore(safeConfig))

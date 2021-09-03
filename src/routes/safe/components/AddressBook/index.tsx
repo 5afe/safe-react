@@ -124,7 +124,7 @@ const AddressBookTable = (): ReactElement => {
         })
       }
     }
-  }, [addressBook, entryAddressToEditOrCreateNew])
+  }, [addressBook, entryAddressToEditOrCreateNew, networkId])
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     // close the modal
