@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { CookieAttributes } from 'js-cookie'
 import { COOKIES_KEY_INTERCOM } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { INTERCOM_ID } from 'src/utils/constants'
@@ -12,8 +13,10 @@ const getIntercomUserId = async () => {
   if (!cookiesState) {
     const userId = crypto.randomBytes(32).toString('hex')
     const newCookieState = { userId }
-    const expirationDays = 365
-    await saveCookie(COOKIES_KEY_INTERCOM, newCookieState, expirationDays)
+    const cookieConfig: CookieAttributes = {
+      expires: 365,
+    }
+    await saveCookie(COOKIES_KEY_INTERCOM, newCookieState, cookieConfig)
     return userId
   }
   const { userId } = cookiesState
