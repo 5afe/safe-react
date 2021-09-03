@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitForElementToBeRemoved } from 'src/utils/
 import Stepper, { StepElement } from './Stepper'
 
 describe('<Stepper>', () => {
-  it('renders Stepper component', () => {
+  it('Renders Stepper component', () => {
     render(
       <Stepper testId="stepper-component">
         <StepElement label={'Step 1 label'}>
@@ -23,7 +23,7 @@ describe('<Stepper>', () => {
     expect(stepperNode).toBeInTheDocument()
   })
 
-  it('renders first step by default', () => {
+  it('Renders first step by default', () => {
     render(
       <Stepper testId="stepper-component">
         <StepElement label={'Step 1 label'}>
@@ -44,7 +44,7 @@ describe('<Stepper>', () => {
     expect(screen.queryByText('Final step content')).not.toBeInTheDocument()
   })
 
-  it('renders all step labels', () => {
+  it('Renders all step labels', () => {
     render(
       <Stepper testId="stepper-component">
         <StepElement label={'Step 1 label'}>
@@ -71,7 +71,7 @@ describe('<Stepper>', () => {
 
   describe('Navigation', () => {
     describe('Next button', () => {
-      it('renders next step when clicks on next button', async () => {
+      it('Renders next step when clicks on next button', async () => {
         render(
           <Stepper testId="stepper-component">
             <StepElement label={'Step 1 label'}>
@@ -111,7 +111,7 @@ describe('<Stepper>', () => {
     })
 
     describe('Back button', () => {
-      it('returns to the previous step clicking on back button', async () => {
+      it('Returns to the previous step clicking on back button', async () => {
         render(
           <Stepper testId="stepper-component">
             <StepElement label={'Step 1 label'}>
@@ -140,10 +140,32 @@ describe('<Stepper>', () => {
         expect(screen.queryByText('Step 2 content')).not.toBeInTheDocument()
         expect(screen.queryByText('Final step content')).not.toBeInTheDocument()
       })
+
+      it('Returns to the previous screen if we are in the first step and click on Cancel button', () => {
+        const goBackSpy = jest.spyOn(history, 'goBack')
+        render(
+          <Stepper testId="stepper-component">
+            <StepElement label={'Step 1 label'}>
+              <div>Step 1 content</div>
+            </StepElement>
+            <StepElement label={'Step 2 label'}>
+              <div>Step 2 content</div>
+            </StepElement>
+            <StepElement label={'Final step label'}>
+              <div>Final step content</div>
+            </StepElement>
+          </Stepper>,
+        )
+
+        expect(goBackSpy).not.toHaveBeenCalled()
+        fireEvent.click(screen.getByText('Cancel'))
+        expect(goBackSpy).toHaveBeenCalled()
+        goBackSpy.mockRestore()
+      })
     })
 
     describe('Label navigation', () => {
-      it('previous steps labels are clickable', () => {
+      it('Previous steps labels are clickable', () => {
         render(
           <Stepper testId="stepper-component">
             <StepElement label={'Step 1 label'}>
@@ -188,7 +210,7 @@ describe('<Stepper>', () => {
         expect(screen.getByText('Step 1 content'))
       })
 
-      it('next steps labels are NOT clickable', () => {
+      it('Next steps labels are NOT clickable', () => {
         render(
           <Stepper testId="stepper-component">
             <StepElement label={'Step 1 label'}>
@@ -225,7 +247,28 @@ describe('<Stepper>', () => {
     })
   })
 
-  it('perform onFinish callback in the last step', async () => {
+  it('Customize next button label', async () => {
+    const customNextButtonLabel = 'my next button custom label'
+
+    render(
+      <Stepper testId="stepper-component">
+        <StepElement label={'Step 1 label'} nextButtonLabel={customNextButtonLabel}>
+          <div>Step 1 content</div>
+        </StepElement>
+        <StepElement label={'Step 2 label'}>
+          <div>Step 2 content</div>
+        </StepElement>
+        <StepElement label={'Final step label'}>
+          <div>Final step content</div>
+        </StepElement>
+      </Stepper>,
+    )
+
+    expect(screen.getByText(customNextButtonLabel)).toBeInTheDocument()
+    expect(screen.queryByText('Next')).not.toBeInTheDocument()
+  })
+
+  it('Perform onFinish callback in the last step', async () => {
     const onFinishSpy = jest.fn()
 
     render(
@@ -252,27 +295,5 @@ describe('<Stepper>', () => {
     expect(onFinishSpy).not.toHaveBeenCalled()
     fireEvent.click(screen.getByText('Next'))
     expect(onFinishSpy).toHaveBeenCalled()
-  })
-
-  it('returns to the previous screen if we are in the first step and click on Cancel button', () => {
-    const goBackSpy = jest.spyOn(history, 'goBack')
-    render(
-      <Stepper testId="stepper-component">
-        <StepElement label={'Step 1 label'}>
-          <div>Step 1 content</div>
-        </StepElement>
-        <StepElement label={'Step 2 label'}>
-          <div>Step 2 content</div>
-        </StepElement>
-        <StepElement label={'Final step label'}>
-          <div>Final step content</div>
-        </StepElement>
-      </Stepper>,
-    )
-
-    expect(goBackSpy).not.toHaveBeenCalled()
-    fireEvent.click(screen.getByText('Cancel'))
-    expect(goBackSpy).toHaveBeenCalled()
-    goBackSpy.mockRestore()
   })
 })
