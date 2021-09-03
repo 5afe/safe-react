@@ -1,5 +1,8 @@
 import { handleChunkError } from '..'
 
+const lastFallbackReloadKey = 'SAFE__lastFallbackReload'
+const createTestErrorObject = (message: string) => ({ name: 'Test', message })
+
 describe('handleChunkError', () => {
   beforeEach(() => {
     // Mock window.location.reload
@@ -11,16 +14,13 @@ describe('handleChunkError', () => {
     window.sessionStorage.clear()
   })
 
-  const lastFallbackReloadKey = 'SAFE__lastFallbackReload'
-  const createTestErrorObject = (message: string) => ({ name: 'Test', message })
-
   it('does not handle non-chunk loading failure errors', () => {
     const testErrorObj = createTestErrorObject('Unrelated error')
 
     const isChunkError = handleChunkError(testErrorObj)
 
     expect(sessionStorage.getItem(lastFallbackReloadKey)).toBeNull()
-    expect(isChunkError).not.toBeTruthy()
+    expect(isChunkError).toBe(false)
     expect(window.location.reload).not.toHaveBeenCalled()
   })
 
@@ -30,7 +30,7 @@ describe('handleChunkError', () => {
     const isChunkError = handleChunkError(testChunkErrorObj)
 
     expect(sessionStorage.getItem(lastFallbackReloadKey)).not.toBeNull()
-    expect(isChunkError).toBeTruthy()
+    expect(isChunkError).toBe(true)
     expect(window.location.reload).toHaveBeenCalled()
   })
 
@@ -41,7 +41,7 @@ describe('handleChunkError', () => {
     const isChunkError = handleChunkError(testChunkErrorObj)
 
     expect(sessionStorage.getItem(lastFallbackReloadKey)).not.toBe(sessionStorageValue)
-    expect(isChunkError).not.toBeTruthy()
+    expect(isChunkError).toBe(false)
     expect(window.location.reload).not.toHaveBeenCalled()
   })
 
@@ -53,11 +53,11 @@ describe('handleChunkError', () => {
 
     const isChunkError = handleChunkError(testChunkErrorObj)
 
-    expect(isChunkError).not.toBeTruthy()
+    expect(isChunkError).toBe(false)
     expect(window.location.reload).not.toHaveBeenCalled()
   })
 
-  it('reload if the reload was more than 10 seconds ago', () => {
+  it('reloads if the reload was more than 10 seconds ago', () => {
     const expiredTime = new Date().getTime() - 11_000
     const expiredTimeString = expiredTime.toString()
 
