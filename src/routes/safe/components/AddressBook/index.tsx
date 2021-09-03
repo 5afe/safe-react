@@ -48,7 +48,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -84,7 +84,7 @@ const AddressBookTable = (): ReactElement => {
   const safesList = useSelector(safesAsList)
   const entryAddressToEditOrCreateNew = useSelector(addressBookFromQueryParams)
   const addressBook = useSelector(currentNetworkAddressBook)
-  const networkId = useSelector(networkSelector)
+  const networkId = useSelector(currentChainId)
   const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)

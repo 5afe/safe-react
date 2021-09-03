@@ -1,5 +1,5 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
-import { onboard } from 'src/components/ConnectButton'
+import onboard from 'src/logic/wallets/onboard'
 import { getConfig, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
@@ -79,9 +79,22 @@ export const switchNetwork = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): 
   }
 }
 
+/**
+ * Switch to a desired network
+ */
+export const switchToCurrentNetwork = async (wallet = onboard().getState()?.wallet): Promise<void> => {
+  try {
+    await switchNetwork(wallet, getNetworkId())
+  } catch (e) {
+    e.log()
+    // Fallback to the onboard popup if switching isn't supported
+    await onboard().walletCheck()
+  }
+}
+
 export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
-  const desiredNetwork = String(getNetworkId())
-  const currentNetwork = wallet?.provider?.networkVersion
+  const desiredNetwork = getNetworkId()
+  const currentNetwork = wallet?.provider?.networkVersion.toString()
   return currentNetwork ? desiredNetwork !== currentNetwork : false
 }
 

@@ -1,8 +1,7 @@
 import { createSelector } from 'reselect'
-
-import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -53,26 +52,28 @@ type GetNameParams = Overwrite<Partial<AddressBookEntry>, { address: string }>
 export const addressBookEntryName = createSelector(
   [
     addressBookAsMap,
-    (_, { address, chainId = getNetworkId() }: GetNameParams): { address: string; chainId: ETHEREUM_NETWORK } => ({
+    networkSelector,
+    (_, { address, chainId }: GetNameParams): { address: string; chainId?: ETHEREUM_NETWORK } => ({
       address,
       chainId,
     }),
   ],
-  (addressBook, { address, chainId }) => {
-    return getNameByAddress(addressBook, address, chainId) || ADDRESS_BOOK_DEFAULT_NAME
+  (addressBook, networkId, { address, chainId }) => {
+    return getNameByAddress(addressBook, address, chainId || networkId) || ADDRESS_BOOK_DEFAULT_NAME
   },
 )
 
 export const addressBookName = createSelector(
   [
     addressBookAsMap,
-    (_, { address, chainId = getNetworkId() }: GetNameParams): { address: string; chainId: ETHEREUM_NETWORK } => ({
+    networkSelector,
+    (_, { address, chainId }: GetNameParams): { address: string; chainId?: ETHEREUM_NETWORK } => ({
       address,
       chainId,
     }),
   ],
-  (addressBook, { address, chainId }) => {
-    return getNameByAddress(addressBook, address, chainId)
+  (addressBook, networkId, { address, chainId }) => {
+    return getNameByAddress(addressBook, address, chainId || networkId)
   },
 )
 
@@ -81,9 +82,9 @@ export const addressBookName = createSelector(
 /*********************/
 
 export const currentNetworkAddressBook = createSelector(
-  [addressBookState],
-  (addressBook): AppReduxState['addressBook'] => {
-    return addressBook.filter(({ chainId }) => chainId.toString() === getNetworkId())
+  [addressBookState, networkSelector],
+  (addressBook, networkId): AppReduxState['addressBook'] => {
+    return addressBook.filter(({ chainId }) => chainId.toString() === networkId)
   },
 )
 

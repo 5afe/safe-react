@@ -32,7 +32,7 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -83,7 +83,7 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
-  const networkId = useSelector(networkSelector)
+  const networkId = useSelector(currentChainId)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const history = useHistory()

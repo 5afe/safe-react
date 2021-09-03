@@ -19,7 +19,7 @@ import {
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -47,7 +47,7 @@ const BaseAddressBookInput = ({
   setValidationText,
   validationText,
 }: BaseAddressBookInputProps): ReactElement => {
-  const networkId = useSelector(networkSelector)
+  const networkId = useSelector(currentChainId)
 
   const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
     setSelectedEntry(addressEntry)
