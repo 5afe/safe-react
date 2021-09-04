@@ -74,8 +74,6 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const initialEntryState: Entry = { entry: { address: '', name: '', chainId: getNetworkId(), isNew: true } }
-
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
   const columns = generateColumns()
@@ -86,6 +84,7 @@ const AddressBookTable = (): ReactElement => {
   const addressBook = useSelector(currentNetworkAddressBook)
   const networkId = useSelector(currentChainId)
   const granted = useSelector(grantedSelector)
+  const initialEntryState: Entry = { entry: { address: '', name: '', chainId: getNetworkId(), isNew: true } }
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [importEntryModalOpen, setImportEntryModalOpen] = useState(false)

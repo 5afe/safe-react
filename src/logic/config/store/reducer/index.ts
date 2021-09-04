@@ -3,8 +3,7 @@ import { Action, handleActions } from 'redux-actions'
 import { AppReduxState } from 'src/store'
 import { CONFIG_ACTIONS } from 'src/logic/config/store/actions'
 import { makeNetworkConfig, NetworkState } from 'src/logic/config/model/networkConfig'
-import { getConfig, getNetworkName, setNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getConfig } from 'src/config'
 
 export const NETWORK_CONFIG_REDUCER_ID = 'networkConfig'
 

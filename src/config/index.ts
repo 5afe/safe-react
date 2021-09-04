@@ -42,10 +42,6 @@ export const getNetworkLabel = (id: ETHEREUM_NETWORK = getNetworkId()): string =
   return cfg ? cfg.network.label : ''
 }
 
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
-  getNetworkId(),
-)
-
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
     case 'test': {
@@ -112,33 +108,29 @@ export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracles = (): GasPriceOracle[] | undefined => getConfig()?.gasPriceOracles
 
+const useInfuraRPC = () => {
+  return [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(getNetworkId())
+}
+
 export const getSafeAppsRpcServiceUrl = (): string =>
-  usesInfuraRPC ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
+  useInfuraRPC() ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
 
 export const getRpcServiceUrl = (): string =>
-  usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
+  useInfuraRPC() ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
 export const getTokensServiceBaseUrl = () => `${getTxServiceUrl()}/tokens`
-
-export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => ({
-  name: getConfig().networkExplorerName,
-  url: getConfig().networkExplorerUrl,
-  apiUrl: getConfig().networkExplorerApiUrl,
-})
-
-export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig().disabledFeatures || []
 
 /**
  * Checks if a particular feature is enabled in the current network configuration
  * @params {FEATURES} feature
  * @returns boolean
  */
-export const isFeatureEnabled = memoize((feature: FEATURES): boolean => {
-  const disabledFeatures = getNetworkConfigDisabledFeatures()
-  return !disabledFeatures.some((disabledFeature) => disabledFeature === feature)
-})
+export const isFeatureEnabled = (feature: FEATURES): boolean => {
+  const { disabledFeatures } = getConfig()
+  return !disabledFeatures?.some((disabledFeature) => disabledFeature === feature)
+}
 
 export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
 
@@ -177,6 +169,15 @@ const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefin
     default: {
       return undefined
     }
+  }
+}
+
+const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => {
+  const cfg = getConfig()
+  return {
+    name: cfg.networkExplorerName,
+    url: cfg.networkExplorerUrl,
+    apiUrl: cfg.networkExplorerApiUrl,
   }
 }
 
