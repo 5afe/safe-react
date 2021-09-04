@@ -15,6 +15,7 @@ import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/interco
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { CookieAttributes } from 'js-cookie'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -112,6 +113,12 @@ const CookiesBanner = (): ReactElement => {
   const isSafeAppView = newAppUrl !== null
 
   useEffect(() => {
+    if (showIntercom && !isSafeAppView) {
+      loadIntercom()
+    }
+  }, [showIntercom, isSafeAppView])
+
+  useEffect(() => {
     if (intercomLoaded && isSafeAppView) {
       closeIntercom()
     }
@@ -130,8 +137,10 @@ const CookiesBanner = (): ReactElement => {
             acceptedAnalytics,
             acceptedIntercom: acceptedAnalytics,
           }
-          const expDays = acceptedAnalytics ? 365 : 7
-          await saveCookie(COOKIES_KEY, newState, expDays)
+          const cookieConfig: CookieAttributes = {
+            expires: acceptedAnalytics ? 365 : 7,
+          }
+          await saveCookie(COOKIES_KEY, newState, cookieConfig)
           setLocalIntercom(newState.acceptedIntercom)
           setShowIntercom(newState.acceptedIntercom)
         } else {
@@ -155,7 +164,10 @@ const CookiesBanner = (): ReactElement => {
       acceptedAnalytics: !isDesktop,
       acceptedIntercom: true,
     }
-    await saveCookie(COOKIES_KEY, newState, 365)
+    const cookieConfig: CookieAttributes = {
+      expires: 365,
+    }
+    await saveCookie(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
@@ -167,8 +179,10 @@ const CookiesBanner = (): ReactElement => {
       acceptedAnalytics: localAnalytics,
       acceptedIntercom: localIntercom,
     }
-    const expDays = localAnalytics ? 365 : 7
-    await saveCookie(COOKIES_KEY, newState, expDays)
+    const cookieConfig: CookieAttributes = {
+      expires: localAnalytics ? 365 : 7,
+    }
+    await saveCookie(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(localAnalytics)
     setShowIntercom(localIntercom)
 
@@ -180,10 +194,6 @@ const CookiesBanner = (): ReactElement => {
       closeIntercom()
     }
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
-  }
-
-  if (showIntercom && !isSafeAppView) {
-    loadIntercom()
   }
 
   const CookiesBannerForm = (props: CookiesBannerFormProps) => {
