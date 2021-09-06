@@ -46,9 +46,9 @@ interface ProcessTransactionArgs {
     data: string
     operation: Operation
     nonce: number
-    safeTxGas: number
+    safeTxGas: string
     safeTxHash: string
-    baseGas: number
+    baseGas: string
     gasPrice: string
     gasToken: string
     refundReceiver: string

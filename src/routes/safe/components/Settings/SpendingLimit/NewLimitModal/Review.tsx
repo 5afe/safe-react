@@ -131,7 +131,7 @@ const calculateSpendingLimitsTxData = (
 
     if (txParameters) {
       spendingLimitTxData.txNonce = txParameters.safeNonce
-      spendingLimitTxData.safeTxGas = txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined
+      spendingLimitTxData.safeTxGas = txParameters.safeTxGas ? txParameters.safeTxGas : undefined
       spendingLimitTxData.ethParameters = txParameters
     }
   }
@@ -165,7 +165,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     to: '',
     txData: '',
   })
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -242,8 +242,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)

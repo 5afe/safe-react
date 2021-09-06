@@ -88,7 +88,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
         ? t.current.txDetails.detailedExecutionInfo.baseGas
-        : 0,
+        : '0',
     [],
   )
 
@@ -104,7 +104,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
         ? t.current.txDetails.detailedExecutionInfo.safeTxGas
-        : 0,
+        : '0',
     [],
   )
 
