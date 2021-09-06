@@ -21,10 +21,8 @@ import LoadSafeOwnersStep, { loadSafeOwnersStepLabel } from './steps/LoadSafeOwn
 import ReviewLoadStep, { reviewLoadStepLabel } from './steps/ReviewLoadStep'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
-import { APP_ENV } from 'src/utils/constants'
 import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { FIELD_LOAD_SAFE_NAME } from '../load/components/fields'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -33,6 +31,7 @@ import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { SAFE_ROUTES } from '../routes'
 import {
+  FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
@@ -56,6 +55,7 @@ function Load(): ReactElement {
   }
 
   const onSubmitLoadSafe = async (values) => {
+    const safeName = values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SUGGESTED_SAFE_NAME]
     const safeAddress = values[FIELD_LOAD_SAFE_ADDRESS]
     const ownerList = values[FIELD_SAFE_OWNER_LIST]
 
@@ -76,7 +76,7 @@ function Load(): ReactElement {
 
     const safeAddressBook = makeAddressBookEntry({
       address: safeAddress,
-      name: values[FIELD_LOAD_SUGGESTED_SAFE_NAME] || values[FIELD_LOAD_SAFE_NAME],
+      name: safeName,
     })
     dispatch(addressBookSafeLoad([...ownerListWithNames, safeAddressBook]))
 
@@ -93,7 +93,7 @@ function Load(): ReactElement {
     )
   }
 
-  const isProductionEnv = APP_ENV === 'production'
+  const isProductionEnv = process.env.REACT_APP_ENV === 'production'
 
   return isProductionEnv && !provider ? (
     <div>No account detected</div>
@@ -108,7 +108,7 @@ function Load(): ReactElement {
         </Row>
         <StepperForm initialValues={initialValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
           {!isProductionEnv && (
-            <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue" disableNextButton={!provider}>
+            <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />
             </StepFormElement>
           )}

@@ -18,8 +18,6 @@ import { useEffect } from 'react'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { useSelector } from 'react-redux'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { useStepper } from 'src/components/NewStepper/stepperContext'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
@@ -36,15 +34,6 @@ function LoadSafeAddressStep(): ReactElement {
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
-
-  const provider = useSelector(providerNameSelector)
-  const { setCurrentStep } = useStepper()
-
-  useEffect(() => {
-    if (!provider) {
-      setCurrentStep(0)
-    }
-  }, [provider, setCurrentStep])
 
   const classes = useStyles()
 
@@ -112,7 +101,7 @@ function LoadSafeAddressStep(): ReactElement {
   const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
 
   return (
-    <Block className={classes.padding}>
+    <Block className={classes.padding} data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="md">
           You are about to add an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is

@@ -1,5 +1,5 @@
 import { makeStyles, TableContainer } from '@material-ui/core'
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { useForm } from 'react-final-form'
 
 import Block from 'src/components/layout/Block'
@@ -13,9 +13,7 @@ import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/va
 import { minMaxLength } from 'src/components/forms/validator'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
-import { useSelector } from 'react-redux'
-import { useStepper } from 'src/components/NewStepper/stepperContext'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+
 import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
 
 export const loadSafeOwnersStepLabel = 'Owners'
@@ -23,22 +21,13 @@ export const loadSafeOwnersStepLabel = 'Owners'
 function LoadSafeOwnersStep(): ReactElement {
   const classes = useStyles()
 
-  const provider = useSelector(providerNameSelector)
-  const { setCurrentStep } = useStepper()
-
-  useEffect(() => {
-    if (!provider) {
-      setCurrentStep(0)
-    }
-  }, [provider, setCurrentStep])
-
   const loadSafeForm = useForm()
   const ownersWithName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_LIST]
 
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph color="primary" noMargin size="md" data-testid="load-safe-step-two">
+        <Paragraph color="primary" noMargin size="md" data-testid="load-safe-owners-step">
           {`This Safe has ${ownersWithName.length} owners. Optional: Provide a name for each owner.`}
         </Paragraph>
       </Block>

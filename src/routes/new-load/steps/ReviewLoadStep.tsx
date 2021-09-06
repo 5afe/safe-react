@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useEffect } from 'react'
+import React, { Fragment, ReactElement } from 'react'
 import { makeStyles, TableContainer } from '@material-ui/core'
 import Block from 'src/components/layout/Block'
 import { border, lg, screenSm, sm, xs } from 'src/theme/variables'
@@ -9,9 +9,8 @@ import { useForm } from 'react-final-form'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
 import { useSelector } from 'react-redux'
-import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import Hairline from 'src/components/layout/Hairline'
-import { useStepper } from 'src/components/NewStepper/stepperContext'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_SAFE_ADDRESS,
@@ -27,15 +26,6 @@ function ReviewLoadStep(): ReactElement {
 
   const loadSafeForm = useForm()
   const userAddress = useSelector(userAccountSelector)
-
-  const provider = useSelector(providerNameSelector)
-  const { setCurrentStep } = useStepper()
-
-  useEffect(() => {
-    if (!provider) {
-      setCurrentStep(0)
-    }
-  }, [provider, setCurrentStep])
 
   const formValues = loadSafeForm.getState().values
 
@@ -56,7 +46,7 @@ function ReviewLoadStep(): ReactElement {
   const isUserConnectedWalletASAfeOwner = checkIfUserAddressIsAnOwner(ownerList, userAddress)
 
   return (
-    <Row className={classes.root}>
+    <Row className={classes.root} data-testid={'load-safe-review-step'}>
       <Col className={classes.detailsColumn} layout="column" xs={4}>
         <Block className={classes.details}>
           <Block margin="lg">
@@ -97,7 +87,14 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Connected wallet client is owner?
             </Paragraph>
-            <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+            <Paragraph
+              data-testid={'connected-wallet-is-owner'}
+              className={classes.name}
+              color="primary"
+              noMargin
+              size="lg"
+              weight="bolder"
+            >
               {isUserConnectedWalletASAfeOwner ? 'Yes' : 'No (read-only)'}
             </Paragraph>
           </Block>
