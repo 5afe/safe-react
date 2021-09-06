@@ -41,7 +41,7 @@ describe('<Load>', () => {
   })
 
   describe('First Step Load Safe', () => {
-    beforeEach(() => {
+    afterEach(() => {
       getENSAddressSpy.mockClear()
     })
 
