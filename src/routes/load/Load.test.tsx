@@ -1,10 +1,16 @@
 import { getClientGatewayUrl } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { mockedEndpoints } from 'src/setupTests'
-import { render, fireEvent, screen, waitFor } from 'src/utils/test-utils'
+import { render, fireEvent, screen, waitFor, act } from 'src/utils/test-utils'
 import Load from './container/Load'
 
 const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
+
+const networkId = '4'
+const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
+const validSafeAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+const notExistingENSNameDomain = 'notExistingENSDomain.eth'
+const validSafeENSNameDomain = 'testENSDomain.eth'
 
 describe('<Load>', () => {
   it('Should render Load container and form', async () => {
@@ -14,7 +20,7 @@ describe('<Load>', () => {
         loaded: true,
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
-        network: '4',
+        network: networkId,
         smartContractWallet: false,
         hardwareWallet: false,
       },
@@ -35,9 +41,11 @@ describe('<Load>', () => {
   })
 
   describe('First Step Load Safe', () => {
-    it('Should call getSafeInfo if a valid Safe Address is present', async () => {
-      const networkId = '4'
+    beforeEach(() => {
+      getENSAddressSpy.mockClear()
+    })
 
+    it('Should call getSafeInfo if a valid Safe Address is present', async () => {
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -65,8 +73,6 @@ describe('<Load>', () => {
     })
 
     it('should show and error if the Safe Address is invalid', async () => {
-      const networkId = '4'
-
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -80,8 +86,6 @@ describe('<Load>', () => {
       }
 
       render(<Load />, customState)
-
-      const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
 
       await waitFor(() => {
         const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
@@ -103,8 +107,6 @@ describe('<Load>', () => {
         }),
       )
 
-      const networkId = '4'
-
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -116,8 +118,6 @@ describe('<Load>', () => {
           hardwareWallet: false,
         },
       }
-
-      const validSafeAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
 
       render(<Load />, customState)
 
@@ -133,8 +133,6 @@ describe('<Load>', () => {
     })
 
     it('Should get Safe Address From ENS Name Domain', async () => {
-      const networkId = '4'
-
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -147,8 +145,6 @@ describe('<Load>', () => {
         },
       }
 
-      const validSafeENSNameDomain = 'testENSDomain.eth'
-      const validSafeAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
       const ensDomains = {
         [validSafeENSNameDomain]: validSafeAddress,
       }
@@ -166,13 +162,10 @@ describe('<Load>', () => {
       await waitFor(() => {
         expect(safeAddressInputNode.value).toBe(validSafeAddress)
         expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), networkId, validSafeAddress)
-        getENSAddressSpy.mockClear()
       })
     })
 
     it('Should show and error if it the ENS Name Domain is not registered', async () => {
-      const networkId = '4'
-
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -185,7 +178,6 @@ describe('<Load>', () => {
         },
       }
 
-      const notExistingENSNameDomain = 'notExistingENSDomain.eth'
       // mock getAddress fn to simulate a non existing ENS domain (rejecting the promise)
       getENSAddressSpy.mockImplementation(
         (notExistingENSNameDomain) => new Promise((reject) => reject(notExistingENSNameDomain)),
@@ -212,13 +204,10 @@ describe('<Load>', () => {
         const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
 
         expect(errorTextNode).toBeInTheDocument()
-        getENSAddressSpy.mockClear()
       })
     })
 
     it('Should show an error if a NO valid Safe Address is registered in the ENS Name Domain', async () => {
-      const networkId = '4'
-
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -239,7 +228,6 @@ describe('<Load>', () => {
         }),
       )
 
-      const validSafeENSNameDomain = 'testENSDomain.eth'
       const inValidSafeAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
       const ensDomains = {
         [validSafeENSNameDomain]: inValidSafeAddress,
@@ -261,7 +249,6 @@ describe('<Load>', () => {
         const errorTextNode = screen.getByText('Address given is not a valid Safe address')
 
         expect(errorTextNode).toBeInTheDocument()
-        getENSAddressSpy.mockClear()
       })
     })
   })
