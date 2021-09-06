@@ -6,7 +6,7 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/'
 
-import Hairline from '../layout/Hairline'
+import Hairline from 'src/components/layout/Hairline'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
