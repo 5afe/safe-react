@@ -78,7 +78,15 @@ describe('<Load>', () => {
       render(<Load />)
 
       fireEvent.click(screen.getByText('Switch Network'))
-      expect(screen.getByTestId('select-network-popup')).toBeInTheDocument()
+      const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
+      expect(selectNetworkPopupNode).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Switches Network if clicks on Switch Network button', async () => {

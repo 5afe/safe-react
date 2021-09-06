@@ -119,7 +119,8 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   networkLabel: {
-    margin: lg,
+    margin: `${lg} auto`,
     cursor: 'pointer',
+    maxWidth: '50%',
   },
 })
