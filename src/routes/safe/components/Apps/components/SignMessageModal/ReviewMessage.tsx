@@ -4,6 +4,7 @@ import MuiTextField from '@material-ui/core/TextField'
 import { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -78,7 +79,7 @@ export const ReviewMessage = ({
 
   const txRecipient: string | undefined = useMemo(() => getSignMessageLibAddress(getNetworkId()) || ZERO_ADDRESS, [])
   const txData = getSignMessageLibContractInstance(web3ReadOnly, getNetworkId())
-    .methods.signMessage(typeof message === 'string' ? web3ReadOnly.utils.fromAscii(message) : (message as number[]))
+    .methods.signMessage(calculateMessageHash(message))
     .encodeABI()
 
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
