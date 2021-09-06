@@ -37,7 +37,7 @@ const Routes = (): React.ReactElement => {
       <div style={{ maxWidth: '500px' }}>
         <p>
           {`
-          The current community version of Gnosis Safe homepage on Binance Smart Chain is expected to be retired around 2021/09/01
+          The current community version of Gnosis Safe homepage on Binance Smart Chain is expected to be retired around 2021/10/01
           at 1:00 PM (UTC). Gnosis Safe team has launched the mainnet support on Binance Smart Chain (BSC) here.
           We suggest all users migrate Safes from the community site to the `}
           <a href="https://bsc.gnosis-safe.io/" style={{ color: 'rgb(0, 140, 115)' }}>
@@ -51,6 +51,7 @@ const Routes = (): React.ReactElement => {
         </p>
         <p>
           <b>{`Current balance is not synced. If you want to send any fund, please use a contract to interact with it.`}</b>
+          <b>{`Do not add owner to your safe wallet, it can not be recognized.`}</b>
         </p>
       </div>
     ),
