@@ -1,17 +1,14 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Icon, Text } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { getSignMessageLibContractInstance, getSignMessageLibAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getExplorerInfo, getNetworkId, getNetworkInfo } from 'src/config'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -23,11 +20,11 @@ import { BasicTxInfo } from 'src/components/DecodeTxs'
 import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
 
-import { ConfirmTxModalProps } from '.'
+import { SignMessageModalProps } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -60,7 +57,20 @@ const MessageTextArea = styled(MuiTextField)`
   }
 `
 
-type Props = ConfirmTxModalProps
+const InfoMessage = styled(Paragraph)`
+  display: flex;
+  align-items: center;
+
+  > span:first-child {
+    margin-right: ${({ theme }) => theme.margin.xs};
+  }
+`
+
+type Props = Omit<SignMessageModalProps, 'message' | 'isOpen'> & {
+  txData: string
+  txRecipient: string
+  utf8Message: string
+}
 
 export const ReviewMessage = ({
   app,
@@ -70,17 +80,14 @@ export const ReviewMessage = ({
   onUserConfirm,
   onClose,
   onTxReject,
-  message,
   requestId,
+  utf8Message,
+  txData,
+  txRecipient,
 }: Props): ReactElement => {
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
   const isOwner = useSelector(grantedSelector)
-
-  const txRecipient: string | undefined = useMemo(() => getSignMessageLibAddress(getNetworkId()) || ZERO_ADDRESS, [])
-  const txData = getSignMessageLibContractInstance(web3ReadOnly, getNetworkId())
-    .methods.signMessage(calculateMessageHash(message))
-    .encodeABI()
 
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -187,7 +194,7 @@ export const ReviewMessage = ({
 
             <Divider withArrow />
 
-            <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue={'0'} />
+            <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue="0" recipientName="SignMessageLib" />
 
             <Text size="lg" strong>
               Signing message:
@@ -200,7 +207,7 @@ export const ReviewMessage = ({
               label="Message to sign"
               inputProps={{
                 type: 'text',
-                value: message.toString(),
+                value: utf8Message,
                 name: 'Message to sign',
                 onChange: () => {},
                 placeholder: '',
@@ -209,6 +216,10 @@ export const ReviewMessage = ({
                 disableUnderline: true,
               }}
             />
+            <InfoMessage>
+              <Icon size="md" type="info" color="warning" />
+              Signing a message with the Gnosis Safe requires a transaction on the blockchain
+            </InfoMessage>
 
             <TxParametersDetail
               txParameters={txParameters}
