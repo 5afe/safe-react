@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { getNetworks } from 'src/config'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
+
+const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/'
+const networks = [
+  {
+    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/rinkeby/',
+  },
+  {
+    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/polygon/',
+  },
+]
+
+type MigratedMessage = {
+  migrated: boolean
+}
 
 const mergeAddressBooks = (addressBookEntries: AddressBookEntry[], dispatch) => {
   addressBookEntries.forEach((addressBookEntry) => {
@@ -16,7 +29,7 @@ const mergeAddressBooks = (addressBookEntries: AddressBookEntry[], dispatch) => 
 const StoreMigrator: React.FC = () => {
   const [currentNetwork, setCurrentNetwork] = useState(0)
   const dispatch = useDispatch()
-  const networks = getNetworks()
+  //let networks = getNetworks()
 
   // Recieve the data to be migrated and save it into the localstorage
   useEffect(() => {
@@ -39,12 +52,10 @@ const StoreMigrator: React.FC = () => {
           })
           const migrationIframe = (document.getElementById('targetWindow') as HTMLIFrameElement).contentWindow
           if (migrationIframe) {
-            migrationIframe.postMessage(
-              {
-                migrated: true,
-              },
-              networks[currentNetwork].safeUrl,
-            )
+            const message: MigratedMessage = {
+              migrated: true,
+            }
+            migrationIframe.postMessage(message, networks[currentNetwork].safeUrl)
           }
           setCurrentNetwork(currentNetwork + 1)
         } catch (error) {
@@ -58,10 +69,10 @@ const StoreMigrator: React.FC = () => {
 
     window.addEventListener('message', saveEventData, false)
     return window.removeEventListener('message', saveEventData, false)
-  }, [currentNetwork, dispatch, networks])
+  }, [currentNetwork, dispatch])
 
   const isSingleNetworkApp = networks.some((network) => {
-    return network.safeUrl.includes(self.origin)
+    return self.origin !== MAINET_URL && network.safeUrl.includes(self.origin)
   })
   // Migrate local storage
   useEffect(() => {
@@ -69,7 +80,7 @@ const StoreMigrator: React.FC = () => {
       const urlToMigrate = `${networks[currentNetwork].safeUrl}${MIGRATION_ADDRESS}`
       window.open(urlToMigrate, 'targetWindow')
     }
-  }, [currentNetwork, isSingleNetworkApp, networks])
+  }, [currentNetwork, isSingleNetworkApp])
 
   return (
     <div>{!isSingleNetworkApp && <iframe width="0px" height="0px" name="targetWindow" id="targetWindow"></iframe>}</div>
