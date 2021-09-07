@@ -23,6 +23,12 @@ const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
 const validSafeENSNameDomain = 'testENSDomain.eth'
 
 describe('<Load>', () => {
+  afterEach(() => {
+    const constants = require('src/utils/constants')
+
+    Object.defineProperty(constants, 'APP_ENV', { value: undefined })
+  })
+
   it('renders Load Form', () => {
     render(<Load />)
 
@@ -40,7 +46,9 @@ describe('<Load>', () => {
   })
 
   it('hides Connect wallet & select network step if we are in production env', () => {
-    process.env.REACT_APP_ENV = 'production'
+    const constants = require('src/utils/constants')
+
+    Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
 
     const customState = {
       providers: {
@@ -134,7 +142,9 @@ describe('<Load>', () => {
 
   describe('Step 2: Name and address', () => {
     it('Shows a No account detected error message if no wallet is connected in production environment', () => {
-      process.env.REACT_APP_ENV = 'production'
+      const constants = require('src/utils/constants')
+
+      Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
 
       render(<Load />)
 

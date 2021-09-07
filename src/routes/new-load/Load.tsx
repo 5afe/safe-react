@@ -37,6 +37,7 @@ import {
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
 } from './fields/loadFields'
+import { APP_ENV } from 'src/utils/constants'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -93,7 +94,7 @@ function Load(): ReactElement {
     )
   }
 
-  const isProductionEnv = process.env.REACT_APP_ENV === 'production'
+  const isProductionEnv = APP_ENV === 'production'
 
   return isProductionEnv && !provider ? (
     <div>No account detected</div>
