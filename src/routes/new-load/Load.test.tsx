@@ -82,10 +82,25 @@ describe('<Load>', () => {
       expect(screen.getByText('Switch Network')).toBeInTheDocument()
     })
 
-    it('Shows the Switch Network popup if clicks on Switch Network button', () => {
+    it('Opens the Switch Network popup if clicks on Switch Network button', () => {
       render(<Load />)
 
       fireEvent.click(screen.getByText('Switch Network'))
+      const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
+      expect(selectNetworkPopupNode).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
+    })
+
+    it('Opens the Switch Network popup if clicks on the current selected Network label', () => {
+      render(<Load />)
+
+      fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()

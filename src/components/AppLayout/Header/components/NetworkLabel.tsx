@@ -11,6 +11,7 @@ const currentNetworkInfo = getNetworkInfo()
 const StyledCol = styled(Col)`
   flex-grow: 0;
   padding: 0 ${sm};
+  cursor: ${(props) => (props.onClick ? 'pointer' : 'initial')};
   @media (min-width: ${screenSm}px) {
     padding-left: ${md};
     padding-right: ${md};
@@ -28,11 +29,17 @@ const StyledParagraph = styled(Paragraph)<{ network: Partial<NetworkSettings> }>
   text-align: center;
 `
 
-const NetworkLabel = ({ networkInfo }: { networkInfo?: NetworkInfo }): React.ReactElement => {
-  const selectedNetwork = networkInfo || currentNetworkInfo
+const NetworkLabel = ({
+  networkInfo,
+  onClick,
+}: {
+  networkInfo?: NetworkInfo
+  onClick?: () => void
+}): React.ReactElement => {
+  const selectedNetwork = networkInfo || getNetworkInfo()
 
   return (
-    <StyledCol middle="xs" start="xs">
+    <StyledCol middle="xs" start="xs" onClick={onClick}>
       <StyledParagraph network={selectedNetwork} size="xs">
         {selectedNetwork.label}
       </StyledParagraph>

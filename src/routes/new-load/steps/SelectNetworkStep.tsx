@@ -50,7 +50,7 @@ function SelectNetworkStep(): ReactElement {
       <div className={classes.labelContainer}>
         Select network on which the Safe was created:
         {currentNetworkName ? (
-          <NetworkLabel />
+          <NetworkLabel onClick={openNetworkSelectorPopup} />
         ) : (
           <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
             Select Network
