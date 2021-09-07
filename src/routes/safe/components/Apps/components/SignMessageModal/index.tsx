@@ -25,7 +25,6 @@ export type SignMessageModalProps = {
 const networkId = getNetworkId()
 
 export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalProps): ReactElement => {
-  console.log({ message: message.toString(), isHex: web3ReadOnly.utils.isHex(message.toString()) })
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
   const txData = getSignMessageLibContractInstance(web3ReadOnly, networkId)
     .methods.signMessage(calculateMessageHash(message))
