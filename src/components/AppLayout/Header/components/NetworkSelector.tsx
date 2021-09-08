@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, Fragment } from 'react'
+import { ReactElement, useRef, Fragment } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -13,11 +13,13 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-
 import { sameString } from 'src/utils/strings'
 import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
+import { generatePath } from 'react-router'
+import { ROOT_ROUTE } from 'src/routes/routes'
+import { Link } from 'react-router-dom'
 
 const styles = {
   root: {
@@ -59,7 +61,7 @@ const styles = {
 
 const useStyles = makeStyles(styles)
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
   margin: 0;
   text-decoration: none;
   display: flex;
@@ -82,6 +84,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
   const networkRef = useRef(null)
   const classes = useStyles()
   const networkName = getNetworkName().toLowerCase()
+
   return (
     <>
       <div className={classes.root} ref={networkRef}>
@@ -107,7 +110,11 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
                 <List className={classes.network} component="div">
                   {networks.map((network) => (
                     <Fragment key={network.id}>
-                      <StyledLink href={network.safeUrl}>
+                      <StyledLink
+                        to={generatePath(ROOT_ROUTE, {
+                          network: network.label?.toLowerCase(),
+                        })}
+                      >
                         <NetworkLabel networkInfo={network} />
                         {sameString(networkName, network.label?.toLowerCase()) && (
                           <Icon type="check" size="md" color="primary" />

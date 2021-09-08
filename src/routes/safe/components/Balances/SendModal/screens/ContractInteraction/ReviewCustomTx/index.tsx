@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { ReactElement } from 'react'
+import { useDispatch } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -15,7 +15,6 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -26,9 +25,9 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -50,7 +49,7 @@ const { nativeCoin } = getNetworkInfo()
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
 
   const {
     gasLimit,
@@ -82,7 +81,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           valueInWei: txValue,
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),

@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -20,8 +20,6 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import {
   generateFormFieldKey,
   getValueFromTxInputs,
@@ -32,6 +30,7 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 const useStyles = makeStyles(styles)
 
@@ -57,8 +56,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const safeAddress = safeAddressFromUrl()
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
@@ -106,7 +105,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           valueInWei: txInfo?.txAmount,
           txData: txInfo?.txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -118,10 +117,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -142,7 +141,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
@@ -197,7 +196,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               const value: string = getValueFromTxInputs(key, type, tx)
 
               return (
-                <React.Fragment key={key}>
+                <Fragment key={key}>
                   <Row margin="xs">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       {name} ({type})
@@ -208,7 +207,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                       {value}
                     </Paragraph>
                   </Row>
-                </React.Fragment>
+                </Fragment>
               )
             })}
             <Row margin="xs">

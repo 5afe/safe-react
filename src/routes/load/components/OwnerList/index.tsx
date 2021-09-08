@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getExplorerInfo } from 'src/config'

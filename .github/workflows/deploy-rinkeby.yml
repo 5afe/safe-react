@@ -77,7 +77,6 @@ jobs:
       - name: Build ${{ env.REACT_APP_NETWORK }} app ${{ env.REACT_APP_ENV }}
         run: yarn build
         env:
-          PUBLIC_URL: './'
           REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
           REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
           REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN: ${{ secrets.REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN }}
@@ -105,7 +104,7 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/${{ env.REACT_APP_NETWORK }}/app/)
+            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/app/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number

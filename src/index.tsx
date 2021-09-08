@@ -1,9 +1,7 @@
 import { BigNumber } from 'bignumber.js'
-import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
-
 import Root from 'src/components/Root'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'

@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
@@ -131,7 +131,7 @@ const calculateSpendingLimitsTxData = (
 
     if (txParameters) {
       spendingLimitTxData.txNonce = txParameters.safeNonce
-      spendingLimitTxData.safeTxGas = txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined
+      spendingLimitTxData.safeTxGas = txParameters.safeTxGas ? txParameters.safeTxGas : undefined
       spendingLimitTxData.ethParameters = txParameters
     }
   }
@@ -165,7 +165,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     to: '',
     txData: '',
   })
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -240,10 +240,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     'One-time spending limit'
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -269,7 +269,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (

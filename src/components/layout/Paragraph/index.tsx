@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind'
-import React, { MouseEventHandler, CSSProperties, ReactElement, ReactNode } from 'react'
+import { MouseEventHandler, CSSProperties, ReactElement, ReactNode } from 'react'
 
 import styles from './index.module.scss'
 

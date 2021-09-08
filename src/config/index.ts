@@ -99,7 +99,6 @@ export const getNetworks = (): NetworkInfo[] => {
     label: networkObj.network.label,
     backgroundColor: networkObj.network.backgroundColor,
     textColor: networkObj.network.textColor,
-    safeUrl: networkObj.environment[getCurrentEnvironment()].safeUrl,
   }))
 }
 

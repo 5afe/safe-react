@@ -1,6 +1,4 @@
 import { Map } from 'immutable'
-import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
-import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
 import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
@@ -38,8 +36,6 @@ import currencyValues, {
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware/currencyValuesStorageMiddleware'
 
-export const history = createHashHistory()
-
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const localStorageConfig = {
@@ -53,7 +49,6 @@ const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
     save(localStorageConfig),
-    routerMiddleware(history),
     notificationsMiddleware,
     safeStorageMiddleware,
     providerWatcher,
@@ -63,7 +58,6 @@ const finalCreateStore = composeEnhancers(
 )
 
 const reducers = combineReducers({
-  router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
   [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
@@ -89,7 +83,6 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
-  router: RouterState<{ pathname: string }>
 }>
 
 // Address Book v2 migration

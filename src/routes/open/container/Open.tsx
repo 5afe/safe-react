@@ -1,7 +1,7 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { generatePath, useLocation } from 'react-router-dom'
 import { TransactionReceipt } from 'web3-core'
@@ -19,9 +19,9 @@ import {
   getSafeNameFrom,
   getThresholdFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
-import { SAFE_ROUTES, WELCOME_ADDRESS } from 'src/routes/routes'
+import { getNetworkSlug, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import { history } from 'src/store'
+import { history } from 'src/routes/routes'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
@@ -210,6 +210,7 @@ const Open = (): ReactElement => {
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
       pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        network: getNetworkSlug(),
         safeAddress: safeProps.address,
       }),
       state: {
@@ -223,9 +224,11 @@ const Open = (): ReactElement => {
 
   const onCancel = () => {
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-    history.push({
-      pathname: `${WELCOME_ADDRESS}`,
-    })
+    history.push(
+      generatePath(WELCOME_ROUTE, {
+        network: getNetworkSlug(),
+      }),
+    )
   }
 
   const onRetry = async () => {

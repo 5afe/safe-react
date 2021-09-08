@@ -1,11 +1,11 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import Link from 'src/components/layout/Link'
-import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, LOAD_ROUTE, getNetworkSlug } from 'src/routes/routes'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 
 const Wrapper = styled.div`
@@ -36,21 +36,21 @@ type Props = {
 export const OwnedAddress = ({ address, isAdded, onClick, children }: Props): ReactElement => {
   const name = useSelector((state) => addressBookName(state, { address }))
 
+  const baseRouteSlugs = {
+    network: getNetworkSlug(),
+    safeAddress: address,
+  }
+
   return (
     <Wrapper>
       {children}
 
-      <Link
-        to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-          safeAddress: address,
-        })}
-        onClick={onClick}
-      >
+      <Link to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs)} onClick={onClick}>
         <EthHashInfo hash={address} name={name} showAvatar shortenHash={4} />
       </Link>
 
       {!isAdded && (
-        <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onClick}>
+        <Link to={generatePath(LOAD_ROUTE, baseRouteSlugs)} onClick={onClick}>
           <Text size="sm" color="primary">
             Add Safe
           </Text>

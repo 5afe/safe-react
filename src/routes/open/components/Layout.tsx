@@ -18,7 +18,7 @@ import {
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
 import { WelcomeLayout } from 'src/routes/welcome/components'
-import { history } from 'src/store'
+import { history } from 'src/routes/routes'
 import { secondary, sm } from 'src/theme/variables'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'

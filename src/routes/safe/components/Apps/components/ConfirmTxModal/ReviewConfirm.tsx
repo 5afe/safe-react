@@ -1,6 +1,6 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -60,7 +60,6 @@ const StyledBlock = styled(Block)`
 `
 
 type Props = ConfirmTxModalProps & {
-  areTxsMalformed: boolean
   showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
   hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
@@ -80,7 +79,7 @@ export const ReviewConfirm = ({
   onUserConfirm,
   onClose,
   onTxReject,
-  areTxsMalformed,
+  requestId,
   showDecodedTxData,
 }: Props): ReactElement => {
   const isMultiSend = txs.length > 1
@@ -98,12 +97,11 @@ export const ReviewConfirm = ({
     [txs, isMultiSend],
   )
   const txValue: string | undefined = useMemo(
-    // Value is converted to string because numbers were allowed in the safe-apps-sdk v1, so 0 and anything would evaluate as false
-    () => (isMultiSend ? '0' : txs[0]?.value.toString() && parseTxValue(txs[0]?.value)),
+    () => (isMultiSend ? '0' : parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
   )
   const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -139,12 +137,12 @@ export const ReviewConfirm = ({
   }, [txData])
 
   const handleTxRejection = () => {
-    onTxReject()
+    onTxReject(requestId)
     onClose()
   }
 
   const handleUserConfirmation = (safeTxHash: string): void => {
-    onUserConfirm(safeTxHash)
+    onUserConfirm(safeTxHash, requestId)
     onClose()
   }
 
@@ -162,7 +160,7 @@ export const ReviewConfirm = ({
           origin: app.id,
           navigateToTransactionsTab: false,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
@@ -175,10 +173,10 @@ export const ReviewConfirm = ({
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -197,7 +195,7 @@ export const ReviewConfirm = ({
     <EditableTxParameters
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={Math.max(gasEstimation, params?.safeTxGas || 0).toString()}
+      safeTxGas={Math.max(parseInt(gasEstimation), params?.safeTxGas || 0).toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
       isExecution={isExecution}
@@ -258,7 +256,7 @@ export const ReviewConfirm = ({
               cancelButtonProps={{ onClick: handleTxRejection }}
               confirmButtonProps={{
                 onClick: () => confirmTransactions(txParameters),
-                disabled: !isOwner || areTxsMalformed,
+                disabled: !isOwner,
                 status: buttonStatus,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
               }}

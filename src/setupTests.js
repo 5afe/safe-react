@@ -68,19 +68,6 @@ Object.defineProperty(window, 'crypto', {
 
 const DEFAULT_ENV = { ...process.env }
 
-const originalError = console.error
-beforeAll(() => {
-  console.error = (...args) => {
-    if (/Warning.*not wrapped in act/.test(args[0])) {
-      return
-    }
-    if (/Code 101: Failed to resolve the address \(Given address \"notExistingENSDomain.eth\" /.test(args[0])) {
-      return
-    }
-    originalError.call(console, ...args)
-  }
-})
-
 function clearAllMockRequest() {
   Object.keys(mockedEndpoints).forEach((endpoint) => {
     mockedEndpoints[endpoint].mockClear()

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
@@ -6,7 +6,6 @@ import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -17,6 +16,8 @@ import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/Man
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
+import { safeAddressFromUrl } from 'src/utils/router'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 
 export type OwnerValues = {
   address: string
@@ -44,7 +45,7 @@ export const sendReplaceOwner = async (
       valueInWei: '0',
       txData,
       txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
@@ -66,7 +67,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   useEffect(

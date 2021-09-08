@@ -1,17 +1,18 @@
+import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 
 import {
-  LOAD_ADDRESS,
-  OPEN_ADDRESS,
-  SAFELIST_ADDRESS,
-  SAFE_PARAM_ADDRESS,
+  BASE_SAFE_ROUTE,
+  getNetworkSlug,
+  LOAD_ROUTE,
+  OPEN_ROUTE,
+  ROOT_ROUTE,
   SAFE_ROUTES,
-  WELCOME_ADDRESS,
+  WELCOME_ROUTE,
 } from 'src/routes/routes'
-
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
@@ -21,13 +22,11 @@ const Open = React.lazy(() => import('./open/container/Open'))
 const Safe = React.lazy(() => import('./safe/container'))
 const Load = React.lazy(() => import('./load/container/Load'))
 
-const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
-
 const Routes = (): React.ReactElement => {
   const [isInitialLoad, setInitialLoad] = useState(true)
   const location = useLocation()
   const matchSafeWithAction = useRouteMatch<{ safeAddress: string; safeAction: string }>({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
+    path: `${BASE_SAFE_ROUTE}/:safeAction`,
   })
 
   const defaultSafe = useSelector(lastViewedSafe)
@@ -41,17 +40,25 @@ const Routes = (): React.ReactElement => {
 
   useEffect(() => {
     if (matchSafeWithAction) {
-      // prevent logging safeAddress
-      let safePage = `${SAFELIST_ADDRESS}/SAFE_ADDRESS`
-      if (matchSafeWithAction.params?.safeAction) {
-        safePage += `/${matchSafeWithAction.params?.safeAction}`
-      }
+      const safePage = generatePath(BASE_SAFE_ROUTE, {
+        network: getNetworkSlug(),
+        // prevent logging safeAddress
+        safeAddress: 'SAFE_ADDRESS',
+        ...(matchSafeWithAction.params?.safeAction && {
+          safeAction: matchSafeWithAction.params.safeAction,
+        }),
+      })
+
       trackPage(safePage)
     } else {
       const page = `${location.pathname}${location.search}`
       trackPage(page)
     }
   }, [location, matchSafeWithAction, trackPage])
+
+  const baseRouteSlugs = {
+    network: getNetworkSlug(),
+  }
 
   return (
     <Switch>
@@ -60,7 +67,7 @@ const Routes = (): React.ReactElement => {
         path="/"
         render={() => {
           if (!isInitialLoad) {
-            return <Redirect to={WELCOME_ADDRESS} />
+            return <Redirect to={generatePath(WELCOME_ROUTE, baseRouteSlugs)} />
           }
 
           if (defaultSafe === null) {
@@ -75,20 +82,21 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                  ...baseRouteSlugs,
                   safeAddress: defaultSafe,
                 })}
               />
             )
           }
 
-          return <Redirect to={WELCOME_ADDRESS} />
+          return <Redirect to={generatePath(WELCOME_ROUTE, baseRouteSlugs)} />
         }}
       />
-      <Route component={Welcome} exact path={WELCOME_ADDRESS} />
-      <Route component={Open} exact path={OPEN_ADDRESS} />
-      <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
-      <Redirect to="/" />
+      <Route component={Welcome} exact path={WELCOME_ROUTE} />
+      <Route component={Open} exact path={OPEN_ROUTE} />
+      <Route component={Safe} path={BASE_SAFE_ROUTE} />
+      <Route component={Load} path={`${LOAD_ROUTE}/:safeAddress?`} />
+      <Redirect to={generatePath(ROOT_ROUTE, baseRouteSlugs)} />
     </Switch>
   )
 }

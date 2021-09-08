@@ -1,8 +1,9 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
+import { generatePath } from 'react-router'
+import { getNetworkSlug, ROOT_ROUTE } from 'src/routes/routes'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -75,7 +76,8 @@ export const handleChunkError = (error: Error): boolean => {
 
 const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) => {
   if (handleChunkError(error)) {
-    return null
+    // FallbackRender type does not allow null to be returned
+    return <></>
   }
 
   return (
@@ -117,7 +119,13 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
             </Text>
           </>
         )}
-        <Link size="lg" color="primary" href="/app/">
+        <Link
+          size="lg"
+          color="primary"
+          href={generatePath(ROOT_ROUTE, {
+            network: getNetworkSlug(),
+          })}
+        >
           <LinkContent>
             <Icon size="md" type="home" color="primary" />
             Go to Home

@@ -1,6 +1,5 @@
 import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
-import * as React from 'react'
 
 import { Notification, NOTIFICATIONS } from './notificationTypes'
 

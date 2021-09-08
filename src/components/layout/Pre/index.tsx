@@ -1,11 +1,11 @@
 import classNames from 'classnames/bind'
-import * as React from 'react'
+import { ReactElement } from 'react'
 
 import styles from './index.module.scss'
 
 const cx = classNames.bind(styles)
 
-const Pre = ({ children, ...props }) => (
+const Pre = ({ children, ...props }): ReactElement => (
   <pre className={cx(styles.pre)} {...props}>
     {children}
   </pre>

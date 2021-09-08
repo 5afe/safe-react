@@ -1,5 +1,5 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
 import ReceiveModal from 'src/components/App/ReceiveModal'
 
-import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, getNetworkSlug, BASE_SAFE_ROUTE } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -15,8 +15,8 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
 
-const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
-const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
+const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
+const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -37,7 +37,7 @@ export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 const Balances = (): ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const matchSafeWithAction = useRouteMatch({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+    path: `${BASE_SAFE_ROUTE}/:safeAction/:safeSubaction?`,
   }) as {
     url: string
     params: Record<string, string>
@@ -84,16 +84,17 @@ const Balances = (): ReactElement => {
 
   const { erc721Enabled, sendFunds, showReceive } = state
 
+  const baseRouteSlugs = {
+    network: getNetworkSlug(),
+    safeAddress,
+  }
+
   let balancesSection
   switch (matchSafeWithAction.url) {
-    case generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs):
       balancesSection = 'Coins'
       break
-    case generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, baseRouteSlugs):
       balancesSection = 'Collectibles'
       break
     default:
@@ -111,26 +112,18 @@ const Balances = (): ReactElement => {
         </Col>
         <Switch>
           <Route
-            path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-              safeAddress,
-            })}
+            path={SAFE_ROUTES.ASSETS_COLLECTIBLES}
             exact
             render={() => {
               return !erc721Enabled ? (
-                <Redirect
-                  to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                    safeAddress,
-                  })}
-                />
+                <Redirect to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs)} />
               ) : (
                 <Col end="sm" sm={6} xs={12}></Col>
               )
             }}
           />
           <Route
-            path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-              safeAddress,
-            })}
+            path={SAFE_ROUTES.ASSETS_BALANCES}
             exact
             render={() => (
               <Col end="sm" sm={6} xs={12}>
@@ -142,9 +135,7 @@ const Balances = (): ReactElement => {
       </Menu>
       <Switch>
         <Route
-          path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-            safeAddress,
-          })}
+          path={SAFE_ROUTES.ASSETS_COLLECTIBLES}
           exact
           render={() => {
             if (erc721Enabled) {
@@ -154,9 +145,7 @@ const Balances = (): ReactElement => {
           }}
         />
         <Route
-          path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            safeAddress,
-          })}
+          path={SAFE_ROUTES.ASSETS_BALANCES}
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}

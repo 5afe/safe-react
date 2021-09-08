@@ -1,22 +1,20 @@
-import axios from 'axios'
+import { postSafeGasEstimation, SafeTransactionEstimationRequest } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getSafeServiceBaseUrl } from 'src/config'
+import { getClientGatewayUrl, getNetworkId } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
-
-export type GasEstimationResponse = {
-  safeTxGas: string
-}
 
 type FetchSafeTxGasEstimationProps = {
   safeAddress: string
-  to: string
-  value: string
-  data?: string
-  operation: number
-}
+} & SafeTransactionEstimationRequest
 
-export const fetchSafeTxGasEstimation = ({ safeAddress, ...body }: FetchSafeTxGasEstimationProps): Promise<string> => {
-  const url = `${getSafeServiceBaseUrl(checksumAddress(safeAddress))}/multisig-transactions/estimations/`
-
-  return axios.post(url, body).then(({ data }) => data.safeTxGas)
+export const fetchSafeTxGasEstimation = async ({
+  safeAddress,
+  ...body
+}: FetchSafeTxGasEstimationProps): Promise<string> => {
+  return postSafeGasEstimation(
+    getClientGatewayUrl(),
+    getNetworkId().toString(),
+    checksumAddress(safeAddress),
+    body,
+  ).then(({ safeTxGas }) => safeTxGas)
 }

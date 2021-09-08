@@ -14,11 +14,13 @@ const getMockedOldSafe = ({
   nonce,
   modules,
   spendingLimits,
+  guard,
 }: Partial<SafeRecordProps>): SafeRecordProps => {
   const owner1 = '0x3bE3c2dE077FBC409ae50AFFA66a94a9aE669A8d'
   const owner2 = '0xA2366b0c2607de70777d87aCdD1D22F0708fA6a3'
   const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
   const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
+  const mockedGuardAddress = '0x4f8a82d73729A33E0165aDeF3450A7F85f007528'
 
   return {
     address: address || '0xAE173F30ec9A293d37c44BA68d3fCD35F989Ce9F',
@@ -38,6 +40,7 @@ const getMockedOldSafe = ({
     featuresEnabled: featuresEnabled || [],
     totalFiatBalance: '110',
     loadedViaUrl: false,
+    guard: guard || mockedGuardAddress,
   }
 }
 

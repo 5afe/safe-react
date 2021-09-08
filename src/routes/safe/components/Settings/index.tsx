@@ -1,13 +1,11 @@
 import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Route, Switch, useRouteMatch } from 'react-router-dom'
-
 import { styles } from './style'
-
-import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, getNetworkSlug, BASE_SAFE_ROUTE } from 'src/routes/routes'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
@@ -15,12 +13,12 @@ import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-const Advanced = React.lazy(() => import('./Advanced'))
-const SpendingLimitSettings = React.lazy(() => import('./SpendingLimit'))
-const ManageOwners = React.lazy(() => import('./ManageOwners'))
-const RemoveSafeModal = React.lazy(() => import('./RemoveSafeModal'))
-const SafeDetails = React.lazy(() => import('./SafeDetails'))
-const ThresholdSettings = React.lazy(() => import('./ThresholdSettings'))
+const Advanced = lazy(() => import('./Advanced'))
+const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
+const ManageOwners = lazy(() => import('./ManageOwners'))
+const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
+const SafeDetails = lazy(() => import('./SafeDetails'))
+const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -36,37 +34,32 @@ const Settings = (): React.ReactElement => {
   const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
   const matchSafeWithAction = useRouteMatch({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+    path: `${BASE_SAFE_ROUTE}/:safeAction/:safeSubaction?`,
   }) as {
     url: string
     params: Record<string, string>
   }
 
+  const baseRouteSlugs = {
+    network: getNetworkSlug(),
+    safeAddress,
+  }
+
   let settingsSection
   switch (matchSafeWithAction.url) {
-    case generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.SETTINGS_DETAILS, baseRouteSlugs):
       settingsSection = 'Safe Details'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.SETTINGS_OWNERS, baseRouteSlugs):
       settingsSection = 'Owners'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.SETTINGS_POLICIES, baseRouteSlugs):
       settingsSection = 'Policies'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, baseRouteSlugs):
       settingsSection = 'Spending Limit'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
-      safeAddress,
-    }):
+    case generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, baseRouteSlugs):
       settingsSection = 'Advanced'
       break
     default:
@@ -112,41 +105,15 @@ const Settings = (): React.ReactElement => {
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>
             <Switch>
+              <Route path={SAFE_ROUTES.SETTINGS_DETAILS} exact render={() => <SafeDetails />} />
               <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <SafeDetails />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
-                  safeAddress,
-                })}
+                path={SAFE_ROUTES.SETTINGS_OWNERS}
                 exact
                 render={() => <ManageOwners granted={granted} owners={owners} />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <ThresholdSettings />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <SpendingLimitSettings />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <Advanced />}
-              ></Route>
+              />
+              <Route path={SAFE_ROUTES.SETTINGS_POLICIES} exact render={() => <ThresholdSettings />} />
+              <Route path={SAFE_ROUTES.SETTINGS_SPENDING_LIMIT} exact render={() => <SpendingLimitSettings />} />
+              <Route path={SAFE_ROUTES.SETTINGS_ADVANCED} exact render={() => <Advanced />} />
             </Switch>
           </Block>
         </Col>

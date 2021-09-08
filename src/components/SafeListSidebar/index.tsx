@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react'
+import { useState, ReactElement, createContext } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import { useSelector } from 'react-redux'
 
@@ -9,11 +9,11 @@ import useSidebarStyles from './style'
 import Hairline from 'src/components/layout/Hairline'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import AddSafeButton from 'src/components/SafeListSidebar/AddSafeButton'
+import { safeAddressFromUrl } from 'src/utils/router'
 
-export const SafeListSidebarContext = React.createContext({
+export const SafeListSidebarContext = createContext({
   isOpen: false,
   toggleSidebar: () => {},
 })
@@ -26,7 +26,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const ownedSafes = useOwnerSafes()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
 
   const classes = useSidebarStyles()
   const { trackEvent } = useAnalytics()

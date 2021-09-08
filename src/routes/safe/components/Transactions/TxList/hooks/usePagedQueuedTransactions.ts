@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
+import { useDispatch } from 'react-redux'
 import { loadPagedQueuedTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addQueuedTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 type PagedQueuedTransactions = {
   count: number
@@ -19,7 +18,7 @@ type PagedQueuedTransactions = {
 export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
   const transactions = useQueueTransactions()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   const [hasMore, setHasMore] = useState(true)
 
   const nextPage = async () => {

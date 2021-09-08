@@ -1,4 +1,3 @@
-import React from 'react'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'

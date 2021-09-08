@@ -1,9 +1,8 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { push } from 'connected-react-router'
 import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
-
+import { getNetworkSlug, history } from '../../../../routes/routes'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
@@ -45,7 +44,7 @@ export interface CreateTransactionArgs {
   txData?: string
   txNonce?: number | string
   valueInWei: string
-  safeTxGas?: number
+  safeTxGas?: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
 }
 
@@ -81,12 +80,11 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      dispatch(
-        push(
-          generatePath(SAFE_ROUTES.TRANSACTIONS, {
-            safeAddress,
-          }),
-        ),
+      history.push(
+        generatePath(SAFE_ROUTES.TRANSACTIONS, {
+          network: getNetworkSlug(),
+          safeAddress,
+        }),
       )
     }
 
@@ -101,13 +99,13 @@ export const createTransaction =
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-    let safeTxGas = safeTxGasArg || 0
+    let safeTxGas = safeTxGasArg || '0'
     try {
       if (safeTxGasArg === undefined) {
         safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
       }
     } catch (error) {
-      safeTxGas = safeTxGasArg || 0
+      safeTxGas = safeTxGasArg || '0'
     }
 
     const sigs = getPreValidatedSignatures(from)
@@ -123,7 +121,7 @@ export const createTransaction =
       operation,
       nonce: Number.parseInt(nonce),
       safeTxGas,
-      baseGas: 0,
+      baseGas: '0',
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
       refundReceiver: ZERO_ADDRESS,

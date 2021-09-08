@@ -1,8 +1,8 @@
 import Onboard from 'bnc-onboard'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Button from 'src/components/layout/Button'
-import { getNetworkId, getNetworkName } from 'src/config'
+import { getNetworkName, getNetworkId } from 'src/config'
 import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
@@ -11,7 +11,6 @@ import { store } from 'src/store'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
 const networkId = getNetworkId()
-const networkName = getNetworkName()
 
 let lastUsedAddress = ''
 let providerName
@@ -20,7 +19,7 @@ const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
   networkId: parseInt(networkId, 10),
-  networkName: networkName.toLowerCase(),
+  networkName: getNetworkName().toLowerCase(),
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {

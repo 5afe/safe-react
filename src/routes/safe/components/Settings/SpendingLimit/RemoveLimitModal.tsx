@@ -1,6 +1,6 @@
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { ReactElement, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -10,7 +10,6 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -18,11 +17,11 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-
 import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -35,10 +34,10 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
 
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -80,7 +79,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
           valueInWei: '0',
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
         }),
@@ -97,10 +96,10 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     getResetTimeOptions().find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin)?.label ?? ''
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -132,7 +131,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
-        safeTxGas={gasEstimation.toString()}
+        safeTxGas={gasEstimation}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => {

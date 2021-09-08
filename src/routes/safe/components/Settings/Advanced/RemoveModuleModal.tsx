@@ -2,7 +2,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -20,6 +20,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -35,10 +36,10 @@ interface RemoveModuleModalProps {
 export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): ReactElement => {
   const classes = useStyles()
 
-  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -78,21 +79,21 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
           valueInWei: '0',
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
         }),
       )
     } catch (e) {
-      console.error(`failed to remove the module ${selectedModulePair}`, e.message)
+      logError(Errors._806, `${selectedModulePair} – ${e.message}`)
     }
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -125,7 +126,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
-        safeTxGas={gasEstimation.toString()}
+        safeTxGas={gasEstimation}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => {

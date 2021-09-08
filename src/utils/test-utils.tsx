@@ -1,8 +1,9 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { theme as styledTheme } from '@gnosis.pm/safe-react-components'
 import Providers from 'src/components/Providers'
-import { createCustomStore, history, store } from 'src/store'
+import { createCustomStore, store } from 'src/store'
+import { history } from 'src/routes/routes'
 import theme from 'src/theme/mui'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 

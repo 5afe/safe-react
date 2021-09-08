@@ -1,8 +1,9 @@
+import { Fragment } from 'react'
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
 import { Icon } from '@gnosis.pm/safe-react-components'
-import React from 'react'
+
 import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -10,7 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
 import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
 import { OwnedAddress } from 'src/components/SafeListSidebar/SafeList/OwnedAddress'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
@@ -78,11 +79,12 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
   return (
     <MuiList className={classes.list}>
       {safes.map((safe) => (
-        <React.Fragment key={safe.address}>
+        <Fragment key={safe.address}>
           <Link
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
             onClick={onSafeClick}
             to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              network: getNetworkSlug(),
               safeAddress: safe.address,
             })}
           >
@@ -92,19 +94,19 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
             </ListItem>
           </Link>
           <Hairline />
-        </React.Fragment>
+        </Fragment>
       ))}
 
       {ownedSafes.length > 0 && (
         <ListItem classes={{ root: classes.listItemCollapse }}>
           <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
             {ownedSafes.map((address: string) => (
-              <React.Fragment key={address}>
+              <Fragment key={address}>
                 <OwnedAddress address={address} onClick={onSafeClick} isAdded={isAddressAdded(safes, address)}>
                   {getLink(address)}
                 </OwnedAddress>
                 <Hairline />
-              </React.Fragment>
+              </Fragment>
             ))}
           </Collapse>
         </ListItem>
