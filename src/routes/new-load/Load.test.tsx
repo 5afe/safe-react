@@ -69,91 +69,91 @@ describe('<Load>', () => {
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  describe('Step 1: Connect wallet & select network', () => {
-    it('Shows the current selected network', () => {
-      render(<Load />)
+  // describe('Step 1: Connect wallet & select network', () => {
+  //   it('Shows the current selected network', () => {
+  //     render(<Load />)
 
-      expect(screen.getByText('Rinkeby')).toBeInTheDocument()
-    })
+  //     expect(screen.getByText('Rinkeby')).toBeInTheDocument()
+  //   })
 
-    it('Shows the Switch Network button', () => {
-      render(<Load />)
+  //   it('Shows the Switch Network button', () => {
+  //     render(<Load />)
 
-      expect(screen.getByText('Switch Network')).toBeInTheDocument()
-    })
+  //     expect(screen.getByText('Switch Network')).toBeInTheDocument()
+  //   })
 
-    it('Opens the Switch Network popup if clicks on Switch Network button', () => {
-      render(<Load />)
+  //   it('Opens the Switch Network popup if clicks on Switch Network button', () => {
+  //     render(<Load />)
 
-      fireEvent.click(screen.getByText('Switch Network'))
-      const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
-      expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
-    })
+  //     fireEvent.click(screen.getByText('Switch Network'))
+  //     const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
+  //     expect(selectNetworkPopupNode).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
+  //   })
 
-    it('Opens the Switch Network popup if clicks on the current selected Network label', () => {
-      render(<Load />)
+  //   it('Opens the Switch Network popup if clicks on the current selected Network label', () => {
+  //     render(<Load />)
 
-      fireEvent.click(screen.getByText('Rinkeby'))
-      const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
-      expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
-    })
+  //     fireEvent.click(screen.getByText('Rinkeby'))
+  //     const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
+  //     expect(selectNetworkPopupNode).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
+  //     expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
+  //   })
 
-    it('Switches Network if clicks on Switch Network button', async () => {
-      render(<Load />)
+  //   it('Switches Network if clicks on Switch Network button', async () => {
+  //     render(<Load />)
 
-      // from Rinkeby to Mainnet
-      expect(screen.getByText('Rinkeby')).toBeInTheDocument()
-      fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Mainnet'))
-      await waitFor(() => expect(screen.getByText('Mainnet')).toBeInTheDocument())
+  //     // from Rinkeby to Mainnet
+  //     expect(screen.getByText('Rinkeby')).toBeInTheDocument()
+  //     fireEvent.click(screen.getByText('Switch Network'))
+  //     fireEvent.click(screen.getByText('Mainnet'))
+  //     await waitFor(() => expect(screen.getByText('Mainnet')).toBeInTheDocument())
 
-      // from Mainnet to Polygon
-      fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Polygon'))
-      await waitFor(() => expect(screen.getByText('Polygon')).toBeInTheDocument())
+  //     // from Mainnet to Polygon
+  //     fireEvent.click(screen.getByText('Switch Network'))
+  //     fireEvent.click(screen.getByText('Polygon'))
+  //     await waitFor(() => expect(screen.getByText('Polygon')).toBeInTheDocument())
 
-      // from Polygon to Rinkeby
-      fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Rinkeby'))
-      await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
-    })
+  //     // from Polygon to Rinkeby
+  //     fireEvent.click(screen.getByText('Switch Network'))
+  //     fireEvent.click(screen.getByText('Rinkeby'))
+  //     await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
+  //   })
 
-    it('the Switch Network popup can be closed', async () => {
-      render(<Load />)
+  //   it('the Switch Network popup can be closed', async () => {
+  //     render(<Load />)
 
-      expect(screen.getByText('Rinkeby')).toBeInTheDocument()
-      fireEvent.click(screen.getByText('Switch Network'))
-      // closes popup
-      fireEvent.click(screen.getByLabelText('close'))
+  //     expect(screen.getByText('Rinkeby')).toBeInTheDocument()
+  //     fireEvent.click(screen.getByText('Switch Network'))
+  //     // closes popup
+  //     fireEvent.click(screen.getByLabelText('close'))
 
-      await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
-    })
+  //     await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
+  //   })
 
-    it('goes to the next step when clicks on the next button', async () => {
-      render(<Load />)
+  //   it('goes to the next step when clicks on the next button', async () => {
+  //     render(<Load />)
 
-      expect(screen.queryByTestId('load-safe-address-step')).not.toBeInTheDocument()
+  //     expect(screen.queryByTestId('load-safe-address-step')).not.toBeInTheDocument()
 
-      fireEvent.click(screen.getByText('Continue'))
+  //     fireEvent.click(screen.getByText('Continue'))
 
-      await waitFor(() => expect(screen.getByTestId('load-safe-address-step')).toBeInTheDocument())
-      expect(screen.queryByTestId('select-network-step')).not.toBeInTheDocument()
-    })
-  })
+  //     await waitFor(() => expect(screen.getByTestId('load-safe-address-step')).toBeInTheDocument())
+  //     expect(screen.queryByTestId('select-network-step')).not.toBeInTheDocument()
+  //   })
+  // })
 
   describe('Step 2: Name and address', () => {
     it('Shows a No account detected error message if no wallet is connected in production environment', () => {
