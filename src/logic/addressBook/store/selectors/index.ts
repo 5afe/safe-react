@@ -17,6 +17,13 @@ export const addressBookAddresses = createSelector([addressBookState], (addressB
   return addressBook.map(({ address }) => address)
 })
 
+export const addressBookAddressesByCurrentChainId = createSelector(
+  [addressBookState, currentChainId],
+  (addressBook, currentChainId): string[] => {
+    return addressBook.filter(({ chainId }) => currentChainId === chainId).map(({ address }) => address)
+  },
+)
+
 type AddressBookMap = {
   [address: string]: AddressBookEntry
 }
