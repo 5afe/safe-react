@@ -1,30 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
+import { addressBookImport } from 'src/logic/addressBook/store/actions'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
 
-const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/'
+const MAINET_URL = 'http://localhost:3000'
 const networks = [
   {
-    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/rinkeby/',
+    safeUrl: 'http://localhost:3001/#',
   },
   {
-    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/polygon/',
+    safeUrl: 'http://localhost:3002/#',
   },
 ]
-
-type MigratedMessage = {
-  migrated: boolean
-}
-
-const mergeAddressBooks = (addressBookEntries: AddressBookEntry[], dispatch) => {
-  addressBookEntries.forEach((addressBookEntry) => {
-    // Save addressBookEntries
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(addressBookEntry)))
-  })
-}
 
 const StoreMigrator: React.FC = () => {
   const [currentNetwork, setCurrentNetwork] = useState(0)
@@ -44,31 +32,21 @@ const StoreMigrator: React.FC = () => {
           Object.keys(payload).forEach((key) => {
             const payloadEntry = JSON.parse(payload[key])
             if (key === 'SAFE__addressBook') {
-              mergeAddressBooks(payloadEntry, dispatch)
+              dispatch(addressBookImport(JSON.parse(payloadEntry)))
             } else if (key.startsWith('_immortal|v2_')) {
               // Save entry in localStorage
               localStorage.setItem(key, payloadEntry)
             }
           })
-          const migrationIframe = (document.getElementById('targetWindow') as HTMLIFrameElement).contentWindow
-          if (migrationIframe) {
-            const message: MigratedMessage = {
-              migrated: true,
-            }
-            migrationIframe.postMessage(message, networks[currentNetwork].safeUrl)
-          }
           setCurrentNetwork(currentNetwork + 1)
         } catch (error) {
           logError(Errors._612, error.message)
         }
       }
-      if (event.data.migrated && isRightOrigin) {
-        setCurrentNetwork(currentNetwork + 1)
-      }
     }
 
     window.addEventListener('message', saveEventData, false)
-    return window.removeEventListener('message', saveEventData, false)
+    return () => window.removeEventListener('message', saveEventData, false)
   }, [currentNetwork, dispatch])
 
   const isSingleNetworkApp = networks.some((network) => {
@@ -83,7 +61,11 @@ const StoreMigrator: React.FC = () => {
   }, [currentNetwork, isSingleNetworkApp])
 
   return (
-    <div>{!isSingleNetworkApp && <iframe width="0px" height="0px" name="targetWindow" id="targetWindow"></iframe>}</div>
+    <div>
+      {!isSingleNetworkApp && currentNetwork < networks.length && (
+        <iframe name="targetWindow" id="targetWindow"></iframe>
+      )}
+    </div>
   )
 }
 
