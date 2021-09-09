@@ -17,13 +17,6 @@ export const addressBookAddresses = createSelector([addressBookState], (addressB
   return addressBook.map(({ address }) => address)
 })
 
-export const addressBookAddressesByCurrentChainId = createSelector(
-  [addressBookState, currentChainId],
-  (addressBook, currentChainId): string[] => {
-    return addressBook.filter(({ chainId }) => currentChainId === chainId).map(({ address }) => address)
-  },
-)
-
 type AddressBookMap = {
   [address: string]: AddressBookEntry
 }
@@ -92,6 +85,13 @@ export const currentNetworkAddressBook = createSelector(
   [addressBookState, currentChainId],
   (addressBook, curChainId): AppReduxState['addressBook'] => {
     return addressBook.filter(({ chainId }) => chainId.toString() === curChainId)
+  },
+)
+
+export const currentNetworkAddressBookAddresses = createSelector(
+  [currentNetworkAddressBook],
+  (addressBook): string[] => {
+    return addressBook.map(({ address }) => address)
   },
 )
 
