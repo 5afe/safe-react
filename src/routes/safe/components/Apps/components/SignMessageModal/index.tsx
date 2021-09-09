@@ -28,12 +28,12 @@ const convertToHumanReadableMessage = (message: string): string => {
   const isHex = web3ReadOnly.utils.isHexStrict(message.toString())
 
   let humanReadableMessage = message
-  try {
-    if (isHex) {
+  if (isHex) {
+    try {
       humanReadableMessage = web3ReadOnly.utils.hexToUtf8(message)
+    } catch (e) {
+      // do nothing
     }
-  } catch (e) {
-    // do nothing
   }
 
   return humanReadableMessage
