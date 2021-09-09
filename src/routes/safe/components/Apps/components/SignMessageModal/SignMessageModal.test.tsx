@@ -87,4 +87,25 @@ describe('SignMessageModal Component', () => {
 
     expect(screen.getByText('SignMessageLib')).toBeVisible()
   })
+
+  test("Displays transaction hash as a message, doesn't convert it", () => {
+    const transactionHash = '0x1c953f75ea7aa13bdb365a536b897a34813b438cc3c0582dd70a0cd7851a84cd'
+
+    render(
+      <SignMessageModal
+        isOpen
+        safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
+        message={transactionHash}
+        safeName="test safe"
+        ethBalance="100000000000000000"
+        onClose={jest.fn()}
+        onUserConfirm={jest.fn()}
+        onTxReject={jest.fn()}
+        requestId="1"
+        app={getEmptySafeApp()}
+      />,
+    )
+
+    expect(screen.getByText(transactionHash)).toBeVisible()
+  })
 })

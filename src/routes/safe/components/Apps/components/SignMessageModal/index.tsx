@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { BytesLike, RequestId, calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
+import { RequestId, calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
 
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -12,7 +12,7 @@ import { ReviewMessage } from './ReviewMessage'
 export type SignMessageModalProps = {
   isOpen: boolean
   app: SafeApp
-  message: BytesLike
+  message: string
   safeAddress: string
   safeName: string
   requestId: RequestId
@@ -24,15 +24,28 @@ export type SignMessageModalProps = {
 
 const networkId = getNetworkId()
 
+const convertToHumanReadableMessage = (message: string): string => {
+  const isHex = web3ReadOnly.utils.isHexStrict(message.toString())
+
+  let humanReadableMessage = message
+  try {
+    if (isHex) {
+      humanReadableMessage = web3ReadOnly.utils.hexToUtf8(message)
+    }
+  } catch (e) {
+    // do nothing
+  }
+
+  return humanReadableMessage
+}
+
 export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalProps): ReactElement => {
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
   const txData = getSignMessageLibContractInstance(web3ReadOnly, networkId)
     .methods.signMessage(calculateMessageHash(message))
     .encodeABI()
 
-  const readableData = web3ReadOnly.utils.isHexStrict(message.toString())
-    ? web3ReadOnly.utils.hexToUtf8(message.toString())
-    : message.toString()
+  const readableData = convertToHumanReadableMessage(message)
 
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open={isOpen}>
