@@ -63,8 +63,12 @@ const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
 
 const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
-  const contractCode = await web3Provider.eth.getCode(account)
-
+  let contractCode = ''
+  try {
+    contractCode = await web3Provider.eth.getCode(account)
+  } catch (e) {
+    // ignore
+  }
   return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
