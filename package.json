@@ -167,7 +167,7 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "https://gitpkg.now.sh/gnosis/safe-apps-sdk/packages/safe-apps-sdk?71fd1bef7ec36499c7179b406818324cb6e34ac6",
+    "@gnosis.pm/safe-apps-sdk": "https://gitpkg.now.sh/gnosis/safe-apps-sdk/packages/safe-apps-sdk?ec591acbee085d9375c02116fcc5e4c02ee07794",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-deployments": "^1.2.0",
     "@gnosis.pm/safe-react-components": "^0.8.0",
