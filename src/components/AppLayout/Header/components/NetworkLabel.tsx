@@ -6,12 +6,10 @@ import { getNetworkInfo } from 'src/config'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
 import { NetworkInfo, NetworkSettings } from 'src/config/networks/network'
 
-const currentNetworkInfo = getNetworkInfo()
-
 const StyledCol = styled(Col)`
   flex-grow: 0;
   padding: 0 ${sm};
-  cursor: ${(props) => (props.onClick ? 'pointer' : 'initial')};
+  cursor: ${(props) => (props.onClick ? 'pointer' : 'inherit')};
   @media (min-width: ${screenSm}px) {
     padding-left: ${md};
     padding-right: ${md};

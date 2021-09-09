@@ -49,8 +49,10 @@ function StepperComponent(): ReactElement {
           }
         }
 
+        const currentComponent = steps[index]
+
         const backButtonLabel = isFirstStep ? 'Cancel' : 'Back'
-        const customNextButtonLabel = steps[index].props.nextButtonLabel
+        const customNextButtonLabel = currentComponent.props.nextButtonLabel
 
         const nextButtonLabel = customNextButtonLabel || 'Next'
 
@@ -61,7 +63,7 @@ function StepperComponent(): ReactElement {
             </StepLabel>
             <StepContent>
               <Paper className={classes.root} elevation={1}>
-                {steps[index]}
+                {currentComponent}
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>

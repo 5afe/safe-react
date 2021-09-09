@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 // import React, { ReactElement, useCallback, useState } from 'react'
 // import { useDispatch, useSelector } from 'react-redux'
-// import { ButtonLink } from '@gnosis.pm/safe-react-components'
+import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
@@ -31,9 +31,9 @@ function SelectNetworkStep(): ReactElement {
 
   // const currentNetworkName = getNetworkLabel(currentNetworkId)
 
-  // function openNetworkSelectorPopup() {
-  //   setIsNetworkSelectorPopupOpen(true)
-  // }
+  function openNetworkSelectorPopup() {
+    setIsNetworkSelectorPopupOpen(true)
+  }
 
   const networks = getNetworks()
 
@@ -51,21 +51,21 @@ function SelectNetworkStep(): ReactElement {
     <Block className={classes.padding} data-testid={'select-network-step'}>
       <div className={classes.labelContainer}>
         Select network on which the Safe was created:
-        {/* {currentNetworkName ? (
-          <NetworkLabel onClick={openNetworkSelectorPopup} />
-        ) : (
+        {/* {currentNetworkName ? ( */}
+        <NetworkLabel onClick={openNetworkSelectorPopup} />
+        {/* ) : (
           <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
             Select Network
           </ButtonLink>
         )} */}
       </div>
-      {/* {currentNetworkName && (
-        <div className={classes.switchButtonContainer}>
-          <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
-            Switch Network
-          </ButtonLink>
-        </div>
-      )} */}
+      {/* {currentNetworkName && ( */}
+      <div className={classes.switchButtonContainer}>
+        <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
+          Switch Network
+        </ButtonLink>
+      </div>
+      {/* )} */}
       <Dialog
         onClose={() => setIsNetworkSelectorPopupOpen(false)}
         aria-labelledby="select-network"
