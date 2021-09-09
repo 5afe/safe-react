@@ -4,7 +4,7 @@ import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SignMessageModal } from './'
 import { getEmptySafeApp } from '../../utils'
 
-jest.mock('../../../../../../logic/hooks/useEstimateTransactionGas', () => ({
+jest.mock('src/logic/hooks/useEstimateTransactionGas', () => ({
   useEstimateTransactionGas: () => ({
     txEstimationExecutionStatus: 'SUCCESS',
     gasEstimation: 0,
