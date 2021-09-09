@@ -79,19 +79,6 @@ export const switchNetwork = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): 
   }
 }
 
-/**
- * Switch to a desired network
- */
-export const switchToCurrentNetwork = async (wallet = onboard().getState()?.wallet): Promise<void> => {
-  try {
-    await switchNetwork(wallet, getNetworkId())
-  } catch (e) {
-    e.log()
-    // Fallback to the onboard popup if switching isn't supported
-    await onboard().walletCheck()
-  }
-}
-
 export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
   const desiredNetwork = getNetworkId()
   const currentNetwork = wallet?.provider?.networkVersion.toString()
