@@ -65,17 +65,6 @@ export type NetworkSpecificConfiguration = EnvironmentSettings & {
 export const getConfig = (): NetworkSpecificConfiguration => {
   const currentEnvironment = getCurrentEnvironment()
 
-  // special case for test environment
-  if (currentEnvironment === 'test') {
-    const configFile = networks.local
-
-    return {
-      ...configFile.environment.production,
-      network: configFile.network,
-      disabledFeatures: configFile.disabledFeatures,
-    }
-  }
-
   // lookup the config file based on the network specified in the NETWORK variable
   const configFile = networks[getNetworkName().toLowerCase()]
   // defaults to 'production' as it's the only environment that is required for the network configs
