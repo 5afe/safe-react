@@ -10,16 +10,13 @@ describe('Config Services', () => {
 
   it(`should load 'test' network config`, () => {
     // Given
-    jest.mock('src/utils/constants', () => ({
-      NODE_ENV: 'test',
-    }))
     const { getNetworkInfo } = require('src/config')
 
     // When
     const networkInfo = getNetworkInfo()
 
     // Then
-    expect(networkInfo.id).toBe(ETHEREUM_NETWORK.LOCAL)
+    expect(networkInfo.id).toBe(ETHEREUM_NETWORK.RINKEBY)
   })
 
   it(`should load 'mainnet' network config`, () => {

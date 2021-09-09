@@ -27,24 +27,19 @@ function StepperComponent(): ReactElement {
     setCurrentStep,
     steps,
 
-    isFirstStep,
-
     onClickPreviousStep,
     onClickNextStep,
 
     disableNextButton,
     nextButtonType,
-    customNextButtonLabel,
 
     testId,
   } = useStepper()
 
-  const backButtonLabel = isFirstStep ? 'Cancel' : 'Back'
-  const nextButtonLabel = customNextButtonLabel || 'Next'
-
   return (
     <StepperMUI data-testid={testId} activeStep={currentStep} orientation="vertical">
       {steps.map(function Step(step, index) {
+        const isFirstStep = index === 0
         const isStepLabelClickable = currentStep > index
         const classes = useStyles({ isStepLabelClickable })
 
@@ -54,6 +49,13 @@ function StepperComponent(): ReactElement {
           }
         }
 
+        const currentComponent = steps[index]
+
+        const backButtonLabel = isFirstStep ? 'Cancel' : 'Back'
+        const customNextButtonLabel = currentComponent.props.nextButtonLabel
+
+        const nextButtonLabel = customNextButtonLabel || 'Next'
+
         return (
           <StepMUI key={step.props.label}>
             <StepLabel onClick={onClickLabel} className={classes.stepLabel}>
@@ -61,7 +63,7 @@ function StepperComponent(): ReactElement {
             </StepLabel>
             <StepContent>
               <Paper className={classes.root} elevation={1}>
-                {steps[index]}
+                {currentComponent}
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
