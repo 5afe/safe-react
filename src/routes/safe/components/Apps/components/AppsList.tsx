@@ -1,5 +1,16 @@
-import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import {
+  IconText,
+  Loader,
+  Menu,
+  Text,
+  Icon,
+  Breadcrumb,
+  BreadcrumbElement,
+  Card,
+} from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
+import MuiTextField from '@material-ui/core/TextField'
+import SearchIcon from '@material-ui/icons/Search'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, generatePath } from 'react-router-dom'
@@ -11,6 +22,7 @@ import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SAFE_ROUTES } from 'src/routes/routes'
+import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
@@ -45,13 +57,12 @@ const CardsWrapper = styled.div`
   column-gap: 20px;
   row-gap: 20px;
   justify-content: space-evenly;
-  margin: 0 0 16px 0;
+  margin: ${({ theme }) => `${theme.margin.xxl} 0 ${theme.margin.lg} 0`};
 `
 
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   flex-grow: 1;
   align-items: center;
 `
@@ -65,6 +76,15 @@ const IconBtn = styled(IconButton)`
   opacity: 0;
 
   transition: opacity 0.2s ease-in-out;
+`
+
+const SearchCard = styled(Card)`
+  width: 100%;
+  box-sizing: border-box;
+`
+
+const CenterIconText = styled(IconText)`
+  justify-content: center;
 `
 
 const AppContainer = styled.div`
@@ -87,12 +107,11 @@ const AppsList = (): React.ReactElement => {
   const appsPath = generatePath(SAFE_ROUTES.APPS, {
     safeAddress,
   })
+  const [appSearch, setAppSearch] = useState('')
   const { appList, removeApp, isLoading } = useAppList()
-  const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
-  const openAddAppModal = () => setIsAddAppModalOpen(true)
+  const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
 
-  const closeAddAppModal = () => setIsAddAppModalOpen(false)
   if (isLoading || !safeAddress) {
     return (
       <LoadingContainer>
@@ -100,6 +119,7 @@ const AppsList = (): React.ReactElement => {
       </LoadingContainer>
     )
   }
+
   return (
     <Wrapper>
       <Menu>
@@ -110,6 +130,15 @@ const AppsList = (): React.ReactElement => {
         </Col>
       </Menu>
       <ContentWrapper>
+        <SearchCard>
+          <MuiTextField
+            InputProps={{ 'aria-label': 'search', startAdornment: <SearchIcon /> }}
+            onChange={(event) => setAppSearch(event.target.value)}
+            placeholder="Search…"
+            value={appSearch}
+            style={{ width: '100%' }}
+          />
+        </SearchCard>
         <CardsWrapper>
           <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
 
@@ -135,15 +164,14 @@ const AppsList = (): React.ReactElement => {
               </AppContainer>
             ))}
         </CardsWrapper>
-
-        <IconText
-          color="secondary"
-          iconSize="sm"
-          iconType="info"
-          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk. Any communication within the Apps is for informational purposes only and must not be construed as investment advice to engage in any transaction."
-          textSize="sm"
-        />
       </ContentWrapper>
+      <CenterIconText
+        color="secondary"
+        iconSize="sm"
+        iconType="info"
+        text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk. Any communication within the Apps is for informational purposes only and must not be construed as investment advice to engage in any transaction."
+        textSize="sm"
+      />
 
       {isAddAppModalOpen && (
         <Modal title="Add app" description="Add a custom app to the list of apps" handleClose={closeAddAppModal}>
