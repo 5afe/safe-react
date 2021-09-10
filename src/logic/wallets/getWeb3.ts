@@ -74,8 +74,7 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
   const network = await getNetworkIdFrom(web3Instance)
   const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)
-
-  const available = account !== null
+  const available = Boolean(account)
 
   return {
     name: providerName,
