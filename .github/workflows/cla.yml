@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'CLA Assistant'
-        if: (/recheckcla|I hereby sign the CLA/i.test(github.event.comment.body)) || github.event_name == 'pull_request_target'
+        if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         # Alpha Release
         uses: gnosis/github-action@master
         # GitHub token, automatically provided to the action
