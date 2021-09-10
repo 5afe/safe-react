@@ -6,19 +6,16 @@ import onboard from 'src/logic/wallets/onboard'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
 const checkWallet = async (): Promise<boolean> => {
-  const ready = onboard().walletCheck()
-
   if (shouldSwitchNetwork()) {
     try {
       await switchNetwork(onboard().getState().wallet, getNetworkId())
       return true
     } catch (e) {
       e.log()
-      return false
+      return await onboard().walletCheck()
     }
   }
-
-  return await ready
+  return true
 }
 
 export const onboardUser = async (): Promise<boolean> => {
