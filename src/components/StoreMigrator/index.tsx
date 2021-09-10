@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addressBookImport } from 'src/logic/addressBook/store/actions'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { MigrationMessage } from 'src/routes/migration/container'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
 
 const MAINET_URL = 'http://localhost:3000'
@@ -14,6 +15,10 @@ const networks = [
   },
 ]
 
+type MigrationMessageEvent = MessageEvent & {
+  data: MigrationMessage
+}
+
 const StoreMigrator: React.FC = () => {
   const [currentNetwork, setCurrentNetwork] = useState(0)
   const dispatch = useDispatch()
@@ -21,7 +26,7 @@ const StoreMigrator: React.FC = () => {
 
   // Recieve the data to be migrated and save it into the localstorage
   useEffect(() => {
-    const saveEventData = (event) => {
+    const saveEventData = (event: MigrationMessageEvent) => {
       const isTrustedOrigin = networks.some((network) => {
         return network.safeUrl.includes(event.origin)
       })
@@ -63,7 +68,7 @@ const StoreMigrator: React.FC = () => {
   return (
     <div>
       {!isSingleNetworkApp && currentNetwork < networks.length && (
-        <iframe name="targetWindow" id="targetWindow"></iframe>
+        <iframe width="0" height="0" name="targetWindow" id="targetWindow"></iframe>
       )}
     </div>
   )

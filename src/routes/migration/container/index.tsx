@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-type MigrationMessage = {
+export type MigrationMessage = {
   migrate: boolean
   payload: string
 }
