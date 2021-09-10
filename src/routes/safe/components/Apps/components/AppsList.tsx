@@ -27,6 +27,7 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
+import { useAppsSearch } from '../hooks/useAppsSearch'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -109,6 +110,7 @@ const AppsList = (): React.ReactElement => {
   })
   const [appSearch, setAppSearch] = useState('')
   const { appList, removeApp, isLoading } = useAppList()
+  const apps = useAppsSearch(appList, appSearch)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
   const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
 
@@ -142,7 +144,7 @@ const AppsList = (): React.ReactElement => {
         <CardsWrapper>
           <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
 
-          {appList
+          {apps
             .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
             .map((a) => (
               <AppContainer key={a.url}>
