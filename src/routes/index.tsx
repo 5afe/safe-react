@@ -16,8 +16,10 @@ import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 
-const Welcome = React.lazy(() => import('./welcome/container'))
-const Open = React.lazy(() => import('./open/container/Open'))
+const Welcome = React.lazy(() => import('./welcome/Welcome'))
+// TODO: remove old component import
+// const Open = React.lazy(() => import('./open/container/Open'))
+const Open = React.lazy(() => import('./new-open/Open'))
 const Safe = React.lazy(() => import('./safe/container'))
 const Load = React.lazy(() => import('./new-load/Load'))
 

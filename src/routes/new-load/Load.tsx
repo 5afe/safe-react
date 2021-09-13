@@ -13,6 +13,7 @@ import Row from 'src/components/layout/Row'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { history } from 'src/store'
 import { sm } from 'src/theme/variables'
+import SelectNetworkStep, { selectNetworkStepLabel } from 'src/components/SelectNetworkStep/SelectNetworkStep'
 import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
   loadSafeAddressStepValidations,
@@ -21,7 +22,6 @@ import LoadSafeOwnersStep, { loadSafeOwnersStepLabel } from './steps/LoadSafeOwn
 import ReviewLoadStep, { reviewLoadStepLabel } from './steps/ReviewLoadStep'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
-import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
