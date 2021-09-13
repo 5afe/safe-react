@@ -11,6 +11,7 @@ import {
 import IconButton from '@material-ui/core/IconButton'
 import MuiTextField from '@material-ui/core/TextField'
 import SearchIcon from '@material-ui/icons/Search'
+import ClearIcon from '@material-ui/icons/Clear'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, generatePath } from 'react-router-dom'
@@ -134,7 +135,15 @@ const AppsList = (): React.ReactElement => {
       <ContentWrapper>
         <SearchCard>
           <MuiTextField
-            InputProps={{ 'aria-label': 'search', startAdornment: <SearchIcon /> }}
+            InputProps={{
+              'aria-label': 'search',
+              startAdornment: <SearchIcon />,
+              endAdornment: appSearch && (
+                <IconButton onClick={() => setAppSearch('')}>
+                  <ClearIcon />
+                </IconButton>
+              ),
+            }}
             onChange={(event) => setAppSearch(event.target.value)}
             placeholder="Search…"
             value={appSearch}
