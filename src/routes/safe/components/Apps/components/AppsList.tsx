@@ -16,6 +16,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, generatePath } from 'react-router-dom'
 import styled, { css } from 'styled-components'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
@@ -52,7 +53,7 @@ const LoadingContainer = styled.div`
   ${centerCSS};
 `
 
-const CardsWrapper = styled.div`
+const CardsWrapper = styled(motion.div)`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(243px, 1fr));
@@ -89,7 +90,7 @@ const CenterIconText = styled(IconText)`
   justify-content: center;
 `
 
-const AppContainer = styled.div`
+const AppContainer = styled(motion.div)`
   position: relative;
 
   &:hover {
@@ -150,33 +151,46 @@ const AppsList = (): React.ReactElement => {
             style={{ width: '100%' }}
           />
         </SearchCard>
-        <CardsWrapper>
-          {!appSearch && (
-            <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
-          )}
+        <AnimatePresence>
+          <CardsWrapper>
+            {!appSearch && (
+              <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
+            )}
 
-          {apps
-            .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
-            .map((a) => (
-              <AppContainer key={a.url}>
-                <StyledLink key={a.url} to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
-                  <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
-                </StyledLink>
-                {isCustomApp(a.url, appList) && (
-                  <IconBtn
-                    title="Remove"
-                    onClick={(e) => {
-                      e.stopPropagation()
+            {apps
+              .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
+              .map((a) => (
+                <AppContainer
+                  key={a.url}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <StyledLink key={a.url} to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
+                    <AppCard
+                      isLoading={isAppLoading(a)}
+                      iconUrl={a.iconUrl}
+                      name={a.name}
+                      description={a.description}
+                    />
+                  </StyledLink>
+                  {isCustomApp(a.url, appList) && (
+                    <IconBtn
+                      title="Remove"
+                      onClick={(e) => {
+                        e.stopPropagation()
 
-                      setAppToRemove(a)
-                    }}
-                  >
-                    <Icon size="sm" type="delete" color="error" />
-                  </IconBtn>
-                )}
-              </AppContainer>
-            ))}
-        </CardsWrapper>
+                        setAppToRemove(a)
+                      }}
+                    >
+                      <Icon size="sm" type="delete" color="error" />
+                    </IconBtn>
+                  )}
+                </AppContainer>
+              ))}
+          </CardsWrapper>
+        </AnimatePresence>
       </ContentWrapper>
       <CenterIconText
         color="secondary"
