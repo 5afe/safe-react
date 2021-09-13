@@ -7,11 +7,13 @@ import {
   Breadcrumb,
   BreadcrumbElement,
   Card,
+  Button,
 } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import MuiTextField from '@material-ui/core/TextField'
 import SearchIcon from '@material-ui/icons/Search'
 import ClearIcon from '@material-ui/icons/Clear'
+import InfoIcon from '@material-ui/icons/Info'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, generatePath } from 'react-router-dom'
@@ -90,6 +92,16 @@ const CenterIconText = styled(IconText)`
   justify-content: center;
 `
 
+const ClearSearchButton = styled(Button)`
+  &&.MuiButton-root {
+    padding: 0 12px;
+  }
+
+  *:first-child {
+    margin: 0 ${({ theme }) => theme.margin.xxs} 0 0;
+  }
+`
+
 const AppContainer = styled(motion.div)`
   position: relative;
 
@@ -97,6 +109,17 @@ const AppContainer = styled(motion.div)`
     ${IconBtn} {
       opacity: 1;
     }
+  }
+`
+
+const NoAppsFoundTextContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: ${({ theme }) => theme.margin.xxl};
+  margin-bottom: ${({ theme }) => theme.margin.md};
+
+  & > svg {
+    margin-right: ${({ theme }) => theme.margin.sm};
   }
 `
 
@@ -115,6 +138,7 @@ const AppsList = (): React.ReactElement => {
   const apps = useAppsSearch(appList, appSearch)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
   const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
+  const noAppsFound = apps.length === 0 && appSearch
 
   if (isLoading || !safeAddress) {
     return (
@@ -151,12 +175,28 @@ const AppsList = (): React.ReactElement => {
             style={{ width: '100%' }}
           />
         </SearchCard>
+        {noAppsFound && (
+          <>
+            <NoAppsFoundTextContainer>
+              <InfoIcon />
+              <Text size="xl">
+                No apps found matching <b>{appSearch}</b>
+              </Text>
+            </NoAppsFoundTextContainer>
+            <ClearSearchButton size="md" color="primary" variant="contained" onClick={() => setAppSearch('')}>
+              <Icon type="cross" size="sm" />
+              <Text size="xl" color="white">
+                Clear search
+              </Text>
+            </ClearSearchButton>
+          </>
+        )}
+
         <AnimatePresence>
           <CardsWrapper>
             {!appSearch && (
               <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
             )}
-
             {apps
               .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
               .map((a) => (
