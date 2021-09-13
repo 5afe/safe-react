@@ -5,13 +5,13 @@ import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { MigrationMessage } from 'src/routes/migration/container'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
 
-const MAINET_URL = 'http://localhost:3000'
+const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/app'
 const networks = [
   {
-    safeUrl: 'http://localhost:3001/#',
+    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/polygon/app',
   },
   {
-    safeUrl: 'http://localhost:3002/#',
+    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/rinkeby/app',
   },
 ]
 
@@ -55,12 +55,12 @@ const StoreMigrator: React.FC = () => {
   }, [currentNetwork, dispatch])
 
   const isSingleNetworkApp = networks.some((network) => {
-    return self.origin !== MAINET_URL && network.safeUrl.includes(self.origin)
+    return !MAINET_URL.includes(self.origin) && network.safeUrl.includes(self.origin)
   })
   // Migrate local storage
   useEffect(() => {
     if (!isSingleNetworkApp && currentNetwork < networks.length) {
-      const urlToMigrate = `${networks[currentNetwork].safeUrl}${MIGRATION_ADDRESS}`
+      const urlToMigrate = `${networks[currentNetwork].safeUrl}/#${MIGRATION_ADDRESS}`
       window.open(urlToMigrate, 'targetWindow')
     }
   }, [currentNetwork, isSingleNetworkApp])
