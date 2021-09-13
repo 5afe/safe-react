@@ -6,13 +6,9 @@ import {
   Icon,
   Breadcrumb,
   BreadcrumbElement,
-  Card,
   Button,
 } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import MuiTextField from '@material-ui/core/TextField'
-import SearchIcon from '@material-ui/icons/Search'
-import ClearIcon from '@material-ui/icons/Clear'
 import InfoIcon from '@material-ui/icons/Info'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -27,6 +23,7 @@ import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
+import { SearchCard } from './SearchCard'
 
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
@@ -81,11 +78,6 @@ const IconBtn = styled(IconButton)`
   opacity: 0;
 
   transition: opacity 0.2s ease-in-out;
-`
-
-const SearchCard = styled(Card)`
-  width: 100%;
-  box-sizing: border-box;
 `
 
 const CenterIconText = styled(IconText)`
@@ -158,23 +150,7 @@ const AppsList = (): React.ReactElement => {
         </Col>
       </Menu>
       <ContentWrapper>
-        <SearchCard>
-          <MuiTextField
-            InputProps={{
-              'aria-label': 'search',
-              startAdornment: <SearchIcon />,
-              endAdornment: appSearch && (
-                <IconButton onClick={() => setAppSearch('')}>
-                  <ClearIcon />
-                </IconButton>
-              ),
-            }}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setAppSearch(event.target.value.trim())}
-            placeholder="e.g Compound"
-            value={appSearch}
-            style={{ width: '100%' }}
-          />
-        </SearchCard>
+        <SearchCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
         {noAppsFound && (
           <>
             <NoAppsFoundTextContainer>

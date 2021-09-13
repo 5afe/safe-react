@@ -1,0 +1,39 @@
+import React from 'react'
+import IconButton from '@material-ui/core/IconButton'
+import MuiTextField from '@material-ui/core/TextField'
+import SearchIcon from '@material-ui/icons/Search'
+import ClearIcon from '@material-ui/icons/Clear'
+import styled from 'styled-components'
+import { Card } from '@gnosis.pm/safe-react-components'
+
+const Container = styled(Card)`
+  width: 100%;
+  box-sizing: border-box;
+`
+
+type Props = {
+  value: string
+  onValueChange: (value: string) => void
+}
+
+const SearchCard = ({ value, onValueChange }: Props): React.ReactElement => (
+  <Container>
+    <MuiTextField
+      InputProps={{
+        'aria-label': 'search',
+        startAdornment: <SearchIcon />,
+        endAdornment: value && (
+          <IconButton onClick={() => onValueChange('')}>
+            <ClearIcon />
+          </IconButton>
+        ),
+      }}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => onValueChange(event.target.value)}
+      placeholder="e.g Compound"
+      value={value}
+      style={{ width: '100%' }}
+    />
+  </Container>
+)
+
+export { SearchCard }
