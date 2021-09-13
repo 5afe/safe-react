@@ -2,7 +2,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -12,38 +12,36 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import { getExplorerInfo } from 'src/config'
-import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
-import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
-interface RemoveModuleModalProps {
+interface RemoveGuardModalProps {
   onClose: () => void
-  selectedModulePair: ModulePair
+  guardAddress: string
 }
 
-export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): ReactElement => {
+export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProps): ReactElement => {
   const classes = useStyles()
 
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
-  const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
-  const [, moduleAddress] = selectedModulePair
+  const txData = useMemo(() => getRemoveGuardTxData(safeAddress, safeVersion), [safeAddress, safeVersion])
 
   const {
     gasCostFormatted,
@@ -65,12 +63,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  useEffect(() => {
-    const txData = getDisableModuleTxData(selectedModulePair, safeAddress, safeVersion)
-    setTxData(txData)
-  }, [selectedModulePair, safeAddress, safeVersion])
-
-  const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
+  const removeTransactionGuard = async (txParameters: TxParameters): Promise<void> => {
     try {
       dispatch(
         createTransaction({
@@ -85,7 +78,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         }),
       )
     } catch (e) {
-      logError(Errors._806, `${selectedModulePair} – ${e.message}`)
+      logError(Errors._807, `${guardAddress} – ${e.message}`)
     }
   }
 
@@ -115,10 +108,10 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
 
   return (
     <Modal
-      description="Remove the selected Module"
+      description="Remove the selected Transaction Guard"
       handleClose={onClose}
       paperClassName="modal"
-      title="Remove Module"
+      title="Remove Transaction Guard"
       open
     >
       <EditableTxParameters
@@ -134,7 +127,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
             <>
               <Row align="center" className={classes.modalHeading} grow>
                 <Paragraph className={classes.modalManage} noMargin weight="bolder">
-                  Remove module
+                  Remove Transaction Guard
                 </Paragraph>
                 <IconButton disableRipple onClick={onClose}>
                   <Close className={classes.modalClose} />
@@ -145,18 +138,17 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
                     <EthHashInfo
-                      hash={moduleAddress}
+                      hash={guardAddress}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(moduleAddress)}
+                      explorerUrl={getExplorerInfo(guardAddress)}
                     />
                   </Col>
                 </Row>
                 <Row className={classes.modalDescription}>
                   <Paragraph noMargin size="lg">
-                    After removing this module, any feature or app that uses this module might no longer work. If this
-                    Safe requires more then one signature, the module removal will have to be confirmed by other owners
-                    as well.
+                    Once the transaction guard has been removed, checks by the transaction guard will not be conducted
+                    before or after any subsequent transactions.
                   </Paragraph>
                 </Row>
               </Block>
@@ -184,7 +176,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   cancelButtonProps={{ onClick: onClose }}
                   confirmButtonProps={{
                     color: 'error',
-                    onClick: () => removeSelectedModule(txParameters),
+                    onClick: () => removeTransactionGuard(txParameters),
                     status: buttonStatus,
                     text: confirmButtonText,
                   }}
