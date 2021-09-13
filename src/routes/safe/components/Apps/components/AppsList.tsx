@@ -1,15 +1,5 @@
-import {
-  IconText,
-  Loader,
-  Menu,
-  Text,
-  Icon,
-  Breadcrumb,
-  BreadcrumbElement,
-  Button,
-} from '@gnosis.pm/safe-react-components'
+import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import InfoIcon from '@material-ui/icons/Info'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, generatePath } from 'react-router-dom'
@@ -23,11 +13,12 @@ import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-import { SearchCard } from './SearchCard'
 
-import { useAppList } from '../hooks/useAppList'
+import { SearchCard } from './SearchCard'
+import { NoAppsFound } from './NoAppsFound'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
+import { useAppList } from '../hooks/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
 
 const Wrapper = styled.div`
@@ -84,16 +75,6 @@ const CenterIconText = styled(IconText)`
   justify-content: center;
 `
 
-const ClearSearchButton = styled(Button)`
-  &&.MuiButton-root {
-    padding: 0 12px;
-  }
-
-  *:first-child {
-    margin: 0 ${({ theme }) => theme.margin.xxs} 0 0;
-  }
-`
-
 const AppContainer = styled(motion.div)`
   position: relative;
 
@@ -101,17 +82,6 @@ const AppContainer = styled(motion.div)`
     ${IconBtn} {
       opacity: 1;
     }
-  }
-`
-
-const NoAppsFoundTextContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: ${({ theme }) => theme.margin.xxl};
-  margin-bottom: ${({ theme }) => theme.margin.xxl};
-
-  & > svg {
-    margin-right: ${({ theme }) => theme.margin.sm};
   }
 `
 
@@ -151,22 +121,7 @@ const AppsList = (): React.ReactElement => {
       </Menu>
       <ContentWrapper>
         <SearchCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
-        {noAppsFound && (
-          <>
-            <NoAppsFoundTextContainer>
-              <InfoIcon />
-              <Text size="xl">
-                No apps found matching <b>{appSearch}</b>
-              </Text>
-            </NoAppsFoundTextContainer>
-            <ClearSearchButton size="md" color="primary" variant="contained" onClick={() => setAppSearch('')}>
-              <Icon type="cross" size="sm" />
-              <Text size="xl" color="white">
-                Clear search
-              </Text>
-            </ClearSearchButton>
-          </>
-        )}
+        {noAppsFound && <NoAppsFound query={appSearch} handleSearchClear={() => setAppSearch('')} />}
 
         <AnimatePresence>
           <CardsWrapper>
