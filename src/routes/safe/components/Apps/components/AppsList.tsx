@@ -116,7 +116,7 @@ const NoAppsFoundTextContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: ${({ theme }) => theme.margin.xxl};
-  margin-bottom: ${({ theme }) => theme.margin.md};
+  margin-bottom: ${({ theme }) => theme.margin.xxl};
 
   & > svg {
     margin-right: ${({ theme }) => theme.margin.sm};
@@ -170,7 +170,7 @@ const AppsList = (): React.ReactElement => {
               ),
             }}
             onChange={(event) => setAppSearch(event.target.value)}
-            placeholder="Search…"
+            placeholder="e.g Compound"
             value={appSearch}
             style={{ width: '100%' }}
           />
@@ -200,14 +200,8 @@ const AppsList = (): React.ReactElement => {
             {apps
               .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
               .map((a) => (
-                <AppContainer
-                  key={a.url}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <StyledLink key={a.url} to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
+                <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
                     <AppCard
                       isLoading={isAppLoading(a)}
                       iconUrl={a.iconUrl}
