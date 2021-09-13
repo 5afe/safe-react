@@ -7,8 +7,9 @@ const useAppsSearch = (apps: SafeApp[], searchText: string): SafeApp[] => {
     () =>
       new Fuse(apps, {
         keys: ['name', 'description'],
-        threshold: 0.3,
+        threshold: 0.2,
         findAllMatches: true,
+        ignoreLocation: true,
       }),
     [apps],
   )

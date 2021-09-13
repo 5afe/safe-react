@@ -142,7 +142,9 @@ const AppsList = (): React.ReactElement => {
           />
         </SearchCard>
         <CardsWrapper>
-          <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
+          {!appSearch && (
+            <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
+          )}
 
           {apps
             .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
