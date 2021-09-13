@@ -21,7 +21,7 @@ const MigrationScreen: React.FC = () => {
 
     loadStorageMigrationDone()
   }, [])
-  return <div>Migrator</div>
+  return null
 }
 
 export default MigrationScreen

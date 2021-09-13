@@ -45,7 +45,7 @@ const StoreMigrator: React.FC = () => {
           })
           setCurrentNetwork(currentNetwork + 1)
         } catch (error) {
-          logError(Errors._612, error.message)
+          logError(Errors._703, error.message)
         }
       }
     }

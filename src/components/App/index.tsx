@@ -32,7 +32,6 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
-import StoreMigrator from '../StoreMigrator'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 
 const notificationStyles = {
@@ -154,7 +153,6 @@ const App: React.FC = ({ children }) => {
           )}
         </>
       </SnackbarProvider>
-      <StoreMigrator />
       <CookiesBanner />
     </Frame>
   )
