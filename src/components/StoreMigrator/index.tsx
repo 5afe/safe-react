@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { addressBookImport } from 'src/logic/addressBook/store/actions'
+import { addressBookMigrate } from 'src/logic/addressBook/store/actions'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { MigrationMessage } from 'src/routes/migration/container'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
@@ -37,7 +37,7 @@ const StoreMigrator: React.FC = () => {
           Object.keys(payload).forEach((key) => {
             const payloadEntry = JSON.parse(payload[key])
             if (key === 'SAFE__addressBook') {
-              dispatch(addressBookImport(JSON.parse(payloadEntry)))
+              dispatch(addressBookMigrate(JSON.parse(payloadEntry)))
             } else if (key.startsWith('_immortal|v2_')) {
               // Save entry in localStorage
               localStorage.setItem(key, payloadEntry)
