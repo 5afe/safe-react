@@ -169,7 +169,7 @@ const AppsList = (): React.ReactElement => {
                 </IconButton>
               ),
             }}
-            onChange={(event) => setAppSearch(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setAppSearch(event.target.value.trim())}
             placeholder="e.g Compound"
             value={appSearch}
             style={{ width: '100%' }}
