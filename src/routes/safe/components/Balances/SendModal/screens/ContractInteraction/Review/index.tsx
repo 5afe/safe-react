@@ -15,7 +15,6 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { Header } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -32,6 +31,7 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { ModalHeader } from '../../ModalHeader'
 
 const useStyles = makeStyles(styles)
 
@@ -147,7 +147,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Header onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
           <Hairline />
           <Block className={classes.formContainer}>
             <Row margin="xs">

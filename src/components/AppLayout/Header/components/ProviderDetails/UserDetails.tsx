@@ -15,8 +15,8 @@ import { background, connected as connectedBg, lg, md, sm, warning, xs } from 's
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getExplorerInfo, getNetworkId, getNetworkLabel } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
 import WalletIcon from '../../assets/wallet.svg'
+import NetworkCircle from '../NetworkCircle'
 
 const styles = createStyles({
   container: {
@@ -79,11 +79,6 @@ const styles = createStyles({
   logo: {
     margin: `0px ${xs}`,
   },
-  dot: {
-    marginRight: xs,
-    height: '15px',
-    width: '15px',
-  },
   warning: {
     color: warning,
   },
@@ -117,7 +112,6 @@ export const UserDetails = ({
   userAddress,
 }: Props): React.ReactElement => {
   const explorerUrl = getExplorerInfo(userAddress)
-  const networkLabel = getNetworkLabel(network)
   const desiredNetwork = getNetworkId()
   const classes = useStyles()
 
@@ -156,10 +150,7 @@ export const UserDetails = ({
           Connected network
         </Paragraph>
         <Spacer />
-        {networkLabel && <CircleDot networkId={network} className={classes.dot} />}
-        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {networkLabel || 'unknown'}
-        </Paragraph>
+        <NetworkCircle />
       </Row>
       <Hairline margin="xs" />
       {openDashboard && (

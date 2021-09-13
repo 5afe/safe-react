@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -38,6 +36,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { ModalHeader } from '../ModalHeader'
 
 const useStyles = makeStyles(styles)
 
@@ -203,15 +202,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       {(txParameters, toggleEditMode) => (
         <>
           {/* Header */}
-          <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send funds
-            </Paragraph>
-            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
 
           <Hairline />
 
