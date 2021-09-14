@@ -1,2 +1,5 @@
 export const FIELD_CREATE_CUSTOM_SAFE_NAME = 'customSafeName'
 export const FIELD_CREATE_SUGGESTED_SAFE_NAME = 'suggestedSafeName'
+export const FIELD_SAFE_OWNERS_LIST = 'owners'
+export const FIELD_NEW_SAFE_THRESHOLD = 'newSafeThreshold'
+export const FIELD_MAX_OWNER_NUMBER = 'maxOwnerNumber'

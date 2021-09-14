@@ -1,5 +1,7 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core'
+import { useSelector } from 'react-redux'
+import { useForm } from 'react-final-form'
 
 import Block from 'src/components/layout/Block'
 import { lg } from 'src/theme/variables'
@@ -8,18 +10,28 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { FIELD_CREATE_CUSTOM_SAFE_NAME, FIELD_CREATE_SUGGESTED_SAFE_NAME } from '../fields/createSafeFields'
-import { useForm } from 'react-final-form'
+import { useStepper } from 'src/components/NewStepper/stepperContext'
 
 export const nameNewSafeStepLabel = 'Name'
 
 function NameNewSafeStep(): ReactElement {
   const classes = useStyles()
 
-  const loadSafeForm = useForm()
+  const provider = useSelector(providerNameSelector)
 
-  const formValues = loadSafeForm.getState().values
-  const safeName = formValues[FIELD_CREATE_CUSTOM_SAFE_NAME] || formValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]
+  const { setCurrentStep } = useStepper()
+
+  useEffect(() => {
+    if (!provider) {
+      setCurrentStep(0)
+    }
+  }, [provider, setCurrentStep])
+
+  const createNewSafeForm = useForm()
+
+  const formValues = createNewSafeForm.getState().values
 
   return (
     <Block className={classes.padding} data-testid={'create-safe-name-step'}>
@@ -39,10 +51,10 @@ function NameNewSafeStep(): ReactElement {
           <Field
             component={TextField}
             name={FIELD_CREATE_CUSTOM_SAFE_NAME}
-            placeholder={safeName}
+            placeholder={formValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]}
             text="Safe name"
             type="text"
-            testId="load-safe-name-field"
+            testId="create-new-safe-name-field"
           />
         </Col>
       </Block>

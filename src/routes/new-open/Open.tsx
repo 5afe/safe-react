@@ -13,11 +13,29 @@ import StepperForm, { StepFormElement } from 'src/components/StepperForm/Stepper
 import SelectNetworkStep, { selectNetworkStepLabel } from 'src/components/SelectNetworkStep/SelectNetworkStep'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
 import { APP_ENV } from 'src/utils/constants'
-import { FIELD_CREATE_SUGGESTED_SAFE_NAME } from './fields/createSafeFields'
+import {
+  FIELD_CREATE_SUGGESTED_SAFE_NAME,
+  FIELD_MAX_OWNER_NUMBER,
+  FIELD_NEW_SAFE_THRESHOLD,
+  FIELD_SAFE_OWNERS_LIST,
+} from './fields/createSafeFields'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
+import { useSelector } from 'react-redux'
+import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import OwnersAndConfirmationsNewSafeStep, {
+  ownersAndConfirmationsNewSafeStepLabel,
+  ownersAndConfirmationsNewSafeStepValidations,
+} from './steps/OwnersAndConfirmationsNewSafeStep'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
+// TODO: Rename to CreateSafePage
+// TODO: Rename to LoadSafePage
 function Open(): ReactElement {
   const classes = useStyles()
+
+  const provider = useSelector(providerNameSelector)
+  const address = useSelector(userAccountSelector)
+  const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   function onSubmitCreateNewSafe(values) {
     // TODO: onSubmitCreateNewSafe
@@ -29,6 +47,17 @@ function Open(): ReactElement {
 
   const initialValues = {
     [FIELD_CREATE_SUGGESTED_SAFE_NAME]: getRandomName('safe'),
+    // we set the owner address as a default owner
+    ['owner-address-0']: address,
+    ['owner-name-0']: addressBook[address]?.name || 'My Wallet',
+    [FIELD_SAFE_OWNERS_LIST]: [
+      {
+        nameFieldName: 'owner-name-0',
+        addressFieldName: 'owner-address-0',
+      },
+    ],
+    [FIELD_NEW_SAFE_THRESHOLD]: 1,
+    [FIELD_MAX_OWNER_NUMBER]: 1,
   }
 
   return (
@@ -38,23 +67,26 @@ function Open(): ReactElement {
           <IconButton disableRipple onClick={history.goBack} className={classes.backIcon}>
             <ChevronLeft />
           </IconButton>
-          <Heading tag="h2">Add existing Safe</Heading>
+          <Heading tag="h2">Create new Safe</Heading>
         </Row>
         <StepperForm initialValues={initialValues} testId={'load-safe-form'} onSubmit={onSubmitCreateNewSafe}>
           {!isProductionEnv && (
-            <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
+            <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue" disableNextButton={!provider}>
               <SelectNetworkStep />
             </StepFormElement>
           )}
           <StepFormElement label={nameNewSafeStepLabel} nextButtonLabel="Continue">
             <NameNewSafeStep />
           </StepFormElement>
-          <StepFormElement label={'Owners and Confirmations'} nextButtonLabel="Continue">
-            {/* <Owners and Confirmations Step /> */}
-            <div>Owners and Confirmations Step</div>
+          <StepFormElement
+            label={ownersAndConfirmationsNewSafeStepLabel}
+            nextButtonLabel="Continue"
+            validate={ownersAndConfirmationsNewSafeStepValidations}
+          >
+            <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
           <StepFormElement label={'Review'} nextButtonLabel="Create">
-            {/* <Review Step /> */}
+            {/* TODO: <Review Step /> */}
             <div>Review Step</div>
           </StepFormElement>
         </StepperForm>

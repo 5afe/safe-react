@@ -33,6 +33,7 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
           }, [setCurrentStep])
           return step.props.children
         }
+
         return (
           <StepElement key={step.props.label} nextButtonType={'submit'} {...step.props}>
             <ComponentStep />
