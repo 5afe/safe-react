@@ -126,7 +126,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       }
       case ADD_OR_UPDATE_SAFE: {
         const state = store.getState()
-        const { safe } = action.payload
+        const safe = action.payload
         const currentSafeAddress = safeAddressFromUrl(state) || safe.address
         if (!currentSafeAddress || !safe.currentVersion) {
           break

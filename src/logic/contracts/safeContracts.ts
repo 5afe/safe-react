@@ -35,7 +35,8 @@ const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => 
   const networkId = getNetworkId()
   const networkConfig = getNetworkConfigById(networkId)
   // We had L1 contracts in three L2 networks, xDai, EWC and Volta so even if network is L2 we have to check that safe version is after v1.3.0
-  const useL2ContractVersion = networkConfig?.network.ethereumLayer === ETHEREUM_LAYER.L2 && semverSatisfies(safeVersion, '>=1.3.0')
+  const useL2ContractVersion =
+    networkConfig?.network.ethereumLayer === ETHEREUM_LAYER.L2 && semverSatisfies(safeVersion, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
   return (
     getDeployment({

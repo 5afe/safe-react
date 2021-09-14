@@ -54,8 +54,6 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const { nativeCoin } = getNetworkInfo()
-
 const SendCustomTx = ({
   initialValues,
   onClose,
@@ -65,6 +63,7 @@ const SendCustomTx = ({
   isABI,
 }: Props): ReactElement => {
   const classes = useStyles()
+  const { nativeCoin } = getNetworkInfo()
   const ethBalance = useSelector(currentSafeEthBalance)
   const addressBook = useSelector(addressBookState)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)

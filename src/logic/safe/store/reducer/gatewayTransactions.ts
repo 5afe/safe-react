@@ -29,16 +29,18 @@ import { sortObject } from 'src/utils/objects'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
-type BasePayload = { safeAddress: string; isTail?: boolean }
+type BasePayload = { chainId: string; safeAddress: string; isTail?: boolean }
 export type HistoryPayload = BasePayload & { values: HistoryGatewayResponse['results'] }
 export type QueuedPayload = BasePayload & { values: QueuedGatewayResponse['results'] }
 export type TransactionDetailsPayload = {
+  chainId: string
   safeAddress: string
   txLocation: TxLocation
   transactionId: string
   value: Transaction['txDetails']
 }
 export type TransactionStatusPayload = {
+  chainId: string
   safeAddress: string
   nonce: number
   id?: string
@@ -69,8 +71,8 @@ const findTransactionLocation = (
 export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
-      const { safeAddress, values, isTail = false } = action.payload
-      const history: StoreStructure['history'] = Object.assign({}, state[safeAddress]?.history)
+      const { chainId, safeAddress, values, isTail = false } = action.payload
+      const history: StoreStructure['history'] = Object.assign({}, state[chainId]?.[safeAddress]?.history)
 
       values.forEach((value) => {
         if (isDateLabel(value)) {
@@ -102,11 +104,13 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         // all the safes with their respective states
         ...state,
         // current safe
-        [safeAddress]: {
-          // keep queued list
-          ...state[safeAddress],
-          // extend history list
-          history: isTail ? history : sortObject(history, 'desc'),
+        [chainId]: {
+          [safeAddress]: {
+            // keep queued list
+            ...state[chainId]?.[safeAddress],
+            // extend history list
+            history: isTail ? history : sortObject(history, 'desc'),
+          },
         },
       }
     },
@@ -115,9 +119,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       // as for usage experience there were no more than 5 transactions competing for the same nonce.
       // Thus, given the client-gateway page size of 20, we have plenty of "room" to be provided with
       // `next` and `queued` transactions in the first page.
-      const { safeAddress, values } = action.payload
-      let next = Object.assign({}, state[safeAddress]?.queued?.next)
-      const queued = Object.assign({}, state[safeAddress]?.queued?.queued)
+      const { chainId, safeAddress, values } = action.payload
+      let next = Object.assign({}, state[chainId]?.[safeAddress]?.queued?.next)
+      const queued = Object.assign({}, state[chainId]?.[safeAddress]?.queued?.queued)
 
       let label: 'next' | 'queued' | undefined
       values.forEach((value) => {
@@ -235,21 +239,23 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       return {
         // all the safes with their respective states
         ...state,
-        // current safe
-        [safeAddress]: {
-          // keep history list
-          ...state[safeAddress],
-          // overwrites queued lists
-          queued: {
-            next,
-            queued,
+        [chainId]: {
+          // current safe
+          [safeAddress]: {
+            // keep history list
+            ...state[chainId]?.[safeAddress],
+            // overwrites queued lists
+            queued: {
+              next,
+              queued,
+            },
           },
         },
       }
     },
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
-      const { safeAddress, transactionId, txLocation, value } = action.payload
-      const storedTransactions = Object.assign({}, state[safeAddress])
+      const { chainId, safeAddress, transactionId, txLocation, value } = action.payload
+      const storedTransactions = Object.assign({}, state[chainId][safeAddress])
       const { queued } = storedTransactions
       let { history } = storedTransactions
 
@@ -281,18 +287,20 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       return {
         // all the safes with their respective states
         ...state,
-        // current safe
-        [safeAddress]: {
-          history,
-          queued,
+        [chainId]: {
+          // current safe
+          [safeAddress]: {
+            history,
+            queued,
+          },
         },
       }
     },
     [UPDATE_TRANSACTION_STATUS]: (state, action: Action<TransactionStatusPayload>) => {
       // if we provide the tx ID that sole tx will have the _pending_ status.
       // if not, all the txs that share the same nonce will have the _pending_ status.
-      const { nonce, id, safeAddress, txStatus } = action.payload
-      const storedTransactions = Object.assign({}, state[safeAddress])
+      const { chainId, nonce, id, safeAddress, txStatus } = action.payload
+      const storedTransactions = Object.assign({}, state[chainId][safeAddress])
       const { queued } = storedTransactions
       const { history } = storedTransactions
 
@@ -371,10 +379,12 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       return {
         // all the safes with their respective states
         ...state,
-        // current safe
-        [safeAddress]: {
-          history,
-          queued,
+        [chainId]: {
+          // current safe
+          [safeAddress]: {
+            history,
+            queued,
+          },
         },
       }
     },

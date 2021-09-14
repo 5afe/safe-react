@@ -22,10 +22,9 @@ interface NativeCoinValueProps {
   onSetMax: (nativeCoinBalance: string) => void
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
+  const { nativeCoin } = getNetworkInfo()
   const ethBalance = useSelector(currentSafeEthBalance)
 
   const {

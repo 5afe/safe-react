@@ -51,12 +51,11 @@ type Props = {
   txParameters: TxParameters
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { nativeCoin } = getNetworkInfo()
   const safeAddress = useSelector(safeAddressFromUrl)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -95,7 +94,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
       txData: tx.data ? tx.data.trim() : '',
     })
-  }, [tx.contractAddress, tx.value, tx.data, safeAddress])
+  }, [tx.contractAddress, tx.value, tx.data, safeAddress, nativeCoin.decimals])
 
   const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {

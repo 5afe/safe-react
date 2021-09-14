@@ -1,5 +1,5 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
-import { onboard } from 'src/components/ConnectButton'
+import onboard from 'src/logic/wallets/onboard'
 import { getConfig, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
@@ -79,12 +79,12 @@ export const switchNetwork = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): 
   }
 }
 
-export const shouldSwitchNetwork = (wallet = onboard.getState()?.wallet): boolean => {
-  const desiredNetwork = String(getNetworkId())
-  const currentNetwork = wallet?.provider?.networkVersion
+export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
+  const desiredNetwork = getNetworkId()
+  const currentNetwork = wallet?.provider?.networkVersion.toString()
   return currentNetwork ? desiredNetwork !== currentNetwork : false
 }
 
-export const canSwitchNetwork = (wallet = onboard.getState()?.wallet): boolean => {
+export const canSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
   return wallet?.provider?.isMetaMask || false
 }

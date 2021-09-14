@@ -5,7 +5,7 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 type Props = {
   networkId: ETHEREUM_NETWORK
-  className: string
+  className?: string
 }
 
 export const CircleDot = (props: Props): React.ReactElement => {

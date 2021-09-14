@@ -36,9 +36,8 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
   )
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const MultiSendDetails = ({ txData }: { txData: TransactionData }): ReactElement | null => {
+  const { nativeCoin } = getNetworkInfo()
   // no parameters for the `multiSend`
   if (!txData.dataDecoded?.parameters) {
     // we render the hex encoded data

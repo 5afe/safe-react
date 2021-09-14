@@ -9,12 +9,10 @@ export type AddressBookEntry = {
   chainId: ETHEREUM_NETWORK // see https://chainid.network
 }
 
-const networkId = getNetworkId()
-
 export const makeAddressBookEntry = ({
   address,
   name,
-  chainId = networkId,
+  chainId = getNetworkId(),
 }: {
   address: string
   name: string

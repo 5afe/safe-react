@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { getNetworkLabel } from 'src/config'
 import { animalsDict, adjectivesDict } from './useMnemonicName.dict'
 
 const animals: string[] = animalsDict.trim().split(/\s+/)
@@ -24,5 +25,6 @@ export const useMnemonicName = (noun?: string): string => {
 }
 
 export const useMnemonicSafeName = (): string => {
-  return useMnemonicName('safe')
+  const networkName = getNetworkLabel().toLowerCase()
+  return useMnemonicName(`${networkName}-safe`)
 }
