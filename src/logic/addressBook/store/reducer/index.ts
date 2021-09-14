@@ -9,7 +9,8 @@ export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
 type Payloads = AddressBookEntry | AddressBookState
 
-const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookState => {
+export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
+  console.log(state, action)
   const newState = [...state]
   const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name.trim() }))
   addressBookEntries
@@ -26,7 +27,6 @@ const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookS
         newState.push(addressBookEntry)
       }
     })
-
   return newState
 }
 export default handleActions<AppReduxState['addressBook'], Payloads>(
