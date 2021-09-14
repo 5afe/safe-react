@@ -2556,10 +2556,9 @@
   dependencies:
     react-media "^1.10.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.2.2":
+"@gnosis.pm/safe-react-gateway-sdk@git://github.com/gnosis/safe-react-gateway-sdk.git#f76f2a4":
   version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.2.2.tgz#aba4cb93469e12854655d0ffd67a4a7842f4b2e4"
-  integrity sha512-ADDAvykm6L7ok2OxrCe1A+RadJHy9c4Uuu29tSI446ivI7PRcn/hzT8lyAVEFgUIjLqUaUF8+Gd0n+JKwHgZaA==
+  resolved "git://github.com/gnosis/safe-react-gateway-sdk.git#f76f2a4bc061ea30cb2d90dd93e981b35f10190c"
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
