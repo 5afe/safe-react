@@ -1,6 +1,6 @@
 import React from 'react'
 import IconButton from '@material-ui/core/IconButton'
-import MuiTextField from '@material-ui/core/TextField'
+import Input from '@material-ui/core/Input'
 import SearchIcon from '@material-ui/icons/Search'
 import ClearIcon from '@material-ui/icons/Clear'
 import styled from 'styled-components'
@@ -18,8 +18,8 @@ type Props = {
 
 const SearchInputCard = ({ value, onValueChange }: Props): React.ReactElement => (
   <Container>
-    <MuiTextField
-      InputProps={{
+    <Input
+      inputProps={{
         'aria-label': 'search',
         startAdornment: <SearchIcon />,
         endAdornment: value && (
