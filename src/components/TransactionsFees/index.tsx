@@ -12,7 +12,6 @@ type TransactionFailTextProps = {
   isCreation: boolean
   isOffChainSignature: boolean
 }
-const { nativeCoin } = getNetworkInfo()
 
 export const TransactionFees = ({
   gasCostFormatted,
@@ -21,6 +20,7 @@ export const TransactionFees = ({
   isOffChainSignature,
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
+  const { nativeCoin } = getNetworkInfo()
   let transactionAction
   if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
     return null

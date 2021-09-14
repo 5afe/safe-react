@@ -17,8 +17,6 @@ import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
 import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
-const { nativeCoin } = getNetworkInfo()
-
 type DetailsWithTxInfoProps = {
   children: ReactNode
   txData: TransactionData
@@ -26,6 +24,7 @@ type DetailsWithTxInfoProps = {
 }
 
 const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps): ReactElement => {
+  const { nativeCoin } = getNetworkInfo()
   const amount = txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'
   let name
   let avatarUrl

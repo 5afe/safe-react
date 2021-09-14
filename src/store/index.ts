@@ -37,6 +37,9 @@ import currencyValues, {
   CurrencyValuesState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware/currencyValuesStorageMiddleware'
+import networkConfig, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
+import { NetworkState } from 'src/logic/config/model/networkConfig'
+import { configMiddleware } from 'src/logic/config/store/middleware'
 
 export const history = createHashHistory()
 
@@ -59,6 +62,7 @@ const finalCreateStore = composeEnhancers(
     providerWatcher,
     addressBookMiddleware,
     currencyValuesStorageMiddleware,
+    configMiddleware,
   ),
 )
 
@@ -75,6 +79,7 @@ const reducers = combineReducers({
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
+  [NETWORK_CONFIG_REDUCER_ID]: networkConfig,
 })
 
 export type AppReduxState = CombinedState<{
@@ -83,12 +88,13 @@ export type AppReduxState = CombinedState<{
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
-  [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
+  [GATEWAY_TRANSACTIONS_ID]: Record<string, Record<string, StoreStructure>>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
+  [NETWORK_CONFIG_REDUCER_ID]: NetworkState
   router: RouterState<{ pathname: string }>
 }>
 

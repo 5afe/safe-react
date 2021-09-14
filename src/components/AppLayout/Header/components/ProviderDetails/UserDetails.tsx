@@ -12,11 +12,14 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getExplorerInfo, getNetworkId, getNetworkLabel } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
-import NetworkCircle from '../NetworkCircle'
+import { useSelector } from 'react-redux'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import ChainIndicator from 'src/components/ChainIndicator'
 
 const styles = createStyles({
   container: {
@@ -92,7 +95,6 @@ const StyledCard = styled(Card)`
 `
 type Props = {
   connected: boolean
-  network: ETHEREUM_NETWORK
   onDisconnect: () => void
   onNetworkChange?: () => unknown
   openDashboard?: (() => void | null) | boolean
@@ -104,7 +106,6 @@ const useStyles = makeStyles(styles)
 
 export const UserDetails = ({
   connected,
-  network,
   onDisconnect,
   onNetworkChange,
   openDashboard,
@@ -112,7 +113,8 @@ export const UserDetails = ({
   userAddress,
 }: Props): React.ReactElement => {
   const explorerUrl = getExplorerInfo(userAddress)
-  const desiredNetwork = getNetworkId()
+  const connectedNetwork = useSelector(networkSelector)
+  const desiredNetwork = useSelector(currentChainId)
   const classes = useStyles()
 
   return (
@@ -150,7 +152,7 @@ export const UserDetails = ({
           Connected network
         </Paragraph>
         <Spacer />
-        <NetworkCircle />
+        {connectedNetwork && <ChainIndicator chainId={connectedNetwork} />}
       </Row>
       <Hairline margin="xs" />
       {openDashboard && (
@@ -162,11 +164,11 @@ export const UserDetails = ({
           </Button>
         </Row>
       )}
-      {network !== desiredNetwork && onNetworkChange && (
+      {shouldSwitchNetwork() && onNetworkChange && (
         <Row className={classes.buttonRow}>
           <Button fullWidth onClick={onNetworkChange} size="medium" variant="outlined" color="primary">
             <Paragraph noMargin size="lg">
-              Switch to {getNetworkLabel(desiredNetwork)}
+              Switch to <ChainIndicator chainId={desiredNetwork} />
             </Paragraph>
           </Button>
         </Row>

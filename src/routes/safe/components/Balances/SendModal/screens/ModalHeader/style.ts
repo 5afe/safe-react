@@ -21,7 +21,7 @@ export const styles = createStyles({
     height: '35px',
     width: '35px',
   },
-  networkCircle: {
+  chainIndicator: {
     padding: `0 ${md}`,
     height: '20px',
     alignItems: 'center',

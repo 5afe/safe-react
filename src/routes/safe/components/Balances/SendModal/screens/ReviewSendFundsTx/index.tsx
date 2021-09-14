@@ -40,8 +40,6 @@ import { ModalHeader } from '../ModalHeader'
 
 const useStyles = makeStyles(styles)
 
-const { nativeCoin } = getNetworkInfo()
-
 export type ReviewTxProp = {
   recipientAddress: string
   recipientName?: string
@@ -91,9 +89,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeAddressFromUrl)
+  const { nativeCoin } = getNetworkInfo()
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, nativeCoin.address), [txToken])
+  const isSendingNativeToken = useMemo(
+    () => sameAddress(txToken?.address, nativeCoin.address),
+    [txToken, nativeCoin.address],
+  )
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)

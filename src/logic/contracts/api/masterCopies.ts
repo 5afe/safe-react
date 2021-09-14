@@ -34,14 +34,12 @@ const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
   return masterCopy
 }
 
-export const fetchMasterCopies = memoize(
-  async (): Promise<MasterCopy[] | undefined> => {
-    const url = `${getTxServiceUrl()}/about/master-copies/`
-    try {
-      const res = await axios.get<{ address: string; version: string }[]>(url)
-      return res.data.map(extractMasterCopyInfo)
-    } catch (error) {
-      console.error('Fetching data from master-copies errored', error)
-    }
-  },
-)
+export const fetchMasterCopies = memoize(async (): Promise<MasterCopy[] | undefined> => {
+  const url = `${getTxServiceUrl()}/about/master-copies/`
+  try {
+    const res = await axios.get<{ address: string; version: string }[]>(url)
+    return res.data.map(extractMasterCopyInfo)
+  } catch (error) {
+    console.error('Fetching data from master-copies errored', error)
+  }
+})
