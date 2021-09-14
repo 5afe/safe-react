@@ -85,23 +85,21 @@ export const fetchSafe =
 
       // TODO: Use React Router's history object after upgrade
       const { pathname, hash } = state.router.location
-      const isPage = (str: string) => [pathname, hash].some((location) => location.includes(str))
-      const isCollectiblesPage = isPage('collectibles')
-      const isTransactionsPage = isPage('transactions') // Does not specify if queued/historical
+      const isCollectiblesPage = [pathname, hash].some((location) => location.includes('collectibles'))
 
       const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag && isCollectiblesPage
-      const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag && isTransactionsPage
-      const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag && isTransactionsPage
+      const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
+      const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
       if (shouldUpdateCollectibles) {
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      if (shouldUpdateTxQueued) {
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued) {
         dispatch(fetchTransactions(safeAddress))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxHistory) {
+      if (shouldUpdateTxHistory) {
         dispatch(fetchSafeTokens(address))
       }
     }
