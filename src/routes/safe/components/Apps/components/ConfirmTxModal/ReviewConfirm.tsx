@@ -98,7 +98,8 @@ export const ReviewConfirm = ({
     [txs, isMultiSend],
   )
   const txValue: string | undefined = useMemo(
-    () => (isMultiSend ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
+    // Value is converted to string because numbers were allowed in the safe-apps-sdk v1, so 0 and anything would evaluate as false
+    () => (isMultiSend ? '0' : txs[0]?.value.toString() && parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
   )
   const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
