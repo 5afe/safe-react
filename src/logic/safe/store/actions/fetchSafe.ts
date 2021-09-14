@@ -8,6 +8,11 @@ import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { store } from 'src/store'
+import { currentSafe } from '../selectors'
+import fetchTransactions from './transactions/fetchTransactions'
+import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -51,7 +56,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  */
 export const fetchSafe =
   (safeAddress: string) =>
-  async (dispatch: Dispatch): Promise<Action<Partial<SafeRecordProps>> | void> => {
+  async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
       address = checksumAddress(safeAddress)
@@ -60,7 +65,7 @@ export const fetchSafe =
       return
     }
 
-    let safeInfo = {}
+    let safeInfo: Partial<SafeRecordProps> = {}
     let remoteSafeInfo: SafeInfo | null = null
 
     // if there's no remote info, we keep what's in memory
@@ -73,6 +78,32 @@ export const fetchSafe =
     // remote (client-gateway)
     if (remoteSafeInfo) {
       safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
+      const state = store.getState()
+
+      // If these polling timestamps have changed, fetch again
+      const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafe(state)
+
+      // TODO: Use React Router's history object after upgrade
+      const { pathname, hash } = state.router.location
+      const isPage = (str: string) => [pathname, hash].some((location) => location.includes(str))
+      const isCollectiblesPage = isPage('collectibles')
+      const isTransactionsPage = isPage('transactions') // Does not specify if queued/historical
+
+      const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag && isCollectiblesPage
+      const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag && isTransactionsPage
+      const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag && isTransactionsPage
+
+      if (shouldUpdateCollectibles) {
+        dispatch(fetchCollectibles(safeAddress))
+      }
+
+      if (shouldUpdateTxQueued) {
+        dispatch(fetchTransactions(safeAddress))
+      }
+
+      if (shouldUpdateTxHistory || shouldUpdateTxHistory) {
+        dispatch(fetchSafeTokens(address))
+      }
     }
 
     const owners = buildSafeOwners(remoteSafeInfo?.owners)
