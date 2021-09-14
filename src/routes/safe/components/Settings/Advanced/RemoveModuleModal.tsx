@@ -39,7 +39,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -79,7 +79,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
           valueInWei: '0',
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
         }),
@@ -92,8 +92,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)

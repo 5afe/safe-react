@@ -103,7 +103,7 @@ export const ReviewConfirm = ({
     [txs, isMultiSend],
   )
   const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -162,7 +162,7 @@ export const ReviewConfirm = ({
           origin: app.id,
           navigateToTransactionsTab: false,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
@@ -177,8 +177,8 @@ export const ReviewConfirm = ({
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -197,7 +197,7 @@ export const ReviewConfirm = ({
     <EditableTxParameters
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={Math.max(gasEstimation, params?.safeTxGas || 0).toString()}
+      safeTxGas={Math.max(parseInt(gasEstimation), params?.safeTxGas || 0).toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
       isExecution={isExecution}

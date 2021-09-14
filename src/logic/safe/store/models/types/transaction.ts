@@ -8,7 +8,7 @@ export enum PendingActionType {
 export type PendingActionValues = PendingActionType[keyof PendingActionType]
 
 export type TxArgs = {
-  baseGas: number
+  baseGas: string
   data: string
   gasPrice: string
   gasToken: string
@@ -16,7 +16,7 @@ export type TxArgs = {
   operation: Operation
   refundReceiver: string
   safeInstance: GnosisSafe
-  safeTxGas: number
+  safeTxGas: string
   sender?: string
   sigs: string
   to: string

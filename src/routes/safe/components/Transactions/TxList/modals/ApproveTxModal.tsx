@@ -87,8 +87,8 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const baseGas = useMemo(
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.baseGas
-        : 0,
+        ? t.current.txDetails.detailedExecutionInfo.baseGas.toString()
+        : '0',
     [],
   )
 
@@ -103,8 +103,8 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const safeTxGas = useMemo(
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.safeTxGas
-        : 0,
+        ? t.current.txDetails.detailedExecutionInfo.safeTxGas.toString()
+        : '0',
     [],
   )
 
