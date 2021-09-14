@@ -25,10 +25,10 @@ const NoAppsFoundTextContainer = styled.div`
 `
 type Props = {
   query: string
-  handleSearchClear: () => void
+  onSearchClear: () => void
 }
 
-const NoAppsFound = ({ query, handleSearchClear }: Props): React.ReactElement => (
+const NoAppsFound = ({ query, onSearchClear }: Props): React.ReactElement => (
   <>
     <NoAppsFoundTextContainer>
       <InfoIcon />
@@ -36,7 +36,7 @@ const NoAppsFound = ({ query, handleSearchClear }: Props): React.ReactElement =>
         No apps found matching <b>{query}</b>
       </Text>
     </NoAppsFoundTextContainer>
-    <ClearSearchButton size="md" color="primary" variant="contained" onClick={handleSearchClear}>
+    <ClearSearchButton size="md" color="primary" variant="contained" onClick={onSearchClear}>
       <Icon type="cross" size="sm" />
       <Text size="xl" color="white">
         Clear search

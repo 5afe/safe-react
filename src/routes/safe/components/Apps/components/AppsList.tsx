@@ -14,7 +14,7 @@ import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
-import { SearchCard } from './SearchCard'
+import { SearchInputCard } from './SearchInputCard'
 import { NoAppsFound } from './NoAppsFound'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
@@ -120,8 +120,8 @@ const AppsList = (): React.ReactElement => {
         </Col>
       </Menu>
       <ContentWrapper>
-        <SearchCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
-        {noAppsFound && <NoAppsFound query={appSearch} handleSearchClear={() => setAppSearch('')} />}
+        <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
+        {noAppsFound && <NoAppsFound query={appSearch} onSearchClear={() => setAppSearch('')} />}
 
         <AnimatePresence>
           <CardsWrapper>

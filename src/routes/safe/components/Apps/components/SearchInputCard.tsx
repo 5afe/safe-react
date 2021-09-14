@@ -16,7 +16,7 @@ type Props = {
   onValueChange: (value: string) => void
 }
 
-const SearchCard = ({ value, onValueChange }: Props): React.ReactElement => (
+const SearchInputCard = ({ value, onValueChange }: Props): React.ReactElement => (
   <Container>
     <MuiTextField
       InputProps={{
@@ -36,4 +36,4 @@ const SearchCard = ({ value, onValueChange }: Props): React.ReactElement => (
   </Container>
 )
 
-export { SearchCard }
+export { SearchInputCard }
