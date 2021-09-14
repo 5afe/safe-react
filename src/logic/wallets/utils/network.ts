@@ -81,8 +81,8 @@ export const switchNetwork = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): 
 
 export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
   const desiredNetwork = getNetworkId()
-  const currentNetwork = wallet?.provider?.networkVersion.toString()
-  return currentNetwork ? desiredNetwork !== currentNetwork : false
+  const currentNetwork = wallet?.provider?.networkVersion
+  return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
 }
 
 export const canSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {

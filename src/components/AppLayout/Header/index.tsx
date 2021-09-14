@@ -21,6 +21,7 @@ import { getNetworkId } from 'src/config'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
+  const networkId = getNetworkId()
   const userAddress = useSelector(userAccountSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
@@ -37,7 +38,7 @@ const HeaderComponent = (): React.ReactElement => {
     }
 
     tryToConnectToLastUsedProvider()
-  }, [])
+  }, [networkId])
 
   const openDashboard = () => {
     const { wallet } = onboard().getState()
@@ -51,7 +52,7 @@ const HeaderComponent = (): React.ReactElement => {
   const onNetworkChange = async () => {
     const { wallet } = onboard().getState()
     try {
-      await switchNetwork(wallet, getNetworkId())
+      await switchNetwork(wallet, networkId)
     } catch (e) {
       e.log()
       // Fallback to the onboard popup if switching isn't supported
