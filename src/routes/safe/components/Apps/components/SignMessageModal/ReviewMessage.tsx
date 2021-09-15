@@ -173,7 +173,7 @@ export const ReviewMessage = ({
     <EditableTxParameters
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
       isExecution={isExecution}

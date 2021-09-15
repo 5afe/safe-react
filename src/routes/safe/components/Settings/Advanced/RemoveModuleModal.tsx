@@ -90,8 +90,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 
@@ -126,7 +126,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
-        safeTxGas={gasEstimation.toString()}
+        safeTxGas={gasEstimation}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => {

@@ -309,15 +309,15 @@ export const ApproveTxModal = ({
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(newGasPrice.toString())
+      setManualGasPrice(txParameters.ethGasPrice)
     }
 
     if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit.toString())
+      setManualGasLimit(txParameters.ethGasLimit)
     }
   }
 
@@ -330,7 +330,7 @@ export const ApproveTxModal = ({
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeNonce={nonce.toString()}
-        safeTxGas={safeTxGas.toString()}
+        safeTxGas={safeTxGas}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => {
