@@ -1,25 +1,29 @@
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
-import { Icon } from '@gnosis.pm/safe-react-components'
 import React from 'react'
-import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
-
-import Hairline from 'src/components/layout/Hairline'
-import Link from 'src/components/layout/Link'
-import Collapse from 'src/components/Collapse'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES } from 'src/routes/routes'
-import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
-import { OwnedAddress } from 'src/components/SafeListSidebar/SafeList/OwnedAddress'
+import { getNetworks } from 'src/config'
+import { NetworkSettings } from 'src/config/networks/network'
+import ListItemText from 'src/components/List/ListItemText'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import Avatar, { AvatarProps } from '@material-ui/core/Avatar'
+import SafeListItem from './SafeListItem'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import { background } from 'src/theme/variables'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
-const StyledIcon = styled(Icon)`
-  margin-right: 4px;
+type StyledAvatarProps = Pick<NetworkSettings, 'backgroundColor' | 'textColor' | 'label'> & AvatarProps
+const StyledAvatar = styled(({ textColor, label, backgroundColor, ...props }) => (
+  <Avatar alt={label} {...props} />
+))<StyledAvatarProps>`
+  && {
+    width: 15px;
+    height: 15px;
+    color: ${({ textColor }) => textColor};
+    background-color: ${({ backgroundColor }) => backgroundColor};
+    margin-right: 10px;
+  }
 `
 
 const useStyles = makeStyles({
@@ -28,26 +32,6 @@ const useStyles = makeStyles({
     overflowX: 'hidden',
     overflowY: 'auto',
     padding: 0,
-  },
-  listItemRoot: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    '&:hover': {
-      backgroundColor: background,
-    },
-  },
-  listItemCollapse: {
-    paddingTop: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: '50px',
-    '& > div > div:first-child': {
-      paddingLeft: '44px',
-    },
-  },
-  noIcon: {
-    visibility: 'hidden',
-    width: '28px',
   },
 })
 
@@ -58,26 +42,15 @@ type Props = {
   onSafeClick: () => void
 }
 
-const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean => {
-  return addedSafes.some((safe) => sameAddress(safe.address, address))
-}
-
 export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }: Props): React.ReactElement => {
   const classes = useStyles()
-  const ownedSafesExpanded = ownedSafes.some((address) => {
-    return address === currentSafeAddress && !isAddressAdded(safes, address)
-  })
+  const networks = getNetworks()
 
-  const getLink = (address: string): React.ReactElement =>
-    sameAddress(currentSafeAddress, address) ? (
-      <StyledIcon type="check" size="md" color="primary" />
-    ) : (
-      <div className={classes.noIcon}>placeholder</div>
-    )
+  console.log('TODO:', safes)
 
   return (
     <MuiList className={classes.list}>
-      {safes.map((safe) => (
+      {/* {safes.map((safe) => (
         <React.Fragment key={safe.address}>
           <Link
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
@@ -93,22 +66,28 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
           </Link>
           <Hairline />
         </React.Fragment>
-      ))}
-
-      {ownedSafes.length > 0 && (
-        <ListItem classes={{ root: classes.listItemCollapse }}>
-          <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
+      ))} */}
+      {networks.map(({ label, backgroundColor, textColor, id }) => (
+        <React.Fragment key={id}>
+          <ListItem selected>
+            <ListItemAvatar key={id}>
+              <StyledAvatar alt={label} backgroundColor={backgroundColor} textColor={textColor} />
+            </ListItemAvatar>
+            <ListItemText primary={label} />
+          </ListItem>
+          <MuiList>
+            {/* TODO: Match owned safes with network */}
             {ownedSafes.map((address: string) => (
-              <React.Fragment key={address}>
-                <OwnedAddress address={address} onClick={onSafeClick} isAdded={isAddressAdded(safes, address)}>
-                  {getLink(address)}
-                </OwnedAddress>
-                <Hairline />
-              </React.Fragment>
+              <SafeListItem
+                key={address}
+                address={address}
+                onSafeClick={onSafeClick}
+                currentSafeAddress={currentSafeAddress}
+              />
             ))}
-          </Collapse>
-        </ListItem>
-      )}
+          </MuiList>
+        </React.Fragment>
+      ))}
     </MuiList>
   )
 }
