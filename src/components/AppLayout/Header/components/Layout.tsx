@@ -5,14 +5,19 @@ import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+
 import Provider from './Provider'
+import NetworkSelector from './NetworkSelector'
+
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
+
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
+import { getNetworks } from 'src/config'
 
 const styles = () => ({
   root: {
@@ -84,6 +89,9 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
 
 const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
   const { clickAway, open, toggle } = useStateHandler()
+  const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
+  const networks = getNetworks()
+  const { isDesktop } = window
   const isOpen = open || shouldSwitchChain
 
   return (
@@ -110,6 +118,14 @@ const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) =
           )
         }
       />
+      {!isDesktop && (
+        <NetworkSelector
+          open={openNetworks}
+          networks={networks}
+          toggle={toggleNetworks}
+          clickAway={clickAwayNetworks}
+        />
+      )}
     </Row>
   )
 }

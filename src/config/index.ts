@@ -11,6 +11,9 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
+import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
+import { configStore } from 'src/logic/config/store/actions'
+import { store } from 'src/store'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -25,6 +28,21 @@ let networkId = NETWORK
 export const setNetworkId = (id: string): void => {
   networkId = id
 }
+
+export const setNetwork = (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
+  if (networkId === getNetworkId()) return
+  // FIXME: remove navigation when L2-UX completes
+  // This was added in order to switch network using navigation on prod
+  // but be able to check chain swapping on dev environments and PRs
+  if (APP_ENV === 'production') {
+    window.location.href = safeUrl
+  } else {
+    setNetworkId(getNetworkName(networkId))
+    const safeConfig = makeNetworkConfig(getConfig())
+    store.dispatch(configStore(safeConfig))
+  }
+}
+
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
