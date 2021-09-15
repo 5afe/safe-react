@@ -68,10 +68,12 @@ export const BasicTxInfo = ({
   txRecipient,
   txData,
   txValue,
+  recipientName,
 }: {
   txRecipient: string
   txData: string
   txValue: string
+  recipientName?: string
 }): ReactElement => {
   const { nativeCoin } = getNetworkInfo()
 
@@ -87,6 +89,7 @@ export const BasicTxInfo = ({
           showAvatar
           textSize="lg"
           showCopyBtn
+          name={recipientName}
           explorerUrl={getExplorerInfo(txRecipient)}
         />
       </>
