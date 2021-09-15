@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import { makeStyles } from '@material-ui/core/'
+import { useSelector } from 'react-redux'
 
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
@@ -16,17 +17,18 @@ import { APP_ENV } from 'src/utils/constants'
 import {
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
   FIELD_MAX_OWNER_NUMBER,
+  FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
 } from './fields/createSafeFields'
 import { getRandomName } from 'src/logic/hooks/useMnemonicName'
-import { useSelector } from 'react-redux'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
   ownersAndConfirmationsNewSafeStepValidations,
 } from './steps/OwnersAndConfirmationsNewSafeStep'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafeStep'
 
 // TODO: Rename to CreateSafePage
 // TODO: Rename to LoadSafePage
@@ -58,6 +60,7 @@ function Open(): ReactElement {
     ],
     [FIELD_NEW_SAFE_THRESHOLD]: 1,
     [FIELD_MAX_OWNER_NUMBER]: 1,
+    [FIELD_NEW_SAFE_PROXY_SALT]: Date.now(),
   }
 
   return (
@@ -85,9 +88,8 @@ function Open(): ReactElement {
           >
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
-          <StepFormElement label={'Review'} nextButtonLabel="Create">
-            {/* TODO: <Review Step /> */}
-            <div>Review Step</div>
+          <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
+            <ReviewNewSafeStep />
           </StepFormElement>
         </StepperForm>
       </Block>
