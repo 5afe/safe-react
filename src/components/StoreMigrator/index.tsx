@@ -8,10 +8,10 @@ import { MIGRATION_ADDRESS } from 'src/routes/routes'
 const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/app'
 const networks = [
   {
-    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/polygon/app',
+    safeUrl: 'https://pr2729--safereact.review.gnosisdev.com/polygon/app',
   },
   {
-    safeUrl: 'https://pr2695--safereact.review.gnosisdev.com/rinkeby/app',
+    safeUrl: 'https://pr2730--safereact.review.gnosisdev.com/rinkeby/app',
   },
 ]
 
