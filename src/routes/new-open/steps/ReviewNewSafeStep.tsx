@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core'
 import TableContainer from '@material-ui/core/TableContainer'
 
@@ -11,6 +11,7 @@ import { background, border, lg, sm } from 'src/theme/variables'
 import {
   FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
+  FIELD_NEW_SAFE_GAS_LIMIT,
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
@@ -37,12 +38,16 @@ function ReviewNewSafeStep(): ReactElement {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  const { gasCostFormatted } = useEstimateSafeCreationGas({
+  const { gasCostFormatted, gasLimit } = useEstimateSafeCreationGas({
     addresses: ownerAddresses,
     numOwners: numberOfOwners,
     safeCreationSalt,
   })
   const { nativeCoin } = getNetworkInfo()
+
+  useEffect(() => {
+    createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
+  }, [gasLimit, createSafeForm])
 
   return (
     <Row className={classes.root} data-testid={'create-new-safe-review-step'}>

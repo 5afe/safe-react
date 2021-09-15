@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import { makeStyles } from '@material-ui/core/'
@@ -16,11 +16,14 @@ import SelectNetworkStep, { selectNetworkStepLabel } from 'src/components/Select
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
 import { APP_ENV } from 'src/utils/constants'
 import {
+  CreateSafeFormValues,
+  FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
   FIELD_MAX_OWNER_NUMBER,
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
+  SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -31,12 +34,27 @@ import OwnersAndConfirmationsNewSafeStep, {
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafeStep'
 import { useLocation } from 'react-router'
-import { FIELD_CUSTOM_SAFE_NAME } from '../open/components/fields'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import SafeCreationProcess from './components/SafeCreationProcess'
+import { Loader } from '@gnosis.pm/safe-react-components'
 
 // TODO: Rename to CreateSafePage
 // TODO: Rename to LoadSafePage
 function Open(): ReactElement {
   const classes = useStyles()
+
+  const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues | null>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    async function checkIfSafeIsPendingToBeCreated() {
+      setIsLoading(true)
+      const safePendingToBeCreated = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+      setSafePendingToBeCreated(safePendingToBeCreated)
+      setIsLoading(false)
+    }
+    checkIfSafeIsPendingToBeCreated()
+  }, [])
 
   const provider = useSelector(providerNameSelector)
   const address = useSelector(userAccountSelector)
@@ -44,19 +62,22 @@ function Open(): ReactElement {
   const location = useLocation()
   const safeRandomName = useMnemonicSafeName()
 
-  function onSubmitCreateNewSafe(values) {
-    // TODO: onSubmitCreateNewSafe
-    // TODO: Safe Creation Process Component
-    console.log('onSubmitCreateNewSafe', values)
+  async function showSafeCreationProcess(newSafeFormValues: CreateSafeFormValues) {
+    await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
+    setSafePendingToBeCreated(newSafeFormValues)
   }
 
   const isProductionEnv = APP_ENV === 'production'
 
   const initialValuesFromUrl = getInitialValues(address, addressBook, location, safeRandomName)
 
-  console.log(initialValuesFromUrl)
+  if (isLoading) {
+    return <Loader size="md" />
+  }
 
-  return (
+  return !!safePendingToBeCreated ? (
+    <SafeCreationProcess />
+  ) : (
     <Page>
       <Block>
         <Row align="center">
@@ -65,7 +86,11 @@ function Open(): ReactElement {
           </IconButton>
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
-        <StepperForm initialValues={initialValuesFromUrl} testId={'load-safe-form'} onSubmit={onSubmitCreateNewSafe}>
+        <StepperForm
+          initialValues={initialValuesFromUrl}
+          onSubmit={showSafeCreationProcess}
+          testId={'create-new-safe-form'}
+        >
           {!isProductionEnv && (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue" disableNextButton={!provider}>
               <SelectNetworkStep />
@@ -103,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
 const DEFAULT_THRESHOLD_VALUE = 1
 
 // initial values can be present in the URL because the Old MultiSig migration
-function getInitialValues(userAddress, addressBook, location, suggestedSafeName) {
+function getInitialValues(userAddress, addressBook, location, suggestedSafeName): CreateSafeFormValues {
   const query = queryString.parse(location.search, { arrayFormat: 'comma' })
   const { name, owneraddresses, ownernames, threshold } = query
 
@@ -123,7 +148,7 @@ function getInitialValues(userAddress, addressBook, location, suggestedSafeName)
 
   return {
     [FIELD_CREATE_SUGGESTED_SAFE_NAME]: suggestedSafeName,
-    [FIELD_CUSTOM_SAFE_NAME]: name,
+    [FIELD_CREATE_CUSTOM_SAFE_NAME]: name,
     [FIELD_NEW_SAFE_THRESHOLD]: isValidThresholdInTheUrl ? threshold : DEFAULT_THRESHOLD_VALUE,
     [FIELD_SAFE_OWNERS_LIST]: owners.map((owner, index) => ({
       nameFieldName: `owner-name-${index}`,
