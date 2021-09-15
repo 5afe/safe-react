@@ -3,10 +3,6 @@ import { postSafeGasEstimation, SafeTransactionEstimationRequest } from '@gnosis
 import { getClientGatewayUrl, getNetworkId } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
-export type GasEstimationResponse = {
-  safeTxGas: string
-}
-
 type FetchSafeTxGasEstimationProps = {
   safeAddress: string
 } & SafeTransactionEstimationRequest
