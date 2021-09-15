@@ -1,4 +1,4 @@
-import AppList from './AppList'
+import AppList from './AppsList'
 
 describe('Safe Apps -> AppList -> Search', () => {
   it('Shows apps matching the search query', () => {})
