@@ -1,39 +1,37 @@
-import { EthHashInfo, Icon } from '@gnosis.pm/safe-react-components'
-import ListItem from '@material-ui/core/ListItem/ListItem'
+import { EthHashInfo, Text, Icon } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, useHistory } from 'react-router'
-import { addressBookName } from 'src/logic/addressBook/store/selectors'
+import { useHistory, generatePath } from 'react-router'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
+import Link from 'src/components/layout/Link'
+import ListItem from '@material-ui/core/ListItem/ListItem'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction'
 import styled from 'styled-components'
 
-type StyledIconProps = { isSameAddress: boolean } & React.ComponentProps<typeof Icon>
-const StyledIcon = styled(({ isSameAddress, ...props }) => <Icon {...props} />)<StyledIconProps>`
-  && {
-    margin-right: 4px;
-    ${({ isSameAddress }) =>
-      isSameAddress
-        ? `
-            visibility: 'hidden',
-            width: '28px'
-          `
-        : ``}
-  }
+const StyledIcon = styled(Icon)<{ isSameAddress: boolean }>`
+  ${({ isSameAddress }) => (isSameAddress ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
 `
 
 type Props = {
-  address: string
   onSafeClick: () => void
-  currentSafeAddress: string | undefined
+  address: string
+  name?: string
+  totalFiatBalance?: string
+  currentSafeAddress?: string
 }
 
-const SafeListItem = ({ address, onSafeClick, currentSafeAddress }: Props) => {
+const SafeListItem = ({
+  onSafeClick,
+  address,
+  name,
+  totalFiatBalance,
+  currentSafeAddress,
+}: Props): React.ReactElement => {
   const history = useHistory()
-  const name = useSelector((state) => addressBookName(state, { address }))
-  const isSameAddress = sameAddress(currentSafeAddress, address)
 
-  const handleSafeClick = () => {
+  const handleOpenSafe = (): void => {
     onSafeClick()
     return history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
@@ -42,10 +40,30 @@ const SafeListItem = ({ address, onSafeClick, currentSafeAddress }: Props) => {
     )
   }
 
+  const currentCurrency = useSelector(currentCurrencySelector)
+  // TODO: use formatAmount from SRC when Amount component PR is merged
+  const formatCurrency = (balance: string): string =>
+    Intl.NumberFormat([], {
+      style: 'currency',
+      currency: currentCurrency,
+      maximumFractionDigits: 2,
+    }).format(+balance)
+
   return (
-    <ListItem button onClick={handleSafeClick}>
-      <StyledIcon type="check" size="md" color="primary" isSameAddress={isSameAddress} test="t" />
+    <ListItem button onClick={handleOpenSafe}>
+      <StyledIcon type="check" size="md" color="primary" isSameAddress={sameAddress(currentSafeAddress, address)} />
       <EthHashInfo hash={address} name={name} showAvatar shortenHash={4} />
+      <ListItemSecondaryAction>
+        {totalFiatBalance ? (
+          formatCurrency(totalFiatBalance)
+        ) : (
+          <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onSafeClick}>
+            <Text size="sm" color="primary">
+              Add Safe
+            </Text>
+          </Link>
+        )}
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
