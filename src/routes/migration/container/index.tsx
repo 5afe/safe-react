@@ -16,7 +16,7 @@ const MigrationScreen: React.FC = () => {
         migrate: true,
         payload: JSON.stringify(payload),
       }
-      window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
+      window.parent.postMessage(message, '*')
     }
 
     loadStorageMigrationDone()
