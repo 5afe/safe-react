@@ -167,9 +167,9 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "4.1.0",
+    "@gnosis.pm/safe-apps-sdk": "4.3.0-next.2",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
-    "@gnosis.pm/safe-deployments": "^1.0.0",
+    "@gnosis.pm/safe-deployments": "^1.2.0",
     "@gnosis.pm/safe-react-components": "^0.8.0",
     "@gnosis.pm/safe-react-gateway-sdk": "^2.2.2",
     "@ledgerhq/hw-transport-node-hid-singleton": "6.3.0",
