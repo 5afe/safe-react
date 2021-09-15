@@ -16,6 +16,7 @@ const StyledIcon = styled(Icon)<{ isSameAddress: boolean }>`
 
 type Props = {
   onSafeClick: () => void
+  onNetworkSwitch?: () => void
   address: string
   name?: string
   totalFiatBalance?: string
@@ -24,6 +25,7 @@ type Props = {
 
 const SafeListItem = ({
   onSafeClick,
+  onNetworkSwitch,
   address,
   name,
   totalFiatBalance,
@@ -31,9 +33,14 @@ const SafeListItem = ({
 }: Props): React.ReactElement => {
   const history = useHistory()
 
-  const handleOpenSafe = (): void => {
+  const handleLoadSafe = (): void => {
+    onNetworkSwitch?.()
     onSafeClick()
-    return history.push(
+  }
+
+  const handleOpenSafe = (): void => {
+    handleLoadSafe()
+    history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
         safeAddress: address,
       }),
@@ -57,7 +64,7 @@ const SafeListItem = ({
         {totalFiatBalance ? (
           formatCurrency(totalFiatBalance)
         ) : (
-          <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onSafeClick}>
+          <Link to={`${LOAD_ADDRESS}/${address}`} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
             </Text>
