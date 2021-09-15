@@ -59,8 +59,10 @@ const StoreMigrator: React.FC = () => {
   })
   // Migrate local storage
   useEffect(() => {
+    console.log(console.log(isSingleNetworkApp))
     if (!isSingleNetworkApp && currentNetwork < networks.length) {
       const urlToMigrate = `${networks[currentNetwork].safeUrl}/#${MIGRATION_ADDRESS}`
+      console.log('Url To migrate:', urlToMigrate)
       window.open(urlToMigrate, 'targetWindow')
     }
   }, [currentNetwork, isSingleNetworkApp])
