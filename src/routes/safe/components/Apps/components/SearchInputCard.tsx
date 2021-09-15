@@ -21,13 +21,15 @@ const SearchInputCard = ({ value, onValueChange }: Props): React.ReactElement =>
     <Input
       inputProps={{
         'aria-label': 'search',
-        startAdornment: <SearchIcon />,
-        endAdornment: value && (
+      }}
+      startAdornment={<SearchIcon />}
+      endAdornment={
+        value && (
           <IconButton onClick={() => onValueChange('')}>
             <ClearIcon />
           </IconButton>
-        ),
-      }}
+        )
+      }
       onChange={(event: React.ChangeEvent<HTMLInputElement>) => onValueChange(event.target.value)}
       placeholder="e.g Compound"
       value={value}

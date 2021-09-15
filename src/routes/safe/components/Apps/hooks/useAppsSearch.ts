@@ -13,7 +13,6 @@ const useAppsSearch = (apps: SafeApp[], searchText: string): SafeApp[] => {
         // 0 - 1, where 0 is the exact match and 1 matches anything
         threshold: 0.2,
         findAllMatches: true,
-        ignoreLocation: true,
       }),
     [apps],
   )
