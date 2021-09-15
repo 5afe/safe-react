@@ -205,6 +205,7 @@ const theme = createTheme({
           borderBottomWidth: '2px !important',
         },
         '&.isValid::before': {
+          visibility: 'visible',
           borderBottomColor: `${secondary} !important`,
         },
         '&.isInvalid::after': {
