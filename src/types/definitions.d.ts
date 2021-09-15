@@ -11,7 +11,6 @@ declare global {
       autoRefreshOnNetworkChange: boolean
       isMetaMask: boolean
     }
-    testAccountIndex?: string | number
   }
 }
 declare module '@openzeppelin/contracts/build/contracts/ERC721'

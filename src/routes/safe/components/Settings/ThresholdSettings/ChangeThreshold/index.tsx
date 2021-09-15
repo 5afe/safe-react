@@ -46,7 +46,7 @@ export const ChangeThresholdModal = ({
   const dispatch = useDispatch()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
   const [data, setData] = useState('')
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
@@ -101,7 +101,7 @@ export const ChangeThresholdModal = ({
         valueInWei: '0',
         txData: data,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       }),
@@ -112,8 +112,8 @@ export const ChangeThresholdModal = ({
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)

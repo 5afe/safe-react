@@ -1,16 +1,14 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import { EthHashInfo, Icon, Text } from '@gnosis.pm/safe-react-components'
+import MuiTextField from '@material-ui/core/TextField'
+import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -18,17 +16,15 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { lg, md, sm } from 'src/theme/variables'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { BasicTxInfo, DecodeTxs } from 'src/components/DecodeTxs'
-import { fetchTxDecoder } from 'src/utils/decodeTx'
-import { DecodedData } from 'src/types/transactions/decode.d'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { BasicTxInfo } from 'src/components/DecodeTxs'
 import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
 
-import { ConfirmTxModalProps, DecodedTxDetail } from '.'
+import { SignMessageModalProps } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -39,10 +35,6 @@ const Container = styled.div`
 const TransactionFeesWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   padding: ${sm} ${lg};
-`
-
-const DecodeTxsWrapper = styled.div`
-  margin: 24px -24px;
 `
 
 const StyledBlock = styled(Block)`
@@ -59,51 +51,44 @@ const StyledBlock = styled(Block)`
   }
 `
 
-type Props = ConfirmTxModalProps & {
-  areTxsMalformed: boolean
-  showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
-  hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
+const MessageTextArea = styled(MuiTextField)`
+  &.MuiFormControl-root {
+    padding-bottom: ${({ theme }) => theme.margin.md};
+  }
+`
+
+const InfoMessage = styled(Paragraph)`
+  display: flex;
+  align-items: center;
+
+  > span:first-child {
+    margin-right: ${({ theme }) => theme.margin.xs};
+  }
+`
+
+type Props = Omit<SignMessageModalProps, 'message' | 'isOpen'> & {
+  txData: string
+  txRecipient: string
+  utf8Message: string
 }
 
-const parseTxValue = (value: string | number): string => {
-  return web3ReadOnly.utils.toBN(value).toString()
-}
-
-export const ReviewConfirm = ({
+export const ReviewMessage = ({
   app,
-  txs,
   safeAddress,
   ethBalance,
   safeName,
-  params,
-  hidden,
   onUserConfirm,
   onClose,
   onTxReject,
-  areTxsMalformed,
   requestId,
-  showDecodedTxData,
+  utf8Message,
+  txData,
+  txRecipient,
 }: Props): ReactElement => {
-  const isMultiSend = txs.length > 1
-  const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
   const isOwner = useSelector(grantedSelector)
 
-  const txRecipient: string | undefined = useMemo(
-    () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
-    [txs, isMultiSend],
-  )
-  const txData: string | undefined = useMemo(
-    () => (isMultiSend ? encodeMultiSendCall(txs) : txs[0]?.data),
-    [txs, isMultiSend],
-  )
-  const txValue: string | undefined = useMemo(
-    // Value is converted to string because numbers were allowed in the safe-apps-sdk v1, so 0 and anything would evaluate as false
-    () => (isMultiSend ? '0' : txs[0]?.value.toString() && parseTxValue(txs[0]?.value)),
-    [txs, isMultiSend],
-  )
-  const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -120,24 +105,14 @@ export const ReviewConfirm = ({
   } = useEstimateTransactionGas({
     txData: txData || '',
     txRecipient,
-    operation,
-    txAmount: txValue,
+    operation: Operation.DELEGATE,
+    txAmount: '0',
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
   })
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
-
-  // Decode tx data.
-  useEffect(() => {
-    const decodeTxData = async () => {
-      const res = await fetchTxDecoder(txData)
-      setDecodedData(res)
-    }
-
-    decodeTxData()
-  }, [txData])
 
   const handleTxRejection = () => {
     onTxReject(requestId)
@@ -157,13 +132,13 @@ export const ReviewConfirm = ({
         {
           safeAddress,
           to: txRecipient,
-          valueInWei: txValue,
+          valueInWei: '0',
           txData,
-          operation,
+          operation: Operation.DELEGATE,
           origin: app.id,
           navigateToTransactionsTab: false,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
@@ -176,8 +151,8 @@ export const ReviewConfirm = ({
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 
@@ -198,13 +173,13 @@ export const ReviewConfirm = ({
     <EditableTxParameters
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={Math.max(parseInt(gasEstimation), params?.safeTxGas || 0).toString()}
+      safeTxGas={gasEstimation.toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
       isExecution={isExecution}
     >
       {(txParameters, toggleEditMode) => (
-        <div hidden={hidden}>
+        <div>
           <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 
           <Hairline />
@@ -219,18 +194,33 @@ export const ReviewConfirm = ({
 
             <Divider withArrow />
 
-            {/* Txs decoded */}
-            <BasicTxInfo
-              txRecipient={txRecipient}
-              txData={txData}
-              txValue={fromTokenUnit(txValue, nativeCoin.decimals)}
-            />
+            <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue="0" recipientName="SignMessageLib" />
 
-            <DecodeTxsWrapper>
-              <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
-            </DecodeTxsWrapper>
-            {!isMultiSend && <Divider />}
-            {/* Tx Parameters */}
+            <Text size="lg" strong>
+              Signing message:
+            </Text>
+            <MessageTextArea
+              rows="2"
+              multiline
+              disabled
+              fullWidth
+              label="Message to sign"
+              inputProps={{
+                type: 'text',
+                value: utf8Message,
+                name: 'Message to sign',
+                onChange: () => {},
+                placeholder: '',
+              }}
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
+            <InfoMessage>
+              <Icon size="md" type="info" color="warning" />
+              Signing a message with the Gnosis Safe requires a transaction on the blockchain
+            </InfoMessage>
+
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
@@ -259,7 +249,7 @@ export const ReviewConfirm = ({
               cancelButtonProps={{ onClick: handleTxRejection }}
               confirmButtonProps={{
                 onClick: () => confirmTransactions(txParameters),
-                disabled: !isOwner || areTxsMalformed,
+                disabled: !isOwner,
                 status: buttonStatus,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
               }}
