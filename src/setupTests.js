@@ -32,7 +32,9 @@ function mockedGetRandomValues(buf) {
 
 jest.mock('bnc-onboard', () => () => ({
   config: jest.fn(),
-  getState: jest.fn(),
+  getState: jest.fn(() => ({
+    appNetworkId: 4,
+  })),
   walletCheck: jest.fn(),
   walletReset: jest.fn(),
   walletSelect: jest.fn(), // returns true or false

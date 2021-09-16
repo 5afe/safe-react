@@ -106,7 +106,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
         history.push(ROOT_ADDRESS)
       }
     },
-    [dispatch, history],
+    [clickAway, dispatch, history],
   )
 
   return (

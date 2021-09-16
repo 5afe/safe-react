@@ -10,6 +10,7 @@ import { getSupportedWallets } from './utils/walletList'
 const getOnboardConfiguration = () => {
   let lastUsedAddress = ''
   let providerName: string | null = null
+  let lastNetworkId = ''
 
   return {
     networkId: parseInt(getNetworkId(), 10),
@@ -26,6 +27,7 @@ const getOnboardConfiguration = () => {
       address: (address: string) => {
         if (!lastUsedAddress && address && providerName) {
           lastUsedAddress = address
+          lastNetworkId = getNetworkId()
           store.dispatch(fetchProvider(providerName))
         }
 
@@ -33,7 +35,7 @@ const getOnboardConfiguration = () => {
         if (!address && lastUsedAddress) {
           lastUsedAddress = ''
           providerName = null
-          store.dispatch(removeProvider())
+          store.dispatch(removeProvider({ keepStorageKey: lastNetworkId !== getNetworkId() }))
         }
       },
     },
@@ -51,11 +53,13 @@ const getOnboardConfiguration = () => {
   }
 }
 
-let currentOnboardInstance = Onboard(getOnboardConfiguration())
-const onboard = (): API => {
-  if (!currentOnboardInstance) {
+let currentOnboardInstance: API
+export const onboard = (): API => {
+  const chainId = getNetworkId()
+  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
     currentOnboardInstance = Onboard(getOnboardConfiguration())
   }
+
   return currentOnboardInstance
 }
 

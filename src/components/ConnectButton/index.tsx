@@ -12,10 +12,10 @@ const checkWallet = async (): Promise<boolean> => {
       return true
     } catch (e) {
       e.log()
-      return await onboard().walletCheck()
     }
   }
-  return true
+
+  return await onboard().walletCheck()
 }
 
 export const onboardUser = async (): Promise<boolean> => {
