@@ -12,8 +12,8 @@ import SpendingLimitModule from './artifacts/AllowanceModule.json'
 export const getSpendingLimitContract = () => {
   const web3 = getWeb3()
 
-  return (new web3.eth.Contract(
+  return new web3.eth.Contract(
     SpendingLimitModule.abi as AbiItem[],
     SPENDING_LIMIT_MODULE_ADDRESS,
-  ) as unknown) as AllowanceModule
+  ) as unknown as AllowanceModule
 }

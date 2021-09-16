@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Icon, Text, Title, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { ConfirmTxModalProps } from '.'
