@@ -1,5 +1,5 @@
 import { TextField as SRCTextField } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'

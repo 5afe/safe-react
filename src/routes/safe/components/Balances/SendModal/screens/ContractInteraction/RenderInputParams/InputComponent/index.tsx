@@ -1,5 +1,5 @@
 import { Checkbox } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Col from 'src/components/layout/Col'
 import Field from 'src/components/forms/Field'

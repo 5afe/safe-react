@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { KeyboardEvent, ReactElement, useEffect, useState } from 'react'
+import { KeyboardEvent, ReactElement, useEffect, useState } from 'react'
 import { useForm, useFormState } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'

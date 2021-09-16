@@ -1,4 +1,3 @@
-import React from 'react'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { createAction } from 'redux-actions'

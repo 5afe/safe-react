@@ -1,5 +1,4 @@
 import { BigNumber } from 'bignumber.js'
-import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'

@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, ReactNode, useState } from 'react'
+import { createContext, ReactElement, ReactNode, useState } from 'react'
 
 export const TxHoverContext = createContext<{
   activeHover?: string

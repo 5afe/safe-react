@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -197,7 +197,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               const value: string = getValueFromTxInputs(key, type, tx)
 
               return (
-                <React.Fragment key={key}>
+                <Fragment key={key}>
                   <Row margin="xs">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       {name} ({type})
@@ -208,7 +208,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                       {value}
                     </Paragraph>
                   </Row>
-                </React.Fragment>
+                </Fragment>
               )
             })}
             <Row margin="xs">
