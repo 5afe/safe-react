@@ -1,17 +1,6 @@
-import React from 'react'
-import { Button, Text, Icon } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import InfoIcon from '@material-ui/icons/Info'
 import styled from 'styled-components'
-
-const ClearSearchButton = styled(Button)`
-  &&.MuiButton-root {
-    padding: 0 12px;
-  }
-
-  *:first-child {
-    margin: 0 ${({ theme }) => theme.margin.xxs} 0 0;
-  }
-`
 
 const NoAppsFoundTextContainer = styled.div`
   display: flex;
@@ -25,24 +14,15 @@ const NoAppsFoundTextContainer = styled.div`
 `
 type Props = {
   query: string
-  onSearchClear: () => void
 }
 
-const NoAppsFound = ({ query, onSearchClear }: Props): React.ReactElement => (
-  <>
-    <NoAppsFoundTextContainer>
-      <InfoIcon />
-      <Text size="xl">
-        No apps found matching <b>{query}</b>
-      </Text>
-    </NoAppsFoundTextContainer>
-    <ClearSearchButton size="md" color="primary" variant="contained" onClick={onSearchClear}>
-      <Icon type="cross" size="sm" />
-      <Text size="xl" color="white">
-        Clear search
-      </Text>
-    </ClearSearchButton>
-  </>
+const NoAppsFound = ({ query }: Props): React.ReactElement => (
+  <NoAppsFoundTextContainer>
+    <InfoIcon />
+    <Text size="xl">
+      No apps found matching <b>{query}</b>
+    </Text>
+  </NoAppsFoundTextContainer>
 )
 
 export { NoAppsFound }

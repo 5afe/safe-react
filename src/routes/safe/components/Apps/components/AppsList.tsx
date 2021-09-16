@@ -121,7 +121,7 @@ const AppsList = (): React.ReactElement => {
       </Menu>
       <ContentWrapper>
         <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
-        {noAppsFound && <NoAppsFound query={appSearch} onSearchClear={() => setAppSearch('')} />}
+        {noAppsFound && <NoAppsFound query={appSearch} />}
 
         <AnimatePresence>
           <CardsWrapper>
