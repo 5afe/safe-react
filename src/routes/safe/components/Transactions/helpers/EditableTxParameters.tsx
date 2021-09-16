@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { TxParameters, useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EditTxParametersForm } from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 import { ParametersStatus } from './utils'

@@ -1,5 +1,5 @@
 import { IconText, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Row from 'src/components/layout/Row'
 

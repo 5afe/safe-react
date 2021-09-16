@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind'
-import React, { ReactElement, ImgHTMLAttributes } from 'react'
+import { ReactElement, ImgHTMLAttributes } from 'react'
 
 import styles from './index.module.scss'
 

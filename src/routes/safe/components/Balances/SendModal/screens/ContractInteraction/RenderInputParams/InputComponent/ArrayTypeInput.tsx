@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { TextAreaField } from 'src/components/forms/TextAreaField'
 import {
   isAddress,

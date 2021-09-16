@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 

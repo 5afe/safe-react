@@ -1,7 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import Switch from '@material-ui/core/Switch'
+
 import { styles } from './style'
 import Divider from 'src/components/Divider'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -56,7 +57,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   const safeAddress = useSelector(safeAddressFromUrl)
   let setCallResults
 
-  React.useMemo(() => {
+  useMemo(() => {
     if (contractAddress) {
       initialValues.contractAddress = contractAddress
     }

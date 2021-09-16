@@ -1,7 +1,7 @@
 import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
-import React from 'react'
+import { useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 
 import { generateColumns } from './dataFetcher'
@@ -31,7 +31,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
 
   const granted = useSelector(grantedSelector)
 
-  const [viewRemoveGuardModal, setViewRemoveGuardModal] = React.useState(false)
+  const [viewRemoveGuardModal, setViewRemoveGuardModal] = useState(false)
   const hideRemoveGuardModal = () => setViewRemoveGuardModal(false)
 
   const triggerRemoveSelectedGuard = (): void => {
@@ -53,7 +53,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                 {autoColumns.map((column, index) => {
                   const columnId = column.id
                   return (
-                    <React.Fragment key={`${columnId}-${index}`}>
+                    <Fragment key={`${columnId}-${index}`}>
                       <TableCell align={column.align} component="td" key={columnId}>
                         <Block justify="left">
                           <EthHashInfo hash={row} showCopyBtn showAvatar explorerUrl={getExplorerInfo(row)} />
@@ -68,7 +68,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                           )}
                         </Row>
                       </TableCell>
-                    </React.Fragment>
+                    </Fragment>
                   )
                 })}
               </TableRow>

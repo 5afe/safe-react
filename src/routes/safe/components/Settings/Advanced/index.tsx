@@ -1,5 +1,5 @@
 import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 

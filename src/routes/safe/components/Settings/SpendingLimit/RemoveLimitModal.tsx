@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'

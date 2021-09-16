@@ -1,6 +1,6 @@
 import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import Col from 'src/components/layout/Col'
 import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'

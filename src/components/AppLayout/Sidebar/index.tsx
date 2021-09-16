@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 

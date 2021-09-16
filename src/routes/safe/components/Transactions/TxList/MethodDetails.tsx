@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React from 'react'
+
 import styled from 'styled-components'
 
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
