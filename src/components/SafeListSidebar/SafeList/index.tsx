@@ -2,12 +2,13 @@ import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import React from 'react'
 import styled from 'styled-components'
-import { getNetworkLabel, getNetworks, setNetwork } from 'src/config'
+import { getNetworkLabel, getNetworks } from 'src/config'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import SafeListItem from './SafeListItem'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import { setNetwork } from 'src/logic/config/utils'
 
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;

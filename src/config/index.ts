@@ -11,9 +11,6 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
-import { store } from 'src/store'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -211,11 +208,4 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
       })
     }
   }
-}
-
-export const setNetwork = (id: ETHEREUM_NETWORK) => {
-  if (id === getNetworkId()) return
-  setNetworkId(getNetworkName(id))
-  const safeConfig = makeNetworkConfig(getConfig())
-  store.dispatch(configStore(safeConfig))
 }

@@ -14,11 +14,12 @@ import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-import { getNetworkName, setNetwork } from 'src/config'
+import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
 import { ROOT_ADDRESS } from 'src/routes/routes'
 import { APP_ENV } from 'src/utils/constants'
+import { setNetwork } from 'src/logic/config/utils'
 
 const styles = {
   root: {

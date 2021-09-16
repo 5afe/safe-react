@@ -10,10 +10,11 @@ import List from '@material-ui/core/List'
 import { makeStyles, Typography } from '@material-ui/core'
 import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
 import Block from 'src/components/layout/Block'
-import { setNetwork, getNetworkLabel, getNetworks } from 'src/config'
+import { getNetworkLabel, getNetworks } from 'src/config'
 import { lg } from 'src/theme/variables'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { setNetwork } from 'src/logic/config/utils'
 
 export const selectNetworkStepLabel = 'Connect wallet & select network'
 
