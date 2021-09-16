@@ -13,20 +13,22 @@ const useStyles = makeStyles(styles)
 
 interface HeaderProps {
   onClose: () => void
-  subTitle: string
+  subTitle?: string
   title: string
+  iconUrl?: string
 }
 
-export const ModalHeader = ({ onClose, subTitle, title }: HeaderProps): ReactElement => {
+export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps): ReactElement => {
   const classes = useStyles()
   const connectedNetwork = getNetworkInfo()
 
   return (
     <Row align="center" className={classes.heading} grow>
+      {iconUrl && <img className={classes.icon} alt={title} src={iconUrl} />}
       <Paragraph className={classes.headingText} noMargin weight="bolder">
         {title}
       </Paragraph>
-      <Paragraph className={classes.annotation}>{subTitle}</Paragraph>
+      <Paragraph className={classes.annotation}>{subTitle ? subTitle : ''}</Paragraph>
       <Row className={classes.chainIndicator}>
         {connectedNetwork.id && <ChainIndicator chainId={connectedNetwork.id} />}
       </Row>

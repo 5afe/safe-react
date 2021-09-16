@@ -5,7 +5,6 @@ import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -25,6 +24,7 @@ import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
+import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -180,7 +180,7 @@ export const ReviewMessage = ({
     >
       {(txParameters, toggleEditMode) => (
         <div>
-          <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 
           <Hairline />
 

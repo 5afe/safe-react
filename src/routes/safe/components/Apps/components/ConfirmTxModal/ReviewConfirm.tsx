@@ -4,7 +4,6 @@ import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -29,6 +28,7 @@ import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
 
 const Container = styled.div`
   max-width: 480px;
@@ -204,7 +204,7 @@ export const ReviewConfirm = ({
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
-          <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 
           <Hairline />
 

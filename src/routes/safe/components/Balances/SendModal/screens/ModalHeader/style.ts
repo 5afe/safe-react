@@ -26,4 +26,8 @@ export const styles = createStyles({
     height: '20px',
     alignItems: 'center',
   },
+  icon: {
+    width: '20px',
+    marginRight: '10px',
+  },
 })
