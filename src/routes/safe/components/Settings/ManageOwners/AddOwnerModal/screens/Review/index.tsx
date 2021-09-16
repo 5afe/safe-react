@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -44,7 +44,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     owners,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -92,8 +92,8 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -164,7 +164,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 </Row>
                 <Hairline />
                 {owners?.map((owner) => (
-                  <React.Fragment key={owner.address}>
+                  <Fragment key={owner.address}>
                     <Row className={classes.owner}>
                       <Col align="center" xs={12}>
                         <EthHashInfo
@@ -177,7 +177,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       </Col>
                     </Row>
                     <Hairline />
-                  </React.Fragment>
+                  </Fragment>
                 ))}
                 <Row align="center" className={classes.info}>
                   <Paragraph color="primary" noMargin size="md" weight="bolder">

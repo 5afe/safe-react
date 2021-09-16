@@ -1,4 +1,5 @@
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -33,7 +34,9 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
     } else {
       // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS, PENDING or PENDING_FAILED
       let text: string
-      const signaturePending = addressInList(transaction.executionInfo?.missingSigners ?? undefined)
+      const signaturePending = addressInList(
+        (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
+      )
 
       switch (transaction.txStatus) {
         case 'AWAITING_CONFIRMATIONS':
@@ -51,7 +54,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
 
       setStatus({ color: 'rinkeby', text })
     }
-  }, [currentUser, transaction.executionInfo?.missingSigners, transaction.txStatus])
+  }, [currentUser, transaction.executionInfo, transaction.txStatus])
 
   return status
 }

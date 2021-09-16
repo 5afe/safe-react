@@ -8,7 +8,7 @@ import Heading from 'src/components/layout/Heading'
 import Row from 'src/components/layout/Row'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { Review } from 'src/routes/open/components/ReviewInformation'
-import SafeNameField from 'src/routes/open/components/SafeNameForm'
+import SafeNameForm from 'src/routes/open/components/SafeNameForm'
 import { SafeOwnersPage, validateOwnersForm } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
 import {
   FIELD_CONFIRMATIONS,
@@ -26,12 +26,13 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { SafeProps } from 'src/routes/open/container/Open'
 import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { sameString } from 'src/utils/strings'
+import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
 
 const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-export type InitialValuesForm = {
+type InitialSafeFormValues = {
   owner0Address?: string
   owner0Name?: string
   confirmations: string
@@ -39,14 +40,16 @@ export type InitialValuesForm = {
   safeCreationSalt: number
 }
 
-const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
+const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialSafeFormValues => {
   const ownerName = useSelector((state) => addressBookEntryName(state, { address: userAccount }))
+  const randomName = useMnemonicSafeName()
 
   if (!safeProps) {
     return {
       [getOwnerNameBy(0)]: sameString(ownerName, ADDRESS_BOOK_DEFAULT_NAME) ? 'My Wallet' : ownerName,
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
+      [FIELD_SAFE_NAME]: randomName,
       [FIELD_CREATION_PROXY_SALT]: Date.now(),
     }
   }
@@ -64,7 +67,7 @@ const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): Initi
   return {
     ...obj,
     [FIELD_CONFIRMATIONS]: threshold || '1',
-    [FIELD_SAFE_NAME]: name,
+    [FIELD_SAFE_NAME]: name || randomName,
     [FIELD_CREATION_PROXY_SALT]: Date.now(),
   }
 }
@@ -127,7 +130,7 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
         steps={steps}
         testId="create-safe-form"
       >
-        <StepperPage component={SafeNameField} />
+        <StepperPage component={SafeNameForm} />
         <StepperPage component={SafeOwnersPage} validate={validateOwnersForm} />
         <StepperPage component={Review} />
       </Stepper>

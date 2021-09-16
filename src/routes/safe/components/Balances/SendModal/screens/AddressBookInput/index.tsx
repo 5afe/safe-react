@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
 import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
-import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
@@ -18,6 +18,7 @@ import {
 } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput/style'
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const chainId = getNetworkId()
 
@@ -61,8 +62,16 @@ const BaseAddressBookInput = ({
       return
     }
 
-    const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: address })
-    return filteredEntries.length === 1 ? filteredEntries[0] : address
+    // Automatically checksum valid addresses
+    let checkedAddr: string
+    try {
+      checkedAddr = checksumAddress(address)
+    } catch (err) {
+      checkedAddr = address
+    }
+
+    const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: checkedAddr })
+    return filteredEntries.length === 1 ? filteredEntries[0] : checkedAddr
   }
 
   const onChange: AutocompleteProps<AddressBookEntry, false, false, true>['onChange'] = (_, value, reason) => {

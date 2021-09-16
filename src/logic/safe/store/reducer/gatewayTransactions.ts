@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash.get'
 import merge from 'lodash.merge'
 import { Action, handleActions } from 'redux-actions'
@@ -12,6 +13,7 @@ import {
   isConflictHeader,
   isDateLabel,
   isLabel,
+  isMultisigExecutionInfo,
   isTransactionSummary,
   QueuedGatewayResponse,
   StoreStructure,
@@ -24,7 +26,6 @@ import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
-import { TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
@@ -131,7 +132,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           return
         }
 
-        if (isTransactionSummary(value)) {
+        if (isTransactionSummary(value) && isMultisigExecutionInfo(value.transaction.executionInfo)) {
           const txNonce = value.transaction.executionInfo?.nonce
 
           if (typeof txNonce === 'undefined') {
@@ -151,7 +152,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 if (txIndex !== -1) {
                   const storedTransaction = next[txNonce][txIndex]
                   const updateFromService =
-                    storedTransaction.executionInfo?.confirmationsSubmitted !==
+                    (storedTransaction.executionInfo as MultisigExecutionInfo).confirmationsSubmitted !==
                     value.transaction.executionInfo?.confirmationsSubmitted
 
                   if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
@@ -189,7 +190,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 if (txIndex !== -1) {
                   const storedTransaction = queued[txNonce][txIndex]
                   const updateFromService =
-                    storedTransaction.executionInfo?.confirmationsSubmitted !==
+                    (storedTransaction.executionInfo as MultisigExecutionInfo).confirmationsSubmitted !==
                     value.transaction.executionInfo?.confirmationsSubmitted
 
                   if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
@@ -304,7 +305,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         txLocation = 'queued.queued'
       } else {
         Object.entries(history).forEach(([timestamp, transactions]) => {
-          const txIndex = transactions.findIndex((transaction) => Number(transaction.executionInfo?.nonce) === nonce)
+          const txIndex = transactions.findIndex(
+            (transaction) => Number((transaction.executionInfo as MultisigExecutionInfo).nonce) === nonce,
+          )
 
           if (txIndex !== -1) {
             txLocation = 'history'

@@ -1,4 +1,5 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import { Erc721Transfer, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ReactElement, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -9,7 +10,6 @@ import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'
 import { TxLocationContext, TxLocationProps } from './TxLocationProvider'
 import { getTxTokenData } from './utils'
-import { Erc721Transfer, Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const SingleRow = styled.div`
   display: flex;
@@ -38,7 +38,7 @@ export const TxInfoDetails = ({
     // is transfer type by context
     isTransferType &&
     // not a Collectible
-    txInfo?.transferInfo.type !== 'ERC721' &&
+    txInfo?.transferInfo.type !== TokenType.ERC721 &&
     // in history list
     txLocation === 'history' &&
     // it's outgoing
@@ -66,7 +66,7 @@ export const TxInfoDetails = ({
 
   useEffect(() => {
     if (txInfo) {
-      const isCollectible = txInfo.transferInfo.type === 'ERC721'
+      const isCollectible = txInfo.transferInfo.type === TokenType.ERC721
       const { address, value, decimals } = getTxTokenData(txInfo)
 
       setSendModalParams((prev) => ({

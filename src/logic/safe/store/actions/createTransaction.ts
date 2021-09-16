@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { push } from 'connected-react-router'
 import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
@@ -7,7 +8,6 @@ import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
-  CALL,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -45,7 +45,7 @@ export interface CreateTransactionArgs {
   txData?: string
   txNonce?: number | string
   valueInWei: string
-  safeTxGas?: number
+  safeTxGas?: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
 }
 
@@ -54,6 +54,10 @@ type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
+
+export const isKeystoneError = (err: Error): boolean => {
+  return err.message.startsWith('#ktek_error')
+}
 
 export const createTransaction =
   (
@@ -64,7 +68,7 @@ export const createTransaction =
       txData = EMPTY_DATA,
       notifiedTransaction,
       txNonce,
-      operation = CALL,
+      operation = Operation.CALL,
       navigateToTransactionsTab = true,
       origin = null,
       safeTxGas: safeTxGasArg,
@@ -97,13 +101,13 @@ export const createTransaction =
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-    let safeTxGas = safeTxGasArg || 0
+    let safeTxGas = safeTxGasArg || '0'
     try {
       if (safeTxGasArg === undefined) {
         safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
       }
     } catch (error) {
-      safeTxGas = safeTxGasArg || 0
+      safeTxGas = safeTxGasArg || '0'
     }
 
     const sigs = getPreValidatedSignatures(from)
@@ -119,7 +123,7 @@ export const createTransaction =
       operation,
       nonce: Number.parseInt(nonce),
       safeTxGas,
-      baseGas: 0,
+      baseGas: '0',
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
       refundReceiver: ZERO_ADDRESS,
@@ -160,15 +164,21 @@ export const createTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          await saveTxToHistory({ ...txArgs, txHash, origin })
+          try {
+            await saveTxToHistory({ ...txArgs, origin })
+          } catch (err) {
+            logError(Errors._803, err.message)
+
+            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
+            if (!isExecution) {
+              return
+            }
+          }
 
           // store the pending transaction's nonce
           isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
           dispatch(fetchTransactions(safeAddress))
-        })
-        .on('error', () => {
-          onError?.()
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(safeAddress))
@@ -176,6 +186,8 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
+      onError?.()
+
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {

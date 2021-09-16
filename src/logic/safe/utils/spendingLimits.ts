@@ -1,8 +1,9 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { AbiItem } from 'web3-utils'
 
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
-import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { enableModuleTx, isModuleEnabled } from 'src/logic/safe/utils/modules'
 import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
@@ -199,7 +200,7 @@ export const setSpendingLimitTx = ({
     txData: spendingLimitContract.methods
       .setAllowance(beneficiary, token, spendingLimitInWei, resetTimeMin, resetBaseMin)
       .encodeABI(),
-    operation: CALL,
+    operation: Operation.CALL,
     notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   }
 
@@ -229,7 +230,7 @@ export const spendingLimitMultiSendTx = ({
   valueInWei: ZERO_VALUE,
   txData: encodeMultiSendCall(transactions),
   notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-  operation: DELEGATE_CALL,
+  operation: Operation.DELEGATE,
 })
 
 type SpendingLimitAllowedBalance = GetTokenByAddress & {

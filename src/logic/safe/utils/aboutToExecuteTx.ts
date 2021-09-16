@@ -1,4 +1,5 @@
-import { TransactionListItem, Transaction } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionListItem, Transaction, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import { isStatusFailed, isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
@@ -29,7 +30,7 @@ export const getNotification = (
     const executedTx = values
       .filter(isTransactionSummary)
       .map((item: TransactionListItem) => (item as Transaction).transaction)
-      .find((transaction) => transaction.executionInfo?.nonce === nonce)
+      .find((transaction) => (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce)
 
     // transaction that was pending, was moved into history
     // that is: it was executed

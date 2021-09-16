@@ -1,14 +1,21 @@
-import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
+import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import { Loader, Title, Card } from '@gnosis.pm/safe-react-components'
+import {
+  GetBalanceParams,
+  GetTxBySafeTxHashParams,
+  MethodToResponse,
+  RPCPayload,
+  Methods,
+  SignMessageParams,
+  RequestId,
+} from '@gnosis.pm/safe-apps-sdk'
 import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
+import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
@@ -27,14 +34,8 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-
-const OwnerDisclaimer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 476px;
-`
+import { useSignMessageModal } from '../hooks/useSignMessageModal'
+import { SignMessageModal } from './SignMessageModal'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -87,7 +88,6 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 })
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
-  const granted = useSelector(grantedSelector)
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
@@ -99,6 +99,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
+  const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
 
   const redirectToBalance = () =>
     history.push(
@@ -170,7 +171,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       txServiceUrl: getTxServiceUrl(),
     }))
 
-    communicator?.on('getTxBySafeTxHash', async (msg) => {
+    communicator?.on(Methods.getTxBySafeTxHash, async (msg) => {
       const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
 
       const tx = await fetchSafeTransaction(safeTxHash)
@@ -178,7 +179,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return tx
     })
 
-    communicator?.on('getSafeInfo', () => ({
+    communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
       network: NETWORK_NAME,
       chainId: parseInt(NETWORK_ID, 10),
@@ -186,7 +187,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       threshold,
     }))
 
-    communicator?.on('getSafeBalances', async (msg) => {
+    communicator?.on(Methods.getSafeBalances, async (msg) => {
       const { currency = 'usd' } = msg.data.params as GetBalanceParams
 
       const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currency })
@@ -194,7 +195,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return balances
     })
 
-    communicator?.on('rpcCall', async (msg) => {
+    communicator?.on(Methods.rpcCall, async (msg) => {
       const params = msg.data.params as RPCPayload
 
       try {
@@ -222,13 +223,19 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }
     })
 
-    communicator?.on('sendTransactions', (msg) => {
+    communicator?.on(Methods.sendTransactions, (msg) => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold])
 
-  const onUserTxConfirm = (safeTxHash: string) => {
+    communicator?.on(Methods.signMessage, async (msg) => {
+      const { message } = msg.data.params as SignMessageParams
+
+      openSignMessageModal(message, msg.data.id)
+    })
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
+
+  const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_CONFIRMED, data: { safeTxHash } },
@@ -236,10 +243,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId as string)
+    communicator?.send({ safeTxHash }, requestId as string)
   }
 
-  const onTxReject = () => {
+  const onTxReject = (requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
@@ -247,7 +254,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId as string, true)
+    communicator?.send('Transaction was rejected', requestId as string, true)
   }
 
   useEffect(() => {
@@ -285,15 +292,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
   }
 
-  if (NETWORK_NAME === 'UNKNOWN' || !granted) {
-    return (
-      <OwnerDisclaimer>
-        <FixedIcon type="notOwner" />
-        <Title size="xs">To use apps, you must be an owner of this Safe</Title>
-      </OwnerDisclaimer>
-    )
-  }
-
   return (
     <AppWrapper>
       <StyledCard>
@@ -327,8 +325,22 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         safeName={safeName as string}
         txs={confirmTransactionModal.txs}
         onClose={closeConfirmationModal}
+        requestId={confirmTransactionModal.requestId}
         onUserConfirm={onUserTxConfirm}
         params={confirmTransactionModal.params}
+        onTxReject={onTxReject}
+      />
+
+      <SignMessageModal
+        isOpen={signMessageModalState.isOpen}
+        app={safeApp as SafeApp}
+        safeAddress={safeAddress}
+        ethBalance={ethBalance as string}
+        safeName={safeName as string}
+        onClose={closeSignMessageModal}
+        requestId={signMessageModalState.requestId}
+        message={signMessageModalState.message}
+        onUserConfirm={onUserTxConfirm}
         onTxReject={onTxReject}
       />
     </AppWrapper>

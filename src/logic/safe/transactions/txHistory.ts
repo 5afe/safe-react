@@ -1,8 +1,8 @@
-import axios from 'axios'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { getClientGatewayUrl, getNetworkId, getSafeServiceBaseUrl } from 'src/config'
 
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
-import { getSafeServiceBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { proposeTransaction, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const calculateBodyFrom = async (
   safeInstance: GnosisSafe,
@@ -16,12 +16,11 @@ const calculateBodyFrom = async (
   gasPrice,
   gasToken,
   refundReceiver,
-  transactionHash,
   sender,
   origin,
   signature,
 ) => {
-  const contractTransactionHash = await safeInstance.methods
+  const safeTxHash = await safeInstance.methods
     .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
     .call()
 
@@ -30,14 +29,13 @@ const calculateBodyFrom = async (
     value: valueInWei,
     data,
     operation,
-    nonce,
-    safeTxGas,
-    baseGas,
+    nonce: nonce.toString(),
+    safeTxGas: safeTxGas.toString(),
+    baseGas: baseGas.toString(),
     gasPrice,
     gasToken,
     refundReceiver,
-    contractTransactionHash,
-    transactionHash,
+    safeTxHash,
     sender: checksumAddress(sender),
     origin,
     signature,
@@ -48,8 +46,6 @@ export const buildTxServiceUrl = (safeAddress: string): string => {
   const address = checksumAddress(safeAddress)
   return `${getSafeServiceBaseUrl(address)}/multisig-transactions/?has_confirmations=True`
 }
-
-const SUCCESS_STATUS = 201 // CREATED status
 
 interface SaveTxToHistoryArgs {
   safeInstance: GnosisSafe
@@ -70,10 +66,9 @@ export const saveTxToHistory = async ({
   sender,
   signature,
   to,
-  txHash,
   valueInWei,
-}: SaveTxToHistoryArgs): Promise<void> => {
-  const url = buildTxServiceUrl(safeInstance.options.address)
+}: SaveTxToHistoryArgs): Promise<TransactionDetails> => {
+  const address = checksumAddress(safeInstance.options.address)
   const body = await calculateBodyFrom(
     safeInstance,
     to,
@@ -86,16 +81,10 @@ export const saveTxToHistory = async ({
     gasPrice,
     gasToken,
     refundReceiver,
-    txHash || null,
     sender,
     origin || null,
     signature,
   )
-  const response = await axios.post(url, body)
-
-  if (response.status !== SUCCESS_STATUS) {
-    return Promise.reject(new Error('Error submitting the transaction'))
-  }
-
-  return Promise.resolve()
+  const txDetails = await proposeTransaction(getClientGatewayUrl(), getNetworkId().toString(), address, body)
+  return txDetails
 }

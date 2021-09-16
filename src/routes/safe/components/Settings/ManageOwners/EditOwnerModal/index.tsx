@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+
 import { useDispatch } from 'react-redux'
 
 import Field from 'src/components/forms/Field'

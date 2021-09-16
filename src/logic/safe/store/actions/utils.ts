@@ -1,4 +1,4 @@
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
 import axios from 'axios'
 
@@ -90,6 +90,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.currentVersion = remoteSafeInfo.version
   safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, LATEST_SAFE_VERSION)
   safeInfo.featuresEnabled = enabledFeatures(safeInfo.currentVersion)
+  safeInfo.guard = remoteSafeInfo.guard ? remoteSafeInfo.guard.value : undefined
 
   return safeInfo
 }

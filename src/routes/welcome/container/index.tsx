@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { WelcomeLayout } from 'src/routes/welcome/components'
 
 import Page from 'src/components/layout/Page'

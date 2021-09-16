@@ -9,7 +9,7 @@ import {
 import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.rinkeby.staging.gnosisdev.com/v1',
+  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://rinkeby.gnosis-safe.io/app',
   gasPriceOracles: [
@@ -43,7 +43,7 @@ const rinkeby: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.rinkeby.gnosis.io/v1',
+      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
       txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1',
     },
   },

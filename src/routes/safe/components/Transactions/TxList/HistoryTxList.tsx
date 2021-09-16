@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxsInfiniteScrollContext } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'

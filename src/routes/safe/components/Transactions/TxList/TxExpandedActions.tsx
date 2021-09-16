@@ -1,5 +1,6 @@
 import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
@@ -29,7 +30,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
 
   const getConfirmTooltipTitle = () => {
     if (transaction.txStatus === 'AWAITING_EXECUTION') {
-      return transaction.executionInfo?.nonce === nonce
+      return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
     }

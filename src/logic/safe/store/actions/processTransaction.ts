@@ -46,9 +46,9 @@ interface ProcessTransactionArgs {
     data: string
     operation: Operation
     nonce: number
-    safeTxGas: number
+    safeTxGas: string
     safeTxHash: string
-    baseGas: number
+    baseGas: string
     gasPrice: string
     gasToken: string
     refundReceiver: string
@@ -160,14 +160,14 @@ export const processTransaction =
           )
 
           try {
-            await saveTxToHistory({ ...txArgs, txHash })
+            await saveTxToHistory({ ...txArgs })
 
             // store the pending transaction's nonce
             isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
             dispatch(fetchTransactions(safeAddress))
           } catch (e) {
-            console.error(e)
+            logError(Errors._804, e.message)
           }
         })
         .on('error', () => {

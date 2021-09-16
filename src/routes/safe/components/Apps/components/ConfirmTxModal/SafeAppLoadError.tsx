@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Icon, Text, Title, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { ConfirmTxModalProps } from '.'
@@ -16,9 +16,9 @@ const FooterWrapper = styled.div`
   margin-top: 15px;
 `
 
-export const SafeAppLoadError = ({ onTxReject, onClose }: ConfirmTxModalProps): ReactElement => {
+export const SafeAppLoadError = ({ onTxReject, onClose, requestId }: ConfirmTxModalProps): ReactElement => {
   const handleTxRejection = () => {
-    onTxReject()
+    onTxReject(requestId)
     onClose()
   }
 

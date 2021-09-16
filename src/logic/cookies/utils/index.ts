@@ -1,12 +1,12 @@
-import Cookies from 'js-cookie'
-
+import Cookies, { CookieAttributes } from 'js-cookie'
 import { getNetworkName } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
-const PREFIX = `v1_${getNetworkName()}`
+const VERSION_PREFIX = 'v1_'
+const PREFIX = `${VERSION_PREFIX}${getNetworkName()}__`
 
 export const loadFromCookie = async (key: string, withoutPrefix = false): Promise<undefined | Record<string, any>> => {
-  const prefix = withoutPrefix ? '' : `${PREFIX}__`
+  const prefix = withoutPrefix ? '' : PREFIX
   try {
     const stringifiedValue = await Cookies.get(`${prefix}${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
@@ -20,11 +20,16 @@ export const loadFromCookie = async (key: string, withoutPrefix = false): Promis
   }
 }
 
-export const saveCookie = async (key: string, value: Record<string, any>, expirationDays: number): Promise<void> => {
+export const saveCookie = async (
+  key: string,
+  value: Record<string, any>,
+  options: CookieAttributes,
+  withoutPrefix = false,
+): Promise<void> => {
+  const prefix = withoutPrefix ? '' : PREFIX
   try {
     const stringifiedValue = JSON.stringify(value)
-    const expiration = expirationDays ? { expires: expirationDays } : undefined
-    await Cookies.set(`${PREFIX}__${key}`, stringifiedValue, expiration)
+    await Cookies.set(`${prefix}${key}`, stringifiedValue, options)
   } catch (err) {
     logError(Errors._701, `cookie ${key} – ${err.message}`)
   }

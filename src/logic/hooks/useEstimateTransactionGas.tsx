@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -12,7 +13,6 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { CALL } from 'src/logic/safe/transactions'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 
@@ -75,7 +75,7 @@ type UseEstimateTransactionGasProps = {
   txAmount?: string
   preApprovingOwner?: string
   operation?: number
-  safeTxGas?: number
+  safeTxGas?: string
   txType?: string
   manualGasPrice?: string
   manualGasLimit?: string
@@ -83,7 +83,7 @@ type UseEstimateTransactionGasProps = {
 
 export type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
-  gasEstimation: number // Amount of gas needed for execute or approve the transaction
+  gasEstimation: string // Amount of gas needed for execute or approve the transaction
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
@@ -92,6 +92,28 @@ export type TransactionGasEstimationResult = {
   isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
   isOffChainSignature: boolean // Returns true if offChainSignature is available
+}
+
+const getDefaultGasEstimation = (
+  txEstimationExecutionStatus: EstimationStatus,
+  gasPrice: string,
+  gasPriceFormatted: string,
+  isExecution = false,
+  isCreation = false,
+  isOffChainSignature = false,
+): TransactionGasEstimationResult => {
+  return {
+    txEstimationExecutionStatus,
+    gasEstimation: '0',
+    gasCost: '0',
+    gasCostFormatted: '< 0.001',
+    gasPrice,
+    gasPriceFormatted,
+    gasLimit: '0',
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+  }
 }
 
 export const useEstimateTransactionGas = ({
@@ -106,40 +128,36 @@ export const useEstimateTransactionGas = ({
   manualGasPrice,
   manualGasLimit,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
-  const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
-    txEstimationExecutionStatus: EstimationStatus.LOADING,
-    gasEstimation: 0,
-    gasCost: '0',
-    gasCostFormatted: '< 0.001',
-    gasPrice: '0',
-    gasPriceFormatted: '0',
-    gasLimit: '0',
-    isExecution: false,
-    isCreation: false,
-    isOffChainSignature: false,
-  })
+  const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
+    getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
+  )
   const { nativeCoin } = getNetworkInfo()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
-
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
         return
       }
-
-      const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
       const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
+      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
+      const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
+
+      if (isOffChainSignature && !isCreation) {
+        setGasEstimation(
+          getDefaultGasEstimation(EstimationStatus.SUCCESS, '1', '1', isExecution, isCreation, isOffChainSignature),
+        )
+        return
+      }
       const approvalAndExecution = checkIfTxIsApproveAndExecution(
         Number(threshold),
         txConfirmations?.size || 0,
         txType,
         preApprovingOwner,
       )
-      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
       try {
-        let safeTxGasEstimation = safeTxGas || 0
+        let safeTxGasEstimation = safeTxGas || '0'
         let ethGasLimitEstimation = 0
         let transactionCallSuccess = true
         let txEstimationExecutionStatus = EstimationStatus.LOADING
@@ -150,7 +168,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txRecipient,
             txAmount: txAmount || '0',
-            operation: operation || CALL,
+            operation: operation || Operation.CALL,
           })
         }
         if (isExecution || approvalAndExecution) {
@@ -163,7 +181,7 @@ export const useEstimateTransactionGas = ({
             txConfirmations,
             isExecution,
             isOffChainSignature,
-            operation: operation || CALL,
+            operation: operation || Operation.CALL,
             from,
             safeTxGas: safeTxGasEstimation,
             approvalAndExecution,
@@ -185,7 +203,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txAmount: txAmount || '0',
             txConfirmations,
-            operation: operation || CALL,
+            operation: operation || Operation.CALL,
             from,
             gasPrice: '0',
             gasToken: ZERO_ADDRESS,
@@ -213,18 +231,7 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         console.warn(error.message)
         // If safeTxGas estimation fail we set this value to 0 (so up to all gasLimit can be used)
-        setGasEstimation({
-          txEstimationExecutionStatus: EstimationStatus.FAILURE,
-          gasEstimation: 0,
-          gasCost: '0',
-          gasCostFormatted: '< 0.001',
-          gasPrice: '1',
-          gasPriceFormatted: '1',
-          gasLimit: '0',
-          isExecution,
-          isCreation,
-          isOffChainSignature,
-        })
+        setGasEstimation(getDefaultGasEstimation(EstimationStatus.FAILURE, '1', '1'))
       }
     }
 

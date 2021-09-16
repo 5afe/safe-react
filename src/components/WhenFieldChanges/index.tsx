@@ -1,4 +1,3 @@
-import React from 'react'
 import { OnChange } from 'react-final-form-listeners'
 
 import GnoField from 'src/components/forms/Field'

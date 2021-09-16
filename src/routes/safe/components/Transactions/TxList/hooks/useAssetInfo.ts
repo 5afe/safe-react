@@ -1,4 +1,4 @@
-import { Custom, SettingsChange, TransactionInfo, Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Custom, SettingsChange, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
@@ -39,7 +39,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
       const directionSign = direction === 'INCOMING' ? '+' : '-'
 
       switch (transferInfo.type) {
-        case 'ERC20': {
+        case TokenType.ERC20: {
           setAsset({
             type: 'Transfer',
             name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
@@ -50,7 +50,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'ERC721': {
+        case TokenType.ERC721: {
           setAsset({
             type: 'Transfer',
             name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
@@ -61,7 +61,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'ETHER': {
+        case TokenType.NATIVE_COIN: {
           const { nativeCoin } = getNetworkInfo()
 
           setAsset({

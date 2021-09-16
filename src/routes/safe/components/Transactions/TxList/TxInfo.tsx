@@ -1,5 +1,5 @@
 import { SettingsChange, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxInfoSettings } from './TxInfoSettings'

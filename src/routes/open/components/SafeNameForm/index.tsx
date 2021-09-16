@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, required, validAddressBookName } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-import { FIELD_NAME } from 'src/routes/open/components/fields'
+import { FIELD_CUSTOM_SAFE_NAME, FIELD_SAFE_NAME } from 'src/routes/open/components/fields'
 import { secondary, sm } from 'src/theme/variables'
+import { LoadFormValues } from 'src/routes/load/container/Load'
 
 const styles = createStyles({
   root: {
@@ -48,15 +48,16 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
           name is only stored locally and will never be shared with Gnosis or any third parties.
         </Paragraph>
       </Block>
+      <Block className={classes.root} margin="sm">
+        <label>Name of the new Safe</label>
+      </Block>
       <Block className={classes.root} margin="lg">
         <StyledField
           component={TextField}
-          defaultValue={safeName}
-          name={FIELD_NAME}
-          placeholder="Name of the new Safe"
+          name={FIELD_CUSTOM_SAFE_NAME}
+          placeholder={safeName}
           text="Safe name"
           type="text"
-          validate={composeValidators(required, validAddressBookName)}
           testId="create-safe-name-field"
         />
       </Block>
@@ -78,11 +79,10 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
 }
 
 const SafeNamePageComponent = () =>
-  function SafeNamePage(controls, { values }): React.ReactElement {
-    const { safeName } = values
+  function SafeNamePage(controls: React.ReactNode, { values }: { values: LoadFormValues }): React.ReactElement {
     return (
       <OpenPaper controls={controls}>
-        <SafeNameForm safeName={safeName} />
+        <SafeNameForm safeName={values[FIELD_CUSTOM_SAFE_NAME] || values[FIELD_SAFE_NAME]} />
       </OpenPaper>
     )
   }

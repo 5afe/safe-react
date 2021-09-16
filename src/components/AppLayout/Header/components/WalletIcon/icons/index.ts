@@ -12,6 +12,7 @@ import torusIcon from './icon-torus.svg'
 import coinbaseIcon from './icon-coinbase.svg'
 import operaIcon from './icon-opera.png'
 import squarelinkIcon from './icon-squarelink.png'
+import keystoneIcon from './icon-keystone.png'
 
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
@@ -38,6 +39,10 @@ const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } 
   },
   [WALLET_PROVIDER.LATTICE]: {
     src: latticeIcon,
+    height: 41,
+  },
+  [WALLET_PROVIDER.KEYSTONE]: {
+    src: keystoneIcon,
     height: 41,
   },
   [WALLET_PROVIDER.FORTMATIC]: {
