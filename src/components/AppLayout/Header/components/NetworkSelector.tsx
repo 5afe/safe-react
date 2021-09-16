@@ -16,8 +16,9 @@ import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { getNetworkName, setNetwork } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { NetworkInfo } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
 import { ROOT_ADDRESS } from 'src/routes/routes'
+import { APP_ENV } from 'src/utils/constants'
 
 const styles = {
   root: {
@@ -84,9 +85,16 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
   const classes = useStyles()
   const networkName = getNetworkName().toLowerCase()
 
-  const onNetworkChange = (...args: Parameters<typeof setNetwork>) => {
-    setNetwork(...args)
-    history.push(ROOT_ADDRESS)
+  const onNetworkChange = (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
+    // FIXME: remove navigation when L2-UX completes
+    // This was added in order to switch network using navigation on prod
+    // but be able to check chain swapping on dev environments and PRs
+    if (APP_ENV === 'production') {
+      window.location.href = safeUrl
+    } else {
+      setNetwork(networkId)
+      history.push(ROOT_ADDRESS)
+    }
   }
 
   return (

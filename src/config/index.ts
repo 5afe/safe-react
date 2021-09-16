@@ -29,20 +29,6 @@ export const setNetworkId = (id: string): void => {
   networkId = id
 }
 
-export const setNetwork = (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-  if (networkId === getNetworkId()) return
-  // FIXME: remove navigation when L2-UX completes
-  // This was added in order to switch network using navigation on prod
-  // but be able to check chain swapping on dev environments and PRs
-  if (APP_ENV === 'production') {
-    window.location.href = safeUrl
-  } else {
-    setNetworkId(getNetworkName(networkId))
-    const safeConfig = makeNetworkConfig(getConfig())
-    store.dispatch(configStore(safeConfig))
-  }
-}
-
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
@@ -225,4 +211,11 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
       })
     }
   }
+}
+
+export const setNetwork = (id: ETHEREUM_NETWORK) => {
+  if (id === getNetworkId()) return
+  setNetworkId(getNetworkName(id))
+  const safeConfig = makeNetworkConfig(getConfig())
+  store.dispatch(configStore(safeConfig))
 }

@@ -60,7 +60,7 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
   return (
     <>
       <StyledList>
-        {networks.map(({ id, label, backgroundColor, textColor, safeUrl }) => {
+        {networks.map(({ id, label, backgroundColor, textColor }) => {
           const hasNetworkSafes = label === getNetworkLabel()
           if (!hasNetworkSafes) return null
           return (
@@ -74,7 +74,7 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
                   <SafeListItem
                     key={safe.address}
                     onSafeClick={onSafeClick}
-                    onNetworkSwitch={() => setNetwork(safeUrl, id)}
+                    onNetworkSwitch={() => setNetwork(id)}
                     currentSafeAddress={currentSafeAddress}
                     {...safe}
                   />

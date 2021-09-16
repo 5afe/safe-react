@@ -1,5 +1,5 @@
-import React, { ReactElement, useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { ReactElement, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -10,18 +10,15 @@ import List from '@material-ui/core/List'
 import { makeStyles, Typography } from '@material-ui/core'
 import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
 import Block from 'src/components/layout/Block'
-import { getConfig, getNetworkLabel, getNetworkName, getNetworks, setNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
+import { setNetwork, getNetworkLabel, getNetworks } from 'src/config'
 import { lg } from 'src/theme/variables'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 export const selectNetworkStepLabel = 'Connect wallet & select network'
 
 function SelectNetworkStep(): ReactElement {
   const classes = useStyles()
-  const dispatch = useDispatch()
 
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
 
@@ -35,15 +32,10 @@ function SelectNetworkStep(): ReactElement {
 
   const networks = getNetworks()
 
-  const onNetworkSwitch = useCallback(
-    (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-      setNetworkId(getNetworkName(networkId))
-      const safeConfig = makeNetworkConfig(getConfig())
-      dispatch(configStore(safeConfig))
-      setIsNetworkSelectorPopupOpen(false)
-    },
-    [dispatch],
-  )
+  const onNetworkSwitch = (networkId: ETHEREUM_NETWORK) => {
+    setNetwork(networkId)
+    setIsNetworkSelectorPopupOpen(false)
+  }
 
   return (
     <Block className={classes.padding} data-testid={'select-network-step'}>
@@ -83,7 +75,7 @@ function SelectNetworkStep(): ReactElement {
                 key={network.id}
                 role={'button'}
                 className={classes.networkLabel}
-                onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
+                onClick={() => onNetworkSwitch(network.id)}
               >
                 <NetworkLabel networkInfo={network} />
               </div>
