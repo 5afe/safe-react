@@ -1,5 +1,3 @@
-import React from 'react'
-
 import WalletInfo from './index'
 
 export default {

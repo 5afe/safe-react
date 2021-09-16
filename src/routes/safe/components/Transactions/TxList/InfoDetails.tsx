@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 type InfoDetailsProps = {
   children: ReactNode

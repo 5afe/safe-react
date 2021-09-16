@@ -1,4 +1,4 @@
-import { List } from 'immutable'
+import BigNumber from 'bignumber.js'
 import { Dispatch } from 'redux'
 
 import {
@@ -12,7 +12,6 @@ import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
@@ -26,7 +25,7 @@ export type BalanceRecord = {
 interface ExtractedData {
   balances: Array<BalanceRecord>
   ethBalance: string
-  tokens: List<Token>
+  tokens: Array<Token>
 }
 
 const extractDataFromResult = (
@@ -45,7 +44,7 @@ const extractDataFromResult = (
   if (sameAddress(address, ZERO_ADDRESS)) {
     acc.ethBalance = humanReadableValue(balance, Number(decimals))
   } else {
-    acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
+    acc.tokens.push(makeToken({ ...tokenInfo }))
   }
 
   return acc
@@ -78,7 +77,7 @@ export const fetchSafeTokens =
       {
         balances: [],
         ethBalance: '0',
-        tokens: List(),
+        tokens: [],
       },
     )
 

@@ -1,9 +1,7 @@
 import { getMockedSafeInstance } from 'src/test/utils/safeHelper'
 
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
-import {
-  generateSafeTxHash,
-} from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
@@ -16,7 +14,7 @@ jest.mock('src/logic/wallets/getWeb3', () => {
     __esModule: true, // Use it when dealing with esModules
     ...originalModule,
     getNetworkIdFrom: jest.fn(),
-  } 
+  }
 })
 
 describe('generateSafeTxHash', () => {
@@ -31,7 +29,7 @@ describe('generateSafeTxHash', () => {
     const safeInstance = getMockedSafeInstance({})
     const safeVersion = await getCurrentSafeVersion(safeInstance)
     const txArgs = {
-      baseGas: 100,
+      baseGas: '100',
       data: '',
       gasPrice: '1000',
       gasToken: '',
@@ -39,7 +37,7 @@ describe('generateSafeTxHash', () => {
       operation: 0,
       refundReceiver: userAddress,
       safeInstance,
-      safeTxGas: 1000,
+      safeTxGas: '1000',
       sender: userAddress2,
       sigs: '',
       to: userAddress3,
@@ -63,7 +61,7 @@ describe('generateSafeTxHash', () => {
     const safeVersion = await getCurrentSafeVersion(safeInstance)
     getWeb3.getNetworkIdFrom.mockReturnValue(4)
     const txArgs = {
-      baseGas: 100,
+      baseGas: '100',
       data: '',
       gasPrice: '1000',
       gasToken: '',
@@ -71,7 +69,7 @@ describe('generateSafeTxHash', () => {
       operation: 0,
       refundReceiver: userAddress,
       safeInstance,
-      safeTxGas: 1000,
+      safeTxGas: '1000',
       sender: userAddress2,
       sigs: '',
       to: userAddress3,

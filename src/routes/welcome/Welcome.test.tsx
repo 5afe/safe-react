@@ -1,4 +1,4 @@
-import { onboard } from 'src/components/ConnectButton'
+import onboard from 'src/logic/wallets/onboard'
 import { render, fireEvent, screen } from 'src/utils/test-utils'
 import Welcome from './Welcome'
 

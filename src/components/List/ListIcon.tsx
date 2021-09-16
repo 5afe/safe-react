@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Icon, IconTypes } from '@gnosis.pm/safe-react-components'
 

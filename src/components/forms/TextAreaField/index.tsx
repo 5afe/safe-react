@@ -1,5 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'

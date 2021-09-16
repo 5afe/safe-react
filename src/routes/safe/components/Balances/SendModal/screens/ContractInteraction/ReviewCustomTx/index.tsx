@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
@@ -45,11 +45,10 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const { nativeCoin } = getNetworkInfo()
-
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const { nativeCoin } = getNetworkInfo()
   const safeAddress = useSelector(safeAddressFromUrl)
 
   const {
@@ -82,7 +81,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           valueInWei: txValue,
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),

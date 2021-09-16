@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -40,8 +40,6 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const useStyles = makeStyles(styles)
-
-const { nativeCoin } = getNetworkInfo()
 
 export type ReviewTxProp = {
   recipientAddress: string
@@ -92,13 +90,17 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeAddressFromUrl)
+  const { nativeCoin } = getNetworkInfo()
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, nativeCoin.address), [txToken])
+  const isSendingNativeToken = useMemo(
+    () => sameAddress(txToken?.address, nativeCoin.address),
+    [txToken, nativeCoin.address],
+  )
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -164,7 +166,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         valueInWei: txValue,
         txData: data,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
       }),
@@ -175,8 +177,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)

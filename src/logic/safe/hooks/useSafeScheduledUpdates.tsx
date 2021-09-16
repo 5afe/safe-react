@@ -1,15 +1,17 @@
 import { useEffect, useRef } from 'react'
-import { batch, useDispatch } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string): void => {
   const dispatch = useDispatch()
   const timer = useRef<number>()
+  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
     // using this variable to prevent setting a timeout when the component is already unmounted or the effect
@@ -19,7 +21,7 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       batch(async () => {
         await Promise.all([
           dispatch(fetchSafeTokens(address)),
-          dispatch(fetchTransactions(address)),
+          dispatch(fetchTransactions(chainId, address)),
           dispatch(fetchCollectibles(address)),
           dispatch(fetchSafe(address)),
         ])
@@ -38,5 +40,5 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       mounted = false
       clearTimeout(timer.current)
     }
-  }, [dispatch, safeAddress, safeLoaded])
+  }, [chainId, dispatch, safeAddress, safeLoaded])
 }

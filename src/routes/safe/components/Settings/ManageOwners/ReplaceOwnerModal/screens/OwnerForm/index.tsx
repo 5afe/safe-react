@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { Mutator } from 'final-form'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { OnChange } from 'react-final-form-listeners'
 
