@@ -1,5 +1,3 @@
-import React from 'react'
-
 import List, { ListItemType } from '.'
 import ListIcon from './ListIcon'
 

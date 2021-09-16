@@ -1,6 +1,5 @@
 import MuiTextField from '@material-ui/core/TextField'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React from 'react'
 
 import { lg } from 'src/theme/variables'
 

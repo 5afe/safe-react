@@ -1,7 +1,7 @@
 import { Button, Icon, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
-import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
+import { ReactElement, ReactNode, ReactNodeArray } from 'react'
 import styled from 'styled-components'
 
 type Theme = typeof theme

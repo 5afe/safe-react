@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect, Fragment, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
@@ -80,8 +80,8 @@ const useStyles = makeStyles(
 const Collectibles = (): React.ReactElement => {
   const { trackEvent } = useAnalytics()
   const classes = useStyles()
-  const [selectedToken, setSelectedToken] = React.useState<NFTToken | undefined>()
-  const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
+  const [selectedToken, setSelectedToken] = useState<NFTToken | undefined>()
+  const [sendNFTsModalOpen, setSendNFTsModalOpen] = useState(false)
 
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
@@ -107,7 +107,7 @@ const Collectibles = (): React.ReactElement => {
         {nftAssetsFromNftTokens.length > 0 &&
           nftAssetsFromNftTokens.map((nftAsset) => {
             return (
-              <React.Fragment key={nftAsset.slug}>
+              <Fragment key={nftAsset.slug}>
                 <div className={classes.title}>
                   <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
                   <h2 className={classes.titleText}>{nftAsset.name}</h2>
@@ -124,7 +124,7 @@ const Collectibles = (): React.ReactElement => {
                       />
                     ))}
                 </div>
-              </React.Fragment>
+              </Fragment>
             )
           })}
       </div>

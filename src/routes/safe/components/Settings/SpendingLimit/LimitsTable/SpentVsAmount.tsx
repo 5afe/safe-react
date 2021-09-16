@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Token } from 'src/logic/tokens/store/model/token'

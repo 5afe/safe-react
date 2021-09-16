@@ -1,6 +1,6 @@
 import { RadioButtons, Text } from '@gnosis.pm/safe-react-components'
 import { FormControlLabel, hexToRgb, Switch as SwitchMui } from '@material-ui/core'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 import styled from 'styled-components'
 

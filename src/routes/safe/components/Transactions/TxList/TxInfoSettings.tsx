@@ -1,6 +1,6 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { SettingsChange } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'

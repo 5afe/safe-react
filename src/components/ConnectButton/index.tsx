@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import Button from 'src/components/layout/Button'
 import { getNetworkId } from 'src/config'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'

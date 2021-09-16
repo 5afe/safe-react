@@ -1,5 +1,3 @@
-import React from 'react'
-
 import AppCard from './index'
 
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'

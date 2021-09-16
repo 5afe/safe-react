@@ -1,5 +1,5 @@
 import { Loader, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Img from 'src/components/layout/Img'
 import { ActionModal } from './ActionModal'

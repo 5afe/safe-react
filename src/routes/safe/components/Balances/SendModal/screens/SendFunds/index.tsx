@@ -3,7 +3,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getExplorerInfo } from 'src/config'

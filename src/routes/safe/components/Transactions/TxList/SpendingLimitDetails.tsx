@@ -1,9 +1,9 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React from 'react'
-import { sameString } from 'src/utils/strings'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
+import { sameString } from 'src/utils/strings'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
@@ -29,12 +29,12 @@ const SpendingLimitRow = styled.div`
 `
 
 export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  const [beneficiary, tokenAddress, amount, resetTimeMin] = React.useMemo(
+  const [beneficiary, tokenAddress, amount, resetTimeMin] = useMemo(
     () => data.parameters?.map(({ value }) => value) ?? [],
     [data.parameters],
   )
 
-  const resetTimeLabel = React.useMemo(
+  const resetTimeLabel = useMemo(
     () => getResetTimeOptions().find(({ value }) => +value === +resetTimeMin)?.label ?? '',
     [resetTimeMin],
   )
@@ -64,10 +64,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
 }
 
 export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  const [beneficiary, tokenAddress] = React.useMemo(
-    () => data.parameters?.map(({ value }) => value) ?? [],
-    [data.parameters],
-  )
+  const [beneficiary, tokenAddress] = useMemo(() => data.parameters?.map(({ value }) => value) ?? [], [data.parameters])
   const tokenInfo = useTokenInfo(tokenAddress as string)
 
   return (
