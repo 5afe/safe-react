@@ -44,7 +44,7 @@ export const sendReplaceOwner = async (
       valueInWei: '0',
       txData,
       txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),

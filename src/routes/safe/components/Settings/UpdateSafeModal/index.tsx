@@ -67,7 +67,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
         ethParameters: txParameters,
         notifiedTransaction: 'STANDARD_TX',
         operation: Operation.DELEGATE,

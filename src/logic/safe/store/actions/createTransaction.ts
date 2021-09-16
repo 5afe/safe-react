@@ -46,7 +46,7 @@ export interface CreateTransactionArgs {
   txData?: string
   txNonce?: number | string
   valueInWei: string
-  safeTxGas?: number
+  safeTxGas?: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
 }
 
@@ -103,13 +103,13 @@ export const createTransaction =
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-    let safeTxGas = safeTxGasArg || 0
+    let safeTxGas = safeTxGasArg || '0'
     try {
       if (safeTxGasArg === undefined) {
         safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
       }
     } catch (error) {
-      safeTxGas = safeTxGasArg || 0
+      safeTxGas = safeTxGasArg || '0'
     }
 
     const sigs = getPreValidatedSignatures(from)
@@ -125,7 +125,7 @@ export const createTransaction =
       operation,
       nonce: Number.parseInt(nonce),
       safeTxGas,
-      baseGas: 0,
+      baseGas: '0',
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
       refundReceiver: ZERO_ADDRESS,

@@ -22,7 +22,7 @@ export const estimateSafeTxGas = async ({
   txRecipient,
   txAmount,
   operation,
-}: SafeTxGasEstimationProps): Promise<number> => {
+}: SafeTxGasEstimationProps): Promise<string> => {
   try {
     const safeTxGasEstimation = await fetchSafeTxGasEstimation({
       safeAddress,
@@ -32,7 +32,7 @@ export const estimateSafeTxGas = async ({
       operation,
     })
 
-    return parseInt(safeTxGasEstimation)
+    return safeTxGasEstimation
   } catch (error) {
     console.info('Error calculating tx gas estimation', error.message)
     throw error
@@ -50,7 +50,7 @@ type TransactionEstimationProps = {
   gasPrice?: string
   gasToken?: string
   refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
-  safeTxGas?: number
+  safeTxGas?: string
   from?: string
   isExecution: boolean
   isOffChainSignature?: boolean
@@ -91,7 +91,7 @@ export const estimateTransactionGasLimit = async ({
       gasPrice: gasPrice || '0',
       gasToken: gasToken || ZERO_ADDRESS,
       refundReceiver: refundReceiver || ZERO_ADDRESS,
-      safeTxGas: safeTxGas || 0,
+      safeTxGas: safeTxGas || '0',
       approvalAndExecution,
     })
   }
@@ -120,7 +120,7 @@ type TransactionExecutionEstimationProps = {
   gasToken: string
   gasLimit?: string
   refundReceiver: string // Address of receiver of gas payment (or 0 if tx.origin).
-  safeTxGas: number
+  safeTxGas: string
   from: string
   approvalAndExecution?: boolean
 }
