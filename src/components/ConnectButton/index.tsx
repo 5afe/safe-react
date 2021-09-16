@@ -12,7 +12,6 @@ const checkWallet = async (): Promise<boolean> => {
       return true
     } catch (e) {
       e.log()
-      return await onboard().walletCheck()
     }
   }
 

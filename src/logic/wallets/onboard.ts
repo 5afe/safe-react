@@ -53,10 +53,10 @@ const getOnboardConfiguration = () => {
   }
 }
 
-let currentOnboardInstance
+let currentOnboardInstance: API
 export const onboard = (): API => {
   const chainId = getNetworkId()
-  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId !== parseInt(chainId, 10)) {
+  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
     currentOnboardInstance = Onboard(getOnboardConfiguration())
   }
 
