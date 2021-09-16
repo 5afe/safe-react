@@ -121,14 +121,37 @@ describe('Safe Apps -> AppsList -> Search', () => {
 
     fireEvent.input(searchInput, { target: { value: 'Tra' } })
 
-    expect(screen.getByText('Transaction Builder')).toBeInTheDocument()
+    // matches the name
+    const transactionBuilder = screen.getByText('Transaction Builder')
+    // matches the description (synthetix)
+    const synthetix = screen.getByText('Trade synthetic assets on Ethereum')
+    // query the dom for ordered array of matches
+    const results = screen.queryAllByText(/Tra/)
+
+    expect(results[0]).toBe(transactionBuilder)
+    expect(results[1]).toBe(synthetix)
   })
 
   it('Shows "no apps found" message when not able to find apps matching the query', () => {
     render(<AppsList />, customState)
+
+    const query = 'not-a-real-app'
+    const searchInput = screen.getByPlaceholderText('e.g Compound')
+
+    fireEvent.input(searchInput, { target: { value: query } })
+
+    expect(screen.getByText('No apps found matching')).toBeInTheDocument()
   })
 
   it('Clears the search result when you press on clear button and shows all apps again', () => {
     render(<AppsList />, customState)
+
+    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    fireEvent.input(searchInput, { target: { value: 'Compound' } })
+
+    const clearButton = screen.getByLabelText('Clear the search')
+    fireEvent.click(clearButton)
+
+    expect((searchInput as HTMLInputElement).value).toBe('')
   })
 })

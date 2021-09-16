@@ -25,7 +25,7 @@ const SearchInputCard = ({ value, onValueChange }: Props): React.ReactElement =>
       startAdornment={<SearchIcon />}
       endAdornment={
         value && (
-          <IconButton onClick={() => onValueChange('')}>
+          <IconButton aria-label="Clear the search" onClick={() => onValueChange('')}>
             <ClearIcon />
           </IconButton>
         )
