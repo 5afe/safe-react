@@ -1,6 +1,5 @@
 import { Dispatch } from 'redux'
 import { Action } from 'redux-actions'
-
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
@@ -13,8 +12,6 @@ import { currentSafe } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import { SAFE_ROUTES } from 'src/routes/routes'
-import { matchPath } from 'react-router'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -86,11 +83,7 @@ export const fetchSafe =
       // If these polling timestamps have changed, fetch again
       const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafe(state)
 
-      const isCollectiblesPage = !!matchPath<{ safeAddress: string }>(state.router.location.pathname, {
-        path: SAFE_ROUTES.ASSETS_COLLECTIBLES,
-      })
-
-      const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag && isCollectiblesPage
+      const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
