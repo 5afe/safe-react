@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from 'react'
+import { useState, useEffect, ReactElement } from 'react'
 import { EthHashInfo, Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'

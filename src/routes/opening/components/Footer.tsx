@@ -1,4 +1,4 @@
-import React, { ReactElement, SyntheticEvent } from 'react'
+import { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'

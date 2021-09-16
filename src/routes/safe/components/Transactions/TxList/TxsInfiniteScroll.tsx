@@ -1,5 +1,5 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 import { INFINITE_SCROLL_CONTAINER, InfiniteScroll } from 'src/components/InfiniteScroll'
 import { HorizontallyCentered, ScrollableTransactionsContainer } from './styled'

@@ -1,5 +1,5 @@
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
-import React from 'react'
+
 import * as Sentry from '@sentry/react'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'

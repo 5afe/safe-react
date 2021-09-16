@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, useRouteMatch } from 'react-router-dom'
 

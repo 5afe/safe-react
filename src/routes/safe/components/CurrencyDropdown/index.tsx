@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'

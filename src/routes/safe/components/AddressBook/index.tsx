@@ -15,7 +15,7 @@ import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import styled from 'styled-components'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'

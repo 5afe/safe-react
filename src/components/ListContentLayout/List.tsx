@@ -1,6 +1,6 @@
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import React from 'react'
+
 import styled from 'styled-components'
 
 // TODO: move these styles to a generic place

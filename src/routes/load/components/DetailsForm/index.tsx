@@ -1,7 +1,7 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { FormApi } from 'final-form'
 import { useParams } from 'react-router'
 

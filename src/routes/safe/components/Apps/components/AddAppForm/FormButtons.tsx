@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { useFormState } from 'react-final-form'
 
 import { Modal } from 'src/components/Modal'

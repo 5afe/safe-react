@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
