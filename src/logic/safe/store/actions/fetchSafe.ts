@@ -12,6 +12,8 @@ import { currentSafe } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import { matchPath } from 'react-router-dom'
+import { SAFE_ROUTES } from 'src/routes/routes'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -83,7 +85,11 @@ export const fetchSafe =
       // If these polling timestamps have changed, fetch again
       const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafe(state)
 
-      const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag
+      const isCollectiblesPage = !!matchPath<{ safeAddress: string }>(state.router.location.pathname, {
+        path: SAFE_ROUTES.ASSETS_COLLECTIBLES,
+      })
+
+      const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag && isCollectiblesPage
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
@@ -95,9 +101,7 @@ export const fetchSafe =
         dispatch(fetchTransactions(safeAddress))
       }
 
-      if (shouldUpdateTxHistory) {
-        dispatch(fetchSafeTokens(address))
-      }
+      dispatch(fetchSafeTokens(address))
     }
 
     const owners = buildSafeOwners(remoteSafeInfo?.owners)
