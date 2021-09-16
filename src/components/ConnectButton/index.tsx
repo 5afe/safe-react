@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import Button from 'src/components/layout/Button'
 import { getNetworkId } from 'src/config'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -12,10 +12,10 @@ const checkWallet = async (): Promise<boolean> => {
       return true
     } catch (e) {
       e.log()
-      return await onboard().walletCheck()
     }
   }
-  return true
+
+  return await onboard().walletCheck()
 }
 
 export const onboardUser = async (): Promise<boolean> => {

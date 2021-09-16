@@ -1,6 +1,6 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'

@@ -1,6 +1,6 @@
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'

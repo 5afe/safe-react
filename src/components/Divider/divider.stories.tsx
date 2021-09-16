@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Divider from './index'
 
 export default {

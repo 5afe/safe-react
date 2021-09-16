@@ -1,7 +1,7 @@
 import { Icon, Tooltip } from '@gnosis.pm/safe-react-components'
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { default as MuiIconButton } from '@material-ui/core/IconButton'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 

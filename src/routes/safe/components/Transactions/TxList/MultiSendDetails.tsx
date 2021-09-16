@@ -1,6 +1,6 @@
 import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
 import { DataDecoded, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 import { getNetworkInfo } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'

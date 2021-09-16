@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'

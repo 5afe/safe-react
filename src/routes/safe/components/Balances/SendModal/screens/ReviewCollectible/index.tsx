@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -52,7 +52,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeAddressFromUrl)
   const nftTokens = useSelector(nftTokensSelector)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -110,7 +110,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             valueInWei: '0',
             txData: data,
             txNonce: txParameters.safeNonce,
-            safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+            safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
             ethParameters: txParameters,
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           }),
@@ -128,8 +128,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)

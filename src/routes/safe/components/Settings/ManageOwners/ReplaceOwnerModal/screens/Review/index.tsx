@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -53,7 +53,7 @@ export const ReviewReplaceOwnerModal = ({
     threshold = 1,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -98,8 +98,8 @@ export const ReviewReplaceOwnerModal = ({
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -172,7 +172,7 @@ export const ReviewReplaceOwnerModal = ({
                 {owners?.map(
                   (safeOwner) =>
                     !sameAddress(safeOwner.address, owner.address) && (
-                      <React.Fragment key={safeOwner.address}>
+                      <Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
@@ -185,7 +185,7 @@ export const ReviewReplaceOwnerModal = ({
                           </Col>
                         </Row>
                         <Hairline />
-                      </React.Fragment>
+                      </Fragment>
                     ),
                 )}
                 <Row align="center" className={classes.info}>

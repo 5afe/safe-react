@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
