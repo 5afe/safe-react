@@ -9,7 +9,6 @@ import CloseIcon from '@material-ui/icons/Close'
 import DialogContent from '@material-ui/core/DialogContent'
 import List from '@material-ui/core/List'
 import { makeStyles, Typography } from '@material-ui/core'
-import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
 import Block from 'src/components/layout/Block'
 import { getNetworks } from 'src/config'
 // import { getConfig, getNetworkLabel, getNetworkName, getNetworks, setNetworkId } from 'src/config'
@@ -17,9 +16,11 @@ import { getNetworks } from 'src/config'
 // import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
 // import { configStore } from 'src/logic/config/store/actions'
 import { lg } from 'src/theme/variables'
+import Paragraph from 'src/components/layout/Paragraph'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 // import { currentChainId } from 'src/logic/config/store/selectors'
 
-export const selectNetworkStepLabel = 'Connect wallet & select network'
+export const selectNetworkStepLabel = 'Select network'
 
 function SelectNetworkStep(): ReactElement {
   const classes = useStyles()
@@ -49,23 +50,14 @@ function SelectNetworkStep(): ReactElement {
 
   return (
     <Block className={classes.padding} data-testid={'select-network-step'}>
-      <div className={classes.labelContainer}>
-        Select network on which the Safe was created:
-        {/* {currentNetworkName ? ( */}
-        <NetworkLabel onClick={openNetworkSelectorPopup} />
-        {/* ) : (
-          <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
-            Select Network
-          </ButtonLink>
-        )} */}
-      </div>
-      {/* {currentNetworkName && ( */}
+      <Paragraph color="primary" noMargin size="lg">
+        Select network on which the Safe was created: <NetworkLabel onClick={openNetworkSelectorPopup} />
+      </Paragraph>
       <div className={classes.switchButtonContainer}>
         <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
           Switch Network
         </ButtonLink>
       </div>
-      {/* )} */}
       <Dialog
         onClose={() => setIsNetworkSelectorPopupOpen(false)}
         aria-labelledby="select-network"
@@ -87,7 +79,7 @@ function SelectNetworkStep(): ReactElement {
                 className={classes.networkLabel}
                 // onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
               >
-                <NetworkLabel networkInfo={network} />
+                <NetworkLabel networkInfo={network} flexGrow />
               </div>
             ))}
           </List>
@@ -121,6 +113,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   networkLabel: {
+    display: 'flex',
     margin: `${lg} auto`,
     cursor: 'pointer',
     maxWidth: '50%',

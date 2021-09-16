@@ -13,7 +13,7 @@ import Row from 'src/components/layout/Row'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { history } from 'src/store'
 import { sm } from 'src/theme/variables'
-import SelectNetworkStep, { selectNetworkStepLabel } from 'src/components/SelectNetworkStep/SelectNetworkStep'
+import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
   loadSafeAddressStepValidations,
@@ -116,7 +116,7 @@ function Load(): ReactElement {
           <StepFormElement label={loadSafeAddressStepLabel} validate={loadSafeAddressStepValidations}>
             <LoadSafeAddressStep />
           </StepFormElement>
-          <StepFormElement label={loadSafeOwnersStepLabel} nextButtonLabel="Review">
+          <StepFormElement label={loadSafeOwnersStepLabel} nextButtonLabel="Continue">
             <LoadSafeOwnersStep />
           </StepFormElement>
           <StepFormElement label={reviewLoadStepLabel} nextButtonLabel="Add">

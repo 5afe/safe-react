@@ -39,13 +39,13 @@ describe('<Load>', () => {
   it('shows all steps if we are not in production env', () => {
     render(<Load />)
 
-    expect(screen.getByText('Connect wallet & select network')).toBeInTheDocument()
+    expect(screen.getByText('Select network')).toBeInTheDocument()
     expect(screen.getByText('Name and address')).toBeInTheDocument()
     expect(screen.getByText('Owners')).toBeInTheDocument()
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  it('hides Connect wallet & select network step if we are in production env', () => {
+  it('hides Select network step if we are in production env', () => {
     const constants = require('src/utils/constants')
 
     Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
@@ -63,13 +63,13 @@ describe('<Load>', () => {
     }
     render(<Load />, customState)
 
-    expect(screen.queryByText('Connect wallet & select network')).not.toBeInTheDocument()
+    expect(screen.queryByText('Select network')).not.toBeInTheDocument()
     expect(screen.getByText('Name and address')).toBeInTheDocument()
     expect(screen.getByText('Owners')).toBeInTheDocument()
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  // describe('Step 1: Connect wallet & select network', () => {
+  // describe('Step 1: Select network', () => {
   //   it('Shows the current selected network', () => {
   //     render(<Load />)
 
@@ -346,7 +346,7 @@ describe('<Load>', () => {
       await screen.findByTestId('safeAddress-valid-address-adornment')
       fireEvent.click(screen.getByText('Next'))
 
-      expect(screen.getByText('This Safe has 2 owners. Optional: Provide a name for each owner.')).toBeInTheDocument()
+      expect(screen.getByText('has 2 owners', { exact: false })).toBeInTheDocument()
     })
 
     it('shows the owners addresses', async () => {

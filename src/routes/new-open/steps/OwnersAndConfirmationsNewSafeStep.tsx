@@ -17,7 +17,6 @@ import SelectField from 'src/components/forms/SelectField'
 import { useStepper } from 'src/components/NewStepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { disabled, extraSmallFontSize, lg, sm, xs } from 'src/theme/variables'
-import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
@@ -28,10 +27,12 @@ import {
   minMaxLength,
   minValue,
   required,
+  THRESHOLD_ERROR,
 } from 'src/components/forms/validator'
 import { FIELD_MAX_OWNER_NUMBER, FIELD_NEW_SAFE_THRESHOLD, FIELD_SAFE_OWNERS_LIST } from '../fields/createSafeFields'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -102,11 +103,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
           </Link>
-          . The new Safe will ONLY be available on
+          . The new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
-        <div className={classes.labelContainer}>
-          <NetworkLabel />
-        </div>
       </Block>
       <Hairline />
       <Row className={classes.header}>
@@ -232,10 +230,12 @@ export default OwnersAndConfirmationsNewSafeStep
 
 export const ownersAndConfirmationsNewSafeStepValidations = (values: {
   [FIELD_SAFE_OWNERS_LIST]: Array<Record<string, string>>
+  [FIELD_NEW_SAFE_THRESHOLD]: number
 }): Record<string, string> => {
   const errors = {}
 
   const owners = values[FIELD_SAFE_OWNERS_LIST]
+  const threshold = values[FIELD_NEW_SAFE_THRESHOLD]
   const addresses = owners.map(({ addressFieldName }) => values[addressFieldName])
 
   // we check repeated addresses
@@ -248,6 +248,11 @@ export const ownersAndConfirmationsNewSafeStepValidations = (values: {
     }
   })
 
+  const isValidThreshold = !!threshold && threshold <= owners.length
+  if (!isValidThreshold) {
+    errors[FIELD_NEW_SAFE_THRESHOLD] = THRESHOLD_ERROR
+  }
+
   return errors
 }
 
@@ -257,11 +262,9 @@ const useStyles = makeStyles({
   },
   marginBottom: {
     marginBottom: '12px',
-    lineHeight: '1.7',
   },
   descriptionContainer: {
     display: 'inline',
-    lineHeight: '1.7',
   },
   link: {
     padding: `0 ${xs}`,
@@ -272,9 +275,6 @@ const useStyles = makeStyles({
       height: '14px',
       width: '14px',
     },
-  },
-  labelContainer: {
-    display: 'inline-block',
   },
   header: {
     padding: `${sm} ${lg}`,

@@ -12,7 +12,6 @@ import Heading from 'src/components/layout/Heading'
 import { history } from 'src/store'
 import { sm } from 'src/theme/variables'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
-import SelectNetworkStep, { selectNetworkStepLabel } from 'src/components/SelectNetworkStep/SelectNetworkStep'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
 import { APP_ENV } from 'src/utils/constants'
 import {
@@ -37,6 +36,7 @@ import { useLocation } from 'react-router'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import { Loader } from '@gnosis.pm/safe-react-components'
+import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 
 // TODO: Rename to CreateSafePage
 // TODO: Rename to LoadSafePage
@@ -92,8 +92,12 @@ function Open(): ReactElement {
           testId={'create-new-safe-form'}
         >
           {!isProductionEnv && (
-            <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue" disableNextButton={!provider}>
-              <SelectNetworkStep />
+            <StepFormElement
+              label={selectWalletAndNetworkStepLabel}
+              nextButtonLabel="Continue"
+              disableNextButton={!provider}
+            >
+              <SelectWalletAndNetworkStep />
             </StepFormElement>
           )}
           <StepFormElement label={nameNewSafeStepLabel} nextButtonLabel="Continue">

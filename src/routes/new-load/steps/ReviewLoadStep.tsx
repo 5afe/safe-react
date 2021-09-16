@@ -18,6 +18,7 @@ import {
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
 } from '../fields/loadFields'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const reviewLoadStepLabel = 'Review'
 
@@ -52,6 +53,14 @@ function ReviewLoadStep(): ReactElement {
           <Block margin="lg">
             <Paragraph color="primary" noMargin size="lg" data-testid="load-safe-step-three">
               Review details
+            </Paragraph>
+          </Block>
+          <Block margin="lg">
+            <Paragraph color="disabled" noMargin size="sm">
+              Network
+            </Paragraph>
+            <Paragraph color="disabled" noMargin size="sm" data-testid="load-form-review-safe-network">
+              <NetworkLabel />
             </Paragraph>
           </Block>
           <Block margin="lg">

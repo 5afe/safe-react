@@ -9,10 +9,10 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { FIELD_CREATE_CUSTOM_SAFE_NAME, FIELD_CREATE_SUGGESTED_SAFE_NAME } from '../fields/createSafeFields'
 import { useStepper } from 'src/components/NewStepper/stepperContext'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const nameNewSafeStepLabel = 'Name'
 
@@ -36,14 +36,11 @@ function NameNewSafeStep(): ReactElement {
   return (
     <Block className={classes.padding} data-testid={'create-safe-name-step'}>
       <Block margin="md">
-        <Paragraph className={classes.descriptionContainer} color="primary" noMargin size="lg">
-          You are about to create a new Safe wallet with one or more owners. First, let&apos;s give your new wallet a
-          name. This name is only stored locally and will never be shared with Gnosis or any third parties. The new Safe
-          will ONLY be available on
+        <Paragraph color="primary" noMargin size="lg">
+          You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
+          wallet a name. This name is only stored locally and will never be shared with Gnosis or any third parties. The
+          new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
-        <div className={classes.labelContainer}>
-          <NetworkLabel />
-        </div>
       </Block>
       <label htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
       <Block className={classes.fieldContainer} margin="lg">
@@ -81,13 +78,6 @@ export default NameNewSafeStep
 const useStyles = makeStyles((theme) => ({
   padding: {
     padding: lg,
-  },
-  descriptionContainer: {
-    display: 'inline',
-    lineHeight: '1.7',
-  },
-  labelContainer: {
-    display: 'inline-block',
   },
   fieldContainer: {
     display: 'flex',

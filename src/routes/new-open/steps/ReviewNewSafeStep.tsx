@@ -20,7 +20,7 @@ import { useForm } from 'react-final-form'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
-import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const reviewNewSafeStepLabel = 'Review'
 
@@ -120,15 +120,10 @@ function ReviewNewSafeStep(): ReactElement {
         </TableContainer>
       </Col>
       <Row align="center" className={classes.descriptionContainer}>
-        <Paragraph color="primary" noMargin size="lg" className={classes.descriptionLabel}>
-          You&apos;re about to create a new Safe on
-        </Paragraph>
-        <div className={classes.networkLabelContainer}>
-          <NetworkLabel />
-        </div>
-        <Paragraph color="primary" noMargin size="lg" className={classes.descriptionLabel}>
-          and will have to confirm a transaction with your currently connected wallet. The creation will cost
-          approximately {gasCostFormatted} {nativeCoin.name}. The exact amount will be determined by your wallet.
+        <Paragraph color="primary" noMargin size="lg">
+          You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
+          currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The
+          exact amount will be determined by your wallet.
         </Paragraph>
       </Row>
     </Row>
@@ -160,15 +155,8 @@ const useStyles = makeStyles({
     paddingLeft: lg,
   },
   descriptionContainer: {
-    display: 'initial',
     backgroundColor: background,
     padding: lg,
     textAlign: 'center',
-  },
-  descriptionLabel: {
-    display: 'inline',
-  },
-  networkLabelContainer: {
-    display: 'inline-block',
   },
 })

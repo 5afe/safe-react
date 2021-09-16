@@ -15,6 +15,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
 
 import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const loadSafeOwnersStepLabel = 'Owners'
 
@@ -27,8 +28,8 @@ function LoadSafeOwnersStep(): ReactElement {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph color="primary" noMargin size="md" data-testid="load-safe-owners-step">
-          {`This Safe has ${ownersWithName.length} owners. Optional: Provide a name for each owner.`}
+        <Paragraph color="primary" noMargin size="lg" data-testid="load-safe-owners-step">
+          This Safe on <NetworkLabel /> has {ownersWithName.length} owners. Optional: Provide a name for each owner.
         </Paragraph>
       </Block>
       <Hairline />

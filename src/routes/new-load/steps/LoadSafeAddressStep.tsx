@@ -26,6 +26,7 @@ import {
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
 } from '../fields/loadFields'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -103,15 +104,16 @@ function LoadSafeAddressStep(): ReactElement {
   return (
     <Block className={classes.padding} data-testid={'load-safe-address-step'}>
       <Block margin="md">
-        <Paragraph color="primary" noMargin size="md">
-          You are about to add an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
-          only stored locally and will never be shared with Gnosis or any third parties.
-          <br />
+        <Paragraph color="primary" noMargin size="lg">
+          You are about to add an existing Gnosis Safe on <NetworkLabel /> first, choose a name and enter the Safe
+          address. The name is only stored locally and will never be shared with Gnosis or any third parties.
+        </Paragraph>
+        <Paragraph color="primary" size="lg">
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
           a read-only view.
         </Paragraph>
 
-        <Paragraph color="primary" size="md" className={classes.links}>
+        <Paragraph color="primary" size="lg" className={classes.links}>
           Don&apos;t have the address of the Safe you created?{' '}
           <a
             href="https://help.gnosis-safe.io/en/articles/4971293-i-don-t-remember-my-safe-address-where-can-i-find-it"
@@ -166,7 +168,7 @@ function LoadSafeAddressStep(): ReactElement {
         </Col>
       </Block>
       <Block margin="sm">
-        <Paragraph className={classes.links} color="primary" noMargin size="md">
+        <Paragraph className={classes.links} color="primary" noMargin size="lg">
           By continuing you consent to the{' '}
           <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
@@ -175,7 +177,8 @@ function LoadSafeAddressStep(): ReactElement {
           <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
-          .
+          . Most importantly, you confirm that your founds are held securely in the Gnosis Safe, a smart contract on the
+          Ethereum blockchain. These founds cannot be accessed by Gnosis at any point.
         </Paragraph>
       </Block>
     </Block>
