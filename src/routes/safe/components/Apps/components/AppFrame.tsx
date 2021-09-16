@@ -232,7 +232,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       openSignMessageModal(message, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, networkId])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
