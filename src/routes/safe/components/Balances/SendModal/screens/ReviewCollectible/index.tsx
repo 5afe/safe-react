@@ -110,7 +110,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             valueInWei: '0',
             txData: data,
             txNonce: txParameters.safeNonce,
-            safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
+            safeTxGas: txParameters.safeTxGas,
             ethParameters: txParameters,
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           }),
@@ -126,8 +126,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 
@@ -150,7 +150,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (

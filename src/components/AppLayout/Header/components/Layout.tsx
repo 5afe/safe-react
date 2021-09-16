@@ -3,7 +3,6 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
