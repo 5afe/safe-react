@@ -50,7 +50,7 @@ export const ReviewRemoveOwnerModal = ({
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
   const numOptions = owners ? owners.length - 1 : 0
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -108,8 +108,8 @@ export const ReviewRemoveOwnerModal = ({
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)

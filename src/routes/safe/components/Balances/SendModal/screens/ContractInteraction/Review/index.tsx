@@ -57,7 +57,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const dispatch = useDispatch()
   const { nativeCoin } = getNetworkInfo()
   const safeAddress = useSelector(safeAddressFromUrl)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
@@ -105,7 +105,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           valueInWei: txInfo?.txAmount,
           txData: txInfo?.txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -119,8 +119,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
     const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
