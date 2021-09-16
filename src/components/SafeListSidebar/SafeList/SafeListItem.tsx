@@ -23,14 +23,8 @@ type Props = {
   currentSafeAddress?: string
 }
 
-const SafeListItem = ({
-  onSafeClick,
-  onNetworkSwitch,
-  address,
-  name,
-  totalFiatBalance,
-  currentSafeAddress,
-}: Props): React.ReactElement => {
+const SafeListItem = (props: Props): React.ReactElement => {
+  const { onSafeClick, onNetworkSwitch, address, name, totalFiatBalance, currentSafeAddress } = props
   const history = useHistory()
 
   const handleLoadSafe = (): void => {
@@ -61,14 +55,14 @@ const SafeListItem = ({
       <StyledIcon type="check" size="md" color="primary" isSameAddress={sameAddress(currentSafeAddress, address)} />
       <EthHashInfo hash={address} name={name} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
-        {totalFiatBalance ? (
-          formatCurrency(totalFiatBalance)
-        ) : (
+        {totalFiatBalance == null ? (
           <Link to={`${LOAD_ADDRESS}/${address}`} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
             </Text>
           </Link>
+        ) : (
+          formatCurrency(totalFiatBalance)
         )}
       </ListItemSecondaryAction>
     </ListItem>
