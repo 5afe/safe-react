@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { batch, useDispatch } from 'react-redux'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
+import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { TIMEOUT } from 'src/utils/constants'
 
 export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string): void => {
@@ -12,7 +13,9 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
     // has to run again
     let mounted = true
     const fetchSafeData = async (address: string): Promise<void> => {
-      await dispatch(fetchSafe(address))
+      batch(async () => {
+        await Promise.all([dispatch(fetchSafeTokens(address)), dispatch(fetchSafe(address))])
+      })
 
       if (mounted) {
         timer.current = window.setTimeout(() => fetchSafeData(address), TIMEOUT * 3)

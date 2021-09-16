@@ -11,7 +11,6 @@ import { store } from 'src/store'
 import { currentSafe } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { matchPath } from 'react-router-dom'
 import { SAFE_ROUTES } from 'src/routes/routes'
 
@@ -100,8 +99,6 @@ export const fetchSafe =
       if (shouldUpdateTxHistory || shouldUpdateTxQueued) {
         dispatch(fetchTransactions(safeAddress))
       }
-
-      dispatch(fetchSafeTokens(address))
     }
 
     const owners = buildSafeOwners(remoteSafeInfo?.owners)
