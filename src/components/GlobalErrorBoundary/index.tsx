@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
 import { IS_PRODUCTION } from 'src/utils/constants'

@@ -1,5 +1,5 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
-import React, { useState, ReactElement, useCallback, useEffect } from 'react'
+import { useState, ReactElement, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, useHistory } from 'react-router-dom'
 import styled from 'styled-components'

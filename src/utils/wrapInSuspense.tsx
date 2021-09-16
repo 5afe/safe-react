@@ -1,6 +1,6 @@
-import React, { SuspenseProps } from 'react'
+import { Suspense, SuspenseProps } from 'react'
 
 export const wrapInSuspense = (
   component: Required<SuspenseProps['children']>,
   fallback: SuspenseProps['fallback'] = null,
-) => <React.Suspense fallback={fallback}>{component}</React.Suspense>
+) => <Suspense fallback={fallback}>{component}</Suspense>

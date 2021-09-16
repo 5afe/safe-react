@@ -1,6 +1,6 @@
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
-import React, { ReactElement, useContext } from 'react'
+import { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
 import {

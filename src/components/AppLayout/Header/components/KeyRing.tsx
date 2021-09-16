@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'

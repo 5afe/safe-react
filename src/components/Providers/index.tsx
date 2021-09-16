@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { MuiThemeProvider, Theme as MuiTheme } from '@material-ui/core/styles'
 import { ConnectedRouter } from 'connected-react-router'
 import { Provider } from 'react-redux'

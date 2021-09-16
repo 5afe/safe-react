@@ -1,6 +1,6 @@
+import { useEffect } from 'react'
 import { TextField } from '@gnosis.pm/safe-react-components'
 import createDecorator from 'final-form-calculate'
-import React from 'react'
 import { useField, useFormState } from 'react-final-form'
 import styled from 'styled-components'
 
@@ -42,7 +42,7 @@ export const AppInfoUpdater = ({ onAppInfo, onLoading, onError }: AppInfoUpdater
 
   const debouncedValue = useDebounce(appUrl, 500)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const updateAppInfo = async () => {
       onLoading(true)
 

@@ -1,6 +1,6 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 

@@ -1,5 +1,5 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { ReactElement, useEffect, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, Fragment } from 'react'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -93,7 +93,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
             </Block>
             <Hairline />
             {names.map((name, index) => (
-              <React.Fragment key={`name${index}`}>
+              <Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
                   <Col align="center" xs={12} data-testid={`create-safe-owner-details-${index}`}>
                     <EthHashInfo
@@ -107,7 +107,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
                   </Col>
                 </Row>
                 <Hairline />
-              </React.Fragment>
+              </Fragment>
             ))}
           </TableContainer>
         </Col>
