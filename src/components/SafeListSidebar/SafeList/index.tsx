@@ -2,14 +2,14 @@ import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import React from 'react'
 import styled from 'styled-components'
-import { getNetworkId, getNetworks } from 'src/config'
+import { getNetworkId, getNetworkName, getNetworks } from 'src/config'
 import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import SafeListItem from './SafeListItem'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { setNetwork } from 'src/logic/config/utils'
-import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getSafesKey } from 'src/logic/addressBook/utils/v2-migration'
 import { useSelector } from 'react-redux'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
@@ -51,19 +51,17 @@ type Props = {
 const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean =>
   addedSafes.some((safe) => sameAddress(safe.address, address))
 
-const getSafesOnOtherNetworksFromLocalStorage = (
-  networkId: NetworkInfo['id'],
+const getSafesStoredLocally = (
+  networkId: ETHEREUM_NETWORK,
   safes: SafeRecordWithNames[],
   ownedSafes: string[],
 ): SafeRecordWithNames[] => {
   let otherSafes: SafeRecordWithNames[] = []
 
-  for (const [name, id] of Object.entries(ETHEREUM_NETWORK)) {
-    const isCurrentNetwork = id !== networkId
-    const safeString = localStorage.getItem(getSafesKey(name))
+  const name = getNetworkName(networkId)
+  const safeString = localStorage.getItem(getSafesKey(name))
 
-    if (isCurrentNetwork || !safeString) continue
-
+  if (safeString) {
     try {
       Object.values(JSON.parse(safeString)).forEach((parsedSafe: any) => {
         const isAddedSafe = isAddressAdded(safes, parsedSafe.address)
@@ -72,9 +70,7 @@ const getSafesOnOtherNetworksFromLocalStorage = (
 
         otherSafes = [...otherSafes, parsedSafe]
       })
-    } catch {
-      continue
-    }
+    } catch {}
   }
 
   return otherSafes
@@ -94,9 +90,8 @@ export const SafeList = ({ onSafeClick }: Props): React.ReactElement => {
     <>
       <StyledList>
         {networks.map(({ id, backgroundColor, textColor, label }) => {
-          const safesOnOtherNetworks = getSafesOnOtherNetworksFromLocalStorage(id, safes, ownedSafes)
           const isCurrentNetwork = id === getNetworkId()
-          const addedSafes = isCurrentNetwork ? safes : safesOnOtherNetworks
+          const addedSafes = isCurrentNetwork ? safes : getSafesStoredLocally(id, safes, ownedSafes)
 
           if (!isCurrentNetwork && (addedSafes.length === 0 || !hasSafesNotAdded)) return null
           return (
