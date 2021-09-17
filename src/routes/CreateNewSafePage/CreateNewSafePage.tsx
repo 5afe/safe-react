@@ -77,7 +77,11 @@ function CreateNewSafePage(): ReactElement {
   const isProductionEnv = APP_ENV === 'production'
 
   if (isLoading) {
-    return <Loader size="md" />
+    return (
+      <div className={classes.loaderContainer} data-testid={'create-new-safe-loader'}>
+        <Loader size="md" />
+      </div>
+    )
   }
 
   return !!safePendingToBeCreated ? (
@@ -131,6 +135,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.main,
     padding: sm,
     marginRight: '5px',
+  },
+  loaderContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
 }))
 
