@@ -9,12 +9,13 @@ import { setNetwork } from 'src/logic/config/utils'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { sortedSafeListSelector } from '../selectors'
 import { getNetworkConfigById, getNetworkId, getNetworks } from 'src/config'
-import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
-import { getLocalNetworkSafes } from 'src/logic/safe/utils'
+import { getLocalNetworkSafesById } from 'src/logic/safe/utils'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
@@ -52,24 +53,27 @@ type Props = {
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
-  const currentSafeAddress = useSelector(safeAddressFromUrl)
   const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const ownedSafes = useOwnerSafes()
 
-  const [localSafes, setLocalSafes] = useState<Record<ETHEREUM_NETWORK, SafeRecordWithNames[] | never[]>>(
-    Object.keys(networks).reduce((acc, id) => ({ ...acc, [id]: [] }), {} as Record<ETHEREUM_NETWORK, never[]>),
+  const [localSafes, setLocalSafes] = useState<Record<ETHEREUM_NETWORK, SafeRecordProps[] | never[]>>(
+    Object.values(ETHEREUM_NETWORK).reduce(
+      (safes, networkId) => ({ ...safes, [networkId]: [] }),
+      {} as Record<ETHEREUM_NETWORK, never[]>,
+    ),
   )
 
   useEffect(() => {
     const getLocalSafes = () => {
-      Object.entries(ETHEREUM_NETWORK).forEach(async ([name, id]) => {
-        const localSafe = await getLocalNetworkSafes(name)
+      Object.values(ETHEREUM_NETWORK).forEach(async (id) => {
+        const localSafe = await getLocalNetworkSafesById(id)
         setLocalSafes((prevSafes) => ({
           ...prevSafes,
-          [id]: localSafe,
+          ...(localSafe && { [id]: localSafe }),
         }))
       })
     }
+
     getLocalSafes()
   }, [])
 
@@ -79,10 +83,14 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         {networks.map(({ id, backgroundColor, textColor, label }) => {
           const isCurrentNetwork = id === getNetworkId()
 
-          const addedSafeObjects: SafeRecordWithNames[] = isCurrentNetwork ? safes : localSafes[id]
-          const ownedSafeObjects: (Pick<SafeRecordWithNames, 'address'> | SafeRecordWithNames)[] = isCurrentNetwork
+          const localNetworkSafes = localSafes?.[id] ? localSafes[id] : []
+
+          const addedSafeObjects: SafeRecordWithNames[] | SafeRecordProps[] = isCurrentNetwork
+            ? safes
+            : localNetworkSafes
+          const ownedSafeObjects: Pick<SafeRecordProps, 'address'>[] | SafeRecordProps[] = isCurrentNetwork
             ? ownedSafes.map((address) => ({ address }))
-            : localSafes?.[id]
+            : localNetworkSafes
 
           const nativeCoinSymbol = getNetworkConfigById(id)?.network?.nativeCoin?.symbol ?? 'ETH'
           const shouldExpandSafesNotAdded = ownedSafeObjects?.some(({ address }) => isSafeAdded(safes, address))
@@ -99,7 +107,6 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     key={safe.address}
                     onSafeClick={onSafeClick}
                     onNetworkSwitch={() => setNetwork(id)}
-                    currentSafeAddress={currentSafeAddress}
                     nativeCoinSymbol={nativeCoinSymbol}
                     safes={safes}
                     {...safe}
@@ -111,15 +118,13 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                       title={`Safes owned on ${label} (${ownedSafeObjects.length})`}
                       defaultExpanded={shouldExpandSafesNotAdded}
                     >
-                      {ownedSafeObjects?.map(({ address, ...rest }) => (
+                      {ownedSafeObjects?.map((safe) => (
                         <SafeListItem
-                          key={address}
-                          address={address}
+                          key={safe.address}
                           onSafeClick={onSafeClick}
-                          currentSafeAddress={currentSafeAddress}
                           nativeCoinSymbol={nativeCoinSymbol}
                           safes={safes}
-                          {...rest}
+                          {...safe}
                         />
                       ))}
                     </Collapse>

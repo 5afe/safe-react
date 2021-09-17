@@ -11,7 +11,7 @@ import Link from 'src/components/layout/Link'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
@@ -23,7 +23,6 @@ type Props = {
   onNetworkSwitch?: () => void
   address: string
   ethBalance?: string
-  currentSafeAddress?: string
   nativeCoinSymbol: string
   safes: SafeRecordWithNames[]
 }
@@ -33,12 +32,12 @@ const SafeListItem = ({
   onNetworkSwitch,
   address,
   ethBalance,
-  currentSafeAddress,
   nativeCoinSymbol,
   safes,
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookEntryName(state, { address }))
+  const currentSafeAddress = useSelector(safeAddressFromUrl)
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
 
