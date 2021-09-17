@@ -1,5 +1,4 @@
 import { render, screen } from 'src/utils/test-utils'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import { ConfirmTxModal } from './'
 import { getEmptySafeApp } from '../../utils'
