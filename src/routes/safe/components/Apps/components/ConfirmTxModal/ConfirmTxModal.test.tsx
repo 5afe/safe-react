@@ -111,6 +111,7 @@ describe('ConfirmTxModal Component', () => {
         safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
         safeName="test safe"
         ethBalance="100000000000000000"
+        // @ts-expect-error txs are malformed for testing purposes
         txs={txs}
         onClose={jest.fn()}
         onUserConfirm={jest.fn()}
@@ -141,6 +142,7 @@ describe('ConfirmTxModal Component', () => {
         safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
         safeName="test safe"
         ethBalance="100000000000000000"
+        // @ts-expect-error txs are malformed for testing purposes
         txs={txs}
         onClose={jest.fn()}
         onUserConfirm={jest.fn()}
@@ -171,6 +173,7 @@ describe('ConfirmTxModal Component', () => {
         safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
         safeName="test safe"
         ethBalance="100000000000000000"
+        // @ts-expect-error txs are malformed for testing purposes
         txs={txs}
         onClose={jest.fn()}
         onUserConfirm={jest.fn()}
@@ -227,6 +230,7 @@ describe('ConfirmTxModal Component', () => {
         safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
         safeName="test safe"
         ethBalance="100000000000000000"
+        // @ts-expect-error txs are malformed for testing purposes
         txs={txs}
         onClose={jest.fn()}
         onUserConfirm={jest.fn()}
@@ -254,6 +258,7 @@ describe('ConfirmTxModal Component', () => {
         safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
         safeName="test safe"
         ethBalance="100000000000000000"
+        // @ts-expect-error txs are malformed for testing purposes
         txs={txs}
         onClose={jest.fn()}
         onUserConfirm={jest.fn()}
@@ -286,6 +291,7 @@ describe('ConfirmTxModal Component', () => {
         safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
         safeName="test safe"
         ethBalance="100000000000000000"
+        // @ts-expect-error txs are malformed for testing purposes
         txs={txs}
         onClose={jest.fn()}
         onUserConfirm={jest.fn()}
