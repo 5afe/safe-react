@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { makeStyles } from '@material-ui/core'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'

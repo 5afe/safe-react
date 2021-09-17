@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import { makeStyles } from '@material-ui/core/'
@@ -20,7 +20,7 @@ import LoadSafeAddressStep, {
 } from './steps/LoadSafeAddressStep'
 import LoadSafeOwnersStep, { loadSafeOwnersStepLabel } from './steps/LoadSafeOwnersStep'
 import ReviewLoadStep, { reviewLoadStepLabel } from './steps/ReviewLoadStep'
-import { getRandomName } from 'src/logic/hooks/useMnemonicName'
+import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -36,6 +36,7 @@ import {
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
+  LoadSafeFormValues,
 } from './fields/loadFields'
 import { APP_ENV } from 'src/utils/constants'
 
@@ -47,13 +48,19 @@ function Load(): ReactElement {
   const classes = useStyles()
 
   const { safeAddress } = useParams<{ safeAddress?: string }>()
+  const safeRandomName = useMnemonicSafeName()
 
-  const initialValues = {
-    [FIELD_LOAD_SUGGESTED_SAFE_NAME]: getRandomName('safe'),
-    [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
-    [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
-    [FIELD_SAFE_OWNER_LIST]: [],
-  }
+  const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
+
+  useEffect(() => {
+    const initialValues = {
+      [FIELD_LOAD_SUGGESTED_SAFE_NAME]: safeRandomName,
+      [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
+      [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
+      [FIELD_SAFE_OWNER_LIST]: [],
+    }
+    setInitialFormValues(initialValues)
+  }, [safeAddress, safeRandomName])
 
   const onSubmitLoadSafe = async (values) => {
     const safeName = values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SUGGESTED_SAFE_NAME]
@@ -107,7 +114,7 @@ function Load(): ReactElement {
           </IconButton>
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
-        <StepperForm initialValues={initialValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
+        <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
           {!isProductionEnv && (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />

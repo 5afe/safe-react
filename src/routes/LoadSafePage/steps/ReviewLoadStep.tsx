@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement } from 'react'
+import { Fragment, ReactElement } from 'react'
 import { makeStyles, TableContainer } from '@material-ui/core'
 import Block from 'src/components/layout/Block'
 import { border, lg, screenSm, sm, xs } from 'src/theme/variables'

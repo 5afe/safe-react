@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'

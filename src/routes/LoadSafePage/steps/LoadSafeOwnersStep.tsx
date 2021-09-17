@@ -1,5 +1,5 @@
 import { makeStyles, TableContainer } from '@material-ui/core'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useForm } from 'react-final-form'
 
 import Block from 'src/components/layout/Block'

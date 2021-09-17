@@ -21,11 +21,24 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { useStepper } from 'src/components/NewStepper/stepperContext'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
 
 export const reviewNewSafeStepLabel = 'Review'
 
-function ReviewNewSafeStep(): ReactElement {
+function ReviewNewSafeStep(): ReactElement | null {
   const classes = useStyles()
+
+  const provider = useSelector(providerNameSelector)
+
+  const { setCurrentStep } = useStepper()
+
+  useEffect(() => {
+    if (!provider) {
+      setCurrentStep(0)
+    }
+  }, [provider, setCurrentStep])
 
   const createSafeForm = useForm()
   const createSafeFormValues = createSafeForm.getState().values

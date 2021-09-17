@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'

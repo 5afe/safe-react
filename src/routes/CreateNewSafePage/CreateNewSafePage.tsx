@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import { makeStyles } from '@material-ui/core/'
@@ -38,9 +38,7 @@ import SafeCreationProcess from './components/SafeCreationProcess'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 
-// TODO: Rename to CreateSafePage
-// TODO: Rename to LoadSafePage
-function Open(): ReactElement {
+function CreateNewSafePage(): ReactElement {
   const classes = useStyles()
 
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues | null>()
@@ -57,7 +55,7 @@ function Open(): ReactElement {
   }, [])
 
   const provider = useSelector(providerNameSelector)
-  const address = useSelector(userAccountSelector)
+  const userWalletAddress = useSelector(userAccountSelector)
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
   const location = useLocation()
   const safeRandomName = useMnemonicSafeName()
@@ -67,9 +65,16 @@ function Open(): ReactElement {
     setSafePendingToBeCreated(newSafeFormValues)
   }
 
-  const isProductionEnv = APP_ENV === 'production'
+  const [initialFormValues, setInitialFormValues] = useState<CreateSafeFormValues>()
 
-  const initialValuesFromUrl = getInitialValues(address, addressBook, location, safeRandomName)
+  useEffect(() => {
+    if (provider && userWalletAddress) {
+      const initialValuesFromUrl = getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
+      setInitialFormValues(initialValuesFromUrl)
+    }
+  }, [provider, userWalletAddress, addressBook, location, safeRandomName])
+
+  const isProductionEnv = APP_ENV === 'production'
 
   if (isLoading) {
     return <Loader size="md" />
@@ -87,7 +92,7 @@ function Open(): ReactElement {
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
         <StepperForm
-          initialValues={initialValuesFromUrl}
+          initialValues={initialFormValues}
           onSubmit={showSafeCreationProcess}
           testId={'create-new-safe-form'}
         >
@@ -119,7 +124,7 @@ function Open(): ReactElement {
   )
 }
 
-export default Open
+export default CreateNewSafePage
 
 const useStyles = makeStyles((theme) => ({
   backIcon: {

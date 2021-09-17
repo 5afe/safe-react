@@ -1,4 +1,4 @@
-import React, { useEffect, ReactElement, Fragment } from 'react'
+import { useEffect, ReactElement, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
@@ -39,6 +39,15 @@ export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 function OwnersAndConfirmationsNewSafeStep(): ReactElement {
   const classes = useStyles()
 
+  const provider = useSelector(providerNameSelector)
+  const { setCurrentStep } = useStepper()
+
+  useEffect(() => {
+    if (!provider) {
+      setCurrentStep(0)
+    }
+  }, [provider, setCurrentStep])
+
   const createSafeForm = useForm()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
@@ -70,15 +79,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
       createSafeForm.change(FIELD_NEW_SAFE_THRESHOLD, threshold - 1)
     }
   }
-
-  const provider = useSelector(providerNameSelector)
-  const { setCurrentStep } = useStepper()
-
-  useEffect(() => {
-    if (!provider) {
-      setCurrentStep(0)
-    }
-  }, [provider, setCurrentStep])
 
   return (
     <>
