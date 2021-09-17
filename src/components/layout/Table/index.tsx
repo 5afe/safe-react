@@ -3,7 +3,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import * as React from 'react'
+import { ReactElement } from 'react'
 
 export { TableBody, TableCell, TableHead, TableRow }
 
@@ -16,7 +16,7 @@ const overflowStyle: any = {
 }
 
 // see: https://css-tricks.com/responsive-data-tables/
-const GnoTable = ({ children, size }) => {
+const GnoTable = ({ children, size }): ReactElement => {
   const style = size ? buildWidthFrom(size) : undefined
 
   return (

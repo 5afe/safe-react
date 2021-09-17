@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { ReactElement } from 'react'
 
 import { getSize } from 'src/theme/size'
 import { border } from 'src/theme/variables'
@@ -11,7 +11,7 @@ const calculateStyleFrom = (color, margin) => ({
   margin: `${getSize(margin)} 0px`,
 })
 
-const Hairline = ({ className, color, margin, style }: any) => {
+const Hairline = ({ className, color, margin, style }: any): ReactElement => {
   const calculatedStyles = calculateStyleFrom(color, margin)
   const mergedStyles = { ...calculatedStyles, ...(style || {}) }
 

@@ -1,5 +1,5 @@
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
+import { ReactElement } from 'react'
 
 import ConnectButton from 'src/components/ConnectButton'
 
@@ -34,7 +34,7 @@ const styles = () => ({
 const StyledCard = styled(Card)`
   padding: 20px;
 `
-const ConnectDetails = ({ classes }) => (
+const ConnectDetails = ({ classes }): ReactElement => (
   <StyledCard>
     <Row align="center" margin="lg">
       <Paragraph className={classes.text} noMargin size="xl" weight="bolder">
