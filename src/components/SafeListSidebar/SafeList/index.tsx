@@ -83,14 +83,10 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         {networks.map(({ id, backgroundColor, textColor, label }) => {
           const isCurrentNetwork = id === getNetworkId()
 
-          const localNetworkSafes = localSafes?.[id] ? localSafes[id] : []
-
-          const addedSafeObjects: SafeRecordWithNames[] | SafeRecordProps[] = isCurrentNetwork
-            ? safes
-            : localNetworkSafes
+          const addedSafeObjects: SafeRecordWithNames[] | SafeRecordProps[] = isCurrentNetwork ? safes : localSafes[id]
           const ownedSafeObjects: Pick<SafeRecordProps, 'address'>[] | SafeRecordProps[] = isCurrentNetwork
             ? ownedSafes.map((address) => ({ address }))
-            : localNetworkSafes
+            : localSafes[id]
 
           const nativeCoinSymbol = getNetworkConfigById(id)?.network?.nativeCoin?.symbol ?? 'ETH'
           const shouldExpandSafesNotAdded = ownedSafeObjects?.some(({ address }) => isSafeAdded(safes, address))
@@ -109,6 +105,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     onNetworkSwitch={() => setNetwork(id)}
                     nativeCoinSymbol={nativeCoinSymbol}
                     safes={safes}
+                    chainId={id}
                     {...safe}
                   />
                 ))}
@@ -124,6 +121,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                           onSafeClick={onSafeClick}
                           nativeCoinSymbol={nativeCoinSymbol}
                           safes={safes}
+                          chainId={id}
                           {...safe}
                         />
                       ))}

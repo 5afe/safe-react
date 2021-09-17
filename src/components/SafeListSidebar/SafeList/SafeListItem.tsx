@@ -10,9 +10,10 @@ import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
 import Link from 'src/components/layout/Link'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
-import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -25,6 +26,7 @@ type Props = {
   ethBalance?: string
   nativeCoinSymbol: string
   safes: SafeRecordWithNames[]
+  chainId: ETHEREUM_NETWORK
 }
 
 const SafeListItem = ({
@@ -34,9 +36,10 @@ const SafeListItem = ({
   ethBalance,
   nativeCoinSymbol,
   safes,
+  chainId,
 }: Props): ReactElement => {
   const history = useHistory()
-  const safeName = useSelector((state) => addressBookEntryName(state, { address }))
+  const safeName = useSelector((state) => addressBookName(state, { address, chainId }))
   const currentSafeAddress = useSelector(safeAddressFromUrl)
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
