@@ -54,6 +54,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  *
  * @param {string} safeAddress
  */
+let isFirstSafeFetch = true
 export const fetchSafe =
   (safeAddress: string) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
@@ -92,16 +93,17 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      if (shouldUpdateCollectibles) {
+      if (shouldUpdateCollectibles || isFirstSafeFetch) {
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxQueued) {
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued || isFirstSafeFetch) {
         dispatch(fetchTransactions(safeAddress))
       }
     }
 
     const owners = buildSafeOwners(remoteSafeInfo?.owners)
 
+    isFirstSafeFetch = false
     return dispatch(updateSafe({ address, ...safeInfo, owners }))
   }
