@@ -8,8 +8,6 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -39,6 +37,7 @@ import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -336,15 +335,7 @@ export const ApproveTxModal = ({
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              {/* Header */}
-              <Row align="center" className={classes.heading} grow>
-                <Paragraph className={classes.headingText} noMargin weight="bolder">
-                  {title}
-                </Paragraph>
-                <IconButton disableRipple onClick={onClose}>
-                  <Close className={classes.closeIcon} />
-                </IconButton>
-              </Row>
+              <ModalHeader onClose={onClose} title={title} />
 
               <Hairline />
 

@@ -23,6 +23,8 @@ import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
+import Hairline from 'src/components/layout/Hairline'
+import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -138,11 +140,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Modal.Header onClose={onClose}>
-                <Modal.Header.Title size="xs" withoutMargin>
-                  Remove spending limit
-                </Modal.Header.Title>
-              </Modal.Header>
+              <ModalHeader onClose={onClose} title="Remove spending limit" />
+              <Hairline />
 
               <Modal.Body>
                 <Col margin="lg">

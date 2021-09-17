@@ -35,6 +35,8 @@ import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/use
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { isModuleEnabled } from 'src/logic/safe/utils/modules'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
+import Hairline from 'src/components/layout/Hairline'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -274,14 +276,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Modal.Header onClose={onClose}>
-            <Modal.Header.Title>
-              New spending limit
-              <Text size="lg" color="secondaryLight" as="span">
-                2 of 2
-              </Text>
-            </Modal.Header.Title>
-          </Modal.Header>
+          <ModalHeader onClose={onClose} title="New spending limit" subTitle="2 of 2" />
+          <Hairline />
 
           <Modal.Body>
             <Col margin="lg">

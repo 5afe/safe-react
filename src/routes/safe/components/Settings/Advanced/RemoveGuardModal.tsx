@@ -1,6 +1,4 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import cn from 'classnames'
 import { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +24,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
 
 interface RemoveGuardModalProps {
   onClose: () => void
@@ -125,14 +124,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Row align="center" className={classes.modalHeading} grow>
-                <Paragraph className={classes.modalManage} noMargin weight="bolder">
-                  Remove Transaction Guard
-                </Paragraph>
-                <IconButton disableRipple onClick={onClose}>
-                  <Close className={classes.modalClose} />
-                </IconButton>
-              </Row>
+              <ModalHeader onClose={onClose} title="Remove Guard" />
               <Hairline />
               <Block>
                 <Row className={classes.modalOwner}>
