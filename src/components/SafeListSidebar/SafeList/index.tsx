@@ -56,11 +56,8 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const ownedSafes = useOwnerSafes()
 
-  const [localSafes, setLocalSafes] = useState<Record<ETHEREUM_NETWORK, SafeRecordWithNames[]>>(
-    Object.keys(networks).reduce(
-      (acc, id) => ({ ...acc, [id]: [] }),
-      {} as Record<ETHEREUM_NETWORK, SafeRecordWithNames[]>,
-    ),
+  const [localSafes, setLocalSafes] = useState<Record<ETHEREUM_NETWORK, SafeRecordWithNames[] | never[]>>(
+    Object.keys(networks).reduce((acc, id) => ({ ...acc, [id]: [] }), {} as Record<ETHEREUM_NETWORK, never[]>),
   )
 
   useEffect(() => {
@@ -83,12 +80,12 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
           const isCurrentNetwork = id === getNetworkId()
 
           const addedSafeObjects: SafeRecordWithNames[] = isCurrentNetwork ? safes : localSafes[id]
-          const ownedSafeObjects: (SafeRecordWithNames | Pick<SafeRecordWithNames, 'address'>)[] = isCurrentNetwork
+          const ownedSafeObjects: (Pick<SafeRecordWithNames, 'address'> | SafeRecordWithNames)[] = isCurrentNetwork
             ? ownedSafes.map((address) => ({ address }))
-            : localSafes?.[id] ?? []
+            : localSafes?.[id]
 
           const nativeCoinSymbol = getNetworkConfigById(id)?.network?.nativeCoin?.symbol ?? 'ETH'
-          const shouldExpandSafesNotAdded = ownedSafeObjects.some(({ address }) => isSafeAdded(safes, address))
+          const shouldExpandSafesNotAdded = ownedSafeObjects?.some(({ address }) => isSafeAdded(safes, address))
 
           return (
             <Fragment key={id}>
