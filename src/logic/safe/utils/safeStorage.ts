@@ -1,4 +1,4 @@
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { getStoragePrefix, loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 
 export const SAFES_KEY = 'SAFES'
@@ -7,6 +7,10 @@ export type StoredSafes = Record<string, SafeRecordProps>
 
 export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
   return loadFromStorage<StoredSafes>(SAFES_KEY)
+}
+
+export const loadStoredNetworkSafe = (networkName: string): Promise<StoredSafes | undefined> => {
+  return loadFromStorage<StoredSafes>(SAFES_KEY, getStoragePrefix(networkName))
 }
 
 export const saveSafes = async (safes: StoredSafes): Promise<void> => {
@@ -19,6 +23,11 @@ export const saveSafes = async (safes: StoredSafes): Promise<void> => {
 
 export const getLocalSafes = async (): Promise<SafeRecordProps[] | undefined> => {
   const storedSafes = await loadStoredSafes()
+  return storedSafes ? Object.values(storedSafes) : undefined
+}
+
+export const getLocalNetworkSafes = async (networkName: string): Promise<SafeRecordProps[] | undefined> => {
+  const storedSafes = await loadStoredNetworkSafe(networkName)
   return storedSafes ? Object.values(storedSafes) : undefined
 }
 

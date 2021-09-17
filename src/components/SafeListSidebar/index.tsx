@@ -1,12 +1,13 @@
-import React, { useState, ReactElement } from 'react'
+import { useState, ReactElement, createContext } from 'react'
 import Drawer from '@material-ui/core/Drawer'
+
 import { SafeList } from './SafeList'
 import useSidebarStyles from './style'
 import Hairline from 'src/components/layout/Hairline'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import AddSafeButton from 'src/components/SafeListSidebar/AddSafeButton'
 
-export const SafeListSidebarContext = React.createContext({
+export const SafeListSidebarContext = createContext({
   isOpen: false,
   toggleSidebar: () => {},
 })

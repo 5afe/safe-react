@@ -1,19 +1,20 @@
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import React from 'react'
 import styled from 'styled-components'
-import { getNetworkId, getNetworkName, getNetworks } from 'src/config'
-import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import Collapse from 'src/components/Collapse'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import SafeListItem from './SafeListItem'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { setNetwork } from 'src/logic/config/utils'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getSafesKey } from 'src/logic/addressBook/utils/v2-migration'
+import { Fragment, ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+
+import { setNetwork } from 'src/logic/config/utils'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { sortedSafeListSelector } from '../selectors'
+import { getNetworkConfigById, getNetworkId, getNetworks } from 'src/config'
+import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import Collapse from 'src/components/Collapse'
+import SafeListItem from './SafeListItem'
+import { getLocalNetworkSafes } from 'src/logic/safe/utils'
+import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
@@ -48,87 +49,87 @@ type Props = {
   onSafeClick: () => void
 }
 
-const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean =>
-  addedSafes.some((safe) => sameAddress(safe.address, address))
-
-const getSafesStoredLocally = (
-  networkId: ETHEREUM_NETWORK,
-  safes: SafeRecordWithNames[],
-  ownedSafes: string[],
-): SafeRecordWithNames[] => {
-  let otherSafes: SafeRecordWithNames[] = []
-
-  const name = getNetworkName(networkId)
-  const safeString = localStorage.getItem(getSafesKey(name))
-
-  if (safeString) {
-    try {
-      Object.values(JSON.parse(safeString)).forEach((parsedSafe: any) => {
-        const isAddedSafe = isAddressAdded(safes, parsedSafe.address)
-        const isOwnedSafe = ownedSafes.includes(parsedSafe.address)
-        if (isAddedSafe || isOwnedSafe) return
-
-        otherSafes = [...otherSafes, parsedSafe]
-      })
-    } catch {}
-  }
-
-  return otherSafes
-}
-
-export const SafeList = ({ onSafeClick }: Props): React.ReactElement => {
+export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
   const currentSafeAddress = useSelector(safeAddressFromUrl)
   const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const ownedSafes = useOwnerSafes()
-  const safesNotAdded = ownedSafes.filter((address) => !isAddressAdded(safes, address))
-  const hasSafesNotAdded = safesNotAdded.length > 0
-  const shouldExpandSafesNotAdded = safesNotAdded.some((address) => address === currentSafeAddress)
+
+  const [localSafes, setLocalSafes] = useState<Record<ETHEREUM_NETWORK, SafeRecordWithNames[]>>(
+    Object.keys(networks).reduce(
+      (acc, id) => ({ ...acc, [id]: [] }),
+      {} as Record<ETHEREUM_NETWORK, SafeRecordWithNames[]>,
+    ),
+  )
+
+  useEffect(() => {
+    const getLocalSafes = () => {
+      Object.entries(ETHEREUM_NETWORK).forEach(async ([name, id]) => {
+        const localSafe = await getLocalNetworkSafes(name)
+        setLocalSafes((prevSafes) => ({
+          ...prevSafes,
+          [id]: localSafe,
+        }))
+      })
+    }
+    getLocalSafes()
+  }, [])
 
   return (
     <>
       <StyledList>
         {networks.map(({ id, backgroundColor, textColor, label }) => {
           const isCurrentNetwork = id === getNetworkId()
-          const addedSafes = isCurrentNetwork ? safes : getSafesStoredLocally(id, safes, ownedSafes)
 
-          if (!isCurrentNetwork && (addedSafes.length === 0 || !hasSafesNotAdded)) return null
+          const addedSafeObjects: SafeRecordWithNames[] = isCurrentNetwork ? safes : localSafes[id]
+          const ownedSafeObjects: (SafeRecordWithNames | Pick<SafeRecordWithNames, 'address'>)[] = isCurrentNetwork
+            ? ownedSafes.map((address) => ({ address }))
+            : localSafes?.[id] ?? []
+
+          const nativeCoinSymbol = getNetworkConfigById(id)?.network?.nativeCoin?.symbol ?? 'ETH'
+          const shouldExpandSafesNotAdded = ownedSafeObjects.some(({ address }) => isSafeAdded(safes, address))
+
           return (
-            <React.Fragment key={id}>
+            <Fragment key={id}>
               <ListItem selected>
                 <StyledDot backgroundColor={backgroundColor} textColor={textColor} />
                 {label}
               </ListItem>
               <MuiList>
-                {addedSafes?.map((safe) => (
+                {addedSafeObjects?.map((safe) => (
                   <SafeListItem
                     key={safe.address}
                     onSafeClick={onSafeClick}
                     onNetworkSwitch={() => setNetwork(id)}
                     currentSafeAddress={currentSafeAddress}
+                    nativeCoinSymbol={nativeCoinSymbol}
+                    safes={safes}
                     {...safe}
                   />
                 ))}
-                {isCurrentNetwork && hasSafesNotAdded && (
+                {isCurrentNetwork && ownedSafeObjects?.length > 0 && (
                   <ListItem classes={{ root: classes.listItemCollapse }}>
                     <Collapse
-                      title={`Other Safes owned on ${label} (${safesNotAdded.length})`}
+                      title={`Safes owned on ${label} (${ownedSafeObjects.length})`}
                       defaultExpanded={shouldExpandSafesNotAdded}
                     >
-                      {safesNotAdded?.map((address) => (
+                      {ownedSafeObjects?.map(({ address, ...rest }) => (
                         <SafeListItem
                           key={address}
                           address={address}
                           onSafeClick={onSafeClick}
                           currentSafeAddress={currentSafeAddress}
+                          nativeCoinSymbol={nativeCoinSymbol}
+                          safes={safes}
+                          {...rest}
                         />
                       ))}
                     </Collapse>
                   </ListItem>
                 )}
               </MuiList>
-            </React.Fragment>
+            </Fragment>
           )
         })}
       </StyledList>

@@ -1,18 +1,21 @@
 import { EthHashInfo, Text, Icon } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef, ReactElement } from 'react'
 import { useHistory, generatePath } from 'react-router'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
-import Link from 'src/components/layout/Link'
 import ListItem from '@material-ui/core/ListItem/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction'
 import styled from 'styled-components'
+
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
+import Link from 'src/components/layout/Link'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 
-const StyledIcon = styled(Icon)<{ isSameAddress: boolean }>`
-  ${({ isSameAddress }) => (isSameAddress ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
+const StyledIcon = styled(Icon)<{ checked: boolean }>`
+  ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
 `
 
 type Props = {
@@ -21,6 +24,8 @@ type Props = {
   address: string
   ethBalance?: string
   currentSafeAddress?: string
+  nativeCoinSymbol: string
+  safes: SafeRecordWithNames[]
 }
 
 const SafeListItem = ({
@@ -29,16 +34,18 @@ const SafeListItem = ({
   address,
   ethBalance,
   currentSafeAddress,
-}: Props): React.ReactElement => {
+  nativeCoinSymbol,
+  safes,
+}: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookEntryName(state, { address }))
-  const isSameAddress = sameAddress(currentSafeAddress, address)
+  const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!isSameAddress) return
+    if (!isCurrentSafe) return
     safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [isSameAddress])
+  }, [isCurrentSafe])
 
   const handleLoadSafe = (): void => {
     onNetworkSwitch?.()
@@ -56,18 +63,18 @@ const SafeListItem = ({
 
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
-      <StyledIcon type="check" size="md" color="primary" isSameAddress={isSameAddress} />
+      <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <EthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
-          `${formatAmount(ethBalance)} ETH`
-        ) : (
+          `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
+        ) : !isSafeAdded(safes, address) ? (
           <Link to={`${LOAD_ADDRESS}/${address}`} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
             </Text>
           </Link>
-        )}
+        ) : null}
       </ListItemSecondaryAction>
     </ListItem>
   )

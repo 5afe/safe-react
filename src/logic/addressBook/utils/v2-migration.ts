@@ -12,8 +12,6 @@ interface StorageConfig {
   namespaceSeparator: string
 }
 
-export const getSafesKey = (network: string) => `_immortal|v2_${network}__SAFES`
-
 /**
  * Migrates the safes names from the Safe Object to the Address Book
  *
@@ -22,7 +20,7 @@ export const getSafesKey = (network: string) => `_immortal|v2_${network}__SAFES`
  * @note If the Safe name is an invalid AB name, it's renamed to "Migrated from: {safe.name}"
  */
 const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
-  const SAFES_KEY = getSafesKey(getNetworkName())
+  const SAFES_KEY = `_immortal|v2_${getNetworkName()}__SAFES`
 
   const storedSafes = localStorage.getItem(SAFES_KEY)
 
