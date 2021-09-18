@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { getNetworkConfigById, getNetworkId } from 'src/config'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -24,25 +24,17 @@ type Props = {
   onNetworkSwitch?: () => void
   address: string
   ethBalance?: string
-  nativeCoinSymbol: string
   safes: SafeRecordWithNames[]
-  chainId: ETHEREUM_NETWORK
 }
 
-const SafeListItem = ({
-  onSafeClick,
-  onNetworkSwitch,
-  address,
-  ethBalance,
-  nativeCoinSymbol,
-  safes,
-  chainId,
-}: Props): ReactElement => {
+const SafeListItem = ({ onSafeClick, onNetworkSwitch, address, ethBalance, safes }: Props): ReactElement => {
   const history = useHistory()
-  const safeName = useSelector((state) => addressBookName(state, { address, chainId }))
+  const networkId = getNetworkId()
+  const safeName = useSelector((state) => addressBookName(state, { address, chainId: getNetworkId() }))
   const currentSafeAddress = useSelector(safeAddressFromUrl)
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
+  const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
 
   useEffect(() => {
     if (!isCurrentSafe) return
