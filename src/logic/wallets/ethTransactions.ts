@@ -46,7 +46,7 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
     const signerAddress = await getAccountFrom(web3)
 
     if (!signerAddress) {
-      throw new Error('Error retrieving account.')
+      throw new CodedException(Errors._103, 'signerAddress returned null')
     }
 
     const ethAdapter = new Web3Adapter({
