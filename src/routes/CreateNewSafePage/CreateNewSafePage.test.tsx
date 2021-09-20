@@ -274,7 +274,7 @@ describe('<CreateNewSafePage>', () => {
       await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
 
       const userAccount = customState.providers.account
-      const defaultOwner = screen.getByTestId('owner-address-0')
+      const defaultOwner = screen.getByTestId('owner-address-0') as HTMLInputElement
       expect(defaultOwner.value).toBe(userAccount)
     })
 
@@ -429,7 +429,7 @@ describe('<CreateNewSafePage>', () => {
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
 
-      const defaultOwnerInput = screen.getByTestId('owner-address-0')
+      const defaultOwnerInput = screen.getByTestId('owner-address-0') as HTMLInputElement
       fireEvent.change(defaultOwnerInput, { target: { value: validENSNameDomain } })
 
       await waitFor(() => {
