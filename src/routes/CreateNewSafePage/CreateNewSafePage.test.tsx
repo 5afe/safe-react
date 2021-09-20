@@ -1,10 +1,25 @@
-import { fireEvent, getByText, render, screen, waitFor, waitForElementToBeRemoved } from 'src/utils/test-utils'
+import {
+  fireEvent,
+  getByText,
+  getByRole,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from 'src/utils/test-utils'
 
 import CreateNewSafePage from './CreateNewSafePage'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+
+const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
+
+const secondOwnerAddress = '0xfe8BEBd43Ac213bea4bb8eC9e2dd90632f9371b2'
+const validENSNameDomain = 'testENSDomain.eth'
+const notExistingENSNameDomain = 'notExistingENSDomain.eth'
 
 describe('<CreateNewSafePage>', () => {
   beforeEach(() => {
-    // clear the SAFE_PENDING_CREATION_STORAGE_KEY ???
+    // TODO: clear the SAFE_PENDING_CREATION_STORAGE_KEY ???
   })
 
   it('renders CreateNewSafePage Form', async () => {
@@ -164,6 +179,388 @@ describe('<CreateNewSafePage>', () => {
       await waitForElementToBeRemoved(() => screen.getByTestId('select-network-popup'))
 
       await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
+    })
+
+    it('goes to the next Name Safe step when clicks on the next button', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+    })
+  })
+  describe('Step 2: Safe Name', () => {
+    it('Shows Safe Name text Input and the current network', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      expect(screen.getByTestId('create-new-safe-name-field')).toBeInTheDocument()
+      expect(screen.getByText('Rinkeby')).toBeInTheDocument()
+    })
+
+    it('goes to the next Owners and Confirmations step when clicks on the next button', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+    })
+  })
+
+  describe('Step 3: Owners and Confirmations', () => {
+    it('Shows user Account as a default owner', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      const userAccount = customState.providers.account
+      const defaultOwner = screen.getByTestId('owner-address-0')
+      expect(defaultOwner.value).toBe(userAccount)
+    })
+
+    it('At least one owner is Required', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      const defaultOwnerInput = screen.getByTestId('owner-address-0')
+
+      fireEvent.change(defaultOwnerInput, { target: { value: '' } })
+      fireEvent.click(screen.getByText('Continue'))
+
+      expect(screen.getByText('Required')).toBeInTheDocument()
+      expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument()
+    })
+
+    it('Adds new owners button', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      // 1 owner by default
+      expect(screen.getByTestId('owner-address-0')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2')).not.toBeInTheDocument()
+
+      // we add one owner more
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      expect(screen.getByTestId('owner-address-0')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2')).not.toBeInTheDocument()
+
+      // we add one owner more
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      expect(screen.getByTestId('owner-address-0')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2')).toBeInTheDocument()
+    })
+
+    it('Removes owners button', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      // no remove button should be present
+      expect(screen.queryByTestId('owner-address-0-remove-button')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1-remove-button')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2-remove-button')).not.toBeInTheDocument()
+
+      // we add 2 owners more
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+
+      // remove button should be present, except for the first owner field (first owner can not be removed)
+      expect(screen.queryByTestId('owner-address-0-remove-button')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1-remove-button')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2-remove-button')).toBeInTheDocument()
+
+      // we remove a owner
+      expect(screen.queryByTestId('owner-address-0')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2')).toBeInTheDocument()
+
+      fireEvent.click(screen.getByTestId('owner-address-2-remove-button'))
+
+      expect(screen.queryByTestId('owner-address-0')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-1')).toBeInTheDocument()
+      expect(screen.queryByTestId('owner-address-2')).not.toBeInTheDocument()
+    })
+
+    // username.eth example
+    it('Gets the Owner Address From a ENS Name Domain', async () => {
+      const ensDomains = {
+        [validENSNameDomain]: secondOwnerAddress,
+      }
+
+      // mock getAddress to return the Owner address
+      getENSAddressSpy.mockImplementation(
+        (ENSNameDomain) => new Promise((resolve) => resolve(ensDomains[ENSNameDomain as string])),
+      )
+
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      const defaultOwnerInput = screen.getByTestId('owner-address-0')
+      fireEvent.change(defaultOwnerInput, { target: { value: validENSNameDomain } })
+
+      await waitFor(() => {
+        expect(defaultOwnerInput.value).toBe(secondOwnerAddress)
+        getENSAddressSpy.mockClear()
+      })
+    })
+
+    it('Shows an error if it the ENS Name Domain is not registered', async () => {
+      // we do not want annoying warnings in the console caused by our mock in getENSAddress
+      const originalError = console.error
+      console.error = (...args) => {
+        if (/Code 101: Failed to resolve the address \(Given address \"notExistingENSDomain.eth\" /.test(args[0])) {
+          return
+        }
+        originalError.call(console, ...args)
+      }
+
+      // mock getAddress fn to simulate a non existing ENS domain (rejecting the promise)
+      getENSAddressSpy.mockImplementation(
+        (notExistingENSNameDomain) => new Promise((reject) => reject(notExistingENSNameDomain)),
+      )
+
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      const defaultOwnerInput = screen.getByTestId('owner-address-0')
+      fireEvent.change(defaultOwnerInput, { target: { value: notExistingENSNameDomain } })
+
+      const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
+
+      expect(errorTextNode).toBeInTheDocument()
+      getENSAddressSpy.mockClear()
+    })
+
+    it('Shows an error if a owner address is already introduced', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      // we add one owner more
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+
+      // we introduce the same address
+      const defaultOwnerInput = screen.getByTestId('owner-address-1')
+      fireEvent.change(defaultOwnerInput, { target: { value: '0x680cde08860141F9D223cE4E620B10Cd6741037E' } })
+
+      const errorText = 'Address already introduced'
+
+      expect(screen.getByText(errorText)).toBeInTheDocument()
+    })
+
+    it('Confirmation updates', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      expect(screen.getByText('out of 1 owner(s)')).toBeInTheDocument()
+
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      expect(screen.getByText('out of 2 owner(s)')).toBeInTheDocument()
+
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      expect(screen.getByText('out of 3 owner(s)')).toBeInTheDocument()
+
+      const thresholdSelector = screen.getByTestId('threshold-selector-input')
+
+      fireEvent.mouseDown(getByRole(thresholdSelector, 'button'))
+
+      expect(screen.getByTestId('threshold-selector-option-1')).toBeInTheDocument()
+      expect(screen.getByTestId('threshold-selector-option-2')).toBeInTheDocument()
+      expect(screen.getByTestId('threshold-selector-option-3')).toBeInTheDocument()
+
+      expect(getByText(thresholdSelector, '1')).toBeInTheDocument()
+
+      fireEvent.click(screen.getByTestId('threshold-selector-option-3'))
+
+      expect(getByText(thresholdSelector, '3')).toBeInTheDocument()
     })
   })
 })

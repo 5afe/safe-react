@@ -59,13 +59,13 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
   const maxOwnerNumber = createSafeFormValues[FIELD_MAX_OWNER_NUMBER]
 
   function onClickAddNewOwner() {
-    const updatedMaxOwnerNumbers = maxOwnerNumber + 1
-    createSafeForm.change(FIELD_MAX_OWNER_NUMBER, updatedMaxOwnerNumbers)
     const newEmptyOwner = {
-      nameFieldName: `owner-name-${updatedMaxOwnerNumbers}`,
-      addressFieldName: `owner-address-${updatedMaxOwnerNumbers}`,
+      nameFieldName: `owner-name-${maxOwnerNumber}`,
+      addressFieldName: `owner-address-${maxOwnerNumber}`,
     }
     createSafeForm.change(FIELD_SAFE_OWNERS_LIST, [...owners, newEmptyOwner])
+    const updatedMaxOwnerNumbers = maxOwnerNumber + 1
+    createSafeForm.change(FIELD_MAX_OWNER_NUMBER, updatedMaxOwnerNumbers)
   }
 
   function onClickRemoveOwner({ addressFieldName }) {
@@ -207,7 +207,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                   <MenuItem
                     key={`threshold-selector-option-${option}`}
                     value={option + 1}
-                    data-testid={`selector-option-${option + 1}`}
+                    data-testid={`threshold-selector-option-${option + 1}`}
                   >
                     {option + 1}
                   </MenuItem>

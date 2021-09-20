@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Button, Card, Title, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/styles'
 
