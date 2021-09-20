@@ -2,6 +2,9 @@ import { ReactElement, useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { backOff } from 'exponential-backoff'
 import { TransactionReceipt } from 'web3-core'
+import { generatePath } from 'react-router'
+import { GenericModal } from '@gnosis.pm/safe-react-components'
+import { makeStyles } from '@material-ui/core/'
 
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
@@ -26,9 +29,18 @@ import {
 } from '../fields/createSafeFields'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import { generatePath } from 'react-router'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import Paragraph from 'src/components/layout/Paragraph'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import Button from 'src/components/layout/Button'
+import { boldFont } from 'src/theme/variables'
+
+type ModalDataType = {
+  safeAddress: string
+  safeName?: string
+  safeCreationTxHash?: string
+}
 
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
@@ -37,6 +49,11 @@ function SafeCreationProcess(): ReactElement {
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
+
+  const classes = useStyles()
+
+  const [showModal, setShowModal] = useState(false)
+  const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
 
   const createNewSafe = useCallback(async () => {
     const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
@@ -133,19 +150,12 @@ function SafeCreationProcess(): ReactElement {
     const safeProps = await buildSafe(newSafeAddress)
     await dispatch(addOrUpdateSafe(safeProps))
 
-    await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-
-    const url = {
-      pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        safeAddress: safeProps.address,
-      }),
-      state: {
-        name: safeName,
-        tx: safeCreationTxHash,
-      },
-    }
-
-    history.push(url)
+    setShowModal(true)
+    setModalData({
+      safeAddress: safeProps.address,
+      safeName,
+      safeCreationTxHash,
+    })
   }
 
   const onRetry = async () => {
@@ -163,15 +173,68 @@ function SafeCreationProcess(): ReactElement {
     })
   }
 
+  async function onClickModalButton() {
+    await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const { safeAddress, safeName, safeCreationTxHash } = modalData
+    const url = {
+      pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        safeAddress,
+      }),
+      state: {
+        name: safeName,
+        tx: safeCreationTxHash,
+      },
+    }
+    history.push(url)
+  }
+
   return (
-    <SafeDeployment
-      creationTxHash={safeCreationTxHash}
-      onCancel={onCancel}
-      onRetry={onRetry}
-      onSuccess={onSafeCreated}
-      submittedPromise={creationTxPromise}
-    />
+    <>
+      <SafeDeployment
+        creationTxHash={safeCreationTxHash}
+        onCancel={onCancel}
+        onRetry={onRetry}
+        onSuccess={onSafeCreated}
+        submittedPromise={creationTxPromise}
+      />
+      {showModal && (
+        <GenericModal
+          onClose={() => {}}
+          title="Safe Created!"
+          body={
+            <div>
+              <Paragraph>
+                You just created a new Safe on <NetworkLabel />
+              </Paragraph>
+              <Paragraph>
+                You will only be able to use this Safe on <NetworkLabel />
+              </Paragraph>
+              <Paragraph>
+                If you send assets on other networks to this address,{' '}
+                <span className={classes.emphasisLabel}>you will not be able to access them</span>
+              </Paragraph>
+            </div>
+          }
+          footer={
+            <div className={classes.buttonContainer}>
+              <Button onClick={onClickModalButton} color="primary" type={'button'} size="small" variant="contained">
+                Continue
+              </Button>
+            </div>
+          }
+        />
+      )}
+    </>
   )
 }
 
 export default SafeCreationProcess
+
+const useStyles = makeStyles({
+  buttonContainer: {
+    textAlign: 'center',
+  },
+  emphasisLabel: {
+    fontWeight: boldFont,
+  },
+})
