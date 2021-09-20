@@ -10,6 +10,14 @@ import {
 
 import CreateNewSafePage from './CreateNewSafePage'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import * as ethTransactions from 'src/logic/wallets/ethTransactions'
+import * as safeContracts from 'src/logic/contracts/safeContracts'
+
+const mockedDateValue = 1487076708000
+const DateSpy = jest.spyOn(global.Date, 'now')
+
+const estimateGasForDeployingSafeSpy = jest.spyOn(safeContracts, 'estimateGasForDeployingSafe')
+const calculateGasPriceSpy = jest.spyOn(ethTransactions, 'calculateGasPrice')
 
 const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
 
@@ -18,10 +26,6 @@ const validENSNameDomain = 'testENSDomain.eth'
 const notExistingENSNameDomain = 'notExistingENSDomain.eth'
 
 describe('<CreateNewSafePage>', () => {
-  beforeEach(() => {
-    // TODO: clear the SAFE_PENDING_CREATION_STORAGE_KEY ???
-  })
-
   it('renders CreateNewSafePage Form', async () => {
     render(<CreateNewSafePage />)
 
@@ -561,6 +565,298 @@ describe('<CreateNewSafePage>', () => {
       fireEvent.click(screen.getByTestId('threshold-selector-option-3'))
 
       expect(getByText(thresholdSelector, '3')).toBeInTheDocument()
+    })
+
+    // See https://github.com/gnosis/safe-react/issues/2733
+    it('You can NOT set more confirmations than owners', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      // we add 3 owners
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+
+      const thresholdSelector = screen.getByTestId('threshold-selector-input')
+
+      // 3 confirmations
+      fireEvent.mouseDown(getByRole(thresholdSelector, 'button'))
+      fireEvent.click(screen.getByTestId('threshold-selector-option-3'))
+
+      expect(getByText(thresholdSelector, '3')).toBeInTheDocument()
+
+      // we remove 1 owner
+      fireEvent.click(screen.getByTestId('owner-address-2-remove-button'))
+      expect(getByText(thresholdSelector, '2')).toBeInTheDocument()
+
+      // we remove another owner
+      fireEvent.click(screen.getByTestId('owner-address-1-remove-button'))
+      expect(getByText(thresholdSelector, '1')).toBeInTheDocument()
+    })
+  })
+  describe('Step 4: Review', () => {
+    beforeEach(() => {
+      estimateGasForDeployingSafeSpy.mockImplementation(() => Promise.resolve(523170))
+      calculateGasPriceSpy.mockImplementation(() => Promise.resolve('44000000000'))
+      DateSpy.mockImplementation(() => mockedDateValue)
+    })
+
+    it('Basic Safe information', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      const safeNameInput = screen.getByTestId('create-new-safe-name-field') as HTMLInputElement
+
+      const suggestedSafeName = safeNameInput.placeholder
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      expect(calculateGasPriceSpy).not.toHaveBeenCalled()
+      expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+
+      // suggested name of the safe
+      const reviewSafeNameNode = screen.getByTestId('create-new-safe-review-safe-name')
+      expect(getByText(reviewSafeNameNode, suggestedSafeName))
+
+      // threshold
+      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      expect(getByText(reviewSafeThresholdNode, '1 out of 1 owners'))
+
+      // number of owners label
+      expect(screen.getByText('1 Safe owners'))
+
+      // owner address
+      expect(screen.getByText('0x680cde08860141F9D223cE4E620B10Cd6741037E'))
+
+      // network label
+      expect(screen.getByText('Rinkeby'))
+
+      expect(calculateGasPriceSpy).toHaveBeenCalled()
+      const userAccount = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+      const addresses = [userAccount]
+      const owners = addresses.length
+      expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
+
+      await waitFor(() =>
+        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+      )
+    })
+
+    it('shows more than one owner', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      // we add another owner
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      fireEvent.change(screen.getByTestId('owner-address-1'), { target: { value: secondOwnerAddress } })
+
+      expect(calculateGasPriceSpy).not.toHaveBeenCalled()
+      expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+
+      // threshold
+      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      expect(getByText(reviewSafeThresholdNode, '1 out of 2 owners'))
+
+      // number of owners label
+      expect(screen.getByText('2 Safe owners'))
+
+      // owner address
+      expect(screen.getByText('0x680cde08860141F9D223cE4E620B10Cd6741037E'))
+      expect(screen.getByText(secondOwnerAddress))
+
+      // network label
+      expect(screen.getByText('Rinkeby'))
+
+      expect(calculateGasPriceSpy).toHaveBeenCalled()
+      const userAccount = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+      const addresses = [userAccount, secondOwnerAddress]
+      const owners = addresses.length
+      expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
+
+      await waitFor(() =>
+        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+      )
+    })
+
+    it('shows custom safe name', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      const safeNameInput = screen.getByTestId('create-new-safe-name-field') as HTMLInputElement
+
+      // we set a custom safe name
+      const customSafeName = 'Custom Safe name'
+      fireEvent.change(safeNameInput, { target: { value: customSafeName } })
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      expect(calculateGasPriceSpy).not.toHaveBeenCalled()
+      expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+
+      // suggested name of the safe
+      const reviewSafeNameNode = screen.getByTestId('create-new-safe-review-safe-name')
+      expect(getByText(reviewSafeNameNode, customSafeName))
+
+      // threshold
+      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      expect(getByText(reviewSafeThresholdNode, '1 out of 1 owners'))
+
+      // number of owners label
+      expect(screen.getByText('1 Safe owners'))
+
+      // owner address
+      expect(screen.getByText('0x680cde08860141F9D223cE4E620B10Cd6741037E'))
+
+      // network label
+      expect(screen.getByText('Rinkeby'))
+
+      expect(calculateGasPriceSpy).toHaveBeenCalled()
+      const userAccount = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+      const addresses = [userAccount]
+      const owners = addresses.length
+      expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
+
+      await waitFor(() =>
+        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+      )
+    })
+
+    it('shows custom threshold', async () => {
+      const customState = {
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateNewSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      // we add another owner
+      fireEvent.click(screen.getByTestId('add-new-owner'))
+      fireEvent.change(screen.getByTestId('owner-address-1'), { target: { value: secondOwnerAddress } })
+
+      // we set 2 confirmations
+      const thresholdSelector = screen.getByTestId('threshold-selector-input')
+      fireEvent.mouseDown(getByRole(thresholdSelector, 'button'))
+      fireEvent.click(screen.getByTestId('threshold-selector-option-2'))
+
+      expect(calculateGasPriceSpy).not.toHaveBeenCalled()
+      expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+
+      // threshold
+      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      expect(getByText(reviewSafeThresholdNode, '2 out of 2 owners'))
+
+      // number of owners label
+      expect(screen.getByText('2 Safe owners'))
+
+      // owner address
+      expect(screen.getByText('0x680cde08860141F9D223cE4E620B10Cd6741037E'))
+      expect(screen.getByText(secondOwnerAddress))
+
+      // network label
+      expect(screen.getByText('Rinkeby'))
+
+      expect(calculateGasPriceSpy).toHaveBeenCalled()
+      const userAccount = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+      const addresses = [userAccount, secondOwnerAddress]
+      const owners = addresses.length
+      expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
+
+      await waitFor(() =>
+        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+      )
     })
   })
 })
