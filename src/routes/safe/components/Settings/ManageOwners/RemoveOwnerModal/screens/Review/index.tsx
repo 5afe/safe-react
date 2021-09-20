@@ -134,7 +134,7 @@ export const ReviewRemoveOwnerModal = ({
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <ModalHeader onClose={onClose} title="Add new owner" subTitle="3 of 3" />
+          <ModalHeader onClose={onClose} title="Remove owner" subTitle="3 of 3" />
           <Hairline />
           <Block>
             <Row className={classes.root}>
