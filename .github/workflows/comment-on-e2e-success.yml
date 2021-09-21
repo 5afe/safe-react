@@ -14,7 +14,7 @@ jobs:
             issue-number: ${{ github.event.client_payload.pr_number }}
             body-includes: E2E Tests
       - name: Set success comment
-        if: ${{ github.event.client_payload.status == 'success' && steps.checkComment.outputs.comment-id != ''}}
+        if: ${{ github.event.client_payload.status == 'success' }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.client_payload.pr_number }}
@@ -25,7 +25,7 @@ jobs:
             Check the results here: https://github.com/gnosis/safe-react-e2e-tests/actions/runs/${{ github.event.client_payload.run_number }}
             ${{ github.event.client_payload.message }}
       - name: Set failure comment
-        if: ${{ github.event.client_payload.status == 'failure' && steps.checkComment.outputs.comment-id != '' }}
+        if: ${{ github.event.client_payload.status == 'failure' }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.client_payload.pr_number }}
