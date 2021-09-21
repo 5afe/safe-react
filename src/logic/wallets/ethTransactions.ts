@@ -45,7 +45,7 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
   try {
     const ethAdapter = new Web3Adapter({
       web3: getWeb3(),
-      signerAddress: ZERO_ADDRESS,
+      signerAddress: ZERO_ADDRESS, // Not essential because estimateGas is a read-only method
     })
 
     return await ethAdapter.estimateGas(txConfig)
