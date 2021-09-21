@@ -3,10 +3,11 @@ import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 
-import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { GasPriceOracle } from 'src/config/networks/network'
 import { CodedException, Errors } from '../exceptions/CodedException'
+import { ZERO_ADDRESS } from './ethAddresses'
 
 export const EMPTY_DATA = '0x'
 
@@ -42,16 +43,9 @@ export const calculateGasPrice = async (): Promise<string> => {
 
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const web3 = getWeb3()
-    const signerAddress = await getAccountFrom(web3)
-
-    if (!signerAddress) {
-      throw new CodedException(Errors._103, 'signerAddress returned null')
-    }
-
     const ethAdapter = new Web3Adapter({
-      web3,
-      signerAddress,
+      web3: getWeb3(),
+      signerAddress: ZERO_ADDRESS,
     })
 
     return await ethAdapter.estimateGas(txConfig)
