@@ -1,5 +1,8 @@
 import React, { ReactElement, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { useForm } from 'react-final-form'
+import { useSelector } from 'react-redux'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 import TableContainer from '@material-ui/core/TableContainer'
 
 import Block from 'src/components/layout/Block'
@@ -16,20 +19,15 @@ import {
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
 } from '../fields/createSafeFields'
-import { useForm } from 'react-final-form'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { useStepper } from 'src/components/NewStepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { useSelector } from 'react-redux'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
-  const classes = useStyles()
-
   const provider = useSelector(providerNameSelector)
 
   const { setCurrentStep } = useStepper()
@@ -63,9 +61,9 @@ function ReviewNewSafeStep(): ReactElement | null {
   }, [gasLimit, createSafeForm])
 
   return (
-    <Row className={classes.root} data-testid={'create-new-safe-review-step'}>
+    <Row data-testid={'create-new-safe-review-step'}>
       <Col xs={4} layout="column">
-        <Block className={classes.details}>
+        <DetailsContainer>
           <Block margin="lg">
             <Paragraph color="primary" noMargin size="lg">
               Details
@@ -75,8 +73,7 @@ function ReviewNewSafeStep(): ReactElement | null {
             <Paragraph color="disabled" noMargin size="sm">
               Name of new Safe
             </Paragraph>
-            <Paragraph
-              className={classes.safeName}
+            <SafeNameParagraph
               color="primary"
               noMargin
               size="md"
@@ -84,7 +81,7 @@ function ReviewNewSafeStep(): ReactElement | null {
               data-testid="create-new-safe-review-safe-name"
             >
               {safeName}
-            </Paragraph>
+            </SafeNameParagraph>
           </Block>
           <Block margin="lg">
             <Paragraph color="disabled" noMargin size="sm">
@@ -100,22 +97,22 @@ function ReviewNewSafeStep(): ReactElement | null {
               {`${threshold} out of ${numberOfOwners} owners`}
             </Paragraph>
           </Block>
-        </Block>
+        </DetailsContainer>
       </Col>
       <Col layout="column" xs={8}>
         <TableContainer>
-          <Block className={classes.ownersTitleLabel}>
+          <TitleContainer>
             <Paragraph color="primary" noMargin size="lg">
               {`${numberOfOwners} Safe owners`}
             </Paragraph>
-          </Block>
+          </TitleContainer>
           <Hairline />
           {owners.map(({ nameFieldName, addressFieldName }) => {
             const ownerName = createSafeFormValues[nameFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
             return (
               <React.Fragment key={`owner-${addressFieldName}`}>
-                <Row className={classes.ownersLabel}>
+                <OwnersAddressesContainer>
                   <Col align="center" xs={12} data-testid={`create-new-safe-owner-details-${ownerAddress}`}>
                     <EthHashInfo
                       hash={ownerAddress}
@@ -125,51 +122,48 @@ function ReviewNewSafeStep(): ReactElement | null {
                       explorerUrl={getExplorerInfo(ownerAddress)}
                     />
                   </Col>
-                </Row>
+                </OwnersAddressesContainer>
                 <Hairline />
               </React.Fragment>
             )
           })}
         </TableContainer>
       </Col>
-      <Row align="center" className={classes.descriptionContainer}>
+      <DescriptionContainer align="center">
         <Paragraph color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
           currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The
           exact amount will be determined by your wallet.
         </Paragraph>
-      </Row>
+      </DescriptionContainer>
     </Row>
   )
 }
 
 export default ReviewNewSafeStep
 
-const useStyles = makeStyles({
-  root: {
-    minHeight: '300px',
-  },
-  details: {
-    padding: lg,
-    borderRight: `solid 1px ${border}`,
-    height: '100%',
-  },
-  safeName: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  ownersTitleLabel: {
-    padding: lg,
-  },
-  ownersLabel: {
-    alignItems: 'center',
-    minWidth: 'fit-content',
-    padding: sm,
-    paddingLeft: lg,
-  },
-  descriptionContainer: {
-    backgroundColor: background,
-    padding: lg,
-    textAlign: 'center',
-  },
-})
+const DetailsContainer = styled(Block)`
+  padding: ${lg};
+  border-right: solid 1px ${border};
+  height: 100%;
+`
+
+const SafeNameParagraph = styled(Paragraph)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+const TitleContainer = styled(Block)`
+  padding: ${lg};
+`
+
+const OwnersAddressesContainer = styled(Row)`
+  align-items: center;
+  min-width: fit-content;
+  padding: ${sm};
+  padding-left: ${lg};
+`
+const DescriptionContainer = styled(Row)`
+  background-colo: ${background};
+  padding: ${lg};
+  text-align: center;
+`

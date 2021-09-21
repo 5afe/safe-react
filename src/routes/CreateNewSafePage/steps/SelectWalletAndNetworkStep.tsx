@@ -7,7 +7,9 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import DialogContent from '@material-ui/core/DialogContent'
 import List from '@material-ui/core/List'
-import { makeStyles, Typography } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
+import styled from 'styled-components'
+
 import Block from 'src/components/layout/Block'
 import { getConfig, getNetworkName, getNetworks, setNetworkId } from 'src/config'
 import { lg } from 'src/theme/variables'
@@ -22,7 +24,6 @@ import { configStore } from 'src/logic/config/store/actions'
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 
 function SelectWalletAndNetworkStep(): ReactElement {
-  const classes = useStyles()
   const dispatch = useDispatch()
 
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
@@ -45,7 +46,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
   )
 
   return (
-    <Block className={classes.padding} data-testid={'select-network-step'}>
+    <Container data-testid={'select-network-step'}>
       {isWalletConnected ? (
         <Paragraph color="primary" noMargin size="lg">
           Select network on which to create your Safe. You are currently connected to{' '}
@@ -57,7 +58,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
         </Paragraph>
       )}
 
-      <div className={classes.switchButtonContainer}>
+      <SwitchNetworkContainer>
         {isWalletConnected ? (
           <ButtonLink
             type="button"
@@ -70,61 +71,61 @@ function SelectWalletAndNetworkStep(): ReactElement {
         ) : (
           <ConnectButton data-testid="heading-connect-btn" />
         )}
-      </div>
+      </SwitchNetworkContainer>
       <Dialog
         onClose={() => setIsNetworkSelectorPopupOpen(false)}
         aria-labelledby="select-network"
         data-testid={'select-network-popup'}
         open={isNetworkSelectorPopupOpen}
       >
-        <DialogTitle disableTypography className={classes.dialogTitle}>
+        <StyledDialogTitle disableTypography>
           <Typography variant={'h5'}>Select Network</Typography>
           <IconButton aria-label="close" onClick={() => setIsNetworkSelectorPopupOpen(false)}>
             <CloseIcon />
           </IconButton>
-        </DialogTitle>
-        <DialogContent dividers className={classes.dialogContent}>
+        </StyledDialogTitle>
+        <StyledDialogContent dividers>
           <List component="div">
             {networks.map((network) => (
-              <div
+              <NetworkLabelItem
                 key={network.id}
                 role={'button'}
-                className={classes.networkLabel}
                 onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
               >
                 <NetworkLabel networkInfo={network} flexGrow />
-              </div>
+              </NetworkLabelItem>
             ))}
           </List>
-        </DialogContent>
+        </StyledDialogContent>
       </Dialog>
-    </Block>
+    </Container>
   )
 }
 
-export default SelectWalletAndNetworkStep
+const Container = styled(Block)`
+  padding: ${lg};
+`
+const SwitchNetworkContainer = styled.div`
+  margin: ${lg};
+  display: flex;
+  justify-content: center;
+`
 
-const useStyles = makeStyles({
-  padding: {
-    padding: lg,
-  },
-  dialogContent: {
-    minWidth: '500px',
-  },
-  dialogTitle: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '16px 24px',
-  },
-  switchButtonContainer: {
-    margin: lg,
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  networkLabel: {
-    display: 'flex',
-    margin: `${lg} auto`,
-    cursor: 'pointer',
-    maxWidth: '50%',
-  },
-})
+const StyledDialogTitle = styled(DialogTitle)`
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+`
+
+const StyledDialogContent = styled(DialogContent)`
+  min-width: 500px;
+`
+
+const NetworkLabelItem = styled.div`
+  display: flex;
+  margin: ${lg} auto;
+  cursor: pointer;
+  max-width: 50%;
+`
+
+export default SelectWalletAndNetworkStep

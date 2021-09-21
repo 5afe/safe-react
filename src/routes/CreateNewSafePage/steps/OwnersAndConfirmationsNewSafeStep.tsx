@@ -1,6 +1,6 @@
 import { useEffect, ReactElement, Fragment } from 'react'
 import { useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import styled from 'styled-components'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -37,8 +37,6 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
 function OwnersAndConfirmationsNewSafeStep(): ReactElement {
-  const classes = useStyles()
-
   const provider = useSelector(providerNameSelector)
   const { setCurrentStep } = useStepper()
 
@@ -82,19 +80,18 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 
   return (
     <>
-      <Block className={classes.padding} data-testid={'create-safe-owners-confirmation-step'}>
-        <Paragraph className={classes.marginBottom} color="primary" noMargin size="lg">
+      <BlockWithPadding data-testid={'create-safe-owners-confirmation-step'}>
+        <ParagraphWithMargin color="primary" noMargin size="lg">
           Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
-        </Paragraph>
-        <Paragraph color="primary" size="lg" className={classes.descriptionContainer}>
+        </ParagraphWithMargin>
+        <Paragraph color="primary" size="lg">
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
           transaction before it gets executed. In general, the more confirmations required, the more secure your Safe
           is.
-          <Link
+          <StyledLink
             href="https://help.gnosis-safe.io/en/articles/4772567-what-gnosis-safe- setup-should-i-use"
             target="_blank"
-            className={classes.link}
             rel="noreferrer"
             title="Learn about which Safe setup to use"
           >
@@ -102,18 +99,18 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
               Learn about which Safe setup to use
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
-          </Link>
+          </StyledLink>
           . The new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
-      </Block>
+      </BlockWithPadding>
       <Hairline />
-      <Row className={classes.header}>
+      <RowHeader>
         <Col xs={3}>NAME</Col>
         <Col xs={7}>ADDRESS</Col>
-      </Row>
+      </RowHeader>
       <Hairline />
       <Block margin="md" padding="md">
-        <Row className={classes.header}>
+        <RowHeader>
           {owners.map(({ nameFieldName, addressFieldName }) => {
             const hasOwnerAddressError = formErrors[addressFieldName]
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
@@ -126,8 +123,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             return (
               <Fragment key={addressFieldName}>
                 <Col xs={3}>
-                  <Field
-                    className={classes.ownerNameField}
+                  <OwnerNameField
                     component={TextField}
                     name={nameFieldName}
                     placeholder="Owner Name"
@@ -150,10 +146,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                       !hasOwnerAddressError && {
                         endAdornment: (
                           <InputAdornment position="end">
-                            <CheckCircle
-                              className={classes.checkIcon}
-                              data-testid={`${addressFieldName}-valid-adornment`}
-                            />
+                            <CheckIconAddressAdornment data-testid={`${addressFieldName}-valid-adornment`} />
                           </InputAdornment>
                         ),
                       }
@@ -164,35 +157,35 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     testId={addressFieldName}
                   />
                 </Col>
-                <Col xs={1} center="xs" className={classes.ownerIcons} middle="xs">
+                <OwnersIconsContainer xs={1} center="xs" middle="xs">
                   <ScanQRWrapper handleScan={handleScan} testId={`${addressFieldName}-scan-QR`} />
-                </Col>
+                </OwnersIconsContainer>
                 {showDeleteIcon && (
-                  <Col xs={1} center="xs" className={classes.ownerIcons} middle="xs">
+                  <OwnersIconsContainer xs={1} center="xs" middle="xs">
                     <ButtonHelper
                       onClick={() => onClickRemoveOwner({ addressFieldName })}
                       dataTestId={`${addressFieldName}-remove-button`}
                     >
                       <Icon size="sm" type="delete" color="icon" tooltip="Delete Owner" />
                     </ButtonHelper>
-                  </Col>
+                  </OwnersIconsContainer>
                 )}
               </Fragment>
             )
           })}
-        </Row>
-        <Row align="center" className={classes.addOwnerContainer} grow>
+        </RowHeader>
+        <OwnerContainer align="center" grow>
           <Button color="secondary" data-testid="add-new-owner" onClick={onClickAddNewOwner}>
             <Paragraph noMargin size="lg">
               + Add another owner
             </Paragraph>
           </Button>
-        </Row>
-        <div className={classes.padding}>
+        </OwnerContainer>
+        <BlockWithPadding>
           <Block>
             <Paragraph>Any transaction requires the confirmation of:</Paragraph>
           </Block>
-          <Row align="center" className={classes.addOwnerContainer} grow>
+          <OwnerContainer align="center" grow>
             <Col xs={1}>
               <Field
                 component={SelectField}
@@ -212,12 +205,10 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
               </Field>
             </Col>
             <Col xs={11}>
-              <Paragraph noMargin className={classes.paddingLeft}>
-                out of {owners.length} owner(s)
-              </Paragraph>
+              <StyledParagraph noMargin>out of {owners.length} owner(s)</StyledParagraph>
             </Col>
-          </Row>
-        </div>
+          </OwnerContainer>
+        </BlockWithPadding>
       </Block>
     </>
   )
@@ -253,50 +244,49 @@ export const ownersAndConfirmationsNewSafeStepValidations = (values: {
   return errors
 }
 
-const useStyles = makeStyles({
-  padding: {
-    padding: lg,
-  },
-  marginBottom: {
-    marginBottom: '12px',
-  },
-  descriptionContainer: {
-    display: 'inline',
-  },
-  link: {
-    padding: `0 ${xs}`,
-    '& svg': {
-      position: 'relative',
-      top: '1px',
-      left: `${xs}`,
-      height: '14px',
-      width: '14px',
-    },
-  },
-  header: {
-    padding: `${sm} ${lg}`,
-    fontSize: extraSmallFontSize,
-    color: disabled,
-  },
-  ownerNameField: {
-    marginRight: `${sm}`,
-    marginBottom: `${sm}`,
-  },
-  checkIcon: {
-    color: '#03AE60',
-    height: '20px',
-  },
-  ownerIcons: {
-    height: '56px',
-    maxWidth: '32px',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  addOwnerContainer: {
-    justifyContent: 'center',
-  },
-  paddingLeft: {
-    paddingLeft: '12px',
-  },
-})
+const BlockWithPadding = styled(Block)`
+  padding: ${lg};
+`
+
+const ParagraphWithMargin = styled(Paragraph)`
+  margin-bottom: 12px;
+`
+
+const StyledLink = styled(Link)`
+  padding: 0 ${xs};
+  & svg {
+    position: relative;
+    top: 1px;
+    left: ${xs};
+    height: 14px;
+    width: 14px;
+  }
+`
+const RowHeader = styled(Row)`
+  padding: ${sm} ${lg};
+  font-size: ${extraSmallFontSize};
+  color: ${disabled};
+`
+
+const OwnerNameField = styled(Field)`
+  margin-right: ${sm};
+  margin-bottom: ${sm};
+`
+const CheckIconAddressAdornment = styled(CheckCircle)`
+  color: #03ae60;
+  height: 20px;
+`
+
+const OwnersIconsContainer = styled(Col)`
+  height: 56px;
+  max-width: 32px;
+  cursor: pointer;
+`
+
+const OwnerContainer = styled(Row)`
+  justify-content: center;
+`
+
+const StyledParagraph = styled(Paragraph)`
+  padding-left: 12px;
+`

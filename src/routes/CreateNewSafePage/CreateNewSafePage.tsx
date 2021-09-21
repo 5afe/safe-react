@@ -1,16 +1,18 @@
 import { ReactElement, useState, useEffect } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import { makeStyles } from '@material-ui/core/'
+import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import queryString from 'query-string'
+import { useLocation } from 'react-router'
+import { Loader } from '@gnosis.pm/safe-react-components'
 
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import Heading from 'src/components/layout/Heading'
 import { history } from 'src/store'
-import { sm } from 'src/theme/variables'
+import { sm, secondary } from 'src/theme/variables'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
 import { APP_ENV } from 'src/utils/constants'
@@ -32,16 +34,12 @@ import OwnersAndConfirmationsNewSafeStep, {
 } from './steps/OwnersAndConfirmationsNewSafeStep'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafeStep'
-import { useLocation } from 'react-router'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
-import { Loader } from '@gnosis.pm/safe-react-components'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 
 function CreateNewSafePage(): ReactElement {
-  const classes = useStyles()
-
-  const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues | null>()
+  const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -78,9 +76,9 @@ function CreateNewSafePage(): ReactElement {
 
   if (isLoading) {
     return (
-      <div className={classes.loaderContainer} data-testid={'create-new-safe-loader'}>
+      <LoaderContainer data-testid={'create-new-safe-loader'}>
         <Loader size="md" />
-      </div>
+      </LoaderContainer>
     )
   }
 
@@ -90,9 +88,9 @@ function CreateNewSafePage(): ReactElement {
     <Page>
       <Block>
         <Row align="center">
-          <IconButton disableRipple onClick={history.goBack} className={classes.backIcon}>
+          <BackIcon disableRipple onClick={history.goBack}>
             <ChevronLeft />
-          </IconButton>
+          </BackIcon>
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
         <StepperForm
@@ -129,20 +127,6 @@ function CreateNewSafePage(): ReactElement {
 }
 
 export default CreateNewSafePage
-
-const useStyles = makeStyles((theme) => ({
-  backIcon: {
-    color: theme.palette.secondary.main,
-    padding: sm,
-    marginRight: '5px',
-  },
-  loaderContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-  },
-}))
 
 const DEFAULT_THRESHOLD_VALUE = 1
 
@@ -193,3 +177,16 @@ function getInitialValues(userAddress, addressBook, location, suggestedSafeName)
     [FIELD_NEW_SAFE_PROXY_SALT]: Date.now(),
   }
 }
+
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`
+
+const BackIcon = styled(IconButton)`
+  color: ${secondary};
+  padding: ${sm};
+  margin-right: 5px;
+`

@@ -4,7 +4,7 @@ import { backOff } from 'exponential-backoff'
 import { TransactionReceipt } from 'web3-core'
 import { generatePath } from 'react-router'
 import { GenericModal } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/'
+import styled from 'styled-components'
 
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
@@ -49,8 +49,6 @@ function SafeCreationProcess(): ReactElement {
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
-
-  const classes = useStyles()
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
@@ -211,16 +209,16 @@ function SafeCreationProcess(): ReactElement {
               </Paragraph>
               <Paragraph>
                 If you send assets on other networks to this address,{' '}
-                <span className={classes.emphasisLabel}>you will not be able to access them</span>
+                <EmphasisLabel>you will not be able to access them</EmphasisLabel>
               </Paragraph>
             </div>
           }
           footer={
-            <div className={classes.buttonContainer}>
+            <ButtonContainer>
               <Button onClick={onClickModalButton} color="primary" type={'button'} size="small" variant="contained">
                 Continue
               </Button>
-            </div>
+            </ButtonContainer>
           }
         />
       )}
@@ -230,11 +228,10 @@ function SafeCreationProcess(): ReactElement {
 
 export default SafeCreationProcess
 
-const useStyles = makeStyles({
-  buttonContainer: {
-    textAlign: 'center',
-  },
-  emphasisLabel: {
-    fontWeight: boldFont,
-  },
-})
+const ButtonContainer = styled.div`
+  text-align: center;
+`
+
+const EmphasisLabel = styled.span`
+  font-weight: ${boldFont};
+`

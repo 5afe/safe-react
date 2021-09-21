@@ -1,10 +1,10 @@
 import { ReactElement, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
+import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
-import { lg } from 'src/theme/variables'
+import { lg, secondary } from 'src/theme/variables'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Field from 'src/components/forms/Field'
@@ -17,8 +17,6 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 export const nameNewSafeStepLabel = 'Name'
 
 function NameNewSafeStep(): ReactElement {
-  const classes = useStyles()
-
   const provider = useSelector(providerNameSelector)
 
   const { setCurrentStep } = useStepper()
@@ -34,7 +32,7 @@ function NameNewSafeStep(): ReactElement {
   const formValues = createNewSafeForm.getState().values
 
   return (
-    <Block className={classes.padding} data-testid={'create-safe-name-step'}>
+    <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
           You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
@@ -43,7 +41,7 @@ function NameNewSafeStep(): ReactElement {
         </Paragraph>
       </Block>
       <label htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
-      <Block className={classes.fieldContainer} margin="lg">
+      <FieldContainer margin="lg">
         <Col xs={11}>
           <Field
             component={TextField}
@@ -54,39 +52,37 @@ function NameNewSafeStep(): ReactElement {
             testId="create-new-safe-name-field"
           />
         </Col>
-      </Block>
+      </FieldContainer>
       <Block margin="lg">
-        <Paragraph className={classes.links} color="primary" noMargin size="lg">
+        <Paragraph color="primary" noMargin size="lg">
           By continuing you consent with the{' '}
-          <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+          <Link href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
-          </a>{' '}
+          </Link>{' '}
           and{' '}
-          <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
+          <Link href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
-          </a>
-          . Most importantly, you confirm that your founds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These founds cannot be accessed by Gnosis at any point.
+          </Link>
+          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
         </Paragraph>
       </Block>
-    </Block>
+    </BlockWithPadding>
   )
 }
 
 export default NameNewSafeStep
 
-const useStyles = makeStyles((theme) => ({
-  padding: {
-    padding: lg,
-  },
-  fieldContainer: {
-    display: 'flex',
-    maxWidth: '460px',
-    marginTop: '12px',
-  },
-  links: {
-    '&>a': {
-      color: theme.palette.secondary.main,
-    },
-  },
-}))
+const BlockWithPadding = styled(Block)`
+  padding: ${lg};
+`
+
+const FieldContainer = styled(Block)`
+  display: flex;
+  max-width: 460px;
+  margin-top: 12px;
+`
+
+const Link = styled.a`
+  color: ${secondary};
+`
