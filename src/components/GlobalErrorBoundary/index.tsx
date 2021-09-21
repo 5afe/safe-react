@@ -74,7 +74,7 @@ export const handleChunkError = (error: Error): boolean => {
 
 const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) => {
   if (handleChunkError(error)) {
-    return null
+    return <></>
   }
 
   return (
