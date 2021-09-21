@@ -9,10 +9,10 @@ jobs:
     steps:
       - name: Check if result was already commented
         uses: peter-evans/find-comment@v1
-          id: checkComment
-          with:
-            issue-number: ${{ github.event.client_payload.pr_number }}
-            body-includes: E2E Tests
+        id: checkComment
+        with:
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          body-includes: E2E Tests
       - name: Set success comment
         if: ${{ github.event.client_payload.status == 'success' }}
         uses: peter-evans/create-or-update-comment@v1
