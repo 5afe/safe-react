@@ -12,7 +12,7 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.arbitrum.gnosis.io/api/v1',
   safeUrl: 'https://arbitrum.gnosis-safe.io/app',
-  gasPrice: 0.5e9,
+  gasPrice: 2e9,
   rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   safeAppsRpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   networkExplorerName: 'Arbitrum explorer',
