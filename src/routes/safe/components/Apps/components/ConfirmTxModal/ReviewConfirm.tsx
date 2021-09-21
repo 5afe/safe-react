@@ -58,7 +58,6 @@ const StyledBlock = styled(Block)`
 `
 
 type Props = ConfirmTxModalProps & {
-  areTxsMalformed: boolean
   showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
   hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
@@ -78,7 +77,6 @@ export const ReviewConfirm = ({
   onUserConfirm,
   onClose,
   onTxReject,
-  areTxsMalformed,
   requestId,
   showDecodedTxData,
 }: Props): ReactElement => {
@@ -98,8 +96,7 @@ export const ReviewConfirm = ({
     [txs, isMultiSend],
   )
   const txValue: string | undefined = useMemo(
-    // Value is converted to string because numbers were allowed in the safe-apps-sdk v1, so 0 and anything would evaluate as false
-    () => (isMultiSend ? '0' : txs[0]?.value.toString() && parseTxValue(txs[0]?.value)),
+    () => (isMultiSend ? '0' : parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
   )
   const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
@@ -258,7 +255,7 @@ export const ReviewConfirm = ({
               cancelButtonProps={{ onClick: handleTxRejection }}
               confirmButtonProps={{
                 onClick: () => confirmTransactions(txParameters),
-                disabled: !isOwner || areTxsMalformed,
+                disabled: !isOwner,
                 status: buttonStatus,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
               }}
