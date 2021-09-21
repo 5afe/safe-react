@@ -4,15 +4,16 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { SafeRecordProps } from '../store/models/safe'
 import { getLocalNetworkSafesById } from '../utils'
 
+type EmptyLocalSafes = Record<ETHEREUM_NETWORK, never[]>
 type LocalSafes = Record<ETHEREUM_NETWORK, SafeRecordProps[] | never[]>
 
+const getEmptyLocalSafes = (): EmptyLocalSafes => {
+  const networkIds = Object.values(ETHEREUM_NETWORK)
+  return networkIds.reduce((safes, networkId) => ({ ...safes, [networkId]: [] }), {} as EmptyLocalSafes)
+}
+
 const useLocalSafes = (): LocalSafes => {
-  const [localSafes, setLocalSafes] = useState<LocalSafes>(
-    Object.values(ETHEREUM_NETWORK).reduce(
-      (safes, networkId) => ({ ...safes, [networkId]: [] }),
-      {} as Record<ETHEREUM_NETWORK, never[]>,
-    ),
-  )
+  const [localSafes, setLocalSafes] = useState<LocalSafes>(() => getEmptyLocalSafes())
 
   useEffect(() => {
     const getLocalSafes = () => {

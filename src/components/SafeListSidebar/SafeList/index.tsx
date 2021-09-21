@@ -67,6 +67,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
           const addedSafesOnNetwork = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
           const shouldExpandOwnedSafes = localSafesOnNetwork.some(({ address }) => isSafeAdded(loadedSafes, address))
 
+          if (!localSafesOnNetwork.length && !addedSafesOnNetwork.length) return null
           return (
             <Fragment key={id}>
               <ListItem selected>
@@ -83,7 +84,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     {...safe}
                   />
                 ))}
-                {isCurrentNetwork && ownedSafes.length > 0 && (
+                {ownedSafes.length > 0 && (
                   <ListItem classes={{ root: classes.listItemCollapse }}>
                     <Collapse
                       title={`Safes owned on ${label} (${localSafesOnNetwork.length})`}
