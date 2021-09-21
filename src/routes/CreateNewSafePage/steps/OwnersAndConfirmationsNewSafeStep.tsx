@@ -89,8 +89,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
         </Paragraph>
         <Paragraph color="primary" size="lg" className={classes.descriptionContainer}>
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
-          transaction before it gets executed. In general, the more confirmations required, the more secure is your
-          Safe.
+          transaction before it gets executed. In general, the more confirmations required, the more secure your Safe
+          is.
           <Link
             href="https://help.gnosis-safe.io/en/articles/4772567-what-gnosis-safe- setup-should-i-use"
             target="_blank"
@@ -146,8 +146,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                         createSafeForm.change(nameFieldName, addressName)
                       }
                     }}
-                    // eslint-disable-next-line
-                    // @ts-ignore
                     inputAdornment={
                       !hasOwnerAddressError && {
                         endAdornment: (
@@ -161,7 +159,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                       }
                     }
                     name={addressFieldName}
-                    required
                     placeholder="Owner Address*"
                     text="Owner Address"
                     testId={addressFieldName}
@@ -203,7 +200,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 name={FIELD_NEW_SAFE_THRESHOLD}
                 validate={composeValidators(required, minValue(1))}
               >
-                {Array.from(Array(owners.length).keys()).map((option) => (
+                {owners.map((_, option) => (
                   <MenuItem
                     key={`threshold-selector-option-${option}`}
                     value={option + 1}

@@ -142,8 +142,6 @@ function LoadSafeAddressStep(): ReactElement {
             fieldMutator={(val) => {
               loadSafeForm.change(FIELD_LOAD_SAFE_ADDRESS, val)
             }}
-            // eslint-disable-next-line
-            // @ts-ignore
             inputAdornment={
               isValidSafeAddress &&
               !safeAddressError && {
@@ -177,8 +175,8 @@ function LoadSafeAddressStep(): ReactElement {
           <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
-          . Most importantly, you confirm that your founds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These founds cannot be accessed by Gnosis at any point.
+          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
+          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
         </Paragraph>
       </Block>
     </Block>
