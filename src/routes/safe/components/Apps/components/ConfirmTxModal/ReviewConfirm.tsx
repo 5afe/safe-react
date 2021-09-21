@@ -163,7 +163,7 @@ export const ReviewConfirm = ({
           origin: app.id,
           navigateToTransactionsTab: false,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
@@ -176,8 +176,8 @@ export const ReviewConfirm = ({
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 

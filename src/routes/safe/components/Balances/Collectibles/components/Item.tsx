@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 // import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
-import * as React from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import Button from 'src/components/layout/Button'
@@ -98,7 +98,7 @@ const useStyles = makeStyles({
   },
 } as any)
 
-const Item = ({ data, onSend }) => {
+const Item = ({ data, onSend }): ReactElement => {
   const granted = useSelector(grantedSelector)
   const classes = useStyles({ backgroundColor: data.color, granted })
 
