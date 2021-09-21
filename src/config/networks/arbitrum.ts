@@ -9,7 +9,7 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.arbitrum.gnosis.io/v1',
+  clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.arbitrum.gnosis.io/api/v1',
   safeUrl: 'https://arbitrum.gnosis-safe.io/app',
   gasPrice: 0.5e9,
