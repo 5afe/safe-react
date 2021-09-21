@@ -1,5 +1,5 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
-import React, { useState } from 'react'
+import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
 
@@ -17,11 +17,11 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
-const Apps = React.lazy(() => import('src/routes/safe/components/Apps'))
-const Settings = React.lazy(() => import('src/routes/safe/components/Settings'))
-const Balances = React.lazy(() => import('src/routes/safe/components/Balances'))
-const TxList = React.lazy(() => import('src/routes/safe/components/Transactions/TxList'))
-const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
+const Apps = lazy(() => import('src/routes/safe/components/Apps'))
+const Settings = lazy(() => import('src/routes/safe/components/Settings'))
+const Balances = lazy(() => import('src/routes/safe/components/Balances'))
+const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList'))
+const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)

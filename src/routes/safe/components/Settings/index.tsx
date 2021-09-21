@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Route, Switch, useRouteMatch } from 'react-router-dom'
 
@@ -15,12 +15,12 @@ import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-const Advanced = React.lazy(() => import('./Advanced'))
-const SpendingLimitSettings = React.lazy(() => import('./SpendingLimit'))
-const ManageOwners = React.lazy(() => import('./ManageOwners'))
-const RemoveSafeModal = React.lazy(() => import('./RemoveSafeModal'))
-const SafeDetails = React.lazy(() => import('./SafeDetails'))
-const ThresholdSettings = React.lazy(() => import('./ThresholdSettings'))
+const Advanced = lazy(() => import('./Advanced'))
+const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
+const ManageOwners = lazy(() => import('./ManageOwners'))
+const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
+const SafeDetails = lazy(() => import('./SafeDetails'))
+const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 

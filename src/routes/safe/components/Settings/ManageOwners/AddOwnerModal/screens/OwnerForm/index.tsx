@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { Mutator } from 'final-form'
-import React from 'react'
+
 import { useSelector } from 'react-redux'
 import { OnChange } from 'react-final-form-listeners'
 

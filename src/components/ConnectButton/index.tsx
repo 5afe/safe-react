@@ -1,5 +1,5 @@
 import Onboard from 'bnc-onboard'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Button from 'src/components/layout/Button'
 import { getNetworkId, getNetworkName } from 'src/config'

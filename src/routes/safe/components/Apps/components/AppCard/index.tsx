@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'

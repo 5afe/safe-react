@@ -42,7 +42,7 @@ export type DecodedTxDetail = DecodedDataParameterValue | DecodedData | undefine
 
 export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
   const [decodedTxDetails, setDecodedTxDetails] = useState<DecodedTxDetail>()
-  const areTxsMalformed = props.txs.some((t) => !isTxValid(t))
+  const invalidTransactions = !props.txs.length || props.txs.some((t) => !isTxValid(t))
 
   const showDecodedTxData = setDecodedTxDetails
   const hideDecodedTxData = () => setDecodedTxDetails(undefined)
@@ -52,9 +52,16 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
     props.onClose()
   }
 
+  if (invalidTransactions) {
+    return (
+      <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
+        <SafeAppLoadError {...props} />
+      </Modal>
+    )
+  }
+
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
-      {areTxsMalformed && <SafeAppLoadError {...props} />}
       {decodedTxDetails && (
         <DecodedTxDetail
           onClose={closeDecodedTxDetail}
@@ -63,12 +70,7 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
         />
       )}
 
-      <ReviewConfirm
-        {...props}
-        areTxsMalformed={areTxsMalformed}
-        showDecodedTxData={showDecodedTxData}
-        hidden={areTxsMalformed || !!decodedTxDetails}
-      />
+      <ReviewConfirm {...props} showDecodedTxData={showDecodedTxData} hidden={!!decodedTxDetails} />
     </Modal>
   )
 }

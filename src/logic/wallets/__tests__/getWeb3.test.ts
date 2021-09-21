@@ -20,8 +20,8 @@ describe('src/logic/wallets/getWeb3', () => {
     it('checks if an address is a contract', async () => {
       const web3Provider = {
         eth: {
-          getCode: jest.fn(() => Promise.resolve('Solidity code'))
-        }
+          getCode: jest.fn(() => Promise.resolve('Solidity code')),
+        },
       } as unknown as Web3
       const result = await isSmartContractWallet(web3Provider, address)
       expect(web3Provider.eth.getCode).toHaveBeenCalledWith(address)
@@ -31,8 +31,8 @@ describe('src/logic/wallets/getWeb3', () => {
     it('returns false for EoA addresses', async () => {
       const web3Provider = {
         eth: {
-          getCode: jest.fn(() => Promise.resolve('0x00000000000000000000'))
-        }
+          getCode: jest.fn(() => Promise.resolve('0x00000000000000000000')),
+        },
       } as unknown as Web3
       const result = await isSmartContractWallet(web3Provider, address)
       expect(web3Provider.eth.getCode).toHaveBeenCalledWith(address)
@@ -42,8 +42,8 @@ describe('src/logic/wallets/getWeb3', () => {
     it('returns false for empty addresses', async () => {
       const web3Provider = {
         eth: {
-          getCode: jest.fn(() => Promise.resolve('Solidity code'))
-        }
+          getCode: jest.fn(() => Promise.resolve('Solidity code')),
+        },
       } as unknown as Web3
       const emptyAddress = ''
       const result = await isSmartContractWallet(web3Provider, emptyAddress)
@@ -54,8 +54,8 @@ describe('src/logic/wallets/getWeb3', () => {
     it('returns false if contract code cannot be fetched', async () => {
       const web3Provider = {
         eth: {
-          getCode: jest.fn(() => Promise.reject('No code'))
-        }
+          getCode: jest.fn(() => Promise.reject('No code')),
+        },
       } as unknown as Web3
       const result = await isSmartContractWallet(web3Provider, address)
       expect(web3Provider.eth.getCode).toHaveBeenCalledWith(address)

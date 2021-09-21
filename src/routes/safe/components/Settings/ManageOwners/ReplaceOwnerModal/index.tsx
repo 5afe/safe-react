@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
@@ -44,7 +44,7 @@ export const sendReplaceOwner = async (
       valueInWei: '0',
       txData,
       txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
+      safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),

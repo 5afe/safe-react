@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const BalancesIcon = () => (
   <svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
     <g fill="none" fillRule="evenodd">

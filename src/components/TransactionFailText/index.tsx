@@ -5,7 +5,7 @@ import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
 import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info_red.svg'
-import React from 'react'
+
 import { useSelector } from 'react-redux'
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'

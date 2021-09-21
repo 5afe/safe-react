@@ -12,13 +12,7 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.bsc.gnosis.io/api/v1',
   safeUrl: 'https://bsc.gnosis-safe.io/app',
-  gasPriceOracles: [
-    {
-      url: 'https://bscgas.info/gas',
-      gasParameter: 'standard',
-      gweiFactor: '1e9',
-    },
-  ],
+  gasPrice: 5e9,
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   safeAppsRpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',

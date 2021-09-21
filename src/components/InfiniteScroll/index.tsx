@@ -1,4 +1,4 @@
-import React, { createContext, forwardRef, MutableRefObject, ReactElement, ReactNode, useEffect, useState } from 'react'
+import { createContext, forwardRef, MutableRefObject, ReactElement, ReactNode, useEffect, useState } from 'react'
 import { InViewHookResponse, useInView } from 'react-intersection-observer'
 
 export const INFINITE_SCROLL_CONTAINER = 'infinite-scroll-container'

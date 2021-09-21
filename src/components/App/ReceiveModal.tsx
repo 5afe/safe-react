@@ -3,7 +3,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'

@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -106,7 +106,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           valueInWei: txInfo?.txAmount,
           txData: txInfo?.txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? txParameters.safeTxGas : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -118,8 +118,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 
@@ -142,7 +142,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
@@ -197,7 +197,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               const value: string = getValueFromTxInputs(key, type, tx)
 
               return (
-                <React.Fragment key={key}>
+                <Fragment key={key}>
                   <Row margin="xs">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       {name} ({type})
@@ -208,7 +208,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                       {value}
                     </Paragraph>
                   </Row>
-                </React.Fragment>
+                </Fragment>
               )
             })}
             <Row margin="xs">

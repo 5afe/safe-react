@@ -1,5 +1,5 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
@@ -15,8 +15,8 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
 
-const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
-const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
+const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
+const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
