@@ -3,6 +3,10 @@ import { Icon, Text, Title, ModalFooterConfirmation } from '@gnosis.pm/safe-reac
 import styled from 'styled-components'
 import { ConfirmTxModalProps } from '.'
 
+const Container = styled.div`
+  padding: ${({ theme }) => `${theme.margin.sm} ${theme.margin.lg}`};
+`
+
 const IconText = styled.div`
   display: flex;
   align-items: center;
@@ -23,7 +27,7 @@ export const SafeAppLoadError = ({ onTxReject, onClose, requestId }: ConfirmTxMo
   }
 
   return (
-    <>
+    <Container>
       <IconText>
         <Icon color="error" size="md" type="info" />
         <Title size="xs">Transaction error</Title>
@@ -42,6 +46,6 @@ export const SafeAppLoadError = ({ onTxReject, onClose, requestId }: ConfirmTxMo
           okText="Submit"
         />
       </FooterWrapper>
-    </>
+    </Container>
   )
 }

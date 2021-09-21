@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import StepperMUI from '@material-ui/core/Stepper'
 import StepMUI from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
