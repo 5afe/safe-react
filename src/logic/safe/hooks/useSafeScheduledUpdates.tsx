@@ -13,7 +13,7 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
     // has to run again
     let mounted = true
     const fetchSafeData = async (address: string): Promise<void> => {
-      dispatch(fetchSafe(address))
+      dispatch(fetchSafe(address, safeLoaded))
       dispatch(fetchSafeTokens(address))
 
       if (mounted) {

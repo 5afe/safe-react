@@ -53,10 +53,10 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  * @note It's being used by the app when it loads for the first time and for the Safe's data polling
  *
  * @param {string} safeAddress
+ * @param {boolean} isSafeLoaded
  */
-let isFirstSafeFetch = true
 export const fetchSafe =
-  (safeAddress: string) =>
+  (safeAddress: string, isSafeLoaded: boolean) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
@@ -93,17 +93,16 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      if (shouldUpdateCollectibles || isFirstSafeFetch) {
+      if (shouldUpdateCollectibles || !isSafeLoaded) {
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxQueued || isFirstSafeFetch) {
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued || !isSafeLoaded) {
         dispatch(fetchTransactions(safeAddress))
       }
     }
 
     const owners = buildSafeOwners(remoteSafeInfo?.owners)
 
-    isFirstSafeFetch = false
     return dispatch(updateSafe({ address, ...safeInfo, owners }))
   }
