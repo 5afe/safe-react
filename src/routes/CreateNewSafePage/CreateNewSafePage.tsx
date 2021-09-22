@@ -15,7 +15,7 @@ import { history } from 'src/store'
 import { sm, secondary } from 'src/theme/variables'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
-import { APP_ENV } from 'src/utils/constants'
+import { IS_PRODUCTION_ENV } from 'src/utils/constants'
 import {
   CreateSafeFormValues,
   FIELD_CREATE_CUSTOM_SAFE_NAME,
@@ -72,8 +72,6 @@ function CreateNewSafePage(): ReactElement {
     }
   }, [provider, userWalletAddress, addressBook, location, safeRandomName])
 
-  const isProductionEnv = APP_ENV === 'production'
-
   if (isLoading) {
     return (
       <LoaderContainer data-testid={'create-new-safe-loader'}>
@@ -98,7 +96,7 @@ function CreateNewSafePage(): ReactElement {
           onSubmit={showSafeCreationProcess}
           testId={'create-new-safe-form'}
         >
-          {!isProductionEnv && (
+          {!IS_PRODUCTION_ENV && (
             <StepFormElement
               label={selectWalletAndNetworkStepLabel}
               nextButtonLabel="Continue"
