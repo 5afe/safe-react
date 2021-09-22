@@ -18,7 +18,7 @@ const MigrationScreen = (): ReactElement => {
         payload: JSON.stringify(payload),
       }
       console.log('This is the parent', window.parent)
-      console.log('This is the origin', window.origin)
+      console.log('This is the window origin', window.origin)
       window.parent.postMessage(message, '*')
       // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
     }
