@@ -27,7 +27,7 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
       }
     }
     fetchData()
-  }, [dispatch, safeAddress, isSafeLoaded])
+  }, [dispatch, safeAddress])
 
   return isSafeLoaded
 }
