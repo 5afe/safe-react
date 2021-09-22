@@ -1,7 +1,7 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { generatePath, useLocation } from 'react-router-dom'
 import { TransactionReceipt } from 'web3-core'

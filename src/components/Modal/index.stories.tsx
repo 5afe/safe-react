@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import TextField from 'src/components/forms/TextField'
 import GnoField from 'src/components/forms/Field'

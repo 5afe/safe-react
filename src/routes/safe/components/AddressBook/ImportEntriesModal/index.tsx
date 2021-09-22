@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'

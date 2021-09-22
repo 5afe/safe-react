@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import { ClickAwayListener, createStyles, Divider } from '@material-ui/core'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { push } from 'connected-react-router'
-import React from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { generatePath } from 'react-router-dom'
 
@@ -47,7 +48,7 @@ export const EllipsisTransactionDetails = ({
   sendModalOpenHandler,
 }: EllipsisTransactionDetailsProps): React.ReactElement => {
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [anchorEl, setAnchorEl] = useState(null)
 
   const dispatch = useDispatch()
   const currentSafeAddress = useSelector(safeAddressFromUrl)

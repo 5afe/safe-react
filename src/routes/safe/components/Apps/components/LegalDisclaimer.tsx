@@ -1,4 +1,3 @@
-import React from 'react'
 import { FixedDialog, Text } from '@gnosis.pm/safe-react-components'
 
 interface OwnProps {

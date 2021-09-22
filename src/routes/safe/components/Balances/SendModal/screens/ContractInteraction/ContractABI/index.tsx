@@ -1,5 +1,5 @@
-import React from 'react'
 import { useField, useForm } from 'react-final-form'
+import { useRef, useEffect } from 'react'
 
 import { TextAreaField } from 'src/components/forms/TextAreaField'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
@@ -27,9 +27,9 @@ const ContractABI = (): React.ReactElement => {
     input: { value: contractAddress },
   } = useField('contractAddress', { subscription: { value: true } })
   const { mutators } = useForm()
-  const setAbiValue = React.useRef(mutators.setAbiValue)
+  const setAbiValue = useRef(mutators.setAbiValue)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const validateAndSetAbi = async () => {
       const isEthereumAddress = mustBeEthereumAddress(contractAddress) === undefined
       const isEthereumContractAddress = (await mustBeEthereumContractAddress(contractAddress)) === undefined

@@ -10,7 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React, { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'
@@ -87,8 +87,8 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const baseGas = useMemo(
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.baseGas
-        : 0,
+        ? t.current.txDetails.detailedExecutionInfo.baseGas.toString()
+        : '0',
     [],
   )
 
@@ -103,8 +103,8 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const safeTxGas = useMemo(
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.safeTxGas
-        : 0,
+        ? t.current.txDetails.detailedExecutionInfo.safeTxGas.toString()
+        : '0',
     [],
   )
 
@@ -309,15 +309,15 @@ export const ApproveTxModal = ({
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(newGasPrice.toString())
+      setManualGasPrice(txParameters.ethGasPrice)
     }
 
     if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit.toString())
+      setManualGasLimit(txParameters.ethGasLimit)
     }
   }
 
@@ -330,7 +330,7 @@ export const ApproveTxModal = ({
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeNonce={nonce.toString()}
-        safeTxGas={safeTxGas.toString()}
+        safeTxGas={safeTxGas}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => {

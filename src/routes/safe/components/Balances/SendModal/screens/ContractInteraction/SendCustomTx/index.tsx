@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -54,8 +54,6 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const { nativeCoin } = getNetworkInfo()
-
 const SendCustomTx = ({
   initialValues,
   onClose,
@@ -65,6 +63,7 @@ const SendCustomTx = ({
   isABI,
 }: Props): ReactElement => {
   const classes = useStyles()
+  const { nativeCoin } = getNetworkInfo()
   const ethBalance = useSelector(currentSafeEthBalance)
   const addressBook = useSelector(addressBookState)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)

@@ -1,5 +1,5 @@
 import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -10,6 +10,7 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { TransactionGuard } from './TransactionGuard'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -25,9 +26,16 @@ const NoModuleLegend = (): ReactElement => (
   </InfoText>
 )
 
+const NoTransactionGuardLegend = (): ReactElement => (
+  <InfoText color="secondaryLight" size="xl">
+    No transaction guard set
+  </InfoText>
+)
+
 const Advanced = (): ReactElement => {
   const classes = useStyles()
-  const { nonce, modules } = useSelector(currentSafe) ?? {}
+  const { nonce, modules, guard } = useSelector(currentSafe) ?? {}
+
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const { trackEvent } = useAnalytics()
 
@@ -70,6 +78,28 @@ const Advanced = (): ReactElement => {
         </InfoText>
 
         {!moduleData || !moduleData.length ? <NoModuleLegend /> : <ModulesTable moduleData={moduleData} />}
+      </Block>
+
+      {/* Transaction guard */}
+      <Block className={classes.container}>
+        <Title size="xs" withoutMargin>
+          Transaction guard
+        </Title>
+        <InfoText size="lg">
+          Transaction guards impose additional constraints that are checked prior to executing a Safe transaction.
+          Transaction guards are potentially risky, so make sure to only use modules from trusted sources. Learn more
+          about transaction guards{' '}
+          <a
+            href="https://help.gnosis-safe.io/en/articles/5324092-what-is-a-transaction-guard"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            here
+          </a>
+          .
+        </InfoText>
+
+        {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
       </Block>
     </>
   )

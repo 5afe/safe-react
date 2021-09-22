@@ -1,5 +1,5 @@
 import { Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { TxInfoDetails } from './TxInfoDetails'

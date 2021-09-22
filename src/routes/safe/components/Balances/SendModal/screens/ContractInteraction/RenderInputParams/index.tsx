@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 
 import Row from 'src/components/layout/Row'

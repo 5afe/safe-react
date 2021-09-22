@@ -3,7 +3,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import { List } from 'immutable'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'

@@ -1,6 +1,6 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+
 import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 
@@ -22,10 +22,9 @@ interface NativeCoinValueProps {
   onSetMax: (nativeCoinBalance: string) => void
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
+  const { nativeCoin } = getNetworkInfo()
   const ethBalance = useSelector(currentSafeEthBalance)
 
   const {

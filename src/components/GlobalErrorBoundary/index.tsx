@@ -1,8 +1,7 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
-
 import { IS_PRODUCTION } from 'src/utils/constants'
+import { FallbackRender } from '@sentry/react/dist/errorboundary'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -43,13 +42,41 @@ const LinkContent = styled.div`
   }
 `
 
-type Props = {
-  error: Error
-  componentStack: string | null
-  resetError: () => void
+//  When loading app during release, chunk load failure may occur
+export const handleChunkError = (error: Error): boolean => {
+  const LAST_CHUNK_FAILURE_RELOAD_KEY = 'SAFE__lastChunkFailureReload'
+  const MIN_RELOAD_TIME = 10_000
+
+  const chunkFailedMessage = /Loading chunk [\d]+ failed/
+  const isChunkError = error?.message && chunkFailedMessage.test(error.message)
+
+  if (!isChunkError) return false
+
+  const lastReloadString = sessionStorage.getItem(LAST_CHUNK_FAILURE_RELOAD_KEY)
+  const lastReload = lastReloadString ? +lastReloadString : 0
+
+  // Not a number in the sessionStorage
+  if (isNaN(lastReload)) {
+    sessionStorage.removeItem(LAST_CHUNK_FAILURE_RELOAD_KEY)
+    return false
+  }
+
+  const now = new Date().getTime()
+
+  const hasJustReloaded = lastReload + MIN_RELOAD_TIME > now
+
+  if (hasJustReloaded) return false
+
+  sessionStorage.setItem(LAST_CHUNK_FAILURE_RELOAD_KEY, now.toString())
+  window.location.reload()
+  return true
 }
 
-const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.ReactElement => {
+const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) => {
+  if (handleChunkError(error)) {
+    return <></>
+  }
+
   return (
     <Wrapper>
       <Content>

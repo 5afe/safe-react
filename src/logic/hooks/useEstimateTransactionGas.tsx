@@ -75,7 +75,7 @@ type UseEstimateTransactionGasProps = {
   txAmount?: string
   preApprovingOwner?: string
   operation?: number
-  safeTxGas?: number
+  safeTxGas?: string
   txType?: string
   manualGasPrice?: string
   manualGasLimit?: string
@@ -83,7 +83,7 @@ type UseEstimateTransactionGasProps = {
 
 export type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
-  gasEstimation: number // Amount of gas needed for execute or approve the transaction
+  gasEstimation: string // Amount of gas needed for execute or approve the transaction
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
@@ -104,7 +104,7 @@ const getDefaultGasEstimation = (
 ): TransactionGasEstimationResult => {
   return {
     txEstimationExecutionStatus,
-    gasEstimation: 0,
+    gasEstimation: '0',
     gasCost: '0',
     gasCostFormatted: '< 0.001',
     gasPrice,
@@ -157,7 +157,7 @@ export const useEstimateTransactionGas = ({
       )
 
       try {
-        let safeTxGasEstimation = safeTxGas || 0
+        let safeTxGasEstimation = safeTxGas || '0'
         let ethGasLimitEstimation = 0
         let transactionCallSuccess = true
         let txEstimationExecutionStatus = EstimationStatus.LOADING

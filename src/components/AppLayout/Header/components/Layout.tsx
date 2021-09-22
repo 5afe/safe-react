@@ -3,7 +3,6 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
@@ -18,7 +17,6 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworks } from 'src/config'
-import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 const styles = () => ({
   root: {
@@ -64,12 +62,37 @@ const styles = () => ({
   },
 })
 
-const Layout = ({ classes, providerDetails, providerInfo }) => {
+const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
+  return (
+    <Popper
+      anchorEl={anchorEl}
+      className={classes.popper}
+      open={open}
+      placement="bottom"
+      popperOptions={{ positionFixed: true }}
+    >
+      {({ TransitionProps }) => (
+        <Grow {...TransitionProps}>
+          <>
+            <ClickAwayListener mouseEvent="onClick" onClickAway={onClose} touchEvent={false}>
+              <List className={classes.root} component="div">
+                {providerDetails}
+              </List>
+            </ClickAwayListener>
+          </>
+        </Grow>
+      )}
+    </Popper>
+  )
+}
+
+const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const networks = getNetworks()
-
   const { isDesktop } = window
+  const isOpen = open || shouldSwitchChain
+
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
@@ -80,29 +103,17 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Spacer />
       <Provider
         info={providerInfo}
-        open={open}
+        open={isOpen}
         toggle={toggle}
         render={(providerRef) =>
           providerRef.current && (
-            <Popper
+            <WalletPopup
               anchorEl={providerRef.current}
-              className={classes.popper}
-              open={open || shouldSwitchNetwork()}
-              placement="bottom"
-              popperOptions={{ positionFixed: true }}
-            >
-              {({ TransitionProps }) => (
-                <Grow {...TransitionProps}>
-                  <>
-                    <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                      <List className={classes.root} component="div">
-                        {providerDetails}
-                      </List>
-                    </ClickAwayListener>
-                  </>
-                </Grow>
-              )}
-            </Popper>
+              providerDetails={providerDetails}
+              open={isOpen}
+              classes={classes}
+              onClose={clickAway}
+            />
           )
         }
       />

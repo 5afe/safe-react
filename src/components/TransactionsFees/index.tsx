@@ -1,4 +1,3 @@
-import React from 'react'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
@@ -12,7 +11,6 @@ type TransactionFailTextProps = {
   isCreation: boolean
   isOffChainSignature: boolean
 }
-const { nativeCoin } = getNetworkInfo()
 
 export const TransactionFees = ({
   gasCostFormatted,
@@ -21,6 +19,7 @@ export const TransactionFees = ({
   isOffChainSignature,
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
+  const { nativeCoin } = getNetworkInfo()
   let transactionAction
   if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
     return null

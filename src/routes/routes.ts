@@ -4,6 +4,7 @@ export const OPEN_ADDRESS = '/open'
 export const LOAD_ADDRESS = '/load'
 export const WELCOME_ADDRESS = '/welcome'
 export const MIGRATION_ADDRESS = '/migration'
+export const ROOT_ADDRESS = '/'
 
 export enum SAFE_ROUTES {
   ASSETS_BASE_ROUTE = '/safes/:safeAddress/balances',

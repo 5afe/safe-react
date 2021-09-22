@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Sidebar from './index'
 import { ListItemType } from 'src/components/List'
 import { Icon } from '@gnosis.pm/safe-react-components'

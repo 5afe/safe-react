@@ -2,7 +2,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import Divider from 'src/components/Divider'
@@ -95,7 +95,7 @@ const SendCollectible = ({
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
 
-  React.useMemo(() => {
+  useMemo(() => {
     if (selectedEntry === null && pristine) {
       setPristine(false)
     }
