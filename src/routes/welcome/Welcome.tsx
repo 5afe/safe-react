@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { Button, Card, Title, Text } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/styles'
+import styled from 'styled-components'
 
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
@@ -8,7 +8,6 @@ import Link from 'src/components/layout/Link'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 
 function Welcome(): ReactElement {
-  const classes = useStyles()
   return (
     <Page align="center">
       <Block>
@@ -18,43 +17,35 @@ function Welcome(): ReactElement {
         <Title size="xs">
           Gnosis Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
         </Title>
-        <div className={classes.cardsContainer}>
+        <CardsContainer>
           {/* Create Safe Card */}
-          <Card className={classes.card}>
+          <StyledCard>
             <Title size="sm" strong withoutMargin>
               Create Safe
             </Title>
-            <div className={classes.cardDescription}>
+            <CardDescriptionContainer>
               <Text size="xl">Create a new Safe Multisig that is controlled by one or multiple owners.</Text>
               <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
-            </div>
-            <Button
-              className={classes.cardButton}
-              size="lg"
-              color="primary"
-              variant="contained"
-              component={Link}
-              to={OPEN_ADDRESS}
-            >
+            </CardDescriptionContainer>
+            <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
               <Text size="xl" color="white">
                 + Create new Safe
               </Text>
             </Button>
-          </Card>
-          <div className={classes.separator}>or</div>
+          </StyledCard>
+          <Separator>or</Separator>
           {/* Load Safe Card */}
-          <Card className={classes.card}>
+          <StyledCard>
             <Title size="sm" strong withoutMargin>
               Load Existing Safe
             </Title>
-            <div className={classes.cardDescription}>
+            <CardDescriptionContainer>
               <Text size="xl">
                 Already have a Safe or want to access it from a different device? Easily load your Safe MultiSig using
                 your Safe address.
               </Text>
-            </div>
+            </CardDescriptionContainer>
             <Button
-              className={classes.cardButton}
               variant="bordered"
               iconType="safe"
               iconSize="sm"
@@ -67,8 +58,8 @@ function Welcome(): ReactElement {
                 Add existing Safe
               </Text>
             </Button>
-          </Card>
-        </div>
+          </StyledCard>
+        </CardsContainer>
       </Block>
     </Page>
   )
@@ -76,30 +67,28 @@ function Welcome(): ReactElement {
 
 export default Welcome
 
-const useStyles = makeStyles({
-  cardsContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '24px',
-    height: '300px',
-    maxWidth: '1200px',
-  },
-  card: {
-    maxWidth: '350px',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '24px',
-    alignItems: 'flex-start',
-  },
-  cardDescription: {
-    marginTop: '16px',
-  },
-  cardButton: {
-    marginTop: 'auto',
-  },
-  separator: {
-    alignSelf: 'center',
-    padding: '0 16px',
-    fontSize: '32px',
-  },
-})
+const CardsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  height: 300px;
+  max-width: 1200px;
+`
+
+const StyledCard = styled(Card)`
+  display: flex;
+  flex: 0 1 33%;
+  flex-direction: column;
+  padding: 24px;
+  align-items: flex-start;
+`
+
+const CardDescriptionContainer = styled.div`
+  margin-top: 16px;
+  margin-bottom: auto;
+`
+
+const Separator = styled.div`
+  align-self: center;
+  padding: 0 16px;
+  font-size: 32px;
+`
