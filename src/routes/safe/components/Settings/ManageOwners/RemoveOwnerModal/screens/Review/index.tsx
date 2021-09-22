@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -23,6 +21,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -50,7 +49,7 @@ export const ReviewRemoveOwnerModal = ({
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
   const numOptions = owners ? owners.length - 1 : 0
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -106,10 +105,10 @@ export const ReviewRemoveOwnerModal = ({
   }, [safeAddress, safeVersion, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -130,20 +129,12 @@ export const ReviewRemoveOwnerModal = ({
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.manage} noMargin weight="bolder">
-              Remove owner
-            </Paragraph>
-            <Paragraph className={classes.annotation}>3 of 3</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} title="Remove owner" subTitle="3 of 3" />
           <Hairline />
           <Block>
             <Row className={classes.root}>
@@ -184,7 +175,7 @@ export const ReviewRemoveOwnerModal = ({
                 {owners?.map(
                   (safeOwner) =>
                     !sameAddress(safeOwner.address, owner.address) && (
-                      <React.Fragment key={safeOwner.address}>
+                      <Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
@@ -197,7 +188,7 @@ export const ReviewRemoveOwnerModal = ({
                           </Col>
                         </Row>
                         <Hairline />
-                      </React.Fragment>
+                      </Fragment>
                     ),
                 )}
                 <Row align="center" className={classes.info}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Layout from './components/Layout'
@@ -6,6 +6,7 @@ import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import { UserDetails } from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import {
   availableSelector,
   loadedSelector,
@@ -17,10 +18,10 @@ import { removeProvider } from 'src/logic/wallets/store/actions'
 import { canSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import onboard from 'src/logic/wallets/onboard'
 import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
-import { getNetworkId } from 'src/config'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
+  const chainId = useSelector(currentChainId)
   const userAddress = useSelector(userAccountSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
@@ -37,7 +38,7 @@ const HeaderComponent = (): React.ReactElement => {
     }
 
     tryToConnectToLastUsedProvider()
-  }, [])
+  }, [chainId])
 
   const openDashboard = () => {
     const { wallet } = onboard().getState()
@@ -51,7 +52,7 @@ const HeaderComponent = (): React.ReactElement => {
   const onNetworkChange = async () => {
     const { wallet } = onboard().getState()
     try {
-      await switchNetwork(wallet, getNetworkId())
+      await switchNetwork(wallet, chainId)
     } catch (e) {
       e.log()
       // Fallback to the onboard popup if switching isn't supported

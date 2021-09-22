@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { ReactElement } from 'react'
 import { Form } from 'react-final-form'
 
 const stylesBasedOn = (padding) => ({
@@ -17,7 +17,7 @@ const GnoForm = ({
   subscription,
   testId = '',
   validation,
-}: any) => (
+}: any): ReactElement => (
   <Form
     decorators={decorators}
     initialValues={initialValues}

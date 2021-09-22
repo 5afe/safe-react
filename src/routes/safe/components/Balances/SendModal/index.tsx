@@ -1,6 +1,6 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, lazy } from 'react'
 
 import Modal from 'src/components/Modal'
 import { CollectibleTx } from './screens/ReviewCollectible'
@@ -12,23 +12,23 @@ import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 
-const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
+const ChooseTxType = lazy(() => import('./screens/ChooseTxType'))
 
-const SendFunds = React.lazy(() => import('./screens/SendFunds'))
+const SendFunds = lazy(() => import('./screens/SendFunds'))
 
-const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
+const SendCollectible = lazy(() => import('./screens/SendCollectible'))
 
-const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
+const ReviewCollectible = lazy(() => import('./screens/ReviewCollectible'))
 
-const ReviewSendFundsTx = React.lazy(() => import('./screens/ReviewSendFundsTx'))
+const ReviewSendFundsTx = lazy(() => import('./screens/ReviewSendFundsTx'))
 
-const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
+const ContractInteraction = lazy(() => import('./screens/ContractInteraction'))
 
-const ContractInteractionReview: any = React.lazy(() => import('./screens/ContractInteraction/Review'))
+const ContractInteractionReview: any = lazy(() => import('./screens/ContractInteraction/Review'))
 
-const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
+const SendCustomTx = lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
 
-const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
+const ReviewCustomTx = lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
 const useStyles = makeStyles({
   loaderStyle: {

@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -15,7 +15,6 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { Header } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -32,6 +31,7 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 const useStyles = makeStyles(styles)
 
@@ -57,7 +57,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const dispatch = useDispatch()
   const { nativeCoin } = getNetworkInfo()
   const safeAddress = useSelector(safeAddressFromUrl)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
@@ -105,7 +105,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           valueInWei: txInfo?.txAmount,
           txData: txInfo?.txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -117,10 +117,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -141,12 +141,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Header onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
           <Hairline />
           <Block className={classes.formContainer}>
             <Row margin="xs">
@@ -196,7 +196,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               const value: string = getValueFromTxInputs(key, type, tx)
 
               return (
-                <React.Fragment key={key}>
+                <Fragment key={key}>
                   <Row margin="xs">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       {name} ({type})
@@ -207,7 +207,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                       {value}
                     </Paragraph>
                   </Row>
-                </React.Fragment>
+                </Fragment>
               )
             })}
             <Row margin="xs">

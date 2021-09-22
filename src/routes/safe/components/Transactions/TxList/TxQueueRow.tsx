@@ -1,6 +1,6 @@
 import { AccordionDetails } from '@gnosis.pm/safe-react-components'
 import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import { ReactElement, useContext, useEffect, useState } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useTransactionActions } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'

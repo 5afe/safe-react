@@ -1,5 +1,6 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
+import { RequestId } from '@gnosis.pm/safe-apps-sdk'
 
 import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
@@ -17,9 +18,10 @@ export type ConfirmTxModalProps = {
   params?: TransactionParams
   safeAddress: string
   safeName: string
+  requestId: RequestId
   ethBalance: string
-  onUserConfirm: (safeTxHash: string) => void
-  onTxReject: () => void
+  onUserConfirm: (safeTxHash: string, requestId: RequestId) => void
+  onTxReject: (requestId: RequestId) => void
   onClose: () => void
 }
 
@@ -38,9 +40,9 @@ const isTxValid = (t: Transaction): boolean => {
 
 export type DecodedTxDetail = DecodedDataParameterValue | DecodedData | undefined
 
-export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null => {
+export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
   const [decodedTxDetails, setDecodedTxDetails] = useState<DecodedTxDetail>()
-  const areTxsMalformed = props.txs.some((t) => !isTxValid(t))
+  const invalidTransactions = !props.txs.length || props.txs.some((t) => !isTxValid(t))
 
   const showDecodedTxData = setDecodedTxDetails
   const hideDecodedTxData = () => setDecodedTxDetails(undefined)
@@ -50,9 +52,16 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null 
     props.onClose()
   }
 
+  if (invalidTransactions) {
+    return (
+      <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
+        <SafeAppLoadError {...props} />
+      </Modal>
+    )
+  }
+
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
-      {areTxsMalformed && <SafeAppLoadError {...props} />}
       {decodedTxDetails && (
         <DecodedTxDetail
           onClose={closeDecodedTxDetail}
@@ -61,12 +70,7 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null 
         />
       )}
 
-      <ReviewConfirm
-        {...props}
-        areTxsMalformed={areTxsMalformed}
-        showDecodedTxData={showDecodedTxData}
-        hidden={areTxsMalformed || !!decodedTxDetails}
-      />
+      <ReviewConfirm {...props} showDecodedTxData={showDecodedTxData} hidden={!!decodedTxDetails} />
     </Modal>
   )
 }

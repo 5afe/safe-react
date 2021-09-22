@@ -1,5 +1,5 @@
 import { Loader, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { usePagedHistoryTransactions } from './hooks/usePagedHistoryTransactions'
 import { Centered, NoTransactions } from './styled'

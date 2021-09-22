@@ -1,5 +1,5 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import React, { Fragment, ReactElement, useContext } from 'react'
+import { Fragment, ReactElement, useContext } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'

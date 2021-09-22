@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, ReactNode, useCallback, useRef, useState } from 'react'
+import { createContext, ReactElement, ReactNode, useCallback, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'

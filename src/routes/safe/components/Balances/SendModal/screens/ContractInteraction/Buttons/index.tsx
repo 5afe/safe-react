@@ -1,4 +1,3 @@
-import React from 'react'
 import { useField, useFormState } from 'react-final-form'
 
 import { ButtonStatus, Modal } from 'src/components/Modal'

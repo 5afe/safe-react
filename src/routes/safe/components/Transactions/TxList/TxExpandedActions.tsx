@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'

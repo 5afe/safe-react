@@ -1,7 +1,5 @@
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -23,6 +21,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { OwnerValues } from '../..'
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -44,7 +43,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     owners,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -90,10 +89,10 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   }, [safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -114,20 +113,12 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.manage} noMargin weight="bolder">
-              Add new owner
-            </Paragraph>
-            <Paragraph className={classes.annotation}>3 of 3</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} title="Add new owner" subTitle="3 of 3" />
           <Hairline />
           <Block>
             <Row className={classes.root}>
@@ -164,7 +155,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 </Row>
                 <Hairline />
                 {owners?.map((owner) => (
-                  <React.Fragment key={owner.address}>
+                  <Fragment key={owner.address}>
                     <Row className={classes.owner}>
                       <Col align="center" xs={12}>
                         <EthHashInfo
@@ -177,7 +168,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       </Col>
                     </Row>
                     <Hairline />
-                  </React.Fragment>
+                  </Fragment>
                 ))}
                 <Row align="center" className={classes.info}>
                   <Paragraph color="primary" noMargin size="md" weight="bolder">

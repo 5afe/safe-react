@@ -1,6 +1,6 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import Img from 'src/components/layout/Img'

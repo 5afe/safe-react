@@ -1,6 +1,6 @@
 import Backdrop from '@material-ui/core/Backdrop'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
 
 const useStyles = makeStyles({

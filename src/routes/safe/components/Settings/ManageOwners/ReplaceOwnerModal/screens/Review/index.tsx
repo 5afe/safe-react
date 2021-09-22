@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -23,6 +21,7 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -53,7 +52,7 @@ export const ReviewReplaceOwnerModal = ({
     threshold = 1,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -96,10 +95,10 @@ export const ReviewReplaceOwnerModal = ({
   }, [owner.address, safeAddress, safeVersion, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -120,20 +119,12 @@ export const ReviewReplaceOwnerModal = ({
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.manage} noMargin weight="bolder">
-              Replace owner
-            </Paragraph>
-            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} title="Replace owner" subTitle="2 of 2" />
           <Hairline />
           <Block>
             <Row className={classes.root}>
@@ -172,7 +163,7 @@ export const ReviewReplaceOwnerModal = ({
                 {owners?.map(
                   (safeOwner) =>
                     !sameAddress(safeOwner.address, owner.address) && (
-                      <React.Fragment key={safeOwner.address}>
+                      <Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
@@ -185,7 +176,7 @@ export const ReviewReplaceOwnerModal = ({
                           </Col>
                         </Row>
                         <Hairline />
-                      </React.Fragment>
+                      </Fragment>
                     ),
                 )}
                 <Row align="center" className={classes.info}>

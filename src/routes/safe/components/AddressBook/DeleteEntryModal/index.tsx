@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { Modal } from 'src/components/Modal'
 import GnoForm from 'src/components/forms/GnoForm'

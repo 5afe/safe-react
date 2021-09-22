@@ -1,7 +1,5 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useStyles } from './style'
@@ -23,6 +21,7 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 type Props = {
   onClose: () => void
@@ -67,7 +66,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: 'STANDARD_TX',
         operation: Operation.DELEGATE,
@@ -91,14 +90,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Update to new Safe version
-            </Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.close} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} title="Update safe version" />
           <Hairline />
           <Block className={classes.modalContent}>
             <Row>

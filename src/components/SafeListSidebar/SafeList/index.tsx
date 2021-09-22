@@ -58,49 +58,47 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const localSafes = useLocalSafes()
 
   return (
-    <>
-      <StyledList>
-        {networks.map(({ id, backgroundColor, textColor, label }) => {
-          const isCurrentNetwork = id === getNetworkId()
+    <StyledList>
+      {networks.map(({ id, backgroundColor, textColor, label }) => {
+        const isCurrentNetwork = id === getNetworkId()
 
-          const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl)
-          const addedSafesOnNetwork = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
-          const shouldExpandOwnedSafes = localSafesOnNetwork.some(({ address }) => isSafeAdded(loadedSafes, address))
+        const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl)
+        const addedSafesOnNetwork = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
+        const shouldExpandOwnedSafes = localSafesOnNetwork.some(({ address }) => isSafeAdded(loadedSafes, address))
 
-          if (!localSafesOnNetwork.length && !addedSafesOnNetwork.length) return null
-          return (
-            <Fragment key={id}>
-              <ListItem selected>
-                <StyledDot backgroundColor={backgroundColor} textColor={textColor} />
-                {label}
-              </ListItem>
-              <MuiList>
-                {addedSafesOnNetwork.map((safe) => (
-                  <SafeListItem
-                    key={safe.address}
-                    onNetworkSwitch={() => setNetwork(id)}
-                    onSafeClick={onSafeClick}
-                    safes={loadedSafes}
-                    {...safe}
-                  />
-                ))}
-                {ownedSafes.length > 0 && (
-                  <ListItem classes={{ root: classes.listItemCollapse }}>
-                    <Collapse
-                      title={`Safes owned on ${label} (${localSafesOnNetwork.length})`}
-                      defaultExpanded={shouldExpandOwnedSafes}
-                    >
-                      {ownedSafes.map((address) => (
-                        <SafeListItem key={address} address={address} onSafeClick={onSafeClick} safes={loadedSafes} />
-                      ))}
-                    </Collapse>
-                  </ListItem>
-                )}
-              </MuiList>
-            </Fragment>
-          )
-        })}
-      </StyledList>
-    </>
+        if (!localSafesOnNetwork.length && !addedSafesOnNetwork.length) return null
+        return (
+          <Fragment key={id}>
+            <ListItem selected>
+              <StyledDot backgroundColor={backgroundColor} textColor={textColor} />
+              {label}
+            </ListItem>
+            <MuiList>
+              {addedSafesOnNetwork.map((safe) => (
+                <SafeListItem
+                  key={safe.address}
+                  onNetworkSwitch={() => setNetwork(id)}
+                  onSafeClick={onSafeClick}
+                  safes={loadedSafes}
+                  {...safe}
+                />
+              ))}
+              {ownedSafes.length > 0 && (
+                <ListItem classes={{ root: classes.listItemCollapse }}>
+                  <Collapse
+                    title={`Safes owned on ${label} (${localSafesOnNetwork.length})`}
+                    defaultExpanded={shouldExpandOwnedSafes}
+                  >
+                    {ownedSafes.map((address) => (
+                      <SafeListItem key={address} address={address} onSafeClick={onSafeClick} safes={loadedSafes} />
+                    ))}
+                  </Collapse>
+                </ListItem>
+              )}
+            </MuiList>
+          </Fragment>
+        )
+      })}
+    </StyledList>
   )
 }

@@ -1,6 +1,6 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'

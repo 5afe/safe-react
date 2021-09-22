@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 
 import { getExplorerInfo } from 'src/config'
 import Divider from 'src/components/Divider'
@@ -30,6 +28,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { ModalHeader } from '../ModalHeader'
 
 const useStyles = makeStyles(styles)
 
@@ -53,7 +52,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeAddressFromUrl)
   const nftTokens = useSelector(nftTokensSelector)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -111,7 +110,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             valueInWei: '0',
             txData: data,
             txNonce: txParameters.safeNonce,
-            safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+            safeTxGas: txParameters.safeTxGas,
             ethParameters: txParameters,
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           }),
@@ -127,10 +126,10 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -151,20 +150,12 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send collectible
-            </Paragraph>
-            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send collectible" />
           <Hairline />
           <Block className={classes.container}>
             <SafeInfo />

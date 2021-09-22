@@ -1,11 +1,13 @@
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
@@ -38,7 +40,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const safeAddress = useSelector(safeAddressFromUrl)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -80,7 +82,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
           valueInWei: '0',
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
         }),
@@ -97,10 +99,10 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     getResetTimeOptions().find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin)?.label ?? ''
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -132,17 +134,14 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
-        safeTxGas={gasEstimation.toString()}
+        safeTxGas={gasEstimation}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Modal.Header onClose={onClose}>
-                <Modal.Header.Title size="xs" withoutMargin>
-                  Remove spending limit
-                </Modal.Header.Title>
-              </Modal.Header>
+              <ModalHeader onClose={onClose} title="Remove spending limit" />
+              <Hairline />
 
               <Modal.Body>
                 <Col margin="lg">
