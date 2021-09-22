@@ -23,7 +23,7 @@ enum ErrorCodes {
   _608 = '608: No next page',
   _609 = '609: Failed to retrieve SpendingLimits module information',
   _610 = '610: Error fetching safes by owner',
-  _611 = '608: Error fetching gasPrice',
+  _611 = '611: Error fetching gasPrice',
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',

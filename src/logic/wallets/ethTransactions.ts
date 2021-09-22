@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
+import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getSDKWeb3Adapter, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { GasPriceOracle } from 'src/config/networks/network'
 import { CodedException, Errors } from '../exceptions/CodedException'
@@ -38,18 +39,11 @@ export const calculateGasPrice = async (): Promise<string> => {
   return Promise.reject(err)
 }
 
-export const calculateGasOf = async (txConfig: {
-  to: string
-  from: string
-  data: string
-  gasPrice?: number
-  gas?: number
-}): Promise<number> => {
-  const web3 = getWeb3()
+export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const gas = await web3.eth.estimateGas(txConfig)
+    const ethAdapter = getSDKWeb3Adapter(txConfig.from)
 
-    return gas
+    return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
     return Promise.reject(err)
   }
