@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { makeStyles } from '@material-ui/core/'
+import styled from 'styled-components'
 
 import { getNetworkInfo } from 'src/config'
 import { NetworkInfo } from 'src/config/networks/network'
@@ -15,29 +15,33 @@ function NetworkLabel({ networkInfo, onClick, flexGrow }: Props): ReactElement {
   const selectedNetwork = networkInfo || getNetworkInfo()
   const backgroundColor = selectedNetwork.backgroundColor
   const textColor = selectedNetwork.textColor
-  const classes = useStyles({ onClick, backgroundColor, textColor, flexGrow })
 
   return (
-    <span className={classes.root} onClick={onClick}>
+    <StyledLabel onClick={onClick} backgroundColor={backgroundColor} textColor={textColor} flexGrow={flexGrow}>
       {selectedNetwork.label}
-    </span>
+    </StyledLabel>
   )
 }
 
 export default NetworkLabel
 
-const useStyles = makeStyles({
-  root: {
-    display: 'inline-block',
-    minWidth: '70px',
-    fontSize: extraSmallFontSize,
-    padding: `${xs} ${sm}`,
-    backgroundColor: ({ backgroundColor }: any) => backgroundColor ?? border,
-    color: ({ textColor }) => textColor ?? fontColor,
-    cursor: ({ onClick }) => (onClick ? 'pointer' : 'inherit'),
-    textAlign: 'center',
-    borderRadius: '3px',
-    textTransform: 'capitalize',
-    flexGrow: ({ flexGrow }) => (flexGrow ? 1 : 'initial'),
-  },
-})
+type StyledLabelTypes = {
+  backgroundColor: string
+  textColor: string
+  onClick?: () => void
+  flexGrow?: boolean
+}
+
+const StyledLabel = styled.span<StyledLabelTypes>`
+  display: inline-block;
+  min-width: 70px;
+  font-size: ${extraSmallFontSize};
+  padding: ${xs} ${sm};
+  background-color: ${({ backgroundColor }) => backgroundColor ?? border};
+  color: ${({ textColor }) => textColor ?? fontColor};
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
+  text-align: center;
+  border-radius: 3px;
+  text-transform: capitalize;
+  flex-grow: ${({ flexGrow }) => (flexGrow ? 1 : 'initial')};
+`

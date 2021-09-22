@@ -1,10 +1,9 @@
 import { ReactElement, useState, useEffect } from 'react'
-import IconButton from '@material-ui/core/IconButton'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import { makeStyles } from '@material-ui/core/'
-
 import { useDispatch, useSelector } from 'react-redux'
 import { generatePath, useParams } from 'react-router-dom'
+import styled from 'styled-components'
+import IconButton from '@material-ui/core/IconButton'
+import ChevronLeft from '@material-ui/icons/ChevronLeft'
 
 import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
@@ -12,7 +11,7 @@ import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { history } from 'src/store'
-import { sm } from 'src/theme/variables'
+import { sm, secondary } from 'src/theme/variables'
 import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
@@ -44,8 +43,6 @@ function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
 
   const dispatch = useDispatch()
-
-  const classes = useStyles()
 
   const { safeAddress } = useParams<{ safeAddress?: string }>()
   const safeRandomName = useMnemonicSafeName()
@@ -109,9 +106,9 @@ function Load(): ReactElement {
     <Page>
       <Block>
         <Row align="center">
-          <IconButton disableRipple onClick={history.goBack} className={classes.backIcon}>
+          <BackIcon disableRipple onClick={history.goBack}>
             <ChevronLeft />
-          </IconButton>
+          </BackIcon>
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
         <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
@@ -137,10 +134,8 @@ function Load(): ReactElement {
 
 export default Load
 
-const useStyles = makeStyles((theme) => ({
-  backIcon: {
-    color: theme.palette.secondary.main,
-    padding: sm,
-    marginRight: '5px',
-  },
-}))
+const BackIcon = styled(IconButton)`
+  color: ${secondary};
+  padding: ${sm};
+  margin-right: 5px;
+`

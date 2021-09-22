@@ -1,13 +1,15 @@
 import { ReactElement, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import DialogContent from '@material-ui/core/DialogContent'
 import List from '@material-ui/core/List'
-import { makeStyles, Typography } from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
+
 import Block from 'src/components/layout/Block'
 import { getConfig, getNetworkName, getNetworks, setNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
@@ -20,7 +22,6 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 export const selectNetworkStepLabel = 'Select network'
 
 function SelectNetworkStep(): ReactElement {
-  const classes = useStyles()
   const dispatch = useDispatch()
 
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
@@ -42,73 +43,68 @@ function SelectNetworkStep(): ReactElement {
   )
 
   return (
-    <Block className={classes.padding} data-testid={'select-network-step'}>
+    <Container data-testid={'select-network-step'}>
       <Paragraph color="primary" noMargin size="lg">
         Select network on which the Safe was created: <NetworkLabel onClick={openNetworkSelectorPopup} />
       </Paragraph>
-      <div className={classes.switchButtonContainer}>
+      <SwitchNetworkContainer>
         <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">
           Switch Network
         </ButtonLink>
-      </div>
+      </SwitchNetworkContainer>
       <Dialog
         onClose={() => setIsNetworkSelectorPopupOpen(false)}
         aria-labelledby="select-network"
         data-testid={'select-network-popup'}
         open={isNetworkSelectorPopupOpen}
       >
-        <DialogTitle disableTypography className={classes.dialogTitle}>
+        <StyledDialogTitle disableTypography>
           <Typography variant={'h5'}>Select Network</Typography>
           <IconButton aria-label="close" onClick={() => setIsNetworkSelectorPopupOpen(false)}>
             <CloseIcon />
           </IconButton>
-        </DialogTitle>
-        <DialogContent dividers className={classes.dialogContent}>
+        </StyledDialogTitle>
+        <StyledDialogContent dividers>
           <List component="div">
             {networks.map((network) => (
-              <div
+              <NetworkLabelItem
                 key={network.id}
                 role={'button'}
-                className={classes.networkLabel}
                 onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
               >
                 <NetworkLabel networkInfo={network} flexGrow />
-              </div>
+              </NetworkLabelItem>
             ))}
           </List>
-        </DialogContent>
+        </StyledDialogContent>
       </Dialog>
-    </Block>
+    </Container>
   )
 }
 
 export default SelectNetworkStep
 
-const useStyles = makeStyles({
-  padding: {
-    padding: lg,
-  },
-  dialogContent: {
-    minWidth: '500px',
-  },
-  dialogTitle: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '16px 24px',
-  },
-  labelContainer: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  switchButtonContainer: {
-    margin: lg,
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  networkLabel: {
-    display: 'flex',
-    margin: `${lg} auto`,
-    cursor: 'pointer',
-    maxWidth: '50%',
-  },
-})
+const Container = styled(Block)`
+  padding: ${lg};
+`
+
+const StyledDialogContent = styled(DialogContent)`
+  min-width: 500px;
+`
+
+const StyledDialogTitle = styled(DialogTitle)`
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+`
+const SwitchNetworkContainer = styled.div`
+  margin: ${lg};
+  display: flex;
+  justify-content: center;
+`
+const NetworkLabelItem = styled.div`
+  display: flex;
+  margin: ${lg} auto;
+  cursor: pointer;
+  max-width: 50%;
+`

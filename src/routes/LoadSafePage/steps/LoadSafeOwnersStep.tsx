@@ -1,6 +1,8 @@
-import { makeStyles, TableContainer } from '@material-ui/core'
 import { ReactElement } from 'react'
 import { useForm } from 'react-final-form'
+import styled from 'styled-components'
+import TableContainer from '@material-ui/core/TableContainer'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -9,44 +11,39 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
+import { disabled, extraSmallFontSize, lg, md, sm } from 'src/theme/variables'
 import { minMaxLength } from 'src/components/forms/validator'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
-
 import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const loadSafeOwnersStepLabel = 'Owners'
 
 function LoadSafeOwnersStep(): ReactElement {
-  const classes = useStyles()
-
   const loadSafeForm = useForm()
   const ownersWithName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_LIST]
 
   return (
     <>
-      <Block className={classes.title}>
+      <TitleContainer>
         <Paragraph color="primary" noMargin size="lg" data-testid="load-safe-owners-step">
           This Safe on <NetworkLabel /> has {ownersWithName.length} owners. Optional: Provide a name for each owner.
         </Paragraph>
-      </Block>
+      </TitleContainer>
       <Hairline />
       <TableContainer>
-        <Row className={classes.header}>
+        <HeaderContainer>
           <Col xs={4}>NAME</Col>
           <Col xs={8}>ADDRESS</Col>
-        </Row>
+        </HeaderContainer>
         <Hairline />
         <Block margin="md" padding="md">
           {ownersWithName.map(({ address, name }, index) => {
             const ownerFieldName = `owner-address-${address}`
             return (
-              <Row className={classes.owner} key={address} data-testid="owner-row">
-                <Col className={classes.ownerName} xs={4}>
-                  <Field
-                    className={classes.name}
+              <OwnerContainer key={address} data-testid="owner-row">
+                <Col xs={4}>
+                  <FieldContainer
                     component={TextField}
                     initialValue={name}
                     name={ownerFieldName}
@@ -58,11 +55,11 @@ function LoadSafeOwnersStep(): ReactElement {
                   />
                 </Col>
                 <Col xs={8}>
-                  <Row className={classes.ownerAddresses}>
+                  <OwnerAddressContainer>
                     <EthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getExplorerInfo(address)} />
-                  </Row>
+                  </OwnerAddressContainer>
                 </Col>
-              </Row>
+              </OwnerContainer>
             )
           })}
         </Block>
@@ -73,36 +70,26 @@ function LoadSafeOwnersStep(): ReactElement {
 
 export default LoadSafeOwnersStep
 
-const useStyles = makeStyles({
-  owners: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-  ownerName: {
-    marginBottom: '15px',
-    minWidth: '100%',
-    [`@media (min-width: ${screenSm}px)`]: {
-      marginBottom: '0',
-      minWidth: '0',
-    },
-  },
-  ownerAddresses: {
-    alignItems: 'center',
-    marginLeft: `${sm}`,
-  },
-  title: {
-    padding: `${md} ${lg}`,
-  },
-  owner: {
-    padding: `0 ${lg}`,
-    marginBottom: '12px',
-  },
-  header: {
-    padding: `${sm} ${lg}`,
-    color: disabled,
-    fontSize: extraSmallFontSize,
-  },
-  name: {
-    marginRight: `${sm}`,
-  },
-})
+const TitleContainer = styled(Block)`
+  padding: ${md} ${lg};
+`
+
+const HeaderContainer = styled(Row)`
+  padding: ${sm} ${lg};
+  color: ${disabled};
+  font-size: ${extraSmallFontSize};
+`
+
+const OwnerContainer = styled(Row)`
+  padding: 0 ${lg};
+  margin-bottom: 12px;
+`
+
+const OwnerAddressContainer = styled(Row)`
+  align-items: center;
+  margin-left: ${sm};
+`
+
+const FieldContainer = styled(Field)`
+  margin-right: ${sm};
+`

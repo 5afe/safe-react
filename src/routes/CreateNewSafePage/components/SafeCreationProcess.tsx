@@ -167,7 +167,7 @@ function SafeCreationProcess(): ReactElement {
   const onCancel = () => {
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     history.push({
-      pathname: `${WELCOME_ADDRESS}`,
+      pathname: WELCOME_ADDRESS,
     })
   }
 

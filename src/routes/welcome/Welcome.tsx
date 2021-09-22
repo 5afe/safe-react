@@ -49,8 +49,8 @@ function Welcome(): ReactElement {
             </Title>
             <div className={classes.cardDescription}>
               <Text size="xl">
-                Already have a Safe? Do you want to access your Safe Multisig from a different device? Easily load your
-                Safe MultiSig using your Safe address.
+                Already have a Safe or want to access it from a different device? Easily load your Safe MultiSig using
+                your Safe address.
               </Text>
             </div>
             <Button

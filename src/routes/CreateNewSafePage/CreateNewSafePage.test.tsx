@@ -282,7 +282,7 @@ describe('<CreateNewSafePage>', () => {
       expect(defaultOwner.value).toBe(userAccount)
     })
 
-    it('At least one owner is Required', async () => {
+    it('Shows an error if a owner address field is empty', async () => {
       const customState = {
         providers: {
           name: 'MetaMask',
