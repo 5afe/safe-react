@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'

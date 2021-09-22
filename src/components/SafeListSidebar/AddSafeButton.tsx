@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import Fab from '@material-ui/core/Fab'

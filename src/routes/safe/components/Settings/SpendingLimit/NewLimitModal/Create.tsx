@@ -1,6 +1,6 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { FormState, Mutator } from 'final-form'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import GnoForm from 'src/components/forms/GnoForm'

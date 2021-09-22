@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'

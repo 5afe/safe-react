@@ -1,7 +1,7 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useStyles } from './style'
@@ -67,7 +67,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: 'STANDARD_TX',
         operation: Operation.DELEGATE,

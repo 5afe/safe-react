@@ -1,6 +1,6 @@
 import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-import React, { ReactElement, useContext, useRef } from 'react'
+import { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
 
 import { CustomIconText } from 'src/components/CustomIconText'

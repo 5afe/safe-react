@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 
 import AppFrame from './components/AppFrame'

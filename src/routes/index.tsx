@@ -1,5 +1,6 @@
+import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 
@@ -20,7 +21,7 @@ import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 const Welcome = React.lazy(() => import('./welcome/container'))
 const Open = React.lazy(() => import('./open/container/Open'))
 const Safe = React.lazy(() => import('./safe/container'))
-const Load = React.lazy(() => import('./load/container/Load'))
+const Load = React.lazy(() => import('./new-load/Load'))
 const Migration = React.lazy(() => import('./migration/container'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`

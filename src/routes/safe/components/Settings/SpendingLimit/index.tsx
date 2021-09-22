@@ -1,5 +1,5 @@
 import { Button, Text, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 

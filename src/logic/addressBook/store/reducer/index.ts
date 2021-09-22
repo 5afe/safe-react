@@ -10,7 +10,6 @@ export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 type Payloads = AddressBookEntry | AddressBookState
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
-  console.log(state, action)
   const newState = [...state]
   const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name.trim() }))
   addressBookEntries

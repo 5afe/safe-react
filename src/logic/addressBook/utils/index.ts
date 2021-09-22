@@ -20,7 +20,7 @@ export const isValidAddressBookName = (addressBookName: string): boolean => {
   const hasInvalidName = ADDRESS_BOOK_INVALID_NAMES.find((invalidName) =>
     addressBookName?.toUpperCase().includes(invalidName),
   )
-  return !hasInvalidName
+  return !hasInvalidName || addressBookName === ''
 }
 
 /**

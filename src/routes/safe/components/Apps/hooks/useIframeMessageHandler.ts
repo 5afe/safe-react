@@ -27,8 +27,6 @@ type ReturnType = {
   sendMessageToIframe: <T extends InterfaceMessageIds>(message: InterfaceMessageProps<T>, requestId?: RequestId) => void
 }
 
-const NETWORK_NAME = getNetworkName()
-
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
   openConfirmationModal: (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) => void,
@@ -84,7 +82,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: (NETWORK_NAME as string).toLowerCase() as LowercaseNetworks,
+              network: getNetworkName().toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }

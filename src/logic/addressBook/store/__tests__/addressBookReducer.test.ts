@@ -2,7 +2,7 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { batchLoadEntries } from '../reducer'
 
 describe('Test AddressBook BatchLoadEntries Reducer', () => {
-  it('It should should return an addressbook array', () => {
+  it('returns an addressbook array', () => {
     const addressBookEntries = [
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
@@ -24,7 +24,7 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     expect(newState).toStrictEqual(addressBookEntries)
   })
 
-  it('It should should merge entries from different chains', () => {
+  it('merges entries from different chains', () => {
     const addressBookEntries = [
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
@@ -57,7 +57,7 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     expect(newState).toStrictEqual(initialState.concat(addressBookEntries))
   })
 
-  it('It should should skip entries with wrong name format', () => {
+  it('skips entries with wrong name format', () => {
     const addressBookEntries = [
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
@@ -79,7 +79,7 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     expect(newState).toStrictEqual(initialState)
   })
 
-  it('It should should replace name when entries share address and chain', () => {
+  it('replaces name when entries share address and chain', () => {
     const addressBookEntries = [
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',

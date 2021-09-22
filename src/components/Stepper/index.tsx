@@ -1,9 +1,10 @@
+import { Children } from 'react'
 import FormStep from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
 import StepLabel from '@material-ui/core/StepLabel'
 import Stepper from '@material-ui/core/Stepper'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FormApi } from 'final-form'
 
 import Controls from './Controls'
@@ -71,7 +72,7 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
   }, [props.initialValues])
 
   const getPageProps: any = (pages) => {
-    const aux: any = React.Children.toArray(pages)[page]
+    const aux: any = Children.toArray(pages)[page]
     return aux.props
   }
 
@@ -89,7 +90,7 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
   const validate = (valuesToValidate) => {
     const { children } = props
 
-    const activePage: any = React.Children.toArray(children)[page]
+    const activePage: any = Children.toArray(children)[page]
     return activePage.props.validate ? activePage.props.validate(valuesToValidate) : {}
   }
 
@@ -106,7 +107,7 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
     const finalValues = { ...formValues, ...pageInitialProps }
 
     setValues(finalValues)
-    setPage(Math.min(page + 1, React.Children.count(children) - 1))
+    setPage(Math.min(page + 1, Children.count(children) - 1))
   }
 
   const previous = () => {
@@ -120,7 +121,7 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
 
   const handleSubmit = async (formValues) => {
     const { children, onSubmit } = props
-    const isLastPage = page === React.Children.count(children) - 1
+    const isLastPage = page === Children.count(children) - 1
     if (isLastPage) {
       return onSubmit(formValues)
     }

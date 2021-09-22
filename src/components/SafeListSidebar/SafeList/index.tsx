@@ -1,8 +1,9 @@
+import { Fragment } from 'react'
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
 import { Icon } from '@gnosis.pm/safe-react-components'
-import React from 'react'
+
 import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -78,7 +79,7 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
   return (
     <MuiList className={classes.list}>
       {safes.map((safe) => (
-        <React.Fragment key={safe.address}>
+        <Fragment key={safe.address}>
           <Link
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
             onClick={onSafeClick}
@@ -92,19 +93,19 @@ export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }:
             </ListItem>
           </Link>
           <Hairline />
-        </React.Fragment>
+        </Fragment>
       ))}
 
       {ownedSafes.length > 0 && (
         <ListItem classes={{ root: classes.listItemCollapse }}>
           <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
             {ownedSafes.map((address: string) => (
-              <React.Fragment key={address}>
+              <Fragment key={address}>
                 <OwnedAddress address={address} onClick={onSafeClick} isAdded={isAddressAdded(safes, address)}>
                   {getLink(address)}
                 </OwnedAddress>
                 <Hairline />
-              </React.Fragment>
+              </Fragment>
             ))}
           </Collapse>
         </ListItem>

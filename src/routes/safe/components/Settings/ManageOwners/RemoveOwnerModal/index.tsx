@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
@@ -41,7 +41,7 @@ export const sendRemoveOwner = async (
       valueInWei: '0',
       txData,
       txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),

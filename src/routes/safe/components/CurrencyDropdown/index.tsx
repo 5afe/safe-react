@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'
@@ -20,11 +20,10 @@ import Img from 'src/components/layout/Img/index'
 import { getNetworkInfo } from 'src/config'
 import { sameString } from 'src/utils/strings'
 
-const { nativeCoin } = getNetworkInfo()
-
 export const CurrencyDropdown = (): React.ReactElement | null => {
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null)
+  const { nativeCoin } = getNetworkInfo()
   const selectedCurrency = useSelector(currentCurrencySelector)
   const [searchParams, setSearchParams] = useState('')
   const currenciesList = useSelector(availableCurrenciesSelector)

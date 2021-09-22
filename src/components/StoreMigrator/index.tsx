@@ -4,6 +4,7 @@ import { addressBookMigrate } from 'src/logic/addressBook/store/actions'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { MigrationMessage } from 'src/routes/migration/container'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
+import { saveToStorage } from 'src/utils/storage'
 
 const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/app'
 const networks = [
@@ -26,7 +27,7 @@ const StoreMigrator: React.FC = () => {
 
   // Recieve the data to be migrated and save it into the localstorage
   useEffect(() => {
-    const saveEventData = (event: MigrationMessageEvent) => {
+    const saveEventData = async (event: MigrationMessageEvent) => {
       const isTrustedOrigin = networks.some((network) => {
         return network.safeUrl.includes(event.origin)
       })
@@ -34,15 +35,17 @@ const StoreMigrator: React.FC = () => {
       if (event.data.migrate && isRightOrigin) {
         try {
           const payload = JSON.parse(event.data.payload)
-          Object.keys(payload).forEach((key) => {
+          const promises = Object.keys(payload).map(async (key) => {
             const payloadEntry = JSON.parse(payload[key])
             if (key === 'SAFE__addressBook') {
               dispatch(addressBookMigrate(JSON.parse(payloadEntry)))
             } else if (key.startsWith('_immortal|v2_')) {
               // Save entry in localStorage
+              await saveToStorage(key, payloadEntry)
               localStorage.setItem(key, payloadEntry)
             }
           })
+          await Promise.all(promises)
           setCurrentNetwork(currentNetwork + 1)
         } catch (error) {
           logError(Errors._703, error.message)
@@ -59,8 +62,10 @@ const StoreMigrator: React.FC = () => {
   })
   // Migrate local storage
   useEffect(() => {
+    console.log(console.log(isSingleNetworkApp))
     if (!isSingleNetworkApp && currentNetwork < networks.length) {
       const urlToMigrate = `${networks[currentNetwork].safeUrl}/#${MIGRATION_ADDRESS}`
+      console.log('Url To migrate:', urlToMigrate)
       window.open(urlToMigrate, 'targetWindow')
     }
   }, [currentNetwork, isSingleNetworkApp])

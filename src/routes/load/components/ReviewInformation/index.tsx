@@ -1,6 +1,6 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { Fragment, ReactElement, ReactNode } from 'react'
+import { Fragment, ReactElement, ReactNode } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'

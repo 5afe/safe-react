@@ -5,6 +5,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended', // Plugin to use typescript with eslint
     'prettier', // Add prettier rules to eslint
     'plugin:prettier/recommended', // Plugin to use prettier rules with eslint
+    'plugin:react/jsx-runtime', // Add runtime rules for React 17
   ],
   plugins: ['react-hooks'],
   parserOptions: {

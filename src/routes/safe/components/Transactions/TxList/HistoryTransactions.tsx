@@ -1,5 +1,5 @@
 import { Loader, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { usePagedHistoryTransactions } from './hooks/usePagedHistoryTransactions'
 import { Centered, NoTransactions } from './styled'
@@ -19,7 +19,7 @@ export const HistoryTransactions = (): ReactElement => {
     )
   }
 
-  if (count === 0) {
+  if (count === 0 || !transactions.length) {
     return (
       <NoTransactions>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />
