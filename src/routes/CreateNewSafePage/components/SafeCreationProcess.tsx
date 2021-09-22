@@ -55,6 +55,14 @@ function SafeCreationProcess(): ReactElement {
 
   const createNewSafe = useCallback(async () => {
     const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+
+    if (!safeCreationFormValues) {
+      history.push({
+        pathname: WELCOME_ADDRESS,
+      })
+      return
+    }
+
     setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
 
     setCreationTxPromise(
@@ -101,6 +109,14 @@ function SafeCreationProcess(): ReactElement {
   useEffect(() => {
     const load = async () => {
       const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+
+      if (!safeCreationFormValues) {
+        history.push({
+          pathname: WELCOME_ADDRESS,
+        })
+        return
+      }
+
       const safeCreationTxHash = safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
       if (safeCreationTxHash) {
         setSafeCreationTxHash(safeCreationTxHash)
@@ -114,6 +130,14 @@ function SafeCreationProcess(): ReactElement {
 
   const onSafeCreated = async (newSafeAddress: string): Promise<void> => {
     const createSafeFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+
+    if (!createSafeFormValues) {
+      history.push({
+        pathname: WELCOME_ADDRESS,
+      })
+      return
+    }
+
     const safeCreationTxHash = createSafeFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
     const defaultSafeValue = createSafeFormValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]
     const safeName = createSafeFormValues[FIELD_CREATE_CUSTOM_SAFE_NAME] || defaultSafeValue
@@ -158,6 +182,14 @@ function SafeCreationProcess(): ReactElement {
 
   const onRetry = async () => {
     const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+
+    if (!safeCreationFormValues) {
+      history.push({
+        pathname: WELCOME_ADDRESS,
+      })
+      return
+    }
+
     setSafeCreationTxHash(undefined)
     delete safeCreationFormValues.safeCreationTxHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, safeCreationFormValues)
