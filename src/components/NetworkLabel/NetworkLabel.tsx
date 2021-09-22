@@ -34,7 +34,8 @@ type StyledLabelTypes = {
 
 const StyledLabel = styled.span<StyledLabelTypes>`
   position: relative;
-  bottom: 1px;
+  bottom: 2px;
+  line-height: normal;
   display: inline-block;
   min-width: 70px;
   font-size: ${extraSmallFontSize};

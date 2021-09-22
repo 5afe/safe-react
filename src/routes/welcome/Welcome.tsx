@@ -33,7 +33,6 @@ function Welcome(): ReactElement {
               </Text>
             </Button>
           </StyledCard>
-          <Separator>or</Separator>
           {/* Load Safe Card */}
           <StyledCard>
             <Title size="sm" strong withoutMargin>
@@ -76,7 +75,7 @@ const CardsContainer = styled.div`
 
 const StyledCard = styled(Card)`
   display: flex;
-  flex: 0 1 33%;
+  flex: 0 1 36%;
   flex-direction: column;
   padding: 24px;
   align-items: flex-start;
@@ -85,10 +84,4 @@ const StyledCard = styled(Card)`
 const CardDescriptionContainer = styled.div`
   margin-top: 16px;
   margin-bottom: auto;
-`
-
-const Separator = styled.div`
-  align-self: center;
-  padding: 0 16px;
-  font-size: 32px;
 `
