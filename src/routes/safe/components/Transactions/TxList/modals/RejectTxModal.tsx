@@ -22,7 +22,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
-import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 type Props = {
   isOpen: boolean

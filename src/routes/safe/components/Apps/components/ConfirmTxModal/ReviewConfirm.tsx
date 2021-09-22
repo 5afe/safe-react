@@ -11,6 +11,7 @@ import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -22,13 +23,12 @@ import { fetchTxDecoder } from 'src/utils/decodeTx'
 import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
+import Hairline from 'src/components/layout/Hairline'
 import Divider from 'src/components/Divider'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
-import Hairline from 'src/components/layout/Hairline'
-import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
 
 const Container = styled.div`
   max-width: 480px;

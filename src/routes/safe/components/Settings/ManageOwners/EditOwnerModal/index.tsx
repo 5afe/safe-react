@@ -1,5 +1,7 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useDispatch } from 'react-redux'
 
+import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -12,12 +14,10 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
-import { getExplorerInfo } from 'src/config'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'

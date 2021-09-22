@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import GnoForm from 'src/components/forms/GnoForm'
 import { Modal } from 'src/components/Modal'
 import { Amount, Beneficiary, ResetTime, Token } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields'
-import { ModalHeader } from '../../../Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import Hairline from 'src/components/layout/Hairline'
 
 const FormContainer = styled.div`
