@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback } from 'react'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp } from '../utils'
+import { useDispatch } from 'react-redux'
 import { AppData, fetchSafeAppsList } from 'src/logic/configService'
-import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { getNetworkId } from 'src/config'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import { useDispatch } from 'react-redux'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp } from '../utils'
+import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -22,6 +22,7 @@ const useAppList = (): UseAppListReturnType => {
   const [customAppList, setCustomAppList] = useState<
     (StoredSafeApp & { disabled?: boolean; networks?: ETHEREUM_NETWORK[] })[]
   >([])
+  const [pinnedApps, setPinnedApps] = useState<SafeApp[]>([])
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -30,7 +31,9 @@ const useAppList = (): UseAppListReturnType => {
       setIsLoading(true)
       try {
         const result = await fetchSafeAppsList()
-        setApiAppsList(result && result?.length ? result : apiAppsList)
+        if (result?.length) {
+          setApiAppsList(result)
+        }
       } catch (e) {
         logError(Errors._902, e.message)
         dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
@@ -39,10 +42,8 @@ const useAppList = (): UseAppListReturnType => {
       }
     }
 
-    if (!apiAppsList.length) {
-      loadAppsList()
-    }
-  }, [dispatch, apiAppsList])
+    loadAppsList()
+  }, [dispatch])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
