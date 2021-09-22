@@ -56,7 +56,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  * @param {boolean} isSafeLoaded
  */
 export const fetchSafe =
-  (safeAddress: string, isSafeLoaded: boolean) =>
+  (safeAddress: string, isSafeLoaded = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
