@@ -1,7 +1,9 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
-import { sameAddress } from './ethAddresses'
+import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
+
+import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
 import { getRpcServiceUrl } from 'src/config'
@@ -103,4 +105,11 @@ export const setWeb3 = (provider: Provider): void => {
 export const isTxPendingError = (err: Error): boolean => {
   const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
   return (err.message || '').startsWith(WEB3_TX_NOT_MINED_ERROR)
+}
+
+export const getSDKWeb3Adapter = async (): Promise<Web3Adapter> => {
+  const web3 = getWeb3()
+  const signerAddress = (await getAccountFrom(web3)) || ZERO_ADDRESS
+
+  return new Web3Adapter({ web3, signerAddress })
 }
