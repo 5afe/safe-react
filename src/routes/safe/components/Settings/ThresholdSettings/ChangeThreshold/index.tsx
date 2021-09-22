@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import Close from '@material-ui/icons/Close'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -13,6 +11,9 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
@@ -24,8 +25,6 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
-import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -139,14 +138,7 @@ export const ChangeThresholdModal = ({
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Change required confirmations
-            </Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.close} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} title="Change threshold" />
           <Hairline />
           <GnoForm initialValues={{ threshold: editedThreshold.toString(), txParameters }} onSubmit={handleSubmit}>
             {() => (
