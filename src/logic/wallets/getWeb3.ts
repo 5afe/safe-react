@@ -3,13 +3,15 @@ import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 
-import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
+import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
 import { getRpcServiceUrl } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { store } from 'src/store'
+import { userAccountSelector } from './store/selectors'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -107,9 +109,9 @@ export const isTxPendingError = (err: Error): boolean => {
   return (err.message || '').startsWith(WEB3_TX_NOT_MINED_ERROR)
 }
 
-export const getSDKWeb3Adapter = async (): Promise<Web3Adapter> => {
-  const web3 = getWeb3()
-  const signerAddress = (await getAccountFrom(web3)) || ZERO_ADDRESS
-
-  return new Web3Adapter({ web3, signerAddress })
+export const getSDKWeb3Adapter = (signerAddress: string = store.select(userAccountSelector)): Web3Adapter => {
+  return new Web3Adapter({
+    web3: getWeb3(),
+    signerAddress,
+  })
 }

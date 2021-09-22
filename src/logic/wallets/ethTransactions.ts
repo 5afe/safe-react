@@ -6,6 +6,7 @@ import { getSDKWeb3Adapter, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { GasPriceOracle } from 'src/config/networks/network'
 import { CodedException, Errors } from '../exceptions/CodedException'
+import { ZERO_ADDRESS } from './ethAddresses'
 
 export const EMPTY_DATA = '0x'
 
@@ -41,7 +42,8 @@ export const calculateGasPrice = async (): Promise<string> => {
 
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const ethAdapter = await getSDKWeb3Adapter()
+    // Estimation is a read-only method and we therefore do not need actual address
+    const ethAdapter = getSDKWeb3Adapter(ZERO_ADDRESS)
 
     return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
