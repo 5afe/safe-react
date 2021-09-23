@@ -41,6 +41,9 @@ const getMockedOldSafe = ({
     totalFiatBalance: '110',
     loadedViaUrl: false,
     guard: guard || mockedGuardAddress,
+    collectiblesTag: '0',
+    txQueuedTag: '0',
+    txHistoryTag: '0',
   }
 }
 
