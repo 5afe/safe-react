@@ -7,7 +7,7 @@ import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 /*************/
 /*  HISTORY  */
 /*************/
-const historyPointers: { [safeAddress: string]: { next?: string; previous?: string } } = {}
+const historyPointers: { [chainId: string]: { [safeAddress: string]: { next?: string; previous?: string } } } = {}
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -17,38 +17,44 @@ const historyPointers: { [safeAddress: string]: { next?: string; previous?: stri
 export const loadPagedHistoryTransactions = async (
   safeAddress: string,
 ): Promise<{ values: HistoryGatewayResponse['results']; next?: string } | undefined> => {
+  const chainId = getNetworkId().toString()
   // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
-  if (!historyPointers[safeAddress]?.next) {
+  if (!historyPointers[chainId][safeAddress]?.next) {
     throw new CodedException(Errors._608)
   }
 
   try {
     const { results, next, previous } = await getTransactionHistory(
       getClientGatewayUrl(),
-      getNetworkId().toString(),
+      chainId,
       checksumAddress(safeAddress),
-      historyPointers[safeAddress].next,
+      historyPointers[chainId][safeAddress].next,
     )
 
-    historyPointers[safeAddress] = { next, previous }
+    historyPointers[chainId][safeAddress] = { next, previous }
 
-    return { values: results, next: historyPointers[safeAddress].next }
+    return { values: results, next: historyPointers[chainId][safeAddress].next }
   } catch (e) {
     throw new CodedException(Errors._602, e.message)
   }
 }
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
+  const chainId = getNetworkId().toString()
   try {
     const { results, next, previous } = await getTransactionHistory(
       getClientGatewayUrl(),
-      getNetworkId().toString(),
+      chainId,
       checksumAddress(safeAddress),
     )
 
-    if (!historyPointers[safeAddress]) {
-      historyPointers[safeAddress] = { next, previous }
+    if (!historyPointers[chainId]) {
+      historyPointers[chainId] = {}
+    }
+
+    if (!historyPointers[chainId][safeAddress]) {
+      historyPointers[chainId][safeAddress] = { next, previous }
     }
 
     return results
@@ -60,7 +66,7 @@ export const loadHistoryTransactions = async (safeAddress: string): Promise<Hist
 /************/
 /*  QUEUED  */
 /************/
-const queuedPointers: { [safeAddress: string]: { next?: string; previous?: string } } = {}
+const queuedPointers: { [chainId: string]: { [safeAddress: string]: { next?: string; previous?: string } } } = {}
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -70,6 +76,7 @@ const queuedPointers: { [safeAddress: string]: { next?: string; previous?: strin
 export const loadPagedQueuedTransactions = async (
   safeAddress: string,
 ): Promise<{ values: QueuedGatewayResponse['results']; next?: string } | undefined> => {
+  const chainId = getNetworkId().toString()
   // if `queuedPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `queuedPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!queuedPointers[safeAddress]?.next) {
@@ -79,29 +86,34 @@ export const loadPagedQueuedTransactions = async (
   try {
     const { results, next, previous } = await getTransactionQueue(
       getClientGatewayUrl(),
-      getNetworkId().toString(),
+      chainId,
       checksumAddress(safeAddress),
-      queuedPointers[safeAddress].next,
+      queuedPointers[chainId][safeAddress].next,
     )
 
-    queuedPointers[safeAddress] = { next, previous }
+    queuedPointers[chainId][safeAddress] = { next, previous }
 
-    return { values: results, next: queuedPointers[safeAddress].next }
+    return { values: results, next: queuedPointers[chainId][safeAddress].next }
   } catch (e) {
     throw new CodedException(Errors._603, e.message)
   }
 }
 
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
+  const chainId = getNetworkId().toString()
   try {
     const { results, next, previous } = await getTransactionQueue(
       getClientGatewayUrl(),
-      getNetworkId().toString(),
+      chainId,
       checksumAddress(safeAddress),
     )
 
-    if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
-      queuedPointers[safeAddress] = { next, previous }
+    if (!queuedPointers[chainId]) {
+      queuedPointers[chainId] = {}
+    }
+
+    if (!queuedPointers[chainId][safeAddress] || queuedPointers[chainId][safeAddress].next === null) {
+      queuedPointers[chainId][safeAddress] = { next, previous }
     }
 
     return results

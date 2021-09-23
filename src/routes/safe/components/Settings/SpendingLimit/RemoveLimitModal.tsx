@@ -4,8 +4,10 @@ import { useDispatch } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
@@ -137,11 +139,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Modal.Header onClose={onClose}>
-                <Modal.Header.Title size="xs" withoutMargin>
-                  Remove spending limit
-                </Modal.Header.Title>
-              </Modal.Header>
+              <ModalHeader onClose={onClose} title="Remove spending limit" />
+              <Hairline />
 
               <Modal.Body>
                 <Col margin="lg">

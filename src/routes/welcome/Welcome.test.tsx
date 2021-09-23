@@ -1,5 +1,5 @@
-import { onboard } from 'src/components/ConnectButton'
 import { PUBLIC_URL } from 'src/utils/constants'
+import onboard from 'src/logic/wallets/onboard'
 import { render, fireEvent, screen } from 'src/utils/test-utils'
 import { getNetworkSlug } from '../routes'
 import Welcome from './container'
@@ -20,7 +20,7 @@ describe('<Welcome>', () => {
   })
 
   it('Should prompt user to select a wallet when clicks on Connect wallet button', () => {
-    const showSelectWalletPromptSpy = jest.spyOn(onboard, 'walletSelect')
+    const showSelectWalletPromptSpy = jest.spyOn(onboard(), 'walletSelect')
 
     render(<Welcome />)
 

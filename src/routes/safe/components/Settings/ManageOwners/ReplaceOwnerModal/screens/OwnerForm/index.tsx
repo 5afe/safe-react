@@ -1,5 +1,3 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import { Mutator } from 'final-form'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
@@ -37,6 +35,7 @@ export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid
 export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 import { OwnerValues } from '../..'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 const formMutators: Record<
   string,
@@ -75,15 +74,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Replace owner
-        </Paragraph>
-        <Paragraph className={classes.annotation}>1 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} title="Replace owner" subTitle="1 of 2" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}

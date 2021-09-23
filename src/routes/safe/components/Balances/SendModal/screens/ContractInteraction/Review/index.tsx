@@ -15,7 +15,6 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { Header } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -31,6 +30,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { safeAddressFromUrl } from 'src/utils/router'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 const useStyles = makeStyles(styles)
 
@@ -50,13 +50,12 @@ type Props = {
   txParameters: TxParameters
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = safeAddressFromUrl()
+  const { nativeCoin } = getNetworkInfo()
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -94,7 +93,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
       txData: tx.data ? tx.data.trim() : '',
     })
-  }, [tx.contractAddress, tx.value, tx.data, safeAddress])
+  }, [tx.contractAddress, tx.value, tx.data, safeAddress, nativeCoin.decimals])
 
   const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
@@ -146,7 +145,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Header onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
           <Hairline />
           <Block className={classes.formContainer}>
             <Row margin="xs">

@@ -1,5 +1,3 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -23,6 +21,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -135,15 +134,7 @@ export const ReviewRemoveOwnerModal = ({
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.manage} noMargin weight="bolder">
-              Remove owner
-            </Paragraph>
-            <Paragraph className={classes.annotation}>3 of 3</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} title="Remove owner" subTitle="3 of 3" />
           <Hairline />
           <Block>
             <Row className={classes.root}>

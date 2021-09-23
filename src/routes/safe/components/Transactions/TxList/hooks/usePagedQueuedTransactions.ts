@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadPagedQueuedTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addQueuedTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
@@ -17,6 +18,8 @@ type PagedQueuedTransactions = {
 
 export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
   const transactions = useQueueTransactions()
+  const chainId = useSelector(currentChainId)
+
   const dispatch = useDispatch()
   const safeAddress = safeAddressFromUrl()
   const [hasMore, setHasMore] = useState(true)
@@ -44,7 +47,7 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
     }
 
     if (values) {
-      dispatch(addQueuedTransactions({ safeAddress, values }))
+      dispatch(addQueuedTransactions({ chainId, safeAddress, values }))
     } else {
       setHasMore(false)
     }

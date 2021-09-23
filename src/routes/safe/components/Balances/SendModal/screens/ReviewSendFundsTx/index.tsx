@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -38,10 +36,9 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { safeAddressFromUrl } from 'src/utils/router'
+import { ModalHeader } from '../ModalHeader'
 
 const useStyles = makeStyles(styles)
-
-const { nativeCoin } = getNetworkInfo()
 
 export type ReviewTxProp = {
   recipientAddress: string
@@ -92,9 +89,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = safeAddressFromUrl()
+  const { nativeCoin } = getNetworkInfo()
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, nativeCoin.address), [txToken])
+  const isSendingNativeToken = useMemo(
+    () => sameAddress(txToken?.address, nativeCoin.address),
+    [txToken, nativeCoin.address],
+  )
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
@@ -203,15 +204,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       {(txParameters, toggleEditMode) => (
         <>
           {/* Header */}
-          <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send funds
-            </Paragraph>
-            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
 
           <Hairline />
 

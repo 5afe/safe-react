@@ -58,7 +58,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "public/**/*.{ts}": [
+    "public/**/*.ts": [
       "eslint --fix",
       "prettier --write"
     ],

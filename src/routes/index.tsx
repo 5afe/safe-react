@@ -20,7 +20,7 @@ import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 const Welcome = React.lazy(() => import('./welcome/container'))
 const Open = React.lazy(() => import('./open/container/Open'))
 const Safe = React.lazy(() => import('./safe/container'))
-const Load = React.lazy(() => import('./load/container/Load'))
+const Load = React.lazy(() => import('./new-load/Load'))
 
 const Routes = (): React.ReactElement => {
   const [isInitialLoad, setInitialLoad] = useState(true)

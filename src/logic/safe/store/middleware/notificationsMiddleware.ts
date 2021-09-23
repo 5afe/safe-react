@@ -1,5 +1,6 @@
 import { generatePath } from 'react-router-dom'
-import { getNetworkSlug, history } from 'src/routes/routes'
+import { Action } from 'redux-actions'
+
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -15,15 +16,12 @@ import {
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safesAsMap } from 'src/logic/safe/store/selectors'
-
 import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionListItem, Transaction, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getNetworkSlug, SAFE_ROUTES, history } from 'src/routes/routes'
 import { safeAddressFromUrl } from 'src/utils/router'
-import { Store } from 'redux'
-import { Action } from 'redux-actions'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -69,104 +67,105 @@ const sendAwaitingTransactionNotification = async (
 
 const onNotificationClicked = (dispatch, notificationKey, safeAddress) => () => {
   dispatch(closeSnackbarAction({ key: notificationKey }))
-  history.push(
-    generatePath(SAFE_ROUTES.TRANSACTIONS, {
-      network: getNetworkSlug(),
-      safeAddress,
-    }),
+  dispatch(
+    history.push(
+      generatePath(SAFE_ROUTES.TRANSACTIONS, {
+        network: getNetworkSlug(),
+        safeAddress,
+      }),
+    ),
   )
 }
 
-const notificationsMiddleware =
-  (store: Store<any, any>) =>
-  (next: (arg0: Action<QueuedPayload>) => any) =>
-  async (action: Action<any>): Promise<any> => {
-    const handledAction = next(action)
-    const { dispatch } = store
+const notificationsMiddleware = (store) => (next) => async (action) => {
+  const handledAction = next(action)
+  const { dispatch } = store
 
-    if (watchedActions.includes(action.type)) {
-      const state = store.getState()
+  if (watchedActions.includes(action.type)) {
+    const state = store.getState()
 
-      switch (action.type) {
-        case ADD_HISTORY_TRANSACTIONS: {
-          const userAddress: string = userAccountSelector(state)
-          const safesMap = safesAsMap(state)
+    switch (action.type) {
+      case ADD_HISTORY_TRANSACTIONS: {
+        const userAddress: string = userAccountSelector(state)
+        const safesMap = safesAsMap(state)
 
-          const executedTxNotification = aboutToExecuteTx.getNotification(action.payload, userAddress, safesMap)
-          // if we have a notification, dispatch it depending on transaction's status
-          executedTxNotification && dispatch(enqueueSnackbar(executedTxNotification))
+        const executedTxNotification = aboutToExecuteTx.getNotification(action.payload, userAddress, safesMap)
+        // if we have a notification, dispatch it depending on transaction's status
+        executedTxNotification && dispatch(enqueueSnackbar(executedTxNotification))
 
+        break
+      }
+      case ADD_QUEUED_TRANSACTIONS: {
+        const { safeAddress, values } = (action as Action<QueuedPayload>).payload
+        const transactions: TransactionSummary[] = values
+          .filter((tx) => isTransactionSummary(tx))
+          .map((item: TransactionListItem) => (item as Transaction).transaction)
+        const userAddress: string = userAccountSelector(state)
+        const awaitingTransactions = getAwaitingGatewayTransactions(transactions, userAddress)
+
+        const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.timestamp)
+
+        const safesMap = safesAsMap(state)
+        const currentSafe = safesMap.get(safeAddress)
+
+        if (!currentSafe || !isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.length === 0) {
           break
         }
-        case ADD_QUEUED_TRANSACTIONS: {
-          const { safeAddress, values } = (action as Action<QueuedPayload>).payload
-          const transactions: TransactionSummary[] = values
-            .filter((tx) => isTransactionSummary(tx))
-            .map((item: TransactionListItem) => (item as Transaction).transaction)
-          const userAddress: string = userAccountSelector(state)
-          const awaitingTransactions = getAwaitingGatewayTransactions(transactions, userAddress)
 
-          const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.timestamp)
+        const notificationKey = `${safeAddress}-awaiting`
 
-          const safesMap = safesAsMap(state)
-          const currentSafe = safesMap.get(safeAddress)
+        await sendAwaitingTransactionNotification(
+          dispatch,
+          safeAddress,
+          awaitingTxsSubmissionDateList,
+          notificationKey,
+          onNotificationClicked(dispatch, notificationKey, safeAddress),
+        )
 
-          if (!currentSafe || !isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.length === 0) {
-            break
-          }
-
-          const notificationKey = `${safeAddress}-awaiting`
-
-          await sendAwaitingTransactionNotification(
-            dispatch,
-            safeAddress,
-            awaitingTxsSubmissionDateList,
-            notificationKey,
-            onNotificationClicked(dispatch, notificationKey, safeAddress),
-          )
-
+        break
+      }
+      case ADD_OR_UPDATE_SAFE: {
+        const state = store.getState()
+        const safe = action.payload
+        const currentSafeAddress = safeAddressFromUrl() || safe.address
+        if (!currentSafeAddress || !safe.currentVersion) {
           break
         }
-        case ADD_OR_UPDATE_SAFE: {
-          const state = store.getState()
-          const { safe } = action.payload
-          const currentSafeAddress = safeAddressFromUrl() || safe.address
-          if (!currentSafeAddress || !safe.currentVersion) {
-            break
-          }
-          const isUserOwner = grantedSelector(state)
-          const version = await getSafeVersionInfo(safe.currentVersion)
+        const isUserOwner = grantedSelector(state)
+        const version = await getSafeVersionInfo(safe.currentVersion)
 
-          const notificationKey = `${currentSafeAddress}-update`
-          const onNotificationClicked = () => {
-            dispatch(closeSnackbarAction({ key: notificationKey }))
+        const notificationKey = `${currentSafeAddress}-update`
+        const onNotificationClicked = () => {
+          dispatch(closeSnackbarAction({ key: notificationKey }))
+          dispatch(
             history.push(
               generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
                 network: getNetworkSlug(),
                 safeAddress: currentSafeAddress,
               }),
-            )
-          }
-
-          if (version?.needUpdate && isUserOwner) {
-            dispatch(
-              enqueueSnackbar(
-                enhanceSnackbarForAction(
-                  NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
-                  notificationKey,
-                  onNotificationClicked,
-                ),
-              ),
-            )
-          }
-          break
+            ),
+          )
         }
-        default:
-          break
-      }
-    }
 
-    return handledAction
+        if (version?.needUpdate && isUserOwner) {
+          dispatch(
+            enqueueSnackbar(
+              enhanceSnackbarForAction(
+                NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
+                notificationKey,
+                onNotificationClicked,
+              ),
+            ),
+          )
+        }
+        break
+      }
+      default:
+        break
+    }
   }
+
+  return handledAction
+}
 
 export default notificationsMiddleware

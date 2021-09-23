@@ -1,8 +1,6 @@
 import { ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -28,6 +26,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { safeAddressFromUrl } from 'src/utils/router'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -44,12 +43,11 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const { nativeCoin } = getNetworkInfo()
-
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = safeAddressFromUrl()
+  const { nativeCoin } = getNetworkInfo()
 
   const {
     gasLimit,
@@ -102,15 +100,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Contract interaction
-            </Paragraph>
-            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
+          <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
           <Hairline />
           <Block className={classes.container}>
             <SafeInfo />

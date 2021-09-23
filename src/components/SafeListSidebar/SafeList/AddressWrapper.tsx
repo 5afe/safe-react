@@ -39,10 +39,9 @@ type Props = {
   safe: SafeRecordWithNames
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const AddressWrapper = ({ safe }: Props): ReactElement => {
   const classes = useStyles()
+  const { nativeCoin } = getNetworkInfo()
 
   return (
     <div className={classes.wrapper}>

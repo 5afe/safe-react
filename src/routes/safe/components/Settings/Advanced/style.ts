@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 
-import { background, lg, md, sm } from 'src/theme/variables'
+import { background, lg, md } from 'src/theme/variables'
 
 export const useStyles = makeStyles(
   createStyles({
@@ -24,19 +24,6 @@ export const useStyles = makeStyles(
       '& > td': {
         borderBottom: 'none',
       },
-    },
-    modalHeading: {
-      boxSizing: 'border-box',
-      justifyContent: 'space-between',
-      height: '74px',
-      padding: `${sm} ${lg}`,
-    },
-    modalManage: {
-      fontSize: lg,
-    },
-    modalClose: {
-      height: '35px',
-      width: '35px',
     },
     modalOwner: {
       padding: md,

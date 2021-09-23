@@ -51,12 +51,13 @@ type TxByLocation = {
 
 const getTransactionsByLocation = createHashBasedSelector(
   gatewayTransactions,
+  currentChainId,
   safeAddressFromUrl,
-  (gatewayTransactions, safeAddress) =>
+  (gatewayTransactions, chainId, safeAddress) =>
     (rest: TxByLocationAttr): TxByLocation => ({
       attributeName: rest.attributeName,
       attributeValue: rest.attributeValue,
-      transactions: safeAddress ? get(gatewayTransactions[safeAddress], rest.txLocation) : [],
+      transactions: chainId && safeAddress ? get(gatewayTransactions[chainId][safeAddress], rest.txLocation) : [],
     }),
 )
 

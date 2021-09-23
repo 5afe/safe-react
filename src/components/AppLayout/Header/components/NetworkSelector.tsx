@@ -1,4 +1,6 @@
-import { ReactElement, useRef, Fragment } from 'react'
+import { ReactElement, useRef, Fragment, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -9,17 +11,18 @@ import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { Divider, Icon } from '@gnosis.pm/safe-react-components'
+import { generatePath } from 'react-router'
 
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-import { getNetworkName } from 'src/config'
+import { getConfig, getNetworkName, setNetworkId } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
-import { generatePath } from 'react-router'
 import { ROOT_ROUTE } from 'src/routes/routes'
-import { Link } from 'react-router-dom'
+import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
+import { configStore } from 'src/logic/config/store/actions'
 
 const styles = {
   root: {
@@ -61,7 +64,7 @@ const styles = {
 
 const useStyles = makeStyles(styles)
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.a`
   margin: 0;
   text-decoration: none;
   display: flex;
@@ -83,7 +86,24 @@ type NetworkSelectorProps = ReturnValue & {
 const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorProps): ReactElement => {
   const networkRef = useRef(null)
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const history = useHistory()
   const networkName = getNetworkName().toLowerCase()
+
+  const onNetworkSwitch = useCallback(
+    (network: NetworkInfo) => {
+      clickAway()
+      setNetworkId(getNetworkName(network.id))
+      const safeConfig = makeNetworkConfig(getConfig())
+      dispatch(configStore(safeConfig))
+      history.push(
+        generatePath(ROOT_ROUTE, {
+          network: network.label.toLowerCase(),
+        }),
+      )
+    },
+    [clickAway, dispatch, history],
+  )
 
   return (
     <>
@@ -110,11 +130,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
                 <List className={classes.network} component="div">
                   {networks.map((network) => (
                     <Fragment key={network.id}>
-                      <StyledLink
-                        to={generatePath(ROOT_ROUTE, {
-                          network: network.label?.toLowerCase(),
-                        })}
-                      >
+                      <StyledLink onClick={() => onNetworkSwitch(network)}>
                         <NetworkLabel networkInfo={network} />
                         {sameString(networkName, network.label?.toLowerCase()) && (
                           <Icon type="check" size="md" color="primary" />

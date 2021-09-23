@@ -16,8 +16,8 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
+import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -34,6 +34,7 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
 
@@ -73,9 +74,6 @@ type Props = {
   appUrl: string
 }
 
-const NETWORK_NAME = getNetworkName()
-const NETWORK_ID = getNetworkId()
-
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
   txs: [],
@@ -89,6 +87,7 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
+  const networkId = useSelector(currentChainId)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const history = useHistory()
@@ -159,7 +158,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
+        network: getNetworkName().toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
@@ -182,8 +181,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: NETWORK_NAME,
-      chainId: parseInt(NETWORK_ID, 10),
+      network: getNetworkName(),
+      chainId: parseInt(networkId, 10),
       owners,
       threshold,
     }))
@@ -234,7 +233,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       openSignMessageModal(message, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, networkId])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler

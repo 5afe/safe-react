@@ -27,10 +27,9 @@ type ReviewComponentProps = {
   form: FormApi
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement => {
   const classes = useStyles()
+  const { nativeCoin } = getNetworkInfo()
 
   const names = getNamesFrom(values)
   const addresses = useMemo(() => getAccountsFrom(values), [values])

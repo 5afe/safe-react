@@ -20,11 +20,10 @@ import Img from 'src/components/layout/Img/index'
 import { getNetworkInfo } from 'src/config'
 import { sameString } from 'src/utils/strings'
 
-const { nativeCoin } = getNetworkInfo()
-
 export const CurrencyDropdown = (): React.ReactElement | null => {
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null)
+  const { nativeCoin } = getNetworkInfo()
   const selectedCurrency = useSelector(currentCurrencySelector)
   const [searchParams, setSearchParams] = useState('')
   const currenciesList = useSelector(availableCurrenciesSelector)

@@ -19,7 +19,6 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
-
 import { getExplorerInfo, getNetworkId } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
@@ -49,6 +48,7 @@ import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -74,9 +74,6 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const chainId = getNetworkId()
-const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
-
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
   const columns = generateColumns()
@@ -84,7 +81,9 @@ const AddressBookTable = (): ReactElement => {
   const dispatch = useDispatch()
   const safesList = useSelector(safesAsList)
   const addressBook = useSelector(currentNetworkAddressBook)
+  const networkId = useSelector(currentChainId)
   const granted = useSelector(grantedSelector)
+  const initialEntryState: Entry = { entry: { address: '', name: '', chainId: getNetworkId(), isNew: true } }
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [importEntryModalOpen, setImportEntryModalOpen] = useState(false)
@@ -121,13 +120,13 @@ const AddressBookTable = (): ReactElement => {
           entry: {
             name: '',
             address,
-            chainId,
+            chainId: networkId,
             isNew: true,
           },
         })
       }
     }
-  }, [addressBook, entryAddressToEditOrCreateNew])
+  }, [addressBook, entryAddressToEditOrCreateNew, networkId])
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     // close the modal

@@ -7,6 +7,7 @@ import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTra
 import { AppReduxState } from 'src/store'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { safeAddressFromUrl } from 'src/utils/router'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const UPDATE_TRANSACTION_DETAILS = 'UPDATE_TRANSACTION_DETAILS'
 const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_TRANSACTION_DETAILS)
@@ -20,6 +21,7 @@ export const fetchTransactionDetails =
       txLocation,
     })
     const safeAddress = safeAddressFromUrl()
+    const chainId = currentChainId(getState())
 
     if (txDetails || !safeAddress) {
       return
@@ -28,7 +30,7 @@ export const fetchTransactionDetails =
     try {
       const transactionDetails = await fetchSafeTransaction(transactionId)
 
-      dispatch(updateTransactionDetails({ transactionId, txLocation, safeAddress, value: transactionDetails }))
+      dispatch(updateTransactionDetails({ chainId, transactionId, txLocation, safeAddress, value: transactionDetails }))
     } catch (error) {
       console.error(`Failed to retrieve transaction ${transactionId} details`, error.message)
     }
