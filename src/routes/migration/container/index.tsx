@@ -8,14 +8,14 @@ export type MigrationMessage = {
 const MigrationScreen = (): ReactElement => {
   useEffect(() => {
     const loadStorageMigrationDone = async () => {
-      const payload = {}
+      // const payload = {}
       console.log('This is migration screen localStorage', localStorage)
-      Object.keys(localStorage).forEach((key) => {
-        payload[key] = JSON.stringify(localStorage[key])
-      })
+      // Object.keys(localStorage).forEach((key) => {
+      //   payload[key] = localStorage[key]
+      // })
       const message: MigrationMessage = {
         migrate: true,
-        payload: JSON.stringify(payload),
+        payload: JSON.stringify(localStorage),
       }
       console.log('This is the parent', window.parent)
       console.log('This is the window origin', window.origin)

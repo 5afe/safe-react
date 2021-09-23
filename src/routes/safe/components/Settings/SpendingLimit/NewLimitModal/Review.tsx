@@ -27,14 +27,16 @@ import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/sty
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-
-import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import Hairline from 'src/components/layout/Hairline'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { isModuleEnabled } from 'src/logic/safe/utils/modules'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+
+import { ActionCallback, CREATE } from '.'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -274,14 +276,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Modal.Header onClose={onClose}>
-            <Modal.Header.Title>
-              New spending limit
-              <Text size="lg" color="secondaryLight" as="span">
-                2 of 2
-              </Text>
-            </Modal.Header.Title>
-          </Modal.Header>
+          <ModalHeader onClose={onClose} title="New spending limit" subTitle="2 of 2" />
+          <Hairline />
 
           <Modal.Body>
             <Col margin="lg">
