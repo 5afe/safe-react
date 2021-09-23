@@ -188,6 +188,9 @@ describe('extractRemoteSafeInfo', () => {
       needsUpdate: false,
       guard: undefined,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
+      collectiblesTag: undefined,
+      txHistoryTag: undefined,
+      txQueuedTag: undefined,
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules as any)
@@ -208,6 +211,9 @@ describe('extractRemoteSafeInfo', () => {
       needsUpdate: false,
       guard: '0x4f8a82d73729A33E0165aDeF3450A7F85f007528',
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
+      collectiblesTag: undefined,
+      txHistoryTag: undefined,
+      txQueuedTag: undefined,
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules as any)
