@@ -66,7 +66,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         const addedSafesOnNetwork = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
         const shouldExpandOwnedSafes = localSafesOnNetwork.some(({ address }) => isSafeAdded(loadedSafes, address))
 
-        if (!localSafesOnNetwork.length && !addedSafesOnNetwork.length) return null
+        if (!isCurrentNetwork && !localSafesOnNetwork.length && !addedSafesOnNetwork.length) return null
         return (
           <Fragment key={id}>
             <ListItem selected>
@@ -77,20 +77,27 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
               {addedSafesOnNetwork.map((safe) => (
                 <SafeListItem
                   key={safe.address}
+                  networkId={id}
                   onNetworkSwitch={() => setNetwork(id)}
                   onSafeClick={onSafeClick}
                   safes={loadedSafes}
                   {...safe}
                 />
               ))}
-              {ownedSafes.length > 0 && (
+              {(ownedSafes.length > 0 || isCurrentNetwork) && (
                 <ListItem classes={{ root: classes.listItemCollapse }}>
                   <Collapse
                     title={`Safes owned on ${label} (${localSafesOnNetwork.length})`}
                     defaultExpanded={shouldExpandOwnedSafes}
                   >
                     {ownedSafes.map((address) => (
-                      <SafeListItem key={address} address={address} onSafeClick={onSafeClick} safes={loadedSafes} />
+                      <SafeListItem
+                        key={address}
+                        address={address}
+                        networkId={id}
+                        onSafeClick={onSafeClick}
+                        safes={loadedSafes}
+                      />
                     ))}
                   </Collapse>
                 </ListItem>
