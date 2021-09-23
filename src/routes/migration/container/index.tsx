@@ -5,7 +5,7 @@ import { isLocalStorageMigrated } from 'src/logic/currentSession/store/selectors
 import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 
 export type MigrationMessage = {
-  migrate: boolean
+  executeMigration: boolean
   payload: string
 }
 
@@ -24,7 +24,7 @@ const MigrationScreen = (): ReactElement => {
         }
       })
       const message: MigrationMessage = {
-        migrate: true,
+        executeMigration: true,
         payload: JSON.stringify(payload),
       }
       console.log('This is the parent', window.parent)
@@ -34,9 +34,17 @@ const MigrationScreen = (): ReactElement => {
       // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
     }
 
+    const skipMigration = () => {
+      const message: MigrationMessage = {
+        executeMigration: false,
+        payload: '',
+      }
+      window.parent.postMessage(message, '*')
+    }
+
     console.log('Is already migrated?', alreadyMigrated)
     if (alreadyMigrated) {
-      window.parent.postMessage({}, '*')
+      skipMigration()
     } else {
       sendStorageInformation()
     }
