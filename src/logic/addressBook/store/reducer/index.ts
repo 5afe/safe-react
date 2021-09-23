@@ -11,7 +11,8 @@ type Payloads = AddressBookEntry | AddressBookState
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
-  const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name.trim() }))
+  // We check that name exist before trimming to avoid issues during migration to unified domain
+  const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name ? entry.name.trim() : '' }))
   addressBookEntries
     // exclude those entries with invalid name
     .filter(({ name }) => isValidAddressBookName(name))
