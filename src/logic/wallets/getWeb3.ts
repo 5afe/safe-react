@@ -1,8 +1,6 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
-import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
-
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
@@ -105,11 +103,4 @@ export const setWeb3 = (provider: Provider): void => {
 export const isTxPendingError = (err: Error): boolean => {
   const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
   return (err.message || '').startsWith(WEB3_TX_NOT_MINED_ERROR)
-}
-
-export const getSDKWeb3Adapter = (signerAddress: string): Web3Adapter => {
-  return new Web3Adapter({
-    web3: getWeb3(),
-    signerAddress,
-  })
 }
