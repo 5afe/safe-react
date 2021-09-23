@@ -44,7 +44,8 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
     const ethAdapter = getSDKWeb3Adapter(txConfig.from)
 
     return await ethAdapter.estimateGas(txConfig)
-  } catch (err) {
+  } catch {
+    const err = new CodedException(Errors._611, 'malformed transaction details')
     return Promise.reject(err)
   }
 }
