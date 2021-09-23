@@ -31,8 +31,9 @@ const StoreMigrator = (): ReactElement => {
       const isTrustedOrigin = networks.some((network) => {
         return network.safeUrl.includes(event.origin)
       })
+      const executeMigration = event.data.migrate
       const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
-      if (event.data.migrate && isValidOrigin) {
+      if (executeMigration && isValidOrigin) {
         try {
           const payload = JSON.parse(event.data.payload)
           const promises = Object.keys(payload).map(async (key) => {
@@ -51,6 +52,8 @@ const StoreMigrator = (): ReactElement => {
         } catch (error) {
           logError(Errors._703, error.message)
         }
+      } else if (!executeMigration && isValidOrigin) {
+        setCurrentNetwork(currentNetwork + 1)
       }
     }
 
