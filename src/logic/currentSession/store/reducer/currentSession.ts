@@ -48,6 +48,8 @@ export default handleActions<AppReduxState['currentSession'], CurrentSessionPayl
         isLocalStorageMigrated: action.payload,
       }
 
+      saveCurrentSessionToStorage(newState)
+
       return newState
     },
   },
