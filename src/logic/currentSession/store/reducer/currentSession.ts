@@ -2,6 +2,7 @@ import { Action, handleActions } from 'redux-actions'
 
 import { LOAD_CURRENT_SESSION } from 'src/logic/currentSession/store/actions/loadCurrentSession'
 import { UPDATE_VIEWED_SAFES } from 'src/logic/currentSession/store/actions/updateViewedSafes'
+import { SET_LOCAL_STORAGE_MIGRATED } from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 import { AppReduxState } from 'src/store'
 
@@ -9,16 +10,18 @@ export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 const MAX_VIEWED_SAFES = 10
 
 export type CurrentSessionState = {
+  isLocalStorageMigrated: boolean
   viewedSafes: string[]
   restored: boolean
 }
 
 export const initialState = {
+  isLocalStorageMigrated: false,
   viewedSafes: [],
   restored: false,
 }
 
-type CurrentSessionPayloads = CurrentSessionState | string
+type CurrentSessionPayloads = CurrentSessionState | string | boolean
 
 export default handleActions<AppReduxState['currentSession'], CurrentSessionPayloads>(
   {
@@ -36,6 +39,14 @@ export default handleActions<AppReduxState['currentSession'], CurrentSessionPayl
       }
 
       saveCurrentSessionToStorage(newState)
+
+      return newState
+    },
+    [SET_LOCAL_STORAGE_MIGRATED]: (state, action: Action<boolean>) => {
+      const newState = {
+        ...state,
+        isLocalStorageMigrated: action.payload,
+      }
 
       return newState
     },

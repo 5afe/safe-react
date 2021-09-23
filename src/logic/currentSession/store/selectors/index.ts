@@ -8,3 +8,7 @@ export const lastViewedSafe = (state: AppReduxState['currentSession']): string |
   }
   return currentSession.viewedSafes[0] || ''
 }
+
+export const isLocalStorageMigrated = (state: AppReduxState['currentSession']): string | null => {
+  return state[CURRENT_SESSION_REDUCER_ID].isLocalStorageMigrated
+}

@@ -1,4 +1,8 @@
 import { ReactElement, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { isLocalStorageMigrated } from 'src/logic/currentSession/store/selectors'
+import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 
 export type MigrationMessage = {
   migrate: boolean
@@ -6,25 +10,37 @@ export type MigrationMessage = {
 }
 
 const MigrationScreen = (): ReactElement => {
+  const dispatch = useDispatch()
+  const alreadyMigrated = useSelector(isLocalStorageMigrated)
+
   useEffect(() => {
-    const loadStorageMigrationDone = async () => {
-      // const payload = {}
-      console.log('This is migration screen localStorage', localStorage)
-      // Object.keys(localStorage).forEach((key) => {
-      //   payload[key] = localStorage[key]
-      // })
+    const sendStorageInformation = async () => {
+      const payload = {}
+      Object.keys(localStorage).forEach((key) => {
+        // We only migrate the addres book and safe information related keys
+        // We avoid moving any related session information that could be sensible (WalletConnect...)
+        if (key === 'SAFE__addressBook' || key.startsWith('_immortal|v2_')) {
+          payload[key] = localStorage[key]
+        }
+      })
       const message: MigrationMessage = {
         migrate: true,
-        payload: JSON.stringify(localStorage),
+        payload: JSON.stringify(payload),
       }
       console.log('This is the parent', window.parent)
       console.log('This is the window origin', window.origin)
       window.parent.postMessage(message, '*')
+      dispatch(setLocalStorageMigrated(true))
       // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
     }
 
-    loadStorageMigrationDone()
-  }, [])
+    console.log('Is already migrated?', alreadyMigrated)
+    if (alreadyMigrated) {
+      window.parent.postMessage({}, '*')
+    } else {
+      sendStorageInformation()
+    }
+  }, [alreadyMigrated, dispatch])
 
   return <></>
 }
