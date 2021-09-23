@@ -25,25 +25,25 @@ const StoreMigrator = (): ReactElement => {
   const dispatch = useDispatch()
   //let networks = getNetworks()
 
-  // Recieve the data to be migrated and save it into the storage
+  // Add an event listener to recieve the data to be migrated and save it into the storage
   useEffect(() => {
     const saveEventData = async (event: MigrationMessageEvent) => {
       const isTrustedOrigin = networks.some((network) => {
         return network.safeUrl.includes(event.origin)
       })
-      const isRightOrigin = event.origin !== self.origin && isTrustedOrigin
-      if (event.data.migrate && isRightOrigin) {
+      const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
+      if (event.data.migrate && isValidOrigin) {
         try {
           const payload = JSON.parse(event.data.payload)
-          console.log('Parsed payload', payload)
-
           const promises = Object.keys(payload).map(async (key) => {
             const payloadEntry = JSON.parse(payload[key])
             if (key === 'SAFE__addressBook') {
               dispatch(addressBookMigrate(JSON.parse(payloadEntry)))
             } else if (key.startsWith('_immortal|v2_')) {
+              // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
+              const storageKey = key.replace('_immortal|', '')
               // Save entry in localStorage
-              await saveMigratedKeyToStorage(key, payloadEntry)
+              await saveMigratedKeyToStorage(storageKey, JSON.parse(payloadEntry))
             }
           })
           await Promise.all(promises)
@@ -62,7 +62,7 @@ const StoreMigrator = (): ReactElement => {
     return !MAINET_URL.includes(self.origin) && network.safeUrl.includes(self.origin)
   })
 
-  // Migrate local storage
+  // Open another network in the iframe to migrate local storage
   useEffect(() => {
     console.log(isSingleNetworkApp)
     if (!isSingleNetworkApp && currentNetwork < networks.length) {
