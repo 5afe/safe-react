@@ -11,8 +11,8 @@ import Controls from './Controls'
 
 import GnoForm from 'src/components/forms/GnoForm'
 import Hairline from 'src/components/layout/Hairline'
-import { history } from 'src/routes/routes'
 import { LoadFormValues } from 'src/routes/load/container/Load'
+import { useHistory } from 'react-router'
 
 const transitionProps = {
   timeout: {
@@ -62,6 +62,7 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
   const [page, setPage] = useState(0)
   const [values, setValues] = useState({})
   const classes = useStyles()
+  const history = useHistory()
 
   useEffect(() => {
     if (props.initialValues) {

@@ -3,7 +3,7 @@ import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { generatePath, useLocation } from 'react-router-dom'
+import { generatePath, useHistory, useLocation } from 'react-router-dom'
 import { TransactionReceipt } from 'web3-core'
 
 import { SafeDeployment } from 'src/routes/opening'
@@ -21,7 +21,6 @@ import {
 } from 'src/routes/open/utils/safeDataExtractor'
 import { getNetworkSlug, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import { history } from 'src/routes/routes'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
@@ -122,6 +121,7 @@ const Open = (): ReactElement => {
   const userAccount = useSelector(userAccountSelector)
   const dispatch = useDispatch()
   const location = useLocation()
+  const history = useHistory()
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {

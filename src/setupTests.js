@@ -98,10 +98,7 @@ const mockRinkebyNetwork = {
   ...rinkeby,
   environment: {
     ...rinkeby.environment,
-    test: {
-      ...rinkeby.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.rinkeby.fake/app/',
-    },
+    test: rinkeby.environment.dev,
   },
 }
 
@@ -109,10 +106,7 @@ const mockPolygonNetwork = {
   ...polygon,
   environment: {
     ...polygon.environment,
-    test: {
-      ...polygon.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.polygon.fake/app/',
-    },
+    test: polygon.environment.dev,
   },
 }
 
@@ -120,10 +114,7 @@ const mockLocalNetwork = {
   ...local,
   environment: {
     ...local.environment,
-    test: {
-      ...local.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.local.fake/app/',
-    },
+    test: local.environment.dev,
   },
 }
 
@@ -131,10 +122,7 @@ const mockMainnetNetwork = {
   ...mainnet,
   environment: {
     ...mainnet.environment,
-    test: {
-      ...mainnet.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.mainnet.fake/app/',
-    },
+    test: mainnet.environment.dev,
   },
 }
 
@@ -142,10 +130,7 @@ const mockXdaiNetwork = {
   ...xdai,
   environment: {
     ...xdai.environment,
-    test: {
-      ...xdai.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.xdai.fake/app/',
-    },
+    test: xdai.environment.dev,
   },
 }
 
@@ -153,10 +138,7 @@ const mockEnergyWebChain = {
   ...energy_web_chain,
   environment: {
     ...energy_web_chain.environment,
-    test: {
-      ...energy_web_chain.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.energy_web_chain.fake/app/',
-    },
+    test: energy_web_chain.environment.dev,
   },
 }
 
@@ -164,10 +146,7 @@ const mockVoltaChain = {
   ...volta,
   environment: {
     ...volta.environment,
-    test: {
-      ...volta.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.volta.fake/app/',
-    },
+    test: volta.environment.dev,
   },
 }
 
@@ -175,10 +154,7 @@ const mockBscChain = {
   ...bsc,
   environment: {
     ...bsc.environment,
-    test: {
-      ...bsc.environment.dev,
-      safeUrl: 'https://safe-test-fake-url.bsc.fake/app/',
-    },
+    test: bsc.environment.dev,
   },
 }
 

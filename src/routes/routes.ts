@@ -13,8 +13,8 @@ export const getNetworkSlug = (): string => {
 
 export const ROOT_ROUTE = '/:network'
 export const WELCOME_ROUTE = `${ROOT_ROUTE}/welcome`
-export const OPEN_ROUTE = `${ROOT_ROUTE}/:network/open`
-export const LOAD_ROUTE = `${ROOT_ROUTE}/:network/load`
+export const OPEN_ROUTE = `${ROOT_ROUTE}/open`
+export const LOAD_ROUTE = `${ROOT_ROUTE}/load`
 
 export const BASE_SAFE_ROUTE = `${ROOT_ROUTE}/safes/:safeAddress`
 

@@ -74,6 +74,8 @@ type Props = {
 export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
 
+  const baseRouteSlugs = { network: getNetworkSlug() }
+
   return (
     <Block>
       {/* Title */}
@@ -155,7 +157,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 color="primary"
                 variant="contained"
                 component={Link}
-                to={generatePath(OPEN_ROUTE, { network: getNetworkSlug() })}
+                to={generatePath(OPEN_ROUTE, baseRouteSlugs)}
               >
                 <Text size="xl" color="white">
                   + Create new Safe
@@ -181,7 +183,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 size="lg"
                 color="secondary"
                 component={Link}
-                to={generatePath(LOAD_ROUTE, { network: getNetworkSlug() })}
+                to={generatePath(LOAD_ROUTE, baseRouteSlugs)}
               >
                 <Text size="xl" color="secondary">
                   Add existing Safe

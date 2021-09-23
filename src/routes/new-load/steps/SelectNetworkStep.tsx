@@ -11,7 +11,7 @@ import { makeStyles, Typography } from '@material-ui/core'
 import NetworkLabel from 'src/components/AppLayout/Header/components/NetworkLabel'
 import Block from 'src/components/layout/Block'
 import { getConfig, getNetworkLabel, getNetworkName, getNetworks, setNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { NetworkInfo } from 'src/config/networks/network.d'
 import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
 import { configStore } from 'src/logic/config/store/actions'
 import { lg } from 'src/theme/variables'
@@ -36,8 +36,8 @@ function SelectNetworkStep(): ReactElement {
   const networks = getNetworks()
 
   const onNetworkSwitch = useCallback(
-    (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-      setNetworkId(getNetworkName(networkId))
+    (network: NetworkInfo) => {
+      setNetworkId(getNetworkName(network.id))
       const safeConfig = makeNetworkConfig(getConfig())
       dispatch(configStore(safeConfig))
       setIsNetworkSelectorPopupOpen(false)
@@ -83,7 +83,7 @@ function SelectNetworkStep(): ReactElement {
                 key={network.id}
                 role={'button'}
                 className={classes.networkLabel}
-                onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
+                onClick={() => onNetworkSwitch(network)}
               >
                 <NetworkLabel networkInfo={network} />
               </div>

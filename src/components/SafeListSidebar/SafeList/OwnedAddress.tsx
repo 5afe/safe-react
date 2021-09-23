@@ -50,7 +50,7 @@ export const OwnedAddress = ({ address, isAdded, onClick, children }: Props): Re
       </Link>
 
       {!isAdded && (
-        <Link to={generatePath(LOAD_ROUTE, baseRouteSlugs)} onClick={onClick}>
+        <Link to={generatePath(`${LOAD_ROUTE}/:safeAddress`, baseRouteSlugs)} onClick={onClick}>
           <Text size="sm" color="primary">
             Add Safe
           </Text>
