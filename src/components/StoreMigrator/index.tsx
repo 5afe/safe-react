@@ -38,12 +38,12 @@ const StoreMigrator = (): ReactElement => {
           const promises = Object.keys(payload).map(async (key) => {
             const payloadEntry = JSON.parse(payload[key])
             if (key === 'SAFE__addressBook') {
-              dispatch(addressBookMigrate(JSON.parse(payloadEntry)))
+              dispatch(addressBookMigrate(payloadEntry))
             } else if (key.startsWith('_immortal|v2_')) {
               // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
               const storageKey = key.replace('_immortal|', '')
               // Save entry in localStorage
-              await saveMigratedKeyToStorage(storageKey, JSON.parse(payloadEntry))
+              await saveMigratedKeyToStorage(storageKey, payloadEntry)
             }
           })
           await Promise.all(promises)
