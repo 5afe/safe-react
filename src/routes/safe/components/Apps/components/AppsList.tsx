@@ -12,7 +12,7 @@ import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SAFE_ROUTES } from 'src/routes/routes'
 
-import { useAppList } from '../hooks/useAppList'
+import { useAppList } from '../hooks/appList/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 

@@ -1,14 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { AppData, fetchSafeAppsList } from 'src/logic/configService'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { getNetworkId } from 'src/config'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { NOTIFICATIONS } from 'src/logic/notifications'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp } from '../utils'
-import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
+import { getAppInfoFromUrl, getEmptySafeApp } from '../../utils'
+import { SafeApp, SAFE_APP_FETCH_STATUS } from '../../types'
+import { useCustomSafeApps } from './useCustomSafeApps'
+import { useRemoteSafeApps } from './useRemoteSafeApps'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -18,32 +14,8 @@ type UseAppListReturnType = {
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
-  const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
-  const [customAppList, setCustomAppList] = useState<
-    (StoredSafeApp & { disabled?: boolean; networks?: ETHEREUM_NETWORK[] })[]
-  >([])
-  const [pinnedApps, setPinnedApps] = useState<SafeApp[]>([])
-  const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const loadAppsList = async () => {
-      setIsLoading(true)
-      try {
-        const result = await fetchSafeAppsList()
-        if (result?.length) {
-          setApiAppsList(result)
-        }
-      } catch (e) {
-        logError(Errors._902, e.message)
-        dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadAppsList()
-  }, [dispatch])
+  const [apiAppsList, isLoading] = useRemoteSafeApps()
+  const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -61,16 +33,6 @@ const useAppList = (): UseAppListReturnType => {
     }
 
     const loadApps = async () => {
-      // recover apps from storage (third-party apps added by the user)
-      let storageAppList =
-        (await loadFromStorage<
-          (StoredSafeApp & { disabled?: boolean; networks?: ETHEREUM_NETWORK[]; custom?: boolean })[]
-        >(APPS_STORAGE_KEY)) || []
-      storageAppList = storageAppList.map((app) => {
-        app.custom = true
-        return app
-      })
-      setCustomAppList(storageAppList)
       // backward compatibility. In a previous implementation a safe app could be disabled, that state was
       // persisted in the storage.
       const customApps = storageAppList.filter(
@@ -113,13 +75,13 @@ const useAppList = (): UseAppListReturnType => {
     (appUrl: string): void => {
       setAppList((list) => {
         const newList = list.filter(({ url }) => url !== appUrl)
-        const newPersistedList = customAppList.filter(({ url }) => url !== appUrl)
-        saveToStorage(APPS_STORAGE_KEY, newPersistedList)
+        const newPersistedList = customSafeApps.filter(({ url }) => url !== appUrl)
+        updateCustomSafeApps(newPersistedList)
 
         return newList
       })
     },
-    [customAppList],
+    [updateCustomSafeApps, customSafeApps],
   )
 
   return {
