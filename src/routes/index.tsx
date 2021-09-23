@@ -64,7 +64,7 @@ const Routes = (): React.ReactElement => {
     <Switch>
       <Route
         exact
-        path="/"
+        path={['/', '/:network']}
         render={() => {
           if (!isInitialLoad) {
             return <Redirect to={generatePath(WELCOME_ROUTE, baseRouteSlugs)} />
