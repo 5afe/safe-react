@@ -19,13 +19,16 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import Img from 'src/components/layout/Img/index'
 import { getNetworkInfo } from 'src/config'
 import { sameString } from 'src/utils/strings'
+import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 
 const { nativeCoin } = getNetworkInfo()
 
 export const CurrencyDropdown = (): React.ReactElement | null => {
   const dispatch = useDispatch()
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
+  const { address } = useSelector(currentSafe)
   const [searchParams, setSearchParams] = useState('')
   const currenciesList = useSelector(availableCurrenciesSelector)
   const tokenImage = nativeCoin.logoUri
@@ -34,7 +37,7 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
     currency.toLowerCase().includes(searchParams.toLowerCase()),
   )
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
     import('currency-flags/dist/currency-flags.min.css' as string)
   }
@@ -43,9 +46,10 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
     setAnchorEl(null)
   }
 
-  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: string) => {
-    dispatch(setSelectedCurrency({ selectedCurrency: newCurrencySelectedName }))
+  const onCurrentCurrencyChangedHandler = async (newCurrencySelectedName: string): Promise<void> => {
     handleClose()
+    await dispatch(fetchSafeTokens(address, newCurrencySelectedName))
+    dispatch(setSelectedCurrency({ selectedCurrency: newCurrencySelectedName }))
   }
 
   if (!selectedCurrency) {
