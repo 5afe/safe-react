@@ -46,6 +46,7 @@ module.exports = {
   md,
   mediumFontSize: '14px',
   primary,
+  prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
   regularFont: 400,
   screenLg: 1200,
   screenMd: 992,

@@ -1,4 +1,3 @@
-import { createTheme } from '@material-ui/core/styles'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 
 import {
@@ -45,7 +44,7 @@ const palette = {
 
 // see https://material-ui-next.com/customization/themes/
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
-const theme = createTheme({
+const theme = {
   typography: {
     fontFamily: mainFontFamily,
     useNextVariants: true,
@@ -426,7 +425,7 @@ const theme = createTheme({
     },
   },
   palette,
-} as any)
+} as any
 
 export default theme
 
