@@ -51,8 +51,11 @@ const Routes = (): React.ReactElement => {
 
       trackPage(safePage)
     } else {
-      const page = `${location.pathname}${location.search}`
-      trackPage(page)
+      const pathname = location.pathname
+        .split('/')
+        .map((el) => (el.startsWith('0x') ? 'SAFE_ADDRESS' : el))
+        .join('/')
+      trackPage(pathname + location.search)
     }
   }, [location, matchSafeWithAction, trackPage])
 

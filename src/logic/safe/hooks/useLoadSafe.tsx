@@ -17,7 +17,6 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsSafeLoaded(false)
       if (safeAddress) {
         await dispatch(fetchSelectedCurrency())
         await dispatch(fetchLatestMasterContractVersion())
@@ -26,6 +25,8 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(chainId, safeAddress))
         dispatch(addViewedSafe(safeAddress))
+      } else {
+        setIsSafeLoaded(false)
       }
     }
     fetchData()

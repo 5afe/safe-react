@@ -75,10 +75,8 @@ const App: React.FC = ({ children }) => {
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-  // if safe is loaded via URL, `safeAddress` won't be available until store is populated with temp information
-  // Temp information will be built from `addressFromUrl`
-  const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
-  useSafeScheduledUpdates(safeLoaded, safeAddress)
+  const safeLoaded = useLoadSafe(addressFromUrl)
+  useSafeScheduledUpdates(safeLoaded, addressFromUrl)
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
