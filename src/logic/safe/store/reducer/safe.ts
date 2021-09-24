@@ -10,6 +10,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { CLEAR_SAFE_LIST } from 'src/logic/safe/store/actions/clearSafeList'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
+import { SafeReducerMap } from './types/safe'
 
 export const SAFE_REDUCER_ID = 'safes'
 
@@ -21,6 +22,15 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
     owners,
     modules: null,
   }
+}
+
+// Merge new polling tags into safe
+const mergeNewTagsInSafe = (state: SafeReducerMap, newSafe: SafeRecord, safeAddress: string) => {
+  state.mergeIn(['safes', safeAddress], {
+    collectiblesTag: newSafe.collectiblesTag,
+    txQueuedTag: newSafe.txQueuedTag,
+    txHistoryTag: newSafe.txHistoryTag,
+  })
 }
 
 const updateSafeProps = (prevSafe, safe) => {
@@ -58,6 +68,8 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       const safe = action.payload
       const safeAddress = safe.address
 
+      mergeNewTagsInSafe(state, safe, safeAddress)
+
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]) as SafeRecordProps)
 
       return shouldUpdate
@@ -74,7 +86,10 @@ export default handleActions<AppReduxState['safes'], Payloads>(
         return state.setIn(['safes', safeAddress], makeSafe(safe))
       }
 
+      mergeNewTagsInSafe(state, safe, safeAddress)
+
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]) as SafeRecordProps)
+
       return shouldUpdate
         ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress }), (prevSafe) =>
             updateSafeProps(prevSafe, safe),
