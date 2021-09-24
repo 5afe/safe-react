@@ -9,6 +9,9 @@ export type MigrationMessage = {
   payload: string
 }
 
+// FIXME This is meant for easiness of testing purposes. Set to a fixed origin once ready
+const MESSAGE_ORIGIN = '*'
+
 const MigrationScreen = (): ReactElement => {
   const dispatch = useDispatch()
   const [messageSent, setMessageSent] = useState(false)
@@ -28,9 +31,7 @@ const MigrationScreen = (): ReactElement => {
         executeMigration: true,
         payload: JSON.stringify(payload),
       }
-      console.log('This is the parent', window.parent)
-      console.log('This is the window origin', window.origin)
-      window.parent.postMessage(message, '*')
+      window.parent.postMessage(message, MESSAGE_ORIGIN)
       // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
       setMessageSent(true)
       dispatch(setLocalStorageMigrated(true))
@@ -41,7 +42,7 @@ const MigrationScreen = (): ReactElement => {
         executeMigration: false,
         payload: '',
       }
-      window.parent.postMessage(message, '*')
+      window.parent.postMessage(message, MESSAGE_ORIGIN)
       setMessageSent(true)
     }
 

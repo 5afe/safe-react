@@ -1,5 +1,7 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+
+// import { getNetworks } from 'src/config'
 import { addressBookMigrate } from 'src/logic/addressBook/store/actions'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { MigrationMessage } from 'src/routes/migration/container'
@@ -23,7 +25,8 @@ type MigrationMessageEvent = MessageEvent & {
 const StoreMigrator = (): ReactElement => {
   const [currentNetwork, setCurrentNetwork] = useState(0)
   const dispatch = useDispatch()
-  //let networks = getNetworks()
+  // FIXME use this networks for staging and production
+  // const configuredNetworks = getNetworks()
 
   // Add an event listener to recieve the data to be migrated and save it into the storage
   useEffect(() => {
@@ -31,7 +34,7 @@ const StoreMigrator = (): ReactElement => {
       const isTrustedOrigin = networks.some((network) => {
         return network.safeUrl.includes(event.origin)
       })
-      const executeMigration = event.data.migrate
+      const executeMigration = event.data.executeMigration
       const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
       if (executeMigration && isValidOrigin) {
         try {
@@ -48,18 +51,18 @@ const StoreMigrator = (): ReactElement => {
             }
           })
           await Promise.all(promises)
-          setCurrentNetwork(currentNetwork + 1)
+          setCurrentNetwork((prevState) => prevState + 1)
         } catch (error) {
           logError(Errors._703, error.message)
         }
-      } else if (!executeMigration && isValidOrigin) {
-        setCurrentNetwork(currentNetwork + 1)
+      } else if (executeMigration !== undefined && !executeMigration && isValidOrigin) {
+        setCurrentNetwork((prevState) => prevState + 1)
       }
     }
 
     window.addEventListener('message', saveEventData, false)
     return () => window.removeEventListener('message', saveEventData, false)
-  }, [currentNetwork, dispatch])
+  }, [dispatch])
 
   const isSingleNetworkApp = networks.some((network) => {
     return !MAINET_URL.includes(self.origin) && network.safeUrl.includes(self.origin)
@@ -67,10 +70,8 @@ const StoreMigrator = (): ReactElement => {
 
   // Open another network in the iframe to migrate local storage
   useEffect(() => {
-    console.log(isSingleNetworkApp)
     if (!isSingleNetworkApp && currentNetwork < networks.length) {
       const urlToMigrate = `${networks[currentNetwork].safeUrl}/#${MIGRATION_ADDRESS}`
-      console.log('Url To migrate:', urlToMigrate)
       window.open(urlToMigrate, 'targetWindow')
     }
   }, [currentNetwork, isSingleNetworkApp])
