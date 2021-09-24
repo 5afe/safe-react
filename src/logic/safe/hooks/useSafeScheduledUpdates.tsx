@@ -12,7 +12,7 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
     // using this variable to prevent setting a timeout when the component is already unmounted or the effect
     // has to run again
     let mounted = true
-    const fetchSafeData = async (address: string): Promise<void> => {
+    const fetchSafeData = (address: string): void => {
       dispatch(fetchSafe(address, safeLoaded))
       dispatch(fetchSafeTokens(address))
 
