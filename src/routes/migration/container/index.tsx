@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { isLocalStorageMigrated } from 'src/logic/currentSession/store/selectors'
@@ -11,6 +11,7 @@ export type MigrationMessage = {
 
 const MigrationScreen = (): ReactElement => {
   const dispatch = useDispatch()
+  const [messageSent, setMessageSent] = useState(false)
   const alreadyMigrated = useSelector(isLocalStorageMigrated)
 
   useEffect(() => {
@@ -30,8 +31,9 @@ const MigrationScreen = (): ReactElement => {
       console.log('This is the parent', window.parent)
       console.log('This is the window origin', window.origin)
       window.parent.postMessage(message, '*')
-      dispatch(setLocalStorageMigrated(true))
       // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
+      setMessageSent(true)
+      dispatch(setLocalStorageMigrated(true))
     }
 
     const skipMigration = () => {
@@ -40,15 +42,19 @@ const MigrationScreen = (): ReactElement => {
         payload: '',
       }
       window.parent.postMessage(message, '*')
+      setMessageSent(true)
     }
 
-    console.log('Is already migrated?', alreadyMigrated)
-    if (alreadyMigrated) {
-      skipMigration()
-    } else {
-      sendStorageInformation()
+    // Ensure that we send only one message on each render as useEffect is triggered again after
+    // alreadyMigrated is updated
+    if (!messageSent) {
+      if (alreadyMigrated) {
+        skipMigration()
+      } else {
+        sendStorageInformation()
+      }
     }
-  }, [alreadyMigrated, dispatch])
+  }, [alreadyMigrated, dispatch, messageSent])
 
   return <></>
 }
