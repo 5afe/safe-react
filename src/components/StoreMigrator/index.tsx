@@ -55,7 +55,8 @@ const StoreMigrator = (): ReactElement => {
         } catch (error) {
           logError(Errors._703, error.message)
         }
-      } else if (executeMigration !== undefined && !executeMigration && isValidOrigin) {
+      } else if (executeMigration === false && isValidOrigin) {
+        // We need executeMigration to be explicitly defined to ensure is the event we are looking for
         setCurrentNetwork((prevState) => prevState + 1)
       }
     }
