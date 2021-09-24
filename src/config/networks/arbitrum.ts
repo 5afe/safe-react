@@ -1,4 +1,4 @@
-import EtherLogo from 'src/config/assets/token_eth.svg'
+import AethLogo from 'src/config/assets/token_aeth.svg'
 import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
@@ -16,8 +16,8 @@ const baseConfig: EnvironmentSettings = {
   rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   safeAppsRpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   networkExplorerName: 'Arbitrum explorer',
-  networkExplorerUrl: 'https://explorer.arbitrum.io',
-  networkExplorerApiUrl: 'https://explorer.arbitrum.io/api', // TODO: check with Arbitrum
+  networkExplorerUrl: 'https://arbiscan.io',
+  networkExplorerApiUrl: 'https://api.arbiscan.io/api',
 }
 
 const arbitrum: NetworkConfig = {
@@ -41,10 +41,10 @@ const arbitrum: NetworkConfig = {
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
-      name: 'Ether',
-      symbol: 'ETH',
+      name: 'AETH',
+      symbol: 'AETH',
       decimals: 18,
-      logoUri: EtherLogo,
+      logoUri: AethLogo,
     },
   },
   disabledWallets: [
@@ -61,6 +61,7 @@ const arbitrum: NetworkConfig = {
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
+    WALLETS.KEYSTONE,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT, FEATURES.SAFE_APPS],
 }
