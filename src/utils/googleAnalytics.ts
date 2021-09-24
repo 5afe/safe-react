@@ -8,6 +8,8 @@ import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
+// TODO: Update cookie handling for unified app
+
 export const COOKIES_LIST = [
   { name: '_ga', path: '/' },
   { name: '_gat', path: '/' },

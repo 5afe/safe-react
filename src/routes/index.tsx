@@ -33,7 +33,7 @@ const Routes = (): React.ReactElement => {
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
-    if (isInitialLoad && location.pathname !== '/') {
+    if (isInitialLoad && ['/', generatePath(ROOT_ROUTE, { network: getNetworkSlug() })].includes[location.pathname]) {
       setInitialLoad(false)
     }
   }, [location.pathname, isInitialLoad])
@@ -64,7 +64,7 @@ const Routes = (): React.ReactElement => {
     <Switch>
       <Route
         exact
-        path={['/', '/:network']}
+        path={['/', ROOT_ROUTE]}
         render={() => {
           if (!isInitialLoad) {
             return <Redirect to={generatePath(WELCOME_ROUTE, baseRouteSlugs)} />
