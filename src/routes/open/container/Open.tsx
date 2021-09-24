@@ -27,6 +27,7 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { sleep } from 'src/utils/timer'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
@@ -205,7 +206,9 @@ const Open = (): ReactElement => {
     })
 
     const safeProps = await buildSafe(safeAddress)
-    await dispatch(addOrUpdateSafe(safeProps))
+    dispatch(addOrUpdateSafe(safeProps))
+    // Flag that changes have been added to this env
+    dispatch(setLocalStorageMigrated(false))
 
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
