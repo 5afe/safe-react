@@ -20,9 +20,9 @@ const baseConfig: EnvironmentSettings = {
   ],
   safeAppsRpcServiceUrl: 'https://mainnet.infura.io:443/v3',
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
-  networkExplorerName: 'Etherscan',
-  networkExplorerUrl: 'https://etherscan.io',
-  networkExplorerApiUrl: 'https://api.etherscan.io/api',
+  networkExplorerName: 'Blockscout',
+  networkExplorerUrl: 'https://explorer.celo.org',
+  networkExplorerApiUrl: 'https://explorer.celo.org/api',
 }
 
 const mainnet: NetworkConfig = {
@@ -45,13 +45,13 @@ const mainnet: NetworkConfig = {
     id: ETHEREUM_NETWORK.MAINNET,
     backgroundColor: '#E8E7E6',
     textColor: '#001428',
-    label: 'Mainnet',
+    label: 'Celo Mainnet',
     isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
-      name: 'Ether',
-      symbol: 'ETH',
+      name: 'Celo',
+      symbol: 'CELO',
       decimals: 18,
       logoUri: EtherLogo,
     },

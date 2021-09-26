@@ -3,4 +3,6 @@ steps:
   args: [ 'build', '-t', 'us.gcr.io/$PROJECT_ID/safe-react:$COMMIT_SHA', '.' ]
 images:
 - us.gcr.io/$PROJECT_ID/safe-react:$COMMIT_SHA
-timeout: 2000s
+timeout: 10000s
+options:
+  machineType: 'E2_HIGHCPU_32'

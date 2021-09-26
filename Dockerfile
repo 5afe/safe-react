@@ -1,17 +1,18 @@
-FROM node:14
+FROM node:14 as builder
 
 RUN apt-get update && apt-get install -y libusb-1.0-0 libusb-1.0-0-dev libudev-dev
 
 WORKDIR /app
 
-COPY package.json ./
-
-COPY yarn.lock ./
-
-RUN yarn install
-
 COPY . .
 
-EXPOSE 3000
+RUN yarn install
+RUN yarn build
 
-CMD ["yarn", "start"]
+FROM node:14
+WORKDIR "/app"
+COPY --from=builder /app/build ./
+RUN yarn global add serve
+EXPOSE 5000
+
+CMD ["serve", "-s", "./"]
