@@ -3,8 +3,8 @@ import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } 
 import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
-  txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
+  clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
+  txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
   safeUrl: 'https://gnosis-safe.io/app',
   gasPriceOracles: [
     {

@@ -2126,10 +2126,10 @@
     "@changesets/cli" "^2.16.0"
     ethers "^5.4.5"
 
-"@gnosis.pm/safe-deployments@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.2.0.tgz#cf3aa9c2c15ca49459e5a90cbe702127528bbacd"
-  integrity sha512-xvfIhpOrCsdN7pkTtq6xl8pYbwXdkx3MTRh4cq3ucNDyw2dPJCYDr7gI6FPJ79jZiUkWwQzXzlxiEieuv6Dhpw==
+"@gnosis.pm/safe-deployments@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.3.0.tgz#a1a5e5e451bda8aa5af5c9081083f6bb787cad30"
+  integrity sha512-TgODtFcxgL+xBIXM1DpHLKfOCyDpqWRPsowVoK7OqzfHpUYtPhxmBACE96eUDWZn0MobyNauLow1P50M+QTlFw==
 
 "@gnosis.pm/safe-react-components@^0.8.0":
   version "0.8.0"

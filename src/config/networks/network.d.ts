@@ -42,7 +42,7 @@ export enum ETHEREUM_LAYER {
 
 export enum ETHEREUM_NETWORK {
   UNKNOWN = '0',
-  MAINNET = '1',
+  MAINNET = '42220',
   MORDEN = '2',
   ROPSTEN = '3',
   RINKEBY = '4',
@@ -54,6 +54,7 @@ export enum ETHEREUM_NETWORK {
   ENERGY_WEB_CHAIN = '246',
   LOCAL = '4447',
   VOLTA = '73799',
+  ALFAJORES = '44787',
 }
 
 export type NetworkSettings = {
