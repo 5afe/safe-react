@@ -1,17 +1,23 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 export type ReturnValue = {
   open: boolean
-  toggle: () => void
+  toggle: (e?: Event) => void
   clickAway: () => void
 }
 
 export const useStateHandler = (openInitialValue = false): ReturnValue => {
   const [open, setOpen] = useState(openInitialValue)
+  const toggle = useCallback((e?: Event) => {
+    e?.stopPropagation()
+
+    setOpen((prevOpen) => !prevOpen)
+  }, [])
+  const clickAway = useCallback(() => setOpen(false), [])
 
   return {
     open,
-    toggle: () => setOpen((open) => !open),
-    clickAway: () => setOpen(false),
+    toggle,
+    clickAway,
   }
 }
