@@ -81,7 +81,9 @@ const onNotificationClicked = (dispatch, notificationKey, safeAddress) => () => 
 
 // any/AnyAction used as our Redux state is not typed
 const notificationsMiddleware =
-  (store: ReturnType<typeof reduxStore>) => (next: (arg0: any) => any) => async (action: Action<AnyAction>) => {
+  (store: ReturnType<typeof reduxStore>) =>
+  (next: (arg0: any) => any) =>
+  async (action: Action<AnyAction>): Promise<any> => {
     const handledAction = next(action)
     const { dispatch } = store
 
