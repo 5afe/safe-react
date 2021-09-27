@@ -23,6 +23,8 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(safeAddress))
         dispatch(addViewedSafe(safeAddress))
+      } else {
+        setIsSafeLoaded(false)
       }
     }
     fetchData()
