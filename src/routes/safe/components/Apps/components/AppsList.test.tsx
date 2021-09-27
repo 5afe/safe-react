@@ -132,7 +132,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect(results[1]).toBe(synthetix)
   })
 
-  it('Shows "no apps found" message when not able to find apps matching the query', () => {
+  it('Shows "no apps found" message when not able to find apps matching the query and a button to search for the WalletConnect Safe app', () => {
     render(<AppsList />, customState)
 
     const query = 'not-a-real-app'
@@ -140,7 +140,12 @@ describe('Safe Apps -> AppsList -> Search', () => {
 
     fireEvent.input(searchInput, { target: { value: query } })
 
-    expect(screen.getByText('No apps found matching')).toBeInTheDocument()
+    expect(screen.getByText(/No apps found matching/)).toBeInTheDocument()
+
+    const button = screen.getByText('Search WalletConnect')
+    fireEvent.click(button)
+
+    expect((searchInput as HTMLInputElement).value).toBe('WalletConnect')
   })
 
   it('Clears the search result when you press on clear button and shows all apps again', () => {
