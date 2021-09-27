@@ -297,12 +297,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
-            {appTimeout && (
+            {appTimeout ? (
               <Title size="xs">
-                The safe app is taking longer than usual to load. There might be a problem with the app provider.
+                There was an error loading the Safe App. There might be a problem with the app provider.
               </Title>
+            ) : (
+              <Loader size="md" />
             )}
-            <Loader size="md" />
           </LoadingContainer>
         )}
 
