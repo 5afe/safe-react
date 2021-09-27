@@ -16,6 +16,7 @@ import {
   ETHERSCAN_API_KEY,
   GOOGLE_ANALYTICS_ID,
   INFURA_TOKEN,
+  IS_TEST,
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
@@ -27,13 +28,14 @@ export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): st
 }
 
 const getNetworkIdFromUrl = () => {
-  const DEFAULT_NETWORK = 'MAINNET'
+  const DEFAULT_NETWORK = IS_TEST ? 'RINKEBY' : 'MAINNET'
   const subdirectories = window.location.pathname.split('/')
 
   if (subdirectories.length <= 2) {
     return DEFAULT_NETWORK
   }
 
+  // /app/network
   const id = Object.values(networks).find(({ network }) => {
     return network.label.toLowerCase() === subdirectories[2].toLowerCase()
   })?.network?.id
