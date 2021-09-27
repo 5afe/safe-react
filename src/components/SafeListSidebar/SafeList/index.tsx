@@ -14,6 +14,7 @@ import SafeListItem from './SafeListItem'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
@@ -34,10 +35,7 @@ const StyledList = styled(MuiList)`
 
 const useStyles = makeStyles({
   listItemCollapse: {
-    paddingTop: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: '50px',
+    padding: '0 0 0 0',
     '& > div > div:first-child': {
       paddingLeft: '44px',
     },
@@ -55,6 +53,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const networks = getNetworks()
   const currentSafeAddress = useSelector(safeAddressFromUrl)
   const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
 
@@ -62,15 +61,15 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
     <StyledList>
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
+        const isConnected = !!connectedWalletAddress
 
         const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl)
-        const addedSafesOnNetwork = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
+        const addedSafesOnNetwork = isCurrentNetwork && isConnected ? loadedSafes : localSafesOnNetwork
         const shouldExpandOwnedSafes = localSafesOnNetwork.some(
           ({ address }) => address === currentSafeAddress && isSafeAdded(loadedSafes, address),
         )
 
-        const hasSafes = isCurrentNetwork ? ownedSafes.length > 0 : localSafesOnNetwork.length > 0
-
+        const hasSafes = isCurrentNetwork && isConnected ? ownedSafes.length > 0 : localSafesOnNetwork.length > 0
         if (!hasSafes) return null
         return (
           <Fragment key={id}>
@@ -86,6 +85,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                   onNetworkSwitch={() => setNetwork(id)}
                   onSafeClick={onSafeClick}
                   loadedSafes={loadedSafes}
+                  isAddedOnNetwork
                   {...safe}
                 />
               ))}

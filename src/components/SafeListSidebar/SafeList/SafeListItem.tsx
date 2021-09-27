@@ -27,6 +27,7 @@ type Props = {
   ethBalance?: string
   loadedSafes: SafeRecordWithNames[]
   networkId: ETHEREUM_NETWORK
+  isAddedOnNetwork?: boolean
 }
 
 const SafeListItem = ({
@@ -36,20 +37,21 @@ const SafeListItem = ({
   ethBalance,
   loadedSafes,
   networkId,
+  isAddedOnNetwork = false,
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
   const currentSafeAddress = useSelector(safeAddressFromUrl)
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
-  const isAdded = isSafeAdded(loadedSafes, address)
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
+  const showAddSafeLink = !isSafeAdded(loadedSafes, address)
 
   useEffect(() => {
-    if (isCurrentSafe && isAdded) {
+    if (isCurrentSafe && isAddedOnNetwork) {
       safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [isCurrentSafe, isAdded])
+  }, [isCurrentSafe, isAddedOnNetwork])
 
   const handleLoadSafe = (): void => {
     onNetworkSwitch?.()
@@ -72,7 +74,7 @@ const SafeListItem = ({
       <ListItemSecondaryAction>
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
-        ) : !isAdded ? (
+        ) : showAddSafeLink ? (
           <Link to={`${LOAD_ADDRESS}/${address}`} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
