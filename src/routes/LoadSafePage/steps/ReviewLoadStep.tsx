@@ -59,9 +59,9 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Network
             </Paragraph>
-            <Paragraph color="disabled" noMargin size="sm" data-testid="load-form-review-safe-network">
+            <StyledParagraph color="disabled" noMargin size="sm" data-testid="load-form-review-safe-network">
               <NetworkLabel />
-            </Paragraph>
+            </StyledParagraph>
           </Block>
           <Block margin="lg">
             <Paragraph color="disabled" noMargin size="sm">
@@ -159,4 +159,7 @@ const OwnerItemContainer = styled(Row)`
 const SafeAddressContainer = styled(Row)`
   margin-top: ${xs};
   align-items: center;
+`
+const StyledParagraph = styled(Paragraph)`
+  margin-top: 4px;
 `
