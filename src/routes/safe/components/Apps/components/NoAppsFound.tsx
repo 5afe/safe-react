@@ -33,8 +33,8 @@ const NoAppsFound = ({ query, onWalletConnectSearch }: Props): React.ReactElemen
   <NoAppsFoundTextContainer>
     <InfoIcon />
     <Text size="xl">
-      No apps found matching <b>{query}</b>. Connect to dApps that haven&apos;t yet been integrated with WalletConnect
-      Safe using the WalletConnect Safe App.
+      No apps found matching <b>{query}</b>. Connect to dApps that haven&apos;t yet been integrated with the Safe using
+      the WalletConnect App.
     </Text>
     <SButton onClick={onWalletConnectSearch} size="md">
       Search WalletConnect
