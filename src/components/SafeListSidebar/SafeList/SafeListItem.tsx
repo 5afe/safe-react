@@ -49,7 +49,7 @@ const SafeListItem = ({
     if (isCurrentSafe && isAdded) {
       safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [isCurrentSafe])
+  }, [isCurrentSafe, isAdded])
 
   const handleLoadSafe = (): void => {
     onNetworkSwitch?.()
