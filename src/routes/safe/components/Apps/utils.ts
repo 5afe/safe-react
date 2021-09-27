@@ -17,6 +17,7 @@ interface AppData {
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
+export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')

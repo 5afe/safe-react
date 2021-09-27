@@ -90,6 +90,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(async () => {
+    // TODO: remove this
     const persistedAppList =
       (await loadFromStorage<(StoredSafeApp & { disabled?: number[] })[]>(APPS_STORAGE_KEY)) || []
     const newAppList = [

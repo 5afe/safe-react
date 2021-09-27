@@ -2,9 +2,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { getNetworkId } from 'src/config'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { getAppInfoFromUrl, getEmptySafeApp } from '../../utils'
-import { SafeApp, SAFE_APP_FETCH_STATUS } from '../../types'
+import { SafeApp } from '../../types'
 import { useCustomSafeApps } from './useCustomSafeApps'
 import { useRemoteSafeApps } from './useRemoteSafeApps'
+import { usePinnedSafeApps } from './usePinnedSafeApps'
+import { FETCH_STATUS } from 'src/utils/requests'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -14,8 +16,10 @@ type UseAppListReturnType = {
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
-  const [apiAppsList, isLoading] = useRemoteSafeApps()
+  const { remoteSafeApps, status: remoteAppsFetchStatus } = useRemoteSafeApps()
   const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
+  const { pinnedSafeAppIds } = usePinnedSafeApps()
+  const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -26,7 +30,7 @@ const useAppList = (): UseAppListReturnType => {
       setAppList((prevStatus) => {
         const cpPrevStatus = [...prevStatus]
         const appIndex = cpPrevStatus.findIndex((a) => a.url === res.url)
-        const newStatus = res.error ? SAFE_APP_FETCH_STATUS.ERROR : SAFE_APP_FETCH_STATUS.SUCCESS
+        const newStatus = res.error ? FETCH_STATUS.ERROR : FETCH_STATUS.SUCCESS
         cpPrevStatus[appIndex] = { ...res, fetchStatus: newStatus }
         return cpPrevStatus.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
       })
@@ -35,10 +39,10 @@ const useAppList = (): UseAppListReturnType => {
     const loadApps = async () => {
       // backward compatibility. In a previous implementation a safe app could be disabled, that state was
       // persisted in the storage.
-      const customApps = storageAppList.filter(
-        (persistedApp) => !apiAppsList.some((app) => app.url === persistedApp.url),
+      const customApps = customSafeApps.filter(
+        (persistedApp) => !remoteSafeApps.some((app) => app.url === persistedApp.url),
       )
-      const apps: SafeApp[] = [...apiAppsList, ...customApps]
+      const apps: SafeApp[] = [...remoteSafeApps, ...customApps]
         // if the app does not expose supported networks, include them. (backward compatible)
         .filter((app) => (!app.networks ? true : app.networks.includes(getNetworkId())))
         .map((app) => ({
@@ -69,8 +73,10 @@ const useAppList = (): UseAppListReturnType => {
       })
     }
 
-    loadApps()
-  }, [apiAppsList])
+    if (remoteAppsFetchStatus === FETCH_STATUS.SUCCESS && !appList.length) {
+      loadApps()
+    }
+  }, [remoteSafeApps, customSafeApps, remoteAppsFetchStatus, appList.length])
 
   const removeApp = useCallback(
     (appUrl: string): void => {
@@ -88,7 +94,7 @@ const useAppList = (): UseAppListReturnType => {
   return {
     appList,
     removeApp,
-    isLoading,
+    isLoading: remoteIsLoading,
   }
 }
 

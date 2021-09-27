@@ -1,8 +1,4 @@
-export enum SAFE_APP_FETCH_STATUS {
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR',
-}
+import { FETCH_STATUS } from 'src/utils/requests'
 
 export type SafeApp = {
   id: string
@@ -12,7 +8,7 @@ export type SafeApp = {
   disabled?: boolean
   description: string
   error: boolean
-  fetchStatus: SAFE_APP_FETCH_STATUS
+  fetchStatus: FETCH_STATUS
   custom?: boolean
 }
 
