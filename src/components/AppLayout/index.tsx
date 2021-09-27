@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import { useLocation } from 'react-router-dom'
 import { ListItemType } from 'src/components/List'
 
 import Header from './Header'
@@ -91,6 +92,9 @@ const Layout: React.FC<Props> = ({
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
+  const hasFooterRegex = new RegExp(/\/(welcome|safes\/0x[a-fA-F0-9]{40}\/settings)/)
+  const hasFooter = hasFooterRegex.test(useLocation().pathname)
+
   return (
     <Container>
       <HeaderWrapper>
@@ -111,7 +115,7 @@ const Layout: React.FC<Props> = ({
         </SidebarWrapper>
         <ContentWrapper>
           <div>{children}</div>
-          <Footer />
+          {hasFooter && <Footer />}
         </ContentWrapper>
       </BodyWrapper>
 
