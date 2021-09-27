@@ -65,11 +65,7 @@ const App: React.FC = ({ children }) => {
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const matchSafe = useRouteMatch({ path: BASE_SAFE_ROUTE, strict: false })
   const history = useHistory()
-  const {
-    address: safeAddress,
-    name: safeName,
-    totalFiatBalance: currentSafeBalance,
-  } = useSelector(currentSafeWithNames)
+  const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
   const addressFromUrl = safeAddressFromUrl()
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
@@ -121,7 +117,7 @@ const App: React.FC = ({ children }) => {
 
           <AppLayout
             sidebarItems={sidebarItems}
-            safeAddress={safeAddress}
+            safeAddress={addressFromUrl}
             safeName={safeName}
             balance={balance}
             granted={granted}
@@ -139,7 +135,7 @@ const App: React.FC = ({ children }) => {
             selectedToken={sendFunds.selectedToken}
           />
 
-          {safeAddress && (
+          {addressFromUrl && (
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
@@ -147,7 +143,7 @@ const App: React.FC = ({ children }) => {
               paperClassName="receive-modal"
               title="Receive Tokens"
             >
-              <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
+              <ReceiveModal onClose={onReceiveHide} safeAddress={addressFromUrl} safeName={safeName} />
             </Modal>
           )}
         </>
