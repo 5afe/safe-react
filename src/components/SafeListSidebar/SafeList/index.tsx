@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { setNetwork } from 'src/logic/config/utils'
 import { sortedSafeListSelector } from '../selectors'
 import { getNetworkId, getNetworks } from 'src/config'
-import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
@@ -53,6 +53,7 @@ const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => !loadedViaU
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
+  const currentSafeAddress = useSelector(safeAddressFromUrl)
   const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
@@ -64,9 +65,13 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
 
         const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl)
         const addedSafesOnNetwork = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
-        const shouldExpandOwnedSafes = localSafesOnNetwork.some(({ address }) => isSafeAdded(loadedSafes, address))
+        const shouldExpandOwnedSafes = localSafesOnNetwork.some(
+          ({ address }) => address === currentSafeAddress && isSafeAdded(loadedSafes, address),
+        )
 
-        if ((!localSafesOnNetwork.length && !addedSafesOnNetwork.length) || !ownedSafes.length) return null
+        const hasSafes = isCurrentNetwork ? ownedSafes.length > 0 : localSafesOnNetwork.length > 0
+
+        if (!hasSafes) return null
         return (
           <Fragment key={id}>
             <ListItem selected>
@@ -80,7 +85,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                   networkId={id}
                   onNetworkSwitch={() => setNetwork(id)}
                   onSafeClick={onSafeClick}
-                  safes={loadedSafes}
+                  loadedSafes={loadedSafes}
                   {...safe}
                 />
               ))}
@@ -96,7 +101,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                         address={address}
                         networkId={id}
                         onSafeClick={onSafeClick}
-                        safes={loadedSafes}
+                        loadedSafes={loadedSafes}
                       />
                     ))}
                   </Collapse>

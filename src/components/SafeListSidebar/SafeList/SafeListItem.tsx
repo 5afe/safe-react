@@ -12,9 +12,9 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import { getNetworkConfigById } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -25,21 +25,30 @@ type Props = {
   onNetworkSwitch?: () => void
   address: string
   ethBalance?: string
-  safes: SafeRecordWithNames[]
+  loadedSafes: SafeRecordWithNames[]
   networkId: ETHEREUM_NETWORK
 }
 
-const SafeListItem = ({ onSafeClick, onNetworkSwitch, address, ethBalance, safes, networkId }: Props): ReactElement => {
+const SafeListItem = ({
+  onSafeClick,
+  onNetworkSwitch,
+  address,
+  ethBalance,
+  loadedSafes,
+  networkId,
+}: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
   const currentSafeAddress = useSelector(safeAddressFromUrl)
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
+  const isAdded = isSafeAdded(loadedSafes, address)
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
 
   useEffect(() => {
-    if (!isCurrentSafe) return
-    safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
+    if (isCurrentSafe && isAdded) {
+      safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [isCurrentSafe])
 
   const handleLoadSafe = (): void => {
@@ -63,7 +72,7 @@ const SafeListItem = ({ onSafeClick, onNetworkSwitch, address, ethBalance, safes
       <ListItemSecondaryAction>
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
-        ) : !isSafeAdded(safes, address) ? (
+        ) : !isAdded ? (
           <Link to={`${LOAD_ADDRESS}/${address}`} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
