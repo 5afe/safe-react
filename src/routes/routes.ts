@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history'
 
-import { getNetworkName } from 'src/config'
+import { getNetworkLabel } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
 
 export const history = createBrowserHistory({
@@ -8,7 +8,7 @@ export const history = createBrowserHistory({
 })
 
 export const getNetworkSlug = (): string => {
-  return getNetworkName().toLowerCase() || 'rinkeby'
+  return getNetworkLabel().toLowerCase()
 }
 
 export const ROOT_ROUTE = '/:network'

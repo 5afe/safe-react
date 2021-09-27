@@ -16,22 +16,37 @@ import {
   ETHERSCAN_API_KEY,
   GOOGLE_ANALYTICS_ID,
   INFURA_TOKEN,
-  NETWORK,
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
-
-let networkId = NETWORK
-export const setNetworkId = (id: string): void => {
-  networkId = id
-}
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
   const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == networkId)
   return name || ''
 }
+
+const getNetworkIdFromUrl = () => {
+  const DEFAULT_NETWORK = 'MAINNET'
+  const subdirectories = window.location.pathname.split('/')
+
+  if (subdirectories.length <= 2) {
+    return DEFAULT_NETWORK
+  }
+
+  const id = Object.values(networks).find(({ network }) => {
+    return network.label.toLowerCase() === subdirectories[2].toLowerCase()
+  })?.network?.id
+
+  return id ? getNetworkName(id) : DEFAULT_NETWORK
+}
+
+let networkId = getNetworkIdFromUrl()
+
+export const setNetworkId = (id: string): void => {
+  networkId = id
+}
+export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | undefined => {
   return Object.values(networks).find((cfg) => cfg.network.id === id)
