@@ -229,7 +229,7 @@ function SafeCreationProcess(): ReactElement {
       />
       {showModal && (
         <GenericModal
-          onClose={() => {}}
+          onClose={onClickModalButton}
           title="Safe Created!"
           body={
             <div>
