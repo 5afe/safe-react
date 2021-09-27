@@ -30,7 +30,7 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
       }
     }
     fetchData()
-  }, [chainId, dispatch, safeAddress])
+  }, [chainId, dispatch, safeAddress, isSafeLoaded])
 
   return isSafeLoaded
 }
