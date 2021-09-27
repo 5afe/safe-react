@@ -1,6 +1,5 @@
-/* eslint-disable react/button-has-type  */
 import cn from 'classnames/bind'
-import * as React from 'react'
+import { ReactElement } from 'react'
 
 import styles from './index.module.scss'
 
@@ -14,7 +13,7 @@ const GnoButtonLink = ({
   type = 'button',
   weight = 'regular',
   ...props
-}: any) => (
+}: any): ReactElement => (
   <button className={cx(styles.btnLink, size, color, weight, className)} data-testid={testId} type={type} {...props} />
 )
 
