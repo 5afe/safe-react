@@ -1,10 +1,10 @@
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 jest.mock('src/logic/wallets/getWeb3', () => ({
-  web3ReadOnly: {
+  getWeb3ReadOnly: jest.fn(() => ({
     eth: {},
-  },
+  })),
 }))
 
 const params = {
@@ -21,6 +21,7 @@ const options = {
 }
 
 describe('txMonitor', () => {
+  const web3ReadOnly = getWeb3ReadOnly()
   beforeEach(() => {
     web3ReadOnly.eth.getTransaction = jest.fn(() => Promise.reject('getTransaction')) as any
     web3ReadOnly.eth.getTransactionReceipt = jest.fn(() => Promise.reject('getTransactionReceipt')) as any
