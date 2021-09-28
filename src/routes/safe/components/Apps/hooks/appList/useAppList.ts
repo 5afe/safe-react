@@ -19,6 +19,7 @@ const useAppList = (): UseAppListReturnType => {
   const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
 
   const appList = useMemo(() => {
+    // Filter out custom apps that are now part of the production app list
     const customApps = customSafeApps.filter(
       (persistedApp) => !remoteSafeApps.some((app) => app.url === persistedApp.url),
     )
