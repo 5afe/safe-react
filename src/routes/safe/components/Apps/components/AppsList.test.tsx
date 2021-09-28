@@ -1,6 +1,23 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
 
+jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () => ({
+  useCustomSafeApps: () => ({
+    customSafeApps: [
+      {
+        id: '0.44667970656294087',
+        url: 'http://localhost:3001',
+        name: 'unknown',
+        iconUrl: '/static/media/apps.70657d32.svg',
+        description: '',
+        fetchStatus: 'ERROR',
+        disabled: false,
+        custom: true,
+      },
+    ],
+  }),
+}))
+
 jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
   useAppList: () => ({
     appList: [
@@ -20,7 +37,6 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
         url: 'https://apps.gnosis-safe.io/drain-safe',
         name: 'Drain safe',
         iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
-        error: false,
         description: 'Transfer all your assets in batch',
         fetchStatus: 'SUCCESS',
         chainIds: [4],
@@ -31,7 +47,7 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
         url: 'https://app.ens.domains',
         name: 'ENS App',
         iconUrl: 'https://app.ens.domains/android-chrome-144x144.png',
-        error: false,
+
         description: 'Decentralised naming for wallets, websites, & more.',
         fetchStatus: 'SUCCESS',
         chainIds: [1, 4],
@@ -42,7 +58,7 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
         url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
         name: 'Synthetix',
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
-        error: false,
+
         description: 'Trade synthetic assets on Ethereum',
         fetchStatus: 'SUCCESS',
         chainIds: [1, 4],
@@ -54,22 +70,10 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
         url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
         name: 'Transaction Builder',
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
-        error: false,
         description: 'A Safe app to compose custom transactions',
         fetchStatus: 'SUCCESS',
         chainIds: [1, 4, 56, 100, 137, 246, 73799],
         provider: null,
-      },
-      {
-        id: '0.44667970656294087',
-        url: 'http://localhost:3001',
-        name: 'unknown',
-        iconUrl: '/static/media/apps.70657d32.svg',
-        error: 'Failed to fetch app manifest',
-        description: '',
-        fetchStatus: 'ERROR',
-        disabled: false,
-        custom: true,
       },
     ],
     removeApp: (appUrl: string) => {},
