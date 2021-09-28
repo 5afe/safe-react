@@ -20,6 +20,7 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
+import { sameString } from 'src/utils/strings'
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
@@ -33,7 +34,7 @@ const getNetworkIdFromUrl = () => {
   const subdirectories = window.location.pathname.split('/')
 
   const network = Object.values(networks).find(({ network }) => {
-    return subdirectories.some((subdirectory) => network.label.toLowerCase() === subdirectory.toLowerCase())
+    return subdirectories.some((subdirectory) => sameString(network.label, subdirectory))
   })
   const id = network?.network?.id
 

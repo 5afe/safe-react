@@ -40,7 +40,7 @@ describe('Config Services', () => {
       NODE_ENV: '',
     }))
     window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.dev?.txServiceUrl
 
     // When
@@ -73,7 +73,7 @@ describe('Config Services', () => {
       APP_ENV: 'production',
     }))
     window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
 
     // When
@@ -90,7 +90,7 @@ describe('Config Services', () => {
       APP_ENV: 'production',
     }))
     window.history.pushState(null, '', `${window.location.origin}/app/xdai`)
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
 
     // When
@@ -105,7 +105,7 @@ describe('Config Services', () => {
       NODE_ENV: '',
     }))
     window.history.pushState(null, '', `${window.location.origin}/app/xdai`)
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
 
     // When

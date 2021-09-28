@@ -91,7 +91,7 @@ const originalLocationHref = window.location.href
 
 beforeEach(() => {
   mockAllEndpointsByDefault()
-  window.location.href = originalLocationHref // Restore the url to http://localhost/
+  window.history.pushState(null, '', originalLocationHref) // Restore the url to http://localhost/
 })
 
 const mockRinkebyNetwork = {

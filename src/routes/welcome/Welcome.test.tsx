@@ -78,7 +78,7 @@ describe('<Welcome>', () => {
 
     fireEvent.click(createNewSafeLinkNode)
 
-    expect(window.location.pathname).toBe(`${PUBLIC_URL}/${getNetworkSlug()}/open`)
+    expect(window.location.pathname).toBe(`/${getNetworkSlug()}/open`)
   })
 
   it('Add existing Safe button should redirect to /load if a wallet is already selected', () => {
@@ -94,7 +94,7 @@ describe('<Welcome>', () => {
       },
     }
 
-    expect(window.location.pathname).toBe(`${PUBLIC_URL}/${getNetworkSlug()}/open`)
+    expect(window.location.pathname).toBe('/')
 
     render(<Welcome />, customState)
 
@@ -104,6 +104,6 @@ describe('<Welcome>', () => {
 
     fireEvent.click(addExistingSafeLinkNode)
 
-    expect(window.location.pathname).toBe(`${PUBLIC_URL}/${getNetworkSlug()}/load`)
+    expect(window.location.pathname).toBe(`/${getNetworkSlug()}/load`)
   })
 })
