@@ -9,7 +9,11 @@ export const safeAddressFromUrl = (): string => {
   })
 
   if (match) {
-    return checksumAddress(match.params.safeAddress).toString()
+    try {
+      return checksumAddress(match.params.safeAddress).toString()
+    } catch (err) {
+      throw new Error(err.message)
+    }
   }
 
   return ''
