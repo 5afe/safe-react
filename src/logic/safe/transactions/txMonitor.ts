@@ -1,6 +1,6 @@
 import { Transaction, TransactionReceipt } from 'web3-core'
 
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
@@ -22,7 +22,8 @@ const MAX_RETRIES = 720
 const DEFAULT_DELAY = 5000
 
 async function findSpeedupTx({ sender, hash, nonce, data }: TxMonitorProps): Promise<Transaction | undefined> {
-  const latestBlock = await web3ReadOnly.eth.getBlock('latest', true)
+  const web3 = getWeb3ReadOnly()
+  const latestBlock = await web3.eth.getBlock('latest', true)
 
   const replacementTransaction = latestBlock.transactions.find((transaction) => {
     // TODO: use gasPrice, timestamp or another better way to differentiate
@@ -56,6 +57,7 @@ export const txMonitor = (
   options?: TxMonitorOptions,
   tries = 0,
 ): Promise<TransactionReceipt> => {
+  const web3 = getWeb3ReadOnly()
   return new Promise<TransactionReceipt>((resolve, reject) => {
     const { maxRetries = MAX_RETRIES } = options || {}
     if (tries > maxRetries) {
@@ -69,7 +71,7 @@ export const txMonitor = (
         let params: TxMonitorProps = { sender, hash, data }
         try {
           // Find the nonce for the current tx
-          const transaction = await web3ReadOnly.eth.getTransaction(hash)
+          const transaction = await web3.eth.getTransaction(hash)
           if (transaction) {
             params = { ...params, nonce: transaction.nonce, gasPrice: transaction.gasPrice }
           }
@@ -84,7 +86,7 @@ export const txMonitor = (
 
       // Case 2: the nonce exists, try to get the receipt for the original tx
       try {
-        const firstTxReceipt = await web3ReadOnly.eth.getTransactionReceipt(hash)
+        const firstTxReceipt = await web3.eth.getTransactionReceipt(hash)
         if (firstTxReceipt) {
           return resolve(firstTxReceipt)
         }
@@ -97,7 +99,7 @@ export const txMonitor = (
         const replacementTx = await findSpeedupTx({ sender, hash, nonce, data })
 
         if (replacementTx) {
-          const replacementReceipt = await web3ReadOnly.eth.getTransactionReceipt(replacementTx.hash)
+          const replacementReceipt = await web3.eth.getTransactionReceipt(replacementTx.hash)
 
           // goal achieved
           if (replacementReceipt) {
