@@ -25,6 +25,7 @@ let networkId = NETWORK
 export const setNetworkId = (id: string): void => {
   networkId = id
 }
+
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
