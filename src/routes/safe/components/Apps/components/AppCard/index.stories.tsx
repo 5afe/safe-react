@@ -7,14 +7,15 @@ export default {
   component: AppCard,
 }
 
-export const Loading = (): React.ReactElement => <AppCard isLoading />
+export const Loading = (): React.ReactElement => <AppCard to="" isLoading />
 
 export const AddCustomApp = (): React.ReactElement => (
-  <AppCard iconUrl={AddAppIcon} onClick={console.log} buttonText="Add custom app" />
+  <AppCard to="" iconUrl={AddAppIcon} onClick={console.log} buttonText="Add custom app" />
 )
 
 export const LoadedApp = (): React.ReactElement => (
   <AppCard
+    to=""
     iconUrl="https://cryptologos.cc/logos/versions/gnosis-gno-gno-logo-circle.svg?v=007"
     name="Gnosis"
     description="Gnosis safe app"

@@ -1,8 +1,17 @@
-import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import {
+  IconText,
+  Loader,
+  Menu,
+  Text,
+  Icon,
+  Breadcrumb,
+  BreadcrumbElement,
+  Title,
+} from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, generatePath } from 'react-router-dom'
+import { generatePath } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -26,10 +35,6 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-`
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
 `
 
 const centerCSS = css`
@@ -94,7 +99,7 @@ const AppsList = (): React.ReactElement => {
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')
-  const { appList, removeApp, isLoading } = useAppList()
+  const { appList, removeApp, isLoading, pinnedSafeApps } = useAppList()
   const apps = useAppsSearch(appList, appSearch)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
   const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
@@ -120,17 +125,50 @@ const AppsList = (): React.ReactElement => {
       <ContentWrapper>
         <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
+        <Title size="xs">Pinned apps</Title>
+        <AnimatePresence>
+          <CardsWrapper>
+            {pinnedSafeApps.map((a) => (
+              <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <AppCard
+                  to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                  isLoading={isAppLoading(a)}
+                  iconUrl={a.iconUrl}
+                  name={a.name}
+                  description={a.description}
+                />
+                {a.custom && (
+                  <IconBtn
+                    title="Remove"
+                    onClick={(e) => {
+                      e.stopPropagation()
 
+                      setAppToRemove(a)
+                    }}
+                  >
+                    <Icon size="sm" type="delete" color="error" />
+                  </IconBtn>
+                )}
+              </AppContainer>
+            ))}
+          </CardsWrapper>
+        </AnimatePresence>
+
+        <Title size="xs">All apps</Title>
         <AnimatePresence>
           <CardsWrapper>
             {!appSearch && (
-              <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
+              <AppCard to="" iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
             )}
             {apps.map((a) => (
               <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
-                  <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
-                </StyledLink>
+                <AppCard
+                  to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                  isLoading={isAppLoading(a)}
+                  iconUrl={a.iconUrl}
+                  name={a.name}
+                  description={a.description}
+                />
                 {a.custom && (
                   <IconBtn
                     title="Remove"

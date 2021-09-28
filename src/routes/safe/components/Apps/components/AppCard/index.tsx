@@ -1,5 +1,6 @@
 import { SyntheticEvent } from 'react'
 import styled from 'styled-components'
+import { Link, generatePath } from 'react-router-dom'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
@@ -51,6 +52,10 @@ const AppDescription = styled(Text)`
   -webkit-box-orient: vertical;
 `
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`
+
 export const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
   error.currentTarget.onerror = null
   error.currentTarget.src = appsIconSvg
@@ -70,6 +75,7 @@ type Props = {
   iconUrl?: string
   iconSize?: 'md' | 'lg'
   buttonText?: string
+  to: string
 }
 
 const AppCard = ({
@@ -80,6 +86,7 @@ const AppCard = ({
   iconUrl,
   iconSize = 'md',
   buttonText,
+  to,
   onClick = () => undefined,
 }: Props): React.ReactElement => {
   if (isLoading) {
@@ -94,19 +101,21 @@ const AppCard = ({
   }
 
   return (
-    <StyledAppCard className={className} onClick={onClick}>
-      <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
+    <StyledLink to={to}>
+      <StyledAppCard className={className} onClick={onClick}>
+        <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
-      {name && <AppName size="xs">{name}</AppName>}
+        {name && <AppName size="xs">{name}</AppName>}
 
-      {description && <AppDescription size="lg">{description} </AppDescription>}
+        {description && <AppDescription size="lg">{description} </AppDescription>}
 
-      {buttonText && (
-        <Button size="md" color="primary" variant="contained" onClick={onClick}>
-          {buttonText}
-        </Button>
-      )}
-    </StyledAppCard>
+        {buttonText && (
+          <Button size="md" color="primary" variant="contained" onClick={onClick}>
+            {buttonText}
+          </Button>
+        )}
+      </StyledAppCard>
+    </StyledLink>
   )
 }
 
