@@ -24,7 +24,9 @@ const useAppList = (): UseAppListReturnType => {
     )
     const apps: SafeApp[] = [...remoteSafeApps, ...customApps]
 
-    return apps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    return apps
+      .filter((a) => a.fetchStatus !== FETCH_STATUS.ERROR)
+      .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
   }, [customSafeApps, remoteSafeApps])
 
   const removeApp = useCallback(

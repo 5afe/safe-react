@@ -129,32 +129,25 @@ const AppsList = (): React.ReactElement => {
             {!appSearch && (
               <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
             )}
-            {apps
-              .filter((a) => a.fetchStatus !== FETCH_STATUS.ERROR)
-              .map((a) => (
-                <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
-                    <AppCard
-                      isLoading={isAppLoading(a)}
-                      iconUrl={a.iconUrl}
-                      name={a.name}
-                      description={a.description}
-                    />
-                  </StyledLink>
-                  {isCustomApp(a.url, appList) && (
-                    <IconBtn
-                      title="Remove"
-                      onClick={(e) => {
-                        e.stopPropagation()
+            {apps.map((a) => (
+              <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
+                  <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
+                </StyledLink>
+                {isCustomApp(a.url, appList) && (
+                  <IconBtn
+                    title="Remove"
+                    onClick={(e) => {
+                      e.stopPropagation()
 
-                        setAppToRemove(a)
-                      }}
-                    >
-                      <Icon size="sm" type="delete" color="error" />
-                    </IconBtn>
-                  )}
-                </AppContainer>
-              ))}
+                      setAppToRemove(a)
+                    }}
+                  >
+                    <Icon size="sm" type="delete" color="error" />
+                  </IconBtn>
+                )}
+              </AppContainer>
+            ))}
           </CardsWrapper>
         </AnimatePresence>
       </ContentWrapper>

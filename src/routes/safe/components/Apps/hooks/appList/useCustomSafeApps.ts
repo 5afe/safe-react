@@ -15,6 +15,13 @@ type ReturnType = {
 
 type CustomSafeApp = StoredSafeApp & { disabled?: boolean; networks?: ETHEREUM_NETWORK[]; custom: true }
 
+/* 
+  This hook is used to manage the list of custom safe apps.
+  What it does:
+  1. Loads a list of custom safe apps from local storage
+  2. Does some backward compatibility checks (supported app networks, etc)
+  3. Tries to fetch the app info (manifest.json) from the app url
+*/
 const useCustomSafeApps = (): ReturnType => {
   const [customSafeApps, setCustomSafeApps] = useState<SafeApp[]>([])
   const [loaded, setLoaded] = useState(false)
