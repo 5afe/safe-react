@@ -3,13 +3,13 @@ import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { toBN } from 'web3-utils'
 
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -63,7 +63,7 @@ type Props = ConfirmTxModalProps & {
 }
 
 const parseTxValue = (value: string | number): string => {
-  return web3ReadOnly.utils.toBN(value).toString()
+  return toBN(value).toString()
 }
 
 export const ReviewConfirm = ({
