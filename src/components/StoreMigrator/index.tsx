@@ -10,7 +10,7 @@ import { saveMigratedKeyToStorage } from 'src/utils/storage'
 // FIXME set staging and production version URLs
 export const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/app'
 const networks = [
-  'https://pr2730--safereact.review.gnosisdev.com/rinkeby/app',
+  'https://pr2774--safereact.review.gnosisdev.com/rinkeby/app',
   'https://pr2729--safereact.review.gnosisdev.com/polygon/app',
 ]
 
