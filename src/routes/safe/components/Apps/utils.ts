@@ -1,10 +1,11 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp, SAFE_APP_FETCH_STATUS } from './types'
-
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
+import { FETCH_STATUS } from 'src/utils/requests'
+
+import { SafeApp } from './types'
 
 interface AppData {
   data?: {
@@ -38,9 +39,7 @@ export const isAppManifestValid = (appInfo: AppData['data'] | SafeApp | undefine
   // if `name` exists is not 'unknown'
   appInfo.name !== 'unknown' &&
   // `description` exists
-  !!appInfo.description &&
-  // no `error` (or `error` undefined)
-  !appInfo.error
+  !!appInfo.description
 
 export const getEmptySafeApp = (): SafeApp => {
   return {
@@ -48,9 +47,8 @@ export const getEmptySafeApp = (): SafeApp => {
     url: '',
     name: 'unknown',
     iconUrl: appsIconSvg,
-    error: false,
     description: '',
-    fetchStatus: SAFE_APP_FETCH_STATUS.LOADING,
+    fetchStatus: FETCH_STATUS.LOADING,
   }
 }
 
@@ -58,7 +56,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   let res = {
     ...getEmptySafeApp(),
     error: true,
-    loadingStatus: SAFE_APP_FETCH_STATUS.ERROR,
+    loadingStatus: FETCH_STATUS.ERROR,
   }
 
   if (!appUrl?.length) {
@@ -97,7 +95,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     ...appInfoData,
     id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
     error: false,
-    loadingStatus: SAFE_APP_FETCH_STATUS.SUCCESS,
+    loadingStatus: FETCH_STATUS.SUCCESS,
   }
 
   const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`

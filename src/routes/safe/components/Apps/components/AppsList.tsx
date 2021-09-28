@@ -13,10 +13,11 @@ import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
+import { FETCH_STATUS } from 'src/utils/requests'
 
 import { SearchInputCard } from './SearchInputCard'
 import { NoAppsFound } from './NoAppsFound'
-import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
+import { SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
@@ -85,7 +86,7 @@ const AppContainer = styled(motion.div)`
   }
 `
 
-const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
+const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
 const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
   return appsList.some(({ url, custom }) => url === appUrl && custom)
 }
@@ -129,7 +130,7 @@ const AppsList = (): React.ReactElement => {
               <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
             )}
             {apps
-              .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
+              .filter((a) => a.fetchStatus !== FETCH_STATUS.ERROR)
               .map((a) => (
                 <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                   <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>

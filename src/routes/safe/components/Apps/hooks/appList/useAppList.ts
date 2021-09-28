@@ -1,7 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { getNetworkId } from 'src/config'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { getAppInfoFromUrl, getEmptySafeApp } from '../../utils'
+import { useCallback, useMemo } from 'react'
+
 import { SafeApp } from '../../types'
 import { useCustomSafeApps } from './useCustomSafeApps'
 import { useRemoteSafeApps } from './useRemoteSafeApps'
@@ -16,7 +14,7 @@ type UseAppListReturnType = {
 
 const useAppList = (): UseAppListReturnType => {
   const { remoteSafeApps, status: remoteAppsFetchStatus } = useRemoteSafeApps()
-  const { customSafeApps, updateCustomSafeApps, loaded: customAppsLoaded } = useCustomSafeApps()
+  const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
   const { pinnedSafeAppIds } = usePinnedSafeApps()
   const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
 
@@ -27,7 +25,7 @@ const useAppList = (): UseAppListReturnType => {
     const apps: SafeApp[] = [...remoteSafeApps, ...customApps]
 
     return apps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-  }, [customSafeApps])
+  }, [customSafeApps, remoteSafeApps])
 
   const removeApp = useCallback(
     (appUrl: string): void => {

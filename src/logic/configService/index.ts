@@ -3,20 +3,20 @@ import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
-export type AppData = {
+export type RemoteAppData = {
+  id: number
   url: string
-  name?: string
-  disabled?: boolean
-  description?: string
-  networks: ETHEREUM_NETWORK[]
-  custom?: boolean
+  name: string
+  iconUrl: string
+  description: string
+  chainIds: ETHEREUM_NETWORK[]
 }
 
 enum Endpoints {
   SAFE_APPS = '/safe-apps/',
 }
 
-export const fetchSafeAppsList = async (): Promise<AppData[]> => {
+export const fetchSafeAppsList = async (): Promise<RemoteAppData[]> => {
   const networkId = getNetworkId()
   return axios.get(`${CONFIG_SERVICE_URL}${Endpoints['SAFE_APPS']}?chainId=${networkId}`).then(({ data }) => data)
 }

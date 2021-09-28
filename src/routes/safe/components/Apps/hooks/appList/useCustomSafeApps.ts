@@ -25,11 +25,11 @@ const useCustomSafeApps = (): ReturnType => {
   }, [])
 
   useEffect(() => {
-    const fetchAppCallback = (res: SafeApp) => {
+    const fetchAppCallback = (res: SafeApp, error = false) => {
       setCustomSafeApps((prev) => {
         const cpPrevStatus = [...prev]
         const appIndex = cpPrevStatus.findIndex((a) => a.url === res.url)
-        const newStatus = res.error ? FETCH_STATUS.ERROR : FETCH_STATUS.SUCCESS
+        const newStatus = error ? FETCH_STATUS.ERROR : FETCH_STATUS.SUCCESS
         cpPrevStatus[appIndex] = { ...res, fetchStatus: newStatus }
         return cpPrevStatus
       })
@@ -62,7 +62,7 @@ const useCustomSafeApps = (): ReturnType => {
               fetchAppCallback(formatedApp)
             })
             .catch((err) => {
-              fetchAppCallback({ ...app, error: err.message })
+              fetchAppCallback(app, true)
               logError(Errors._900, `${app.url}, ${err.message}`)
             })
         } else {

@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { AppData as RemoteSafeApp, fetchSafeAppsList } from 'src/logic/configService'
+import { fetchSafeAppsList } from 'src/logic/configService'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import { FETCH_STATUS } from 'src/utils/requests'
+import { SafeApp } from '../../types'
 
 type ReturnType = {
-  remoteSafeApps: RemoteSafeApp[]
+  remoteSafeApps: SafeApp[]
   status: FETCH_STATUS
 }
 
 const useRemoteSafeApps = (): ReturnType => {
-  const [remoteSafeApps, setRemoteSafeApps] = useState<RemoteSafeApp[]>([])
+  const [remoteSafeApps, setRemoteSafeApps] = useState<SafeApp[]>([])
   const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
   const dispatch = useDispatch()
 
@@ -22,7 +23,7 @@ const useRemoteSafeApps = (): ReturnType => {
       try {
         const result = await fetchSafeAppsList()
         if (result?.length) {
-          setRemoteSafeApps(result)
+          setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
           setStatus(FETCH_STATUS.SUCCESS)
         } else {
           throw new Error('Empty apps array 🤬')

@@ -7,7 +7,6 @@ export type SafeApp = {
   iconUrl: string
   disabled?: boolean
   description: string
-  error: boolean
   fetchStatus: FETCH_STATUS
   custom?: boolean
 }
