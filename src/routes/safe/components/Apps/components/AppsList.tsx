@@ -87,9 +87,6 @@ const AppContainer = styled(motion.div)`
 `
 
 const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
-const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
-  return appsList.some(({ url, custom }) => url === appUrl && custom)
-}
 
 const AppsList = (): React.ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
@@ -134,7 +131,7 @@ const AppsList = (): React.ReactElement => {
                 <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
                   <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
                 </StyledLink>
-                {isCustomApp(a.url, appList) && (
+                {a.custom && (
                   <IconBtn
                     title="Remove"
                     onClick={(e) => {
