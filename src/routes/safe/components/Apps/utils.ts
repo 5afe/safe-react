@@ -13,7 +13,6 @@ interface AppData {
     iconPath: string
     description: string
     providedBy: string
-    error?: string
   }
 }
 
@@ -33,7 +32,7 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
-export const isAppManifestValid = (appInfo: AppData['data'] | SafeApp | undefined): boolean =>
+export const isAppManifestValid = (appInfo: AppData['data']): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
