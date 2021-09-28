@@ -8,6 +8,7 @@ import { FETCH_STATUS } from 'src/utils/requests'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
+  pinnedSafeApps: SafeApp[]
   removeApp: (appUrl: string) => void
   isLoading: boolean
 }
@@ -30,6 +31,11 @@ const useAppList = (): UseAppListReturnType => {
       .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
   }, [customSafeApps, remoteSafeApps])
 
+  const pinnedSafeApps = useMemo(
+    () => appList.filter((app) => pinnedSafeAppIds.includes(app.id)),
+    [pinnedSafeAppIds, appList],
+  )
+
   const removeApp = useCallback(
     (appUrl: string): void => {
       const newPersistedList = customSafeApps.filter(({ url }) => url !== appUrl)
@@ -40,6 +46,7 @@ const useAppList = (): UseAppListReturnType => {
 
   return {
     appList,
+    pinnedSafeApps,
     removeApp,
     isLoading: remoteIsLoading,
   }
