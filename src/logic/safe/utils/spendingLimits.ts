@@ -11,7 +11,7 @@ import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { encodeMultiSendCall, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -25,7 +25,8 @@ const requestTokensByDelegate = async (
   safeAddress: string,
   delegates: string[],
 ): Promise<[string, string[] | undefined][]> => {
-  const batch = new web3ReadOnly.BatchRequest()
+  const web3 = getWeb3ReadOnly()
+  const batch = new web3.BatchRequest()
 
   const whenRequestValues = delegates.map((delegateAddress: string) =>
     generateBatchRequests<[string, string[] | undefined]>({
@@ -75,7 +76,8 @@ const requestAllowancesByDelegatesAndTokens = async (
   safeAddress: string,
   tokensByDelegate: [string, string[] | undefined][],
 ): Promise<SpendingLimitRow[]> => {
-  const batch = new web3ReadOnly.BatchRequest()
+  const web3 = getWeb3ReadOnly()
+  const batch = new web3.BatchRequest()
 
   const whenRequestValues: Promise<TokenSpendingLimitRequest>[] = []
 

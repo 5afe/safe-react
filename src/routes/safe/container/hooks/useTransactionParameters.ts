@@ -6,7 +6,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
 
@@ -37,6 +37,7 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
+  const web3 = getWeb3ReadOnly()
   const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = useSelector(safeAddressFromUrl)
@@ -76,7 +77,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       return
     }
     setEthGasPriceInGWei(web3.utils.toWei(ethGasPrice, 'Gwei'))
-  }, [ethGasPrice, isCancelTransaction])
+  }, [ethGasPrice, isCancelTransaction, web3])
 
   // Calc safe nonce
   useEffect(() => {
