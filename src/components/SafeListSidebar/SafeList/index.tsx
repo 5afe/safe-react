@@ -60,16 +60,20 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   return (
     <StyledList>
       {networks.map(({ id, backgroundColor, textColor, label }) => {
-        const isCurrentNetwork = id === getNetworkId()
         const isConnected = !!connectedWalletAddress
+        const isCurrentNetwork = id === getNetworkId()
+        const isConnectedToCurrentNetwork = isCurrentNetwork && isConnected
 
         const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl)
-        const addedSafesOnNetwork = isCurrentNetwork && isConnected ? loadedSafes : localSafesOnNetwork
-        const shouldExpandOwnedSafes = localSafesOnNetwork.some(
-          ({ address }) => address === currentSafeAddress && isSafeAdded(loadedSafes, address),
-        )
+        const addedSafesOnNetwork = isConnectedToCurrentNetwork ? loadedSafes : localSafesOnNetwork
 
-        const hasSafes = isCurrentNetwork && isConnected ? ownedSafes.length > 0 : localSafesOnNetwork.length > 0
+        const shouldExpandOwnedSafes = isConnectedToCurrentNetwork
+          ? ownedSafes.some((address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address))
+          : localSafesOnNetwork.some(
+              ({ address }) => address === currentSafeAddress && isSafeAdded(loadedSafes, address),
+            )
+
+        const hasSafes = isConnectedToCurrentNetwork ? ownedSafes.length > 0 : localSafesOnNetwork.length > 0
         if (!hasSafes) return null
         return (
           <Fragment key={id}>
@@ -85,7 +89,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                   onNetworkSwitch={() => setNetwork(id)}
                   onSafeClick={onSafeClick}
                   loadedSafes={loadedSafes}
-                  isAddedOnNetwork
+                  shouldScrollToSafe
                   {...safe}
                 />
               ))}
@@ -102,6 +106,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                         networkId={id}
                         onSafeClick={onSafeClick}
                         loadedSafes={loadedSafes}
+                        shouldScrollToSafe={!isSafeAdded(loadedSafes, address)}
                       />
                     ))}
                   </Collapse>

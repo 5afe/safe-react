@@ -27,7 +27,7 @@ type Props = {
   ethBalance?: string
   loadedSafes: SafeRecordWithNames[]
   networkId: ETHEREUM_NETWORK
-  isAddedOnNetwork?: boolean
+  shouldScrollToSafe?: boolean
 }
 
 const SafeListItem = ({
@@ -37,7 +37,7 @@ const SafeListItem = ({
   ethBalance,
   loadedSafes,
   networkId,
-  isAddedOnNetwork = false,
+  shouldScrollToSafe = false,
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
@@ -48,10 +48,10 @@ const SafeListItem = ({
   const showAddSafeLink = !isSafeAdded(loadedSafes, address)
 
   useEffect(() => {
-    if (isCurrentSafe && isAddedOnNetwork) {
+    if (isCurrentSafe && shouldScrollToSafe) {
       safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [isCurrentSafe, isAddedOnNetwork])
+  }, [isCurrentSafe, shouldScrollToSafe])
 
   const handleLoadSafe = (): void => {
     onNetworkSwitch?.()
