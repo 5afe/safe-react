@@ -8,7 +8,7 @@ import { MigrationMessage } from 'src/routes/migration/container'
 import { MIGRATION_ADDRESS } from 'src/routes/routes'
 import { saveMigratedKeyToStorage } from 'src/utils/storage'
 
-const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/app'
+export const MAINET_URL = 'https://pr2695--safereact.review.gnosisdev.com/mainnet/app'
 const networks = [
   {
     safeUrl: 'https://pr2730--safereact.review.gnosisdev.com/rinkeby/app',

@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { isLocalStorageMigrated } from 'src/logic/currentSession/store/selectors'
 import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
+import { MAINET_URL } from 'src/components/StoreMigrator'
 
 export type MigrationMessage = {
   executeMigration: boolean
   payload: string
 }
 
-// FIXME This is meant for easiness of testing purposes. Set to a fixed origin once ready
-const MESSAGE_ORIGIN = '*'
+// FIXME Review to set to the correct mainnet URL on Prod/Staging
+const MESSAGE_TARGET_ORIGIN = MAINET_URL
 
 const MigrationScreen = (): ReactElement => {
   const dispatch = useDispatch()
@@ -31,7 +32,7 @@ const MigrationScreen = (): ReactElement => {
         executeMigration: true,
         payload: JSON.stringify(payload),
       }
-      window.parent.postMessage(message, MESSAGE_ORIGIN)
+      window.parent.postMessage(message, MESSAGE_TARGET_ORIGIN)
       // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
       setMessageSent(true)
       dispatch(setLocalStorageMigrated(true))
@@ -42,7 +43,7 @@ const MigrationScreen = (): ReactElement => {
         executeMigration: false,
         payload: '',
       }
-      window.parent.postMessage(message, MESSAGE_ORIGIN)
+      window.parent.postMessage(message, MESSAGE_TARGET_ORIGIN)
       setMessageSent(true)
     }
 
