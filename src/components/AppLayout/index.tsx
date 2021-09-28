@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { useLocation } from 'react-router-dom'
+import { useLocation, generatePath } from 'react-router-dom'
 import { ListItemType } from 'src/components/List'
+import { WELCOME_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
 
 import Header from './Header'
 import Footer from './Footer'
@@ -68,9 +69,9 @@ const ContentWrapper = styled.div`
 
 type Props = {
   sidebarItems: ListItemType[]
-  safeAddress: string | undefined
-  safeName: string | undefined
-  balance: string | undefined
+  safeAddress?: string
+  safeName?: string
+  balance?: string
   granted: boolean
   onToggleSafeList: () => void
   onReceiveClick: () => void
@@ -92,8 +93,13 @@ const Layout: React.FC<Props> = ({
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
-  const hasFooterRegex = new RegExp(/\/(welcome|safes\/0x[a-fA-F0-9]{40}\/settings)/)
-  const hasFooter = hasFooterRegex.test(useLocation().pathname)
+  const settingsBaseRoute = safeAddress
+    ? generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
+        safeAddress,
+      })
+    : undefined
+  const footerRegex = new RegExp(`(${WELCOME_ADDRESS}|${settingsBaseRoute})`)
+  const hasFooter = footerRegex.test(useLocation().pathname)
 
   return (
     <Container>
