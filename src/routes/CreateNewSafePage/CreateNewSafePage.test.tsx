@@ -9,7 +9,7 @@ import {
 } from 'src/utils/test-utils'
 
 import CreateNewSafePage from './CreateNewSafePage'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import * as ethTransactions from 'src/logic/wallets/ethTransactions'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
 
@@ -19,7 +19,7 @@ const DateSpy = jest.spyOn(global.Date, 'now')
 const estimateGasForDeployingSafeSpy = jest.spyOn(safeContracts, 'estimateGasForDeployingSafe')
 const calculateGasPriceSpy = jest.spyOn(ethTransactions, 'calculateGasPrice')
 
-const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
+const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
 const secondOwnerAddress = '0xfe8BEBd43Ac213bea4bb8eC9e2dd90632f9371b2'
 const validENSNameDomain = 'testENSDomain.eth'
