@@ -33,7 +33,6 @@ const MigrationScreen = (): ReactElement => {
         payload: JSON.stringify(payload),
       }
       window.parent.postMessage(message, MESSAGE_TARGET_ORIGIN)
-      // window.parent.postMessage(message, 'https://pr2695--safereact.review.gnosisdev.com')
       setMessageSent(true)
       dispatch(setLocalStorageMigrated(true))
     }
