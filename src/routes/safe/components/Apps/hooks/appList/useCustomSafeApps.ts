@@ -58,9 +58,7 @@ const useCustomSafeApps = (): ReturnType => {
       serializedApps.forEach((app) => {
         getAppInfoFromUrl(app.url)
           .then((appFromUrl) => {
-            const formatedApp = appFromUrl
-            formatedApp.custom = app.custom
-            fetchAppCallback(formatedApp)
+            fetchAppCallback({ ...appFromUrl, custom: true })
           })
           .catch((err) => {
             fetchAppCallback(app, true)
