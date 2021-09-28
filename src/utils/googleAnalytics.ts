@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
-import { getNetworkInfo } from 'src/config'
+import { getCurrentEnvironment, getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
+import { IS_PRODUCTION } from './constants'
+import { capitalize } from './css'
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
@@ -16,27 +18,58 @@ export const COOKIES_LIST = [
   { name: '_gid', path: '/' },
 ]
 
+const IS_STAGING = getCurrentEnvironment() === 'staging'
+const shouldUseGoogleAnalytics = IS_PRODUCTION || IS_STAGING
+
+export const trackAnalyticsEvent = (event: Parameters<typeof ReactGA.event>[0]): void => {
+  const chainName = getNetworkInfo().label
+
+  // action, category, label, etc. => eventAction, eventCategory, eventLabel, etc.
+  const fieldsObject: Parameters<typeof ReactGA.ga>[1] = Object.entries(event).reduce(
+    (acc, [key, value]) => ({ ...acc, [`event${capitalize(key)}`]: value }),
+    { hitType: 'event', chainName },
+  )
+
+  return shouldUseGoogleAnalytics
+    ? ReactGA.ga('send', fieldsObject)
+    : console.info('[GA] - Event:', { ...event, chainName })
+}
+const trackAnalyticsPage: typeof ReactGA.pageview = (...args) => {
+  return shouldUseGoogleAnalytics ? ReactGA.pageview(...args) : console.info('[GA] - Page:', ...args)
+}
+
 let analyticsLoaded = false
 export const loadGoogleAnalytics = (): void => {
   if (analyticsLoaded) {
     return
   }
-  // eslint-disable-next-line no-console
-  console.log('Loading google analytics...')
-  const trackingID = getGoogleAnalyticsTrackingID()
-  const networkInfo = getNetworkInfo()
-  if (!trackingID) {
-    console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
-  } else {
-    ReactGA.initialize(trackingID)
-    ReactGA.set({
-      anonymizeIp: true,
-      appName: `Gnosis Safe Multisig (${networkInfo.label})`,
-      appId: `io.gnosis.safe.${networkInfo.label.toLowerCase()}`,
-      appVersion: process.env.REACT_APP_APP_VERSION,
-    })
-    analyticsLoaded = true
+
+  console.info(
+    shouldUseGoogleAnalytics
+      ? 'Loading Google Analytics...'
+      : 'Google Analytics will not load in the development environment, but instead log.',
+  )
+
+  const gaTrackingId = getGoogleAnalyticsTrackingID()
+
+  const customDimensions: ReactGA.FieldsObject = {
+    anonymizeIp: true,
+    appName: `Gnosis Safe Web`,
+    appVersion: process.env.REACT_APP_APP_VERSION,
   }
+
+  if (shouldUseGoogleAnalytics) {
+    if (!gaTrackingId) {
+      console.error('In order to use Google Analytics you need to add a tracking ID.')
+    } else {
+      ReactGA.initialize(gaTrackingId)
+      ReactGA.set(customDimensions)
+    }
+  } else {
+    console.info('[GA] - Custom dimensions:', customDimensions)
+  }
+
+  analyticsLoaded = true
 }
 
 type UseAnalyticsResponse = {
@@ -60,20 +93,18 @@ export const useAnalytics = (): UseAnalyticsResponse => {
 
   const trackPage = useCallback(
     (page) => {
-      if (!analyticsAllowed || !analyticsLoaded) {
-        return
+      if (analyticsAllowed && analyticsLoaded) {
+        trackAnalyticsPage(page)
       }
-      ReactGA.pageview(page)
     },
     [analyticsAllowed],
   )
 
   const trackEvent = useCallback(
     (event: EventArgs) => {
-      if (!analyticsAllowed || !analyticsLoaded) {
-        return
+      if (analyticsAllowed && analyticsLoaded) {
+        trackAnalyticsEvent(event)
       }
-      ReactGA.event(event)
     },
     [analyticsAllowed],
   )

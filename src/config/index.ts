@@ -57,16 +57,22 @@ export const getNetworkLabel = (id: ETHEREUM_NETWORK = getNetworkId()): string =
   return cfg ? cfg.network.label : ''
 }
 
-const getCurrentEnvironment = (): string => {
-  switch (NODE_ENV) {
+export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
+  getNetworkId(),
+)
+
+export const getCurrentEnvironment = (): 'test' | 'production' | 'staging' | 'dev' => {
+  switch (APP_ENV) {
     case 'test': {
       return 'test'
     }
     case 'production': {
       return APP_ENV === 'production' ? 'production' : 'staging'
     }
+    case 'dev':
     default: {
-      return 'dev'
+      // We need to check NODE_ENV calling jest outside of scripts
+      return NODE_ENV === 'test' ? 'test' : 'dev'
     }
   }
 }
