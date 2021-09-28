@@ -15,7 +15,7 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworks } from 'src/config'
-import { getNetworkSlug, ROOT_ROUTE } from 'src/routes/routes'
+import { getNetworkSlug, WELCOME_ROUTE } from 'src/routes/routes'
 
 const styles = () => ({
   root: {
@@ -96,7 +96,7 @@ const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) =
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link
-          to={generatePath(ROOT_ROUTE, {
+          to={generatePath(WELCOME_ROUTE, {
             network: getNetworkSlug(),
           })}
         >
