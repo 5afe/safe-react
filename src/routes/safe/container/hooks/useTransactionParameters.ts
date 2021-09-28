@@ -4,11 +4,11 @@ import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
-import { } from 'src/utils/router'
+import { safeAddressFromUrl } from 'src/utils/router'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 export type TxParameters = {
   safeNonce: string | undefined
