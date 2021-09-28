@@ -7,13 +7,11 @@ import { FETCH_STATUS } from 'src/utils/requests'
 
 import { SafeApp } from './types'
 
-interface AppData {
-  data?: {
-    name: string
-    iconPath: string
-    description: string
-    providedBy: string
-  }
+export interface AppManifest {
+  name: string
+  iconPath: string
+  description: string
+  providedBy: string
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
@@ -32,7 +30,7 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
-export const isAppManifestValid = (appInfo: AppData['data']): boolean =>
+export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
@@ -65,15 +63,16 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   res.url = appUrl.trim()
   const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
-  let appInfo: AppData | undefined
+  let appInfo: AppManifest | undefined
   try {
-    appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
+    const response = await axios.get<AppManifest>(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
+    appInfo = response.data
   } catch (error) {
     throw Error('Failed to fetch app manifest')
   }
 
   // verify imported app fulfil safe requirements
-  if (!appInfo?.data || !isAppManifestValid(appInfo.data)) {
+  if (!appInfo || !isAppManifestValid(appInfo)) {
     throw Error('App manifest does not fulfil the required structure.')
   }
 
@@ -83,21 +82,21 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   const remainingSpace = originFieldSize - res.url.length - jsonDataLength
 
   const appInfoData = {
-    name: appInfo.data.name,
-    iconPath: appInfo.data.iconPath,
-    description: appInfo.data.description,
-    providedBy: appInfo.data.providedBy,
+    name: appInfo.name,
+    iconPath: appInfo.iconPath,
+    description: appInfo.description,
+    providedBy: appInfo.providedBy,
   }
 
   res = {
     ...res,
     ...appInfoData,
-    id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
+    id: JSON.stringify({ url: res.url, name: appInfo.name.substring(0, remainingSpace) }),
     error: false,
     loadingStatus: FETCH_STATUS.SUCCESS,
   }
 
-  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
+  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.iconPath}`
   if (await canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }

@@ -1,7 +1,7 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
 
-jest.mock('src/routes/safe/components/Apps/hooks/useAppList', () => ({
+jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
   useAppList: () => ({
     appList: [
       {
