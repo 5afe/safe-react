@@ -35,7 +35,7 @@ class GnoTableHead extends React.PureComponent<any> {
             <TableCell
               align={column.align}
               key={column.id}
-              padding={column.disablePadding ? 'none' : 'normal'}
+              padding={column.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === column.id ? order : false}
             >
               {column.static ? (
