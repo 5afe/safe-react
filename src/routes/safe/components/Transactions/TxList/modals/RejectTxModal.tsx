@@ -1,6 +1,4 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -24,6 +22,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 type Props = {
   isOpen: boolean
@@ -97,14 +96,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Row align="center" className={classes.heading} grow>
-                <Paragraph className={classes.headingText} noMargin weight="bolder">
-                  Reject transaction
-                </Paragraph>
-                <IconButton disableRipple onClick={onClose}>
-                  <Close className={classes.closeIcon} />
-                </IconButton>
-              </Row>
+              <ModalHeader onClose={onClose} title="Reject transaction" />
               <Hairline />
               <Block className={classes.container}>
                 <Row>

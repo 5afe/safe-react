@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+
 import { getNetworkLabel } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
 
 interface Props {
   chainId: ETHEREUM_NETWORK

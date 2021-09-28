@@ -1,10 +1,10 @@
 import { getClientGatewayUrl } from 'src/config'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { mockedEndpoints } from 'src/setupTests'
 import { render, fireEvent, screen, waitFor, act } from 'src/utils/test-utils'
 import Load from './container/Load'
 
-const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
+const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
 const networkId = '4'
 const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'

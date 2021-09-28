@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { Text, EthHashInfo, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
 import get from 'lodash.get'
+import { hexToBytes } from 'web3-utils'
 
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
@@ -56,7 +56,7 @@ export const getByteLength = (data: string | string[]): number => {
     }
     // Return the sum of the byte sizes of each hex string
     return data.reduce((result, hex) => {
-      const bytes = web3.utils.hexToBytes(hex)
+      const bytes = hexToBytes(hex)
       return result + bytes.length
     }, 0)
   } catch (err) {
