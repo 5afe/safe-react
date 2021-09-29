@@ -15,8 +15,8 @@ const MIGRATION_KEY = 'SAFE__subdomainsMigrated'
 const IFRAME_PATH = '/migrate-local-storage.html'
 const IFRAME_NAME = 'migrationIframe'
 
-// Take all networks except for local
-const { local, ...migratedNetworks } = allNetworks
+// Mainnet is not needed because we remain on same domain
+const { local, mainnet, ...migratedNetworks } = allNetworks
 // The result is [ 'bsc', 'polygon', 'ewc', ... ]
 const networks = Object.values(migratedNetworks).map(({ network }) => network.label.toLowerCase())
 
