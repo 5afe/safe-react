@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { useLocation, generatePath } from 'react-router-dom'
+import { useLocation, matchPath } from 'react-router-dom'
+
 import { ListItemType } from 'src/components/List'
 import { WELCOME_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
 
@@ -90,16 +91,13 @@ const Layout: React.FC<Props> = ({
   sidebarItems,
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
+  const { pathname } = useLocation()
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
-  const settingsBaseRoute = safeAddress
-    ? generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
-        safeAddress,
-      })
-    : undefined
-  const footerRegex = new RegExp(`(${WELCOME_ADDRESS}|${settingsBaseRoute})`)
-  const hasFooter = footerRegex.test(useLocation().pathname)
+  const hasFooter = !!matchPath(pathname, {
+    path: [SAFE_ROUTES.SETTINGS_BASE_ROUTE, WELCOME_ADDRESS],
+  })
 
   return (
     <Container>
