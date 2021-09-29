@@ -1,5 +1,4 @@
-import { ReactElement, useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { ReactElement, useState } from 'react'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import Dialog from '@material-ui/core/Dialog'
@@ -11,19 +10,16 @@ import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 
 import Block from 'src/components/layout/Block'
-import { getConfig, getNetworkName, getNetworks, setNetworkId } from 'src/config'
+import { getNetworks } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
 import { lg } from 'src/theme/variables'
 import Paragraph from 'src/components/layout/Paragraph'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { setNetwork } from 'src/logic/config/utils'
 
 export const selectNetworkStepLabel = 'Select network'
 
 function SelectNetworkStep(): ReactElement {
-  const dispatch = useDispatch()
-
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
 
   function openNetworkSelectorPopup() {
@@ -32,15 +28,10 @@ function SelectNetworkStep(): ReactElement {
 
   const networks = getNetworks()
 
-  const onNetworkSwitch = useCallback(
-    (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-      setNetworkId(getNetworkName(networkId))
-      const safeConfig = makeNetworkConfig(getConfig())
-      dispatch(configStore(safeConfig))
-      setIsNetworkSelectorPopupOpen(false)
-    },
-    [dispatch],
-  )
+  const onNetworkSwitch = (networkId: ETHEREUM_NETWORK) => {
+    setNetwork(networkId)
+    setIsNetworkSelectorPopupOpen(false)
+  }
 
   return (
     <Container data-testid={'select-network-step'}>
@@ -67,11 +58,7 @@ function SelectNetworkStep(): ReactElement {
         <StyledDialogContent dividers>
           <List component="div">
             {networks.map((network) => (
-              <NetworkLabelItem
-                key={network.id}
-                role={'button'}
-                onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
-              >
+              <NetworkLabelItem key={network.id} role={'button'} onClick={() => onNetworkSwitch(network.id)}>
                 <NetworkLabel networkInfo={network} flexGrow />
               </NetworkLabelItem>
             ))}

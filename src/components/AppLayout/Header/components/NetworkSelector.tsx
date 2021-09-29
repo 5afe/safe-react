@@ -1,5 +1,4 @@
-import { ReactElement, useRef, Fragment, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { ReactElement, useRef, Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
@@ -15,15 +14,13 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-
 import { sameString } from 'src/utils/strings'
-import { getConfig, getNetworkName, setNetworkId } from 'src/config'
+import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
-import { APP_ENV } from 'src/utils/constants'
 import { ROOT_ADDRESS } from 'src/routes/routes'
+import { APP_ENV } from 'src/utils/constants'
+import { setNetwork } from 'src/logic/config/utils'
 
 const styles = {
   root: {
@@ -86,28 +83,21 @@ type NetworkSelectorProps = ReturnValue & {
 
 const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorProps): ReactElement => {
   const networkRef = useRef(null)
-  const classes = useStyles()
-  const dispatch = useDispatch()
   const history = useHistory()
+  const classes = useStyles()
   const networkName = getNetworkName().toLowerCase()
 
-  const onNetworkSwitch = useCallback(
-    (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-      // FIXME remove navigation when L2-UX completes
-      // This was added in order to switch network using navigation on prod
-      // but be able to check chain swapping on dev environments and PRs
-      if (APP_ENV === 'production') {
-        window.location.href = safeUrl
-      } else {
-        clickAway()
-        setNetworkId(getNetworkName(networkId))
-        const safeConfig = makeNetworkConfig(getConfig())
-        dispatch(configStore(safeConfig))
-        history.push(ROOT_ADDRESS)
-      }
-    },
-    [clickAway, dispatch, history],
-  )
+  const onNetworkChange = (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
+    // FIXME: remove navigation when L2-UX completes
+    // This was added in order to switch network using navigation on prod
+    // but be able to check chain swapping on dev environments and PRs
+    if (APP_ENV === 'production') {
+      window.location.href = safeUrl
+    } else {
+      setNetwork(networkId)
+      history.push(ROOT_ADDRESS)
+    }
+  }
 
   return (
     <>
@@ -134,7 +124,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
                 <List className={classes.network} component="div">
                   {networks.map((network) => (
                     <Fragment key={network.id}>
-                      <StyledLink onClick={() => onNetworkSwitch(network.safeUrl, network.id)}>
+                      <StyledLink onClick={() => onNetworkChange(network.safeUrl, network.id)}>
                         <NetworkLabel networkInfo={network} />
                         {sameString(networkName, network.label?.toLowerCase()) && (
                           <Icon type="check" size="md" color="primary" />

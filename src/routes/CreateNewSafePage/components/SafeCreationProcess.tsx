@@ -6,7 +6,7 @@ import { generatePath } from 'react-router'
 import { GenericModal } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
-import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
+import { getSafeDeploymentTransaction, instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { FIELD_CREATION_PROXY_SALT } from 'src/routes/open/components/fields'
@@ -50,18 +50,28 @@ function SafeCreationProcess(): ReactElement {
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
 
+  useEffect(() => {
+    if (!userAddressAccount) {
+      history.push({
+        pathname: WELCOME_ADDRESS,
+      })
+    }
+  }, [userAddressAccount])
+
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
 
   const createNewSafe = useCallback(async () => {
     const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
 
-    if (!safeCreationFormValues) {
+    if (!safeCreationFormValues || !userAddressAccount) {
       history.push({
         pathname: WELCOME_ADDRESS,
       })
       return
     }
+
+    await instantiateSafeContracts()
 
     setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
 

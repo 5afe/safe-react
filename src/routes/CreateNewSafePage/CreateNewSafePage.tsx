@@ -41,18 +41,20 @@ import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './s
 function CreateNewSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const provider = useSelector(providerNameSelector)
 
   useEffect(() => {
     async function checkIfSafeIsPendingToBeCreated() {
       setIsLoading(true)
       const safePendingToBeCreated = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
-      setSafePendingToBeCreated(safePendingToBeCreated)
+      if (provider) {
+        setSafePendingToBeCreated(safePendingToBeCreated)
+      }
       setIsLoading(false)
     }
     checkIfSafeIsPendingToBeCreated()
-  }, [])
+  }, [provider])
 
-  const provider = useSelector(providerNameSelector)
   const userWalletAddress = useSelector(userAccountSelector)
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
   const location = useLocation()
