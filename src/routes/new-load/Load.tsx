@@ -29,7 +29,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 import { SAFE_ROUTES } from '../routes'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
@@ -88,8 +87,6 @@ function Load(): ReactElement {
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
-    // Flag that changes have been added to this env
-    dispatch(setLocalStorageMigrated(false))
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
         safeAddress,

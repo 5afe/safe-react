@@ -23,7 +23,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 
 export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordProps) => void): Promise<void> => {
   const safeProps = await buildSafe(safeAddress)
@@ -63,8 +62,6 @@ const Load = (): ReactElement => {
 
   const addSafeHandler = async (safe: SafeRecordProps) => {
     dispatch(addOrUpdateSafe(safe))
-    // Flag that changes have been added to this env
-    dispatch(setLocalStorageMigrated(false))
   }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]

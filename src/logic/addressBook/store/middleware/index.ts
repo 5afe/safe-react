@@ -1,5 +1,4 @@
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
-import setLocalStorageMigrated from 'src/logic/currentSession/store/actions/setLocalStorageMigrated'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -16,8 +15,6 @@ export const addressBookMiddleware = (store) => (next) => async (action) => {
         if (!shouldAvoidUpdatesNotifications) {
           const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_NEW_ENTRY)
           dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
-          // Flag that changes have been added to this env
-          dispatch(setLocalStorageMigrated(false))
         }
         break
       }
@@ -29,8 +26,6 @@ export const addressBookMiddleware = (store) => (next) => async (action) => {
       case ADDRESS_BOOK_ACTIONS.IMPORT: {
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_IMPORT_ENTRIES)
         dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
-        // Flag that changes have been added to this env
-        dispatch(setLocalStorageMigrated(false))
         break
       }
       default:
