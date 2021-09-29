@@ -37,6 +37,7 @@ import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafe
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 
 function CreateNewSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -48,6 +49,7 @@ function CreateNewSafePage(): ReactElement {
       setIsLoading(true)
       const safePendingToBeCreated = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
       if (provider) {
+        await instantiateSafeContracts()
         setSafePendingToBeCreated(safePendingToBeCreated)
       }
       setIsLoading(false)
