@@ -1,60 +1,12 @@
-import { PUBLIC_URL } from 'src/utils/constants'
-import onboard from 'src/logic/wallets/onboard'
 import { render, fireEvent, screen } from 'src/utils/test-utils'
 import { getNetworkSlug } from '../routes'
-import Welcome from './container'
+import Welcome from './Welcome'
 
 describe('<Welcome>', () => {
   it('Should render Welcome container', () => {
     render(<Welcome />)
 
     expect(screen.getByText('Welcome to Gnosis Safe.')).toBeInTheDocument()
-  })
-
-  it('Connect wallet button should not be disabled if no wallet is selected', () => {
-    render(<Welcome />)
-
-    const connectWalletButton = screen.getByTestId('connect-btn') as HTMLButtonElement
-
-    expect(connectWalletButton.disabled).toBe(false)
-  })
-
-  it('Should prompt user to select a wallet when clicks on Connect wallet button', () => {
-    const showSelectWalletPromptSpy = jest.spyOn(onboard(), 'walletSelect')
-
-    render(<Welcome />)
-
-    expect(showSelectWalletPromptSpy).not.toHaveBeenCalled()
-
-    const connectWalletButton = screen.getByTestId('connect-btn')
-
-    expect(connectWalletButton).toBeInTheDocument()
-
-    fireEvent.click(connectWalletButton)
-
-    expect(showSelectWalletPromptSpy).toHaveBeenCalled()
-
-    showSelectWalletPromptSpy.mockRestore()
-  })
-
-  it('Connect wallet button should be disabled if a wallet is already selected', () => {
-    const customState = {
-      providers: {
-        name: 'MetaMask',
-        loaded: true,
-        available: true,
-        account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
-        network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
-      },
-    }
-
-    render(<Welcome />, customState)
-
-    const connectWalletButton = screen.getByTestId('connect-btn') as HTMLButtonElement
-
-    expect(connectWalletButton.disabled).toBe(true)
   })
 
   it('Create new Safe button should redirect to /open if a wallet is already selected', () => {

@@ -19,7 +19,7 @@ export interface AddressInputProps {
   name?: string
   text?: string
   placeholder?: string
-  inputAdornment?: { endAdornment: React.ReactElement } | undefined
+  inputAdornment?: { endAdornment: React.ReactElement } | undefined | false
   testId: string
   validators?: Validator[]
   defaultValue?: string

@@ -17,10 +17,10 @@ import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 
-const Welcome = React.lazy(() => import('./welcome/container'))
-const Open = React.lazy(() => import('./open/container/Open'))
+const Welcome = React.lazy(() => import('./welcome/Welcome'))
+const CreateNewSafePage = React.lazy(() => import('./CreateNewSafePage/CreateNewSafePage'))
+const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
 const Safe = React.lazy(() => import('./safe/container'))
-const Load = React.lazy(() => import('./new-load/Load'))
 
 const Routes = (): React.ReactElement => {
   const [isInitialLoad, setInitialLoad] = useState(true)
@@ -96,9 +96,9 @@ const Routes = (): React.ReactElement => {
         }}
       />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
-      <Route component={Open} exact path={OPEN_ROUTE} />
+      <Route component={CreateNewSafePage} exact path={OPEN_ROUTE} />
       <Route component={Safe} path={BASE_SAFE_ROUTE} />
-      <Route component={Load} path={`${LOAD_ROUTE}/:safeAddress?`} />
+      <Route component={LoadSafePage} path={`${LOAD_ROUTE}/:safeAddress?`} />
       <Redirect to={generatePath(ROOT_ROUTE, baseRouteSlugs)} />
     </Switch>
   )

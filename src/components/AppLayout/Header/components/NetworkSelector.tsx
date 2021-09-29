@@ -1,5 +1,4 @@
 import { ReactElement, useRef, Fragment, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
@@ -17,12 +16,11 @@ import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-import { getConfig, getNetworkName, setNetworkId } from 'src/config'
+import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
 import { ROOT_ROUTE } from 'src/routes/routes'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
+import { setNetwork } from 'src/logic/config/utils'
 
 const styles = {
   root: {
@@ -85,24 +83,21 @@ type NetworkSelectorProps = ReturnValue & {
 
 const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorProps): ReactElement => {
   const networkRef = useRef(null)
-  const classes = useStyles()
-  const dispatch = useDispatch()
   const history = useHistory()
+  const classes = useStyles()
   const networkName = getNetworkName().toLowerCase()
 
   const onNetworkSwitch = useCallback(
     (network: NetworkInfo) => {
       clickAway()
-      setNetworkId(getNetworkName(network.id))
-      const safeConfig = makeNetworkConfig(getConfig())
-      dispatch(configStore(safeConfig))
+      setNetwork(network.id)
       history.push(
         generatePath(ROOT_ROUTE, {
           network: network.label.toLowerCase(),
         }),
       )
     },
-    [clickAway, dispatch, history],
+    [clickAway, history],
   )
 
   return (
