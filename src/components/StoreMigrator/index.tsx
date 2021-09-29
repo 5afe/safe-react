@@ -28,7 +28,7 @@ const getSubdomainUrl = (network: string): string => {
   } else if (hostname.includes('staging.gnosisdev.com')) {
     return `https://safe-team-${network}.staging.gnosisdev.com/app`
   } else if (hostname.includes('review.gnosisdev.com')) {
-    return `https://pr2774--safereact.review.gnosisdev.com/app/${network}`
+    return `https://pr2778--safereact.review.gnosisdev.com/${network}/app/`
   } else if (hostname.includes('localhost')) {
     return `http://localhost:3001`
   } else {
