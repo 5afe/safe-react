@@ -21,6 +21,17 @@ const calculateGasPriceSpy = jest.spyOn(ethTransactions, 'calculateGasPrice')
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
+jest.mock('src/logic/contracts/safeContracts', () => {
+  // Require the original module to not be mocked...
+  const originalModule = jest.requireActual('src/logic/contracts/safeContracts')
+
+  return {
+    __esModule: true, // Use it when dealing with esModules
+    ...originalModule,
+    instantiateSafeContracts: jest.fn(() => Promise.resolve()),
+  }
+})
+
 const secondOwnerAddress = '0xfe8BEBd43Ac213bea4bb8eC9e2dd90632f9371b2'
 const validENSNameDomain = 'testENSDomain.eth'
 const notExistingENSNameDomain = 'notExistingENSDomain.eth'
