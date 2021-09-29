@@ -17,10 +17,10 @@ import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 
-const Welcome = React.lazy(() => import('./welcome/container'))
-const Open = React.lazy(() => import('./open/container/Open'))
+const Welcome = React.lazy(() => import('./welcome/Welcome'))
+const CreateNewSafePage = React.lazy(() => import('./CreateNewSafePage/CreateNewSafePage'))
+const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
 const Safe = React.lazy(() => import('./safe/container'))
-const Load = React.lazy(() => import('./new-load/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
@@ -86,9 +86,9 @@ const Routes = (): React.ReactElement => {
         }}
       />
       <Route component={Welcome} exact path={WELCOME_ADDRESS} />
-      <Route component={Open} exact path={OPEN_ADDRESS} />
+      <Route component={CreateNewSafePage} exact path={OPEN_ADDRESS} />
       <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
+      <Route component={LoadSafePage} path={`${LOAD_ADDRESS}/:safeAddress?`} />
       <Redirect to="/" />
     </Switch>
   )

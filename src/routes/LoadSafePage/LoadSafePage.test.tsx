@@ -3,7 +3,7 @@ import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getClientGatewayUrl } from 'src/config'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
-import Load from './Load'
+import LoadSafePage from './LoadSafePage'
 import { history } from 'src/store'
 import { generatePath } from 'react-router-dom'
 import { SAFE_ROUTES } from '../routes'
@@ -22,30 +22,30 @@ const validSafeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
 const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
 const validSafeENSNameDomain = 'testENSDomain.eth'
 
-describe('<Load>', () => {
+describe('<LoadSafePage>', () => {
   afterEach(() => {
     const constants = require('src/utils/constants')
 
     Object.defineProperty(constants, 'APP_ENV', { value: undefined })
   })
 
-  it('renders Load Form', () => {
-    render(<Load />)
+  it('renders LoadSafePage Form', () => {
+    render(<LoadSafePage />)
 
     expect(screen.getByText('Add existing Safe', { selector: 'h2' })).toBeInTheDocument()
     expect(screen.getByTestId('load-safe-form')).toBeInTheDocument()
   })
 
   it('shows all steps if we are not in production env', () => {
-    render(<Load />)
+    render(<LoadSafePage />)
 
-    expect(screen.getByText('Connect wallet & select network')).toBeInTheDocument()
+    expect(screen.getByText('Select network')).toBeInTheDocument()
     expect(screen.getByText('Name and address')).toBeInTheDocument()
     expect(screen.getByText('Owners')).toBeInTheDocument()
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  it('hides Connect wallet & select network step if we are in production env', () => {
+  it('hides Select network step if we are in production env', () => {
     const constants = require('src/utils/constants')
 
     Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
@@ -61,29 +61,29 @@ describe('<Load>', () => {
         hardwareWallet: false,
       },
     }
-    render(<Load />, customState)
+    render(<LoadSafePage />, customState)
 
-    expect(screen.queryByText('Connect wallet & select network')).not.toBeInTheDocument()
+    expect(screen.queryByText('Select network')).not.toBeInTheDocument()
     expect(screen.getByText('Name and address')).toBeInTheDocument()
     expect(screen.getByText('Owners')).toBeInTheDocument()
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  describe('Step 1: Connect wallet & select network', () => {
+  describe('Step 1: Select network', () => {
     it('Shows the current selected network', () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
     })
 
     it('Shows the Switch Network button', () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       expect(screen.getByText('Switch Network')).toBeInTheDocument()
     })
 
     it('Opens the Switch Network popup if clicks on Switch Network button', () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Switch Network'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
@@ -98,7 +98,7 @@ describe('<Load>', () => {
     })
 
     it('Opens the Switch Network popup if clicks on the current selected Network label', () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
@@ -113,7 +113,7 @@ describe('<Load>', () => {
     })
 
     it('Switches Network if clicks on Switch Network button', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       // from Rinkeby to Mainnet
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
@@ -133,7 +133,7 @@ describe('<Load>', () => {
     })
 
     it('the Switch Network popup can be closed', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
       fireEvent.click(screen.getByText('Switch Network'))
@@ -144,7 +144,7 @@ describe('<Load>', () => {
     })
 
     it('goes to the next step when clicks on the next button', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       expect(screen.queryByTestId('load-safe-address-step')).not.toBeInTheDocument()
 
@@ -161,13 +161,13 @@ describe('<Load>', () => {
 
       Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
 
-      render(<Load />)
+      render(<LoadSafePage />)
 
       expect(screen.getByText('No account detected')).toBeInTheDocument()
     })
 
     it('Checks if the Safe Address is a valid Safe Address', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -184,7 +184,7 @@ describe('<Load>', () => {
     })
 
     it('Shows an error if the Safe Address is an invalid Safe Address', () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -208,7 +208,7 @@ describe('<Load>', () => {
         }),
       )
 
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -236,7 +236,7 @@ describe('<Load>', () => {
         (validSafeENSNameDomain) => new Promise((resolve) => resolve(ensDomains[validSafeENSNameDomain])),
       )
 
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -268,7 +268,7 @@ describe('<Load>', () => {
         (notExistingENSNameDomain) => new Promise((reject) => reject(notExistingENSNameDomain)),
       )
 
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -298,7 +298,7 @@ describe('<Load>', () => {
       // mock getAddress fn to return the invalid Safe Address Domain
       getENSAddressSpy.mockImplementation((EnsDomain) => new Promise((resolve) => resolve(ensDomains[EnsDomain])))
 
-      render(<Load />)
+      render(<LoadSafePage />)
       fireEvent.click(screen.getByText('Continue'))
 
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field') as HTMLInputElement
@@ -316,7 +316,7 @@ describe('<Load>', () => {
     })
 
     it('goes to the next owners step when clicks on the next button', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -334,7 +334,7 @@ describe('<Load>', () => {
 
   describe('Step 3: Owner', () => {
     it('shows the number of owners', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -346,11 +346,11 @@ describe('<Load>', () => {
       await screen.findByTestId('safeAddress-valid-address-adornment')
       fireEvent.click(screen.getByText('Next'))
 
-      expect(screen.getByText('This Safe has 2 owners. Optional: Provide a name for each owner.')).toBeInTheDocument()
+      expect(screen.getByText('has 2 owners', { exact: false })).toBeInTheDocument()
     })
 
     it('shows the owners addresses', async () => {
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -369,7 +369,7 @@ describe('<Load>', () => {
     it('sets a owner name', async () => {
       const myCustomOwnerName = 'My custom owner name'
 
-      render(<Load />)
+      render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -389,7 +389,7 @@ describe('<Load>', () => {
     })
 
     it('goes to the final step when clicks on the next button', async () => {
-      const { container } = render(<Load />)
+      const { container } = render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -410,7 +410,7 @@ describe('<Load>', () => {
 
   describe('Step 4: Review', () => {
     it('shows the basic info of the Safe', async () => {
-      const { container } = render(<Load />)
+      const { container } = render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -464,7 +464,7 @@ describe('<Load>', () => {
           hardwareWallet: false,
         },
       }
-      const { container } = render(<Load />, customState)
+      const { container } = render(<LoadSafePage />, customState)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -485,7 +485,7 @@ describe('<Load>', () => {
     })
 
     it('shows owner custom names', async () => {
-      const { container } = render(<Load />)
+      const { container } = render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -521,7 +521,7 @@ describe('<Load>', () => {
     })
 
     it('shows custom safe name', async () => {
-      const { container } = render(<Load />)
+      const { container } = render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -551,7 +551,7 @@ describe('<Load>', () => {
     it('On submit Load Safe', async () => {
       const historyPushSpy = jest.spyOn(history, 'push')
 
-      const { container } = render(<Load />)
+      const { container } = render(<LoadSafePage />)
 
       fireEvent.click(screen.getByText('Continue'))
 
