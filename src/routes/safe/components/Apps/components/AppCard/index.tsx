@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react'
 import styled from 'styled-components'
-import { Link, generatePath } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
@@ -56,14 +56,9 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
-export const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
+const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
   error.currentTarget.onerror = null
   error.currentTarget.src = appsIconSvg
-}
-
-export enum TriggerType {
-  Button,
-  Content,
 }
 
 type Props = {
@@ -87,7 +82,7 @@ const AppCard = ({
   iconSize = 'md',
   buttonText,
   to,
-  onClick = () => undefined,
+  onClick,
 }: Props): React.ReactElement => {
   if (isLoading) {
     return (
@@ -100,23 +95,27 @@ const AppCard = ({
     )
   }
 
-  return (
-    <StyledLink to={to}>
-      <StyledAppCard className={className} onClick={onClick}>
-        <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
+  const content = (
+    <StyledAppCard className={className} onClick={onClick}>
+      <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
-        {name && <AppName size="xs">{name}</AppName>}
+      {name && <AppName size="xs">{name}</AppName>}
 
-        {description && <AppDescription size="lg">{description} </AppDescription>}
+      {description && <AppDescription size="lg">{description} </AppDescription>}
 
-        {buttonText && (
-          <Button size="md" color="primary" variant="contained" onClick={onClick}>
-            {buttonText}
-          </Button>
-        )}
-      </StyledAppCard>
-    </StyledLink>
+      {buttonText && (
+        <Button size="md" color="primary" variant="contained" onClick={onClick}>
+          {buttonText}
+        </Button>
+      )}
+    </StyledAppCard>
   )
+
+  if (to) {
+    return <StyledLink to={to}>{content}</StyledLink>
+  }
+
+  return content
 }
 
 export default AppCard

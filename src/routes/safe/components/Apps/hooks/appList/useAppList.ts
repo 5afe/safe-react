@@ -8,28 +8,31 @@ import { FETCH_STATUS } from 'src/utils/requests'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
+  customApps: SafeApp[]
   pinnedSafeApps: SafeApp[]
-  removeApp: (appUrl: string) => void
+  togglePin: (appId: string) => void
+  removeApp: (appId: string) => void
   isLoading: boolean
 }
 
 const useAppList = (): UseAppListReturnType => {
   const { remoteSafeApps, status: remoteAppsFetchStatus } = useRemoteSafeApps()
   const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
-  const { pinnedSafeAppIds } = usePinnedSafeApps()
+  const { pinnedSafeAppIds, updatePinnedSafeApps } = usePinnedSafeApps()
   const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
 
   const appList = useMemo(() => {
-    // Filter out custom apps that are now part of the production app list
-    const customApps = customSafeApps.filter(
-      (persistedApp) => !remoteSafeApps.some((app) => app.url === persistedApp.url),
-    )
-    const apps: SafeApp[] = [...remoteSafeApps, ...customApps]
+    return remoteSafeApps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  }, [remoteSafeApps])
 
-    return apps
-      .filter((a) => a.fetchStatus !== FETCH_STATUS.ERROR)
-      .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-  }, [customSafeApps, remoteSafeApps])
+  const customApps = useMemo(
+    () =>
+      // Filter out custom apps that are now part of the production app list
+      customSafeApps
+        .filter((persistedApp) => !remoteSafeApps.some((app) => app.url === persistedApp.url))
+        .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())),
+    [customSafeApps, remoteSafeApps],
+  )
 
   const pinnedSafeApps = useMemo(
     () => appList.filter((app) => pinnedSafeAppIds.includes(app.id)),
@@ -37,17 +40,34 @@ const useAppList = (): UseAppListReturnType => {
   )
 
   const removeApp = useCallback(
-    (appUrl: string): void => {
-      const newPersistedList = customSafeApps.filter(({ url }) => url !== appUrl)
+    (appId: string): void => {
+      const newPersistedList = customSafeApps.filter(({ id }) => id !== appId)
       updateCustomSafeApps(newPersistedList)
     },
     [updateCustomSafeApps, customSafeApps],
   )
 
+  const togglePin = useCallback(
+    (appId: string): void => {
+      const newPinnedIds = [...pinnedSafeAppIds]
+
+      if (pinnedSafeAppIds.includes(appId)) {
+        newPinnedIds.splice(newPinnedIds.indexOf(appId), 1)
+      } else {
+        newPinnedIds.push(appId)
+      }
+
+      updatePinnedSafeApps(newPinnedIds)
+    },
+    [updatePinnedSafeApps, pinnedSafeAppIds],
+  )
+
   return {
     appList,
+    customApps,
     pinnedSafeApps,
     removeApp,
+    togglePin,
     isLoading: remoteIsLoading,
   }
 }

@@ -101,7 +101,7 @@ const AppsList = (): React.ReactElement => {
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')
-  const { appList, removeApp, isLoading, pinnedSafeApps } = useAppList()
+  const { appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps } = useAppList()
   const apps = useAppsSearch(appList, appSearch)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
   const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
@@ -144,10 +144,37 @@ const AppsList = (): React.ReactElement => {
                   onClick={(e) => {
                     e.stopPropagation()
 
-                    setAppToRemove(a)
+                    togglePin(a.id)
                   }}
                 >
                   <FavoriteIcon />
+                </IconBtn>
+              </AppContainer>
+            ))}
+          </CardsWrapper>
+        </AnimatePresence>
+
+        <Title size="xs">Custom apps</Title>
+        <AnimatePresence>
+          <CardsWrapper>
+            {customApps.map((a) => (
+              <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <AppCard
+                  to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                  isLoading={isAppLoading(a)}
+                  iconUrl={a.iconUrl}
+                  name={a.name}
+                  description={a.description}
+                />
+                <IconBtn
+                  title="Remove app"
+                  onClick={(e) => {
+                    e.stopPropagation()
+
+                    setAppToRemove(a)
+                  }}
+                >
+                  <Icon size="sm" type="delete" color="error" />
                 </IconBtn>
               </AppContainer>
             ))}
@@ -174,23 +201,11 @@ const AppsList = (): React.ReactElement => {
                   onClick={(e) => {
                     e.stopPropagation()
 
-                    setAppToRemove(a)
+                    togglePin(a.id)
                   }}
                 >
                   <FavoriteBorderIcon />
                 </IconBtn>
-                {a.custom && (
-                  <IconBtn
-                    title="Unpin"
-                    onClick={(e) => {
-                      e.stopPropagation()
-
-                      setAppToRemove(a)
-                    }}
-                  >
-                    <Icon size="sm" type="delete" color="error" />
-                  </IconBtn>
-                )}
               </AppContainer>
             ))}
           </CardsWrapper>
@@ -233,7 +248,7 @@ const AppsList = (): React.ReactElement => {
               confirmButtonProps={{
                 color: 'error',
                 onClick: () => {
-                  removeApp(appToRemove.url)
+                  removeApp(appToRemove.id)
                   setAppToRemove(null)
                 },
                 text: 'Remove',
