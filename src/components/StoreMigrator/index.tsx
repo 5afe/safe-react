@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 import { addressBookMigrate } from 'src/logic/addressBook/store/actions'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 import { saveMigratedKeyToStorage } from 'src/utils/storage'
 import allNetworks from 'src/config/networks'
 
@@ -80,7 +80,7 @@ const StoreMigrator = (): ReactElement | null => {
       try {
         payload = JSON.parse(event.data.payload)
       } catch (e) {
-        logError(Errors._703, e.message)
+        trackError(Errors._703, e.message)
       }
 
       Object.keys(payload).forEach((key) => {
