@@ -30,7 +30,7 @@ const getSubdomainUrl = (network: string): string => {
   } else if (hostname.includes('review.gnosisdev.com')) {
     return `https://pr2778--safereact.review.gnosisdev.com/${network}/app/`
   } else if (hostname.includes('localhost')) {
-    return `http://localhost:3001`
+    return 'http://localhost:3001'
   } else {
     return ''
   }
@@ -114,7 +114,7 @@ const StoreMigrator = (): ReactElement | null => {
 
     window.addEventListener('message', saveEventData, false)
     return () => window.removeEventListener('message', saveEventData, false)
-  }, [currentNetworkIndex, dispatch, setCurrentNetworkIndex])
+  }, [dispatch, currentNetworkIndex, setCurrentNetworkIndex])
 
   // Open another network in the iframe to migrate local storage
   useEffect(() => {

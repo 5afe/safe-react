@@ -9,18 +9,16 @@ export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 const MAX_VIEWED_SAFES = 10
 
 export type CurrentSessionState = {
-  isLocalStorageMigrated: boolean
   viewedSafes: string[]
   restored: boolean
 }
 
 export const initialState = {
-  isLocalStorageMigrated: false,
   viewedSafes: [],
   restored: false,
 }
 
-type CurrentSessionPayloads = CurrentSessionState | string | boolean
+type CurrentSessionPayloads = CurrentSessionState | string
 
 export default handleActions<AppReduxState['currentSession'], CurrentSessionPayloads>(
   {
