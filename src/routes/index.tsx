@@ -6,7 +6,6 @@ import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } fro
 
 import {
   LOAD_ADDRESS,
-  MIGRATION_ADDRESS,
   OPEN_ADDRESS,
   SAFELIST_ADDRESS,
   SAFE_PARAM_ADDRESS,
@@ -22,7 +21,6 @@ const Welcome = React.lazy(() => import('./welcome/container'))
 const Open = React.lazy(() => import('./open/container/Open'))
 const Safe = React.lazy(() => import('./safe/container'))
 const Load = React.lazy(() => import('./new-load/Load'))
-const Migration = React.lazy(() => import('./migration/container'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
@@ -90,7 +88,6 @@ const Routes = (): React.ReactElement => {
       <Route component={Welcome} exact path={WELCOME_ADDRESS} />
       <Route component={Open} exact path={OPEN_ADDRESS} />
       <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Migration} path={MIGRATION_ADDRESS} />
       <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
       <Redirect to="/" />
     </Switch>
