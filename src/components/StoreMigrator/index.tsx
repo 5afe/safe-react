@@ -24,7 +24,7 @@ const getSubdomainUrl = (network: string): string => {
   const hostname = location.hostname
 
   if (hostname.includes('gnosis-safe.io')) {
-    return network === 'mainnet' ? `https://gnosis-safe.io/app` : `https://${network}.gnosis-safe.io/app`
+    return 'https://gnosis-safe.io/app'
   } else if (hostname.includes('staging.gnosisdev.com')) {
     return `https://safe-team-${network}.staging.gnosisdev.com/app`
   } else if (hostname.includes('review.gnosisdev.com')) {
@@ -114,7 +114,7 @@ const StoreMigrator = (): ReactElement | null => {
 
     window.addEventListener('message', saveEventData, false)
     return () => window.removeEventListener('message', saveEventData, false)
-  }, [dispatch, setCurrentNetworkIndex])
+  }, [currentNetworkIndex, dispatch, setCurrentNetworkIndex])
 
   // Open another network in the iframe to migrate local storage
   useEffect(() => {
