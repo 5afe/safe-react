@@ -1,13 +1,4 @@
-import {
-  IconText,
-  Loader,
-  Menu,
-  Text,
-  Icon,
-  Breadcrumb,
-  BreadcrumbElement,
-  Title,
-} from '@gnosis.pm/safe-react-components'
+import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import FavoriteIcon from '@material-ui/icons/Favorite'
@@ -83,6 +74,10 @@ const CenterIconText = styled(IconText)`
   justify-content: center;
 `
 
+const SectionHeading = styled(Text)`
+  width: 100%;
+`
+
 const AppContainer = styled(motion.div)`
   position: relative;
 
@@ -127,7 +122,9 @@ const AppsList = (): React.ReactElement => {
       <ContentWrapper>
         <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
-        <Title size="xs">Pinned apps</Title>
+        <SectionHeading color="placeHolder" strong size="md">
+          PINNED APPS
+        </SectionHeading>
         <AnimatePresence>
           <CardsWrapper>
             {pinnedSafeApps.map((a) => (
@@ -154,7 +151,9 @@ const AppsList = (): React.ReactElement => {
           </CardsWrapper>
         </AnimatePresence>
 
-        <Title size="xs">Custom apps</Title>
+        <SectionHeading color="placeHolder" strong size="md">
+          CUSTOM APPS
+        </SectionHeading>
         <AnimatePresence>
           <CardsWrapper>
             {customApps.map((a) => (
@@ -181,7 +180,9 @@ const AppsList = (): React.ReactElement => {
           </CardsWrapper>
         </AnimatePresence>
 
-        <Title size="xs">All apps</Title>
+        <SectionHeading color="placeHolder" strong size="md">
+          ALL APPS
+        </SectionHeading>
         <AnimatePresence>
           <CardsWrapper>
             {!appSearch && (
