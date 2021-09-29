@@ -87,7 +87,7 @@ const Collectibles = (): React.ReactElement => {
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
 
   useEffect(() => {
-    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Collectibles' })
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Collectibles' })
   }, [trackEvent])
 
   const handleItemSend = (nftToken: NFTToken) => {

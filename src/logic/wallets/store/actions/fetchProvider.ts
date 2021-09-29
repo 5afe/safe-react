@@ -8,7 +8,7 @@ import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider, ProviderProps } from 'src/logic/wallets/store/model/provider'
 import { trackAnalyticsEvent } from 'src/utils/googleAnalytics'
 
-export const processProviderResponse = (dispatch, provider) => {
+export const processProviderResponse = (dispatch: Dispatch<any>, provider: ProviderProps): void => {
   const walletRecord = makeProvider(provider)
   dispatch(addProvider(walletRecord))
 }
@@ -32,9 +32,9 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Dispatch<
     // of number or characters, but it has to be unique to a given snackbar.
 
     trackAnalyticsEvent({
-      eventCategory: 'Wallets',
-      eventAction: 'Connect a wallet',
-      eventLabel: provider.name,
+      category: 'Wallets',
+      action: 'Connect a wallet',
+      label: provider.name,
     })
   } else {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))

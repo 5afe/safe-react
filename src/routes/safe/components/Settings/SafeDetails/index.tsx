@@ -105,7 +105,7 @@ const SafeDetails = (): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Settings', eventLabel: 'Details' })
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Details' })
   }, [trackEvent])
 
   useEffect(() => {

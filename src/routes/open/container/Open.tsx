@@ -189,8 +189,8 @@ const Open = (): ReactElement => {
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
     trackEvent({
-      eventCategory: 'User',
-      eventAction: 'Created a safe',
+      category: 'User',
+      action: 'Created a safe',
     })
 
     // a default 5s wait before starting to request safe information

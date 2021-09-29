@@ -82,7 +82,7 @@ const Coins = (props: Props): React.ReactElement => {
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Coins' })
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
   const filteredData: List<BalanceData> = useMemo(

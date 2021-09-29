@@ -94,7 +94,7 @@ const AddressBookTable = (): ReactElement => {
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'AddressBook' })
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
   }, [trackEvent])
 
   useEffect(() => {

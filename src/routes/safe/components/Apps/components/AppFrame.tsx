@@ -271,7 +271,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   //track GA
   useEffect(() => {
     if (safeApp) {
-      trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Apps', eventLabel: safeApp.name })
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: safeApp.name })
     }
   }, [safeApp, trackEvent])
 

@@ -40,7 +40,7 @@ const Advanced = (): ReactElement => {
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Settings', eventLabel: 'Advanced' })
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Advanced' })
   }, [trackEvent])
 
   return (

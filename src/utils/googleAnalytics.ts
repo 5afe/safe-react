@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import ReactGA, { FieldsObject } from 'react-ga'
+import ReactGA, { EventArgs, FieldsObject } from 'react-ga'
 
 import { getCurrentEnvironment, getNetworkInfo } from 'src/config'
 import { getGoogleAnalyticsTrackingID } from 'src/config'
-import { NetworkSettings } from 'src/config/networks/network'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 import { IS_PRODUCTION } from './constants'
@@ -13,25 +12,15 @@ const SHOULD_TRACK_ANALYTICS = IS_PRODUCTION || IS_STAGING
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
-type TrackAnalyticsEventEvent = {
-  eventCategory: string
-  eventAction: string
-  eventLabel?: string
-  eventValue?: number
-}
-export const trackAnalyticsEvent = (event: TrackAnalyticsEventEvent) => {
-  // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#events
-  const fieldsObject: TrackAnalyticsEventEvent & {
-    hitType: 'event'
-    chain: NetworkSettings['label']
-  } = {
-    hitType: 'event',
+// trackAnalyticsEvent appends dimension1
+type TrackAnalyticsEventEvent = Omit<EventArgs, 'dimension1'>
+export const trackAnalyticsEvent = (event: TrackAnalyticsEventEvent): void => {
+  const fieldsObject: EventArgs = {
     ...event,
-    chain: getNetworkInfo().label, // Chain name
+    dimension1: getNetworkInfo().label, // Chain
   }
 
-  // React.event is not used because we want to track `{ chain }`, which is a custom var
-  return SHOULD_TRACK_ANALYTICS ? ReactGA.ga('send', fieldsObject) : console.info('[GA] - Event:', fieldsObject)
+  return SHOULD_TRACK_ANALYTICS ? ReactGA.event(fieldsObject) : console.info('[GA] - Event:', fieldsObject)
 }
 
 type TrackAnalyticsPagePage = Parameters<typeof ReactGA.pageview>[0]
@@ -57,6 +46,7 @@ export const loadGoogleAnalytics = (): void => {
     anonymizeIp: true,
     appName: `Gnosis Safe Web`,
     appVersion: process.env.REACT_APP_APP_VERSION,
+    dimension1: getNetworkInfo().label, // Chain
   }
 
   if (SHOULD_TRACK_ANALYTICS) {

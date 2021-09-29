@@ -31,7 +31,7 @@ const ThresholdSettings = (): React.ReactElement => {
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Settings', eventLabel: 'Owners' })
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
   }, [trackEvent])
 
   return (
