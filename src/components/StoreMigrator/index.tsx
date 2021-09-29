@@ -51,10 +51,7 @@ const getAddressBookEntry = (key: string, payloadEntry: unknown): AddressBookSta
 
 const isNetworkSubdomain = (): boolean => {
   const { href } = location
-  return networks.map(getSubdomainUrl).some((url) => {
-    console.log({ href, url })
-    return href.startsWith(url)
-  })
+  return networks.map(getSubdomainUrl).some((url) => href.startsWith(url))
 }
 
 const StoreMigrator = (): ReactElement | null => {
