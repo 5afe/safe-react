@@ -43,7 +43,7 @@ export const getNetworkLabel = (id: ETHEREUM_NETWORK = getNetworkId()): string =
   return cfg ? cfg.network.label : ''
 }
 
-const getCurrentEnvironment = (): string => {
+export const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
     case 'test': {
       return 'test'

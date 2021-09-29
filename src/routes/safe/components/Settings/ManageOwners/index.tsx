@@ -68,7 +68,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Settings', eventLabel: 'Owners' })
   }, [trackEvent])
 
   const columns = generateColumns()

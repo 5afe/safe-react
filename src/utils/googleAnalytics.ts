@@ -1,47 +1,80 @@
 import { useCallback, useEffect, useState } from 'react'
-import ReactGA, { EventArgs } from 'react-ga'
-import { getNetworkInfo } from 'src/config'
+import ReactGA, { FieldsObject } from 'react-ga'
 
+import { getCurrentEnvironment, getNetworkInfo } from 'src/config'
 import { getGoogleAnalyticsTrackingID } from 'src/config'
+import { NetworkSettings } from 'src/config/networks/network'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
+import { IS_PRODUCTION } from './constants'
+
+const IS_STAGING = getCurrentEnvironment() === 'staging'
+const SHOULD_TRACK_ANALYTICS = IS_PRODUCTION || IS_STAGING
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
-export const COOKIES_LIST = [
-  { name: '_ga', path: '/' },
-  { name: '_gat', path: '/' },
-  { name: '_gid', path: '/' },
-]
+type TrackAnalyticsEventEvent = {
+  eventCategory: string
+  eventAction: string
+  eventLabel?: string
+  eventValue?: number
+}
+export const trackAnalyticsEvent = (event: TrackAnalyticsEventEvent) => {
+  // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#events
+  const fieldsObject: TrackAnalyticsEventEvent & {
+    hitType: 'event'
+    chain: NetworkSettings['label']
+  } = {
+    hitType: 'event',
+    ...event,
+    chain: getNetworkInfo().label, // Chain name
+  }
 
-let analyticsLoaded = false
+  // React.event is not used because we want to track `{ chain }`, which is a custom var
+  return SHOULD_TRACK_ANALYTICS ? ReactGA.ga('send', fieldsObject) : console.info('[GA] - Event:', fieldsObject)
+}
+
+type TrackAnalyticsPagePage = Parameters<typeof ReactGA.pageview>[0]
+const trackAnalyticsPage: typeof ReactGA.pageview = (page: TrackAnalyticsPagePage) => {
+  return SHOULD_TRACK_ANALYTICS ? ReactGA.pageview(page) : console.info('[GA] - Page:', page)
+}
+
+const analyticsLoaded = false
 export const loadGoogleAnalytics = (): void => {
   if (analyticsLoaded) {
     return
   }
-  // eslint-disable-next-line no-console
-  console.log('Loading google analytics...')
-  const trackingID = getGoogleAnalyticsTrackingID()
-  const networkInfo = getNetworkInfo()
-  if (!trackingID) {
-    console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
+
+  console.info(
+    SHOULD_TRACK_ANALYTICS
+      ? 'Loading Google Analytics...'
+      : 'Google Analytics will only log in the development environment.',
+  )
+
+  const gaTrackingId = getGoogleAnalyticsTrackingID()
+
+  const fieldsObject: FieldsObject = {
+    anonymizeIp: true,
+    appName: `Gnosis Safe Web`,
+    appVersion: process.env.REACT_APP_APP_VERSION,
+  }
+
+  if (SHOULD_TRACK_ANALYTICS) {
+    if (!gaTrackingId) {
+      console.error('In order to use Google Analytics you need to add a tracking ID.')
+    } else {
+      ReactGA.initialize(gaTrackingId)
+      ReactGA.set(fieldsObject)
+    }
   } else {
-    ReactGA.initialize(trackingID)
-    ReactGA.set({
-      anonymizeIp: true,
-      appName: `Gnosis Safe Multisig (${networkInfo.label})`,
-      appId: `io.gnosis.safe.${networkInfo.label.toLowerCase()}`,
-      appVersion: process.env.REACT_APP_APP_VERSION,
-    })
-    analyticsLoaded = true
+    console.info('[GA] - Fields:', fieldsObject)
   }
 }
 
 type UseAnalyticsResponse = {
   trackPage: (path: string) => void
-  trackEvent: (event: EventArgs) => void
+  trackEvent: (event: TrackAnalyticsEventEvent) => void
 }
-
 export const useAnalytics = (): UseAnalyticsResponse => {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
 
@@ -56,22 +89,20 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = useCallback(
-    (page) => {
-      if (!analyticsAllowed || !analyticsLoaded) {
-        return
+  const trackEvent = useCallback(
+    (event: TrackAnalyticsEventEvent) => {
+      if (analyticsAllowed && analyticsLoaded) {
+        trackAnalyticsEvent(event)
       }
-      ReactGA.pageview(page)
     },
     [analyticsAllowed],
   )
 
-  const trackEvent = useCallback(
-    (event: EventArgs) => {
-      if (!analyticsAllowed || !analyticsLoaded) {
-        return
+  const trackPage = useCallback(
+    (page: TrackAnalyticsPagePage) => {
+      if (analyticsAllowed && analyticsLoaded) {
+        trackAnalyticsPage(page)
       }
-      ReactGA.event(event)
     },
     [analyticsAllowed],
   )
@@ -79,8 +110,9 @@ export const useAnalytics = (): UseAnalyticsResponse => {
   return { trackPage, trackEvent }
 }
 
-// we remove GA cookies manually as react-ga does not provides a utility for it.
-export const removeCookies = (): void => {
-  const subDomain = location.host.split('.').slice(-2).join('.')
-  COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
+const GOOGLE_ANALYTICS_COOKIE_NAMES = ['_ga', '_gat', '_gid']
+
+// We remove GA cookies manually as ReactGA does not have the functionality to do so
+export const removeGoogleAnalyticsCookies = (): void => {
+  GOOGLE_ANALYTICS_COOKIE_NAMES.forEach((name) => removeCookie(name, '/', window.location.host))
 }

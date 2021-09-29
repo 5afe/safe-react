@@ -1,20 +1,19 @@
-import ReactGA from 'react-ga'
 import { Dispatch } from 'redux'
 
 import addProvider from './addProvider'
-
 import { getNetworkInfo } from 'src/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
-import { makeProvider } from 'src/logic/wallets/store/model/provider'
+import { makeProvider, ProviderProps } from 'src/logic/wallets/store/model/provider'
+import { trackAnalyticsEvent } from 'src/utils/googleAnalytics'
 
 export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)
   dispatch(addProvider(walletRecord))
 }
 
-const handleProviderNotification = (provider, dispatch) => {
+const handleProviderNotification = (provider: ProviderProps, dispatch: Dispatch<any>) => {
   const { available, loaded } = provider
 
   if (!loaded) {
@@ -32,10 +31,10 @@ const handleProviderNotification = (provider, dispatch) => {
     // you SHOULD pass your own `key` in the options. `key` can be any sequence
     // of number or characters, but it has to be unique to a given snackbar.
 
-    ReactGA.event({
-      category: 'Wallets',
-      action: 'Connect a wallet',
-      label: provider.name,
+    trackAnalyticsEvent({
+      eventCategory: 'Wallets',
+      eventAction: 'Connect a wallet',
+      eventLabel: provider.name,
     })
   } else {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
@@ -43,9 +42,9 @@ const handleProviderNotification = (provider, dispatch) => {
 }
 
 export default (providerName: string) =>
-  async (dispatch: Dispatch): Promise<void> => {
+  async (dispatch: Dispatch<any>): Promise<void> => {
     const web3 = getWeb3()
     const providerInfo = await getProviderInfo(web3, providerName)
-    await handleProviderNotification(providerInfo, dispatch)
+    handleProviderNotification(providerInfo, dispatch)
     processProviderResponse(dispatch, providerInfo)
   }

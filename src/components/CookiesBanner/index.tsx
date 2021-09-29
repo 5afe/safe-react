@@ -3,6 +3,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { CookieAttributes } from 'js-cookie'
+
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
@@ -10,12 +12,11 @@ import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBann
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
+import { loadGoogleAnalytics, removeGoogleAnalyticsCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
-import { CookieAttributes } from 'js-cookie'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -187,7 +188,7 @@ const CookiesBanner = (): ReactElement => {
     setShowIntercom(localIntercom)
 
     if (!localAnalytics) {
-      removeCookies()
+      removeGoogleAnalyticsCookies()
     }
 
     if (!localIntercom && isIntercomLoaded()) {

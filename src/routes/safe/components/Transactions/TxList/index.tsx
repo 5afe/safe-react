@@ -19,7 +19,7 @@ const GatewayTransactions = (): ReactElement => {
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
+    trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Transactions' })
   }, [trackEvent])
 
   return (

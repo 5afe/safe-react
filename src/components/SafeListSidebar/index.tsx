@@ -24,7 +24,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
 
   const toggleSidebar = () => {
     if (!isOpen) {
-      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Safe List Sidebar' })
+      trackEvent({ eventCategory: SAFE_NAVIGATION_EVENT, eventAction: 'Safe List Sidebar' })
     }
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }

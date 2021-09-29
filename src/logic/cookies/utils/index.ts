@@ -1,4 +1,5 @@
 import Cookies, { CookieAttributes } from 'js-cookie'
+
 import { getNetworkName } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
@@ -35,4 +36,4 @@ export const saveCookie = async (
   }
 }
 
-export const removeCookie = (key: string, path: string, domain: string): void => Cookies.remove(key, { path, domain })
+export const removeCookie = (name: string, path: string, domain: string): void => Cookies.remove(name, { path, domain })

@@ -10,14 +10,14 @@ on:
       - main
   # Launches build when release is published
   release:
-      types: [published]
+    types: [published]
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
   REACT_APP_NETWORK: 'xdai'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_XDAI_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_XDAI }}
-  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_XDAI }}
+  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
 
 jobs:
@@ -45,7 +45,6 @@ jobs:
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
       - uses: actions/checkout@v2
-
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -139,7 +138,7 @@ jobs:
           PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
           VERSION_TAG: ${{ github.event.release.tag_name }}
 
-     # Upload Sentry source maps when sending to staging or production
+      # Upload Sentry source maps when sending to staging or production
       - run: yarn sentry-upload-sourcemaps
         if: success() && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         env:
