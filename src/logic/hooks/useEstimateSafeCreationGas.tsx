@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import throttle from 'lodash/throttle'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -21,31 +20,27 @@ type SafeCreationEstimationResult = {
   gasLimit: number // Minimum gas requited to execute the Tx
 }
 
-const estimateGas = throttle(
-  async (
-    userAccount: string,
-    numOwners: number,
-    safeCreationSalt: number,
-    addresses: string[],
-  ): Promise<SafeCreationEstimationResult> => {
-    const [gasEstimation, gasPrice] = await Promise.all([
-      estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt),
-      calculateGasPrice(),
-    ])
-    const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-    const { nativeCoin } = getNetworkInfo()
-    const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-    const gasCostFormatted = formatAmount(gasCost)
+const estimateGas = async (
+  userAccount: string,
+  numOwners: number,
+  safeCreationSalt: number,
+  addresses: string[],
+): Promise<SafeCreationEstimationResult> => {
+  const [gasEstimation, gasPrice] = await Promise.all([
+    estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt),
+    calculateGasPrice(),
+  ])
+  const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
+  const { nativeCoin } = getNetworkInfo()
+  const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+  const gasCostFormatted = formatAmount(gasCost)
 
-    return {
-      gasEstimation,
-      gasCostFormatted,
-      gasLimit: gasEstimation,
-    }
-  },
-  3000,
-  { leading: true, trailing: false },
-)
+  return {
+    gasEstimation,
+    gasCostFormatted,
+    gasLimit: gasEstimation,
+  }
+}
 
 export const useEstimateSafeCreationGas = ({
   addresses,

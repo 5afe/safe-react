@@ -17,7 +17,6 @@ import {
   getOwnerAddressBy,
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
-import { WelcomeLayout } from 'src/routes/welcome/components'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -108,10 +107,6 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
   const steps = getSteps()
 
   const initialValues = useInitialValuesFrom(userAccount, safeProps)
-
-  if (!provider) {
-    return <WelcomeLayout isOldMultisigMigration />
-  }
 
   return (
     <Block>

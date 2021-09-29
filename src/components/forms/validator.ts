@@ -118,6 +118,7 @@ export const minMaxDecimalsLength =
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
+export const THRESHOLD_ERROR = 'You cannot set more confirmations than owners'
 
 export const uniqueAddress =
   (addresses: string[] = []) =>
