@@ -46,7 +46,6 @@ export const loadGoogleAnalytics = (): void => {
     anonymizeIp: true,
     appName: `Gnosis Safe Web`,
     appVersion: process.env.REACT_APP_APP_VERSION,
-    dimension1: getNetworkInfo().label, // Chain
   }
 
   if (SHOULD_TRACK_ANALYTICS) {
