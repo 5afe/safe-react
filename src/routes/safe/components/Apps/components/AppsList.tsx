@@ -9,6 +9,8 @@ import {
   Title,
 } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+import FavoriteIcon from '@material-ui/icons/Favorite'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath } from 'react-router-dom'
@@ -137,18 +139,16 @@ const AppsList = (): React.ReactElement => {
                   name={a.name}
                   description={a.description}
                 />
-                {a.custom && (
-                  <IconBtn
-                    title="Remove"
-                    onClick={(e) => {
-                      e.stopPropagation()
+                <IconBtn
+                  title="Unpin"
+                  onClick={(e) => {
+                    e.stopPropagation()
 
-                      setAppToRemove(a)
-                    }}
-                  >
-                    <Icon size="sm" type="delete" color="error" />
-                  </IconBtn>
-                )}
+                    setAppToRemove(a)
+                  }}
+                >
+                  <FavoriteIcon />
+                </IconBtn>
               </AppContainer>
             ))}
           </CardsWrapper>
@@ -169,9 +169,19 @@ const AppsList = (): React.ReactElement => {
                   name={a.name}
                   description={a.description}
                 />
+                <IconBtn
+                  title="Pin"
+                  onClick={(e) => {
+                    e.stopPropagation()
+
+                    setAppToRemove(a)
+                  }}
+                >
+                  <FavoriteBorderIcon />
+                </IconBtn>
                 {a.custom && (
                   <IconBtn
-                    title="Remove"
+                    title="Unpin"
                     onClick={(e) => {
                       e.stopPropagation()
 
