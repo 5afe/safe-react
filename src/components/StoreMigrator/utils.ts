@@ -4,12 +4,20 @@ import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 const MIGRATION_KEY = 'SAFE__migratedNetworks'
 const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IMMORTAL_PREFIX = '_immortal|'
-const networks = ['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai']
 
-export function getSubdomainUrl(network: string): string {
+export enum NETWORK_TO_MIGRATE {
+  bsc = 'bsc',
+  polygon = 'polygon',
+  ewc = 'ewc',
+  rinkeby = 'rinkeby',
+  xdai = 'xdai',
+}
+const networks = Object.values(NETWORK_TO_MIGRATE)
+
+export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
   const hostname = location.hostname
 
-  if (hostname.includes('gnosis-safe.io')) {
+  if (hostname === 'gnosis-safe.io') {
     return `https://${network}.gnosis-safe.io/app`
   } else if (hostname.includes('staging.gnosisdev.com')) {
     return `https://safe-team-${network}.staging.gnosisdev.com/app`
@@ -22,8 +30,8 @@ export function getSubdomainUrl(network: string): string {
   }
 }
 
-function getMigratedNetworks(): string[] {
-  let migratedNetworks: string[]
+function getMigratedNetworks(): NETWORK_TO_MIGRATE[] {
+  let migratedNetworks: NETWORK_TO_MIGRATE[]
   try {
     const item = localStorage.getItem(MIGRATION_KEY)
     migratedNetworks = item ? JSON.parse(item) : []
@@ -33,17 +41,16 @@ function getMigratedNetworks(): string[] {
   return migratedNetworks
 }
 
-function addMigratedNetwork(network: string): string[] {
+export function addMigratedNetwork(network: NETWORK_TO_MIGRATE): void {
   const migratedNetworks = getMigratedNetworks()
   if (migratedNetworks.includes(network)) {
-    return migratedNetworks
+    return
   }
   const newValue = [...migratedNetworks, network]
   localStorage.setItem(MIGRATION_KEY, JSON.stringify(newValue))
-  return newValue
 }
 
-export function getNetworksToMigrate(): string[] {
+export function getNetworksToMigrate(): NETWORK_TO_MIGRATE[] {
   const migrated = getMigratedNetworks()
   const remaining = networks.filter((network) => !migrated.includes(network))
   return remaining
@@ -67,7 +74,6 @@ export function handleMessage(
   event: MessageEvent,
   addressBookCallback: (data: AddressBookState) => void,
   immortalDataCallback: (key: string, value: unknown) => void,
-  doneCallback: () => void,
 ): void {
   const isTrustedOrigin = networks.some((network) => getSubdomainUrl(network).startsWith(event.origin))
   const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
@@ -88,20 +94,11 @@ export function handleMessage(
   const immortalKeys = Object.keys(payload).filter((key) => key.startsWith(IMMORTAL_PREFIX))
   immortalKeys.forEach((key) => {
     const data = parsePayload<unknown>(payload[key])
+    if (data == null) return
+
     // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
     const storageKey = key.replace(IMMORTAL_PREFIX, '')
     // Save entry in localStorage
     immortalDataCallback(storageKey, data)
   })
-
-  // Extract the network name
-  const network = immortalKeys[0]?.split('_')[2]?.toLowerCase()
-  if (network) {
-    const migrated = addMigratedNetwork(network)
-
-    // Clean up the iframes if all networks were migrated
-    if (migrated.length === networks.length) {
-      doneCallback()
-    }
-  }
 }
