@@ -39,7 +39,7 @@ import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 
-function CreateNewSafePage(): ReactElement {
+function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const provider = useSelector(providerNameSelector)
@@ -124,7 +124,7 @@ function CreateNewSafePage(): ReactElement {
   )
 }
 
-export default CreateNewSafePage
+export default CreateSafePage
 
 const DEFAULT_THRESHOLD_VALUE = 1
 
