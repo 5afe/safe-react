@@ -1,11 +1,10 @@
-name: Deploy to Binance smart chain
+name: Deploy to Mainnet network
 
-# Run on pushes to main or PRs to main
+# Run on pushes to main or PRs
 on:
-  push:
-    branches:
-      - main
+  # Pull request hook without any config. Launches for every pull request
   pull_request:
+  push:
     branches:
       - main
   # Launches build when release is published
@@ -14,11 +13,12 @@ on:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REACT_APP_NETWORK: 'bsc'
-  STAGING_BUCKET_NAME: ${{ secrets.STAGING_BSC_BUCKET_NAME }}
-  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_BSC }}
-  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_BSC }}
+  REACT_APP_NETWORK: 'mainnet'
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_MAINNET_BUCKET_NAME }}
+  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
+  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
+  REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY_MAINNET }}
 
 jobs:
   debug:
@@ -67,6 +67,11 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
+      # Set dev flag (for PR deployments)
+      - name: Set PR flag
+        run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
+        if: github.ref != 'refs/heads/main'
+
       # Set production flag
       - name: Set production flag for release PR or tagged build
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
@@ -77,6 +82,7 @@ jobs:
         env:
           REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
           REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
+          REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN: ${{ secrets.REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN }}
           REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
           REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
           REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
@@ -92,27 +98,30 @@ jobs:
       - run: bash ./scripts/github/deploy_pull_request.sh
         if: success() && github.event.number
         env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           PR_NUMBER: ${{ github.event.number }}
           REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
           REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+          TRAVIS_TAG: ${{ github.event.release.tag_name }}
 
       - name: 'PRaul: Comment PR with app URLs'
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/app/)
+            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }})
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number
         env:
-          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com/app
 
-      # Script to deploy to development environment
-      # xDai build is never created in development branch
+      # Script to deploy to the dev environment
+      # Mainnet build is never created on the dev branch
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' # Or refs/heads/main
         run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
 
       # Script to upload release files
