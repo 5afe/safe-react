@@ -109,12 +109,15 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }})
+            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rinkeby)
+            * [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet)
+            * [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon)
+            * [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number
         env:
-          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com/app
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app
 
       # Script to deploy to the dev environment
       # Mainnet build is never created on the dev branch
