@@ -51,7 +51,7 @@ const extractDataFromResult = (
 }
 
 export const fetchSafeTokens =
-  (safeAddress: string, currencySelected?: string) =>
+  (safeAddress: string, currency?: string) =>
   async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
     const state = getState()
     const safe = currentSafe(state)
@@ -59,13 +59,13 @@ export const fetchSafeTokens =
     if (!safe) {
       return
     }
-    const selectedCurrency = currentCurrencySelector(state)
+    const selectedCurrency = currency ?? currentCurrencySelector(state)
 
     let tokenCurrenciesBalances: BalanceEndpoint
     try {
       tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
         safeAddress,
-        selectedCurrency: currencySelected ?? selectedCurrency,
+        selectedCurrency,
       })
     } catch (e) {
       logError(Errors._601, e.message)

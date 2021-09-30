@@ -9,6 +9,7 @@ import { getExplorerInfo } from 'src/config'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;
@@ -43,7 +44,9 @@ const Beneficiary = (): ReactElement => {
 
   const handleScan = (value, closeQrModal) => {
     const scannedAddress = value.startsWith('ethereum:') ? value.replace('ethereum:', '') : value
-    const scannedName = addressBook[scannedAddress]?.name ?? ''
+    const scannedName = addressBook.find(({ address }) => {
+      return sameAddress(scannedAddress, address)
+    })?.name
 
     mutators?.setBeneficiary?.(scannedAddress)
 

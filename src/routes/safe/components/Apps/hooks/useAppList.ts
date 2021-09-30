@@ -96,6 +96,7 @@ const useAppList = (): UseAppListReturnType => {
               fetchAppCallback(formatedApp)
             })
             .catch((err) => {
+              fetchAppCallback({ ...app, error: err.message })
               logError(Errors._900, `${app.url}, ${err.message}`)
             })
         } else {
