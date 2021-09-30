@@ -50,7 +50,7 @@ const Collapse: React.FC<CollapseProps> = ({
 
   return (
     <Wrapper>
-      <HeaderWrapper onClick={handleClick}>
+      <HeaderWrapper tabIndex={0} role="button" aria-pressed="false" onClick={handleClick}>
         <TitleWrapper>{title}</TitleWrapper>
         <Header>
           <IconButton disableRipple size="small">

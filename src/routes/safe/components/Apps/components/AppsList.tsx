@@ -8,6 +8,7 @@ import { generatePath } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 
+import Collapse from 'src/components/Collapse'
 import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
@@ -59,23 +60,25 @@ const ContentWrapper = styled.div`
 `
 
 const IconBtn = styled(IconButton)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
-  padding: 5px;
-  opacity: 0;
+  &.MuiButtonBase-root {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    padding: 5px;
+    opacity: 0;
 
-  transition: opacity 0.2s ease-in-out;
-`
-
-const CenterIconText = styled(IconText)`
-  justify-content: center;
+    transition: opacity 0.2s ease-in-out;
+  }
 `
 
 const SectionHeading = styled(Text)`
   width: 100%;
-  margin: ${({ theme }) => `${theme.margin.lg} 0 ${theme.margin.sm} 0`};
+  margin: ${({ theme }) => `${theme.margin.xl} 0 ${theme.margin.md} 0`};
+`
+
+const CenterIconText = styled(IconText)`
+  justify-content: center;
 `
 
 const AppContainer = styled(motion.div)`
@@ -122,63 +125,75 @@ const AppsList = (): React.ReactElement => {
       <ContentWrapper>
         <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
-        <SectionHeading color="placeHolder" strong size="md">
-          PINNED APPS
-        </SectionHeading>
-        <AnimatePresence>
-          <CardsWrapper>
-            {pinnedSafeApps.map((a) => (
-              <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <AppCard
-                  to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                  isLoading={isAppLoading(a)}
-                  iconUrl={a.iconUrl}
-                  name={a.name}
-                  description={a.description}
-                />
-                <IconBtn
-                  title="Unpin"
-                  onClick={(e) => {
-                    e.stopPropagation()
+        <Collapse
+          title={
+            <Text color="placeHolder" strong size="md">
+              PINNED APPS
+            </Text>
+          }
+          defaultExpanded
+        >
+          <AnimatePresence>
+            <CardsWrapper>
+              {pinnedSafeApps.map((a) => (
+                <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <AppCard
+                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                    isLoading={isAppLoading(a)}
+                    iconUrl={a.iconUrl}
+                    name={a.name}
+                    description={a.description}
+                  />
+                  <IconBtn
+                    title="Unpin"
+                    onClick={(e) => {
+                      e.stopPropagation()
 
-                    togglePin(a.id)
-                  }}
-                >
-                  <FavoriteIcon />
-                </IconBtn>
-              </AppContainer>
-            ))}
-          </CardsWrapper>
-        </AnimatePresence>
+                      togglePin(a.id)
+                    }}
+                  >
+                    <FavoriteIcon />
+                  </IconBtn>
+                </AppContainer>
+              ))}
+            </CardsWrapper>
+          </AnimatePresence>
+        </Collapse>
 
-        <SectionHeading color="placeHolder" strong size="md">
-          CUSTOM APPS
-        </SectionHeading>
-        <AnimatePresence>
-          <CardsWrapper>
-            {customApps.map((a) => (
-              <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <AppCard
-                  to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                  isLoading={isAppLoading(a)}
-                  iconUrl={a.iconUrl}
-                  name={a.name}
-                  description={a.description}
-                />
-                <IconBtn
-                  title="Remove app"
-                  onClick={(e) => {
-                    e.stopPropagation()
+        <Collapse
+          title={
+            <Text color="placeHolder" strong size="md">
+              CUSTOM APPS
+            </Text>
+          }
+          defaultExpanded
+        >
+          <AnimatePresence>
+            <CardsWrapper>
+              {customApps.map((a) => (
+                <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <AppCard
+                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                    isLoading={isAppLoading(a)}
+                    iconUrl={a.iconUrl}
+                    name={a.name}
+                    description={a.description}
+                  />
+                  <IconBtn
+                    title="Remove app"
+                    onClick={(e) => {
+                      e.stopPropagation()
 
-                    setAppToRemove(a)
-                  }}
-                >
-                  <Icon size="sm" type="delete" color="error" />
-                </IconBtn>
-              </AppContainer>
-            ))}
-          </CardsWrapper>
-        </AnimatePresence>
+                      setAppToRemove(a)
+                    }}
+                  >
+                    <Icon size="sm" type="delete" color="error" />
+                  </IconBtn>
+                </AppContainer>
+              ))}
+            </CardsWrapper>
+          </AnimatePresence>
+        </Collapse>
 
         <SectionHeading color="placeHolder" strong size="md">
           ALL APPS
