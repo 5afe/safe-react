@@ -78,7 +78,7 @@ function CreateNewSafePage(): ReactElement {
 
   if (isLoading) {
     return (
-      <LoaderContainer data-testid={'create-new-safe-loader'}>
+      <LoaderContainer data-testid={'create-safe-loader'}>
         <Loader size="md" />
       </LoaderContainer>
     )
@@ -95,11 +95,7 @@ function CreateNewSafePage(): ReactElement {
           </BackIcon>
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
-        <StepperForm
-          initialValues={initialFormValues}
-          onSubmit={showSafeCreationProcess}
-          testId={'create-new-safe-form'}
-        >
+        <StepperForm initialValues={initialFormValues} onSubmit={showSafeCreationProcess} testId={'create-safe-form'}>
           {!IS_PRODUCTION_ENV && (
             <StepFormElement
               label={selectWalletAndNetworkStepLabel}

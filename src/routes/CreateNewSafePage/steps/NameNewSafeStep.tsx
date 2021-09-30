@@ -49,7 +49,7 @@ function NameNewSafeStep(): ReactElement {
             placeholder={formValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]}
             text="Safe name"
             type="text"
-            testId="create-new-safe-name-field"
+            testId="create-safe-name-field"
           />
         </Col>
       </FieldContainer>

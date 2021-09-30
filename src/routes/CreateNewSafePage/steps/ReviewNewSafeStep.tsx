@@ -61,7 +61,7 @@ function ReviewNewSafeStep(): ReactElement | null {
   }, [gasLimit, createSafeForm])
 
   return (
-    <Row data-testid={'create-new-safe-review-step'}>
+    <Row data-testid={'create-safe-review-step'}>
       <Col xs={4} layout="column">
         <DetailsContainer>
           <Block margin="lg">
@@ -78,7 +78,7 @@ function ReviewNewSafeStep(): ReactElement | null {
               noMargin
               size="md"
               weight="bolder"
-              data-testid="create-new-safe-review-safe-name"
+              data-testid="create-safe-review-safe-name"
             >
               {safeName}
             </SafeNameParagraph>
@@ -92,7 +92,7 @@ function ReviewNewSafeStep(): ReactElement | null {
               noMargin
               size="md"
               weight="bolder"
-              data-testid={'create-new-safe-review-threshold-label'}
+              data-testid={'create-safe-review-threshold-label'}
             >
               {`${threshold} out of ${numberOfOwners} owners`}
             </Paragraph>
@@ -113,7 +113,7 @@ function ReviewNewSafeStep(): ReactElement | null {
             return (
               <React.Fragment key={`owner-${addressFieldName}`}>
                 <OwnersAddressesContainer>
-                  <Col align="center" xs={12} data-testid={`create-new-safe-owner-details-${ownerAddress}`}>
+                  <Col align="center" xs={12} data-testid={`create-safe-owner-details-${ownerAddress}`}>
                     <EthHashInfo
                       hash={ownerAddress}
                       name={ownerName}

@@ -9,7 +9,6 @@ import styled from 'styled-components'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { FIELD_CREATION_PROXY_SALT } from 'src/routes/open/components/fields'
 import { SafeDeployment } from 'src/routes/opening'
 import { getNetworkSlug, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import { history } from 'src/routes/routes'
@@ -26,6 +25,7 @@ import {
   FIELD_NEW_SAFE_CREATION_TX_HASH,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
   FIELD_CREATE_CUSTOM_SAFE_NAME,
+  FIELD_NEW_SAFE_PROXY_SALT,
 } from '../fields/createSafeFields'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
@@ -72,7 +72,7 @@ function SafeCreationProcess(): ReactElement {
         const confirmations = safeCreationFormValues[FIELD_NEW_SAFE_THRESHOLD]
         const ownerFields = safeCreationFormValues[FIELD_SAFE_OWNERS_LIST]
         const ownerAddresses = ownerFields.map(({ addressFieldName }) => safeCreationFormValues[addressFieldName])
-        const safeCreationSalt = safeCreationFormValues[FIELD_CREATION_PROXY_SALT]
+        const safeCreationSalt = safeCreationFormValues[FIELD_NEW_SAFE_PROXY_SALT]
         const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
         const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
@@ -227,7 +227,7 @@ function SafeCreationProcess(): ReactElement {
           onClose={onClickModalButton}
           title="Safe Created!"
           body={
-            <div>
+            <div data-testid="safe-created-popup">
               <Paragraph>
                 You just created a new Safe on <NetworkLabel />
               </Paragraph>
@@ -242,7 +242,14 @@ function SafeCreationProcess(): ReactElement {
           }
           footer={
             <ButtonContainer>
-              <Button onClick={onClickModalButton} color="primary" type={'button'} size="small" variant="contained">
+              <Button
+                testId="safe-created-button"
+                onClick={onClickModalButton}
+                color="primary"
+                type={'button'}
+                size="small"
+                variant="contained"
+              >
                 Continue
               </Button>
             </ButtonContainer>

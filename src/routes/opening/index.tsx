@@ -235,7 +235,7 @@ export const SafeDeployment = ({
 
   if (loading || stepIndex === undefined) {
     return (
-      <LoaderContainer data-testid={'create-new-safe-loader'}>
+      <LoaderContainer data-testid={'create-safe-loader'}>
         <Loader size="md" />
       </LoaderContainer>
     )
