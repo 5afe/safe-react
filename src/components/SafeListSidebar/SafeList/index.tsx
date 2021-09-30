@@ -90,7 +90,6 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                   onSafeClick={onSafeClick}
                   loadedSafes={loadedSafes}
                   shouldScrollToSafe
-                  //component="div"
                   {...safe}
                 />
               ))}
