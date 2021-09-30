@@ -98,7 +98,6 @@ type GasPrice =
 export type EnvironmentSettings = GasPrice & {
   clientGatewayUrl: string
   txServiceUrl: string
-  safeUrl: string
   rpcServiceUrl: string
   safeAppsRpcServiceUrl: string
   networkExplorerName: string
@@ -112,7 +111,7 @@ type SafeEnvironments = {
   production: EnvironmentSettings
 }
 
-export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'ethereumLayer' | 'nativeCoin'> & { safeUrl: string }
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'ethereumLayer' | 'nativeCoin'>
 
 export interface NetworkConfig {
   network: NetworkSettings

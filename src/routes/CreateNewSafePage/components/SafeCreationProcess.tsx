@@ -11,8 +11,8 @@ import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { FIELD_CREATION_PROXY_SALT } from 'src/routes/open/components/fields'
 import { SafeDeployment } from 'src/routes/opening'
-import { SAFE_ROUTES, WELCOME_ADDRESS } from 'src/routes/routes'
-import { history } from 'src/store'
+import { getNetworkSlug, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { history } from 'src/routes/routes'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { sleep } from 'src/utils/timer'
@@ -42,6 +42,10 @@ type ModalDataType = {
   safeCreationTxHash?: string
 }
 
+const goToWelcomePage = () => {
+  history.push(generatePath(WELCOME_ROUTE, { network: getNetworkSlug() }))
+}
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
@@ -57,9 +61,7 @@ function SafeCreationProcess(): ReactElement {
     const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
 
     if (!safeCreationFormValues) {
-      history.push({
-        pathname: WELCOME_ADDRESS,
-      })
+      goToWelcomePage()
       return
     }
 
@@ -111,9 +113,7 @@ function SafeCreationProcess(): ReactElement {
       const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
 
       if (!safeCreationFormValues) {
-        history.push({
-          pathname: WELCOME_ADDRESS,
-        })
+        goToWelcomePage()
         return
       }
 
@@ -132,9 +132,7 @@ function SafeCreationProcess(): ReactElement {
     const createSafeFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
 
     if (!createSafeFormValues) {
-      history.push({
-        pathname: WELCOME_ADDRESS,
-      })
+      goToWelcomePage()
       return
     }
 
@@ -184,9 +182,7 @@ function SafeCreationProcess(): ReactElement {
     const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
 
     if (!safeCreationFormValues) {
-      history.push({
-        pathname: WELCOME_ADDRESS,
-      })
+      goToWelcomePage()
       return
     }
 
@@ -198,9 +194,7 @@ function SafeCreationProcess(): ReactElement {
 
   const onCancel = () => {
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-    history.push({
-      pathname: WELCOME_ADDRESS,
-    })
+    goToWelcomePage()
   }
 
   async function onClickModalButton() {
@@ -209,6 +203,7 @@ function SafeCreationProcess(): ReactElement {
     const url = {
       pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
         safeAddress,
+        network: getNetworkSlug(),
       }),
       state: {
         name: safeName,

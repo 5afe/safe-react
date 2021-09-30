@@ -6,15 +6,16 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/L
 import styled from 'styled-components'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, LOAD_ROUTE, getNetworkSlug } from 'src/routes/routes'
 import Link from 'src/components/layout/Link'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { getNetworkConfigById } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -41,7 +42,7 @@ const SafeListItem = ({
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
-  const currentSafeAddress = useSelector(safeAddressFromUrl)
+  const currentSafeAddress = safeAddressFromUrl()
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
@@ -63,6 +64,7 @@ const SafeListItem = ({
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
         safeAddress: address,
+        network: getNetworkSlug(),
       }),
     )
   }
@@ -75,7 +77,7 @@ const SafeListItem = ({
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
         ) : showAddSafeLink ? (
-          <Link to={`${LOAD_ADDRESS}/${address}`} onClick={handleLoadSafe}>
+          <Link to={generatePath(LOAD_ROUTE, { network: getNetworkSlug(), address })} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
             </Text>

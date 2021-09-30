@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -13,7 +13,6 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -24,10 +23,10 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-
 import { styles } from './style'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { safeAddressFromUrl } from 'src/utils/router'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -47,8 +46,8 @@ const useStyles = makeStyles(styles)
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const safeAddress = safeAddressFromUrl()
   const { nativeCoin } = getNetworkInfo()
-  const safeAddress = useSelector(safeAddressFromUrl)
 
   const {
     gasLimit,

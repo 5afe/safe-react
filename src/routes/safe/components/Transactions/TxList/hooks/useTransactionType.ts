@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
@@ -10,6 +7,7 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 export type TxTypeProps = {
   icon?: string
@@ -19,7 +17,7 @@ export type TxTypeProps = {
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
   const knownAddress = useKnownAddress(toAddress?.value || '0x', {

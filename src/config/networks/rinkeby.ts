@@ -11,7 +11,6 @@ import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
-  safeUrl: 'https://rinkeby.gnosis-safe.io/app',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -33,14 +32,8 @@ const baseConfig: EnvironmentSettings = {
 
 const rinkeby: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team.dev.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-rinkeby.staging.gnosisdev.com/app/',
-    },
+    dev: baseConfig,
+    staging: baseConfig,
     production: {
       ...baseConfig,
       clientGatewayUrl: 'https://safe-client.gnosis.io/v1',

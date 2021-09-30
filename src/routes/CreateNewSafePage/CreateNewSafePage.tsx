@@ -11,11 +11,11 @@ import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import Heading from 'src/components/layout/Heading'
-import { history } from 'src/store'
+import { history } from 'src/routes/routes'
 import { sm, secondary } from 'src/theme/variables'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
-import { IS_PRODUCTION_ENV } from 'src/utils/constants'
+import { IS_PRODUCTION } from 'src/utils/constants'
 import {
   CreateSafeFormValues,
   FIELD_CREATE_CUSTOM_SAFE_NAME,
@@ -100,7 +100,7 @@ function CreateNewSafePage(): ReactElement {
           onSubmit={showSafeCreationProcess}
           testId={'create-new-safe-form'}
         >
-          {!IS_PRODUCTION_ENV && (
+          {!IS_PRODUCTION && (
             <StepFormElement
               label={selectWalletAndNetworkStepLabel}
               nextButtonLabel="Continue"

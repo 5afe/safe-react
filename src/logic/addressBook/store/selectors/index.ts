@@ -7,10 +7,6 @@ import { Overwrite } from 'src/types/helpers'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
 
-export const addressBookFromQueryParams = (state: AppReduxState): string | undefined => {
-  return state.router.location?.query?.entryAddress
-}
-
 export const addressBookState = (state: AppReduxState): AppReduxState['addressBook'] => state['addressBook']
 
 export const addressBookAddresses = createSelector([addressBookState], (addressBook): string[] => {

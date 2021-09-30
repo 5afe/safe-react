@@ -15,9 +15,9 @@ import {
 import Page from 'src/components/layout/Page'
 import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import { history } from 'src/store'
+import { history } from 'src/routes/routes'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
@@ -97,6 +97,7 @@ const Load = (): ReactElement => {
 
       history.push(
         generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+          network: getNetworkSlug(),
           safeAddress,
         }),
       )

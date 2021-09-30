@@ -1,4 +1,4 @@
-import { ReactElement, useRef, Fragment } from 'react'
+import { ReactElement, useRef, Fragment, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { Divider, Icon } from '@gnosis.pm/safe-react-components'
+import { generatePath } from 'react-router'
 
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
@@ -17,9 +18,8 @@ import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
-import { ROOT_ADDRESS } from 'src/routes/routes'
-import { APP_ENV } from 'src/utils/constants'
+import { NetworkInfo } from 'src/config/networks/network'
+import { ROOT_ROUTE } from 'src/routes/routes'
 import { setNetwork } from 'src/logic/config/utils'
 
 const styles = {
@@ -87,17 +87,18 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
   const classes = useStyles()
   const networkName = getNetworkName().toLowerCase()
 
-  const onNetworkChange = (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-    // FIXME: remove navigation when L2-UX completes
-    // This was added in order to switch network using navigation on prod
-    // but be able to check chain swapping on dev environments and PRs
-    if (APP_ENV === 'production') {
-      window.location.href = safeUrl
-    } else {
-      setNetwork(networkId)
-      history.push(ROOT_ADDRESS)
-    }
-  }
+  const onNetworkSwitch = useCallback(
+    (network: NetworkInfo) => {
+      clickAway()
+      setNetwork(network.id)
+      history.push(
+        generatePath(ROOT_ROUTE, {
+          network: network.label.toLowerCase(),
+        }),
+      )
+    },
+    [clickAway, history],
+  )
 
   return (
     <>
@@ -124,7 +125,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
                 <List className={classes.network} component="div">
                   {networks.map((network) => (
                     <Fragment key={network.id}>
-                      <StyledLink onClick={() => onNetworkChange(network.safeUrl, network.id)}>
+                      <StyledLink onClick={() => onNetworkSwitch(network)}>
                         <NetworkLabel networkInfo={network} />
                         {sameString(networkName, network.label?.toLowerCase()) && (
                           <Icon type="check" size="md" color="primary" />

@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import Switch from '@material-ui/core/Switch'
 
 import { styles } from './style'
@@ -9,7 +8,6 @@ import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
@@ -21,6 +19,7 @@ import { RenderOutputParams } from './RenderOutputParams'
 import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
+import { safeAddressFromUrl } from 'src/utils/router'
 import { ModalHeader } from '../ModalHeader'
 
 const useStyles = makeStyles(styles)
@@ -54,7 +53,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   isABI,
 }) => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   let setCallResults
 
   useMemo(() => {
