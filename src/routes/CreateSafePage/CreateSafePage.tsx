@@ -39,7 +39,7 @@ import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 
-function CreateNewSafePage(): ReactElement {
+function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const provider = useSelector(providerNameSelector)
@@ -78,7 +78,7 @@ function CreateNewSafePage(): ReactElement {
 
   if (isLoading) {
     return (
-      <LoaderContainer data-testid={'create-new-safe-loader'}>
+      <LoaderContainer data-testid={'create-safe-loader'}>
         <Loader size="md" />
       </LoaderContainer>
     )
@@ -95,11 +95,7 @@ function CreateNewSafePage(): ReactElement {
           </BackIcon>
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
-        <StepperForm
-          initialValues={initialFormValues}
-          onSubmit={showSafeCreationProcess}
-          testId={'create-new-safe-form'}
-        >
+        <StepperForm initialValues={initialFormValues} onSubmit={showSafeCreationProcess} testId={'create-safe-form'}>
           {!IS_PRODUCTION && (
             <StepFormElement
               label={selectWalletAndNetworkStepLabel}
@@ -128,7 +124,7 @@ function CreateNewSafePage(): ReactElement {
   )
 }
 
-export default CreateNewSafePage
+export default CreateSafePage
 
 const DEFAULT_THRESHOLD_VALUE = 1
 

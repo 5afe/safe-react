@@ -8,7 +8,7 @@ import {
   waitForElementToBeRemoved,
 } from 'src/utils/test-utils'
 
-import CreateNewSafePage from './CreateNewSafePage'
+import CreateSafePage from './CreateSafePage'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import * as ethTransactions from 'src/logic/wallets/ethTransactions'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
@@ -36,23 +36,23 @@ const secondOwnerAddress = '0xfe8BEBd43Ac213bea4bb8eC9e2dd90632f9371b2'
 const validENSNameDomain = 'testENSDomain.eth'
 const notExistingENSNameDomain = 'notExistingENSDomain.eth'
 
-describe('<CreateNewSafePage>', () => {
-  it('renders CreateNewSafePage Form', async () => {
-    render(<CreateNewSafePage />)
+describe('<CreateSafePage>', () => {
+  it('renders CreateSafePage Form', async () => {
+    render(<CreateSafePage />)
 
     // we show a loader
-    expect(screen.getByTestId('create-new-safe-loader')).toBeInTheDocument()
+    expect(screen.getByTestId('create-safe-loader')).toBeInTheDocument()
 
     // after that we show the form
-    await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
-    await waitFor(() => expect(screen.getByTestId('create-new-safe-form')).toBeInTheDocument())
+    await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
+    await waitFor(() => expect(screen.getByTestId('create-safe-form')).toBeInTheDocument())
   })
 
   describe('Step 1: Connect wallet & select network', () => {
     it('Shows Connect Wallet Button if No wallet is connected', async () => {
-      render(<CreateNewSafePage />)
+      render(<CreateSafePage />)
 
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       await waitFor(() => expect(screen.getByTestId('heading-connect-btn')).toBeInTheDocument())
     })
@@ -70,7 +70,7 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
+      render(<CreateSafePage />, customState)
 
       await waitFor(() => expect(screen.getByTestId('switch-network-link')).toBeInTheDocument())
 
@@ -90,7 +90,7 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
+      render(<CreateSafePage />, customState)
 
       await waitFor(() => expect(screen.getByTestId('switch-network-link')).toBeInTheDocument())
 
@@ -120,7 +120,7 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
+      render(<CreateSafePage />, customState)
 
       await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
 
@@ -149,7 +149,7 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
+      render(<CreateSafePage />, customState)
 
       await waitFor(() => expect(screen.getByTestId('switch-network-link')).toBeInTheDocument())
 
@@ -183,7 +183,7 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
+      render(<CreateSafePage />, customState)
 
       await waitFor(() => expect(screen.getByTestId('switch-network-link')).toBeInTheDocument())
 
@@ -209,8 +209,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
 
@@ -231,13 +231,13 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
-      expect(screen.getByTestId('create-new-safe-name-field')).toBeInTheDocument()
+      expect(screen.getByTestId('create-safe-name-field')).toBeInTheDocument()
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
     })
 
@@ -254,8 +254,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -279,8 +279,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -306,8 +306,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -337,8 +337,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -377,8 +377,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -435,8 +435,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -480,9 +480,9 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
+      render(<CreateSafePage />, customState)
 
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -512,8 +512,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -546,8 +546,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -592,8 +592,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -642,13 +642,13 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
-      const safeNameInput = screen.getByTestId('create-new-safe-name-field') as HTMLInputElement
+      const safeNameInput = screen.getByTestId('create-safe-name-field') as HTMLInputElement
 
       const suggestedSafeName = safeNameInput.placeholder
 
@@ -659,14 +659,14 @@ describe('<CreateNewSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
 
       fireEvent.click(screen.getByText('Continue'))
-      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByTestId('create-safe-review-step')).toBeInTheDocument())
 
       // suggested name of the safe
-      const reviewSafeNameNode = screen.getByTestId('create-new-safe-review-safe-name')
+      const reviewSafeNameNode = screen.getByTestId('create-safe-review-safe-name')
       expect(getByText(reviewSafeNameNode, suggestedSafeName))
 
       // threshold
-      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      const reviewSafeThresholdNode = screen.getByTestId('create-safe-review-threshold-label')
       expect(getByText(reviewSafeThresholdNode, '1 out of 1 owners'))
 
       // number of owners label
@@ -702,8 +702,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -719,10 +719,10 @@ describe('<CreateNewSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
 
       fireEvent.click(screen.getByText('Continue'))
-      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByTestId('create-safe-review-step')).toBeInTheDocument())
 
       // threshold
-      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      const reviewSafeThresholdNode = screen.getByTestId('create-safe-review-threshold-label')
       expect(getByText(reviewSafeThresholdNode, '1 out of 2 owners'))
 
       // number of owners label
@@ -759,13 +759,13 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
-      const safeNameInput = screen.getByTestId('create-new-safe-name-field') as HTMLInputElement
+      const safeNameInput = screen.getByTestId('create-safe-name-field') as HTMLInputElement
 
       // we set a custom safe name
       const customSafeName = 'Custom Safe name'
@@ -778,14 +778,14 @@ describe('<CreateNewSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
 
       fireEvent.click(screen.getByText('Continue'))
-      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByTestId('create-safe-review-step')).toBeInTheDocument())
 
       // suggested name of the safe
-      const reviewSafeNameNode = screen.getByTestId('create-new-safe-review-safe-name')
+      const reviewSafeNameNode = screen.getByTestId('create-safe-review-safe-name')
       expect(getByText(reviewSafeNameNode, customSafeName))
 
       // threshold
-      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      const reviewSafeThresholdNode = screen.getByTestId('create-safe-review-threshold-label')
       expect(getByText(reviewSafeThresholdNode, '1 out of 1 owners'))
 
       // number of owners label
@@ -821,8 +821,8 @@ describe('<CreateNewSafePage>', () => {
         },
       }
 
-      render(<CreateNewSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-new-safe-loader'))
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
@@ -843,10 +843,10 @@ describe('<CreateNewSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).not.toHaveBeenCalled()
 
       fireEvent.click(screen.getByText('Continue'))
-      await waitFor(() => expect(screen.getByTestId('create-new-safe-review-step')).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByTestId('create-safe-review-step')).toBeInTheDocument())
 
       // threshold
-      const reviewSafeThresholdNode = screen.getByTestId('create-new-safe-review-threshold-label')
+      const reviewSafeThresholdNode = screen.getByTestId('create-safe-review-threshold-label')
       expect(getByText(reviewSafeThresholdNode, '2 out of 2 owners'))
 
       // number of owners label
