@@ -16,7 +16,7 @@ export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
     return `https://${network}.gnosis-safe.io/app`
   } else if (hostname.includes('staging.gnosisdev.com')) {
     return `https://safe-team-${network}.staging.gnosisdev.com/app`
-  } else if (hostname.includes('review.gnosisdev.com')) {
+  } else if (hostname.includes('.gnosisdev.com')) {
     return `https://pr2778--safereact.review.gnosisdev.com/${network}/app/`
   } else if (hostname.includes('localhost')) {
     return 'http://localhost:3001'
