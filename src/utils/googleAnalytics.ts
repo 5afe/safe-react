@@ -12,20 +12,32 @@ const SHOULD_TRACK_ANALYTICS = IS_PRODUCTION || IS_STAGING
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
+const setFieldObjects = (fieldsObjects: Omit<FieldsObject, 'dimension1'> = {}) => {
+  ReactGA.set({
+    ...fieldsObjects,
+    dimension1: getNetworkInfo().label, // 'chain
+  })
+}
+
 // trackAnalyticsEvent appends dimension1
 type TrackAnalyticsEventEvent = Omit<EventArgs, 'dimension1'>
 export const trackAnalyticsEvent = (event: TrackAnalyticsEventEvent): void => {
-  const fieldsObject: EventArgs = {
-    ...event,
-    dimension1: getNetworkInfo().label, // Chain
+  if (SHOULD_TRACK_ANALYTICS) {
+    setFieldObjects()
+    ReactGA.event(event)
+  } else {
+    console.info('[GA] - Event:', event)
   }
-
-  return SHOULD_TRACK_ANALYTICS ? ReactGA.event(fieldsObject) : console.info('[GA] - Event:', fieldsObject)
 }
 
 type TrackAnalyticsPagePage = Parameters<typeof ReactGA.pageview>[0]
-const trackAnalyticsPage: typeof ReactGA.pageview = (page: TrackAnalyticsPagePage) => {
-  return SHOULD_TRACK_ANALYTICS ? ReactGA.pageview(page) : console.info('[GA] - Page:', page)
+const trackAnalyticsPage = (page: TrackAnalyticsPagePage): void => {
+  if (SHOULD_TRACK_ANALYTICS) {
+    setFieldObjects()
+    ReactGA.pageview(page)
+  } else {
+    console.info('[GA] - Page:', page)
+  }
 }
 
 const analyticsLoaded = false
@@ -44,7 +56,7 @@ export const loadGoogleAnalytics = (): void => {
 
   const fieldsObject: FieldsObject = {
     anonymizeIp: true,
-    appName: `Gnosis Safe Web`,
+    appName: 'Gnosis Safe Multisig', // Name on GA
     appVersion: process.env.REACT_APP_APP_VERSION,
   }
 
@@ -52,8 +64,8 @@ export const loadGoogleAnalytics = (): void => {
     if (!gaTrackingId) {
       console.error('In order to use Google Analytics you need to add a tracking ID.')
     } else {
-      ReactGA.initialize(gaTrackingId)
-      ReactGA.set(fieldsObject)
+      ReactGA.initialize(gaTrackingId, { debug: true })
+      setFieldObjects(fieldsObject)
     }
   } else {
     console.info('[GA] - Fields:', fieldsObject)
@@ -61,7 +73,7 @@ export const loadGoogleAnalytics = (): void => {
 }
 
 type UseAnalyticsResponse = {
-  trackPage: (path: string) => void
+  trackPage: (path: TrackAnalyticsPagePage) => void
   trackEvent: (event: TrackAnalyticsEventEvent) => void
 }
 export const useAnalytics = (): UseAnalyticsResponse => {
