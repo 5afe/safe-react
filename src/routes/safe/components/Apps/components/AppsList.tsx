@@ -1,7 +1,7 @@
 import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
-import FavoriteIcon from '@material-ui/icons/Favorite'
+import Bookmark from '@material-ui/icons/Bookmark'
+import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath } from 'react-router-dom'
@@ -152,7 +152,7 @@ const AppsList = (): React.ReactElement => {
                       togglePin(a.id)
                     }}
                   >
-                    <FavoriteIcon />
+                    <Bookmark />
                   </IconBtn>
                 </AppContainer>
               ))}
@@ -160,40 +160,48 @@ const AppsList = (): React.ReactElement => {
           </AnimatePresence>
         </Collapse>
 
-        <Collapse
-          title={
-            <Text color="placeHolder" strong size="md">
-              CUSTOM APPS
-            </Text>
-          }
-          defaultExpanded
-        >
-          <AnimatePresence>
-            <CardsWrapper>
-              {customApps.map((a) => (
-                <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <AppCard
-                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                    isLoading={isAppLoading(a)}
-                    iconUrl={a.iconUrl}
-                    name={a.name}
-                    description={a.description}
-                  />
-                  <IconBtn
-                    title="Remove app"
-                    onClick={(e) => {
-                      e.stopPropagation()
-
-                      setAppToRemove(a)
-                    }}
+        {!!customApps.length && (
+          <Collapse
+            title={
+              <Text color="placeHolder" strong size="md">
+                CUSTOM APPS
+              </Text>
+            }
+            defaultExpanded
+          >
+            <AnimatePresence>
+              <CardsWrapper>
+                {customApps.map((a) => (
+                  <AppContainer
+                    key={a.id}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
-                    <Icon size="sm" type="delete" color="error" />
-                  </IconBtn>
-                </AppContainer>
-              ))}
-            </CardsWrapper>
-          </AnimatePresence>
-        </Collapse>
+                    <AppCard
+                      to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                      isLoading={isAppLoading(a)}
+                      iconUrl={a.iconUrl}
+                      name={a.name}
+                      description={a.description}
+                    />
+                    <IconBtn
+                      title="Remove app"
+                      onClick={(e) => {
+                        e.stopPropagation()
+
+                        setAppToRemove(a)
+                      }}
+                    >
+                      <Icon size="sm" type="delete" color="error" />
+                    </IconBtn>
+                  </AppContainer>
+                ))}
+              </CardsWrapper>
+            </AnimatePresence>
+          </Collapse>
+        )}
 
         <SectionHeading color="placeHolder" strong size="md">
           ALL APPS
@@ -220,7 +228,7 @@ const AppsList = (): React.ReactElement => {
                     togglePin(a.id)
                   }}
                 >
-                  <FavoriteBorderIcon />
+                  <BookmarkBorder />
                 </IconBtn>
               </AppContainer>
             ))}
