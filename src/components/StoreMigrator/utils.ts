@@ -5,14 +5,8 @@ const MIGRATION_KEY = 'SAFE__migratedNetworks'
 const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IMMORTAL_PREFIX = '_immortal|'
 
-export enum NETWORK_TO_MIGRATE {
-  bsc = 'bsc',
-  polygon = 'polygon',
-  ewc = 'ewc',
-  rinkeby = 'rinkeby',
-  xdai = 'xdai',
-}
-const networks = Object.values(NETWORK_TO_MIGRATE)
+const networks = ['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai'] as const
+export type NETWORK_TO_MIGRATE = typeof networks[number]
 
 export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
   const hostname = location.hostname

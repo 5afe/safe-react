@@ -1,6 +1,4 @@
-// import { trackError } from 'src/logic/exceptions/CodedException'
 import * as migrationUtils from '../utils'
-import { NETWORK_TO_MIGRATE } from '../utils'
 
 jest.mock('src/logic/exceptions/CodedException', () => {
   // Require the original module to not be mocked...
@@ -22,7 +20,7 @@ describe('getSubdomainUrl', () => {
       value: { hostname: 'gnosis-safe.io' },
     })
 
-    const subdomain = migrationUtils.getSubdomainUrl(NETWORK_TO_MIGRATE.rinkeby)
+    const subdomain = migrationUtils.getSubdomainUrl('rinkeby')
     expect(subdomain).toEqual('https://rinkeby.gnosis-safe.io/app')
   })
 
@@ -32,7 +30,7 @@ describe('getSubdomainUrl', () => {
       value: { hostname: 'fake.url' },
     })
 
-    const subdomain = migrationUtils.getSubdomainUrl(NETWORK_TO_MIGRATE.rinkeby)
+    const subdomain = migrationUtils.getSubdomainUrl('rinkeby')
     expect(subdomain).toEqual('')
   })
 
@@ -43,7 +41,7 @@ describe('getSubdomainUrl', () => {
       value: { hostname: 'safe-team-mainnet.staging.gnosisdev.com' },
     })
 
-    const subdomain = migrationUtils.getSubdomainUrl(NETWORK_TO_MIGRATE.bsc)
+    const subdomain = migrationUtils.getSubdomainUrl('bsc')
     expect(subdomain).toEqual('https://safe-team-bsc.staging.gnosisdev.com/app')
   })
 })
@@ -55,7 +53,7 @@ describe('addMigratedNetwork', () => {
       value: { getItem: jest.fn(() => JSON.stringify(['rinkeby'])), setItem: jest.fn() },
     })
 
-    migrationUtils.addMigratedNetwork(NETWORK_TO_MIGRATE.rinkeby)
+    migrationUtils.addMigratedNetwork('rinkeby')
     expect(localStorage.setItem).not.toHaveBeenCalled()
   })
   it('should add newly migrated network', () => {
@@ -64,7 +62,7 @@ describe('addMigratedNetwork', () => {
       value: { getItem: jest.fn(() => JSON.stringify(['xdai'])), setItem: jest.fn() },
     })
 
-    migrationUtils.addMigratedNetwork(NETWORK_TO_MIGRATE.rinkeby)
+    migrationUtils.addMigratedNetwork('rinkeby')
     expect(localStorage.setItem).toHaveBeenCalledWith('SAFE__migratedNetworks', JSON.stringify(['xdai', 'rinkeby']))
   })
 })
