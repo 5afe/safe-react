@@ -4,6 +4,7 @@ import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 const MIGRATION_KEY = 'SAFE__migratedNetworks'
 const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IMMORTAL_PREFIX = '_immortal|'
+const MAINNET_PREFIX = 'MAINNET'
 
 const networks = ['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai'] as const
 export type NETWORK_TO_MIGRATE = typeof networks[number]
@@ -85,14 +86,15 @@ export function handleMessage(
   }
 
   // Migrate the rest of the payload
-  const immortalKeys = Object.keys(payload).filter((key) => key.startsWith(IMMORTAL_PREFIX))
-  immortalKeys.forEach((key) => {
-    const data = parsePayload<unknown>(payload[key])
-    if (data == null) return
+  Object.keys(payload)
+    .filter((key) => key.startsWith(IMMORTAL_PREFIX) && !key.includes(MAINNET_PREFIX))
+    .forEach((key) => {
+      const data = parsePayload<unknown>(payload[key])
+      if (data == null) return
 
-    // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
-    const storageKey = key.replace(IMMORTAL_PREFIX, '')
-    // Save entry in localStorage
-    immortalDataCallback(storageKey, data)
-  })
+      // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
+      const storageKey = key.replace(IMMORTAL_PREFIX, '')
+      // Save entry in localStorage
+      immortalDataCallback(storageKey, data)
+    })
 }

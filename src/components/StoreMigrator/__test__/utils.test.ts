@@ -198,7 +198,8 @@ describe('handleMessage', () => {
       data: {
         payload: JSON.stringify({
           SAFE__addressBook: 'sdfiguhfdoshgudslf',
-          ['_immortal|v2_RINKEBY']: JSON.stringify({ test: 'aisfdhoilsaf' }),
+          ['_immortal|v2_RINKEBY__SAFES']: JSON.stringify({ test: 'aisfdhoilsaf' }),
+          ['_immortal|v2_MAINNET__SAFES']: JSON.stringify({}),
         }),
       },
       origin: 'https://rinkeby.gnosis-safe.io',
@@ -208,7 +209,8 @@ describe('handleMessage', () => {
 
     expect(addressBookCallbackMock).not.toHaveBeenCalled()
     expect(exceptions.trackError).toHaveBeenCalledTimes(1)
-    expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY', { test: 'aisfdhoilsaf' })
+    expect(immortalDataCallbackMock).toHaveBeenCalledTimes(1)
+    expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY__SAFES', { test: 'aisfdhoilsaf' })
   })
   it('should not save localStorage data if the localStorage payload is malformed', () => {
     Object.defineProperty(window, 'localStorage', {
@@ -232,7 +234,7 @@ describe('handleMessage', () => {
       data: {
         payload: JSON.stringify({
           SAFE__addressBook: JSON.stringify([]),
-          ['_immortal|v2_RINKEBY']: 'sdifughosidfghdfgs',
+          ['_immortal|v2_RINKEBY__SAFES']: 'sdifughosidfghdfgs',
         }),
       },
       origin: 'https://rinkeby.gnosis-safe.io',
@@ -267,7 +269,7 @@ describe('handleMessage', () => {
       data: {
         payload: JSON.stringify({
           SAFE__addressBook: JSON.stringify([]),
-          ['_immortal|v2_RINKEBY']: JSON.stringify({}),
+          ['_immortal|v2_RINKEBY__SAFES']: JSON.stringify({}),
         }),
       },
       origin: 'https://rinkeby.gnosis-safe.io',
@@ -276,6 +278,6 @@ describe('handleMessage', () => {
     migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock)
 
     expect(addressBookCallbackMock).toHaveBeenCalledWith([])
-    expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY', {})
+    expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY__SAFES', {})
   })
 })
