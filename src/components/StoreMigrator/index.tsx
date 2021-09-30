@@ -12,13 +12,14 @@ type MigrationMessageEvent = MessageEvent & {
 const MIGRATION_KEY = 'SAFE__migratedNetworks'
 const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IFRAME_PATH = '/migrate-local-storage.html'
+const IMMORTAL_PREFIX = '_immortal|'
 const networks = ['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai']
 
 const getSubdomainUrl = (network: string): string => {
   const hostname = location.hostname
 
   if (hostname.includes('gnosis-safe.io')) {
-    return 'https://gnosis-safe.io/app'
+    return `https://${network}.gnosis-safe.io/app`
   } else if (hostname.includes('staging.gnosisdev.com')) {
     return `https://safe-team-${network}.staging.gnosisdev.com/app`
   } else if (hostname.includes('review.gnosisdev.com')) {
@@ -85,7 +86,7 @@ const StoreMigrator = (): ReactElement | null => {
     }
 
     const saveEventData = async (event: MigrationMessageEvent) => {
-      const isTrustedOrigin = networks.some((network) => getSubdomainUrl(network).includes(event.origin))
+      const isTrustedOrigin = networks.some((network) => getSubdomainUrl(network).startsWith(event.origin))
       const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
       if (!isValidOrigin) return
 
@@ -101,11 +102,11 @@ const StoreMigrator = (): ReactElement | null => {
       }
 
       // Migrate the rest of the payload
-      const immortalKeys = Object.keys(payload).filter((key) => key.startsWith('_immortal|v2_'))
+      const immortalKeys = Object.keys(payload).filter((key) => key.startsWith(IMMORTAL_PREFIX))
       immortalKeys.forEach((key) => {
         const data = parsePayload<unknown>(payload[key])
         // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
-        const storageKey = key.replace('_immortal|', '')
+        const storageKey = key.replace(IMMORTAL_PREFIX, '')
         // Save entry in localStorage
         saveMigratedKeyToStorage(storageKey, data)
       })
