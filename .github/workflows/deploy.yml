@@ -1,22 +1,24 @@
-name: Deploy to Polygon network
+name: Deploy to Mainnet network
 
-# Run on pushes to main or PRs to main
+# Run on pushes to main or PRs
 on:
+  # Pull request hook without any config. Launches for every pull request
+  pull_request:
   push:
     branches:
       - main
-  pull_request:
   # Launches build when release is published
   release:
     types: [published]
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REACT_APP_NETWORK: 'polygon'
-  STAGING_BUCKET_NAME: ${{ secrets.STAGING_POLYGON_BUCKET_NAME }}
-  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_POLYGON }}
+  REACT_APP_NETWORK: 'mainnet'
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_MAINNET_BUCKET_NAME }}
+  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
+  REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY_MAINNET }}
 
 jobs:
   debug:
@@ -64,6 +66,12 @@ jobs:
           yarn install --cache-folder ./.yarncache --frozen-lockfile
           rm -rf .yarncache
           yarn cache clean
+
+      # Set dev flag (for PR deployments)
+      - name: Set PR flag
+        run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
+        if: github.ref != 'refs/heads/main'
+
       # Set production flag
       - name: Set production flag for release PR or tagged build
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
@@ -90,27 +98,30 @@ jobs:
       - run: bash ./scripts/github/deploy_pull_request.sh
         if: success() && github.event.number
         env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           PR_NUMBER: ${{ github.event.number }}
           REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
           REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+          TRAVIS_TAG: ${{ github.event.release.tag_name }}
 
       - name: 'PRaul: Comment PR with app URLs'
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/app/)
+            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }})
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number
         env:
-          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com/app
 
       # Script to deploy to the dev environment
-      # Polygon build is never created on the dev branch
+      # Mainnet build is never created on the dev branch
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' # Or refs/heads/main
         run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
 
       # Script to upload release files
@@ -126,6 +137,7 @@ jobs:
       #     REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
       #     REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
       #     VERSION_TAG: ${{ github.event.release.tag_name }}
+
       # Script to prepare production deployments
       - run: bash ./scripts/github/prepare_production_deployment.sh
         if: success() && startsWith(github.ref, 'refs/tags/v')
