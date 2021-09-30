@@ -49,7 +49,6 @@ const CardsWrapper = styled(motion.div)`
   column-gap: 20px;
   row-gap: 20px;
   justify-content: space-evenly;
-  margin: ${({ theme }) => `${theme.margin.xxl} 0 ${theme.margin.lg} 0`};
 `
 
 const ContentWrapper = styled.div`
@@ -76,6 +75,7 @@ const CenterIconText = styled(IconText)`
 
 const SectionHeading = styled(Text)`
   width: 100%;
+  margin: ${({ theme }) => `${theme.margin.lg} 0 ${theme.margin.sm} 0`};
 `
 
 const AppContainer = styled(motion.div)`
