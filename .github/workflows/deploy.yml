@@ -109,9 +109,7 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rinkeby)
-            * [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon)
-            * [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc)
+            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }})
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number

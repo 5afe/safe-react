@@ -1,6 +1,14 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
 
+jest.mock('src/utils/router', () => {
+  const original = jest.requireActual('src/utils/router')
+  return {
+    ...original,
+    safeAddressFromUrl: () => '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
+  }
+})
+
 jest.mock('src/routes/safe/components/Apps/hooks/useAppList', () => ({
   useAppList: () => ({
     appList: [
@@ -77,26 +85,15 @@ jest.mock('src/routes/safe/components/Apps/hooks/useAppList', () => ({
   }),
 }))
 
-const customState = {
-  router: {
-    location: {
-      pathname: '/safes/0x75096d02718d1B56BEaE4273b178d34F6695F097/balances',
-    },
-    // had to include this because of checks in connected-react-router
-    // https://github.com/supasate/connected-react-router/issues/312#issuecomment-500968504
-    action: 'truthy',
-  },
-}
-
 describe('Safe Apps -> AppsList', () => {
   it('Shows apps from the app list', () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     expect(screen.getByText('Compound')).toBeInTheDocument()
   })
 
   it("Doesn't show apps with unavailable manifest.json", () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     expect(screen.queryByText('unknown')).not.toBeInTheDocument()
   })
@@ -104,7 +101,7 @@ describe('Safe Apps -> AppsList', () => {
 
 describe('Safe Apps -> AppsList -> Search', () => {
   it('Shows apps matching the search query', () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = screen.getByPlaceholderText('e.g Compound')
 
@@ -115,7 +112,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Shows app matching the name first for a query that matches in name and description of multiple apps', () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = screen.getByPlaceholderText('e.g Compound')
 
@@ -133,7 +130,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Shows "no apps found" message when not able to find apps matching the query and a button to search for the WalletConnect Safe app', () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const query = 'not-a-real-app'
     const searchInput = screen.getByPlaceholderText('e.g Compound')
@@ -149,7 +146,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Clears the search result when you press on clear button and shows all apps again', () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = screen.getByPlaceholderText('e.g Compound')
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
