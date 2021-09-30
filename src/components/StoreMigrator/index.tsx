@@ -1,24 +1,18 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-
 import { addressBookMigrate } from 'src/logic/addressBook/store/actions'
 import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 import { saveMigratedKeyToStorage } from 'src/utils/storage'
-import allNetworks from 'src/config/networks'
 
 type MigrationMessageEvent = MessageEvent & {
   data: { payload: string }
 }
 
-const MIGRATION_KEY = 'SAFE__subdomainsMigrated'
+const MIGRATION_KEY = 'SAFE__migratedNetworks'
+const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IFRAME_PATH = '/migrate-local-storage.html'
-const IFRAME_NAME = 'migrationIframe'
-
-// Mainnet is not needed because we remain on same domain
-const { local, mainnet, ...migratedNetworks } = allNetworks
-// The result is [ 'bsc', 'polygon', 'ewc', ... ]
-const networks = Object.values(migratedNetworks).map(({ network }) => network.label.toLowerCase())
+const networks = ['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai']
 
 const getSubdomainUrl = (network: string): string => {
   const hostname = location.hostname
@@ -36,17 +30,25 @@ const getSubdomainUrl = (network: string): string => {
   }
 }
 
-const isMigrationDone = (): boolean => {
-  return Boolean(localStorage.getItem(MIGRATION_KEY))
+const getMigratedNetworks = (): string[] => {
+  let migratedNetworks: string[]
+  try {
+    const item = localStorage.getItem(MIGRATION_KEY)
+    migratedNetworks = item ? JSON.parse(item) : []
+  } catch (e) {
+    migratedNetworks = []
+  }
+  return migratedNetworks
 }
 
-const setMigrationDone = (): void => {
-  localStorage.setItem(MIGRATION_KEY, 'true')
-}
-
-const getAddressBookEntry = (key: string, payloadEntry: unknown): AddressBookState | null => {
-  const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
-  return key === ADDRESS_BOOK_KEY && Array.isArray(payloadEntry) ? (payloadEntry as AddressBookState) : null
+const addMigratedNetwork = (network: string): string[] => {
+  const migratedNetworks = getMigratedNetworks()
+  if (migratedNetworks.includes(network)) {
+    return migratedNetworks
+  }
+  const newValue = [...migratedNetworks, network]
+  localStorage.setItem(MIGRATION_KEY, JSON.stringify(newValue))
+  return newValue
 }
 
 const isNetworkSubdomain = (): boolean => {
@@ -54,20 +56,31 @@ const isNetworkSubdomain = (): boolean => {
   return networks.map(getSubdomainUrl).some((url) => href.startsWith(url))
 }
 
-const StoreMigrator = (): ReactElement | null => {
-  const [currentNetworkIndex, setCurrentNetworkIndex] = useState(0)
-  const dispatch = useDispatch()
-
-  const onIframeError = () => {
-    // Skip the network if its iframe errored out
-    setCurrentNetworkIndex((prevState) => prevState + 1)
+function parsePayload<T>(entry: string): T | null {
+  try {
+    return JSON.parse(entry) as T
+  } catch (e) {
+    trackError(Errors._703, e.message)
+    return null
   }
+}
+
+const StoreMigrator = (): ReactElement | null => {
+  const dispatch = useDispatch()
+  const [networksToMigrate, setNetworksToMigrate] = useState<string[]>([])
+
+  useEffect(() => {
+    if (isNetworkSubdomain()) {
+      return
+    }
+    const migrated = getMigratedNetworks()
+    const remaining = networks.filter((network) => !migrated.includes(network))
+    setNetworksToMigrate(remaining)
+  }, [])
 
   // Add an event listener to recieve the data to be migrated and save it into the storage
   useEffect(() => {
-    if (isMigrationDone() || isNetworkSubdomain()) {
-      // Skip the actual migration and make the iframe disappear
-      setCurrentNetworkIndex(networks.length)
+    if (!networksToMigrate.length) {
       return
     }
 
@@ -76,57 +89,51 @@ const StoreMigrator = (): ReactElement | null => {
       const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
       if (!isValidOrigin) return
 
-      let payload: Record<string, string> = {}
-      try {
-        payload = JSON.parse(event.data.payload)
-      } catch (e) {
-        trackError(Errors._703, e.message)
+      const payload = parsePayload<Record<string, string>>(event.data.payload)
+      if (!payload) {
+        return
       }
 
-      Object.keys(payload).forEach((key) => {
-        let payloadEntry: unknown
-        try {
-          payloadEntry = JSON.parse(payload[key])
-        } catch (e) {
-          return
-        }
+      // Migrate the address book
+      const addressBookData = parsePayload<AddressBookState>(payload[ADDRESS_BOOK_KEY])
+      if (addressBookData) {
+        dispatch(addressBookMigrate(addressBookData))
+      }
 
-        const isImmortal = key.startsWith('_immortal|v2_')
-        const addressBookState = !isImmortal && getAddressBookEntry(key, payloadEntry)
-
-        if (addressBookState) {
-          dispatch(addressBookMigrate(addressBookState))
-        } else if (isImmortal) {
-          // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
-          const storageKey = key.replace('_immortal|', '')
-          // Save entry in localStorage
-          saveMigratedKeyToStorage(storageKey, payloadEntry)
-        }
+      // Migrate the rest of the payload
+      const immortalKeys = Object.keys(payload).filter((key) => key.startsWith('_immortal|v2_'))
+      immortalKeys.forEach((key) => {
+        const data = parsePayload<unknown>(payload[key])
+        // _immortal is automatically added by Immortal library so the basic key shouldn't contain this
+        const storageKey = key.replace('_immortal|', '')
+        // Save entry in localStorage
+        saveMigratedKeyToStorage(storageKey, data)
       })
 
-      setCurrentNetworkIndex((prevState) => prevState + 1)
+      // Extract the network name
+      const network = immortalKeys[0]?.split('_')[2]?.toLowerCase()
+      if (network) {
+        const migrated = addMigratedNetwork(network)
 
-      // If all networks were migrated, set a flag
-      if (currentNetworkIndex === networks.length - 1) {
-        setMigrationDone()
+        // Clean up the iframes if all networks were migrated
+        if (migrated.length === networks.length) {
+          setNetworksToMigrate([])
+        }
       }
     }
 
     window.addEventListener('message', saveEventData, false)
+
     return () => window.removeEventListener('message', saveEventData, false)
-  }, [dispatch, currentNetworkIndex, setCurrentNetworkIndex])
+  }, [dispatch, networksToMigrate, setNetworksToMigrate])
 
-  // Open another network in the iframe to migrate local storage
-  useEffect(() => {
-    if (currentNetworkIndex < networks.length) {
-      const urlToMigrate = `${getSubdomainUrl(networks[currentNetworkIndex])}${IFRAME_PATH}`
-      window.open(urlToMigrate, IFRAME_NAME)
-    }
-  }, [currentNetworkIndex])
-
-  return currentNetworkIndex < networks.length ? (
-    <iframe width="0" height="0" name={IFRAME_NAME} hidden onError={onIframeError}></iframe>
-  ) : null
+  return (
+    <>
+      {networksToMigrate.map((network) => (
+        <iframe key={network} width="0" height="0" hidden src={`${getSubdomainUrl(network)}${IFRAME_PATH}`} />
+      ))}
+    </>
+  )
 }
 
 export default StoreMigrator
