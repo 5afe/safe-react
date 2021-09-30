@@ -10,7 +10,7 @@ on:
       - main
   # Launches build when release is published
   release:
-      types: [published]
+    types: [published]
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
@@ -45,7 +45,6 @@ jobs:
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
       - uses: actions/checkout@v2
-
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -76,7 +75,6 @@ jobs:
       - name: Build ${{ env.REACT_APP_NETWORK }} app
         run: yarn build
         env:
-          PUBLIC_URL: './'
           REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
           REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
           REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
@@ -102,7 +100,7 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/${{ env.REACT_APP_NETWORK }}/app/)
+            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/app/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number

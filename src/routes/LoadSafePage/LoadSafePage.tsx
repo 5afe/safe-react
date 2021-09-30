@@ -1,6 +1,6 @@
 import { ReactElement, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { generatePath, useParams } from 'react-router-dom'
+import { generatePath, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
@@ -10,8 +10,7 @@ import Heading from 'src/components/layout/Heading'
 import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { history } from 'src/store'
-import { sm, secondary } from 'src/theme/variables'
+import { secondary, sm } from 'src/theme/variables'
 import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
@@ -28,7 +27,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { SAFE_ROUTES } from '../routes'
+import { getNetworkSlug, SAFE_ROUTES } from '../routes'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
@@ -43,6 +42,7 @@ function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const { safeAddress } = useParams<{ safeAddress?: string }>()
   const safeRandomName = useMnemonicSafeName()
@@ -93,6 +93,7 @@ function Load(): ReactElement {
     await dispatch(addOrUpdateSafe(safeProps))
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        network: getNetworkSlug(),
         safeAddress,
       }),
     )

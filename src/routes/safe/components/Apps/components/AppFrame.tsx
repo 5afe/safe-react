@@ -16,8 +16,8 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
+import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
 import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
-import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -103,6 +103,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const redirectToBalance = () =>
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        network: getNetworkSlug(),
         safeAddress,
       }),
     )

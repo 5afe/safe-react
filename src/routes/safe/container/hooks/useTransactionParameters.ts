@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
+import { safeAddressFromUrl } from 'src/utils/router'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -40,7 +40,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   const web3 = getWeb3ReadOnly()
   const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   // Safe Params

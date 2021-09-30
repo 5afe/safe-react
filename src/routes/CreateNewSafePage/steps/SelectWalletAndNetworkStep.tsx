@@ -1,5 +1,5 @@
 import { ReactElement, useState, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -11,21 +11,18 @@ import Typography from '@material-ui/core/Typography'
 import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
-import { getConfig, getNetworkName, getNetworks, setNetworkId } from 'src/config'
+import { getNetworks } from 'src/config'
 import { lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Paragraph from 'src/components/layout/Paragraph'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
+import { setNetwork } from 'src/logic/config/utils'
 
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 
 function SelectWalletAndNetworkStep(): ReactElement {
-  const dispatch = useDispatch()
-
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
   const isWalletConnected = !!useSelector(providerNameSelector)
 
@@ -35,15 +32,10 @@ function SelectWalletAndNetworkStep(): ReactElement {
 
   const networks = getNetworks()
 
-  const onNetworkSwitch = useCallback(
-    (safeUrl: string, networkId: ETHEREUM_NETWORK) => {
-      setNetworkId(getNetworkName(networkId))
-      const safeConfig = makeNetworkConfig(getConfig())
-      dispatch(configStore(safeConfig))
-      setIsNetworkSelectorPopupOpen(false)
-    },
-    [dispatch],
-  )
+  const onNetworkSwitch = useCallback((networkId: ETHEREUM_NETWORK) => {
+    setNetwork(networkId)
+    setIsNetworkSelectorPopupOpen(false)
+  }, [])
 
   return (
     <Container data-testid={'select-network-step'}>
@@ -87,11 +79,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
         <StyledDialogContent dividers>
           <List component="div">
             {networks.map((network) => (
-              <NetworkLabelItem
-                key={network.id}
-                role={'button'}
-                onClick={() => onNetworkSwitch(network.safeUrl, network.id)}
-              >
+              <NetworkLabelItem key={network.id} role={'button'} onClick={() => onNetworkSwitch(network.id)}>
                 <NetworkLabel networkInfo={network} flexGrow />
               </NetworkLabelItem>
             ))}

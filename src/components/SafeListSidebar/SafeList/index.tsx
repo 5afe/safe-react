@@ -8,13 +8,14 @@ import { useSelector } from 'react-redux'
 import { setNetwork } from 'src/logic/config/utils'
 import { sortedSafeListSelector } from '../selectors'
 import { getNetworkId, getNetworks } from 'src/config'
-import { safeAddressFromUrl, SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
@@ -51,7 +52,7 @@ const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => !loadedViaU
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
-  const currentSafeAddress = useSelector(safeAddressFromUrl)
+  const currentSafeAddress = safeAddressFromUrl()
   const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const ownedSafes = useOwnerSafes()

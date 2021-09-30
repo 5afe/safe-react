@@ -5,11 +5,11 @@ import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -19,12 +19,11 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { BasicTxInfo } from 'src/components/DecodeTxs'
 import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
-import { ButtonStatus, Modal } from 'src/components/Modal'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-
 import { SignMessageModalProps } from '.'
+import Hairline from 'src/components/layout/Hairline'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -180,7 +179,7 @@ export const ReviewMessage = ({
     >
       {(txParameters, toggleEditMode) => (
         <div>
-          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+          <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 
           <Hairline />
 

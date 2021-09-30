@@ -12,7 +12,7 @@ import { currentSafe } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { matchPath } from 'react-router-dom'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { SAFE_ROUTES, history } from 'src/routes/routes'
 import { getNetworkId } from 'src/config'
 
 /**
@@ -86,7 +86,7 @@ export const fetchSafe =
       // If these polling timestamps have changed, fetch again
       const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafe(state)
 
-      const isCollectiblesPage = !!matchPath<{ safeAddress: string }>(state.router.location.pathname, {
+      const isCollectiblesPage = !!matchPath(history.location.pathname, {
         path: SAFE_ROUTES.ASSETS_COLLECTIBLES,
       })
 

@@ -2,11 +2,12 @@ import { ReactElement } from 'react'
 import { Button, Card, Title, Text } from '@gnosis.pm/safe-react-components'
 import Divider from '@material-ui/core/Divider'
 import styled from 'styled-components'
+import { generatePath } from 'react-router'
 
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
 import Link from 'src/components/layout/Link'
-import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
+import { getNetworkSlug, LOAD_ROUTE, OPEN_ROUTE } from 'src/routes/routes'
 
 function Welcome(): ReactElement {
   return (
@@ -29,7 +30,13 @@ function Welcome(): ReactElement {
                 <Text size="xl">Create a new Safe Multisig that is controlled by one or multiple owners.</Text>
                 <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
               </CardDescriptionContainer>
-              <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
+              <Button
+                size="lg"
+                color="primary"
+                variant="contained"
+                component={Link}
+                to={generatePath(OPEN_ROUTE, { network: getNetworkSlug() })}
+              >
                 <Text size="xl" color="white">
                   + Create new Safe
                 </Text>
@@ -54,7 +61,7 @@ function Welcome(): ReactElement {
                 size="lg"
                 color="secondary"
                 component={Link}
-                to={LOAD_ADDRESS}
+                to={generatePath(LOAD_ROUTE, { network: getNetworkSlug() })}
               >
                 <StyledButtonLabel size="xl" color="secondary">
                   Add existing Safe

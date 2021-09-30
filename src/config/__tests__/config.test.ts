@@ -23,8 +23,8 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'MAINNET',
     }))
+    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
     const { getNetworkInfo } = require('src/config')
 
     // When
@@ -38,9 +38,9 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'MAINNET',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.dev?.txServiceUrl
 
     // When
@@ -54,8 +54,8 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'MAINNET',
     }))
+    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.staging?.txServiceUrl
 
@@ -70,10 +70,10 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'MAINNET',
       APP_ENV: 'production',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
 
     // When
@@ -87,10 +87,10 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'XDAI',
       APP_ENV: 'production',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/xdai`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
 
     // When
@@ -103,9 +103,9 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'XDAI',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/xdai`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
 
     // When

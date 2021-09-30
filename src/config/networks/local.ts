@@ -4,7 +4,6 @@ import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'http://localhost:8001/v1',
   txServiceUrl: 'http://localhost:8000/api/v1',
-  safeUrl: 'http://localhost:3000/app',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -26,9 +25,7 @@ const baseConfig: EnvironmentSettings = {
 
 const local: NetworkConfig = {
   environment: {
-    production: {
-      ...baseConfig,
-    },
+    production: baseConfig,
   },
   network: {
     id: ETHEREUM_NETWORK.LOCAL,

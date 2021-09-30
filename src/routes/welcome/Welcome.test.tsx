@@ -1,5 +1,5 @@
-import onboard from 'src/logic/wallets/onboard'
 import { render, fireEvent, screen } from 'src/utils/test-utils'
+import { getNetworkSlug } from '../routes'
 import Welcome from './Welcome'
 
 describe('<Welcome>', () => {
@@ -22,7 +22,7 @@ describe('<Welcome>', () => {
       },
     }
 
-    expect(window.location.href).toBe('http://localhost/')
+    expect(window.location.pathname).toBe('/')
 
     render(<Welcome />, customState)
 
@@ -30,7 +30,7 @@ describe('<Welcome>', () => {
 
     fireEvent.click(createNewSafeLinkNode)
 
-    expect(window.location.href).toBe('http://localhost/#/open')
+    expect(window.location.pathname).toBe(`/${getNetworkSlug()}/open`)
   })
 
   it('Add existing Safe button should redirect to /load if a wallet is already selected', () => {
@@ -46,7 +46,7 @@ describe('<Welcome>', () => {
       },
     }
 
-    expect(window.location.href).toBe('http://localhost/')
+    expect(window.location.pathname).toBe('/')
 
     render(<Welcome />, customState)
 
@@ -56,6 +56,6 @@ describe('<Welcome>', () => {
 
     fireEvent.click(addExistingSafeLinkNode)
 
-    expect(window.location.href).toBe('http://localhost/#/load')
+    expect(window.location.pathname).toBe(`/${getNetworkSlug()}/load`)
   })
 })
