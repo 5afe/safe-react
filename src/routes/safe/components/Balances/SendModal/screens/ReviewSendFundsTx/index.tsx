@@ -14,7 +14,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -36,6 +35,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { safeAddressFromUrl } from 'src/utils/router'
 import { ModalHeader } from '../ModalHeader'
 
 const useStyles = makeStyles(styles)
@@ -88,7 +88,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = safeAddressFromUrl()
   const { nativeCoin } = getNetworkInfo()
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])

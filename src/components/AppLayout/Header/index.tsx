@@ -27,7 +27,9 @@ const HeaderComponent = (): React.ReactElement => {
   const available = useSelector(availableSelector)
   const dispatch = useDispatch()
   const showSwitchButton = canSwitchNetwork()
-  const shouldSwitchChain = useSelector(shouldSwitchWalletChain)
+
+  const shouldSwitchWallet = useSelector(shouldSwitchWalletChain)
+  const shouldSwitchChain = !!(userAddress && shouldSwitchWallet)
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {

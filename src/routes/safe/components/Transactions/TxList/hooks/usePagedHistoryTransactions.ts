@@ -1,14 +1,13 @@
 import { useCallback, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
 import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useHistoryTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 type PagedTransactions = {
   count: number
@@ -23,7 +22,7 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
   const chainId = useSelector(currentChainId)
 
   const dispatch = useRef(useDispatch())
-  const safeAddress = useRef(useSelector(safeAddressFromUrl))
+  const safeAddress = useRef(safeAddressFromUrl())
   const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 

@@ -1,27 +1,25 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { generatePath, useHistory, useParams } from 'react-router-dom'
+import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import { makeStyles } from '@material-ui/core/'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { generatePath, useParams } from 'react-router-dom'
 
 import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { history } from 'src/store'
-import { sm } from 'src/theme/variables'
+import { secondary, sm } from 'src/theme/variables'
+import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import LoadSafeAddressStep, {
   loadSafeAddressStepLabel,
   loadSafeAddressStepValidations,
 } from './steps/LoadSafeAddressStep'
 import LoadSafeOwnersStep, { loadSafeOwnersStepLabel } from './steps/LoadSafeOwnersStep'
 import ReviewLoadStep, { reviewLoadStepLabel } from './steps/ReviewLoadStep'
-import { getRandomName } from 'src/logic/hooks/useMnemonicName'
+import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
-import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
@@ -29,13 +27,14 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { SAFE_ROUTES } from '../routes'
+import { getNetworkSlug, SAFE_ROUTES } from '../routes'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
+  LoadSafeFormValues,
 } from './fields/loadFields'
 import { APP_ENV } from 'src/utils/constants'
 
@@ -43,17 +42,22 @@ function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
 
   const dispatch = useDispatch()
-
-  const classes = useStyles()
+  const history = useHistory()
 
   const { safeAddress } = useParams<{ safeAddress?: string }>()
+  const safeRandomName = useMnemonicSafeName()
 
-  const initialValues = {
-    [FIELD_LOAD_SUGGESTED_SAFE_NAME]: getRandomName('safe'),
-    [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
-    [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
-    [FIELD_SAFE_OWNER_LIST]: [],
-  }
+  const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
+
+  useEffect(() => {
+    const initialValues = {
+      [FIELD_LOAD_SUGGESTED_SAFE_NAME]: safeRandomName,
+      [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
+      [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
+      [FIELD_SAFE_OWNER_LIST]: [],
+    }
+    setInitialFormValues(initialValues)
+  }, [safeAddress, safeRandomName])
 
   const onSubmitLoadSafe = async (values) => {
     const safeName = values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SUGGESTED_SAFE_NAME]
@@ -89,6 +93,7 @@ function Load(): ReactElement {
     await dispatch(addOrUpdateSafe(safeProps))
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        network: getNetworkSlug(),
         safeAddress,
       }),
     )
@@ -102,12 +107,12 @@ function Load(): ReactElement {
     <Page>
       <Block>
         <Row align="center">
-          <IconButton disableRipple onClick={history.goBack} className={classes.backIcon}>
+          <BackIcon disableRipple onClick={history.goBack}>
             <ChevronLeft />
-          </IconButton>
+          </BackIcon>
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
-        <StepperForm initialValues={initialValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
+        <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
           {!isProductionEnv && (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />
@@ -116,7 +121,7 @@ function Load(): ReactElement {
           <StepFormElement label={loadSafeAddressStepLabel} validate={loadSafeAddressStepValidations}>
             <LoadSafeAddressStep />
           </StepFormElement>
-          <StepFormElement label={loadSafeOwnersStepLabel} nextButtonLabel="Review">
+          <StepFormElement label={loadSafeOwnersStepLabel} nextButtonLabel="Continue">
             <LoadSafeOwnersStep />
           </StepFormElement>
           <StepFormElement label={reviewLoadStepLabel} nextButtonLabel="Add">
@@ -130,10 +135,8 @@ function Load(): ReactElement {
 
 export default Load
 
-const useStyles = makeStyles((theme) => ({
-  backIcon: {
-    color: theme.palette.secondary.main,
-    padding: sm,
-    marginRight: '5px',
-  },
-}))
+const BackIcon = styled(IconButton)`
+  color: ${secondary};
+  padding: ${sm};
+  margin-right: 5px;
+`

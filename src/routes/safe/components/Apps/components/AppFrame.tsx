@@ -1,6 +1,6 @@
 import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Loader, Title, Card } from '@gnosis.pm/safe-react-components'
+import { Loader, Card } from '@gnosis.pm/safe-react-components'
 import {
   GetBalanceParams,
   GetTxBySafeTxHashParams,
@@ -16,8 +16,8 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
+import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
 import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
-import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -103,11 +103,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const redirectToBalance = () =>
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        network: getNetworkSlug(),
         safeAddress,
       }),
     )
   const timer = useRef<number>()
   const [appTimeout, setAppTimeout] = useState(false)
+  const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
     if (appIsLoading) {
@@ -262,6 +264,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
       } catch (err) {
+        setAppLoadError(true)
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
@@ -277,6 +280,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   if (!appUrl) {
     throw Error('App url No provided or it is invalid.')
+  }
+
+  if (appTimeout || appLoadError) {
+    throw Error('There was an error loading the Safe App. There might be a problem with the app provider.')
   }
 
   if (!safeApp) {
@@ -296,11 +303,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
-            {appTimeout && (
-              <Title size="xs">
-                The safe app is taking longer than usual to load. There might be a problem with the app provider.
-              </Title>
-            )}
             <Loader size="md" />
           </LoadingContainer>
         )}

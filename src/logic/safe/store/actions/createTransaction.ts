@@ -1,9 +1,7 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { push } from 'connected-react-router'
 import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
-
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
@@ -19,7 +17,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getNetworkSlug, SAFE_ROUTES, history } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -82,12 +80,11 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      dispatch(
-        push(
-          generatePath(SAFE_ROUTES.TRANSACTIONS, {
-            safeAddress,
-          }),
-        ),
+      history.push(
+        generatePath(SAFE_ROUTES.TRANSACTIONS, {
+          network: getNetworkSlug(),
+          safeAddress,
+        }),
       )
     }
 

@@ -1,10 +1,10 @@
-import React, { createContext, ReactElement, useContext, useState } from 'react'
-import { history } from 'src/store'
+import { useContext, ReactElement, useState, Children, createContext } from 'react'
+import { history } from 'src/routes/routes'
 
-const stepperContext = createContext({})
+const StepperContext = createContext({})
 
 function useStepper(): any {
-  const context = useContext(stepperContext)
+  const context = useContext(StepperContext)
 
   const hasContextDefined = Object.keys(context).length > 0
 
@@ -34,7 +34,7 @@ function StepperProvider({
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
-  const steps = React.Children.toArray(stepsComponents)
+  const steps = Children.toArray(stepsComponents)
   const CurrentStepComponent: any = steps[currentStep]
 
   const nextButtonType = CurrentStepComponent.props.nextButtonType
@@ -88,7 +88,7 @@ function StepperProvider({
     ...store,
   }
 
-  return <stepperContext.Provider value={state}>{children}</stepperContext.Provider>
+  return <StepperContext.Provider value={state}>{children}</StepperContext.Provider>
 }
 
 export { useStepper, StepperProvider }

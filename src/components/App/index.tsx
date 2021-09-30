@@ -2,14 +2,13 @@ import { useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useRouteMatch, useHistory, generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 
 import AlertIcon from 'src/assets/icons/alert.svg'
 import CheckIcon from 'src/assets/icons/check.svg'
 import ErrorIcon from 'src/assets/icons/error.svg'
 import InfoIcon from 'src/assets/icons/info.svg'
-
 import AppLayout from 'src/components/AppLayout'
 import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
@@ -19,8 +18,8 @@ import Img from 'src/components/layout/Img'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { getNetworkSlug, BASE_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
@@ -29,10 +28,10 @@ import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUp
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
+import { safeAddressFromUrl } from 'src/utils/router'
 
 const notificationStyles = {
   success: {
@@ -64,22 +63,16 @@ const App: React.FC = ({ children }) => {
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
+  const matchSafe = useRouteMatch({ path: BASE_SAFE_ROUTE, strict: false })
   const history = useHistory()
-  const {
-    address: safeAddress,
-    name: safeName,
-    totalFiatBalance: currentSafeBalance,
-  } = useSelector(currentSafeWithNames)
-  const addressFromUrl = useSelector(safeAddressFromUrl)
+  const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
+  const addressFromUrl = safeAddressFromUrl()
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-  // if safe is loaded via URL, `safeAddress` won't be available until store is populated with temp information
-  // Temp information will be built from `addressFromUrl`
-  const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
-  useSafeScheduledUpdates(safeLoaded, safeAddress)
+  const safeLoaded = useLoadSafe(addressFromUrl)
+  useSafeScheduledUpdates(safeLoaded, addressFromUrl)
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
@@ -89,8 +82,11 @@ const App: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (matchSafe?.isExact) {
-      history.push(WELCOME_ADDRESS)
-      return
+      history.push(
+        generatePath(WELCOME_ROUTE, {
+          network: getNetworkSlug(),
+        }),
+      )
     }
   }, [matchSafe, history])
 
@@ -121,7 +117,7 @@ const App: React.FC = ({ children }) => {
 
           <AppLayout
             sidebarItems={sidebarItems}
-            safeAddress={safeAddress}
+            safeAddress={addressFromUrl}
             safeName={safeName}
             balance={balance}
             granted={granted}
@@ -139,7 +135,7 @@ const App: React.FC = ({ children }) => {
             selectedToken={sendFunds.selectedToken}
           />
 
-          {safeAddress && (
+          {addressFromUrl && (
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
@@ -147,7 +143,7 @@ const App: React.FC = ({ children }) => {
               paperClassName="receive-modal"
               title="Receive Tokens"
             >
-              <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
+              <ReceiveModal onClose={onReceiveHide} safeAddress={addressFromUrl} safeName={safeName} />
             </Modal>
           )}
         </>
