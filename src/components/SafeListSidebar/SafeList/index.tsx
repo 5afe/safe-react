@@ -94,7 +94,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                 />
               ))}
               {isCurrentNetwork && ownedSafes.length > 0 && (
-                <ListItem classes={{ root: classes.listItemCollapse }}>
+                <ListItem classes={{ root: classes.listItemCollapse }} component="div">
                   <Collapse
                     title={`Safes owned on ${label} (${ownedSafes.length})`}
                     defaultExpanded={shouldExpandOwnedSafes}
