@@ -2,8 +2,8 @@ import React, { JSXElementConstructor, ReactElement, useMemo, useState } from 'r
 import { useEffect } from 'react'
 import { Form } from 'react-final-form'
 import { Validator } from '../forms/validator'
-import Stepper, { StepElement, StepElementType } from '../NewStepper/Stepper'
-import { useStepper } from '../NewStepper/stepperContext'
+import Stepper, { StepElement, StepElementType } from '../Stepper/Stepper'
+import { useStepper } from '../Stepper/stepperContext'
 
 type StepperFormProps = {
   testId: string

@@ -22,7 +22,7 @@ import {
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { useStepper } from 'src/components/NewStepper/stepperContext'
+import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
 export const reviewNewSafeStepLabel = 'Review'

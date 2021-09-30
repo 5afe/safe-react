@@ -11,7 +11,7 @@ import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { FIELD_CREATE_CUSTOM_SAFE_NAME, FIELD_CREATE_SUGGESTED_SAFE_NAME } from '../fields/createSafeFields'
-import { useStepper } from 'src/components/NewStepper/stepperContext'
+import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const nameNewSafeStepLabel = 'Name'
