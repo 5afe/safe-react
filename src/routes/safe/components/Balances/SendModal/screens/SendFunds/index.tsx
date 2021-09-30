@@ -144,29 +144,31 @@ const SendFunds = ({
   const spendingLimits = useSelector(currentSafeSpendingLimits)
   const currentUser = useSelector(userAccountSelector)
 
-  const sendFundsValidation = (values) => {
+  const sendFundsValidation = (values: { amount?: string; token?: string; txType?: string }) => {
     const { amount, token: tokenAddress, txType } = values ?? {}
-    if (!amount || !tokenAddress) {
-      return
-    }
+    const tokenValidation = composeValidators(required)(tokenAddress)
 
     const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
     const tokenDecimals =
-      Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals) || nativeCoin.decimals
+      (tokenAddress && Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals)) ||
+      nativeCoin.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
       minMaxDecimalsLength(1, tokenDecimals),
       minValue(0, false),
-      maxValue(
-        isSpendingLimit
-          ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
-          : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
-      ),
+      tokenAddress
+        ? maxValue(
+            isSpendingLimit
+              ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
+              : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
+          )
+        : () => undefined,
     )(amount)
 
     return {
       amount: amountValidation,
+      token: tokenValidation,
     }
   }
 
@@ -202,7 +204,9 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook[scannedAddress]?.name ?? ''
+            const scannedName = addressBook.find(({ address }) => {
+              return sameAddress(scannedAddress, address)
+            })?.name
             const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
             if (!addressErrorMessage) {
               mutators.setRecipient(scannedAddress)
