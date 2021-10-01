@@ -46,27 +46,6 @@ describe('getSubdomainUrl', () => {
   })
 })
 
-describe('addMigratedNetwork', () => {
-  it('should not add already migrated network', () => {
-    Object.defineProperty(window, 'localStorage', {
-      writable: true,
-      value: { getItem: jest.fn(() => JSON.stringify(['rinkeby'])), setItem: jest.fn() },
-    })
-
-    migrationUtils.addMigratedNetwork('rinkeby')
-    expect(localStorage.setItem).not.toHaveBeenCalled()
-  })
-  it('should add newly migrated network', () => {
-    Object.defineProperty(window, 'localStorage', {
-      writable: true,
-      value: { getItem: jest.fn(() => JSON.stringify(['xdai'])), setItem: jest.fn() },
-    })
-
-    migrationUtils.addMigratedNetwork('rinkeby')
-    expect(localStorage.setItem).toHaveBeenCalledWith('SAFE__migratedNetworks', JSON.stringify(['xdai', 'rinkeby']))
-  })
-})
-
 describe('getNetworksToMigrate', () => {
   it('returns all networks when no localStorage value exists', () => {
     Object.defineProperty(window, 'localStorage', {
@@ -77,6 +56,7 @@ describe('getNetworksToMigrate', () => {
     const networks = migrationUtils.getNetworksToMigrate()
     expect(networks).toEqual(['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai'])
   })
+
   it('returns non-migrated networks', () => {
     Object.defineProperty(window, 'localStorage', {
       writable: true,
@@ -86,6 +66,7 @@ describe('getNetworksToMigrate', () => {
     const networks = migrationUtils.getNetworksToMigrate()
     expect(networks).toEqual(['polygon', 'ewc', 'xdai'])
   })
+
   it('returns an empty array when all networks are migrated', () => {
     Object.defineProperty(window, 'localStorage', {
       writable: true,
@@ -109,6 +90,7 @@ describe('isNetworkSubdomain', () => {
 
     expect(migrationUtils.isNetworkSubdomain()).toBe(true)
   })
+
   it('returns false if not subdomain', () => {
     Object.defineProperty(window, 'location', {
       writable: true,
@@ -119,12 +101,22 @@ describe('isNetworkSubdomain', () => {
   })
 })
 describe('handleMessage', () => {
-  let addressBookCallbackMock
-  let immortalDataCallbackMock
+  let addressBookCallbackMock: () => void
+  let immortalDataCallbackMock: () => void
+  let doneCallback: () => void
 
   beforeEach(() => {
     addressBookCallbackMock = jest.fn()
     immortalDataCallbackMock = jest.fn()
+    doneCallback = jest.fn()
+
+    Object.defineProperty(window, 'localStorage', {
+      writable: true,
+      value: {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+      },
+    })
   })
 
   afterEach(() => {
@@ -139,18 +131,46 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
+        network: 'rinkeby',
         payload: '',
       },
       origin: 'gnosis-safe.io',
     } as MessageEvent
-    const addressBookCallbackMock = jest.fn()
-    const immortalDataCallbackMock = jest.fn()
 
-    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock)
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
 
     expect(addressBookCallbackMock).not.toHaveBeenCalled()
     expect(immortalDataCallbackMock).not.toHaveBeenCalled()
+    expect(doneCallback).not.toHaveBeenCalled()
   })
+
+  it('should return if there is no network in the event', () => {
+    const exceptions = require('src/logic/exceptions/CodedException')
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { hostname: 'gnosis-safe.io' },
+    })
+
+    Object.defineProperty(window, 'origin', {
+      writable: true,
+      value: 'https://gnosis-safe.io',
+    })
+
+    const eventMock = {
+      data: {
+        payload: '{}',
+      },
+      origin: 'https://rinkeby.gnosis-safe.io',
+    } as MessageEvent
+
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
+
+    expect(addressBookCallbackMock).not.toHaveBeenCalled()
+    expect(immortalDataCallbackMock).not.toHaveBeenCalled()
+    expect(doneCallback).not.toHaveBeenCalled()
+    expect(exceptions.trackError).not.toHaveBeenCalled()
+  })
+
   it('should return if there is a completely malformed payload', () => {
     const exceptions = require('src/logic/exceptions/CodedException')
     Object.defineProperty(window, 'location', {
@@ -165,17 +185,20 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
+        network: 'rinkeby',
         payload: 'isdufhgoisdfuhglsdf',
       },
       origin: 'https://rinkeby.gnosis-safe.io',
     } as MessageEvent
 
-    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock)
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
 
     expect(addressBookCallbackMock).not.toHaveBeenCalled()
     expect(immortalDataCallbackMock).not.toHaveBeenCalled()
+    expect(doneCallback).not.toHaveBeenCalled()
     expect(exceptions.trackError).toHaveBeenCalled()
   })
+
   it('should not try to merge the address book if the address book payload is malformed', () => {
     Object.defineProperty(window, 'localStorage', {
       writable: true,
@@ -196,6 +219,7 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
+        network: 'rinkeby',
         payload: JSON.stringify({
           SAFE__addressBook: 'sdfiguhfdoshgudslf',
           ['_immortal|v2_RINKEBY__SAFES']: JSON.stringify({ test: 'aisfdhoilsaf' }),
@@ -205,13 +229,15 @@ describe('handleMessage', () => {
       origin: 'https://rinkeby.gnosis-safe.io',
     } as MessageEvent
 
-    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock)
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
 
     expect(addressBookCallbackMock).not.toHaveBeenCalled()
     expect(exceptions.trackError).toHaveBeenCalledTimes(1)
     expect(immortalDataCallbackMock).toHaveBeenCalledTimes(1)
     expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY__SAFES', { test: 'aisfdhoilsaf' })
+    expect(doneCallback).not.toHaveBeenCalled()
   })
+
   it('should not save localStorage data if the localStorage payload is malformed', () => {
     Object.defineProperty(window, 'localStorage', {
       writable: true,
@@ -232,6 +258,7 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
+        network: 'rinkeby',
         payload: JSON.stringify({
           SAFE__addressBook: JSON.stringify([]),
           ['_immortal|v2_RINKEBY__SAFES']: 'sdifughosidfghdfgs',
@@ -240,12 +267,14 @@ describe('handleMessage', () => {
       origin: 'https://rinkeby.gnosis-safe.io',
     } as MessageEvent
 
-    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock)
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
 
     expect(addressBookCallbackMock).toHaveBeenCalledWith([])
     expect(immortalDataCallbackMock).not.toHaveBeenCalled()
     expect(exceptions.trackError).toHaveBeenCalledTimes(1)
+    expect(doneCallback).not.toHaveBeenCalled()
   })
+
   it('should migrate correctly formed address book/localStorage data', () => {
     Object.defineProperty(window, 'localStorage', {
       writable: true,
@@ -267,6 +296,7 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
+        network: 'rinkeby',
         payload: JSON.stringify({
           SAFE__addressBook: JSON.stringify([]),
           ['_immortal|v2_RINKEBY__SAFES']: JSON.stringify({}),
@@ -275,9 +305,40 @@ describe('handleMessage', () => {
       origin: 'https://rinkeby.gnosis-safe.io',
     } as MessageEvent
 
-    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock)
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
 
     expect(addressBookCallbackMock).toHaveBeenCalledWith([])
     expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY__SAFES', {})
+  })
+
+  it('should call doneCallbck when all networks are migrated', () => {
+    Object.defineProperty(window, 'localStorage', {
+      writable: true,
+      value: {
+        getItem: jest.fn(() => JSON.stringify(['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai'])),
+        setItem: jest.fn(),
+      },
+    })
+
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { hostname: 'gnosis-safe.io' },
+    })
+
+    Object.defineProperty(window, 'origin', {
+      writable: true,
+      value: 'https://gnosis-safe.io',
+    })
+
+    const eventMock = {
+      data: {
+        network: 'rinkeby',
+        payload: JSON.stringify({}),
+      },
+      origin: 'https://rinkeby.gnosis-safe.io',
+    } as MessageEvent
+
+    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
+    expect(doneCallback).toHaveBeenCalled()
   })
 })

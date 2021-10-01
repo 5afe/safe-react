@@ -19,7 +19,8 @@ export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
   } else if (hostname.includes('.gnosisdev.com')) {
     return `https://pr2778--safereact.review.gnosisdev.com/${network}/app`
   } else if (hostname.includes('localhost')) {
-    return 'http://localhost:3001'
+    return `https://pr2778--safereact.review.gnosisdev.com/${network}/app`
+    //return 'http://localhost:3001'
   } else {
     return ''
   }
@@ -36,13 +37,14 @@ function getMigratedNetworks(): NETWORK_TO_MIGRATE[] {
   return migratedNetworks
 }
 
-export function addMigratedNetwork(network: NETWORK_TO_MIGRATE): void {
+function addMigratedNetwork(network: NETWORK_TO_MIGRATE): string[] {
   const migratedNetworks = getMigratedNetworks()
   if (migratedNetworks.includes(network)) {
-    return
+    return migratedNetworks
   }
   const newValue = [...migratedNetworks, network]
   localStorage.setItem(MIGRATION_KEY, JSON.stringify(newValue))
+  return newValue
 }
 
 export function getNetworksToMigrate(): NETWORK_TO_MIGRATE[] {
@@ -66,13 +68,21 @@ function parsePayload<T>(entry: string): T | null {
 }
 
 export function handleMessage(
-  event: MessageEvent,
+  event: MessageEvent & { data: { network: string; payload: string } },
   addressBookCallback: (data: AddressBookState) => void,
   immortalDataCallback: (key: string, value: unknown) => void,
+  doneCallback: () => void,
 ): void {
   const isTrustedOrigin = networks.some((network) => getSubdomainUrl(network).startsWith(event.origin))
   const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
   if (!isValidOrigin) return
+  if (!event.data.network) return
+
+  // Mark the network as migrated, even if it didn't send any payload
+  const doneNetworks = addMigratedNetwork(event.data.network)
+  if (doneNetworks.length === networks.length) {
+    doneCallback()
+  }
 
   const payload = parsePayload<Record<string, string>>(event.data.payload)
   if (!payload) {
