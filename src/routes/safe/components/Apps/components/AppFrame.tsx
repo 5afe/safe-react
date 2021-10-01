@@ -40,7 +40,7 @@ import { SignMessageModal } from './SignMessageModal'
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% + 59px);
+  height: 100%;
   margin: 0 -16px;
 `
 
