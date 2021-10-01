@@ -6,7 +6,7 @@ const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IMMORTAL_PREFIX = '_immortal|'
 const MAINNET_PREFIX = 'MAINNET'
 
-const networks = ['bsc', 'polygon', 'rinkeby', 'xdai', 'ewc', 'volta'] as const
+const networks = ['polygon', 'bsc', 'rinkeby', 'xdai', 'ewc', 'volta'] as const
 export type NETWORK_TO_MIGRATE = typeof networks[number]
 
 export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {

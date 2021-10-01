@@ -54,7 +54,7 @@ describe('getNetworksToMigrate', () => {
     })
 
     const networks = migrationUtils.getNetworksToMigrate()
-    expect(networks).toEqual(['bsc', 'polygon', 'rinkeby', 'xdai', 'ewc', 'volta'])
+    expect(networks).toEqual(['polygon', 'bsc', 'rinkeby', 'xdai', 'ewc', 'volta'])
   })
 
   it('returns non-migrated networks', () => {
