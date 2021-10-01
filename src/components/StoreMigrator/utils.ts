@@ -6,7 +6,7 @@ const ADDRESS_BOOK_KEY = 'SAFE__addressBook'
 const IMMORTAL_PREFIX = '_immortal|'
 const MAINNET_PREFIX = 'MAINNET'
 
-const networks = ['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai'] as const
+const networks = ['bsc', 'polygon', 'rinkeby', 'xdai', 'ewc', 'volta'] as const
 export type NETWORK_TO_MIGRATE = typeof networks[number]
 
 export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
@@ -19,7 +19,7 @@ export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
   } else if (hostname.includes('.gnosisdev.com')) {
     return `https://pr2778--safereact.review.gnosisdev.com/${network}/app`
   } else if (hostname.includes('localhost')) {
-    return 'http://localhost:3001'
+    return 'http://localhost:3001/app'
   } else {
     return ''
   }
@@ -36,18 +36,13 @@ function getMigratedNetworks(): NETWORK_TO_MIGRATE[] {
   return migratedNetworks
 }
 
-function extractNetwork(url: string): NETWORK_TO_MIGRATE | void {
-  return networks.find((network) => url.includes(network))
-}
-
-export function addMigratedNetwork(network: NETWORK_TO_MIGRATE): string[] {
+export function addMigratedNetwork(network: NETWORK_TO_MIGRATE) {
   const migratedNetworks = getMigratedNetworks()
   if (migratedNetworks.includes(network)) {
-    return migratedNetworks
+    return
   }
   const newValue = [...migratedNetworks, network]
   localStorage.setItem(MIGRATION_KEY, JSON.stringify(newValue))
-  return newValue
 }
 
 export function getNetworksToMigrate(): NETWORK_TO_MIGRATE[] {
@@ -80,21 +75,15 @@ function isTrustedOrigin(event: MessageEvent): boolean {
 
 export function handleMessage(
   event: MessageEvent & { data: { payload: string } },
+  receivedCallback: () => void,
   addressBookCallback: (data: AddressBookState) => void,
   immortalDataCallback: (key: string, value: unknown) => void,
-  doneCallback: () => void,
 ): void {
+  if (!event.data.payload) return
   if (isSameOrigin(event) || !isTrustedOrigin(event)) return
 
-  const network = extractNetwork(event.origin)
-  if (!network) return
-
-  // Mark the network as migrated
-  const migratedNetworks = addMigratedNetwork(network)
-  // When all networks are migrated, call the done callback
-  if (migratedNetworks.length === networks.length) {
-    doneCallback()
-  }
+  // Message acknowledged
+  receivedCallback()
 
   // Parse the JSON payload
   const payload = parsePayload<Record<string, string>>(event.data.payload)
