@@ -19,8 +19,7 @@ export function getSubdomainUrl(network: NETWORK_TO_MIGRATE): string {
   } else if (hostname.includes('.gnosisdev.com')) {
     return `https://pr2778--safereact.review.gnosisdev.com/${network}/app`
   } else if (hostname.includes('localhost')) {
-    return `https://pr2778--safereact.review.gnosisdev.com/${network}/app`
-    //return 'http://localhost:3001'
+    return 'http://localhost:3001'
   } else {
     return ''
   }
@@ -37,7 +36,11 @@ function getMigratedNetworks(): NETWORK_TO_MIGRATE[] {
   return migratedNetworks
 }
 
-function addMigratedNetwork(network: NETWORK_TO_MIGRATE): string[] {
+function extractNetwork(url: string): NETWORK_TO_MIGRATE | void {
+  return networks.find((network) => url.includes(network))
+}
+
+export function addMigratedNetwork(network: NETWORK_TO_MIGRATE): string[] {
   const migratedNetworks = getMigratedNetworks()
   if (migratedNetworks.includes(network)) {
     return migratedNetworks
@@ -67,23 +70,33 @@ function parsePayload<T>(entry: string): T | null {
   }
 }
 
+function isSameOrigin(event: MessageEvent): boolean {
+  return event.origin === self.origin
+}
+
+function isTrustedOrigin(event: MessageEvent): boolean {
+  return networks.some((network) => getSubdomainUrl(network).startsWith(event.origin))
+}
+
 export function handleMessage(
-  event: MessageEvent & { data: { network: string; payload: string } },
+  event: MessageEvent & { data: { payload: string } },
   addressBookCallback: (data: AddressBookState) => void,
   immortalDataCallback: (key: string, value: unknown) => void,
   doneCallback: () => void,
 ): void {
-  const isTrustedOrigin = networks.some((network) => getSubdomainUrl(network).startsWith(event.origin))
-  const isValidOrigin = event.origin !== self.origin && isTrustedOrigin
-  if (!isValidOrigin) return
-  if (!event.data.network) return
+  if (isSameOrigin(event) || !isTrustedOrigin(event)) return
 
-  // Mark the network as migrated, even if it didn't send any payload
-  const doneNetworks = addMigratedNetwork(event.data.network)
-  if (doneNetworks.length === networks.length) {
+  const network = extractNetwork(event.origin)
+  if (!network) return
+
+  // Mark the network as migrated
+  const migratedNetworks = addMigratedNetwork(network)
+  // When all networks are migrated, call the done callback
+  if (migratedNetworks.length === networks.length) {
     doneCallback()
   }
 
+  // Parse the JSON payload
   const payload = parsePayload<Record<string, string>>(event.data.payload)
   if (!payload) {
     return

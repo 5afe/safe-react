@@ -131,7 +131,6 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
-        network: 'rinkeby',
         payload: '',
       },
       origin: 'gnosis-safe.io',
@@ -142,33 +141,7 @@ describe('handleMessage', () => {
     expect(addressBookCallbackMock).not.toHaveBeenCalled()
     expect(immortalDataCallbackMock).not.toHaveBeenCalled()
     expect(doneCallback).not.toHaveBeenCalled()
-  })
-
-  it('should return if there is no network in the event', () => {
-    const exceptions = require('src/logic/exceptions/CodedException')
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: { hostname: 'gnosis-safe.io' },
-    })
-
-    Object.defineProperty(window, 'origin', {
-      writable: true,
-      value: 'https://gnosis-safe.io',
-    })
-
-    const eventMock = {
-      data: {
-        payload: '{}',
-      },
-      origin: 'https://rinkeby.gnosis-safe.io',
-    } as MessageEvent
-
-    migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
-
-    expect(addressBookCallbackMock).not.toHaveBeenCalled()
-    expect(immortalDataCallbackMock).not.toHaveBeenCalled()
-    expect(doneCallback).not.toHaveBeenCalled()
-    expect(exceptions.trackError).not.toHaveBeenCalled()
+    expect(localStorage.setItem).not.toHaveBeenCalled()
   })
 
   it('should return if there is a completely malformed payload', () => {
@@ -185,7 +158,6 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
-        network: 'rinkeby',
         payload: 'isdufhgoisdfuhglsdf',
       },
       origin: 'https://rinkeby.gnosis-safe.io',
@@ -197,6 +169,7 @@ describe('handleMessage', () => {
     expect(immortalDataCallbackMock).not.toHaveBeenCalled()
     expect(doneCallback).not.toHaveBeenCalled()
     expect(exceptions.trackError).toHaveBeenCalled()
+    expect(localStorage.setItem).toHaveBeenCalledWith('SAFE__migratedNetworks', '["rinkeby"]')
   })
 
   it('should not try to merge the address book if the address book payload is malformed', () => {
@@ -219,7 +192,6 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
-        network: 'rinkeby',
         payload: JSON.stringify({
           SAFE__addressBook: 'sdfiguhfdoshgudslf',
           ['_immortal|v2_RINKEBY__SAFES']: JSON.stringify({ test: 'aisfdhoilsaf' }),
@@ -236,6 +208,7 @@ describe('handleMessage', () => {
     expect(immortalDataCallbackMock).toHaveBeenCalledTimes(1)
     expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY__SAFES', { test: 'aisfdhoilsaf' })
     expect(doneCallback).not.toHaveBeenCalled()
+    expect(localStorage.setItem).toHaveBeenCalledWith('SAFE__migratedNetworks', '["rinkeby"]')
   })
 
   it('should not save localStorage data if the localStorage payload is malformed', () => {
@@ -258,7 +231,6 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
-        network: 'rinkeby',
         payload: JSON.stringify({
           SAFE__addressBook: JSON.stringify([]),
           ['_immortal|v2_RINKEBY__SAFES']: 'sdifughosidfghdfgs',
@@ -273,6 +245,7 @@ describe('handleMessage', () => {
     expect(immortalDataCallbackMock).not.toHaveBeenCalled()
     expect(exceptions.trackError).toHaveBeenCalledTimes(1)
     expect(doneCallback).not.toHaveBeenCalled()
+    expect(localStorage.setItem).toHaveBeenCalledWith('SAFE__migratedNetworks', '["rinkeby"]')
   })
 
   it('should migrate correctly formed address book/localStorage data', () => {
@@ -296,7 +269,6 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
-        network: 'rinkeby',
         payload: JSON.stringify({
           SAFE__addressBook: JSON.stringify([]),
           ['_immortal|v2_RINKEBY__SAFES']: JSON.stringify({}),
@@ -309,14 +281,18 @@ describe('handleMessage', () => {
 
     expect(addressBookCallbackMock).toHaveBeenCalledWith([])
     expect(immortalDataCallbackMock).toHaveBeenCalledWith('v2_RINKEBY__SAFES', {})
+    expect(localStorage.setItem).toHaveBeenCalledWith('SAFE__migratedNetworks', '["rinkeby"]')
   })
 
   it('should call doneCallbck when all networks are migrated', () => {
+    const store = {
+      SAFE__migratedNetworks: ['bsc', 'ewc', 'rinkeby', 'xdai'],
+    }
     Object.defineProperty(window, 'localStorage', {
       writable: true,
       value: {
-        getItem: jest.fn(() => JSON.stringify(['bsc', 'polygon', 'ewc', 'rinkeby', 'xdai'])),
-        setItem: jest.fn(),
+        getItem: jest.fn((key) => JSON.stringify(store[key])),
+        setItem: jest.fn((key, value) => (store[key] = value)),
       },
     })
 
@@ -332,13 +308,16 @@ describe('handleMessage', () => {
 
     const eventMock = {
       data: {
-        network: 'rinkeby',
         payload: JSON.stringify({}),
       },
-      origin: 'https://rinkeby.gnosis-safe.io',
+      origin: 'https://polygon.gnosis-safe.io',
     } as MessageEvent
 
     migrationUtils.handleMessage(eventMock, addressBookCallbackMock, immortalDataCallbackMock, doneCallback)
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'SAFE__migratedNetworks',
+      JSON.stringify(['bsc', 'ewc', 'rinkeby', 'xdai', 'polygon']),
+    )
     expect(doneCallback).toHaveBeenCalled()
   })
 })
