@@ -493,7 +493,7 @@ export const StyledScrollableBar = styled.div`
 `
 
 export const ScrollableTransactionsContainer = styled(StyledScrollableBar)`
-  margin-bottom: 16px;
+  height: calc(100vh - 170px);
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
@@ -508,7 +508,7 @@ export const Centered = styled.div<{ padding?: number }>`
 `
 
 export const HorizontallyCentered = styled(Centered)<{ isVisible: boolean }>`
-  display: ${({ isVisible }) => (isVisible ? 'block' : 'none')};
+  display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
   height: 100px;
 `
 
