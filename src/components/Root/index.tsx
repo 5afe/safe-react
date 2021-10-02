@@ -16,6 +16,7 @@ import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
 import { getNetworkName } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
+import StoreMigrator from 'src/components/StoreMigrator'
 
 const Root = (): React.ReactElement => {
   const { pathname, hash, search } = window.location
@@ -40,6 +41,7 @@ const Root = (): React.ReactElement => {
               <Loader size="md" />
             </LoadingContainer>,
           )}
+          <StoreMigrator />
         </App>
       </Sentry.ErrorBoundary>
     </Providers>

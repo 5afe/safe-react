@@ -90,7 +90,7 @@ function Load(): ReactElement {
     const storedSafes = (await loadStoredSafes()) || {}
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
-    await dispatch(addOrUpdateSafe(safeProps))
+    dispatch(addOrUpdateSafe(safeProps))
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
         network: getNetworkSlug(),
