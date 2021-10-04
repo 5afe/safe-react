@@ -3,10 +3,9 @@ import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getClientGatewayUrl } from 'src/config'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
-import { history } from 'src/routes/routes'
+import { history, SAFE_ROUTES } from 'src/routes/newroutes'
 import LoadSafePage from './LoadSafePage'
 import { generatePath } from 'react-router-dom'
-import { getNetworkSlug, SAFE_ROUTES } from '../routes'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')

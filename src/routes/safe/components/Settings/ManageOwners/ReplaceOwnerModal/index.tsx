@@ -16,8 +16,8 @@ import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/Man
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
-import { safeAddressFromUrl } from 'src/utils/router'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
+import { getSafeAddressFromUrl } from 'src/routes/newroutes'
 
 export type OwnerValues = {
   address: string
@@ -67,7 +67,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = getSafeAddressFromUrl()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   useEffect(

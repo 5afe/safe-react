@@ -1,6 +1,6 @@
-import { generatePath } from 'react-router-dom'
 import { Action } from 'redux-actions'
 import { AnyAction } from 'redux'
+import { TransactionListItem, Transaction, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
@@ -17,13 +17,17 @@ import {
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { safesAsMap } from 'src/logic/safe/store/selectors'
 import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionListItem, Transaction, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
-import { getNetworkSlug, SAFE_ROUTES, history } from 'src/routes/routes'
-import { safeAddressFromUrl } from 'src/utils/router'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
+import {
+  SAFE_ROUTES_WITH_ADDRESS,
+  history,
+  getSafeAddressFromUrl,
+  generateSafeRoute,
+  SAFE_ROUTE,
+} from 'src/routes/newroutes'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -67,16 +71,9 @@ const sendAwaitingTransactionNotification = async (
   await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
 }
 
-const onNotificationClicked = (dispatch, notificationKey, safeAddress) => () => {
+const onNotificationClicked = (dispatch, notificationKey) => () => {
   dispatch(closeSnackbarAction({ key: notificationKey }))
-  dispatch(
-    history.push(
-      generatePath(SAFE_ROUTES.TRANSACTIONS, {
-        network: getNetworkSlug(),
-        safeAddress,
-      }),
-    ),
-  )
+  history.push(SAFE_ROUTES_WITH_ADDRESS.TRANSACTIONS)
 }
 
 // any/AnyAction used as our Redux state is not typed
@@ -129,7 +126,7 @@ const notificationsMiddleware =
             safeAddress,
             awaitingTxsSubmissionDateList,
             notificationKey,
-            onNotificationClicked(dispatch, notificationKey, safeAddress),
+            onNotificationClicked(dispatch, notificationKey),
           )
 
           break
@@ -137,7 +134,7 @@ const notificationsMiddleware =
         case ADD_OR_UPDATE_SAFE: {
           const state = store.getState()
           const safe = action.payload
-          const currentSafeAddress = safeAddressFromUrl() || safe.address
+          const currentSafeAddress = getSafeAddressFromUrl() || safe.address
           if (!currentSafeAddress || !safe.currentVersion) {
             break
           }
@@ -147,14 +144,7 @@ const notificationsMiddleware =
           const notificationKey = `${currentSafeAddress}-update`
           const onNotificationClicked = () => {
             dispatch(closeSnackbarAction({ key: notificationKey }))
-            dispatch(
-              history.push(
-                generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
-                  network: getNetworkSlug(),
-                  safeAddress: currentSafeAddress,
-                }),
-              ),
-            )
+            history.push(generateSafeRoute(SAFE_ROUTE, currentSafeAddress))
           }
 
           if (version?.needUpdate && isUserOwner) {

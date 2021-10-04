@@ -10,7 +10,6 @@ import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { Divider, Icon } from '@gnosis.pm/safe-react-components'
-import { generatePath } from 'react-router'
 
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
@@ -19,7 +18,6 @@ import { sameString } from 'src/utils/strings'
 import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
-import { ROOT_ROUTE } from 'src/routes/routes'
 import { setNetwork } from 'src/logic/config/utils'
 
 const styles = {
@@ -91,11 +89,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
     (network: NetworkInfo) => {
       clickAway()
       setNetwork(network.id)
-      history.push(
-        generatePath(ROOT_ROUTE, {
-          network: network.label.toLowerCase(),
-        }),
-      )
+      history.push('/')
     },
     [clickAway, history],
   )

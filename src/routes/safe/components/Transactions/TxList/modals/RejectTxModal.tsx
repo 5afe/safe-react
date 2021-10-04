@@ -19,7 +19,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { getSafeAddressFromUrl } from 'src/routes/newroutes'
 
 type Props = {
   isOpen: boolean
@@ -29,7 +29,7 @@ type Props = {
 
 export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = getSafeAddressFromUrl()
   const classes = useStyles()
 
   const {

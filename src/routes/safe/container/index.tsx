@@ -1,13 +1,13 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
+
 import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -24,7 +24,7 @@ const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList
 const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
-  const safeAddress = safeAddressFromUrl()
+  console.log('Safes')
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const owners = useSelector(currentSafeOwners)
   const isSafeLoaded = owners.length > 0
@@ -45,11 +45,6 @@ const Container = (): React.ReactElement => {
     )
   }
 
-  const baseRouteSlugs = {
-    network: getNetworkSlug(),
-    safeAddress,
-  }
-
   const closeGenericModal = () => {
     if (modal.onClose) {
       modal.onClose?.()
@@ -67,11 +62,7 @@ const Container = (): React.ReactElement => {
   return (
     <>
       <Switch>
-        <Route
-          exact
-          path={`${SAFE_ROUTES.ASSETS_BALANCES}/:assetType?`}
-          render={() => wrapInSuspense(<Balances />, null)}
-        />
+        <Route exact path={SAFE_ROUTES.ASSETS_BALANCES} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={SAFE_ROUTES.TRANSACTIONS} render={() => wrapInSuspense(<TxList />, null)} />
         <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Route
@@ -79,13 +70,13 @@ const Container = (): React.ReactElement => {
           path={SAFE_ROUTES.APPS}
           render={({ history }) => {
             if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
-              history.push(generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs))
+              history.push(SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES)
             }
             return wrapInSuspense(<Apps />, null)
           }}
         />
-        <Route path={SAFE_ROUTES.SETTINGS_BASE_ROUTE} render={() => wrapInSuspense(<Settings />, null)} />
-        <Redirect to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs)} />
+        <Route path={SAFE_ROUTES.SETTINGS} render={() => wrapInSuspense(<Settings />, null)} />
+        <Redirect to={SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES} />
       </Switch>
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>

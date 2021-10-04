@@ -2,7 +2,6 @@ import { ReactElement, useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { backOff } from 'exponential-backoff'
 import { TransactionReceipt } from 'web3-core'
-import { generatePath } from 'react-router'
 import { GenericModal } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
@@ -10,8 +9,6 @@ import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeDeployment } from 'src/routes/opening'
-import { getNetworkSlug, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
-import { history } from 'src/routes/routes'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { sleep } from 'src/utils/timer'
@@ -35,6 +32,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
+import { WELCOME_ROUTE, history, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
 
 type ModalDataType = {
   safeAddress: string
@@ -43,7 +41,7 @@ type ModalDataType = {
 }
 
 const goToWelcomePage = () => {
-  history.push(generatePath(WELCOME_ROUTE, { network: getNetworkSlug() }))
+  history.push(WELCOME_ROUTE)
 }
 
 function SafeCreationProcess(): ReactElement {
@@ -199,18 +197,14 @@ function SafeCreationProcess(): ReactElement {
 
   async function onClickModalButton() {
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-    const { safeAddress, safeName, safeCreationTxHash } = modalData
-    const url = {
-      pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        safeAddress,
-        network: getNetworkSlug(),
-      }),
+    const { safeName, safeCreationTxHash } = modalData
+    history.push({
+      pathname: SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES,
       state: {
         name: safeName,
         tx: safeCreationTxHash,
       },
-    }
-    history.push(url)
+    })
   }
 
   return (

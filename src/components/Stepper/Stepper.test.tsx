@@ -1,4 +1,4 @@
-import { history } from 'src/routes/routes'
+import { history } from 'src/routes/newroutes'
 import { fireEvent, render, screen, waitForElementToBeRemoved } from 'src/utils/test-utils'
 import Stepper, { StepElement } from './Stepper'
 

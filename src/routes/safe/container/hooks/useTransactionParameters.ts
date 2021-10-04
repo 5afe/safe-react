@@ -7,8 +7,8 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
-import { safeAddressFromUrl } from 'src/utils/router'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getSafeAddressFromUrl } from 'src/routes/newroutes'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -40,7 +40,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   const web3 = getWeb3ReadOnly()
   const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = getSafeAddressFromUrl()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   // Safe Params

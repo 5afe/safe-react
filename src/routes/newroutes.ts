@@ -1,12 +1,57 @@
 import { createBrowserHistory } from 'history'
 import { generatePath } from 'react-router-dom'
+import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { isChecksumAddress, checksumAddress } from 'src/utils/checksumAddress'
 
 import { PUBLIC_URL } from 'src/utils/constants'
-import { getPrefixedSafeAddressSlug } from './utils/prefixedSafeAddress'
+import { sameString } from 'src/utils/strings'
 
 export const history = createBrowserHistory({
   basename: PUBLIC_URL,
 })
+
+// Due to hoisting issues, these functions should remain here
+export const getPrefixedSafeAddressFromUrl = (): { shortName: string; safeAddress: string } => {
+  const chainSpecificAddress = history.location.pathname.split('/').filter(Boolean)
+
+  if (!chainSpecificAddress?.length) {
+    return { shortName: '', safeAddress: '' }
+  }
+
+  const [prefix, address] = chainSpecificAddress[0].split(':')
+
+  return {
+    shortName: isValidShortChainName(prefix) ? prefix : getCurrentShortChainName(),
+    safeAddress: isChecksumAddress(prefix) ? checksumAddress(address).toString() : '',
+  }
+}
+
+export const isValidShortChainName = (shortName: string): boolean => {
+  const shortNames = getNetworks().map(({ shortName }) => shortName)
+  return shortNames.some((name) => sameString(name, shortName))
+}
+
+export const isValidChainSpecificAddress = (chainSpecificAddress: string): boolean => {
+  const parts = chainSpecificAddress?.split(':')?.filter(Boolean)
+
+  if (parts?.length === 2) {
+    const [shortName, address] = parts
+    return isValidShortChainName(shortName) && isChecksumAddress(address)
+  } else {
+    return false
+  }
+}
+
+const getShortChainNameFromUrl = (): string => {
+  const { shortName } = getPrefixedSafeAddressFromUrl()
+  return isValidShortChainName(shortName) ? shortName : getCurrentShortChainName()
+}
+export const getSafeAddressFromUrl = (): string => getPrefixedSafeAddressFromUrl().safeAddress
+
+export const getPrefixedSafeAddressSlug = (safeAddress = getSafeAddressFromUrl()): string => {
+  const shortName = getShortChainNameFromUrl() || getCurrentShortChainName()
+  return `${shortName}:${safeAddress}`
+}
 
 // Routes independant of safe/network
 export const WELCOME_ROUTE = '/welcome'
@@ -14,22 +59,23 @@ export const OPEN_ROUTE = '/open'
 export const LOAD_ROUTE = '/load'
 
 // Safe specific routes
-export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
-export const SAFE_ROUTE = `/:${SAFE_ADDRESS_SLUG}`
+const chainSpecificSafeAddressPathRegExp = '[a-z]+:0x[0-9a-zA-Z]+'
+export const SAFE_ADDRESS_SLUG = `prefixedSafeAddress`
+export const SAFE_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
 
 // Safe section routes, i.e. /:prefixedSafeAddress/settings
-const SAFE_SECTION_SLUG = 'safeSection'
+export const SAFE_SECTION_SLUG = 'safeSection'
 export const SAFE_SECTION_ROUTE = `${SAFE_ROUTE}/:${SAFE_SECTION_SLUG}`
 
 // Safe subsection routes, i.e. /:prefixedSafeAddress/settings/advanced
-const SAFE_SUBSECTION_SLUG = 'safeSubsection'
+export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
 export const SAFE_SUBSECTION_ROUTE = `${SAFE_SECTION_ROUTE}/:${SAFE_SUBSECTION_SLUG}`
 
 // URL: gnosis-safe.io/app/:[SAFE_ADDRESS_SLUG]/:[SAFE_SECTION_SLUG]/:[SAFE_SUBSECTION_SLUG]
 export type SafeRouteSlugs = {
-  [SAFE_ADDRESS_SLUG]: string
-  [SAFE_SECTION_SLUG]: string
-  [SAFE_SUBSECTION_SLUG]: string
+  [SAFE_ADDRESS_SLUG]?: string
+  [SAFE_SECTION_SLUG]?: string
+  [SAFE_SUBSECTION_SLUG]?: string
 }
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
@@ -48,7 +94,10 @@ export const SAFE_ROUTES = {
 }
 
 // Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortChainName:safeAddress'
-export const generateSafeRoute: typeof generatePath = (path, params = {}) =>
+export const generateSafeRoute = (
+  path: typeof SAFE_ROUTES[keyof typeof SAFE_ROUTES],
+  params: SafeRouteSlugs = {},
+): string =>
   generatePath(path, {
     [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(),
     ...params,

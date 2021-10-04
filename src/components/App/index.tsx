@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
-import { useRouteMatch, useHistory, generatePath } from 'react-router-dom'
+import { useRouteMatch, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import AlertIcon from 'src/assets/icons/alert.svg'
@@ -18,7 +18,6 @@ import Img from 'src/components/layout/Img'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { getNetworkSlug, BASE_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
@@ -31,7 +30,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { getSafeAddressFromUrl, SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/newroutes'
 
 const notificationStyles = {
   success: {
@@ -63,10 +62,10 @@ const App: React.FC = ({ children }) => {
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const matchSafe = useRouteMatch({ path: BASE_SAFE_ROUTE, strict: false })
+  const matchSafe = useRouteMatch(SAFE_ROUTE)
   const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
-  const addressFromUrl = safeAddressFromUrl()
+  const addressFromUrl = getSafeAddressFromUrl()
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
@@ -82,11 +81,7 @@ const App: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (matchSafe?.isExact) {
-      history.push(
-        generatePath(WELCOME_ROUTE, {
-          network: getNetworkSlug(),
-        }),
-      )
+      history.push(WELCOME_ROUTE)
     }
   }, [matchSafe, history])
 

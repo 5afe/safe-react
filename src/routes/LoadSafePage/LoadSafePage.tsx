@@ -1,6 +1,6 @@
 import { ReactElement, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { generatePath, useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
@@ -27,7 +27,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { getNetworkSlug, SAFE_ROUTES } from '../routes'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
@@ -37,6 +36,7 @@ import {
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { APP_ENV } from 'src/utils/constants'
+import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ADDRESS_SLUG, SAFE_ROUTES } from '../newroutes'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -44,7 +44,7 @@ function Load(): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const { safeAddress } = useParams<{ safeAddress?: string }>()
+  const safeAddress = getSafeAddressFromUrl()
   const safeRandomName = useMnemonicSafeName()
 
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
@@ -91,12 +91,7 @@ function Load(): ReactElement {
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
-    history.push(
-      generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        network: getNetworkSlug(),
-        safeAddress,
-      }),
-    )
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { [SAFE_ADDRESS_SLUG]: safeAddress }))
   }
 
   const isProductionEnv = APP_ENV === 'production'

@@ -1,19 +1,17 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
 import ReceiveModal from 'src/components/App/ReceiveModal'
-
-import { SAFE_ROUTES, getNetworkSlug, BASE_SAFE_ROUTE } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
+import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_ROUTE } from 'src/routes/newroutes'
 
 const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -36,12 +34,7 @@ export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
 const Balances = (): ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
-  const matchSafeWithAction = useRouteMatch({
-    path: `${BASE_SAFE_ROUTE}/:safeAction/:safeSubaction?`,
-  }) as {
-    url: string
-    params: Record<string, string>
-  }
+  const matchSafeWithBalancesSection = useRouteMatch(SAFE_SUBSECTION_ROUTE)
 
   const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
@@ -84,17 +77,12 @@ const Balances = (): ReactElement => {
 
   const { erc721Enabled, sendFunds, showReceive } = state
 
-  const baseRouteSlugs = {
-    network: getNetworkSlug(),
-    safeAddress,
-  }
-
   let balancesSection
-  switch (matchSafeWithAction.url) {
-    case generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs):
+  switch (matchSafeWithBalancesSection?.url) {
+    case SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES:
       balancesSection = 'Coins'
       break
-    case generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, baseRouteSlugs):
+    case SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES_COLLECTIBLES:
       balancesSection = 'Collectibles'
       break
     default:
@@ -112,11 +100,11 @@ const Balances = (): ReactElement => {
         </Col>
         <Switch>
           <Route
-            path={SAFE_ROUTES.ASSETS_COLLECTIBLES}
+            path={SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES}
             exact
             render={() => {
               return !erc721Enabled ? (
-                <Redirect to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, baseRouteSlugs)} />
+                <Redirect to={SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES} />
               ) : (
                 <Col end="sm" sm={6} xs={12}></Col>
               )
@@ -135,7 +123,7 @@ const Balances = (): ReactElement => {
       </Menu>
       <Switch>
         <Route
-          path={SAFE_ROUTES.ASSETS_COLLECTIBLES}
+          path={SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES}
           exact
           render={() => {
             if (erc721Enabled) {

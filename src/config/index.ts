@@ -61,6 +61,11 @@ export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY
   getNetworkId(),
 )
 
+export const getCurrentShortChainName = (): string => getConfig().network.shortName
+
+export const getShortChainNameById = (networkId = getNetworkId()): string =>
+  getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
+
 export const getCurrentEnvironment = (): 'test' | 'production' | 'staging' | 'dev' => {
   switch (APP_ENV) {
     case 'test': {

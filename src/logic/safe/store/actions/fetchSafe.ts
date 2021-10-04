@@ -1,5 +1,7 @@
 import { Dispatch } from 'redux'
 import { Action } from 'redux-actions'
+import { matchPath } from 'react-router-dom'
+
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
@@ -11,9 +13,8 @@ import { store } from 'src/store'
 import { currentSafe } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import { matchPath } from 'react-router-dom'
-import { SAFE_ROUTES, history } from 'src/routes/routes'
 import { getNetworkId } from 'src/config'
+import { SAFE_ROUTES, history } from 'src/routes/newroutes'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -87,7 +88,7 @@ export const fetchSafe =
       const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafe(state)
 
       const isCollectiblesPage = !!matchPath(history.location.pathname, {
-        path: SAFE_ROUTES.ASSETS_COLLECTIBLES,
+        path: SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES,
       })
 
       const shouldUpdateCollectibles = collectiblesTag !== safeInfo.collectiblesTag && isCollectiblesPage

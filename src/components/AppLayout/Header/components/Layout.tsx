@@ -3,7 +3,7 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import { generatePath, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
@@ -15,7 +15,7 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworks } from 'src/config'
-import { getNetworkSlug, WELCOME_ROUTE } from 'src/routes/routes'
+import { WELCOME_ROUTE } from 'src/routes/newroutes'
 
 const styles = () => ({
   root: {
@@ -95,11 +95,7 @@ const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) =
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
-        <Link
-          to={generatePath(WELCOME_ROUTE, {
-            network: getNetworkSlug(),
-          })}
-        >
+        <Link to={WELCOME_ROUTE}>
           <Img alt="Gnosis Team Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
         </Link>
       </Col>

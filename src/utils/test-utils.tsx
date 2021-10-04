@@ -3,7 +3,7 @@ import { render, RenderResult } from '@testing-library/react'
 import { theme as styledTheme } from '@gnosis.pm/safe-react-components'
 import Providers from 'src/components/Providers'
 import { createCustomStore, store } from 'src/store'
-import { history } from 'src/routes/routes'
+import { history } from 'src/routes/newroutes'
 import theme from 'src/theme/mui'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 

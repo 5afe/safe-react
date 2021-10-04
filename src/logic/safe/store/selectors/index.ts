@@ -5,9 +5,9 @@ import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/sele
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
+import { getSafeAddressFromUrl } from 'src/routes/newroutes'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
-import { safeAddressFromUrl } from 'src/utils/router'
 
 const safesState = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -20,7 +20,7 @@ export const latestMasterContractVersion = createSelector(safesState, (safeState
 )
 
 export const currentSafe = createSelector([safesAsMap], (safes: SafesMap) => {
-  const address = safeAddressFromUrl()
+  const address = getSafeAddressFromUrl()
   return safes.get(address, baseSafe(address))
 })
 

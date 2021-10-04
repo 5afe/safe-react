@@ -23,7 +23,7 @@ import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { getSafeAddressFromUrl } from 'src/routes/newroutes'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -36,7 +36,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
 
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = getSafeAddressFromUrl()
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
