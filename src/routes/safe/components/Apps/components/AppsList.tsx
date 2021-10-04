@@ -24,6 +24,7 @@ import { SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
+import { PinnedAppsTutorial } from './PinnedAppsTutorial'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -133,6 +134,7 @@ const AppsList = (): React.ReactElement => {
           }
           defaultExpanded
         >
+          {pinnedSafeApps.length === 0 && <PinnedAppsTutorial />}
           <AnimatePresence>
             <CardsWrapper>
               {pinnedSafeApps.map((a) => (
