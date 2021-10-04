@@ -63,7 +63,7 @@ const arbitrum: NetworkConfig = {
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
   ],
-  disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT, FEATURES.SAFE_APPS],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
 
 export default arbitrum
