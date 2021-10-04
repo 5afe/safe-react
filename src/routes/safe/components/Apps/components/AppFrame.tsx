@@ -1,6 +1,6 @@
 import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Loader, Title, Card } from '@gnosis.pm/safe-react-components'
+import { Loader, Card } from '@gnosis.pm/safe-react-components'
 import {
   GetBalanceParams,
   GetTxBySafeTxHashParams,
@@ -40,7 +40,7 @@ import { SignMessageModal } from './SignMessageModal'
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% + 59px);
+  height: 100%;
   margin: 0 -16px;
 `
 
@@ -109,6 +109,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
   const timer = useRef<number>()
   const [appTimeout, setAppTimeout] = useState(false)
+  const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
     if (appIsLoading) {
@@ -263,6 +264,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
       } catch (err) {
+        setAppLoadError(true)
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
@@ -278,6 +280,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   if (!appUrl) {
     throw Error('App url No provided or it is invalid.')
+  }
+
+  if (appTimeout || appLoadError) {
+    throw Error('There was an error loading the Safe App. There might be a problem with the app provider.')
   }
 
   if (!safeApp) {
@@ -297,11 +303,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
-            {appTimeout && (
-              <Title size="xs">
-                The safe app is taking longer than usual to load. There might be a problem with the app provider.
-              </Title>
-            )}
             <Loader size="md" />
           </LoadingContainer>
         )}

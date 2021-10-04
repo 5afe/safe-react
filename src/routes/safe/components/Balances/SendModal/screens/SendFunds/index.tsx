@@ -213,7 +213,9 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook[scannedAddress]?.name ?? ''
+            const scannedName = addressBook.find(({ address }) => {
+              return sameAddress(scannedAddress, address)
+            })?.name
             const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
             if (!addressErrorMessage) {
               mutators.setRecipient(scannedAddress)
