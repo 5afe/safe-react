@@ -1,6 +1,6 @@
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
-export const IS_PRODUCTION = NODE_ENV === 'production'
+export const IS_PRODUCTION = APP_ENV === 'production'
 export const NETWORK = process.env.REACT_APP_NETWORK?.toUpperCase() || 'RINKEBY'
 export const INTERCOM_ID = APP_ENV === 'production' ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
 export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
