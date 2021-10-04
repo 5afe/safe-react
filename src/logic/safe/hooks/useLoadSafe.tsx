@@ -14,9 +14,7 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
   useEffect(() => {
-    if (isSafeLoaded) {
-      setIsSafeLoaded(false)
-    }
+    setIsSafeLoaded(false)
   }, [safeAddress])
 
   useEffect(() => {
