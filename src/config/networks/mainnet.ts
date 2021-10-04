@@ -1,6 +1,6 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
+import { WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
@@ -56,6 +56,7 @@ const mainnet: NetworkConfig = {
       logoUri: EtherLogo,
     },
   },
+  disabledWallets: [WALLETS.LATTICE],
 }
 
 export default mainnet
