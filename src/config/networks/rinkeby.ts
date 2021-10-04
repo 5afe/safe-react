@@ -62,7 +62,7 @@ const rinkeby: NetworkConfig = {
       logoUri: EtherLogo,
     },
   },
-  disabledWallets: [WALLETS.FORTMATIC],
+  disabledWallets: [WALLETS.FORTMATIC, WALLETS.LATTICE],
 }
 
 export default rinkeby
