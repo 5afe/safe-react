@@ -27,6 +27,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.BSC,
+    shortName: 'bnb',
     backgroundColor: '#d0980b',
     textColor: '#ffffff',
     label: 'BSC',

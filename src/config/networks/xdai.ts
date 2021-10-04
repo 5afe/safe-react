@@ -27,6 +27,7 @@ const xDai: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.XDAI,
+    shortName: 'xdai',
     backgroundColor: '#48A8A6',
     textColor: '#ffffff',
     label: 'xDai',

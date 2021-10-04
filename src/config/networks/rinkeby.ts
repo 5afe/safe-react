@@ -6,7 +6,6 @@ import {
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
@@ -42,6 +41,7 @@ const rinkeby: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.RINKEBY,
+    shortName: 'rin',
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
     label: 'Rinkeby',

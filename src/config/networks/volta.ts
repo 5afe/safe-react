@@ -32,6 +32,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.VOLTA,
+    shortName: 'vt',
     backgroundColor: '#514989',
     textColor: '#ffffff',
     label: 'Volta',

@@ -103,6 +103,7 @@ export const getNetworks = (): NetworkInfo[] => {
   const { local, ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,
+    shortName: networkObj.network.shortName,
     label: networkObj.network.label,
     backgroundColor: networkObj.network.backgroundColor,
     textColor: networkObj.network.textColor,

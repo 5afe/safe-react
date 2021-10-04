@@ -35,6 +35,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+    shortName: 'ewt',
     backgroundColor: '#A566FF',
     textColor: '#ffffff',
     label: 'EWC',
