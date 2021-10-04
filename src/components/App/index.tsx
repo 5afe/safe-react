@@ -67,20 +67,14 @@ const App: React.FC = ({ children }) => {
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
-  const {
-    address: safeAddress,
-    name: safeName,
-    totalFiatBalance: currentSafeBalance,
-  } = useSelector(currentSafeWithNames)
+  const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
   const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-  // if safe is loaded via URL, `safeAddress` won't be available until store is populated with temp information
-  // Temp information will be built from `addressFromUrl`
-  const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
-  useSafeScheduledUpdates(safeLoaded, safeAddress)
+  const safeLoaded = useLoadSafe(addressFromUrl)
+  useSafeScheduledUpdates(safeLoaded, addressFromUrl)
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
@@ -122,7 +116,7 @@ const App: React.FC = ({ children }) => {
 
           <AppLayout
             sidebarItems={sidebarItems}
-            safeAddress={safeAddress}
+            safeAddress={addressFromUrl}
             safeName={safeName}
             balance={balance}
             granted={granted}
@@ -140,7 +134,7 @@ const App: React.FC = ({ children }) => {
             selectedToken={sendFunds.selectedToken}
           />
 
-          {safeAddress && (
+          {addressFromUrl && (
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
@@ -148,7 +142,7 @@ const App: React.FC = ({ children }) => {
               paperClassName="receive-modal"
               title="Receive Tokens"
             >
-              <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
+              <ReceiveModal onClose={onReceiveHide} safeAddress={addressFromUrl} safeName={safeName} />
             </Modal>
           )}
         </>
