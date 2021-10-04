@@ -7,7 +7,6 @@ import { useStyles } from './style'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
-import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
@@ -91,13 +90,12 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
       {(txParameters, toggleEditMode) => (
         <>
           <ModalHeader onClose={onClose} title="Update safe version" />
-          <Hairline />
           <Block className={classes.modalContent}>
             <Row>
-              <Paragraph>
+              <Paragraph noMargin>
                 Update now to take advantage of new features and the highest security standards available.
               </Paragraph>
-              <Block>
+              <Paragraph>
                 To check details about updates added by this smart contract version please visit{' '}
                 <Link
                   target="_blank"
@@ -105,10 +103,17 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
                 >
                   latest Gnosis Safe contracts changelog
                 </Link>
-              </Block>
-              <Paragraph>
+              </Paragraph>
+              <Paragraph noMargin>
                 You will need to confirm this update just like any other transaction. This means other owners will have
                 to confirm the update in case more than one confirmation is required for this Safe.
+              </Paragraph>
+
+              {/* A warning for 1.x.x -> 1.3.0 upgrades */}
+              <Paragraph>
+                <b>Warning</b>: this upgrade will invalidate all unexecuted transactions. This means you will be unable
+                to access or execute them after the upgrade. Please make sure to execute any remaining transactions
+                before upgrading.
               </Paragraph>
             </Row>
             {/* Tx Parameters */}
