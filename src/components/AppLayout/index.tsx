@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useLocation, matchPath } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
-import { WELCOME_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
+import { WELCOME_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 
 import Header from './Header'
 import Footer from './Footer'
@@ -96,7 +96,7 @@ const Layout: React.FC<Props> = ({
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
   const hasFooter = !!matchPath(pathname, {
-    path: [SAFE_ROUTES.SETTINGS_BASE_ROUTE, WELCOME_ADDRESS],
+    path: [SAFE_ROUTES.SETTINGS_BASE_ROUTE, WELCOME_ROUTE],
   })
 
   return (
