@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from 'src/utils/test-utils'
-import { getNetworkSlug } from '../routes'
+import { LOAD_ROUTE, OPEN_ROUTE } from '../newroutes'
 import Welcome from './Welcome'
 
 describe('<Welcome>', () => {
@@ -30,7 +30,7 @@ describe('<Welcome>', () => {
 
     fireEvent.click(createNewSafeLinkNode)
 
-    expect(window.location.pathname).toBe(`/${getNetworkSlug()}/open`)
+    expect(window.location.pathname).toBe(OPEN_ROUTE)
   })
 
   it('Add existing Safe button should redirect to /load if a wallet is already selected', () => {
@@ -56,6 +56,6 @@ describe('<Welcome>', () => {
 
     fireEvent.click(addExistingSafeLinkNode)
 
-    expect(window.location.pathname).toBe(`/${getNetworkSlug()}/load`)
+    expect(window.location.pathname).toBe(LOAD_ROUTE)
   })
 })
