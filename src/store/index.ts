@@ -33,19 +33,24 @@ import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
+  initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware/currencyValuesStorageMiddleware'
 import networkConfig, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
 import { NetworkState } from 'src/logic/config/model/networkConfig'
 import { configMiddleware } from 'src/logic/config/store/middleware'
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
+const currencyLocalStorageKey = `${CURRENCY_VALUES_KEY}.selectedCurrency`
+
 const localStorageConfig = {
-  states: [ADDRESS_BOOK_REDUCER_ID],
+  states: [ADDRESS_BOOK_REDUCER_ID, currencyLocalStorageKey],
   namespace: 'SAFE',
   namespaceSeparator: '__',
   disableWarnings: true,
+  preloadedState: {
+    [CURRENCY_VALUES_KEY]: initialCurrencyState,
+  },
 }
 
 const finalCreateStore = composeEnhancers(
@@ -56,7 +61,6 @@ const finalCreateStore = composeEnhancers(
     safeStorageMiddleware,
     providerWatcher,
     addressBookMiddleware,
-    currencyValuesStorageMiddleware,
     configMiddleware,
   ),
 )

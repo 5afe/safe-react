@@ -10,9 +10,11 @@ export type CurrencyValuesState = {
   availableCurrencies: string[]
 }
 
-export const initialState = {
-  selectedCurrency: 'USD',
-  availableCurrencies: ['USD'],
+const initialSelectedCurrency = 'USD'
+
+export const initialCurrencyState = {
+  selectedCurrency: initialSelectedCurrency,
+  availableCurrencies: [initialSelectedCurrency],
 }
 
 export type SelectedCurrencyPayload = { selectedCurrency: string }
@@ -31,5 +33,5 @@ export default handleActions<AppReduxState['currencyValues'], CurrencyValuesStat
       return state
     },
   },
-  initialState,
+  initialCurrencyState,
 )
