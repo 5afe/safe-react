@@ -113,7 +113,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
                 to confirm the update in case more than one confirmation is required for this Safe.
               </Paragraph>
 
-              {/* A warning for 1.1.1 -> 1.3.0 upgrades */}
+              {/* A warning for 1.x.x -> 1.3.0 upgrades */}
               <Paragraph>
                 <b>Warning</b>: this upgrade will invalidate all unexecuted transactions. This means you will be unable
                 to access or execute them after the upgrade. Please make sure to execute any remaining transactions
