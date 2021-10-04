@@ -137,7 +137,10 @@ const SendCollectible = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook[scannedAddress]?.name ?? ''
+            const scannedName =
+              addressBook.find(({ address }) => {
+                return sameAddress(scannedAddress, address)
+              })?.name ?? ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
               name: scannedName ?? '',
