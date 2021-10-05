@@ -103,6 +103,14 @@ describe('Safe Apps -> AppsList', () => {
 
     expect(screen.getByText('Drain safe')).toBeInTheDocument()
   })
+
+  it('Shows different app sections', () => {
+    render(<AppsList />, customState)
+
+    expect(screen.getByText('ALL APPS')).toBeInTheDocument()
+    expect(screen.getByText('PINNED APPS')).toBeInTheDocument()
+    expect(screen.getByText('CUSTOM APPS')).toBeInTheDocument()
+  })
 })
 
 describe('Safe Apps -> AppsList -> Search', () => {
@@ -162,10 +170,33 @@ describe('Safe Apps -> AppsList -> Search', () => {
 
     expect((searchInput as HTMLInputElement).value).toBe('')
   })
+
+  it("Doesn't display custom/pinned apps irrelevant to the search (= hides pinned/custom sections)", () => {
+    render(<AppsList />, customState)
+
+    const searchInput = screen.getByPlaceholderText('e.g Compound')
+
+    fireEvent.input(searchInput, { target: { value: 'Compound' } })
+
+    expect(screen.queryByText('Drain Safe')).not.toBeInTheDocument()
+    expect(screen.queryByText('Transaction builder')).not.toBeInTheDocument()
+  })
+
+  it('Hides pinned/custom sections when you search', () => {
+    render(<AppsList />, customState)
+
+    const searchInput = screen.getByPlaceholderText('e.g Compound')
+
+    fireEvent.input(searchInput, { target: { value: 'Compound' } })
+
+    expect(screen.queryByText('PINNED APPS')).not.toBeInTheDocument()
+    expect(screen.queryByText('CUSTOM APPS')).not.toBeInTheDocument()
+  })
 })
 
 describe('Safe Apps -> AppsList -> Pinning apps', () => {
   it('Shows a tutorial message when there are no pinned apps', () => {
+    // overriding the global mock just for this test case
     usePinnedSafeApps.mockImplementation(() => ({
       pinnedSafeAppIds: [],
       loaded: true,
