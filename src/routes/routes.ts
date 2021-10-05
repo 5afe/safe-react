@@ -66,24 +66,40 @@ const getValidSafeAddress = (safeAddress?: string): string =>
 
 // Due to hoisting issues, these functions should remain here
 export const getPrefixedSafeAddressFromUrl = (): SafeRouteParams => {
-  console.log('getPrefixedSafeAddressFromUrl', history.location.pathname)
   const match = matchPath<SafeRouteSlugs>(history.location.pathname, { path: ADDRESSED_ROUTE })
-  const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]?.split(':')
+  const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]
+
   const currentShortChainName = getCurrentShortChainName()
 
-  if (prefixedSafeAddress?.length === 1) {
+  if (!prefixedSafeAddress) {
+    return {
+      shortName: currentShortChainName,
+      safeAddress: '', // TODO: get this from the store if it exists
+    }
+  }
+
+  if (isChecksumAddress(prefixedSafeAddress) || !prefixedSafeAddress.includes(':')) {
+    return {
+      shortName: currentShortChainName,
+      safeAddress: getValidSafeAddress(prefixedSafeAddress),
+    }
+  }
+
+  const parts = prefixedSafeAddress.split(':')
+
+  if (parts.length === 1) {
     const safeAddress = prefixedSafeAddress?.[0]
     return {
       shortName: currentShortChainName,
       safeAddress: getValidSafeAddress(safeAddress),
     }
-  }
-
-  const shortName = prefixedSafeAddress?.[0]
-  const safeAddress = prefixedSafeAddress?.[1]
-  return {
-    shortName: getValidShortName(shortName),
-    safeAddress: getValidSafeAddress(safeAddress),
+  } else {
+    const shortName = prefixedSafeAddress?.[0]
+    const safeAddress = prefixedSafeAddress?.[1]
+    return {
+      shortName: getValidShortName(shortName),
+      safeAddress: getValidSafeAddress(safeAddress),
+    }
   }
 }
 
