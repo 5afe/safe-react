@@ -21,6 +21,7 @@ const baseConfig: EnvironmentSettings = {
 
 const mainnet: NetworkConfig = {
   environment: {
+    test: baseConfig,
     dev: baseConfig,
     staging: baseConfig,
     production: baseConfig,

@@ -10,11 +10,11 @@ export type CurrencyValuesState = {
   availableCurrencies: string[]
 }
 
-const initialSelectedCurrency = 'USD'
+const defaultSelectedCurrency = 'USD'
 
 export const initialCurrencyState = {
-  selectedCurrency: initialSelectedCurrency,
-  availableCurrencies: [initialSelectedCurrency],
+  selectedCurrency: defaultSelectedCurrency,
+  availableCurrencies: [defaultSelectedCurrency],
 }
 
 export type SelectedCurrencyPayload = { selectedCurrency: string }

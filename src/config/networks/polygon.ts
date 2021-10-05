@@ -27,6 +27,7 @@ const baseConfig: EnvironmentSettings = {
 
 const polygon: NetworkConfig = {
   environment: {
+    test: baseConfig,
     dev: baseConfig,
     staging: baseConfig,
     production: {

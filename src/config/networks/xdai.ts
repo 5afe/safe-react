@@ -21,6 +21,7 @@ const baseConfig: EnvironmentSettings = {
 
 const xDai: NetworkConfig = {
   environment: {
+    test: baseConfig,
     dev: baseConfig,
     staging: baseConfig,
     production: baseConfig,
