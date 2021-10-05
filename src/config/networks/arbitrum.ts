@@ -48,7 +48,6 @@ const arbitrum: NetworkConfig = {
     },
   },
   disabledWallets: [
-    WALLETS.WALLET_CONNECT,
     WALLETS.TREZOR,
     WALLETS.LEDGER,
     WALLETS.COINBASE,
