@@ -12,7 +12,8 @@ import Col from 'src/components/layout/Col'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_SLUG } from 'src/routes/routes'
+import { getAllSafeRoutesWithPrefixedAddress, SAFE_ROUTES, SAFE_SUBSECTION_SLUG } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 const Advanced = lazy(() => import('./Advanced'))
 const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
@@ -32,9 +33,14 @@ const useStyles = makeStyles(styles)
 const Settings = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const { owners, loadedViaUrl } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
   const matchSafeWithSettingSection = useRouteMatch(SAFE_SUBSECTION_SLUG)
+
+  const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+    shortChainName: getCurrentShortChainName(),
+    safeAddress,
+  })
 
   let settingsSection
   switch (matchSafeWithSettingSection?.url) {

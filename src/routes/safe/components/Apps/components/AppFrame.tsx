@@ -16,7 +16,7 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import { getCurrentShortChainName, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -35,7 +35,7 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
-import { SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -99,7 +99,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
 
-  const redirectToBalance = () => history.push(SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES)
+  const redirectToBalance = () =>
+    history.push(
+      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortChainName: getCurrentShortChainName(), safeAddress }),
+    )
   const timer = useRef<number>()
   const [appTimeout, setAppTimeout] = useState(false)
   const [appLoadError, setAppLoadError] = useState<boolean>(false)

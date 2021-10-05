@@ -48,24 +48,21 @@ const getShortChainNameFromUrl = (): string => {
 }
 export const getSafeAddressFromUrl = (): string => getPrefixedSafeAddressFromUrl().safeAddress
 
-export const getPrefixedSafeAddressSlug = (safeAddress = getSafeAddressFromUrl()): string => {
-  const shortName = getShortChainNameFromUrl() || getCurrentShortChainName()
+export const getPrefixedSafeAddressSlug = (
+  safeAddress = getSafeAddressFromUrl(),
+  shortName = getShortChainNameFromUrl() || getCurrentShortChainName(),
+): string => {
   return `${shortName}:${safeAddress}`
 }
 
-// Routes independant of safe/network
-export const WELCOME_ROUTE = '/welcome'
-export const OPEN_ROUTE = '/open'
-export const LOAD_ROUTE = '/load'
-
 // Safe specific routes
 const chainSpecificSafeAddressPathRegExp = '[a-z]+:0x[0-9a-zA-Z]+'
-export const SAFE_ADDRESS_SLUG = `prefixedSafeAddress`
-export const SAFE_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
+const SAFE_ADDRESS_SLUG = `prefixedSafeAddress`
+export const ADDRESSED_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
 
 // Safe section routes, i.e. /:prefixedSafeAddress/settings
-export const SAFE_SECTION_SLUG = 'safeSection'
-export const SAFE_SECTION_ROUTE = `${SAFE_ROUTE}/:${SAFE_SECTION_SLUG}`
+const SAFE_SECTION_SLUG = 'safeSection'
+export const SAFE_SECTION_ROUTE = `${ADDRESSED_ROUTE}/:${SAFE_SECTION_SLUG}`
 
 // Safe subsection routes, i.e. /:prefixedSafeAddress/settings/advanced
 export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
@@ -78,34 +75,44 @@ export type SafeRouteSlugs = {
   [SAFE_SUBSECTION_SLUG]?: string
 }
 
+// Routes independant of safe/network
+export const WELCOME_ROUTE = '/welcome'
+export const OPEN_ROUTE = '/open'
+export const LOAD_ROUTE = '/load'
+
+// Load safe from URL
+export const LOAD_SPECIFIC_SAFE_ROUTE = `${ADDRESSED_ROUTE}${LOAD_ROUTE}`
+
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {
-  ASSETS_BALANCES: `${SAFE_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
-  ASSETS_BALANCES_COLLECTIBLES: `${SAFE_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
-  TRANSACTIONS: `${SAFE_ROUTE}/transactions`,
-  ADDRESS_BOOK: `${SAFE_ROUTE}/address-book`,
-  APPS: `${SAFE_ROUTE}/apps`,
-  SETTINGS: `${SAFE_ROUTE}/settings`,
-  SETTINGS_DETAILS: `${SAFE_ROUTE}/settings/details`,
-  SETTINGS_OWNERS: `${SAFE_ROUTE}/settings/owners`,
-  SETTINGS_POLICIES: `${SAFE_ROUTE}/settings/policies`,
-  SETTINGS_SPENDING_LIMIT: `${SAFE_ROUTE}/settings/spending-limit`,
-  SETTINGS_ADVANCED: `${SAFE_ROUTE}/settings/advanced`,
+  ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
+  ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
+  TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
+  ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
+  APPS: `${ADDRESSED_ROUTE}/apps`,
+  SETTINGS: `${ADDRESSED_ROUTE}/settings`,
+  SETTINGS_DETAILS: `${ADDRESSED_ROUTE}/settings/details`,
+  SETTINGS_OWNERS: `${ADDRESSED_ROUTE}/settings/owners`,
+  SETTINGS_POLICIES: `${ADDRESSED_ROUTE}/settings/policies`,
+  SETTINGS_SPENDING_LIMIT: `${ADDRESSED_ROUTE}/settings/spending-limit`,
+  SETTINGS_ADVANCED: `${ADDRESSED_ROUTE}/settings/advanced`,
 }
+
+export type SafeRouteParams = { shortChainName: string; safeAddress: string }
 
 // Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortChainName:safeAddress'
 export const generateSafeRoute = (
   path: typeof SAFE_ROUTES[keyof typeof SAFE_ROUTES],
-  params: SafeRouteSlugs = {},
+  { shortChainName = getCurrentShortChainName(), safeAddress = getSafeAddressFromUrl() }: SafeRouteParams,
 ): string =>
   generatePath(path, {
-    [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(),
-    ...params,
+    [SAFE_ADDRESS_SLUG]: `${shortChainName}:${safeAddress}`,
   })
 
-// Routes with populated `/:[SAFE_ADDRESS_SLUG]`
-export const SAFE_ROUTE_WITH_ADDRESS = generateSafeRoute(SAFE_ROUTE)
-export const SAFE_ROUTES_WITH_ADDRESS = Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>(
-  (routes, [key, route]) => ({ ...routes, [key]: generateSafeRoute(route) }),
-  {} as typeof SAFE_ROUTES,
-)
+export const getAllSafeRoutesWithPrefixedAddress = (params: SafeRouteParams) =>
+  Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>((routes, [key, route]) => {
+    return {
+      ...routes,
+      [key]: generateSafeRoute(route, params),
+    }
+  }, {} as typeof SAFE_ROUTES)

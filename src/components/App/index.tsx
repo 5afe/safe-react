@@ -30,7 +30,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
-import { getSafeAddressFromUrl, SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { getSafeAddressFromUrl, ADDRESSED_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 
 const notificationStyles = {
   success: {
@@ -62,7 +62,7 @@ const App: React.FC = ({ children }) => {
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const matchSafe = useRouteMatch(SAFE_ROUTE)
+  const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
   const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
   const addressFromUrl = getSafeAddressFromUrl()

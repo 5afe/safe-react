@@ -11,10 +11,10 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import { getNetworkConfigById } from 'src/config'
+import { getNetworkConfigById, getShortChainNameById } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
-import { getSafeAddressFromUrl, LOAD_ROUTE, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { generateSafeRoute, getSafeAddressFromUrl, LOAD_ROUTE, SAFE_ROUTES, SafeRouteParams } from 'src/routes/routes'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -58,9 +58,14 @@ const SafeListItem = ({
     onSafeClick()
   }
 
+  const routeSlugs: SafeRouteParams = {
+    shortChainName: getShortChainNameById(networkId),
+    safeAddress: address,
+  }
+
   const handleOpenSafe = (): void => {
     handleLoadSafe()
-    history.push(SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES)
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routeSlugs))
   }
 
   return (
@@ -71,7 +76,7 @@ const SafeListItem = ({
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
         ) : showAddSafeLink ? (
-          <Link to={LOAD_ROUTE} onClick={handleLoadSafe}>
+          <Link to={generateSafeRoute(LOAD_ROUTE, routeSlugs)} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
             </Text>

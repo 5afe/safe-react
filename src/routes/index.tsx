@@ -12,11 +12,12 @@ import {
   getPrefixedSafeAddressSlug,
   LOAD_ROUTE,
   OPEN_ROUTE,
-  SAFE_ADDRESS_SLUG,
-  SAFE_ROUTE,
+  ADDRESSED_ROUTE,
   SAFE_ROUTES,
   WELCOME_ROUTE,
+  LOAD_SPECIFIC_SAFE_ROUTE,
 } from './routes'
+import { getCurrentShortChainName } from 'src/config'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -63,7 +64,8 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  [SAFE_ADDRESS_SLUG]: defaultSafe,
+                  shortChainName: getCurrentShortChainName(),
+                  safeAddress: defaultSafe,
                 })}
               />
             )
@@ -74,8 +76,8 @@ const Routes = (): React.ReactElement => {
       />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
       <Route component={CreateSafePage} exact path={OPEN_ROUTE} />
-      <Route component={LoadSafePage} path={LOAD_ROUTE} />
-      <Route component={Safe} path={SAFE_ROUTE} />
+      <Route component={LoadSafePage} path={[LOAD_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
+      <Route component={Safe} path={ADDRESSED_ROUTE} />
       <Redirect to="/" />
     </Switch>
   )

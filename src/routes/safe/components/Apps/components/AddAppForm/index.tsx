@@ -12,7 +12,8 @@ import { FormButtons } from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 const FORM_ID = 'add-apps-form'
 
@@ -91,7 +92,10 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
     saveToStorage(APPS_STORAGE_KEY, newAppList)
 
     history.push({
-      pathname: SAFE_ROUTES_WITH_ADDRESS.APPS,
+      pathname: generateSafeRoute(SAFE_ROUTES.APPS, {
+        shortChainName: getCurrentShortChainName(),
+        safeAddress: getSafeAddressFromUrl(),
+      }),
       search: `?appUrl=${encodeURI(appInfo.url)}`,
     })
   }, [appInfo.url, history])

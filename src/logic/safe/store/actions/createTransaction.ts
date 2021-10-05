@@ -32,7 +32,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { SAFE_ROUTES_WITH_ADDRESS, history } from 'src/routes/routes'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -80,7 +81,9 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      history.push(SAFE_ROUTES_WITH_ADDRESS.TRANSACTIONS)
+      history.push(
+        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, { shortChainName: getCurrentShortChainName(), safeAddress }),
+      )
     }
 
     const ready = await onboardUser()

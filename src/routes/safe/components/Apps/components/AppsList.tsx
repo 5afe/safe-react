@@ -16,7 +16,8 @@ import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
-import { getSafeAddressFromUrl, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -89,6 +90,10 @@ const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
 
 const AppsList = (): React.ReactElement => {
   const safeAddress = getSafeAddressFromUrl()
+  const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
+    shortChainName: getCurrentShortChainName(),
+    safeAddress,
+  })
   const [appSearch, setAppSearch] = useState('')
   const { appList, removeApp, isLoading } = useAppList()
   const apps = useAppsSearch(appList, appSearch)
@@ -126,7 +131,7 @@ const AppsList = (): React.ReactElement => {
               .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
               .map((a) => (
                 <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <StyledLink to={`${SAFE_ROUTES_WITH_ADDRESS.APPS}?appUrl=${encodeURI(a.url)}`}>
+                  <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
                     <AppCard
                       isLoading={isAppLoading(a)}
                       iconUrl={a.iconUrl}

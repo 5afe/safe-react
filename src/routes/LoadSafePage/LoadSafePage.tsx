@@ -35,8 +35,9 @@ import {
   FIELD_SAFE_OWNER_LIST,
   LoadSafeFormValues,
 } from './fields/loadFields'
-import { APP_ENV } from 'src/utils/constants'
-import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ADDRESS_SLUG, SAFE_ROUTES } from '../routes'
+import { IS_PRODUCTION } from 'src/utils/constants'
+import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ROUTES } from '../routes'
+import { getCurrentShortChainName } from 'src/config'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -91,12 +92,12 @@ function Load(): ReactElement {
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { [SAFE_ADDRESS_SLUG]: safeAddress }))
+    history.push(
+      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortChainName: getCurrentShortChainName(), safeAddress }),
+    )
   }
 
-  const isProductionEnv = APP_ENV === 'production'
-
-  return isProductionEnv && !provider ? (
+  return IS_PRODUCTION && !provider ? (
     <div>No account detected</div>
   ) : (
     <Page>
@@ -108,7 +109,7 @@ function Load(): ReactElement {
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
         <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
-          {!isProductionEnv && (
+          {!IS_PRODUCTION && (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />
             </StepFormElement>

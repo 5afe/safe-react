@@ -32,7 +32,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
-import { WELCOME_ROUTE, history, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 type ModalDataType = {
   safeAddress: string
@@ -197,9 +198,12 @@ function SafeCreationProcess(): ReactElement {
 
   async function onClickModalButton() {
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-    const { safeName, safeCreationTxHash } = modalData
+    const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
-      pathname: SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES,
+      pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+        shortChainName: getCurrentShortChainName(),
+        safeAddress,
+      }),
       state: {
         name: safeName,
         tx: safeCreationTxHash,

@@ -2,13 +2,18 @@ import { useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 
-import { isFeatureEnabled } from 'src/config'
+import { getCurrentShortChainName, isFeatureEnabled } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
 import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getSafeAddressFromUrl, SAFE_ROUTE, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
+import {
+  getSafeAddressFromUrl,
+  ADDRESSED_ROUTE,
+  SAFE_SUBSECTION_ROUTE,
+  getAllSafeRoutesWithPrefixedAddress,
+} from 'src/routes/routes'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
@@ -19,7 +24,7 @@ const useSidebarItems = (): ListItemType[] => {
   const safeAddress = getSafeAddressFromUrl()
   const granted = useSelector(grantedSelector)
 
-  const matchSafe = useRouteMatch(SAFE_ROUTE)
+  const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
   const matchSafeWithSidebarSection = useRouteMatch(SAFE_SUBSECTION_ROUTE)
 
   const makeEntryItem = useCallback(
@@ -41,6 +46,11 @@ const useSidebarItems = (): ListItemType[] => {
     if (!matchSafe || !matchSafeWithSidebarSection || !featuresEnabled || !safeAddress) {
       return []
     }
+
+    const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+      shortChainName: getCurrentShortChainName(),
+      safeAddress,
+    })
 
     const assetsSubItems = [
       makeEntryItem({

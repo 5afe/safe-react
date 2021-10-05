@@ -21,13 +21,8 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import {
-  SAFE_ROUTES_WITH_ADDRESS,
-  history,
-  getSafeAddressFromUrl,
-  generateSafeRoute,
-  SAFE_ROUTE,
-} from 'src/routes/routes'
+import { history, getSafeAddressFromUrl, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -69,11 +64,6 @@ const sendAwaitingTransactionNotification = async (
     [safeAddress]: new Date(),
   }
   await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
-}
-
-const onNotificationClicked = (dispatch, notificationKey) => () => {
-  dispatch(closeSnackbarAction({ key: notificationKey }))
-  history.push(SAFE_ROUTES_WITH_ADDRESS.TRANSACTIONS)
 }
 
 // any/AnyAction used as our Redux state is not typed
@@ -121,6 +111,13 @@ const notificationsMiddleware =
 
           const notificationKey = `${safeAddress}-awaiting`
 
+          const onNotificationClicked = (dispatch, notificationKey) => () => {
+            dispatch(closeSnackbarAction({ key: notificationKey }))
+            history.push(
+              generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, { shortChainName: getCurrentShortChainName(), safeAddress }),
+            )
+          }
+
           await sendAwaitingTransactionNotification(
             dispatch,
             safeAddress,
@@ -144,7 +141,12 @@ const notificationsMiddleware =
           const notificationKey = `${currentSafeAddress}-update`
           const onNotificationClicked = () => {
             dispatch(closeSnackbarAction({ key: notificationKey }))
-            history.push(generateSafeRoute(SAFE_ROUTE, currentSafeAddress))
+            history.push(
+              generateSafeRoute(ADDRESSED_ROUTE, {
+                shortChainName: getCurrentShortChainName(),
+                safeAddress: currentSafeAddress,
+              }),
+            )
           }
 
           if (version?.needUpdate && isUserOwner) {

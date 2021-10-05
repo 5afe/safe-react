@@ -1,9 +1,9 @@
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { getClientGatewayUrl } from 'src/config'
+import { getClientGatewayUrl, getCurrentShortChainName } from 'src/config'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
-import { history, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import { generatePath } from 'react-router-dom'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
@@ -568,7 +568,12 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Add'))
 
       await waitFor(() => {
-        expect(historyPushSpy).toHaveBeenCalledWith(generatePath(SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES))
+        expect(historyPushSpy).toHaveBeenCalledWith(
+          generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+            shortChainName: getCurrentShortChainName(),
+            safeAddress: validSafeAddress,
+          }),
+        )
       })
     })
   })

@@ -7,7 +7,8 @@ import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/st
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
+import { getAllSafeRoutesWithPrefixedAddress, getSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -24,7 +25,6 @@ const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList
 const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
-  console.log('Safes')
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const owners = useSelector(currentSafeOwners)
   const isSafeLoaded = owners.length > 0
@@ -58,6 +58,11 @@ const Container = (): React.ReactElement => {
       onClose: () => {},
     })
   }
+
+  const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+    shortChainName: getCurrentShortChainName(),
+    safeAddress: getSafeAddressFromUrl(),
+  })
 
   return (
     <>
