@@ -24,8 +24,7 @@ const validSafeENSNameDomain = 'testENSDomain.eth'
 describe('<LoadSafePage>', () => {
   afterEach(() => {
     const constants = require('src/utils/constants')
-
-    Object.defineProperty(constants, 'APP_ENV', { value: undefined })
+    Object.defineProperty(constants, 'IS_PRODUCTION', { value: false })
   })
 
   it('renders LoadSafePage Form', () => {
@@ -46,8 +45,7 @@ describe('<LoadSafePage>', () => {
 
   it('hides Select network step if we are in production env', () => {
     const constants = require('src/utils/constants')
-
-    Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
+    Object.defineProperty(constants, 'IS_PRODUCTION', { value: true })
 
     const customState = {
       providers: {
@@ -157,8 +155,7 @@ describe('<LoadSafePage>', () => {
   describe('Step 2: Name and address', () => {
     it('Shows a No account detected error message if no wallet is connected in production environment', () => {
       const constants = require('src/utils/constants')
-
-      Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
+      Object.defineProperty(constants, 'IS_PRODUCTION', { value: true })
 
       render(<LoadSafePage />)
 

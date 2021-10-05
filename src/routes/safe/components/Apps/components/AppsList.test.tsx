@@ -1,7 +1,7 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
 
-jest.mock('src/utils/router', () => {
+jest.mock('src/routes/routes', () => {
   const original = jest.requireActual('src/routes/routes')
   return {
     ...original,

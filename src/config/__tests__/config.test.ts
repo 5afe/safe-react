@@ -3,6 +3,11 @@ import { default as networks } from 'src/config/networks'
 
 const { mainnet, xdai } = networks
 
+const mainnetShortName = mainnet.network.shortName
+const xDaiShortName = xdai.network.shortName
+
+const validSafeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
+
 describe('Config Services', () => {
   beforeEach(() => {
     jest.resetModules()
@@ -24,7 +29,7 @@ describe('Config Services', () => {
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
     }))
-    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
     const { getNetworkInfo } = require('src/config')
 
     // When
@@ -39,7 +44,7 @@ describe('Config Services', () => {
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
     }))
-    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.dev?.txServiceUrl
 
@@ -55,7 +60,7 @@ describe('Config Services', () => {
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
     }))
-    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.staging?.txServiceUrl
 
@@ -72,7 +77,7 @@ describe('Config Services', () => {
       NODE_ENV: 'production',
       APP_ENV: 'production',
     }))
-    window.history.pushState(null, '', `${window.location.origin}/app/mainnet`)
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
 
@@ -89,7 +94,7 @@ describe('Config Services', () => {
       NODE_ENV: 'production',
       APP_ENV: 'production',
     }))
-    window.history.pushState(null, '', `${window.location.origin}/app/xdai`)
+    window.history.pushState(null, '', `${window.location.origin}/app/${xDaiShortName}:${validSafeAddress}`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
 
@@ -104,7 +109,7 @@ describe('Config Services', () => {
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
     }))
-    window.history.pushState(null, '', `${window.location.origin}/app/xdai`)
+    window.history.pushState(null, '', `${window.location.origin}/app/${xDaiShortName}:${validSafeAddress}`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
 
