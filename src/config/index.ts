@@ -36,7 +36,9 @@ export const getNetworks = (): NetworkInfo[] => {
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
   const { pathname } = window.location
-  const network = getNetworks().find(({ shortName }) => pathname.split('/').includes(`${shortName}:`))
+  const network = getNetworks().find(({ shortName }) => {
+    return pathname.split('/').some((el) => el.includes(`${shortName}:`))
+  })
   return network?.id || DEFAULT_NETWORK_ID
 }
 
