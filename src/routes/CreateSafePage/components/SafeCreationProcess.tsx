@@ -201,7 +201,7 @@ function SafeCreationProcess(): ReactElement {
     const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-        shortChainName: getCurrentShortChainName(),
+        shortName: getCurrentShortChainName(),
         safeAddress,
       }),
       state: {

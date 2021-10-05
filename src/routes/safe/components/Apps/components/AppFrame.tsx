@@ -100,9 +100,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
 
   const redirectToBalance = () =>
-    history.push(
-      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortChainName: getCurrentShortChainName(), safeAddress }),
-    )
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
   const timer = useRef<number>()
   const [appTimeout, setAppTimeout] = useState(false)
   const [appLoadError, setAppLoadError] = useState<boolean>(false)

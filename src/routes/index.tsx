@@ -31,7 +31,7 @@ const Routes = (): React.ReactElement => {
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
-    if (isInitialLoad && location.pathname === '/') {
+    if (isInitialLoad && location.pathname !== '/') {
       setInitialLoad(false)
     }
   }, [location.pathname, isInitialLoad])
@@ -66,7 +66,7 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  shortChainName: getCurrentShortChainName(),
+                  shortName: getCurrentShortChainName(),
                   safeAddress: defaultSafe,
                 })}
               />
@@ -78,8 +78,8 @@ const Routes = (): React.ReactElement => {
       />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
       <Route component={CreateSafePage} exact path={OPEN_ROUTE} />
-      <Route component={LoadSafePage} path={LOAD_ROUTE} />
       <Route component={Safe} path={ADDRESSED_ROUTE} />
+      <Route component={LoadSafePage} path={LOAD_ROUTE} />
       <Redirect to="/" />
     </Switch>
   )

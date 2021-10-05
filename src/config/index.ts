@@ -12,7 +12,6 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
-import { getShortChainNameFromUrl } from 'src/routes/routes'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -23,10 +22,22 @@ import {
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
 
-export function getInitialNetworkId(): ETHEREUM_NETWORK {
+export const getNetworks = (): NetworkInfo[] => {
+  const { local, ...usefulNetworks } = networks
+  return Object.values(usefulNetworks).map((networkObj) => ({
+    id: networkObj.network.id,
+    shortName: networkObj.network.shortName,
+    label: networkObj.network.label,
+    backgroundColor: networkObj.network.backgroundColor,
+    textColor: networkObj.network.textColor,
+  }))
+}
+
+export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
-  const network = Object.values(networks).find(({ network }) => network.shortName === getShortChainNameFromUrl())
-  return network ? network.network.id : DEFAULT_NETWORK_ID
+  const { pathname } = window.location
+  const network = getNetworks().find(({ shortName }) => pathname.split('/').includes(`${shortName}:`))
+  return network?.id || DEFAULT_NETWORK_ID
 }
 
 let networkId = getInitialNetworkId()
@@ -34,7 +45,7 @@ let networkId = getInitialNetworkId()
 export const setNetworkId = (id: ETHEREUM_NETWORK): void => {
   networkId = id
 }
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
+export const getNetworkId = (): ETHEREUM_NETWORK => networkId
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
@@ -96,17 +107,6 @@ export const getConfig = (): NetworkSpecificConfiguration => {
     disabledFeatures: configFile.disabledFeatures,
     disabledWallets: configFile.disabledWallets,
   }
-}
-
-export const getNetworks = (): NetworkInfo[] => {
-  const { local, ...usefulNetworks } = networks
-  return Object.values(usefulNetworks).map((networkObj) => ({
-    id: networkObj.network.id,
-    shortName: networkObj.network.shortName,
-    label: networkObj.network.label,
-    backgroundColor: networkObj.network.backgroundColor,
-    textColor: networkObj.network.textColor,
-  }))
 }
 
 export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl

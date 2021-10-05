@@ -570,7 +570,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         expect(historyPushSpy).toHaveBeenCalledWith(
           generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-            shortChainName: getCurrentShortChainName(),
+            shortName: getCurrentShortChainName(),
             safeAddress: validSafeAddress,
           }),
         )

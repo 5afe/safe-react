@@ -50,7 +50,7 @@ const useSidebarItems = (): ListItemType[] => {
     }
 
     const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
-      shortChainName: getCurrentShortChainName(),
+      shortName: getCurrentShortChainName(),
       safeAddress,
     })
 

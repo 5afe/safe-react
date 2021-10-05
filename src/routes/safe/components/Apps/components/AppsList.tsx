@@ -91,7 +91,7 @@ const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
 const AppsList = (): React.ReactElement => {
   const safeAddress = getSafeAddressFromUrl()
   const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-    shortChainName: getCurrentShortChainName(),
+    shortName: getCurrentShortChainName(),
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')

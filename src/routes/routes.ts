@@ -51,8 +51,10 @@ export const SAFE_ROUTES = {
   SETTINGS_ADVANCED: `${ADDRESSED_ROUTE}/settings/advanced`,
 }
 
+export type SafeRouteParams = { shortName: string; safeAddress: string }
+
 // Due to hoisting issues, these functions should remain here
-export const getPrefixedSafeAddressFromUrl = (): { shortName: string; safeAddress: string } => {
+export const getPrefixedSafeAddressFromUrl = (): SafeRouteParams => {
   const match = matchPath<SafeRouteSlugs>(history.location.pathname, { path: ADDRESSED_ROUTE })
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]?.split(':')
   const currentShortChainName = getCurrentShortChainName()
@@ -103,18 +105,16 @@ export const getPrefixedSafeAddressSlug = (
   return `${shortName}:${safeAddress}`
 }
 
-export type SafeRouteParams = { shortChainName: string; safeAddress: string }
-
-// Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortChainName:safeAddress'
+// Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortName:safeAddress'
 export const generateSafeRoute = (
   path: typeof SAFE_ROUTES[keyof typeof SAFE_ROUTES],
-  { shortChainName, safeAddress }: SafeRouteParams,
+  { shortName, safeAddress }: SafeRouteParams,
 ): string =>
   generatePath(path, {
-    [SAFE_ADDRESS_SLUG]: `${shortChainName}:${safeAddress}`,
+    [SAFE_ADDRESS_SLUG]: `${shortName}:${safeAddress}`,
   })
 
-export const getAllSafeRoutesWithPrefixedAddress = (params: SafeRouteParams) =>
+export const getAllSafeRoutesWithPrefixedAddress = (params: SafeRouteParams): typeof SAFE_ROUTES =>
   Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>((routes, [key, route]) => {
     return {
       ...routes,

@@ -60,7 +60,7 @@ export const EllipsisTransactionDetails = ({
   const addOrEditEntryHandler = () => {
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ADDRESS_BOOK, {
-        shortChainName: getCurrentShortChainName(),
+        shortName: getCurrentShortChainName(),
         safeAddress: getSafeAddressFromUrl(),
       }),
       search: `?entryAddress=${address}`,

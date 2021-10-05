@@ -7,8 +7,7 @@ import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/st
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { getAllSafeRoutesWithPrefixedAddress, getSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { generateSafeRoute, getPrefixedSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -59,15 +58,14 @@ const Container = (): React.ReactElement => {
     })
   }
 
-  const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
-    shortChainName: getCurrentShortChainName(),
-    safeAddress: getSafeAddressFromUrl(),
-  })
-
   return (
     <>
       <Switch>
-        <Route exact path={SAFE_ROUTES.ASSETS_BALANCES} render={() => wrapInSuspense(<Balances />, null)} />
+        <Route
+          exact
+          path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}
+          render={() => wrapInSuspense(<Balances />, null)}
+        />
         <Route exact path={SAFE_ROUTES.TRANSACTIONS} render={() => wrapInSuspense(<TxList />, null)} />
         <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Route
@@ -75,13 +73,13 @@ const Container = (): React.ReactElement => {
           path={SAFE_ROUTES.APPS}
           render={({ history }) => {
             if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
-              history.push(SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES)
+              history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, getPrefixedSafeAddressFromUrl()))
             }
             return wrapInSuspense(<Apps />, null)
           }}
         />
         <Route path={SAFE_ROUTES.SETTINGS} render={() => wrapInSuspense(<Settings />, null)} />
-        <Redirect to={SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES} />
+        <Redirect to={SAFE_ROUTES.ASSETS_BALANCES} />
       </Switch>
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>

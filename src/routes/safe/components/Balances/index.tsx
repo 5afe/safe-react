@@ -30,9 +30,6 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-export const COINS_LOCATION_REGEX = /\/balances\/?$/
-export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
-
 const Balances = (): ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
 
@@ -81,7 +78,7 @@ const Balances = (): ReactElement => {
   const { erc721Enabled, sendFunds, showReceive } = state
 
   const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
-    shortChainName: getCurrentShortChainName(),
+    shortName: getCurrentShortChainName(),
     safeAddress,
   })
 
@@ -112,7 +109,7 @@ const Balances = (): ReactElement => {
             exact
             render={() => {
               return !erc721Enabled ? (
-                <Redirect to={SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES} />
+                <Redirect to={SAFE_ROUTES.ASSETS_BALANCES} />
               ) : (
                 <Col end="sm" sm={6} xs={12}></Col>
               )

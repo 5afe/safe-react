@@ -114,7 +114,7 @@ const notificationsMiddleware =
           const onNotificationClicked = (dispatch, notificationKey) => () => {
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
-              generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, { shortChainName: getCurrentShortChainName(), safeAddress }),
+              generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, { shortName: getCurrentShortChainName(), safeAddress }),
             )
           }
 
@@ -143,7 +143,7 @@ const notificationsMiddleware =
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
               generateSafeRoute(ADDRESSED_ROUTE, {
-                shortChainName: getCurrentShortChainName(),
+                shortName: getCurrentShortChainName(),
                 safeAddress: currentSafeAddress,
               }),
             )

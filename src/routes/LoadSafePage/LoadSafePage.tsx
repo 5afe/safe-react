@@ -93,9 +93,7 @@ function Load(): ReactElement {
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
-    history.push(
-      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortChainName: getCurrentShortChainName(), safeAddress }),
-    )
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
   }
 
   return IS_PRODUCTION && !provider ? (

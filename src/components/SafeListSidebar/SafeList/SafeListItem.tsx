@@ -59,7 +59,7 @@ const SafeListItem = ({
   }
 
   const routeSlugs: SafeRouteParams = {
-    shortChainName: getShortChainNameById(networkId),
+    shortName: getShortChainNameById(networkId),
     safeAddress: address,
   }
 

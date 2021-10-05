@@ -40,7 +40,7 @@ const Settings = (): React.ReactElement => {
   const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_SLUG}?`)
 
   const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
-    shortChainName: getCurrentShortChainName(),
+    shortName: getCurrentShortChainName(),
     safeAddress,
   })
 
