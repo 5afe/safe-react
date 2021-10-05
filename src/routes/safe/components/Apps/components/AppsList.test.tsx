@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from 'src/utils/test-utils'
 
 jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps', () => ({
   usePinnedSafeApps: () => ({
-    pinnedSafeAppIds: [14, 24],
+    pinnedSafeAppIds: [14, 24, 228], // Including an id that doesn't exist in the remote apps to check that there's no error
   }),
 }))
 
@@ -159,3 +159,5 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect((searchInput as HTMLInputElement).value).toBe('')
   })
 })
+
+describe('Safe Apps -> AppsList -> Pinning apps', () => {})

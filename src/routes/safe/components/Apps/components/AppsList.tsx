@@ -1,7 +1,4 @@
-import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
-import IconButton from '@material-ui/core/IconButton'
-import Bookmark from '@material-ui/icons/Bookmark'
-import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
+import { IconText, Loader, Menu, Text, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { generatePath } from 'react-router-dom'
@@ -12,11 +9,9 @@ import Collapse from 'src/components/Collapse'
 import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
-import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
-import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
+import { AppCard, AddCustomAppCard } from 'src/routes/safe/components/Apps/components/AppCard'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-import { FETCH_STATUS } from 'src/utils/requests'
 
 import { SearchInputCard } from './SearchInputCard'
 import { NoAppsFound } from './NoAppsFound'
@@ -60,19 +55,6 @@ const ContentWrapper = styled.div`
   align-items: center;
 `
 
-const IconBtn = styled(IconButton)`
-  &.MuiButtonBase-root {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-    padding: 5px;
-    opacity: 0;
-
-    transition: opacity 0.2s ease-in-out;
-  }
-`
-
 const SectionHeading = styled(Text)`
   width: 100%;
   margin: ${({ theme }) => `${theme.margin.xl} 0 ${theme.margin.md} 0`};
@@ -81,18 +63,6 @@ const SectionHeading = styled(Text)`
 const CenterIconText = styled(IconText)`
   justify-content: center;
 `
-
-const AppContainer = styled(motion.div)`
-  position: relative;
-
-  &:hover {
-    ${IconBtn} {
-      opacity: 1;
-    }
-  }
-`
-
-const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
 
 const AppsList = (): React.ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
@@ -107,6 +77,10 @@ const AppsList = (): React.ReactElement => {
   const noAppsFound = apps.length === 0 && appSearch
   const showCustomApps = !!customApps.length && !appSearch
   const showPinnedApps = !appSearch
+
+  const handleAppPin = (app: SafeApp) => {
+    togglePin(app.id)
+  }
 
   if (isLoading || !safeAddress) {
     return (
@@ -140,31 +114,13 @@ const AppsList = (): React.ReactElement => {
             <AnimatePresence>
               <CardsWrapper>
                 {pinnedSafeApps.map((a) => (
-                  <AppContainer
+                  <AppCard
+                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
                     key={a.id}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <AppCard
-                      to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                      isLoading={isAppLoading(a)}
-                      iconUrl={a.iconUrl}
-                      name={a.name}
-                      description={a.description}
-                    />
-                    <IconBtn
-                      title="Unpin"
-                      onClick={(e) => {
-                        e.stopPropagation()
-
-                        togglePin(a.id)
-                      }}
-                    >
-                      <Bookmark />
-                    </IconBtn>
-                  </AppContainer>
+                    app={a}
+                    pinned
+                    onPin={handleAppPin}
+                  />
                 ))}
               </CardsWrapper>
             </AnimatePresence>
@@ -182,31 +138,12 @@ const AppsList = (): React.ReactElement => {
             <AnimatePresence>
               <CardsWrapper>
                 {customApps.map((a) => (
-                  <AppContainer
+                  <AppCard
+                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
                     key={a.id}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <AppCard
-                      to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                      isLoading={isAppLoading(a)}
-                      iconUrl={a.iconUrl}
-                      name={a.name}
-                      description={a.description}
-                    />
-                    <IconBtn
-                      title="Remove app"
-                      onClick={(e) => {
-                        e.stopPropagation()
-
-                        setAppToRemove(a)
-                      }}
-                    >
-                      <Icon size="sm" type="delete" color="error" />
-                    </IconBtn>
-                  </AppContainer>
+                    app={a}
+                    onRemove={(app) => removeApp(app.id)}
+                  />
                 ))}
               </CardsWrapper>
             </AnimatePresence>
@@ -219,29 +156,9 @@ const AppsList = (): React.ReactElement => {
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
         <AnimatePresence>
           <CardsWrapper>
-            {!appSearch && (
-              <AppCard to="" iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
-            )}
+            {!appSearch && <AddCustomAppCard onClick={openAddAppModal} />}
             {apps.map((a) => (
-              <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <AppCard
-                  to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                  isLoading={isAppLoading(a)}
-                  iconUrl={a.iconUrl}
-                  name={a.name}
-                  description={a.description}
-                />
-                <IconBtn
-                  title="Pin"
-                  onClick={(e) => {
-                    e.stopPropagation()
-
-                    togglePin(a.id)
-                  }}
-                >
-                  <BookmarkBorder />
-                </IconBtn>
-              </AppContainer>
+              <AppCard to={`${appsPath}?appUrl=${encodeURI(a.url)}`} key={a.id} app={a} />
             ))}
           </CardsWrapper>
         </AnimatePresence>
