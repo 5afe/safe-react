@@ -1,11 +1,8 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
+import { usePinnedSafeApps } from '../hooks/appList/usePinnedSafeApps'
 
-jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps', () => ({
-  usePinnedSafeApps: () => ({
-    pinnedSafeAppIds: [14, 24, 228], // Including an id that doesn't exist in the remote apps to check that there's no error
-  }),
-}))
+jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps')
 
 jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () => ({
   useCustomSafeApps: () => ({
@@ -87,17 +84,24 @@ const customState = {
   },
 }
 
+beforeEach(() => {
+  usePinnedSafeApps.mockImplementation(() => ({
+    pinnedSafeAppIds: [14, 24, 228], // Including an id that doesn't exist in the remote apps to check that there's no error
+  }))
+})
+
 describe('Safe Apps -> AppsList', () => {
-  it('Shows apps from the app list', () => {
+  it('Shows apps from the Remote app list', () => {
     render(<AppsList />, customState)
 
     expect(screen.getByText('Compound')).toBeInTheDocument()
+    expect(screen.getByText('ENS App')).toBeInTheDocument()
   })
 
-  it("Doesn't show apps with unavailable manifest.json", () => {
+  it('Shows apps from the Custom app list', () => {
     render(<AppsList />, customState)
 
-    expect(screen.queryByText('unknown')).not.toBeInTheDocument()
+    expect(screen.getByText('Drain safe')).toBeInTheDocument()
   })
 })
 
@@ -160,4 +164,20 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 })
 
-describe('Safe Apps -> AppsList -> Pinning apps', () => {})
+describe('Safe Apps -> AppsList -> Pinning apps', () => {
+  it('Shows a tutorial message when there are no pinned apps', () => {
+    usePinnedSafeApps.mockImplementation(() => ({
+      pinnedSafeAppIds: [],
+      loaded: true,
+      updatePinnedSafeApps: jest.fn(),
+    }))
+    render(<AppsList />, customState)
+
+    const tut = screen.getByText('Simply hover over an app to pin it to this section for convenient access')
+    expect(tut).toBeInTheDocument()
+  })
+
+  it('allows to pin an app', () => {})
+
+  it('allows to unpin an app', () => {})
+})

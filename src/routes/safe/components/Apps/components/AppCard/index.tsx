@@ -97,17 +97,16 @@ type Props = {
   iconSize?: 'md' | 'lg'
   to: string
   pinned?: boolean
-  key?: React.Key
   onRemove?: (app: SafeApp) => void
   onPin?: (app: SafeApp) => void
 }
 
 const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
 
-const AppCard = ({ app, iconSize = 'md', to, key, onPin, onRemove, pinned }: Props): React.ReactElement => {
+const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned }: Props): React.ReactElement => {
   if (isAppLoading(app)) {
     return (
-      <AppContainer key={key} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <AppContainer layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
         <StyledAppCard>
           <AppIconSK />
           <TitleSK />
@@ -155,7 +154,7 @@ const AppCard = ({ app, iconSize = 'md', to, key, onPin, onRemove, pinned }: Pro
   )
 
   return (
-    <AppContainer key={key} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+    <AppContainer layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <StyledLink to={to}>{content}</StyledLink>
     </AppContainer>
   )
