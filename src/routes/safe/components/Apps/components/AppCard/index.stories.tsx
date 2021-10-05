@@ -22,6 +22,5 @@ export const LoadedApp = (): React.ReactElement => (
       description: 'Gnosis safe app',
       fetchStatus: FETCH_STATUS.SUCCESS,
     }}
-    onClick={console.log}
   />
 )

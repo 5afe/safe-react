@@ -101,6 +101,7 @@ const AppsList = (): React.ReactElement => {
       </Menu>
       <ContentWrapper>
         <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
+
         {showPinnedApps && (
           <Collapse
             title={
@@ -126,6 +127,7 @@ const AppsList = (): React.ReactElement => {
             </AnimatePresence>
           </Collapse>
         )}
+
         {showCustomApps && (
           <Collapse
             title={
@@ -138,12 +140,7 @@ const AppsList = (): React.ReactElement => {
             <AnimatePresence>
               <CardsWrapper>
                 {customApps.map((a) => (
-                  <AppCard
-                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                    key={a.id}
-                    app={a}
-                    onRemove={(app) => removeApp(app.id)}
-                  />
+                  <AppCard to={`${appsPath}?appUrl=${encodeURI(a.url)}`} key={a.id} app={a} onRemove={setAppToRemove} />
                 ))}
               </CardsWrapper>
             </AnimatePresence>
@@ -158,7 +155,13 @@ const AppsList = (): React.ReactElement => {
           <CardsWrapper>
             {!appSearch && <AddCustomAppCard onClick={openAddAppModal} />}
             {apps.map((a) => (
-              <AppCard to={`${appsPath}?appUrl=${encodeURI(a.url)}`} key={a.id} app={a} />
+              <AppCard
+                to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                key={a.id}
+                app={a}
+                onPin={handleAppPin}
+                pinned={pinnedSafeApps.some((pinnedApp) => pinnedApp.id === a.id)}
+              />
             ))}
           </CardsWrapper>
         </AnimatePresence>

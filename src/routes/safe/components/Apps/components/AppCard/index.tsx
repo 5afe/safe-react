@@ -92,7 +92,6 @@ const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): vo
 }
 
 type Props = {
-  onClick?: () => void
   className?: string
   app: SafeApp
   iconSize?: 'md' | 'lg'
@@ -105,7 +104,7 @@ type Props = {
 
 const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
 
-const AppCard = ({ app, iconSize = 'md', to, onClick, key, onPin, onRemove, pinned }: Props): React.ReactElement => {
+const AppCard = ({ app, iconSize = 'md', to, key, onPin, onRemove, pinned }: Props): React.ReactElement => {
   if (isAppLoading(app)) {
     return (
       <AppContainer key={key} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -121,16 +120,17 @@ const AppCard = ({ app, iconSize = 'md', to, onClick, key, onPin, onRemove, pinn
 
   const content = (
     <>
-      <StyledAppCard onClick={onClick}>
+      <StyledAppCard>
         <IconImg alt={`${app.name || 'App'} Logo`} src={app.iconUrl} onError={setAppImageFallback} size={iconSize} />
         <AppName size="xs">{app.name}</AppName>
         <AppDescription size="lg">{app.description} </AppDescription>
       </StyledAppCard>
       {onPin && (
         <IconBtn
-          title="Pin"
+          title={pinned ? 'Unpin' : 'Pin'}
           onClick={(e) => {
-            e.stopPropagation()
+            // prevent triggering the link event
+            e.preventDefault()
 
             onPin(app)
           }}
@@ -143,7 +143,7 @@ const AppCard = ({ app, iconSize = 'md', to, onClick, key, onPin, onRemove, pinn
         <IconBtn
           title="Remove app"
           onClick={(e) => {
-            e.stopPropagation()
+            e.preventDefault()
 
             onRemove(app)
           }}
@@ -154,17 +154,9 @@ const AppCard = ({ app, iconSize = 'md', to, onClick, key, onPin, onRemove, pinn
     </>
   )
 
-  if (to) {
-    return (
-      <AppContainer key={key} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-        <StyledLink to={to}>{content}</StyledLink>
-      </AppContainer>
-    )
-  }
-
   return (
     <AppContainer key={key} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      content
+      <StyledLink to={to}>{content}</StyledLink>
     </AppContainer>
   )
 }
