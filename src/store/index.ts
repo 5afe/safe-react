@@ -31,7 +31,7 @@ import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {
-  CURRENCY_VALUES_KEY,
+  CURRENCY_REDUCER_ID,
   CurrencyValuesState,
   initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
@@ -41,7 +41,7 @@ import { configMiddleware } from 'src/logic/config/store/middleware'
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const currencyLocalStorageKey = `${CURRENCY_VALUES_KEY}.selectedCurrency`
+const currencyLocalStorageKey = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
 const localStorageConfig = {
   states: [ADDRESS_BOOK_REDUCER_ID, currencyLocalStorageKey],
@@ -49,7 +49,7 @@ const localStorageConfig = {
   namespaceSeparator: '__',
   disableWarnings: true,
   preloadedState: {
-    [CURRENCY_VALUES_KEY]: initialCurrencyState,
+    [CURRENCY_REDUCER_ID]: initialCurrencyState,
   },
 }
 
@@ -73,7 +73,7 @@ const reducers = combineReducers({
   [TOKEN_REDUCER_ID]: tokens,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
-  [CURRENCY_VALUES_KEY]: currencyValues,
+  [CURRENCY_REDUCER_ID]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
@@ -88,7 +88,7 @@ export type AppReduxState = CombinedState<{
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: Record<string, Record<string, StoreStructure>>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
-  [CURRENCY_VALUES_KEY]: CurrencyValuesState
+  [CURRENCY_REDUCER_ID]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState

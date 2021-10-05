@@ -3,7 +3,7 @@ import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/set
 import { AppReduxState } from 'src/store'
 import { SET_AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/actions/setAvailableCurrencies'
 
-export const CURRENCY_VALUES_KEY = 'currencyValues'
+export const CURRENCY_REDUCER_ID = 'currencyValues'
 
 export type CurrencyValuesState = {
   selectedCurrency: string
