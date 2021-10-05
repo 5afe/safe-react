@@ -5,7 +5,7 @@ import { configStore } from 'src/logic/config/store/actions'
 import { store } from 'src/store'
 
 export const setNetwork = (id: ETHEREUM_NETWORK) => {
-  setNetworkId(getNetworkName(id))
+  setNetworkId(id)
   const safeConfig = makeNetworkConfig(getConfig())
   store.dispatch(configStore(safeConfig))
 }

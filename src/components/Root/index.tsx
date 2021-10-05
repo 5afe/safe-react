@@ -17,6 +17,7 @@ import './KeystoneCustom.module.scss'
 import { getNetworkId, getNetworks, getShortChainNameById } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
 import StoreMigrator from 'src/components/StoreMigrator'
+import { isChecksumAddress } from 'src/utils/checksumAddress'
 
 const Root = (): React.ReactElement => {
   const { pathname, hash, search } = window.location
@@ -25,10 +26,23 @@ const Root = (): React.ReactElement => {
   if (isLegacyRoute) {
     const networkLabel = window.location.hostname.split('.')[0]
     const id = getNetworks().find(({ label }) => label === networkLabel)?.id || getNetworkId()
-    const pathname = hash.replace('#/safes/', getShortChainNameById(id))
+
+    const pathname = hash
+      .split('/')
+      .reduce((acc, dir) => {
+        const isLegacySubdirectory = ['#', 'safes'].includes(dir)
+        if (isLegacySubdirectory) return acc
+
+        const hasNoShortChainNamePrefix = isChecksumAddress(dir)
+        if (hasNoShortChainNamePrefix) return [...acc, `${getShortChainNameById(id)}:${dir}`]
+
+        return [...acc, dir]
+      }, [])
+      .join('/')
+
     return (
       <Router history={history}>
-        <Redirect to={pathname + search} />
+        <Redirect to={`/${pathname}` + search} />
       </Router>
     )
   }

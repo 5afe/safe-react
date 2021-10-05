@@ -35,7 +35,9 @@ export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
 const Balances = (): ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
-  const matchSafeWithBalancesSection = useRouteMatch(SAFE_SUBSECTION_ROUTE)
+
+  // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
+  const matchSafeWithBalancesSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 

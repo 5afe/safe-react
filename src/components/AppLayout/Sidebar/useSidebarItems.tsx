@@ -25,7 +25,9 @@ const useSidebarItems = (): ListItemType[] => {
   const granted = useSelector(grantedSelector)
 
   const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
-  const matchSafeWithSidebarSection = useRouteMatch(SAFE_SUBSECTION_ROUTE)
+
+  // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
+  const matchSafeWithSidebarSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const makeEntryItem = useCallback(
     ({ label, disabled, badge, iconType, href, subItems }) => {

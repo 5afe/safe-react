@@ -1,4 +1,5 @@
 import memoize from 'lodash.memoize'
+
 import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
@@ -11,6 +12,7 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
+import { getShortChainNameFromUrl } from 'src/routes/routes'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -20,33 +22,25 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
-import { sameString } from 'src/utils/strings'
+
+export function getInitialNetworkId(): ETHEREUM_NETWORK {
+  const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+  const network = Object.values(networks).find(({ network }) => network.shortName === getShortChainNameFromUrl())
+  return network ? network.network.id : DEFAULT_NETWORK_ID
+}
+
+let networkId = getInitialNetworkId()
+
+export const setNetworkId = (id: ETHEREUM_NETWORK): void => {
+  networkId = id
+}
+export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
   const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == networkId)
   return name || ''
 }
-
-const getNetworkIdFromUrl = () => {
-  const DEFAULT_NETWORK = IS_PRODUCTION ? 'MAINNET' : 'RINKEBY'
-
-  const subdirectories = window.location.pathname.split('/')
-
-  const network = Object.values(networks).find(({ network }) => {
-    return subdirectories.some((subdirectory) => sameString(network.label, subdirectory))
-  })
-  const id = network?.network?.id
-
-  return (id ? getNetworkName(id) : DEFAULT_NETWORK).toUpperCase()
-}
-
-let networkId = getNetworkIdFromUrl()
-
-export const setNetworkId = (id: string): void => {
-  networkId = id
-}
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | undefined => {
   return Object.values(networks).find((cfg) => cfg.network.id === id)

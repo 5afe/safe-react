@@ -35,7 +35,9 @@ const Settings = (): React.ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
-  const matchSafeWithSettingSection = useRouteMatch(SAFE_SUBSECTION_SLUG)
+
+  // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
+  const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_SLUG}?`)
 
   const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
     shortChainName: getCurrentShortChainName(),

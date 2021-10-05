@@ -57,7 +57,6 @@ export enum ETHEREUM_NETWORK {
 }
 
 export type NetworkSettings = {
-  // TODO: id now seems to be unnecessary
   id: ETHEREUM_NETWORK
   shortName: string
   backgroundColor: string

@@ -15,7 +15,7 @@ import {
   ADDRESSED_ROUTE,
   SAFE_ROUTES,
   WELCOME_ROUTE,
-  LOAD_SPECIFIC_SAFE_ROUTE,
+  hasPrefixedSafeAddressInUrl,
 } from './routes'
 import { getCurrentShortChainName } from 'src/config'
 
@@ -38,7 +38,9 @@ const Routes = (): React.ReactElement => {
 
   useEffect(() => {
     // Anonymize safe address when tracking page views
-    const pathname = location.pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
+    const pathname = hasPrefixedSafeAddressInUrl()
+      ? location.pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
+      : location.pathname
     trackPage(pathname + location.search)
   }, [location, trackPage])
 
@@ -76,7 +78,7 @@ const Routes = (): React.ReactElement => {
       />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
       <Route component={CreateSafePage} exact path={OPEN_ROUTE} />
-      <Route component={LoadSafePage} path={[LOAD_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
+      <Route component={LoadSafePage} path={LOAD_ROUTE} />
       <Route component={Safe} path={ADDRESSED_ROUTE} />
       <Redirect to="/" />
     </Switch>

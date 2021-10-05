@@ -1,6 +1,6 @@
 import { ReactElement, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
@@ -36,7 +36,7 @@ import {
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { IS_PRODUCTION } from 'src/utils/constants'
-import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ROUTES } from '../routes'
+import { generateSafeRoute, SafeRouteSlugs, SAFE_ADDRESS_SLUG, SAFE_ROUTES } from '../routes'
 import { getCurrentShortChainName } from 'src/config'
 
 function Load(): ReactElement {
@@ -45,7 +45,8 @@ function Load(): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const safeAddress = getSafeAddressFromUrl()
+  const params = useParams<Pick<SafeRouteSlugs, typeof SAFE_ADDRESS_SLUG>>()
+  const safeAddress = params?.[SAFE_ADDRESS_SLUG]?.split(':')?.[1] || ''
   const safeRandomName = useMnemonicSafeName()
 
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
