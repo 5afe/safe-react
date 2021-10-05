@@ -1,26 +1,33 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
 
-// jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () => ({
-//   useCustomSafeApps: () => ({
-//     customSafeApps: [
-//       {
-//         id: '0.44667970656294087',
-//         url: 'http://localhost:3001',
-//         name: 'unknown',
-//         iconUrl: '/static/media/apps.70657d32.svg',
-//         description: '',
-//         fetchStatus: 'ERROR',
-//         disabled: false,
-//         custom: true,
-//       },
-//     ],
-//   }),
-// }))
+jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps', () => ({
+  usePinnedSafeApps: () => ({
+    pinnedSafeAppIds: [14, 24],
+  }),
+}))
 
-jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
-  useAppList: () => ({
-    appList: [
+jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () => ({
+  useCustomSafeApps: () => ({
+    customSafeApps: [
+      {
+        id: 36,
+        url: 'https://apps.gnosis-safe.io/drain-safe',
+        name: 'Drain safe',
+        iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
+        error: false,
+        description: 'Transfer all your assets in batch',
+        fetchStatus: 'SUCCESS',
+        chainIds: [4],
+        provider: null,
+      },
+    ],
+  }),
+}))
+
+jest.mock('src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps', () => ({
+  useRemoteSafeApps: () => ({
+    remoteSafeApps: [
       {
         id: 13,
         url: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k',
@@ -65,43 +72,7 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useAppList', () => ({
         provider: null,
       },
     ],
-    pinnedSafeApps: [
-      {
-        id: 14,
-        url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
-        name: 'Synthetix',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
-
-        description: 'Trade synthetic assets on Ethereum',
-        fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
-        provider: null,
-      },
-      {
-        id: 24,
-        url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
-        name: 'Transaction Builder',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
-        description: 'A Safe app to compose custom transactions',
-        fetchStatus: 'SUCCESS',
-        chainIds: [1, 4, 56, 100, 137, 246, 73799],
-        provider: null,
-      },
-    ],
-    customApps: [
-      {
-        id: 36,
-        url: 'https://apps.gnosis-safe.io/drain-safe',
-        name: 'Drain safe',
-        iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
-        description: 'Transfer all your assets in batch',
-        fetchStatus: 'SUCCESS',
-        chainIds: [4],
-        provider: null,
-      },
-    ],
-    removeApp: (appUrl: string) => {},
-    isLoading: false,
+    status: 'SUCCESS',
   }),
 }))
 
