@@ -105,6 +105,8 @@ const AppsList = (): React.ReactElement => {
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
   const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
   const noAppsFound = apps.length === 0 && appSearch
+  const showCustomApps = !!customApps.length && !appSearch
+  const showPinnedApps = !appSearch
 
   if (isLoading || !safeAddress) {
     return (
@@ -125,44 +127,50 @@ const AppsList = (): React.ReactElement => {
       </Menu>
       <ContentWrapper>
         <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
-        {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
-        <Collapse
-          title={
-            <Text color="placeHolder" strong size="md">
-              PINNED APPS
-            </Text>
-          }
-          defaultExpanded
-        >
-          {pinnedSafeApps.length === 0 && <PinnedAppsTutorial />}
-          <AnimatePresence>
-            <CardsWrapper>
-              {pinnedSafeApps.map((a) => (
-                <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <AppCard
-                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                    isLoading={isAppLoading(a)}
-                    iconUrl={a.iconUrl}
-                    name={a.name}
-                    description={a.description}
-                  />
-                  <IconBtn
-                    title="Unpin"
-                    onClick={(e) => {
-                      e.stopPropagation()
-
-                      togglePin(a.id)
-                    }}
+        {showPinnedApps && (
+          <Collapse
+            title={
+              <Text color="placeHolder" strong size="md">
+                PINNED APPS
+              </Text>
+            }
+            defaultExpanded
+          >
+            {pinnedSafeApps.length === 0 && <PinnedAppsTutorial />}
+            <AnimatePresence>
+              <CardsWrapper>
+                {pinnedSafeApps.map((a) => (
+                  <AppContainer
+                    key={a.id}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
-                    <Bookmark />
-                  </IconBtn>
-                </AppContainer>
-              ))}
-            </CardsWrapper>
-          </AnimatePresence>
-        </Collapse>
+                    <AppCard
+                      to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                      isLoading={isAppLoading(a)}
+                      iconUrl={a.iconUrl}
+                      name={a.name}
+                      description={a.description}
+                    />
+                    <IconBtn
+                      title="Unpin"
+                      onClick={(e) => {
+                        e.stopPropagation()
 
-        {!!customApps.length && (
+                        togglePin(a.id)
+                      }}
+                    >
+                      <Bookmark />
+                    </IconBtn>
+                  </AppContainer>
+                ))}
+              </CardsWrapper>
+            </AnimatePresence>
+          </Collapse>
+        )}
+        {showCustomApps && (
           <Collapse
             title={
               <Text color="placeHolder" strong size="md">
@@ -206,8 +214,9 @@ const AppsList = (): React.ReactElement => {
         )}
 
         <SectionHeading color="placeHolder" strong size="md">
-          ALL APPS
+          {appSearch ? 'SEARCH RESULTS' : 'ALL APPS'}
         </SectionHeading>
+        {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
         <AnimatePresence>
           <CardsWrapper>
             {!appSearch && (
@@ -237,6 +246,7 @@ const AppsList = (): React.ReactElement => {
           </CardsWrapper>
         </AnimatePresence>
       </ContentWrapper>
+
       <CenterIconText
         color="secondary"
         iconSize="sm"
