@@ -7,7 +7,7 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 export type TxTypeProps = {
   icon?: string

@@ -12,7 +12,7 @@ import { FormButtons } from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
+import { SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
 
 const FORM_ID = 'add-apps-form'
 

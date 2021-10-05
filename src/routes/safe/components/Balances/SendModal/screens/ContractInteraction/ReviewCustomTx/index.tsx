@@ -26,7 +26,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 export type ReviewCustomTxProps = {
   contractAddress: string

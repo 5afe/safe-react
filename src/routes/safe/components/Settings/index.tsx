@@ -12,7 +12,7 @@ import Col from 'src/components/layout/Col'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_SLUG } from 'src/routes/newroutes'
+import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_SLUG } from 'src/routes/routes'
 
 const Advanced = lazy(() => import('./Advanced'))
 const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))

@@ -19,7 +19,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 type Props = {
   isOpen: boolean

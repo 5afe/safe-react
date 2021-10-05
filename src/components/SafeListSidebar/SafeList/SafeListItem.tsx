@@ -14,7 +14,7 @@ import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { getNetworkConfigById } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
-import { getSafeAddressFromUrl, LOAD_ROUTE, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl, LOAD_ROUTE, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}

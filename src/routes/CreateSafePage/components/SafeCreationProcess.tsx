@@ -32,7 +32,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
-import { WELCOME_ROUTE, history, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
+import { WELCOME_ROUTE, history, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
 
 type ModalDataType = {
   safeAddress: string

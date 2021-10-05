@@ -14,7 +14,7 @@ import { currentSafe } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { getNetworkId } from 'src/config'
-import { SAFE_ROUTES, history } from 'src/routes/newroutes'
+import { SAFE_ROUTES, history } from 'src/routes/routes'
 
 /**
  * Builds a Safe Record that will be added to the app's store

@@ -28,7 +28,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from '../ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 const useStyles = makeStyles(styles)
 

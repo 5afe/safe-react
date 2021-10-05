@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import { Text } from '@gnosis.pm/safe-react-components'
-import { WELCOME_ROUTE } from 'src/routes/newroutes'
+import { WELCOME_ROUTE } from 'src/routes/routes'
 
 interface Props {
   onAdd: () => unknown

@@ -27,7 +27,7 @@ import {
   getSafeAddressFromUrl,
   generateSafeRoute,
   SAFE_ROUTE,
-} from 'src/routes/newroutes'
+} from 'src/routes/routes'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 

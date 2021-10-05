@@ -16,7 +16,7 @@ import {
   SAFE_ROUTE,
   SAFE_ROUTES,
   WELCOME_ROUTE,
-} from './newroutes'
+} from './routes'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))

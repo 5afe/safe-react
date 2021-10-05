@@ -35,7 +35,7 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
-import { SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
+import { SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
 
 const AppWrapper = styled.div`
   display: flex;

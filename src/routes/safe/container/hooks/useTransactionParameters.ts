@@ -8,7 +8,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 export type TxParameters = {
   safeNonce: string | undefined

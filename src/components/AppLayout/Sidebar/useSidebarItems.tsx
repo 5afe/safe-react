@@ -8,12 +8,7 @@ import ListIcon from 'src/components/List/ListIcon'
 import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import {
-  getSafeAddressFromUrl,
-  SAFE_ROUTE,
-  SAFE_ROUTES_WITH_ADDRESS,
-  SAFE_SUBSECTION_ROUTE,
-} from 'src/routes/newroutes'
+import { getSafeAddressFromUrl, SAFE_ROUTE, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)

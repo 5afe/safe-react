@@ -20,7 +20,7 @@ import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResol
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
 import { ModalHeader } from '../ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 const useStyles = makeStyles(styles)
 

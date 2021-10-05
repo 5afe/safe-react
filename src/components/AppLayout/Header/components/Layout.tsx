@@ -15,7 +15,7 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworks } from 'src/config'
-import { WELCOME_ROUTE } from 'src/routes/newroutes'
+import { WELCOME_ROUTE } from 'src/routes/routes'
 
 const styles = () => ({
   root: {

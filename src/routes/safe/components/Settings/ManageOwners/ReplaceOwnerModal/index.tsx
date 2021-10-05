@@ -17,7 +17,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
-import { getSafeAddressFromUrl } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl } from 'src/routes/routes'
 
 export type OwnerValues = {
   address: string

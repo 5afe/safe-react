@@ -11,7 +11,7 @@ import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBo
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { SAFE_ROUTES_WITH_ADDRESS, history } from 'src/routes/newroutes'
+import { SAFE_ROUTES_WITH_ADDRESS, history } from 'src/routes/routes'
 
 const useStyles = makeStyles(
   createStyles({

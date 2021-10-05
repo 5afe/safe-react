@@ -30,7 +30,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
-import { getSafeAddressFromUrl, SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl, SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 
 const notificationStyles = {
   success: {

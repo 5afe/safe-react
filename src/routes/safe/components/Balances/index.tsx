@@ -11,7 +11,7 @@ import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
-import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_ROUTE } from 'src/routes/newroutes'
+import { SAFE_ROUTES, SAFE_ROUTES_WITH_ADDRESS, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 
 const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))

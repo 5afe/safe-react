@@ -13,7 +13,7 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 import { getExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
-import { WELCOME_ROUTE, history } from 'src/routes/newroutes'
+import { WELCOME_ROUTE, history } from 'src/routes/routes'
 
 type RemoveSafeModalProps = {
   isOpen: boolean

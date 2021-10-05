@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
 import Link from 'src/components/layout/Link'
-import { LOAD_ROUTE, OPEN_ROUTE } from '../newroutes'
+import { LOAD_ROUTE, OPEN_ROUTE } from '../routes'
 
 function Welcome(): ReactElement {
   return (

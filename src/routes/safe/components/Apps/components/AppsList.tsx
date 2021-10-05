@@ -16,7 +16,7 @@ import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
-import { getSafeAddressFromUrl, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/newroutes'
+import { getSafeAddressFromUrl, SAFE_ROUTES_WITH_ADDRESS } from 'src/routes/routes'
 
 const Wrapper = styled.div`
   height: 100%;

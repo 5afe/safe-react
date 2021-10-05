@@ -36,7 +36,7 @@ import {
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { APP_ENV } from 'src/utils/constants'
-import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ADDRESS_SLUG, SAFE_ROUTES } from '../newroutes'
+import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ADDRESS_SLUG, SAFE_ROUTES } from '../routes'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)

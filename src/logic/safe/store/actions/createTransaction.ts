@@ -32,7 +32,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { SAFE_ROUTES_WITH_ADDRESS, history } from 'src/routes/newroutes'
+import { SAFE_ROUTES_WITH_ADDRESS, history } from 'src/routes/routes'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean

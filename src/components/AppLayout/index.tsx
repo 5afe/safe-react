@@ -8,7 +8,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/newroutes'
+import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 
 const Container = styled.div`
   height: 100vh;
