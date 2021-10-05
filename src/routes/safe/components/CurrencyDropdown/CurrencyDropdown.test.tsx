@@ -9,7 +9,7 @@ const rinkebyNetworkId = '4'
 
 describe('<CurrencyDropdown>', () => {
   it('renders CurrencyDropdown Component with USD as initial selected currency', () => {
-    render(<CurrencyDropdown />)
+    render(<CurrencyDropdown testId="testId" />)
 
     const currencySelector = screen.getByRole('button')
     expect(getByText(currencySelector, 'USD')).toBeInTheDocument()
@@ -31,7 +31,7 @@ describe('<CurrencyDropdown>', () => {
         availableCurrencies: mockedAvailableCurrencies,
       },
     }
-    render(<CurrencyDropdown />, customState)
+    render(<CurrencyDropdown testId="testId" />, customState)
 
     const currencySelector = screen.getByRole('button')
     expect(getByText(currencySelector, 'EUR')).toBeInTheDocument()
@@ -63,7 +63,7 @@ describe('<CurrencyDropdown>', () => {
         },
       },
     }
-    render(<CurrencyDropdown />, customState)
+    render(<CurrencyDropdown testId="testId" />, customState)
 
     const currencySelector = screen.getByRole('button')
     expect(getByText(currencySelector, 'USD')).toBeInTheDocument()
@@ -128,7 +128,7 @@ describe('<CurrencyDropdown>', () => {
         },
       },
     }
-    render(<CurrencyDropdown />, customState)
+    render(<CurrencyDropdown testId="testId" />, customState)
 
     const currencySelector = screen.getByRole('button')
     expect(getByText(currencySelector, 'USD')).toBeInTheDocument()
