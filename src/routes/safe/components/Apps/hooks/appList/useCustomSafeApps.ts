@@ -26,7 +26,10 @@ const useCustomSafeApps = (): ReturnType => {
 
   const updateCustomSafeApps = useCallback((newCustomSafeApps: SafeApp[]) => {
     setCustomSafeApps(newCustomSafeApps)
-    saveToStorage(APPS_STORAGE_KEY, newCustomSafeApps)
+    saveToStorage(
+      APPS_STORAGE_KEY,
+      newCustomSafeApps.map(({ url }) => ({ url })),
+    )
   }, [])
 
   useEffect(() => {

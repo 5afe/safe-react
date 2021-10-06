@@ -12,6 +12,7 @@ type UseAppListReturnType = {
   pinnedSafeApps: SafeApp[]
   togglePin: (appId: string) => void
   removeApp: (appId: string) => void
+  addCustomApp: (app: SafeApp) => void
   isLoading: boolean
 }
 
@@ -37,6 +38,14 @@ const useAppList = (): UseAppListReturnType => {
   const pinnedSafeApps = useMemo(
     () => appList.filter((app) => pinnedSafeAppIds.includes(app.id)),
     [pinnedSafeAppIds, appList],
+  )
+
+  const addCustomApp = useCallback(
+    (app: SafeApp): void => {
+      const newList = [...customSafeApps, app]
+      updateCustomSafeApps(newList)
+    },
+    [updateCustomSafeApps, customSafeApps],
   )
 
   const removeApp = useCallback(
@@ -68,6 +77,7 @@ const useAppList = (): UseAppListReturnType => {
     pinnedSafeApps,
     removeApp,
     togglePin,
+    addCustomApp,
     isLoading: remoteIsLoading,
   }
 }
