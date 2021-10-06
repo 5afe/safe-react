@@ -48,6 +48,11 @@ const IconBtn = styled(IconButton)`
 
     transition: opacity 0.2s ease-in-out;
   }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `
 
 const AppContainer = styled(motion.div)`
