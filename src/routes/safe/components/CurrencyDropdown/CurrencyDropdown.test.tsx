@@ -39,7 +39,7 @@ describe('<CurrencyDropdown>', () => {
 
   it('changes the selected currency and updates localStorage', async () => {
     const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
-    const url = `/rinkeby/safes/${safeAddress}/balances`
+    const url = `/rin:${safeAddress}/balances`
     history.location.pathname = url
     const customState = {
       providers: {
@@ -104,7 +104,7 @@ describe('<CurrencyDropdown>', () => {
 
   it('Filters by a currency', async () => {
     const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
-    const url = `/rinkeby/safes/${safeAddress}/balances`
+    const url = `/rin:${safeAddress}/balances`
     history.location.pathname = url
     const customState = {
       providers: {
