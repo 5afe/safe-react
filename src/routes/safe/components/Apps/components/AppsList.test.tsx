@@ -1,6 +1,6 @@
-import AppsList from './AppsList'
-import { render, screen, fireEvent } from 'src/utils/test-utils'
+import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 import { usePinnedSafeApps } from '../hooks/appList/usePinnedSafeApps'
+import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
 
 jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps')
 
@@ -8,7 +8,7 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () 
   useCustomSafeApps: () => ({
     customSafeApps: [
       {
-        id: 36,
+        id: '36',
         url: 'https://apps.gnosis-safe.io/drain-safe',
         name: 'Drain safe',
         iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
@@ -26,7 +26,7 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps', () 
   useRemoteSafeApps: () => ({
     remoteSafeApps: [
       {
-        id: 13,
+        id: '13',
         url: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k',
         name: 'Compound',
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k/Compound.png',
@@ -48,18 +48,17 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps', () 
         provider: null,
       },
       {
-        id: 14,
+        id: '14',
         url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
         name: 'Synthetix',
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
-
         description: 'Trade synthetic assets on Ethereum',
         fetchStatus: 'SUCCESS',
         chainIds: [1, 4],
         provider: null,
       },
       {
-        id: 24,
+        id: '24',
         url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
         name: 'Transaction Builder',
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
@@ -86,7 +85,9 @@ const customState = {
 
 beforeEach(() => {
   usePinnedSafeApps.mockImplementation(() => ({
-    pinnedSafeAppIds: [14, 24, 228], // Including an id that doesn't exist in the remote apps to check that there's no error
+    pinnedSafeAppIds: ['14', '24', '228'], // Including an id that doesn't exist in the remote apps to check that there's no error,
+    loaded: true,
+    updatePinnedSafeApps: jest.fn(),
   }))
 })
 
@@ -208,7 +209,31 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     expect(tut).toBeInTheDocument()
   })
 
-  it('allows to pin an app', () => {})
+  it('allows to pin and unpin an app', async () => {
+    usePinnedSafeApps.mockImplementation(jest.requireActual('../hooks/appList/usePinnedSafeApps').usePinnedSafeApps)
+    render(<AppsList />, customState)
 
-  it('allows to unpin an app', () => {})
+    // check the app is not pinned
+    expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
+
+    const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
+    const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
+    act(() => {
+      fireEvent.click(compoundAppPinBtn)
+    })
+
+    await waitFor(() => {
+      expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
+      expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
+    })
+
+    const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')
+    act(() => {
+      fireEvent.click(compoundAppUnpinBtn)
+    })
+
+    await waitFor(() => {
+      expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
+    })
+  })
 })

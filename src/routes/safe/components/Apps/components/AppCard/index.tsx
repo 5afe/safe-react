@@ -102,8 +102,9 @@ type Props = {
 }
 
 const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
+const getPinLabel = (name: string, pinned: boolean) => (pinned ? `Unpin ${name}` : `Pin ${name}`)
 
-const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned }: Props): React.ReactElement => {
+const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: Props): React.ReactElement => {
   if (isAppLoading(app)) {
     return (
       <AppContainer layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -126,7 +127,8 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned }: Props): 
       </StyledAppCard>
       {onPin && (
         <IconBtn
-          title={pinned ? 'Unpin' : 'Pin'}
+          aria-label={getPinLabel(app.name, pinned)}
+          title={getPinLabel(app.name, pinned)}
           onClick={(e) => {
             // prevent triggering the link event
             e.preventDefault()
@@ -140,6 +142,7 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned }: Props): 
 
       {onRemove && (
         <IconBtn
+          aria-label="Remove an app"
           title="Remove app"
           onClick={(e) => {
             e.preventDefault()

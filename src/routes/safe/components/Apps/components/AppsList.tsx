@@ -21,6 +21,9 @@ import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
 import { PinnedAppsTutorial } from './PinnedAppsTutorial'
 
+export const PINNED_APPS_LIST_TEST_ID = 'safe_apps__pinned-apps-container'
+export const ALL_APPS_LIST_TEST_ID = 'safe_apps__all-apps-container'
+
 const Wrapper = styled.div`
   height: 100%;
   display: flex;
@@ -113,7 +116,7 @@ const AppsList = (): React.ReactElement => {
           >
             {pinnedSafeApps.length === 0 && <PinnedAppsTutorial />}
             <AnimatePresence>
-              <CardsWrapper>
+              <CardsWrapper data-testid={PINNED_APPS_LIST_TEST_ID}>
                 {pinnedSafeApps.map((a) => (
                   <AppCard
                     to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
@@ -152,7 +155,7 @@ const AppsList = (): React.ReactElement => {
         </SectionHeading>
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
         <AnimatePresence>
-          <CardsWrapper>
+          <CardsWrapper data-testid={ALL_APPS_LIST_TEST_ID}>
             {!appSearch && <AddCustomAppCard onClick={openAddAppModal} />}
             {apps.map((a) => (
               <AppCard
