@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, getByText, waitFor, queryByText } from 'src/utils/test-utils'
 import { CurrencyDropdown } from '.'
-import { history } from 'src/routes/routes'
+import { history, ROOT_ROUTE } from 'src/routes/routes'
 import { mockedEndpoints } from 'src/setupTests'
 import { getClientGatewayUrl } from 'src/config'
 
@@ -99,7 +99,7 @@ describe('<CurrencyDropdown>', () => {
     // updates localStorage with the new selected currency
     await waitFor(() => expect(localStorage.getItem('SAFE__currencyValues.selectedCurrency')).toBe('"EUR"'))
 
-    history.location.pathname = '/'
+    history.location.pathname = ROOT_ROUTE
   })
 
   it('Filters by a currency', async () => {
@@ -151,6 +151,6 @@ describe('<CurrencyDropdown>', () => {
     expect(queryByText(currencyModal, 'ALL')).not.toBeInTheDocument()
     expect(queryByText(currencyModal, 'ARS')).not.toBeInTheDocument()
 
-    history.location.pathname = '/'
+    history.location.pathname = ROOT_ROUTE
   })
 })

@@ -14,7 +14,13 @@ import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { getNetworkConfigById, getShortChainNameById } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
-import { generateSafeRoute, getSafeAddressFromUrl, LOAD_ROUTE, SAFE_ROUTES, SafeRouteParams } from 'src/routes/routes'
+import {
+  generateSafeRoute,
+  extractSafeAddress,
+  LOAD_SPECIFIC_SAFE_ROUTE,
+  SAFE_ROUTES,
+  SafeRouteParams,
+} from 'src/routes/routes'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -41,7 +47,7 @@ const SafeListItem = ({
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
-  const currentSafeAddress = getSafeAddressFromUrl()
+  const currentSafeAddress = extractSafeAddress()
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
@@ -58,14 +64,14 @@ const SafeListItem = ({
     onSafeClick()
   }
 
-  const routeSlugs: SafeRouteParams = {
+  const routesSlug: SafeRouteParams = {
     shortName: getShortChainNameById(networkId),
     safeAddress: address,
   }
 
   const handleOpenSafe = (): void => {
     handleLoadSafe()
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routeSlugs))
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug))
   }
 
   return (
@@ -76,7 +82,7 @@ const SafeListItem = ({
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
         ) : showAddSafeLink ? (
-          <Link to={generateSafeRoute(LOAD_ROUTE, routeSlugs)} onClick={handleLoadSafe}>
+          <Link to={generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug)} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
               Add Safe
             </Text>

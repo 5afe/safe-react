@@ -20,7 +20,7 @@ import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResol
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
 import { ModalHeader } from '../ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const useStyles = makeStyles(styles)
 
@@ -53,7 +53,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   isABI,
 }) => {
   const classes = useStyles()
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   let setCallResults
 
   useMemo(() => {

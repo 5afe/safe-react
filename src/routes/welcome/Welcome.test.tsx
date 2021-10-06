@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from 'src/utils/test-utils'
-import { LOAD_ROUTE, OPEN_ROUTE } from '../routes'
+import { LOAD_SAFE_ROUTE, OPEN_SAFE_ROUTE, ROOT_ROUTE } from '../routes'
 import Welcome from './Welcome'
 
 describe('<Welcome>', () => {
@@ -22,7 +22,7 @@ describe('<Welcome>', () => {
       },
     }
 
-    expect(window.location.pathname).toBe('/')
+    expect(window.location.pathname).toBe(ROOT_ROUTE)
 
     render(<Welcome />, customState)
 
@@ -30,7 +30,7 @@ describe('<Welcome>', () => {
 
     fireEvent.click(createNewSafeLinkNode)
 
-    expect(window.location.pathname).toBe(OPEN_ROUTE)
+    expect(window.location.pathname).toBe(OPEN_SAFE_ROUTE)
   })
 
   it('Add existing Safe button should redirect to /load if a wallet is already selected', () => {
@@ -46,7 +46,7 @@ describe('<Welcome>', () => {
       },
     }
 
-    expect(window.location.pathname).toBe('/')
+    expect(window.location.pathname).toBe(ROOT_ROUTE)
 
     render(<Welcome />, customState)
 
@@ -56,6 +56,6 @@ describe('<Welcome>', () => {
 
     fireEvent.click(addExistingSafeLinkNode)
 
-    expect(window.location.pathname).toBe(LOAD_ROUTE)
+    expect(window.location.pathname).toBe(LOAD_SAFE_ROUTE)
   })
 })

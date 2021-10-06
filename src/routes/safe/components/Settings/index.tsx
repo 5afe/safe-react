@@ -12,7 +12,7 @@ import Col from 'src/components/layout/Col'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getAllSafeRoutesWithPrefixedAddress, SAFE_ROUTES, SAFE_SUBSECTION_SLUG } from 'src/routes/routes'
+import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_SLUG } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
 const Advanced = lazy(() => import('./Advanced'))
@@ -39,26 +39,26 @@ const Settings = (): React.ReactElement => {
   // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
   const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_SLUG}?`)
 
-  const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+  const currentSafeRoutes = generatePrefixedAddressRoutes({
     shortName: getCurrentShortChainName(),
     safeAddress,
   })
 
   let settingsSection
   switch (matchSafeWithSettingSection?.url) {
-    case SAFE_ROUTES_WITH_ADDRESS.SETTINGS_DETAILS:
+    case currentSafeRoutes.SETTINGS_DETAILS:
       settingsSection = 'Safe Details'
       break
-    case SAFE_ROUTES_WITH_ADDRESS.SETTINGS_OWNERS:
+    case currentSafeRoutes.SETTINGS_OWNERS:
       settingsSection = 'Owners'
       break
-    case SAFE_ROUTES_WITH_ADDRESS.SETTINGS_POLICIES:
+    case currentSafeRoutes.SETTINGS_POLICIES:
       settingsSection = 'Policies'
       break
-    case SAFE_ROUTES_WITH_ADDRESS.SETTINGS_SPENDING_LIMIT:
+    case currentSafeRoutes.SETTINGS_SPENDING_LIMIT:
       settingsSection = 'Spending Limit'
       break
-    case SAFE_ROUTES_WITH_ADDRESS.SETTINGS_ADVANCED:
+    case currentSafeRoutes.SETTINGS_ADVANCED:
       settingsSection = 'Advanced'
       break
     default:

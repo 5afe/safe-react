@@ -7,7 +7,7 @@ import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTra
 import { AppReduxState } from 'src/store'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 export const UPDATE_TRANSACTION_DETAILS = 'UPDATE_TRANSACTION_DETAILS'
 const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_TRANSACTION_DETAILS)
@@ -20,7 +20,7 @@ export const fetchTransactionDetails =
       attributeName: 'id',
       txLocation,
     })
-    const safeAddress = getSafeAddressFromUrl()
+    const safeAddress = extractSafeAddress()
     const chainId = currentChainId(getState())
 
     if (txDetails || !safeAddress) {

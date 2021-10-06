@@ -9,10 +9,10 @@ import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
-  getSafeAddressFromUrl,
+  extractSafeAddress,
   ADDRESSED_ROUTE,
   SAFE_SUBSECTION_ROUTE,
-  getAllSafeRoutesWithPrefixedAddress,
+  generatePrefixedAddressRoutes,
 } from 'src/routes/routes'
 
 const useSidebarItems = (): ListItemType[] => {
@@ -21,7 +21,7 @@ const useSidebarItems = (): ListItemType[] => {
   const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
   const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
   const { needsUpdate } = useSelector(currentSafeWithNames)
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const granted = useSelector(grantedSelector)
 
   const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
@@ -49,7 +49,7 @@ const useSidebarItems = (): ListItemType[] => {
       return []
     }
 
-    const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+    const currentSafeRoutes = generatePrefixedAddressRoutes({
       shortName: getCurrentShortChainName(),
       safeAddress,
     })
@@ -58,13 +58,13 @@ const useSidebarItems = (): ListItemType[] => {
       makeEntryItem({
         label: 'Coins',
         iconType: 'assets',
-        href: SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES,
+        href: currentSafeRoutes.ASSETS_BALANCES,
       }),
       makeEntryItem({
         disabled: !isCollectiblesEnabled,
         label: 'Collectibles',
         iconType: 'collectibles',
-        href: SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES_COLLECTIBLES,
+        href: currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES,
       }),
     ]
 
@@ -73,28 +73,28 @@ const useSidebarItems = (): ListItemType[] => {
         label: 'Safe Details',
         badge: needsUpdate && granted,
         iconType: 'info',
-        href: SAFE_ROUTES_WITH_ADDRESS.SETTINGS_DETAILS,
+        href: currentSafeRoutes.SETTINGS_DETAILS,
       }),
       makeEntryItem({
         label: 'Owners',
         iconType: 'owners',
-        href: SAFE_ROUTES_WITH_ADDRESS.SETTINGS_OWNERS,
+        href: currentSafeRoutes.SETTINGS_OWNERS,
       }),
       makeEntryItem({
         label: 'Policies',
         iconType: 'requiredConfirmations',
-        href: SAFE_ROUTES_WITH_ADDRESS.SETTINGS_POLICIES,
+        href: currentSafeRoutes.SETTINGS_POLICIES,
       }),
       makeEntryItem({
         disabled: !isSpendingLimitEnabled,
         label: 'Spending Limit',
         iconType: 'fuelIndicator',
-        href: SAFE_ROUTES_WITH_ADDRESS.SETTINGS_SPENDING_LIMIT,
+        href: currentSafeRoutes.SETTINGS_SPENDING_LIMIT,
       }),
       makeEntryItem({
         label: 'Advanced',
         iconType: 'settingsTool',
-        href: SAFE_ROUTES_WITH_ADDRESS.SETTINGS_ADVANCED,
+        href: currentSafeRoutes.SETTINGS_ADVANCED,
       }),
     ]
 
@@ -102,29 +102,29 @@ const useSidebarItems = (): ListItemType[] => {
       makeEntryItem({
         label: 'ASSETS',
         iconType: 'assets',
-        href: SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES,
+        href: currentSafeRoutes.ASSETS_BALANCES,
         subItems: assetsSubItems,
       }),
       makeEntryItem({
         label: 'TRANSACTIONS',
         iconType: 'transactionsInactive',
-        href: SAFE_ROUTES_WITH_ADDRESS.TRANSACTIONS,
+        href: currentSafeRoutes.TRANSACTIONS,
       }),
       makeEntryItem({
         label: 'ADDRESS BOOK',
         iconType: 'addressBook',
-        href: SAFE_ROUTES_WITH_ADDRESS.ADDRESS_BOOK,
+        href: currentSafeRoutes.ADDRESS_BOOK,
       }),
       makeEntryItem({
         disabled: !safeAppsEnabled,
         label: 'Apps',
         iconType: 'apps',
-        href: SAFE_ROUTES_WITH_ADDRESS.APPS,
+        href: currentSafeRoutes.APPS,
       }),
       makeEntryItem({
         label: 'Settings',
         iconType: 'settings',
-        href: SAFE_ROUTES_WITH_ADDRESS.SETTINGS_DETAILS,
+        href: currentSafeRoutes.SETTINGS_DETAILS,
         subItems: settingsSubItems,
       }),
     ]

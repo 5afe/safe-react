@@ -11,7 +11,7 @@ import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
-import { getAllSafeRoutesWithPrefixedAddress, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
+import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
 const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
@@ -77,17 +77,17 @@ const Balances = (): ReactElement => {
 
   const { erc721Enabled, sendFunds, showReceive } = state
 
-  const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+  const currentSafeRoutes = generatePrefixedAddressRoutes({
     shortName: getCurrentShortChainName(),
     safeAddress,
   })
 
   let balancesSection
   switch (matchSafeWithBalancesSection?.url) {
-    case SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES:
+    case currentSafeRoutes.ASSETS_BALANCES:
       balancesSection = 'Coins'
       break
-    case SAFE_ROUTES_WITH_ADDRESS.ASSETS_BALANCES_COLLECTIBLES:
+    case currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES:
       balancesSection = 'Collectibles'
       break
     default:

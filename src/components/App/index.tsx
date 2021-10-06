@@ -30,7 +30,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
-import { getSafeAddressFromUrl, ADDRESSED_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { extractSafeAddress, ADDRESSED_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 
 const notificationStyles = {
   success: {
@@ -65,7 +65,7 @@ const App: React.FC = ({ children }) => {
   const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
   const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
-  const addressFromUrl = getSafeAddressFromUrl()
+  const addressFromUrl = extractSafeAddress()
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)

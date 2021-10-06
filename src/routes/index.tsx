@@ -10,12 +10,14 @@ import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 import {
   generateSafeRoute,
   getPrefixedSafeAddressSlug,
-  LOAD_ROUTE,
-  OPEN_ROUTE,
+  LOAD_SPECIFIC_SAFE_ROUTE,
+  OPEN_SAFE_ROUTE,
   ADDRESSED_ROUTE,
   SAFE_ROUTES,
   WELCOME_ROUTE,
   hasPrefixedSafeAddressInUrl,
+  ROOT_ROUTE,
+  LOAD_SAFE_ROUTE,
 } from './routes'
 import { getCurrentShortChainName } from 'src/config'
 
@@ -31,7 +33,7 @@ const Routes = (): React.ReactElement => {
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
-    if (isInitialLoad && location.pathname !== '/') {
+    if (isInitialLoad && location.pathname !== ROOT_ROUTE) {
       setInitialLoad(false)
     }
   }, [location.pathname, isInitialLoad])
@@ -77,9 +79,9 @@ const Routes = (): React.ReactElement => {
         }}
       />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
-      <Route component={CreateSafePage} exact path={OPEN_ROUTE} />
+      <Route component={CreateSafePage} exact path={OPEN_SAFE_ROUTE} />
       <Route component={Safe} path={ADDRESSED_ROUTE} />
-      <Route component={LoadSafePage} path={LOAD_ROUTE} />
+      <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
       <Redirect to="/" />
     </Switch>
   )

@@ -16,7 +16,7 @@ import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
-import { generateSafeRoute, getSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { generateSafeRoute, extractSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
 const Wrapper = styled.div`
@@ -89,7 +89,7 @@ const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
 }
 
 const AppsList = (): React.ReactElement => {
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
     shortName: getCurrentShortChainName(),
     safeAddress,
@@ -131,7 +131,7 @@ const AppsList = (): React.ReactElement => {
               .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
               .map((a) => (
                 <AppContainer key={a.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <StyledLink to={`${appsPath}?appUrl=${encodeURI(a.url)}`}>
+                  <StyledLink to={`${appsPath}?appUrl=${encodeURIComponent(a.url)}`}>
                     <AppCard
                       isLoading={isAppLoading(a)}
                       iconUrl={a.iconUrl}

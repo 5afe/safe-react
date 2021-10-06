@@ -19,6 +19,7 @@ import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
 import { setNetwork } from 'src/logic/config/utils'
+import { ROOT_ROUTE } from 'src/routes/routes'
 
 const styles = {
   root: {
@@ -89,7 +90,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
     (network: NetworkInfo) => {
       clickAway()
       setNetwork(network.id)
-      history.push('/')
+      history.push(ROOT_ROUTE)
     },
     [clickAway, history],
   )

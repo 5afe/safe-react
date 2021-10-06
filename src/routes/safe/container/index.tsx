@@ -7,7 +7,7 @@ import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/st
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { generateSafeRoute, getPrefixedSafeAddressFromUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -73,7 +73,7 @@ const Container = (): React.ReactElement => {
           path={SAFE_ROUTES.APPS}
           render={({ history }) => {
             if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
-              history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, getPrefixedSafeAddressFromUrl()))
+              history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, extractPrefixedSafeAddress()))
             }
             return wrapInSuspense(<Apps />, null)
           }}

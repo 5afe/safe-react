@@ -21,7 +21,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { history, getSafeAddressFromUrl, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
+import { history, extractSafeAddress, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
@@ -131,7 +131,7 @@ const notificationsMiddleware =
         case ADD_OR_UPDATE_SAFE: {
           const state = store.getState()
           const safe = action.payload
-          const currentSafeAddress = getSafeAddressFromUrl() || safe.address
+          const currentSafeAddress = extractSafeAddress() || safe.address
           if (!currentSafeAddress || !safe.currentVersion) {
             break
           }

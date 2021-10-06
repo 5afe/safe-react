@@ -7,7 +7,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useHistoryTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 type PagedTransactions = {
   count: number
@@ -22,7 +22,7 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
   const chainId = useSelector(currentChainId)
 
   const dispatch = useRef(useDispatch())
-  const safeAddress = useRef(getSafeAddressFromUrl())
+  const safeAddress = useRef(extractSafeAddress())
   const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 

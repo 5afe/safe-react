@@ -30,7 +30,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const useStyles = makeStyles(styles)
 
@@ -54,7 +54,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const { nativeCoin } = getNetworkInfo()
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()

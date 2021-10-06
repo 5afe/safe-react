@@ -11,7 +11,7 @@ import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBo
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { SAFE_ROUTES, history, getSafeAddressFromUrl, generateSafeRoute } from 'src/routes/routes'
+import { SAFE_ROUTES, history, extractSafeAddress, generateSafeRoute } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
 const useStyles = makeStyles(
@@ -61,7 +61,7 @@ export const EllipsisTransactionDetails = ({
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ADDRESS_BOOK, {
         shortName: getCurrentShortChainName(),
-        safeAddress: getSafeAddressFromUrl(),
+        safeAddress: extractSafeAddress(),
       }),
       search: `?entryAddress=${address}`,
     })

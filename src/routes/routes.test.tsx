@@ -1,11 +1,11 @@
 import {
   generateSafeRoute,
-  getAllSafeRoutesWithPrefixedAddress,
+  generatePrefixedAddressRoutes,
   getPrefixedSafeAddressSlug,
   hasPrefixedSafeAddressInUrl,
   SAFE_ROUTES,
   WELCOME_ROUTE,
-  getPrefixedSafeAddressFromUrl,
+  extractPrefixedSafeAddress,
   ADDRESSED_ROUTE,
   history,
 } from './routes'
@@ -43,21 +43,21 @@ describe('chainSpecificSafeAddressPathRegExp', () => {
   })
 })
 
-describe('getPrefixedSafeAddressFromUrl', () => {
+describe('extractPrefixedSafeAddress', () => {
   it('returns the chain-specific addresses from the url if both supplied', async () => {
     const shortName = 'bnb'
 
     const route = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName, safeAddress: validSafeAddress })
     history.push(route)
 
-    expect(getPrefixedSafeAddressFromUrl()).toStrictEqual({ shortName, safeAddress: validSafeAddress })
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName, safeAddress: validSafeAddress })
   })
   it('returns the current chain prefix with safe address when a malformed chain is supplied', () => {
     const route = `/fakechain:${validSafeAddress}/balances`
     history.push(route)
 
     // 'rin' is default dev env shortName
-    expect(getPrefixedSafeAddressFromUrl()).toStrictEqual({ shortName: 'rin', safeAddress: validSafeAddress })
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: validSafeAddress })
   })
 })
 
@@ -81,8 +81,8 @@ describe('hasPrefixedSafeAddressInUrl', () => {
   })
 })
 
-// Not testing getShortChainNameFromUrl or getSafeAddressFromUrl because
-// they return from { [key]: getPrefixedSafeAddressFromUrl()[key] }
+// Not testing extractShortChainName or extractSafeAddress because
+// they return from { [key]: extractPrefixedSafeAddress()[key] }
 
 describe('getPrefixedSafeAddressSlug', () => {
   it('returns a chain-specific address slug with provided safeAddress/shortName', () => {
@@ -135,16 +135,16 @@ describe('generateSafeRoute', () => {
   })
 })
 
-describe('getAllSafeRoutesWithPrefixedAddress', () => {
+describe('generatePrefixedAddressRoutes', () => {
   it('generates all SAFE_ROUTES with given chain-specific arguments', () => {
     const shortName = 'bnb'
 
-    const SAFE_ROUTES_WITH_ADDRESS = getAllSafeRoutesWithPrefixedAddress({
+    const currentSafeRoutes = generatePrefixedAddressRoutes({
       shortName,
       safeAddress: validSafeAddress,
     })
 
-    const hasAllPrefixedSafeAddressesRoutes = Object.values(SAFE_ROUTES_WITH_ADDRESS).every((route) =>
+    const hasAllPrefixedSafeAddressesRoutes = Object.values(currentSafeRoutes).every((route) =>
       route.includes(`${shortName}:${validSafeAddress}`),
     )
 

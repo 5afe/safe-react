@@ -1,5 +1,4 @@
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
-import { Redirect, Router } from 'react-router'
 import * as Sentry from '@sentry/react'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
@@ -14,39 +13,9 @@ import Providers from '../Providers'
 import './index.module.scss'
 import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
-import { getNetworkId, getNetworks, getShortChainNameById } from 'src/config'
-import { PUBLIC_URL } from 'src/utils/constants'
 import StoreMigrator from 'src/components/StoreMigrator'
-import { isChecksumAddress } from 'src/utils/checksumAddress'
 
 const Root = (): React.ReactElement => {
-  const { pathname, hash, search } = window.location
-
-  const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
-  if (isLegacyRoute) {
-    const networkLabel = window.location.hostname.split('.')[0]
-    const id = getNetworks().find(({ label }) => label === networkLabel)?.id || getNetworkId()
-
-    const pathname = hash
-      .split('/')
-      .reduce((acc, dir) => {
-        const isLegacySubdirectory = ['#', 'safes'].includes(dir)
-        if (isLegacySubdirectory) return acc
-
-        const hasNoShortChainNamePrefix = isChecksumAddress(dir)
-        if (hasNoShortChainNamePrefix) return [...acc, `${getShortChainNameById(id)}:${dir}`]
-
-        return [...acc, dir]
-      }, [])
-      .join('/')
-
-    return (
-      <Router history={history}>
-        <Redirect to={`/${pathname}` + search} />
-      </Router>
-    )
-  }
-
   return (
     <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
       <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>

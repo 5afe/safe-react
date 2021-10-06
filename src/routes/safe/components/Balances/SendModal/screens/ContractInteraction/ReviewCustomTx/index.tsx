@@ -26,7 +26,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -46,7 +46,7 @@ const useStyles = makeStyles(styles)
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const { nativeCoin } = getNetworkInfo()
 
   const {

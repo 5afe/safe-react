@@ -15,7 +15,7 @@ import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
@@ -52,7 +52,7 @@ const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => !loadedViaU
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
-  const currentSafeAddress = getSafeAddressFromUrl()
+  const currentSafeAddress = extractSafeAddress()
   const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const ownedSafes = useOwnerSafes()

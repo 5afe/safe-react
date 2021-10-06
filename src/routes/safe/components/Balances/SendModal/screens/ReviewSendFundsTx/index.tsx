@@ -36,7 +36,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
-import { getSafeAddressFromUrl } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const useStyles = makeStyles(styles)
 
@@ -88,7 +88,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const { nativeCoin } = getNetworkInfo()
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
