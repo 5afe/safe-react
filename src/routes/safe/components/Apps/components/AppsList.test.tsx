@@ -37,7 +37,7 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps', () 
         provider: null,
       },
       {
-        id: 3,
+        id: '3',
         url: 'https://app.ens.domains',
         name: 'ENS App',
         iconUrl: 'https://app.ens.domains/android-chrome-144x144.png',
