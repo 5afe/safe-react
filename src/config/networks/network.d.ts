@@ -106,6 +106,7 @@ export type EnvironmentSettings = GasPrice & {
 }
 
 type SafeEnvironments = {
+  test?: EnvironmentSettings
   dev?: EnvironmentSettings
   staging?: EnvironmentSettings
   production: EnvironmentSettings

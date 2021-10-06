@@ -22,7 +22,7 @@ import { sameString } from 'src/utils/strings'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 
-export const CurrencyDropdown = (): React.ReactElement | null => {
+export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactElement | null => {
   const dispatch = useDispatch()
   const { nativeCoin } = getNetworkInfo()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -58,7 +58,7 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
   return (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
-        <button className={classes.button} onClick={handleClick} type="button">
+        <button className={classes.button} onClick={handleClick} type="button" data-testid={`${testId}-btn`}>
           <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
             {selectedCurrency}
           </span>

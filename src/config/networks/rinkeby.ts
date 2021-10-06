@@ -32,6 +32,7 @@ const baseConfig: EnvironmentSettings = {
 
 const rinkeby: NetworkConfig = {
   environment: {
+    test: baseConfig,
     dev: baseConfig,
     staging: baseConfig,
     production: {

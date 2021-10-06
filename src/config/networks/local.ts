@@ -25,6 +25,7 @@ const baseConfig: EnvironmentSettings = {
 
 const local: NetworkConfig = {
   environment: {
+    test: baseConfig,
     production: baseConfig,
   },
   network: {

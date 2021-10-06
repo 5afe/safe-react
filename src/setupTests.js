@@ -2,14 +2,7 @@ import crypto from 'crypto'
 import '@testing-library/jest-dom/extend-expect'
 import * as sdkGatewayEndpoints from '@gnosis.pm/safe-react-gateway-sdk'
 import { mockGetSafeInfoResponse } from './logic/safe/utils/mocks/getSafeMock'
-import rinkeby from './config/networks/rinkeby'
-import polygon from './config/networks/polygon'
-import mainnet from './config/networks/mainnet'
-import xdai from './config/networks/xdai'
-import local from './config/networks/local'
-import energy_web_chain from './config/networks/energy_web_chain'
-import volta from './config/networks/volta'
-import bsc from './config/networks/bsc'
+import { mockTokenCurrenciesBalancesResponse } from 'src/logic/safe/utils/mocks/mockTokenCurrenciesBalancesResponse'
 
 function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
@@ -62,6 +55,10 @@ function mockAllEndpointsByDefault() {
   mockedEndpoints.getSafeInfo = sdkGatewayEndpoints.getSafeInfo.mockImplementation(
     () => new Promise((resolve) => resolve(mockGetSafeInfoResponse)),
   )
+
+  mockedEndpoints.getBalances = sdkGatewayEndpoints.getBalances.mockImplementation(
+    () => new Promise((resolve) => resolve(mockTokenCurrenciesBalancesResponse)),
+  )
 }
 
 // to avoid failing tests in some environments
@@ -93,78 +90,3 @@ beforeEach(() => {
   mockAllEndpointsByDefault()
   window.history.pushState(null, '', originalLocationHref) // Restore the url to http://localhost/
 })
-
-const mockRinkebyNetwork = {
-  ...rinkeby,
-  environment: {
-    ...rinkeby.environment,
-    test: rinkeby.environment.dev,
-  },
-}
-
-const mockPolygonNetwork = {
-  ...polygon,
-  environment: {
-    ...polygon.environment,
-    test: polygon.environment.dev,
-  },
-}
-
-const mockLocalNetwork = {
-  ...local,
-  environment: {
-    ...local.environment,
-    test: local.environment.dev,
-  },
-}
-
-const mockMainnetNetwork = {
-  ...mainnet,
-  environment: {
-    ...mainnet.environment,
-    test: mainnet.environment.dev,
-  },
-}
-
-const mockXdaiNetwork = {
-  ...xdai,
-  environment: {
-    ...xdai.environment,
-    test: xdai.environment.dev,
-  },
-}
-
-const mockEnergyWebChain = {
-  ...energy_web_chain,
-  environment: {
-    ...energy_web_chain.environment,
-    test: energy_web_chain.environment.dev,
-  },
-}
-
-const mockVoltaChain = {
-  ...volta,
-  environment: {
-    ...volta.environment,
-    test: volta.environment.dev,
-  },
-}
-
-const mockBscChain = {
-  ...bsc,
-  environment: {
-    ...bsc.environment,
-    test: bsc.environment.dev,
-  },
-}
-
-jest.mock('./config/networks', () => ({
-  rinkeby: mockRinkebyNetwork,
-  polygon: mockPolygonNetwork,
-  local: mockLocalNetwork,
-  xdai: mockXdaiNetwork,
-  mainnet: mockMainnetNetwork,
-  energy_web_chain: mockEnergyWebChain,
-  volta: mockVoltaChain,
-  bsc: mockBscChain,
-}))
