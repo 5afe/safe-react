@@ -2,7 +2,7 @@ import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
 import { getCurrentShortChainName, getNetworks } from 'src/config'
-import { isChecksumAddress } from 'src/utils/checksumAddress'
+import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 
 export const history = createBrowserHistory({
@@ -53,53 +53,33 @@ export const SAFE_ROUTES = {
 
 export type SafeRouteParams = { shortName: string; safeAddress: string }
 
-const isValidShortChainName = (shortName?: string): boolean => {
+const isValidShortChainName = (shortName: string): boolean => {
   if (!shortName) return false
   const shortNames = getNetworks().map(({ shortName }) => shortName)
   return shortNames.includes(shortName)
 }
 
-const getValidShortName = (shortName?: string): string =>
-  shortName && isValidShortChainName(shortName) ? shortName : ''
-const getValidSafeAddress = (safeAddress?: string): string =>
-  safeAddress && isChecksumAddress(safeAddress) ? safeAddress : ''
-
 // Due to hoisting issues, these functions should remain here
 export const getPrefixedSafeAddressFromUrl = (): SafeRouteParams => {
+  const currentChainShortName = getCurrentShortChainName()
+
   const match = matchPath<SafeRouteSlugs>(history.location.pathname, { path: ADDRESSED_ROUTE })
+
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]
+  const parts = prefixedSafeAddress?.split(':')?.filter(Boolean)
 
-  const currentShortChainName = getCurrentShortChainName()
-
-  if (!prefixedSafeAddress) {
+  if (!prefixedSafeAddress || !parts?.length) {
     return {
-      shortName: currentShortChainName,
-      safeAddress: '', // TODO: get this from the store if it exists
+      shortName: currentChainShortName,
+      safeAddress: '',
     }
   }
 
-  if (isChecksumAddress(prefixedSafeAddress) || !prefixedSafeAddress.includes(':')) {
-    return {
-      shortName: currentShortChainName,
-      safeAddress: getValidSafeAddress(prefixedSafeAddress),
-    }
-  }
-
-  const parts = prefixedSafeAddress.split(':')
-
-  if (parts.length === 1) {
-    const safeAddress = prefixedSafeAddress?.[0]
-    return {
-      shortName: currentShortChainName,
-      safeAddress: getValidSafeAddress(safeAddress),
-    }
-  } else {
-    const shortName = prefixedSafeAddress?.[0]
-    const safeAddress = prefixedSafeAddress?.[1]
-    return {
-      shortName: getValidShortName(shortName),
-      safeAddress: getValidSafeAddress(safeAddress),
-    }
+  const shortName = parts[0]
+  const safeAddress = parts[1]
+  return {
+    shortName: isValidShortChainName(shortName) ? shortName : currentChainShortName,
+    safeAddress: checksumAddress(safeAddress) || '',
   }
 }
 
@@ -111,16 +91,12 @@ export const hasPrefixedSafeAddressInUrl = (): boolean => {
 export const getShortChainNameFromUrl = (): string => getPrefixedSafeAddressFromUrl().shortName
 export const getSafeAddressFromUrl = (): string => getPrefixedSafeAddressFromUrl().safeAddress
 
-const DEFAULT_SAFE_ADDRESS = getSafeAddressFromUrl()
-const DEFAULT_SHORT_NAME = getShortChainNameFromUrl() || getCurrentShortChainName()
-const DEFAULT_PARAMS: Partial<SafeRouteParams> = {
-  safeAddress: DEFAULT_SAFE_ADDRESS,
-  shortName: DEFAULT_SHORT_NAME,
-}
-export const getPrefixedSafeAddressSlug = ({
-  safeAddress = DEFAULT_SAFE_ADDRESS,
-  shortName = DEFAULT_SHORT_NAME,
-} = DEFAULT_PARAMS): string => `${shortName}:${safeAddress}`
+export const getPrefixedSafeAddressSlug = (
+  { safeAddress = getSafeAddressFromUrl(), shortName = getShortChainNameFromUrl() } = {
+    safeAddress: getSafeAddressFromUrl(),
+    shortName: getShortChainNameFromUrl(),
+  },
+): string => `${shortName}:${safeAddress}`
 
 // Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortName:safeAddress'
 export const generateSafeRoute = (
