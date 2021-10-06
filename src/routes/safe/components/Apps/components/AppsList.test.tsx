@@ -210,11 +210,15 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
   })
 
   it('allows to pin and unpin an app', async () => {
+    // I didn't find a way to reset the mock to its original state, only this one worked
     usePinnedSafeApps.mockImplementation(jest.requireActual('../hooks/appList/usePinnedSafeApps').usePinnedSafeApps)
+
     render(<AppsList />, customState)
 
     // check the app is not pinned
-    expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
+    })
 
     const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
     const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
