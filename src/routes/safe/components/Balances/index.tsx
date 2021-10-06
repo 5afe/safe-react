@@ -120,7 +120,7 @@ const Balances = (): ReactElement => {
             exact
             render={() => (
               <Col end="sm" sm={6} xs={12}>
-                <CurrencyDropdown />
+                <CurrencyDropdown testId={'balances-currency-dropdown'} />
               </Col>
             )}
           />

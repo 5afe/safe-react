@@ -113,6 +113,7 @@ jobs:
             * [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet)
             * [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon)
             * [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc)
+            * Unified app on *dev*: https://safe-team.dev.gnosisdev.com/app/
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number
@@ -120,7 +121,9 @@ jobs:
           REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app
 
       # Script to deploy to the dev environment
-      # Mainnet build is never created on the dev branch
+      - name: 'Deploy to S3: Dev'
+        if: github.ref == 'refs/heads/l2-ux'
+        run: aws s3 sync build s3://${{ secrets.AWS_DEV_BUCKET_NAME }}/app --delete
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'

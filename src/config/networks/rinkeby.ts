@@ -31,6 +31,7 @@ const baseConfig: EnvironmentSettings = {
 
 const rinkeby: NetworkConfig = {
   environment: {
+    test: baseConfig,
     dev: baseConfig,
     staging: baseConfig,
     production: {
@@ -55,7 +56,7 @@ const rinkeby: NetworkConfig = {
       logoUri: EtherLogo,
     },
   },
-  disabledWallets: [WALLETS.FORTMATIC],
+  disabledWallets: [WALLETS.FORTMATIC, WALLETS.LATTICE],
 }
 
 export default rinkeby

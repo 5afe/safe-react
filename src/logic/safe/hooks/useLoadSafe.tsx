@@ -8,7 +8,6 @@ import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTr
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { updateAvailableCurrencies } from 'src/logic/currencyValues/store/actions/updateAvailableCurrencies'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { fetchSelectedCurrency } from 'src/logic/currencyValues/store/actions/fetchSelectedCurrency'
 
 export const useLoadSafe = (safeAddress?: string): boolean => {
   const dispatch = useDispatch<Dispatch>()
@@ -16,17 +15,18 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
   useEffect(() => {
+    setIsSafeLoaded(false)
+  }, [safeAddress])
+
+  useEffect(() => {
     const fetchData = async () => {
       if (safeAddress) {
-        await dispatch(fetchSelectedCurrency())
         await dispatch(fetchLatestMasterContractVersion())
         await dispatch(fetchSafe(safeAddress, isSafeLoaded))
         setIsSafeLoaded(true)
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(chainId, safeAddress))
         dispatch(addViewedSafe(safeAddress))
-      } else {
-        setIsSafeLoaded(false)
       }
     }
     fetchData()
