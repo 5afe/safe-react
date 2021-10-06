@@ -91,18 +91,20 @@ const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): vo
   error.currentTarget.src = appsIconSvg
 }
 
-type Props = {
+const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
+const getPinLabel = (name: string, pinned: boolean) => (pinned ? `Unpin ${name}` : `Pin ${name}`)
+
+type Shared = {
   className?: string
   app: SafeApp
   iconSize?: 'md' | 'lg'
   to: string
   pinned?: boolean
-  onRemove?: (app: SafeApp) => void
-  onPin?: (app: SafeApp) => void
 }
 
-const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
-const getPinLabel = (name: string, pinned: boolean) => (pinned ? `Unpin ${name}` : `Pin ${name}`)
+type CustomAppProps = Shared & { onRemove?: (app: SafeApp) => void; onPin?: undefined }
+type RemoteAppProps = Shared & { onPin?: (app: SafeApp) => void; onRemove?: undefined }
+type Props = CustomAppProps | RemoteAppProps
 
 const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: Props): React.ReactElement => {
   if (isAppLoading(app)) {
