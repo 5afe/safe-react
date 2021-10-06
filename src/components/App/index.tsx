@@ -66,7 +66,7 @@ const App: React.FC = ({ children }) => {
   const matchSafe = useRouteMatch({ path: BASE_SAFE_ROUTE, strict: false })
   const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
-  const addressFromUrl = safeAddressFromUrl()
+  const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
