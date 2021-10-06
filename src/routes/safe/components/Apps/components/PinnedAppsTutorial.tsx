@@ -13,10 +13,7 @@ const NoAppsFoundTextContainer = styled(Card)`
   max-width: 100%;
   padding: 52px 54px;
   text-align: center;
-
-  & > p {
-    margin-left: ${({ theme }) => theme.margin.sm};
-  }
+  gap: ${({ theme }) => theme.margin.sm};
 `
 
 const PinnedAppsTutorial = (): React.ReactElement => (
