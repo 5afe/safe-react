@@ -84,7 +84,7 @@ const customState = {
 }
 
 beforeEach(() => {
-  usePinnedSafeApps.mockImplementation(() => ({
+  ;(usePinnedSafeApps as jest.MockedFunction<typeof usePinnedSafeApps>).mockImplementation(() => ({
     pinnedSafeAppIds: ['14', '24', '228'], // Including an id that doesn't exist in the remote apps to check that there's no error,
     loaded: true,
     updatePinnedSafeApps: jest.fn(),
@@ -198,7 +198,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
 describe('Safe Apps -> AppsList -> Pinning apps', () => {
   it('Shows a tutorial message when there are no pinned apps', () => {
     // overriding the global mock just for this test case
-    usePinnedSafeApps.mockImplementation(() => ({
+    ;(usePinnedSafeApps as jest.MockedFunction<typeof usePinnedSafeApps>).mockImplementation(() => ({
       pinnedSafeAppIds: [],
       loaded: true,
       updatePinnedSafeApps: jest.fn(),
@@ -211,7 +211,9 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
 
   it('allows to pin and unpin an app', async () => {
     // I didn't find a way to reset the mock to its original state, only this one worked
-    usePinnedSafeApps.mockImplementation(jest.requireActual('../hooks/appList/usePinnedSafeApps').usePinnedSafeApps)
+    ;(usePinnedSafeApps as jest.MockedFunction<typeof usePinnedSafeApps>).mockImplementation(
+      jest.requireActual('../hooks/appList/usePinnedSafeApps').usePinnedSafeApps,
+    )
 
     render(<AppsList />, customState)
 
