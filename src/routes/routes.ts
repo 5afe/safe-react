@@ -33,6 +33,9 @@ export type SafeRouteSlugs = {
 
 export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
 
+// Addressed routes for matching to retrieve [SAFE_ADDRESS_SLUG]
+export const ADDRESSED_ROUTES = [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]
+
 // Routes independant of safe/network
 export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
@@ -66,7 +69,9 @@ const isValidShortChainName = (shortName: string): boolean => {
 export const extractPrefixedSafeAddress = (): SafeRouteParams => {
   const currentChainShortName = getCurrentShortChainName()
 
-  const match = matchPath<SafeRouteSlugs>(history.location.pathname, { path: ADDRESSED_ROUTE })
+  const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
+    path: ADDRESSED_ROUTES,
+  })
 
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]
   const parts = prefixedSafeAddress?.split(':')?.filter(Boolean)
@@ -89,7 +94,7 @@ export const extractPrefixedSafeAddress = (): SafeRouteParams => {
 
 export const hasPrefixedSafeAddressInUrl = (): boolean => {
   const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    path: [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE],
+    path: ADDRESSED_ROUTES,
   })
   return !!match?.params?.[SAFE_ADDRESS_SLUG]
 }

@@ -46,6 +46,7 @@ function Load(): ReactElement {
   const history = useHistory()
 
   const safeAddress = extractSafeAddress()
+  console.log({ safeAddress })
   const safeRandomName = useMnemonicSafeName()
 
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()

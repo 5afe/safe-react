@@ -40,7 +40,7 @@ const Routes = (): React.ReactElement => {
 
   useEffect(() => {
     // Anonymize safe address when tracking page views
-    // [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE] have [SAFE_ADDRESS_SLUG]
+    // ADDRESSED_ROUTES have [SAFE_ADDRESS_SLUG]
     const pathname = hasPrefixedSafeAddressInUrl()
       ? location.pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
       : location.pathname
