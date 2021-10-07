@@ -44,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           test-command: 'npm run test:ci -- --outputFile=jest.results.json'
-          working-dir: '/home/runner/work/safe-react/safe-react'
+          working-directory: '/home/runner/work/safe-react/safe-react'
           coverage-comment: true
           changes-only: true
