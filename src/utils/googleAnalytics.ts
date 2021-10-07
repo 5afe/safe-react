@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
+import { useSelector } from 'react-redux'
 import { getCurrentEnvironment, getNetworkId, getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 import { IS_PRODUCTION } from './constants'
@@ -30,23 +32,12 @@ export const trackAnalyticsEvent = (event: Parameters<typeof ReactGA.event>[0]):
     { hitType: 'event', chainName },
   )
 
-  if (!shouldUseGoogleAnalytics) {
-    console.info('[GA] - Event:', { ...event, chainName })
-    return
-  }
-
-  ReactGA.set({ dimension1: getNetworkId() })
-  ReactGA.ga('send', fieldsObject)
+  return shouldUseGoogleAnalytics
+    ? ReactGA.ga('send', fieldsObject)
+    : console.info('[GA] - Event:', { ...event, chainName })
 }
-
 const trackAnalyticsPage: typeof ReactGA.pageview = (...args) => {
-  if (!shouldUseGoogleAnalytics) {
-    console.info('[GA] - Page:', ...args)
-    return
-  }
-
-  ReactGA.set({ dimension1: getNetworkId() })
-  ReactGA.pageview(...args)
+  return shouldUseGoogleAnalytics ? ReactGA.pageview(...args) : console.info('[GA] - Page:', ...args)
 }
 
 let analyticsLoaded = false
@@ -91,6 +82,13 @@ type UseAnalyticsResponse = {
 
 export const useAnalytics = (): UseAnalyticsResponse => {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
+  const chainId = useSelector(currentChainId)
+
+  useEffect(() => {
+    if (analyticsAllowed && analyticsLoaded) {
+      ReactGA.set({ dimension1: chainId })
+    }
+  }, [chainId])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
