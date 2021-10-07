@@ -1,5 +1,4 @@
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
-import { Redirect, Router } from 'react-router'
 import * as Sentry from '@sentry/react'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
@@ -14,23 +13,9 @@ import Providers from '../Providers'
 import './index.module.scss'
 import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
-import { getNetworkName } from 'src/config'
-import { PUBLIC_URL } from 'src/utils/constants'
 import StoreMigrator from 'src/components/StoreMigrator'
 
 const Root = (): React.ReactElement => {
-  const { pathname, hash, search } = window.location
-
-  const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
-  if (isLegacyRoute) {
-    const pathname = hash.replace('#', getNetworkName().toLowerCase())
-    return (
-      <Router history={history}>
-        <Redirect to={pathname + search} />
-      </Router>
-    )
-  }
-
   return (
     <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
       <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>

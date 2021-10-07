@@ -1,4 +1,5 @@
 import memoize from 'lodash.memoize'
+
 import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
@@ -20,33 +21,41 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
-import { sameString } from 'src/utils/strings'
+
+export const getNetworks = (): NetworkInfo[] => {
+  const { local, ...usefulNetworks } = networks
+  return Object.values(usefulNetworks).map((networkObj) => ({
+    id: networkObj.network.id,
+    shortName: networkObj.network.shortName,
+    label: networkObj.network.label,
+    backgroundColor: networkObj.network.backgroundColor,
+    textColor: networkObj.network.textColor,
+  }))
+}
+
+export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
+  const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+
+  const { pathname } = window.location
+  const network = getNetworks().find(({ shortName }) => {
+    return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
+  })
+
+  return network?.id || DEFAULT_NETWORK_ID
+}
+
+let networkId = getInitialNetworkId()
+
+export const setNetworkId = (id: ETHEREUM_NETWORK): void => {
+  networkId = id
+}
+export const getNetworkId = (): ETHEREUM_NETWORK => networkId
 
 export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
   const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == networkId)
   return name || ''
 }
-
-const getNetworkIdFromUrl = () => {
-  const DEFAULT_NETWORK = IS_PRODUCTION ? 'MAINNET' : 'RINKEBY'
-
-  const subdirectories = window.location.pathname.split('/')
-
-  const network = Object.values(networks).find(({ network }) => {
-    return subdirectories.some((subdirectory) => sameString(network.label, subdirectory))
-  })
-  const id = network?.network?.id
-
-  return (id ? getNetworkName(id) : DEFAULT_NETWORK).toUpperCase()
-}
-
-let networkId = getNetworkIdFromUrl()
-
-export const setNetworkId = (id: string): void => {
-  networkId = id
-}
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[networkId]
 
 export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | undefined => {
   return Object.values(networks).find((cfg) => cfg.network.id === id)
@@ -61,13 +70,18 @@ export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY
   getNetworkId(),
 )
 
-export const getCurrentEnvironment = (): 'test' | 'production' | 'staging' | 'dev' => {
+export const getCurrentShortChainName = (): string => getConfig().network.shortName
+
+export const getShortChainNameById = (networkId = getNetworkId()): string =>
+  getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
+
+export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {
   switch (APP_ENV) {
     case 'test': {
       return 'test'
     }
     case 'production': {
-      return APP_ENV === 'production' ? 'production' : 'staging'
+      return 'production'
     }
     case 'dev':
     default: {
@@ -97,16 +111,6 @@ export const getConfig = (): NetworkSpecificConfiguration => {
     disabledFeatures: configFile.disabledFeatures,
     disabledWallets: configFile.disabledWallets,
   }
-}
-
-export const getNetworks = (): NetworkInfo[] => {
-  const { local, ...usefulNetworks } = networks
-  return Object.values(usefulNetworks).map((networkObj) => ({
-    id: networkObj.network.id,
-    label: networkObj.network.label,
-    backgroundColor: networkObj.network.backgroundColor,
-    textColor: networkObj.network.textColor,
-  }))
 }
 
 export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl

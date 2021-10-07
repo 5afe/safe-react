@@ -29,8 +29,8 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { safeAddressFromUrl } from 'src/utils/router'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const useStyles = makeStyles(styles)
 
@@ -54,7 +54,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const { nativeCoin } = getNetworkInfo()
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()

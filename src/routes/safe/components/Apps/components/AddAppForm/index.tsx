@@ -1,6 +1,6 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import { useState, ReactElement, useCallback, useEffect } from 'react'
-import { generatePath, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -11,9 +11,8 @@ import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { getNetworkSlug, SAFE_ROUTES } from 'src/routes/routes'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 
 const FORM_ID = 'add-apps-form'
 
@@ -77,11 +76,6 @@ interface AddAppProps {
 }
 
 const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
-  const safeAddress = safeAddressFromUrl()
-  const appsPath = generatePath(SAFE_ROUTES.APPS, {
-    network: getNetworkSlug(),
-    safeAddress,
-  })
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
@@ -95,9 +89,12 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
       ...persistedAppList.map(({ url, disabled }) => ({ url, disabled })),
     ]
     saveToStorage(APPS_STORAGE_KEY, newAppList)
-    const goToApp = `${appsPath}?appUrl=${encodeURI(appInfo.url)}`
-    history.push(goToApp)
-  }, [appInfo.url, history, appsPath])
+
+    history.push({
+      pathname: generateSafeRoute(SAFE_ROUTES.APPS, extractPrefixedSafeAddress()),
+      search: `?appUrl=${encodeURIComponent(appInfo.url)}`,
+    })
+  }, [appInfo.url, history])
 
   useEffect(() => {
     if (isLoading) {

@@ -7,7 +7,7 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { extractSafeAddress } from 'src/routes/routes'
 
 export type TxTypeProps = {
   icon?: string
@@ -17,7 +17,7 @@ export type TxTypeProps = {
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
   const knownAddress = useKnownAddress(toAddress?.value || '0x', {

@@ -37,7 +37,7 @@ import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeAddressFromUrl } from 'src/utils/router'
+import { extractSafeAddress } from 'src/routes/routes'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -67,7 +67,7 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
 
 const useTxInfo = (transaction: Props['transaction']) => {
   const t = useRef(transaction)
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
 
   const confirmations = useMemo(
     () =>
@@ -214,7 +214,7 @@ export const ApproveTxModal = ({
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
   const executionInfo = transaction.executionInfo as MultisigExecutionInfo
   const thresholdReached = !!(transaction.executionInfo && isThresholdReached(executionInfo))

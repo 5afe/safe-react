@@ -6,10 +6,10 @@ import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/g
 import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { extractSafeAddress } from 'src/routes/routes'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState } from 'src/store'
-import { safeAddressFromUrl } from 'src/utils/router'
 
 export const isThresholdReached = (executionInfo: MultisigExecutionInfo): boolean => {
   const { confirmationsSubmitted, confirmationsRequired } = executionInfo
@@ -27,7 +27,7 @@ export type TransactionActions = {
 
 export const useTransactionActions = (transaction: Transaction): TransactionActions => {
   const currentUser = useSelector(userAccountSelector)
-  const safeAddress = safeAddressFromUrl()
+  const safeAddress = extractSafeAddress()
   const isUserAnOwner = useSelector(grantedSelector)
   const { txLocation } = useContext(TxLocationContext)
   const {

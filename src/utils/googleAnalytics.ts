@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
-import { getCurrentEnvironment, getNetworkInfo } from 'src/config'
+import { getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
@@ -18,8 +18,7 @@ export const COOKIES_LIST = [
   { name: '_gid', path: '/' },
 ]
 
-const IS_STAGING = getCurrentEnvironment() === 'staging'
-const shouldUseGoogleAnalytics = IS_PRODUCTION || IS_STAGING
+const shouldUseGoogleAnalytics = IS_PRODUCTION
 
 export const trackAnalyticsEvent = (event: Parameters<typeof ReactGA.event>[0]): void => {
   const chainName = getNetworkInfo().label

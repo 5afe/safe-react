@@ -38,6 +38,7 @@ const polygon: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.POLYGON,
+    shortName: 'matic',
     backgroundColor: '#8B50ED',
     textColor: '#ffffff',
     label: 'Polygon',
