@@ -85,7 +85,7 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     if (analyticsAllowed && analyticsLoaded) {
       ReactGA.set({ dimension1: chainId })
     }
-  }, [chainId])
+  }, [chainId, analyticsAllowed])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
