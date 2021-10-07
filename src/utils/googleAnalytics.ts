@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
-import { getCurrentEnvironment, getNetworkInfo } from 'src/config'
+import { getCurrentEnvironment, getNetworkId, getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
@@ -30,12 +30,23 @@ export const trackAnalyticsEvent = (event: Parameters<typeof ReactGA.event>[0]):
     { hitType: 'event', chainName },
   )
 
-  return shouldUseGoogleAnalytics
-    ? ReactGA.ga('send', fieldsObject)
-    : console.info('[GA] - Event:', { ...event, chainName })
+  if (!shouldUseGoogleAnalytics) {
+    console.info('[GA] - Event:', { ...event, chainName })
+    return
+  }
+
+  ReactGA.set({ dimension1: getNetworkId() })
+  ReactGA.ga('send', fieldsObject)
 }
+
 const trackAnalyticsPage: typeof ReactGA.pageview = (...args) => {
-  return shouldUseGoogleAnalytics ? ReactGA.pageview(...args) : console.info('[GA] - Page:', ...args)
+  if (!shouldUseGoogleAnalytics) {
+    console.info('[GA] - Page:', ...args)
+    return
+  }
+
+  ReactGA.set({ dimension1: getNetworkId() })
+  ReactGA.pageview(...args)
 }
 
 let analyticsLoaded = false
@@ -56,6 +67,7 @@ export const loadGoogleAnalytics = (): void => {
     anonymizeIp: true,
     appName: `Gnosis Safe Web`,
     appVersion: process.env.REACT_APP_APP_VERSION,
+    dimension1: getNetworkId(),
   }
 
   if (shouldUseGoogleAnalytics) {
