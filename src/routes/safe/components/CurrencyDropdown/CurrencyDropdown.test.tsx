@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, getByText, waitFor, queryByText } from 'src/utils/test-utils'
 import { CurrencyDropdown } from '.'
-import { history } from 'src/routes/routes'
+import { history, ROOT_ROUTE } from 'src/routes/routes'
 import { mockedEndpoints } from 'src/setupTests'
 import { getClientGatewayUrl } from 'src/config'
 
@@ -39,7 +39,7 @@ describe('<CurrencyDropdown>', () => {
 
   it('changes the selected currency and updates localStorage', async () => {
     const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
-    const url = `/rinkeby/safes/${safeAddress}/balances`
+    const url = `/rin:${safeAddress}/balances`
     history.location.pathname = url
     const customState = {
       providers: {
@@ -99,12 +99,12 @@ describe('<CurrencyDropdown>', () => {
     // updates localStorage with the new selected currency
     await waitFor(() => expect(localStorage.getItem('SAFE__currencyValues.selectedCurrency')).toBe('"EUR"'))
 
-    history.location.pathname = '/'
+    history.location.pathname = ROOT_ROUTE
   })
 
   it('Filters by a currency', async () => {
     const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
-    const url = `/rinkeby/safes/${safeAddress}/balances`
+    const url = `/rin:${safeAddress}/balances`
     history.location.pathname = url
     const customState = {
       providers: {
@@ -151,6 +151,6 @@ describe('<CurrencyDropdown>', () => {
     expect(queryByText(currencyModal, 'ALL')).not.toBeInTheDocument()
     expect(queryByText(currencyModal, 'ARS')).not.toBeInTheDocument()
 
-    history.location.pathname = '/'
+    history.location.pathname = ROOT_ROUTE
   })
 })

@@ -1,12 +1,11 @@
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { getClientGatewayUrl } from 'src/config'
+import { getClientGatewayUrl, getCurrentShortChainName } from 'src/config'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
-import { history } from 'src/routes/routes'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import { generatePath } from 'react-router-dom'
-import { getNetworkSlug, SAFE_ROUTES } from '../routes'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
@@ -25,8 +24,7 @@ const validSafeENSNameDomain = 'testENSDomain.eth'
 describe('<LoadSafePage>', () => {
   afterEach(() => {
     const constants = require('src/utils/constants')
-
-    Object.defineProperty(constants, 'APP_ENV', { value: undefined })
+    Object.defineProperty(constants, 'IS_PRODUCTION', { value: false })
   })
 
   it('renders LoadSafePage Form', () => {
@@ -47,8 +45,7 @@ describe('<LoadSafePage>', () => {
 
   it('hides Select network step if we are in production env', () => {
     const constants = require('src/utils/constants')
-
-    Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
+    Object.defineProperty(constants, 'IS_PRODUCTION', { value: true })
 
     const customState = {
       providers: {
@@ -158,8 +155,7 @@ describe('<LoadSafePage>', () => {
   describe('Step 2: Name and address', () => {
     it('Shows a No account detected error message if no wallet is connected in production environment', () => {
       const constants = require('src/utils/constants')
-
-      Object.defineProperty(constants, 'APP_ENV', { value: 'production' })
+      Object.defineProperty(constants, 'IS_PRODUCTION', { value: true })
 
       render(<LoadSafePage />)
 
@@ -570,8 +566,8 @@ describe('<LoadSafePage>', () => {
 
       await waitFor(() => {
         expect(historyPushSpy).toHaveBeenCalledWith(
-          generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            network: getNetworkSlug(),
+          generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+            shortName: getCurrentShortChainName(),
             safeAddress: validSafeAddress,
           }),
         )

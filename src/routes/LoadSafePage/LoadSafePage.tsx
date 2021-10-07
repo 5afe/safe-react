@@ -1,6 +1,6 @@
 import { ReactElement, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { generatePath, useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
@@ -27,7 +27,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { getNetworkSlug, SAFE_ROUTES } from '../routes'
 import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
@@ -36,7 +35,9 @@ import {
   FIELD_SAFE_OWNER_LIST,
   LoadSafeFormValues,
 } from './fields/loadFields'
-import { APP_ENV } from 'src/utils/constants'
+import { IS_PRODUCTION } from 'src/utils/constants'
+import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
+import { getCurrentShortChainName } from 'src/config'
 
 function Load(): ReactElement {
   const provider = useSelector(providerNameSelector)
@@ -44,7 +45,8 @@ function Load(): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const { safeAddress } = useParams<{ safeAddress?: string }>()
+  const { safeAddress } = extractPrefixedSafeAddress(LOAD_SPECIFIC_SAFE_ROUTE)
+
   const safeRandomName = useMnemonicSafeName()
 
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
@@ -91,17 +93,10 @@ function Load(): ReactElement {
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
-    history.push(
-      generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        network: getNetworkSlug(),
-        safeAddress,
-      }),
-    )
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
   }
 
-  const isProductionEnv = APP_ENV === 'production'
-
-  return isProductionEnv && !provider ? (
+  return IS_PRODUCTION && !provider ? (
     <div>No account detected</div>
   ) : (
     <Page>
@@ -113,7 +108,7 @@ function Load(): ReactElement {
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
         <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
-          {!isProductionEnv && (
+          {!IS_PRODUCTION && (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />
             </StepFormElement>

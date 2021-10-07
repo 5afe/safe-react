@@ -1,11 +1,11 @@
 import AppsList from './AppsList'
 import { render, screen, fireEvent } from 'src/utils/test-utils'
 
-jest.mock('src/utils/router', () => {
-  const original = jest.requireActual('src/utils/router')
+jest.mock('src/routes/routes', () => {
+  const original = jest.requireActual('src/routes/routes')
   return {
     ...original,
-    safeAddressFromUrl: () => '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
+    extractSafeAddress: () => '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
   }
 })
 

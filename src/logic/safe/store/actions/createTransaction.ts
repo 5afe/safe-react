@@ -1,7 +1,7 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
+
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
@@ -17,7 +17,6 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { getNetworkSlug, SAFE_ROUTES, history } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -33,6 +32,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -80,12 +81,7 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      history.push(
-        generatePath(SAFE_ROUTES.TRANSACTIONS, {
-          network: getNetworkSlug(),
-          safeAddress,
-        }),
-      )
+      history.push(generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, { shortName: getCurrentShortChainName(), safeAddress }))
     }
 
     const ready = await onboardUser()

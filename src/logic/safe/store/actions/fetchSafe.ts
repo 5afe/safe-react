@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux'
 import { Action } from 'redux-actions'
+
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'

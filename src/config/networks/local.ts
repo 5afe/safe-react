@@ -30,6 +30,7 @@ const local: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.LOCAL,
+    shortName: 'local',
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
     label: 'LocalRPC',

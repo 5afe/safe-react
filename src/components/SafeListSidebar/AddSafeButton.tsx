@@ -1,10 +1,10 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
-import { generatePath, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
-import { getNetworkSlug, WELCOME_ROUTE } from 'src/routes/routes'
 import { Text } from '@gnosis.pm/safe-react-components'
+import { WELCOME_ROUTE } from 'src/routes/routes'
 
 interface Props {
   onAdd: () => unknown
@@ -34,7 +34,7 @@ const StyledLink = styled(Link)`
 
 const AddSafeButton = ({ onAdd }: Props): ReactElement => {
   return (
-    <StyledLink onClick={onAdd} to={generatePath(WELCOME_ROUTE, { network: getNetworkSlug() })}>
+    <StyledLink onClick={onAdd} to={WELCOME_ROUTE}>
       <Fab color="secondary" size="small" aria-label="Add Safe">
         <AddIcon />
 
