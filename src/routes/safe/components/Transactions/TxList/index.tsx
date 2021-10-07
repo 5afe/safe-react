@@ -9,8 +9,8 @@ import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
 
 const items: Item[] = [
-  { id: 'queue', label: 'Queue' },
   { id: 'history', label: 'History' },
+  { id: 'queue', label: 'Queue' },
 ]
 
 const GatewayTransactions = (): ReactElement => {
@@ -33,8 +33,8 @@ const GatewayTransactions = (): ReactElement => {
       </Menu>
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
-        {tab === 'queue' && <QueueTransactions />}
         {tab === 'history' && <HistoryTransactions />}
+        {tab === 'queue' && <QueueTransactions />}
       </ContentWrapper>
     </Wrapper>
   )
