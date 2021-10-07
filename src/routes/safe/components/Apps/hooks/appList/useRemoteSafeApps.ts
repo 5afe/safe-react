@@ -22,6 +22,7 @@ const useRemoteSafeApps = (): ReturnType => {
       setStatus(FETCH_STATUS.LOADING)
       try {
         const result = await fetchSafeAppsList()
+
         if (result?.length) {
           setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
           setStatus(FETCH_STATUS.SUCCESS)

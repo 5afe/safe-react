@@ -1,6 +1,7 @@
 import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 import { usePinnedSafeApps } from '../hooks/appList/usePinnedSafeApps'
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
+import * as configServiceApi from 'src/logic/configService'
 
 jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps')
 
@@ -22,56 +23,6 @@ jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () 
   }),
 }))
 
-jest.mock('src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps', () => ({
-  useRemoteSafeApps: () => ({
-    remoteSafeApps: [
-      {
-        id: '13',
-        url: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k',
-        name: 'Compound',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k/Compound.png',
-        error: false,
-        description: 'Money markets on the Ethereum blockchain',
-        fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
-        provider: null,
-      },
-      {
-        id: '3',
-        url: 'https://app.ens.domains',
-        name: 'ENS App',
-        iconUrl: 'https://app.ens.domains/android-chrome-144x144.png',
-
-        description: 'Decentralised naming for wallets, websites, & more.',
-        fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
-        provider: null,
-      },
-      {
-        id: '14',
-        url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
-        name: 'Synthetix',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
-        description: 'Trade synthetic assets on Ethereum',
-        fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
-        provider: null,
-      },
-      {
-        id: '24',
-        url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
-        name: 'Transaction Builder',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
-        description: 'A Safe app to compose custom transactions',
-        fetchStatus: 'SUCCESS',
-        chainIds: [1, 4, 56, 100, 137, 246, 73799],
-        provider: null,
-      },
-    ],
-    status: 'SUCCESS',
-  }),
-}))
-
 const customState = {
   router: {
     location: {
@@ -89,28 +40,81 @@ beforeEach(() => {
     loaded: true,
     updatePinnedSafeApps: jest.fn(),
   }))
+
+  jest.spyOn(configServiceApi, 'fetchSafeAppsList').mockImplementation(() =>
+    Promise.resolve([
+      {
+        id: 13,
+        url: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k',
+        name: 'Compound',
+        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k/Compound.png',
+        error: false,
+        description: 'Money markets on the Ethereum blockchain',
+        fetchStatus: 'SUCCESS',
+        chainIds: [1, 4],
+        provider: null,
+      },
+      {
+        id: 3,
+        url: 'https://app.ens.domains',
+        name: 'ENS App',
+        iconUrl: 'https://app.ens.domains/android-chrome-144x144.png',
+
+        description: 'Decentralised naming for wallets, websites, & more.',
+        fetchStatus: 'SUCCESS',
+        chainIds: [1, 4],
+        provider: null,
+      },
+      {
+        id: 14,
+        url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
+        name: 'Synthetix',
+        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
+        description: 'Trade synthetic assets on Ethereum',
+        fetchStatus: 'SUCCESS',
+        chainIds: [1, 4],
+        provider: null,
+      },
+      {
+        id: 24,
+        url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
+        name: 'Transaction Builder',
+        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
+        description: 'A Safe app to compose custom transactions',
+        fetchStatus: 'SUCCESS',
+        chainIds: [1, 4, 56, 100, 137, 246, 73799],
+        provider: null,
+      },
+    ]),
+  )
 })
 
 describe('Safe Apps -> AppsList', () => {
-  it('Shows apps from the Remote app list', () => {
+  it('Shows apps from the Remote app list', async () => {
     render(<AppsList />, customState)
 
-    expect(screen.getByText('Compound')).toBeInTheDocument()
-    expect(screen.getByText('ENS App')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Compound')).toBeInTheDocument()
+      expect(screen.getByText('ENS App')).toBeInTheDocument()
+    })
   })
 
-  it('Shows apps from the Custom app list', () => {
+  it('Shows apps from the Custom app list', async () => {
     render(<AppsList />, customState)
 
-    expect(screen.getByText('Drain safe')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Drain safe')).toBeInTheDocument()
+    })
   })
 
-  it('Shows different app sections', () => {
+  it('Shows different app sections', async () => {
     render(<AppsList />, customState)
 
-    expect(screen.getByText('ALL APPS')).toBeInTheDocument()
-    expect(screen.getByText('PINNED APPS')).toBeInTheDocument()
-    expect(screen.getByText('CUSTOM APPS')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('ALL APPS')).toBeInTheDocument()
+      expect(screen.getByText('PINNED APPS')).toBeInTheDocument()
+      expect(screen.getByText('CUSTOM APPS')).toBeInTheDocument()
+    })
   })
 })
 
