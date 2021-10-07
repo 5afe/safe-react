@@ -16,7 +16,7 @@ const baseConfig: EnvironmentSettings = {
   rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   safeAppsRpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   networkExplorerName: 'Arbitrum explorer',
-  networkExplorerUrl: 'https://explorer.arbitrum.io',
+  networkExplorerUrl: 'https://arbiscan.io',
   networkExplorerApiUrl: 'https://api.arbiscan.io/api',
 }
 
