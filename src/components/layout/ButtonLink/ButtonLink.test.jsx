@@ -1,4 +1,4 @@
-import { render, fireEvent, screen } from 'src/utils/test-utils'
+import { render, screen } from 'src/utils/test-utils'
 import GnoButtonLink from './index'
 
 describe('<GnoButtonLink>', () => {
