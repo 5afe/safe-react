@@ -12,7 +12,7 @@ const NoAppsFoundTextContainer = styled(Card)`
   box-sizing: border-box;
   max-width: 100%;
   padding: 52px 54px;
-  text-align: center;
+  justify-content: center;
   gap: ${({ theme }) => theme.margin.sm};
 `
 
