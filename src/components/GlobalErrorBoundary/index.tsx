@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
+import { ROOT_ROUTE } from 'src/routes/routes'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -117,7 +118,7 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
             </Text>
           </>
         )}
-        <Link size="lg" color="primary" href="/">
+        <Link size="lg" color="primary" href={ROOT_ROUTE}>
           <LinkContent>
             <Icon size="md" type="home" color="primary" />
             Go to Home

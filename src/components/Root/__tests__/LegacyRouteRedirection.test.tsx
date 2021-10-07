@@ -12,12 +12,20 @@ describe('LegacyRouteRedirection', () => {
 
     expect(window.location.pathname).toBe(`/rin:${ZERO_ADDRESS}`)
   })
-  it('redirects legacy load links and prepends the short chain name', () => {
+  it('redirects (addressed) legacy load links and prepends the short chain name', () => {
     history.push(`/#/load/${ZERO_ADDRESS}`)
 
     render(<LegacyRouteRedirection />)
 
     expect(window.location.pathname).toBe(`/load/rin:${ZERO_ADDRESS}`)
+  })
+  it('redirects (non-addressed) legacy links without alteration', () => {
+    //TODO:
+    history.push(`/#/welcome`)
+
+    render(<LegacyRouteRedirection />)
+
+    expect(window.location.pathname).toBe(`/welcome`)
   })
   it('does not redirect new links', () => {
     history.push(`/rin:${ZERO_ADDRESS}`)

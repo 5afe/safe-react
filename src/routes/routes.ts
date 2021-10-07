@@ -11,9 +11,8 @@ export const history = createBrowserHistory({
 
 // Safe specific routes
 const chainSpecificSafeAddressPathRegExp = '[a-z]+:0x[0-9A-Fa-f]+'
-export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
-export const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
 
+export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
 export const ADDRESSED_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
 
 // Safe section routes, i.e. /:prefixedSafeAddress/settings
@@ -32,9 +31,6 @@ export type SafeRouteSlugs = {
 }
 
 export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
-
-// Addressed routes for matching to retrieve [SAFE_ADDRESS_SLUG]
-export const ADDRESSED_ROUTES = [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]
 
 // Routes independant of safe/network
 export const ROOT_ROUTE = '/'
@@ -66,11 +62,11 @@ const isValidShortChainName = (shortName: string): boolean => {
 }
 
 // Due to hoisting issues, these functions should remain here
-export const extractPrefixedSafeAddress = (): SafeRouteParams => {
+export const extractPrefixedSafeAddress = (path = ADDRESSED_ROUTE): SafeRouteParams => {
   const currentChainShortName = getCurrentShortChainName()
 
   const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    path: ADDRESSED_ROUTES,
+    path,
   })
 
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]
@@ -94,7 +90,8 @@ export const extractPrefixedSafeAddress = (): SafeRouteParams => {
 
 export const hasPrefixedSafeAddressInUrl = (): boolean => {
   const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    path: ADDRESSED_ROUTES,
+    // Routes that have addresses in URL
+    path: [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE],
   })
   return !!match?.params?.[SAFE_ADDRESS_SLUG]
 }
@@ -119,9 +116,7 @@ export const generateSafeRoute = (
   })
 
 export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof SAFE_ROUTES =>
-  Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>((routes, [key, route]) => {
-    return {
-      ...routes,
-      [key]: generateSafeRoute(route, params),
-    }
-  }, {} as typeof SAFE_ROUTES)
+  Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>(
+    (routes, [key, route]) => ({ ...routes, [key]: generateSafeRoute(route, params) }),
+    {} as typeof SAFE_ROUTES,
+  )

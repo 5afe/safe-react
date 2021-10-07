@@ -36,7 +36,7 @@ import {
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { IS_PRODUCTION } from 'src/utils/constants'
-import { extractSafeAddress, generateSafeRoute, SAFE_ROUTES } from '../routes'
+import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getCurrentShortChainName } from 'src/config'
 
 function Load(): ReactElement {
@@ -45,7 +45,7 @@ function Load(): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = extractPrefixedSafeAddress(LOAD_SPECIFIC_SAFE_ROUTE)
 
   const safeRandomName = useMnemonicSafeName()
 

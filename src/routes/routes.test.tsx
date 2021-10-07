@@ -59,6 +59,16 @@ describe('extractPrefixedSafeAddress', () => {
     // 'rin' is default dev env shortName
     expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: validSafeAddress })
   })
+
+  // matchPath will fail because of chainSpecificSafeAddressPathRegExp path
+  it('returns the chain prefix with empty safe address when a malformed address is supplied', () => {
+    const shortName = 'bnb'
+
+    const route = `/${shortName}:0xqiwueyrqpwoifnaskjdgafgdsf/balances`
+    history.push(route)
+
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: '' })
+  })
 })
 
 describe('hasPrefixedSafeAddressInUrl', () => {

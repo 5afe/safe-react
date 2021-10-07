@@ -1,7 +1,7 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react-router/node_modules/@types/react'
 import { getNetworks, getNetworkId, getShortChainNameById } from 'src/config'
-import { ROOT_ROUTE, history } from 'src/routes/routes'
+import { history } from 'src/routes/routes'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 
@@ -22,7 +22,7 @@ const LegacyRouteRedirection = (): ReactElement | null => {
   if (!match || !safeAddress) {
     return (
       <Router history={history}>
-        <Redirect to={ROOT_ROUTE} />
+        <Redirect to={hash.replace('#/', '')} />
       </Router>
     )
   }

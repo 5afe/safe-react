@@ -35,10 +35,12 @@ export const getNetworks = (): NetworkInfo[] => {
 
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+
   const { pathname } = window.location
   const network = getNetworks().find(({ shortName }) => {
-    return pathname.split('/').some((el) => el.includes(`${shortName}:`))
+    return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
   })
+
   return network?.id || DEFAULT_NETWORK_ID
 }
 
@@ -73,13 +75,13 @@ export const getCurrentShortChainName = (): string => getConfig().network.shortN
 export const getShortChainNameById = (networkId = getNetworkId()): string =>
   getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
 
-export const getCurrentEnvironment = (): 'test' | 'production' | 'staging' | 'dev' => {
+export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {
   switch (APP_ENV) {
     case 'test': {
       return 'test'
     }
     case 'production': {
-      return APP_ENV === 'production' ? 'production' : 'staging'
+      return 'production'
     }
     case 'dev':
     default: {
