@@ -41,12 +41,13 @@ jobs:
       - name: pwd command
         run: |
           pwd
+          echo "$GITHUB_WORKSPACE"
 
       - name: Run tests
         uses: mattallty/jest-github-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: "npm run test:ci -- --outputFile=jest.results.json"
+          test-command: "npm run test:ci -- --outputFile=/home/runner/work/safe-react/safe-react/jest.results.json"
           coverage-comment: true
           changes-only: true
