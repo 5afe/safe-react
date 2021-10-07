@@ -73,7 +73,7 @@ const AppsList = (): React.ReactElement => {
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')
-  const { appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
+  const { allApps, appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
   const apps = useAppsSearch(appList, appSearch)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
   const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
@@ -183,7 +183,7 @@ const AppsList = (): React.ReactElement => {
           <Modal.Header onClose={closeAddAppModal}>
             <Modal.Header.Title>Add custom app</Modal.Header.Title>
           </Modal.Header>
-          <AddAppForm closeModal={closeAddAppModal} appList={customApps} onAddApp={addCustomApp} />
+          <AddAppForm closeModal={closeAddAppModal} appList={allApps} onAddApp={addCustomApp} />
         </Modal>
       )}
 

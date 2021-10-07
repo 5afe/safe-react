@@ -7,6 +7,7 @@ import { usePinnedSafeApps } from './usePinnedSafeApps'
 import { FETCH_STATUS } from 'src/utils/requests'
 
 type UseAppListReturnType = {
+  allApps: SafeApp[]
   appList: SafeApp[]
   customApps: SafeApp[]
   pinnedSafeApps: SafeApp[]
@@ -21,6 +22,11 @@ const useAppList = (): UseAppListReturnType => {
   const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
   const { pinnedSafeAppIds, updatePinnedSafeApps } = usePinnedSafeApps()
   const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
+
+  const allApps = useMemo(() => {
+    const allApps = [...remoteSafeApps, ...customSafeApps]
+    return allApps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  }, [remoteSafeApps, customSafeApps])
 
   const appList = useMemo(() => {
     return remoteSafeApps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
@@ -72,6 +78,7 @@ const useAppList = (): UseAppListReturnType => {
   )
 
   return {
+    allApps,
     appList,
     customApps,
     pinnedSafeApps,
