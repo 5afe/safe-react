@@ -126,12 +126,12 @@ describe('generateSafeRoute', () => {
   it('adds the chain-specific slug to provided routes', () => {
     const shortName = 'xdai'
 
-    const SAFE_ROUTE_WITH_ADDRESS = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+    const testSafeRoute = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
       shortName,
       safeAddress: validSafeAddress,
     })
 
-    expect(SAFE_ROUTE_WITH_ADDRESS).toBe(`/${shortName}:${validSafeAddress}/balances`)
+    expect(testSafeRoute).toBe(`/${shortName}:${validSafeAddress}/balances`)
   })
 })
 

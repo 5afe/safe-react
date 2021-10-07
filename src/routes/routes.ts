@@ -31,13 +31,13 @@ export type SafeRouteSlugs = {
   [SAFE_SUBSECTION_SLUG]?: string
 }
 
+export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
+
 // Routes independant of safe/network
 export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
 export const OPEN_SAFE_ROUTE = '/open'
-export const LOAD_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` //'/load'
-
-export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // Slug is optional
+export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By providing no slug, we get '/load'
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {
@@ -88,7 +88,9 @@ export const extractPrefixedSafeAddress = (): SafeRouteParams => {
 }
 
 export const hasPrefixedSafeAddressInUrl = (): boolean => {
-  const match = matchPath<SafeRouteSlugs>(history.location.pathname, { path: ADDRESSED_ROUTE })
+  const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
+    path: [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE],
+  })
   return !!match?.params?.[SAFE_ADDRESS_SLUG]
 }
 
@@ -105,10 +107,10 @@ export const getPrefixedSafeAddressSlug = (
 // Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortName:safeAddress'
 export const generateSafeRoute = (
   path: typeof SAFE_ROUTES[keyof typeof SAFE_ROUTES],
-  { shortName, safeAddress }: SafeRouteParams,
+  params: SafeRouteParams,
 ): string =>
   generatePath(path, {
-    [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug({ safeAddress, shortName }),
+    [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(params),
   })
 
 export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof SAFE_ROUTES =>
