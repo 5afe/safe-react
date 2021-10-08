@@ -13,7 +13,8 @@ import {
 
 import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
-import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
+import { LOAD_ADDRESS } from 'src/routes/routes'
+// import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { onConnectButtonClick } from 'src/components/ConnectButton'
 import { useSelector } from 'react-redux'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
@@ -148,11 +149,12 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 Create a new Safe that is controlled by one or multiple owners. <br />
                 You will be required to pay a network fee for creating your new Safe.
               </Text>
-              <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
+              {/* FIXME: test will fail on purpose to test CI */}
+              {/* <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
                 <Text size="xl" color="white">
                   + Create new Safe
                 </Text>
-              </StyledButton>
+              </StyledButton> */}
             </CardsCol>
 
             <Divider orientation="vertical" />
