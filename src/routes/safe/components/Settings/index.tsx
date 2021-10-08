@@ -21,6 +21,7 @@ const ManageOwners = lazy(() => import('./ManageOwners'))
 const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
 const SafeDetails = lazy(() => import('./SafeDetails'))
 const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
+const Appearance = lazy(() => import('./Appearance'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -105,6 +106,7 @@ const Settings = (): React.ReactElement => {
           <Block className={classes.container}>
             <Switch>
               <Route path={SAFE_ROUTES.SETTINGS_DETAILS} exact render={() => <SafeDetails />} />
+              <Route path={SAFE_ROUTES.SETTINGS_APPEARANCE} exact render={() => <Appearance />} />
               <Route
                 path={SAFE_ROUTES.SETTINGS_OWNERS}
                 exact

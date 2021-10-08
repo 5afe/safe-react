@@ -1,40 +1,35 @@
 import { useEffect, useState } from 'react'
 import { prefersDarkMode } from 'src/theme/variables'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const DARK_MODE_KEY = 'SAFE__darkMode'
-
-const setLocalDarkMode = (value: boolean): void => {
-  localStorage.setItem(DARK_MODE_KEY, JSON.stringify(value))
-}
-
-const getLocalDarkMode = (): boolean => {
-  try {
-    const value = localStorage.getItem(DARK_MODE_KEY)
-    return value ? JSON.parse(value) : prefersDarkMode
-  } catch {
-    return prefersDarkMode
-  }
-}
+const CURRENT_DOCUMENT_EVENT = 'toggle-dark-mode'
+const STORAGE_EVENTS = ['storage', CURRENT_DOCUMENT_EVENT]
 
 const useDarkMode = (): { isDarkMode: boolean; toggleDarkMode: () => void } => {
-  const [isDarkMode, setDarkMode] = useState<boolean>(() => getLocalDarkMode())
-  const toggleDarkMode = () => {
-    const newValue = !isDarkMode
-    setDarkMode(newValue)
-    setLocalDarkMode(newValue)
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(prefersDarkMode)
+
+  const getLocalDarkMode = async () => {
+    try {
+      const newValue = (await loadFromStorage<boolean>(DARK_MODE_KEY)) ?? prefersDarkMode
+      setIsDarkMode(newValue)
+    } catch {}
   }
 
-  // Update state if localStorage changes, i.e. in another tab
-  useEffect(() => {
-    const onStorageUpdate = ({ key, newValue, oldValue }: StorageEvent): void => {
-      if (key === DARK_MODE_KEY && newValue !== oldValue) {
-        setDarkMode(newValue ? JSON.parse(newValue) : getLocalDarkMode())
-      }
-    }
+  const toggleDarkMode = async () => {
+    try {
+      await saveToStorage<boolean>(DARK_MODE_KEY, !isDarkMode)
+      setIsDarkMode(!isDarkMode)
+      window.dispatchEvent(new Event(CURRENT_DOCUMENT_EVENT))
+    } catch {}
+  }
 
-    window.addEventListener('storage', onStorageUpdate)
+  useEffect(() => {
+    getLocalDarkMode()
+
+    STORAGE_EVENTS.forEach((ev) => window.addEventListener(ev, getLocalDarkMode))
     return () => {
-      window.removeEventListener('storage', onStorageUpdate)
+      STORAGE_EVENTS.forEach((ev) => window.removeEventListener(ev, getLocalDarkMode))
     }
   }, [])
 

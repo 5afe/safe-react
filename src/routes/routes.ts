@@ -47,6 +47,7 @@ export const SAFE_ROUTES = {
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
   SETTINGS_DETAILS: `${ADDRESSED_ROUTE}/settings/details`,
+  SETTINGS_APPEARANCE: `${ADDRESSED_ROUTE}/settings/appearance`,
   SETTINGS_OWNERS: `${ADDRESSED_ROUTE}/settings/owners`,
   SETTINGS_POLICIES: `${ADDRESSED_ROUTE}/settings/policies`,
   SETTINGS_SPENDING_LIMIT: `${ADDRESSED_ROUTE}/settings/spending-limit`,

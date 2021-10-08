@@ -76,6 +76,11 @@ const useSidebarItems = (): ListItemType[] => {
         href: currentSafeRoutes.SETTINGS_DETAILS,
       }),
       makeEntryItem({
+        label: 'Appearance',
+        iconType: 'eye',
+        href: currentSafeRoutes.SETTINGS_APPEARANCE,
+      }),
+      makeEntryItem({
         label: 'Owners',
         iconType: 'owners',
         href: currentSafeRoutes.SETTINGS_OWNERS,

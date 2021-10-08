@@ -1,4 +1,4 @@
-import { Switch, Text, theme, Title } from '@gnosis.pm/safe-react-components'
+import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -11,7 +11,6 @@ import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { TransactionGuard } from './TransactionGuard'
-import useDarkMode from 'src/logic/darkMode/hooks/useDarkMode'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -36,7 +35,6 @@ const NoTransactionGuardLegend = (): ReactElement => (
 const Advanced = (): ReactElement => {
   const classes = useStyles()
   const { nonce, modules, guard } = useSelector(currentSafe) ?? {}
-  const { isDarkMode, toggleDarkMode } = useDarkMode()
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const { trackEvent } = useAnalytics()
 
@@ -101,14 +99,6 @@ const Advanced = (): ReactElement => {
         </InfoText>
 
         {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
-      </Block>
-
-      {/* Dark mode */}
-      <Block className={classes.container}>
-        <Title size="xs" withoutMargin>
-          Dark Mode
-        </Title>
-        <Switch checked={isDarkMode} onChange={toggleDarkMode} />
       </Block>
     </>
   )
