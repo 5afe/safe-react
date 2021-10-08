@@ -149,12 +149,11 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 Create a new Safe that is controlled by one or multiple owners. <br />
                 You will be required to pay a network fee for creating your new Safe.
               </Text>
-              {/* FIXME: test will fail on purpose to test CI */}
-              {/* <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
+              <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
                 <Text size="xl" color="white">
                   + Create new Safe
                 </Text>
-              </StyledButton> */}
+              </StyledButton>
             </CardsCol>
 
             <Divider orientation="vertical" />
