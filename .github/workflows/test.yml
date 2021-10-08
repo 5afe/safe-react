@@ -39,12 +39,10 @@ jobs:
           yarn cache clean
 
       - name: Run tests
-        run: 'npm run test:ci -- --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json'
-
-      - uses: mattallty/jest-github-action@v1
+        uses: mattallty/jest-github-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: 'echo done'
+          test-command: 'npm run test:ci'
           coverage-comment: true
           changes-only: true
