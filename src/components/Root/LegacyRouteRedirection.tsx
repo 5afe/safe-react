@@ -1,5 +1,5 @@
 import { matchPath, Router, Redirect } from 'react-router'
-import { ReactElement } from 'react-router/node_modules/@types/react'
+import { ReactElement } from 'react'
 import { getNetworks, getNetworkId, getShortChainNameById } from 'src/config'
 import { history } from 'src/routes/routes'
 import { PUBLIC_URL } from 'src/utils/constants'

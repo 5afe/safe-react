@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
-import { getNetworkInfo } from 'src/config'
+import { useSelector } from 'react-redux'
+import { getNetworkInfo, getNetworkId } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 import { IS_PRODUCTION } from './constants'
 import { capitalize } from './css'
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
-
-// TODO: Update cookie handling for unified app
 
 export const COOKIES_LIST = [
   { name: '_ga', path: '/' },
@@ -55,6 +55,7 @@ export const loadGoogleAnalytics = (): void => {
     anonymizeIp: true,
     appName: `Gnosis Safe Web`,
     appVersion: process.env.REACT_APP_APP_VERSION,
+    dimension1: getNetworkId(),
   }
 
   if (shouldUseGoogleAnalytics) {
@@ -78,6 +79,13 @@ type UseAnalyticsResponse = {
 
 export const useAnalytics = (): UseAnalyticsResponse => {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
+  const chainId = useSelector(currentChainId)
+
+  useEffect(() => {
+    if (analyticsAllowed && analyticsLoaded) {
+      ReactGA.set({ dimension1: chainId })
+    }
+  }, [chainId, analyticsAllowed])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -113,6 +121,7 @@ export const useAnalytics = (): UseAnalyticsResponse => {
 
 // we remove GA cookies manually as react-ga does not provides a utility for it.
 export const removeCookies = (): void => {
+  // Extracts the main domain, e.g. gnosis-safe.io
   const subDomain = location.host.split('.').slice(-2).join('.')
   COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
 }
