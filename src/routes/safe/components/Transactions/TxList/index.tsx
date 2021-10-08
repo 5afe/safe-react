@@ -7,14 +7,17 @@ import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
+import { createBrowserHistory } from 'history'
 
 const items: Item[] = [
-  { id: 'history', label: 'History' },
   { id: 'queue', label: 'Queue' },
+  { id: 'history', label: 'History' },
 ]
 
 const GatewayTransactions = (): ReactElement => {
-  const [tab, setTab] = useState(items[0].id)
+  const history = createBrowserHistory()
+  const activeTab = history.location?.state?.tabId || 'history'
+  const [tab, setTab] = useState(activeTab)
 
   const { trackEvent } = useAnalytics()
 
@@ -33,8 +36,8 @@ const GatewayTransactions = (): ReactElement => {
       </Menu>
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
-        {tab === 'history' && <HistoryTransactions />}
         {tab === 'queue' && <QueueTransactions />}
+        {tab === 'history' && <HistoryTransactions />}
       </ContentWrapper>
     </Wrapper>
   )

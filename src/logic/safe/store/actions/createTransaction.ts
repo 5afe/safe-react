@@ -81,7 +81,13 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      history.push(generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, { shortName: getCurrentShortChainName(), safeAddress }))
+      history.push(
+        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, {
+          shortName: getCurrentShortChainName(),
+          safeAddress,
+        }),
+        { tabId: 'queue' },
+      )
     }
 
     const ready = await onboardUser()
