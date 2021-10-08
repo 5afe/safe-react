@@ -40,7 +40,8 @@ jobs:
 
       - name: Run tests
         run: 'npm run test:ci -- --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json'
-        uses: mattallty/jest-github-action
+
+      - uses: mattallty/jest-github-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
