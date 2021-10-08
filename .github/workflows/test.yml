@@ -42,6 +42,7 @@ jobs:
         run: 'npm run test:ci'
       
       - uses: mattallty/jest-github-action@v1.0.3
+        if: success() || failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
