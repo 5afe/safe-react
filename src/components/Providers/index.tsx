@@ -5,24 +5,21 @@ import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { Store } from 'redux'
 import { History } from 'history'
-import { StyledTheme } from 'src/logic/darkMode/utils/getStyledTheme'
-import { getMuiTheme, getStyledTheme } from 'src/logic/darkMode/utils'
-import useDarkMode from 'src/logic/darkMode/hooks/useDarkMode'
+import { theme as srcStyledTheme } from '@gnosis.pm/safe-react-components'
 
 type ProvidersProps = {
   children: ReactNode
   store: Store
   history: History
-  styledTheme: StyledTheme
+  styledTheme: typeof srcStyledTheme
   muiTheme: MuiTheme
 }
 
 function Providers({ children, store, styledTheme, muiTheme, history }: ProvidersProps): React.ReactElement {
-  const { isDarkMode } = useDarkMode()
   return (
-    <ThemeProvider theme={getStyledTheme(styledTheme, isDarkMode)}>
+    <ThemeProvider theme={styledTheme}>
       <Provider store={store}>
-        <MuiThemeProvider theme={getMuiTheme(muiTheme, isDarkMode)}>
+        <MuiThemeProvider theme={muiTheme}>
           <Router history={history}>{children}</Router>
         </MuiThemeProvider>
       </Provider>
