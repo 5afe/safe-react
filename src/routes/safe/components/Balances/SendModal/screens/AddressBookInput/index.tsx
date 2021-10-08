@@ -5,7 +5,7 @@ import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'rea
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getNetworkId, isFeatureEnabled } from 'src/config'
+import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
@@ -19,8 +19,7 @@ import {
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
-
-const chainId = getNetworkId()
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -48,6 +47,8 @@ const BaseAddressBookInput = ({
   setValidationText,
   validationText,
 }: BaseAddressBookInputProps): ReactElement => {
+  const networkId = useSelector(currentChainId)
+
   const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
     setSelectedEntry(addressEntry)
     fieldMutator(addressEntry.address)
@@ -121,7 +122,7 @@ const BaseAddressBookInput = ({
               ? {
                   address,
                   name: normalizedValue,
-                  chainId,
+                  chainId: networkId,
                 }
               : validatedAddress
 
@@ -142,7 +143,7 @@ const BaseAddressBookInput = ({
             ? {
                 address: validatedAddress,
                 name: '',
-                chainId,
+                chainId: networkId,
               }
             : validatedAddress
 

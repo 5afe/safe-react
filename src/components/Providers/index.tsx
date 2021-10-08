@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { MuiThemeProvider, Theme as MuiTheme } from '@material-ui/core/styles'
-import { ConnectedRouter } from 'connected-react-router'
+import { Router } from 'react-router'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { Store } from 'redux'
@@ -23,7 +23,7 @@ function Providers({ children, store, styledTheme, muiTheme, history }: Provider
     <ThemeProvider theme={getStyledTheme(styledTheme, isDarkMode)}>
       <Provider store={store}>
         <MuiThemeProvider theme={getMuiTheme(muiTheme, isDarkMode)}>
-          <ConnectedRouter history={history}>{children}</ConnectedRouter>
+          <Router history={history}>{children}</Router>
         </MuiThemeProvider>
       </Provider>
     </ThemeProvider>

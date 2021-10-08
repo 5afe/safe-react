@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import { useLocation, matchPath } from 'react-router-dom'
+
 import { ListItemType } from 'src/components/List'
 
 import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
+import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 
 const Container = styled.div`
   height: 100vh;
@@ -67,9 +70,9 @@ const ContentWrapper = styled.div`
 
 type Props = {
   sidebarItems: ListItemType[]
-  safeAddress: string | undefined
-  safeName: string | undefined
-  balance: string | undefined
+  safeAddress?: string
+  safeName?: string
+  balance?: string
   granted: boolean
   onToggleSafeList: () => void
   onReceiveClick: () => void
@@ -88,8 +91,13 @@ const Layout: React.FC<Props> = ({
   sidebarItems,
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
+  const { pathname } = useLocation()
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
+
+  const hasFooter = !!matchPath(pathname, {
+    path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
+  })
 
   return (
     <Container>
@@ -111,7 +119,7 @@ const Layout: React.FC<Props> = ({
         </SidebarWrapper>
         <ContentWrapper>
           <div>{children}</div>
-          <Footer />
+          {hasFooter && <Footer />}
         </ContentWrapper>
       </BodyWrapper>
 

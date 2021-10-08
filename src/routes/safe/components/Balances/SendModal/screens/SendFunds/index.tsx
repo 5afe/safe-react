@@ -1,7 +1,5 @@
-import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -47,6 +45,7 @@ import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelp
 import { getNetworkInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
+import { ModalHeader } from '../ModalHeader'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -145,43 +144,37 @@ const SendFunds = ({
   const spendingLimits = useSelector(currentSafeSpendingLimits)
   const currentUser = useSelector(userAccountSelector)
 
-  const sendFundsValidation = (values) => {
+  const sendFundsValidation = (values: { amount?: string; token?: string; txType?: string }) => {
     const { amount, token: tokenAddress, txType } = values ?? {}
-    if (!amount || !tokenAddress) {
-      return
-    }
+    const tokenValidation = composeValidators(required)(tokenAddress)
 
     const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
     const tokenDecimals =
-      Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals) || nativeCoin.decimals
+      (tokenAddress && Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals)) ||
+      nativeCoin.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
       minMaxDecimalsLength(1, tokenDecimals),
       minValue(0, false),
-      maxValue(
-        isSpendingLimit
-          ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
-          : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
-      ),
+      tokenAddress
+        ? maxValue(
+            isSpendingLimit
+              ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
+              : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
+          )
+        : () => undefined,
     )(amount)
 
     return {
       amount: amountValidation,
+      token: tokenValidation,
     }
   }
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow data-testid="modal-title-send-funds">
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send funds
-        </Paragraph>
-        <Paragraph className={classes.annotation}>1 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send funds" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}
@@ -211,7 +204,9 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook[scannedAddress]?.name ?? ''
+            const scannedName = addressBook.find(({ address }) => {
+              return sameAddress(scannedAddress, address)
+            })?.name
             const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
             if (!addressErrorMessage) {
               mutators.setRecipient(scannedAddress)

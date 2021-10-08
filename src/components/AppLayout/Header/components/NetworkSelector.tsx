@@ -1,4 +1,5 @@
-import { ReactElement, useRef, Fragment } from 'react'
+import { ReactElement, useRef, Fragment, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -13,11 +14,12 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-
 import { sameString } from 'src/utils/strings'
 import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
+import { setNetwork } from 'src/logic/config/utils'
+import { ROOT_ROUTE } from 'src/routes/routes'
 
 const styles = {
   root: {
@@ -80,8 +82,19 @@ type NetworkSelectorProps = ReturnValue & {
 
 const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorProps): ReactElement => {
   const networkRef = useRef(null)
+  const history = useHistory()
   const classes = useStyles()
   const networkName = getNetworkName().toLowerCase()
+
+  const onNetworkSwitch = useCallback(
+    (network: NetworkInfo) => {
+      clickAway()
+      setNetwork(network.id)
+      history.push(ROOT_ROUTE)
+    },
+    [clickAway, history],
+  )
+
   return (
     <>
       <div className={classes.root} ref={networkRef}>
@@ -107,7 +120,7 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
                 <List className={classes.network} component="div">
                   {networks.map((network) => (
                     <Fragment key={network.id}>
-                      <StyledLink href={network.safeUrl}>
+                      <StyledLink onClick={() => onNetworkSwitch(network)}>
                         <NetworkLabel networkInfo={network} />
                         {sameString(networkName, network.label?.toLowerCase()) && (
                           <Icon type="check" size="md" color="primary" />

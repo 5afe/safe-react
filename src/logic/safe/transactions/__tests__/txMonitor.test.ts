@@ -1,10 +1,17 @@
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+
+// We need to have it defined as const to ensure we return the same instance in mock
+const mockWeb3 = {
+  eth: {
+    getTransaction: jest.fn(() => Promise.reject('getTransaction')) as any,
+    getTransactionReceipt: jest.fn(() => Promise.reject('getTransactionReceipt')) as any,
+    getBlock: jest.fn(() => Promise.reject('getBlock')) as any,
+  },
+}
 
 jest.mock('src/logic/wallets/getWeb3', () => ({
-  web3ReadOnly: {
-    eth: {},
-  },
+  getWeb3ReadOnly: () => mockWeb3,
 }))
 
 const params = {
@@ -21,11 +28,7 @@ const options = {
 }
 
 describe('txMonitor', () => {
-  beforeEach(() => {
-    web3ReadOnly.eth.getTransaction = jest.fn(() => Promise.reject('getTransaction')) as any
-    web3ReadOnly.eth.getTransactionReceipt = jest.fn(() => Promise.reject('getTransactionReceipt')) as any
-    web3ReadOnly.eth.getBlock = jest.fn(() => Promise.reject('getBlock')) as any
-  })
+  const web3ReadOnly = getWeb3ReadOnly()
 
   it('should reject when max retries are reached', async () => {
     try {

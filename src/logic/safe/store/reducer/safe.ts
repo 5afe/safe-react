@@ -8,6 +8,7 @@ import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/mode
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import { CLEAR_SAFE_LIST } from 'src/logic/safe/store/actions/clearSafeList'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 import { SafeReducerMap } from './types/safe'
 
@@ -59,18 +60,7 @@ const updateSafeProps = (prevSafe, safe) => {
   })
 }
 
-export type SafePayload = { safe: SafeRecord }
-type SafePayloads = SafeRecord | SafePayload | string
-
-type BaseOwnerPayload = { safeAddress: string; ownerAddress: string }
-type FullOwnerPayload = BaseOwnerPayload & { ownerName: string }
-type ReplaceOwnerPayload = FullOwnerPayload & { oldOwnerAddress: string }
-
-type OwnerPayloads = BaseOwnerPayload | FullOwnerPayload | ReplaceOwnerPayload
-
-type SafeWithAddressPayload = SafeRecord & { safeAddress: string }
-
-type Payloads = SafePayloads | OwnerPayloads | SafeWithAddressPayload
+type Payloads = SafeRecord | string
 
 export default handleActions<AppReduxState['safes'], Payloads>(
   {
@@ -88,8 +78,8 @@ export default handleActions<AppReduxState['safes'], Payloads>(
           )
         : state
     },
-    [ADD_OR_UPDATE_SAFE]: (state, action: Action<SafePayload>) => {
-      const { safe } = action.payload
+    [ADD_OR_UPDATE_SAFE]: (state, action: Action<SafeRecord>) => {
+      const safe = action.payload
       const safeAddress = safe.address
 
       if (!state.hasIn(['safes', safeAddress])) {
@@ -112,11 +102,14 @@ export default handleActions<AppReduxState['safes'], Payloads>(
 
       return newState
     },
+    [CLEAR_SAFE_LIST]: (state) => {
+      return state.set('safes', Map())
+    },
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>
       state.set('latestMasterContractVersion', action.payload),
   },
   Map({
     safes: Map(),
     latestMasterContractVersion: '',
-  }) as unknown as AppReduxState['safes'],
+  }) as AppReduxState['safes'],
 )

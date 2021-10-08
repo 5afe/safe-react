@@ -74,9 +74,9 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     throw Error('Failed to fetch app manifest')
   }
 
-  // verify imported app fulfil safe requirements
+  // verify imported app fulfill safe requirements
   if (!appInfo?.data || !isAppManifestValid(appInfo.data)) {
-    throw Error('App manifest does not fulfil the required structure.')
+    throw Error('App manifest does not fulfill the required structure.')
   }
 
   // the DB origin field has a limit of 100 characters

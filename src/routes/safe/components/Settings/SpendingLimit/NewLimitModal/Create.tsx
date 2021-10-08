@@ -1,4 +1,3 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import { FormState, Mutator } from 'final-form'
 import { ReactElement } from 'react'
 import styled from 'styled-components'
@@ -6,6 +5,8 @@ import styled from 'styled-components'
 import GnoForm from 'src/components/forms/GnoForm'
 import { Modal } from 'src/components/Modal'
 import { Amount, Beneficiary, ResetTime, Token } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import Hairline from 'src/components/layout/Hairline'
 
 const FormContainer = styled.div`
   padding: 24px 8px 24px 24px;
@@ -46,15 +47,8 @@ const canReview = ({
 const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): ReactElement => {
   return (
     <>
-      <Modal.Header onClose={onCancel}>
-        <Modal.Header.Title>
-          New spending limit
-          <Text size="lg" color="secondaryLight" as="span">
-            1 of 2
-          </Text>
-        </Modal.Header.Title>
-      </Modal.Header>
-
+      <ModalHeader onClose={onCancel} title="New spending limit" subTitle="1 of 2" />
+      <Hairline />
       <GnoForm formMutators={formMutators} onSubmit={onReview} initialValues={initialValues}>
         {(...args) => {
           return (

@@ -3,6 +3,11 @@ import { default as networks } from 'src/config/networks'
 
 const { mainnet, xdai } = networks
 
+const mainnetShortName = mainnet.network.shortName
+const xDaiShortName = xdai.network.shortName
+
+const validSafeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
+
 describe('Config Services', () => {
   beforeEach(() => {
     jest.resetModules()
@@ -10,24 +15,21 @@ describe('Config Services', () => {
 
   it(`should load 'test' network config`, () => {
     // Given
-    jest.mock('src/utils/constants', () => ({
-      NODE_ENV: 'test',
-    }))
     const { getNetworkInfo } = require('src/config')
 
     // When
     const networkInfo = getNetworkInfo()
 
     // Then
-    expect(networkInfo.id).toBe(ETHEREUM_NETWORK.LOCAL)
+    expect(networkInfo.id).toBe(ETHEREUM_NETWORK.RINKEBY)
   })
 
   it(`should load 'mainnet' network config`, () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'MAINNET',
     }))
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
     const { getNetworkInfo } = require('src/config')
 
     // When
@@ -41,9 +43,9 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'MAINNET',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.dev?.txServiceUrl
 
     // When
@@ -57,8 +59,8 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'MAINNET',
     }))
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
     const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.staging?.txServiceUrl
 
@@ -73,10 +75,10 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'MAINNET',
       APP_ENV: 'production',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/${mainnetShortName}:${validSafeAddress}`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
 
     // When
@@ -90,10 +92,10 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'XDAI',
       APP_ENV: 'production',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/${xDaiShortName}:${validSafeAddress}`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
 
     // When
@@ -106,9 +108,9 @@ describe('Config Services', () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'XDAI',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    window.history.pushState(null, '', `${window.location.origin}/app/${xDaiShortName}:${validSafeAddress}`)
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
 
     // When

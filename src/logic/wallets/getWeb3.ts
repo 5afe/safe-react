@@ -1,10 +1,12 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
+import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
+
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
-import { getRpcServiceUrl } from 'src/config'
+import { getRpcServiceUrl, getNetworkId } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
@@ -33,17 +35,27 @@ export enum WALLET_PROVIDER {
 const httpProviderOptions = {
   timeout: 10_000,
 }
-export const web3ReadOnly = new Web3(
-  process.env.NODE_ENV !== 'test'
-    ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
-    : 'ws://localhost:8545',
-)
 
-let web3 = web3ReadOnly
+const web3ReadOnly: Web3[] = []
+export const getWeb3ReadOnly = (): Web3 => {
+  if (!web3ReadOnly[getNetworkId()]) {
+    web3ReadOnly[getNetworkId()] = new Web3(
+      process.env.NODE_ENV !== 'test'
+        ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
+        : 'ws://localhost:8545',
+    )
+  }
+
+  return web3ReadOnly[getNetworkId()]
+}
+
+let web3 = getWeb3ReadOnly()
 export const getWeb3 = (): Web3 => web3
-
+export const setWeb3 = (provider: Provider): void => {
+  web3 = new Web3(provider)
+}
 export const resetWeb3 = (): void => {
-  web3 = web3ReadOnly
+  web3 = web3ReadOnly[getNetworkId()]
 }
 
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
@@ -96,11 +108,14 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
 
-export const setWeb3 = (provider: Provider): void => {
-  web3 = new Web3(provider)
-}
-
 export const isTxPendingError = (err: Error): boolean => {
   const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
   return (err.message || '').startsWith(WEB3_TX_NOT_MINED_ERROR)
+}
+
+export const getSDKWeb3Adapter = (signerAddress: string): Web3Adapter => {
+  return new Web3Adapter({
+    web3: getWeb3(),
+    signerAddress,
+  })
 }

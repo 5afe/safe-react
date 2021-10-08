@@ -1,11 +1,10 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
+import { WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
-  safeUrl: 'https://gnosis-safe.io/app',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -27,14 +26,9 @@ const baseConfig: EnvironmentSettings = {
 
 const mainnet: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
-    },
+    test: baseConfig,
+    dev: baseConfig,
+    staging: baseConfig,
     production: {
       ...baseConfig,
       clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
@@ -43,6 +37,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.MAINNET,
+    shortName: 'eth',
     backgroundColor: '#E8E7E6',
     textColor: '#001428',
     label: 'Mainnet',
@@ -56,6 +51,7 @@ const mainnet: NetworkConfig = {
       logoUri: EtherLogo,
     },
   },
+  disabledWallets: [WALLETS.LATTICE],
 }
 
 export default mainnet

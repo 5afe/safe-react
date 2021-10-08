@@ -1,23 +1,19 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'
-
-import { history } from 'src/store'
 import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import { WELCOME_ADDRESS } from 'src/routes/routes'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-
 import { getExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
+import { WELCOME_ROUTE, history } from 'src/routes/routes'
 
 type RemoveSafeModalProps = {
   isOpen: boolean
@@ -31,11 +27,8 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
 
   const onRemoveSafeHandler = async () => {
     dispatch(removeSafe(safeAddress))
-
     onClose()
-    history.push({
-      pathname: `${WELCOME_ADDRESS}`,
-    })
+    history.push(WELCOME_ROUTE)
   }
 
   return (

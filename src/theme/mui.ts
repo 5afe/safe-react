@@ -192,16 +192,19 @@ const theme = {
       },
       underline: {
         '&::before': {
-          borderBottomColor: primary,
+          visibility: 'hidden',
+          borderBottomColor: secondary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
+        // after pseudo element in the underline is used for the focus border
         '&::after': {
-          borderBottomColor: primary,
+          borderBottomColor: secondary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
         '&.isValid::before': {
+          visibility: 'visible',
           borderBottomColor: `${secondary} !important`,
         },
         '&.isInvalid::after': {
@@ -209,6 +212,12 @@ const theme = {
         },
         '&.isValid::after': {
           display: 'none',
+        },
+        '&:focus': {
+          visibility: 'visible',
+        },
+        '&:hover': {
+          visibility: 'visible',
         },
       },
       formControl: {
@@ -218,12 +227,10 @@ const theme = {
     MuiFilledInput: {
       underline: {
         '&::before': {
-          borderBottomColor: primary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
         '&::after': {
-          borderBottomColor: primary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },

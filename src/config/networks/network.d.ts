@@ -57,8 +57,8 @@ export enum ETHEREUM_NETWORK {
 }
 
 export type NetworkSettings = {
-  // TODO: id now seems to be unnecessary
   id: ETHEREUM_NETWORK
+  shortName: string
   backgroundColor: string
   textColor: string
   label: string
@@ -98,7 +98,6 @@ type GasPrice =
 export type EnvironmentSettings = GasPrice & {
   clientGatewayUrl: string
   txServiceUrl: string
-  safeUrl: string
   rpcServiceUrl: string
   safeAppsRpcServiceUrl: string
   networkExplorerName: string
@@ -107,12 +106,13 @@ export type EnvironmentSettings = GasPrice & {
 }
 
 type SafeEnvironments = {
+  test?: EnvironmentSettings
   dev?: EnvironmentSettings
   staging?: EnvironmentSettings
   production: EnvironmentSettings
 }
 
-export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'ethereumLayer' | 'nativeCoin'> & { safeUrl: string }
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'ethereumLayer' | 'nativeCoin'>
 
 export interface NetworkConfig {
   network: NetworkSettings
