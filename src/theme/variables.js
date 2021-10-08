@@ -66,4 +66,15 @@ module.exports = {
   xs,
   xxl,
   xxlFontSize: '32px',
+  darkColors: {
+    background: '#1C1C1E',
+    border: '#3A3A3C',
+    disabled: '#8D8D93',
+    errorColor: '#FF453A',
+    primary: '#FFFFFF',
+    secondary: '#029F7F',
+    secondaryTextOrSvg: '#626269',
+    secondaryBackground: '#2C2C2E',
+    warningColor, // default
+  },
 }

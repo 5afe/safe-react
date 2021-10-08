@@ -23,6 +23,7 @@ import {
   sm,
   smallFontSize,
   xs,
+  darkColors,
 } from './variables'
 
 const palette = {
@@ -433,6 +434,27 @@ const theme = {
   },
   palette,
 } as any
+
+export const darkMuiTheme: typeof theme = {
+  ...theme,
+  palette: {
+    ...theme.palette,
+    primary: {
+      ...theme.palette.primary,
+      main: darkColors.secondary,
+    },
+    secondary: {
+      ...theme.palette.secondary,
+      main: darkColors.primary,
+    },
+    type: 'dark',
+  },
+  connected: darkColors.secondary,
+  error: darkColors.errorColor,
+  fancy: darkColors.errorColor,
+  secondaryText: darkColors.secondaryTextOrSvg,
+  warning: darkColors.warningColor,
+}
 
 export default theme
 
