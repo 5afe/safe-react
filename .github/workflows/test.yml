@@ -43,6 +43,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: 'npm run test:ci'
+          test-command: 'yarn test:ci -- --outputFile=jest.results.json'
           coverage-comment: true
           changes-only: true
