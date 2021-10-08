@@ -1,13 +1,13 @@
 import { background, border, lg, sm } from 'src/theme/variables'
 import { createStyles, makeStyles } from '@material-ui/core'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     root: {
       height: '372px',
     },
     info: {
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
       padding: sm,
       justifyContent: 'center',
       textAlign: 'center',
@@ -41,7 +41,7 @@ export const useStyles = makeStyles(
     selectedOwnerAdded: {
       padding: sm,
       alignItems: 'center',
-      backgroundColor: '#f7f5f5',
+      backgroundColor: palette.backgroundColor[palette.type],
     },
     gasCostsContainer: {
       display: 'flex',

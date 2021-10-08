@@ -10,6 +10,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { useTheme } from '@material-ui/core'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -96,6 +97,8 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
     onClose()
   }
 
+  const { palette } = useTheme()
+
   return (
     <Modal description="Import address book" handleClose={handleClose} open={isOpen} title="Import address book">
       <Modal.Header onClose={handleClose}>
@@ -114,7 +117,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 borderRadius: 8,
               },
               dropAreaActive: {
-                borderColor: '#008C73',
+                borderColor: palette.secondary.main,
               },
               dropFile: {
                 width: 200,
@@ -131,7 +134,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 top: '12px',
               },
               fileNameInfo: {
-                color: importError === '' ? '#008C73' : '#DB3A3D',
+                color: importError === '' ? palette.secondary.main : '#DB3A3D',
                 backgroundColor: '#fff',
                 fontSize: 14,
                 lineHeight: 1.4,
@@ -141,7 +144,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 overflow: 'hidden',
               },
               progressBar: {
-                backgroundColor: '#008C73',
+                backgroundColor: palette.secondary.main,
               },
               removeButton: {
                 color: '#DB3A3D',

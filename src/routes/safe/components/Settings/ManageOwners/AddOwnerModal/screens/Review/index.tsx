@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -19,13 +18,11 @@ import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
-import { styles } from './style'
+import { useStyles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
-
-const useStyles = makeStyles(styles)
 
 type ReviewAddOwnerProps = {
   onClickBack: () => void

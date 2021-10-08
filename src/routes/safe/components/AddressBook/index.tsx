@@ -12,13 +12,12 @@ import {
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import styled from 'styled-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { getExplorerInfo, getNetworkId } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
@@ -61,8 +60,6 @@ const StyledButton = styled(Button)`
     margin: 0 6px 0 0;
   }
 `
-
-const useStyles = makeStyles(styles)
 
 interface AddressBookSelectedEntry extends AddressBookEntry {
   isNew?: boolean

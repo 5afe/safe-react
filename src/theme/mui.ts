@@ -1,5 +1,5 @@
 import { alpha } from '@material-ui/core/styles/colorManipulator'
-
+import { PaletteOptions } from '@material-ui/core/styles/createPalette'
 import {
   boldFont,
   bolderFont,
@@ -24,23 +24,57 @@ import {
   smallFontSize,
   xs,
   darkColors,
+  background,
 } from './variables'
 
-const palette = {
+// declare module '@material-ui/core/styles/createTheme' {
+//   interface Theme {
+//     status: {
+//       danger: React.CSSProperties['color']
+//     }
+//   }
+//   interface ThemeOptions {
+//     status: {
+//       danger: React.CSSProperties['color']
+//     }
+//   }
+// }
+
+declare module '@material-ui/core/styles/createPalette' {
+  interface Palette {
+    backgroundColor: Palette['primary']
+  }
+  interface PaletteOptions {
+    backgroundColor: PaletteOptions['primary']
+  }
+}
+
+const palette: PaletteOptions = {
+  contrastThreshold: 3,
+  tonalOffset: 0.2,
+  // Default theme colours
   primary: {
     main: primary,
+    dark: darkColors.primary,
   },
   secondary: {
     main: secondary,
+    dark: darkColors.secondary,
   },
   error: {
     main: error,
+    dark: darkColors.errorColor,
   },
   success: {
     main: secondary,
+    dark: darkColors.secondary,
   },
-  contrastThreshold: 3,
-  tonalOffset: 0.2,
+  // Custom theme colours
+  backgroundColor: {
+    main: background,
+    dark: darkColors.background,
+  },
+  type: 'light',
 }
 
 // see https://material-ui-next.com/customization/themes/
@@ -432,28 +466,15 @@ const theme = {
       },
     },
   },
-  palette,
+  palette: palette,
 } as any
 
 export const darkMuiTheme: typeof theme = {
   ...theme,
   palette: {
-    ...theme.palette,
-    primary: {
-      ...theme.palette.primary,
-      main: darkColors.secondary,
-    },
-    secondary: {
-      ...theme.palette.secondary,
-      main: darkColors.primary,
-    },
+    ...palette,
     type: 'dark',
   },
-  connected: darkColors.secondary,
-  error: darkColors.errorColor,
-  fancy: darkColors.errorColor,
-  secondaryText: darkColors.secondaryTextOrSvg,
-  warning: darkColors.warningColor,
 }
 
 export default theme

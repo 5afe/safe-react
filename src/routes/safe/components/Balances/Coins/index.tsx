@@ -27,8 +27,7 @@ import {
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { makeStyles } from '@material-ui/core/styles'
-import { styles } from './styles'
+import { useStyles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 
 const StyledButton = styled(Button)`
@@ -41,8 +40,6 @@ const StyledButton = styled(Button)`
     margin: 0 6px 0 0;
   }
 `
-
-const useStyles = makeStyles(styles)
 
 type Props = {
   showReceiveFunds: () => void

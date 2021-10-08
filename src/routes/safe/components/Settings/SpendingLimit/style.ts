@@ -13,7 +13,7 @@ import {
   xl,
 } from 'src/theme/variables'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     title: {
       padding: lg,
@@ -21,7 +21,7 @@ export const useStyles = makeStyles(
     },
     hide: {
       '&:hover': {
-        backgroundColor: '#f7f5f5',
+        backgroundColor: palette.backgroundColor[palette.type],
       },
       '&:hover $actions': {
         visibility: 'initial',

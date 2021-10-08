@@ -2,14 +2,14 @@ import { createStyles, makeStyles } from '@material-ui/core'
 
 import { background, lg, md } from 'src/theme/variables'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     container: {
       padding: lg,
     },
     hide: {
       '&:hover': {
-        backgroundColor: '#f7f5f5',
+        backgroundColor: palette.backgroundColor[palette.type],
       },
       '&:hover $actions': {
         visibility: 'initial',
