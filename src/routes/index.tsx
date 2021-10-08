@@ -19,7 +19,7 @@ import {
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
 } from './routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getCurrentShortChainName, getNetworks, setNetworkId } from 'src/config'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -49,9 +49,23 @@ const Routes = (): React.ReactElement => {
 
   return (
     <Switch>
+      {
+        // Redirection to open network specific welcome pages
+        getNetworks().map(({ id, label }) => (
+          <Route
+            key={id}
+            path={`/${label.toLowerCase()}`}
+            render={() => {
+              setNetworkId(id)
+              // Last viewed safe logic will be handled with defaultSafe below
+              return <Redirect to={ROOT_ROUTE} />
+            }}
+          />
+        ))
+      }
       <Route
         exact
-        path="/"
+        path={ROOT_ROUTE}
         render={() => {
           if (!isInitialLoad) {
             return <Redirect to={WELCOME_ROUTE} />
@@ -83,7 +97,7 @@ const Routes = (): React.ReactElement => {
       <Route component={CreateSafePage} exact path={OPEN_SAFE_ROUTE} />
       <Route component={Safe} path={ADDRESSED_ROUTE} />
       <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
-      <Redirect to="/" />
+      <Redirect to={ROOT_ROUTE} />
     </Switch>
   )
 }
