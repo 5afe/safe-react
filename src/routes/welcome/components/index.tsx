@@ -13,8 +13,7 @@ import {
 
 import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
-import { LOAD_ADDRESS } from 'src/routes/routes'
-// import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
+import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { onConnectButtonClick } from 'src/components/ConnectButton'
 import { useSelector } from 'react-redux'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
