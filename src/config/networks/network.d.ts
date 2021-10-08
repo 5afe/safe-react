@@ -53,6 +53,7 @@ export enum ETHEREUM_NETWORK {
   POLYGON = '137',
   ENERGY_WEB_CHAIN = '246',
   LOCAL = '4447',
+  ARBITRUM = '42161',
   VOLTA = '73799',
 }
 
