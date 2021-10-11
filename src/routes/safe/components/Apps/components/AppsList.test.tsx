@@ -1,27 +1,7 @@
 import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
-import { usePinnedSafeApps } from '../hooks/appList/usePinnedSafeApps'
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
 import * as configServiceApi from 'src/logic/configService'
-
-jest.mock('src/routes/safe/components/Apps/hooks/appList/usePinnedSafeApps')
-
-jest.mock('src/routes/safe/components/Apps/hooks/appList/useCustomSafeApps', () => ({
-  useCustomSafeApps: () => ({
-    customSafeApps: [
-      {
-        id: '36',
-        url: 'https://apps.gnosis-safe.io/drain-safe',
-        name: 'Drain safe',
-        iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
-        error: false,
-        description: 'Transfer all your assets in batch',
-        fetchStatus: 'SUCCESS',
-        chainIds: [4],
-        provider: null,
-      },
-    ],
-  }),
-}))
+import * as appUtils from 'src/routes/safe/components/Apps/utils'
 
 const customState = {
   router: {
@@ -35,11 +15,15 @@ const customState = {
 }
 
 beforeEach(() => {
-  ;(usePinnedSafeApps as jest.MockedFunction<typeof usePinnedSafeApps>).mockImplementation(() => ({
-    pinnedSafeAppIds: ['14', '24', '228'], // Including an id that doesn't exist in the remote apps to check that there's no error,
-    loaded: true,
-    updatePinnedSafeApps: jest.fn(),
-  }))
+  // Including an id that doesn't exist in the remote apps to check that there's no error
+  localStorage.setItem('v2_RINKEBY__PINNED_SAFE_APP_IDS', JSON.stringify(['14', '24', '228']))
+
+  localStorage.setItem(
+    'v2_RINKEBY__APPS_STORAGE_KEY',
+    JSON.stringify({
+      url: 'https://apps.gnosis-safe.io/drain-safe',
+    }),
+  )
 
   jest.spyOn(configServiceApi, 'fetchSafeAppsList').mockImplementation(() =>
     Promise.resolve([
@@ -87,6 +71,20 @@ beforeEach(() => {
       },
     ]),
   )
+
+  jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValueOnce(() =>
+    Promise.resolve({
+      id: '36',
+      url: 'https://apps.gnosis-safe.io/drain-safe',
+      name: 'Drain safe',
+      iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
+      error: false,
+      description: 'Transfer all your assets in batch',
+      fetchStatus: 'SUCCESS',
+      chainIds: [4],
+      provider: null,
+    }),
+  )
 })
 
 describe('Safe Apps -> AppsList', () => {
@@ -119,10 +117,10 @@ describe('Safe Apps -> AppsList', () => {
 })
 
 describe('Safe Apps -> AppsList -> Search', () => {
-  it('Shows apps matching the search query', () => {
+  it('Shows apps matching the search query', async () => {
     render(<AppsList />, customState)
 
-    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -130,10 +128,10 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect(screen.queryByText('ENS App')).not.toBeInTheDocument()
   })
 
-  it('Shows app matching the name first for a query that matches in name and description of multiple apps', () => {
+  it('Shows app matching the name first for a query that matches in name and description of multiple apps', async () => {
     render(<AppsList />, customState)
 
-    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Tra' } })
 
@@ -148,11 +146,11 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect(results[1]).toBe(synthetix)
   })
 
-  it('Shows "no apps found" message when not able to find apps matching the query and a button to search for the WalletConnect Safe app', () => {
+  it('Shows "no apps found" message when not able to find apps matching the query and a button to search for the WalletConnect Safe app', async () => {
     render(<AppsList />, customState)
 
     const query = 'not-a-real-app'
-    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
     fireEvent.input(searchInput, { target: { value: query } })
 
@@ -164,10 +162,10 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect((searchInput as HTMLInputElement).value).toBe('WalletConnect')
   })
 
-  it('Clears the search result when you press on clear button and shows all apps again', () => {
+  it('Clears the search result when you press on clear button and shows all apps again', async () => {
     render(<AppsList />, customState)
 
-    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
     const clearButton = screen.getByLabelText('Clear the search')
@@ -176,10 +174,10 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect((searchInput as HTMLInputElement).value).toBe('')
   })
 
-  it("Doesn't display custom/pinned apps irrelevant to the search (= hides pinned/custom sections)", () => {
+  it("Doesn't display custom/pinned apps irrelevant to the search (= hides pinned/custom sections)", async () => {
     render(<AppsList />, customState)
 
-    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -187,10 +185,10 @@ describe('Safe Apps -> AppsList -> Search', () => {
     expect(screen.queryByText('Transaction builder')).not.toBeInTheDocument()
   })
 
-  it('Hides pinned/custom sections when you search', () => {
+  it('Hides pinned/custom sections when you search', async () => {
     render(<AppsList />, customState)
 
-    const searchInput = screen.getByPlaceholderText('e.g Compound')
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -200,25 +198,17 @@ describe('Safe Apps -> AppsList -> Search', () => {
 })
 
 describe('Safe Apps -> AppsList -> Pinning apps', () => {
-  it('Shows a tutorial message when there are no pinned apps', () => {
-    // overriding the global mock just for this test case
-    ;(usePinnedSafeApps as jest.MockedFunction<typeof usePinnedSafeApps>).mockImplementation(() => ({
-      pinnedSafeAppIds: [],
-      loaded: true,
-      updatePinnedSafeApps: jest.fn(),
-    }))
+  it('Shows a tutorial message when there are no pinned apps', async () => {
+    localStorage.setItem('v2_RINKEBY__PINNED_SAFE_APP_IDS', JSON.stringify([]))
     render(<AppsList />, customState)
 
-    const tut = screen.getByText('Simply hover over an app to pin it to this section for convenient access')
+    const tut = await waitFor(() =>
+      screen.getByText('Simply hover over an app to pin it to this section for convenient access'),
+    )
     expect(tut).toBeInTheDocument()
   })
 
   it('allows to pin and unpin an app', async () => {
-    // I didn't find a way to reset the mock to its original state, only this one worked
-    ;(usePinnedSafeApps as jest.MockedFunction<typeof usePinnedSafeApps>).mockImplementation(
-      jest.requireActual('../hooks/appList/usePinnedSafeApps').usePinnedSafeApps,
-    )
-
     render(<AppsList />, customState)
 
     // check the app is not pinned
