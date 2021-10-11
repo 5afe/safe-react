@@ -1,13 +1,13 @@
 import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { ReactElement, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
-import { createBrowserHistory } from 'history'
 import { TRANSACTIONS_PAGE_TABS } from './utils'
 
 const items: Item[] = [
@@ -15,8 +15,12 @@ const items: Item[] = [
   { id: TRANSACTIONS_PAGE_TABS.HISTORY, label: 'History' },
 ]
 
+interface CustomLocationState {
+  tabId: string
+}
+
 const GatewayTransactions = (): ReactElement => {
-  const history = createBrowserHistory()
+  const history = useHistory<CustomLocationState>()
   const activeTab = history.location?.state?.tabId || TRANSACTIONS_PAGE_TABS.HISTORY
   const [tab, setTab] = useState(activeTab)
 
