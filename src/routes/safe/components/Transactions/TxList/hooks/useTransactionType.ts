@@ -36,9 +36,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
       case 'Transfer': {
         const isSendTx = tx.txInfo.direction === 'OUTGOING'
 
-        const icon = isSendTx
-          ? tx.txInfo.recipient?.logoUri ?? OutgoingTxIcon
-          : tx.txInfo.sender?.logoUri ?? IncomingTxIcon
+        const icon = isSendTx ? OutgoingTxIcon : IncomingTxIcon
         const text = isSendTx ? tx.txInfo?.recipient?.name ?? 'Send' : tx.txInfo?.sender?.name ?? 'Receive'
 
         setType({ icon, text })
@@ -65,12 +63,14 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
-        const icon = knownAddress.isAddressBook ? knownAddress.image : tx.txInfo.to.logoUri ?? CustomTxIcon
+        const icon = knownAddress.isAddressBook
+          ? CustomTxIcon
+          : knownAddress.image ?? tx.txInfo.to.logoUri ?? CustomTxIcon
         const text = knownAddress.isAddressBook ? knownAddress.name : tx.txInfo.to.name ?? 'Contract interaction'
 
         setType({
           icon,
-          fallbackIcon: CustomTxIcon,
+          fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
           text,
         })
         break
