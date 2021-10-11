@@ -30,12 +30,18 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
   useEffect(() => {
     switch (tx.txInfo.type) {
       case 'Creation': {
-        setType({ icon: SettingsTxIcon, text: 'Safe created' })
+        setType({ icon: tx.txInfo.creator.logoUri ?? SettingsTxIcon, text: tx.txInfo.creator.name ?? 'Safe created' })
         break
       }
       case 'Transfer': {
         const isSendTx = tx.txInfo.direction === 'OUTGOING'
-        setType({ icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon, text: isSendTx ? 'Send' : 'Receive' })
+
+        const icon = isSendTx
+          ? tx.txInfo.recipient?.logoUri ?? OutgoingTxIcon
+          : tx.txInfo.sender?.logoUri ?? IncomingTxIcon
+        const text = isSendTx ? tx.txInfo?.recipient?.name ?? 'Send' : tx.txInfo?.sender?.name ?? 'Receive'
+
+        setType({ icon, text })
         break
       }
       case 'SettingsChange': {
@@ -59,11 +65,13 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
-        const hasKnownName = tx.txInfo.to.name
+        const icon = knownAddress.isAddressBook ? knownAddress.image : tx.txInfo.to.logoUri ?? CustomTxIcon
+        const text = knownAddress.isAddressBook ? knownAddress.name : tx.txInfo.to.name ?? 'Contract interaction'
+
         setType({
-          icon: knownAddress.isAddressBook ? CustomTxIcon : knownAddress.image || CustomTxIcon,
-          fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
-          text: hasKnownName ? knownAddress.name : 'Contract interaction',
+          icon,
+          fallbackIcon: CustomTxIcon,
+          text,
         })
         break
       }
