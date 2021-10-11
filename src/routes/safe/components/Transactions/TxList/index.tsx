@@ -8,15 +8,16 @@ import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
 import { createBrowserHistory } from 'history'
+import { TRANSACTIONS_PAGE_TABS } from './utils'
 
 const items: Item[] = [
-  { id: 'queue', label: 'Queue' },
-  { id: 'history', label: 'History' },
+  { id: TRANSACTIONS_PAGE_TABS.QUEUE, label: 'Queue' },
+  { id: TRANSACTIONS_PAGE_TABS.HISTORY, label: 'History' },
 ]
 
 const GatewayTransactions = (): ReactElement => {
   const history = createBrowserHistory()
-  const activeTab = history.location?.state?.tabId || 'history'
+  const activeTab = history.location?.state?.tabId || TRANSACTIONS_PAGE_TABS.HISTORY
   const [tab, setTab] = useState(activeTab)
 
   const { trackEvent } = useAnalytics()
@@ -36,8 +37,8 @@ const GatewayTransactions = (): ReactElement => {
       </Menu>
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
-        {tab === 'queue' && <QueueTransactions />}
-        {tab === 'history' && <HistoryTransactions />}
+        {tab === TRANSACTIONS_PAGE_TABS.QUEUE && <QueueTransactions />}
+        {tab === TRANSACTIONS_PAGE_TABS.HISTORY && <HistoryTransactions />}
       </ContentWrapper>
     </Wrapper>
   )
