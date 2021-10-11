@@ -25,6 +25,7 @@ import {
   xs,
   darkColors,
   background,
+  surface01dp,
 } from './variables'
 
 // declare module '@material-ui/core/styles/createTheme' {
@@ -43,13 +44,18 @@ import {
 declare module '@material-ui/core/styles/createPalette' {
   interface Palette {
     backgroundColor: Palette['primary']
+    secondaryText: Palette['primary']
+    surface01dp: Palette['primary']
   }
   interface PaletteOptions {
     backgroundColor: PaletteOptions['primary']
+    secondaryText: PaletteOptions['primary']
+    surface01dp: PaletteOptions['primary']
   }
 }
 
 const palette: PaletteOptions = {
+  type: 'light',
   contrastThreshold: 3,
   tonalOffset: 0.2,
   // Default theme colours
@@ -74,7 +80,14 @@ const palette: PaletteOptions = {
     main: background,
     dark: darkColors.background,
   },
-  type: 'light',
+  secondaryText: {
+    main: secondaryText,
+    dark: darkColors.secondaryTextOrSvg,
+  },
+  surface01dp: {
+    main: surface01dp,
+    dark: darkColors.surface01dp,
+  },
 }
 
 // see https://material-ui-next.com/customization/themes/

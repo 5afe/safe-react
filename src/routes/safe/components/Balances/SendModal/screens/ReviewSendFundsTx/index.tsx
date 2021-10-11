@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -29,16 +28,13 @@ import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/use
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
-
-import { styles } from './style'
+import { useStyles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-
-const useStyles = makeStyles(styles)
 
 export type ReviewTxProp = {
   recipientAddress: string

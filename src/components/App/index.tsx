@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
 import { useRouteMatch, useHistory } from 'react-router-dom'
@@ -32,21 +32,6 @@ import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItem
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 import { extractSafeAddress, ADDRESSED_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 
-const notificationStyles = {
-  success: {
-    background: '#fff',
-  },
-  error: {
-    background: '#ffe6ea',
-  },
-  warning: {
-    background: '#fff3e2',
-  },
-  info: {
-    background: '#fff',
-  },
-}
-
 const Frame = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,7 +39,22 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const useStyles = makeStyles(notificationStyles)
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    success: {
+      background: palette.surface01dp[palette.type],
+    },
+    error: {
+      background: '#ffe6ea',
+    },
+    warning: {
+      background: '#fff3e2',
+    },
+    info: {
+      background: palette.surface01dp[palette.type],
+    },
+  }),
+)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()

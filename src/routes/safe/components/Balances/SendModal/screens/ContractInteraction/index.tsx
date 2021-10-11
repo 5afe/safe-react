@@ -1,8 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { useMemo } from 'react'
 import Switch from '@material-ui/core/Switch'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import Divider from 'src/components/Divider'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
@@ -21,8 +20,6 @@ import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-
-const useStyles = makeStyles(styles)
 
 export interface CreatedTx {
   contractAddress: string

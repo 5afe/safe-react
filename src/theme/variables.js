@@ -1,3 +1,4 @@
+const surface01dp = '#fff'
 const background = '#f7f5f5'
 const border = '#e8e7e6'
 const connectedColor = '#008C73'
@@ -20,6 +21,7 @@ const xs = '4px'
 const xxl = '40px'
 
 const darkColors = {
+  surface01dp: '#1e1e1e',
   background: '#1C1C1E',
   border: '#3A3A3C',
   disabled: '#8D8D93',
@@ -79,4 +81,5 @@ module.exports = {
   xxl,
   xxlFontSize: '32px',
   darkColors,
+  surface01dp,
 }

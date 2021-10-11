@@ -9,31 +9,31 @@ import { border, fancy, screenSm, warning } from 'src/theme/variables'
 import KeyIcon from '../assets/key.svg'
 import TriangleIcon from '../assets/triangle.svg'
 
-const styles = createStyles({
-  root: {
-    display: 'none',
-    [`@media (min-width: ${screenSm}px)`]: {
-      display: 'flex',
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    root: {
+      display: 'none',
+      [`@media (min-width: ${screenSm}px)`]: {
+        display: 'flex',
+      },
     },
-  },
-  dot: {
-    position: 'relative',
-    backgroundColor: '#ffffff',
-    color: fancy,
-  },
-  key: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: border,
-  },
-  warning: {
-    position: 'relative',
-    top: '-2px',
-  },
-})
-
-const useStyles = makeStyles(styles)
+    dot: {
+      position: 'relative',
+      backgroundColor: palette.surface01dp[palette.type],
+      color: fancy,
+    },
+    key: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: border,
+    },
+    warning: {
+      position: 'relative',
+      top: '-2px',
+    },
+  }),
+)
 
 const buildKeyStyleFrom = (size, center, dotSize) => ({
   width: `${size}px`,
@@ -72,7 +72,7 @@ export const KeyRing = ({
   keySize,
   mode,
 }: Props): ReactElement => {
-  const classes = useStyles(styles)
+  const classes = useStyles()
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
   const isWarning = mode === 'warning'

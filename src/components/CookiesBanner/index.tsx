@@ -1,6 +1,6 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
@@ -19,78 +19,80 @@ import { CookieAttributes } from 'js-cookie'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
-const useStyles = makeStyles({
-  container: {
-    backgroundColor: '#fff',
-    bottom: '0',
-    boxShadow: '1px 2px 10px 0 rgba(40, 54, 61, 0.18)',
-    boxSizing: 'border-box',
-    display: 'flex',
-    justifyContent: 'center',
-    left: '0',
-    minHeight: '200px',
-    padding: '30px 15px 45px',
-    position: 'fixed',
-    width: '100%',
-    zIndex: '999',
-  },
-  content: {
-    maxWidth: '100%',
-  },
-  text: {
-    color: primary,
-    fontFamily: mainFontFamily,
-    fontSize: md,
-    fontWeight: 'normal',
-    lineHeight: '1.38',
-    margin: '0 auto 35px',
-    textAlign: 'center',
-    maxWidth: '810px',
-  },
-  form: {
-    columnGap: '20px',
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    paddingBottom: '50px',
-    rowGap: '15px',
-    margin: '0 auto',
-    [`@media (min-width: ${screenSm}px)`]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-      paddingBottom: '0',
-      rowGap: '5px',
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    container: {
+      backgroundColor: palette.surface01dp[palette.type],
+      bottom: '0',
+      boxShadow: '1px 2px 10px 0 rgba(40, 54, 61, 0.18)',
+      boxSizing: 'border-box',
+      display: 'flex',
+      justifyContent: 'center',
+      left: '0',
+      minHeight: '200px',
+      padding: '30px 15px 45px',
+      position: 'fixed',
+      width: '100%',
+      zIndex: 999,
     },
-  },
-  formItem: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  link: {
-    textDecoration: 'underline',
-    '&:hover': {
-      textDecoration: 'none',
+    content: {
+      maxWidth: '100%',
     },
-  },
-  intercomAlert: {
-    fontWeight: 'bold',
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '0 0 13px 0',
-    svg: {
-      marginRight: '5px',
+    text: {
+      color: primary,
+      fontFamily: mainFontFamily,
+      fontSize: md,
+      fontWeight: 'normal',
+      lineHeight: '1.38',
+      margin: '0 auto 35px',
+      textAlign: 'center',
+      maxWidth: '810px',
     },
-  },
-  intercomImage: {
-    position: 'fixed',
-    cursor: 'pointer',
-    height: '80px',
-    width: '80px',
-    bottom: '8px',
-    right: '10px',
-    zIndex: '1000',
-    boxShadow: '1px 2px 10px 0 var(rgba(40, 54, 61, 0.18))',
-  },
-} as any)
+    form: {
+      columnGap: '20px',
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      paddingBottom: '50px',
+      rowGap: '15px',
+      margin: '0 auto',
+      [`@media (min-width: ${screenSm}px)`]: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+        paddingBottom: '0',
+        rowGap: '5px',
+      },
+    },
+    formItem: {
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    link: {
+      textDecoration: 'underline',
+      '&:hover': {
+        textDecoration: 'none',
+      },
+    },
+    intercomAlert: {
+      fontWeight: 'bold',
+      display: 'flex',
+      justifyContent: 'center',
+      padding: '0 0 13px 0',
+      svg: {
+        marginRight: '5px',
+      },
+    },
+    intercomImage: {
+      position: 'fixed',
+      cursor: 'pointer',
+      height: '80px',
+      width: '80px',
+      bottom: '8px',
+      right: '10px',
+      zIndex: 1000,
+      boxShadow: '1px 2px 10px 0 var(rgba(40, 54, 61, 0.18))',
+    },
+  }),
+)
 
 interface CookiesBannerFormProps {
   alertMessage: boolean

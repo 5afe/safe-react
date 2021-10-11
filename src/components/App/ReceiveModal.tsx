@@ -10,13 +10,13 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/variables'
+import { fontColor, lg, md, screenSm, border } from 'src/theme/variables'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { NetworkSettings } from 'src/config/networks/network'
 
 const useStyles = (networkInfo: NetworkSettings) =>
-  makeStyles(
+  makeStyles(({ palette }) =>
     createStyles({
       heading: {
         padding: `${md} ${lg}`,
@@ -27,13 +27,13 @@ const useStyles = (networkInfo: NetworkSettings) =>
       close: {
         height: lg,
         width: lg,
-        fill: secondaryText,
+        fill: palette.secondaryText[palette.type],
       },
       qrContainer: {
-        backgroundColor: '#fff',
+        backgroundColor: palette.surface01dp[palette.type],
         padding: md,
         borderRadius: '6px',
-        border: `1px solid ${secondaryText}`,
+        border: `1px solid ${palette.secondaryText[palette.type]}`,
       },
       networkInfo: {
         backgroundColor: `${networkInfo?.backgroundColor ?? border}`,

@@ -11,7 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
+import { connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
@@ -21,74 +21,76 @@ import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import ChainIndicator from 'src/components/ChainIndicator'
 
-const styles = createStyles({
-  container: {
-    padding: `${md} 12px`,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  identicon: {
-    justifyContent: 'center',
-    padding: `0 ${md}`,
-  },
-  user: {
-    borderRadius: '3px',
-    backgroundColor: background,
-    margin: '0 auto',
-    padding: '9px',
-    lineHeight: 1,
-  },
-  details: {
-    padding: `0 ${md}`,
-    height: '20px',
-    alignItems: 'center',
-  },
-  address: {
-    flexGrow: 1,
-    textAlign: 'center',
-    letterSpacing: '-0.5px',
-    marginRight: sm,
-  },
-  labels: {
-    fontSize: '12px',
-    letterSpacing: '0.5px',
-  },
-  capitalize: {
-    textTransform: 'capitalize',
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    container: {
+      padding: `${md} 12px`,
+      display: 'flex',
+      flexDirection: 'column',
     },
-  },
-  buttonRow: {
-    padding: `${md} ${lg} 0`,
-  },
-  disconnectButton: {
-    marginBottom: `${md}`,
-    '&:hover': {
-      backgroundColor: '#F02525',
-      color: '#fff',
+    identicon: {
+      justifyContent: 'center',
+      padding: `0 ${md}`,
     },
-  },
-  dashboard: {
-    padding: `${md} ${lg} ${xs}`,
-  },
-  dashboardText: {
-    letterSpacing: '1px',
-  },
-  logo: {
-    margin: `0px ${xs}`,
-  },
-  warning: {
-    color: warning,
-  },
-  connected: {
-    color: connectedBg,
-  },
-})
+    user: {
+      borderRadius: '3px',
+      backgroundColor: palette.backgroundColor[palette.type],
+      margin: '0 auto',
+      padding: '9px',
+      lineHeight: 1,
+    },
+    details: {
+      padding: `0 ${md}`,
+      height: '20px',
+      alignItems: 'center',
+    },
+    address: {
+      flexGrow: 1,
+      textAlign: 'center',
+      letterSpacing: '-0.5px',
+      marginRight: sm,
+    },
+    labels: {
+      fontSize: '12px',
+      letterSpacing: '0.5px',
+    },
+    capitalize: {
+      textTransform: 'capitalize',
+    },
+    open: {
+      paddingLeft: sm,
+      width: 'auto',
+      '&:hover': {
+        cursor: 'pointer',
+      },
+    },
+    buttonRow: {
+      padding: `${md} ${lg} 0`,
+    },
+    disconnectButton: {
+      marginBottom: `${md}`,
+      '&:hover': {
+        backgroundColor: '#F02525',
+        color: palette.surface01dp[palette.type],
+      },
+    },
+    dashboard: {
+      padding: `${md} ${lg} ${xs}`,
+    },
+    dashboardText: {
+      letterSpacing: '1px',
+    },
+    logo: {
+      margin: `0px ${xs}`,
+    },
+    warning: {
+      color: warning,
+    },
+    connected: {
+      color: connectedBg,
+    },
+  }),
+)
 
 const StyledCard = styled(Card)`
   padding: 0px;
@@ -101,8 +103,6 @@ type Props = {
   provider?: string
   userAddress: string
 }
-
-const useStyles = makeStyles(styles)
 
 export const UserDetails = ({
   connected,

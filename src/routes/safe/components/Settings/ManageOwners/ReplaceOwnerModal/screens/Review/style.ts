@@ -1,4 +1,4 @@
-import { background, border, lg, sm } from 'src/theme/variables'
+import { border, lg, sm } from 'src/theme/variables'
 import { createStyles, makeStyles } from '@material-ui/core'
 
 export const useStyles = makeStyles(({ palette }) =>
@@ -49,7 +49,7 @@ export const useStyles = makeStyles(({ palette }) =>
       alignItems: 'center',
       textAlign: 'center',
       width: '100%',
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
     },
   }),
 )

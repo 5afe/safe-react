@@ -1,17 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core'
-import {
-  background,
-  boldFont,
-  border,
-  error,
-  fontColor,
-  lg,
-  md,
-  secondaryText,
-  sm,
-  smallFontSize,
-  xl,
-} from 'src/theme/variables'
+import { boldFont, border, error, fontColor, lg, md, secondaryText, sm, smallFontSize, xl } from 'src/theme/variables'
 
 export const useStyles = makeStyles(({ palette }) =>
   createStyles({
@@ -90,7 +78,7 @@ export const useStyles = makeStyles(({ palette }) =>
       justifyContent: 'center',
     },
     modalButtonRemove: {
-      color: '#fff',
+      color: palette.surface01dp[palette.type],
       backgroundColor: error,
       height: '42px',
     },
@@ -102,7 +90,7 @@ export const useStyles = makeStyles(({ palette }) =>
       whiteSpace: 'nowrap',
     },
     modalOwner: {
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
       padding: md,
       alignItems: 'center',
     },
@@ -123,7 +111,7 @@ export const useStyles = makeStyles(({ palette }) =>
       width: '100% !important',
     },
     gasCostsContainer: {
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
       padding: `0 ${lg}`,
     },
   }),

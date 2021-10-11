@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -23,7 +22,7 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { styles } from './style'
+import { useStyles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -40,8 +39,6 @@ type Props = {
   onPrev: () => void
   tx: ReviewCustomTxProps
 }
-
-const useStyles = makeStyles(styles)
 
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
 
 import { getExplorerInfo } from 'src/config'
 import Divider from 'src/components/Divider'
@@ -17,8 +16,7 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
-
-import { styles } from './style'
+import { useStyles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
@@ -29,8 +27,6 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-
-const useStyles = makeStyles(styles)
 
 export type CollectibleTx = {
   recipientAddress: string

@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { useState } from 'react'
 import { useFormState, useField } from 'react-final-form'
 
@@ -15,9 +14,7 @@ import {
 } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-
-const useStyles = makeStyles(styles)
+import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 
 export interface EthAddressInputProps {
   isContract?: boolean

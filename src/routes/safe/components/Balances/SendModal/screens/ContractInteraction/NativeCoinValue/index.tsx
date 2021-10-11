@@ -1,6 +1,4 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { makeStyles } from '@material-ui/core/styles'
-
 import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
 
@@ -12,11 +10,9 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
-import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import { getNetworkInfo } from 'src/config'
-
-const useStyles = makeStyles(styles)
 
 interface NativeCoinValueProps {
   onSetMax: (nativeCoinBalance: string) => void

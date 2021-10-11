@@ -1,14 +1,14 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 
-import { background, border, lg, sm } from 'src/theme/variables'
+import { border, lg, sm } from 'src/theme/variables'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     root: {
       height: '372px',
     },
     info: {
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
       padding: sm,
       justifyContent: 'center',
       textAlign: 'center',
@@ -45,7 +45,7 @@ export const useStyles = makeStyles(
       alignItems: 'center',
       textAlign: 'center',
       width: '100%',
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
     },
   }),
 )

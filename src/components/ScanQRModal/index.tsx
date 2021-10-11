@@ -1,11 +1,9 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import * as React from 'react'
 import QrReader from 'react-qr-reader'
+import { createRef, ReactElement, useCallback, useEffect, useState } from 'react'
 
-import { styles } from './style'
-
+import { useStyles } from './style'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -13,9 +11,6 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { useEffect, useState } from 'react'
-
-const useStyles = makeStyles(styles)
 
 type Props = {
   isOpen: boolean
@@ -23,13 +18,13 @@ type Props = {
   onScan: (value: string) => void
 }
 
-export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElement => {
+export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): ReactElement => {
   const classes = useStyles()
   const [fileUploadModalOpen, setFileUploadModalOpen] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [cameraBlocked, setCameraBlocked] = useState<boolean>(false)
-  const scannerRef: any = React.createRef()
-  const openImageDialog = React.useCallback(() => {
+  const scannerRef: any = createRef()
+  const openImageDialog = useCallback(() => {
     scannerRef.current.openImageDialog()
   }, [scannerRef])
 

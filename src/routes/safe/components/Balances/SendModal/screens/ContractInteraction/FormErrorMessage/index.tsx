@@ -1,14 +1,11 @@
-import { makeStyles } from '@material-ui/core/styles'
-
 import { useFormState } from 'react-final-form'
 
 import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
-import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+import { ReactElement } from 'react'
 
-const useStyles = makeStyles(styles)
-
-const FormErrorMessage = () => {
+const FormErrorMessage = (): ReactElement | null => {
   const classes = useStyles()
   const { modifiedSinceLastSubmit, submitError } = useFormState({
     subscription: { modifiedSinceLastSubmit: true, submitError: true },

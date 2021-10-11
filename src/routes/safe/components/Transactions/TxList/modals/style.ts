@@ -1,7 +1,7 @@
 import { createStyles, makeStyles } from '@material-ui/core'
-import { background, lg, md, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     container: {
       padding: `${md} ${lg}`,
@@ -11,7 +11,7 @@ export const useStyles = makeStyles(
       fontSize: md,
     },
     gasCostsContainer: {
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
       padding: `0 ${lg}`,
     },
   }),

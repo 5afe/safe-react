@@ -1,6 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useEffect, useState, Fragment } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getNetworkInfo, getExplorerInfo } from 'src/config'
@@ -14,7 +13,7 @@ import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -31,8 +30,6 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-
-const useStyles = makeStyles(styles)
 
 export type TransactionReviewType = {
   abi?: string

@@ -113,16 +113,16 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
             onRemoveFile={handleOnRemoveFile}
             style={{
               dropArea: {
-                borderColor: '#B2B5B2',
+                borderColor: palette.secondaryText[palette.type],
                 borderRadius: 8,
               },
               dropAreaActive: {
-                borderColor: palette.secondary.main,
+                borderColor: palette.secondary[palette.type],
               },
               dropFile: {
                 width: 200,
                 height: 100,
-                background: '#fff',
+                background: palette.surface01dp[palette.type],
                 boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
                 borderRadius: 8,
               },
@@ -134,8 +134,8 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 top: '12px',
               },
               fileNameInfo: {
-                color: importError === '' ? palette.secondary.main : '#DB3A3D',
-                backgroundColor: '#fff',
+                color: importError === '' ? palette.secondary[palette.type] : '#DB3A3D',
+                backgroundColor: palette.surface01dp[palette.type],
                 fontSize: 14,
                 lineHeight: 1.4,
                 padding: '0 0.4em',
@@ -144,7 +144,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 overflow: 'hidden',
               },
               progressBar: {
-                backgroundColor: palette.secondary.main,
+                backgroundColor: palette.secondary[palette.type],
               },
               removeButton: {
                 color: '#DB3A3D',

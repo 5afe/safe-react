@@ -1,13 +1,13 @@
-import { background, lg, md } from 'src/theme/variables'
+import { lg, md } from 'src/theme/variables'
 import { createStyles, makeStyles } from '@material-ui/core'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     modalContent: {
       padding: `${md} ${lg}`,
     },
     gasCostsContainer: {
-      backgroundColor: background,
+      backgroundColor: palette.backgroundColor[palette.type],
       padding: `0 ${lg}`,
     },
   }),
