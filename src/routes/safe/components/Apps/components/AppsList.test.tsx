@@ -2,6 +2,8 @@ import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './App
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
 import * as configServiceApi from 'src/logic/configService'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
+import { FETCH_STATUS } from 'src/utils/requests'
+import { saveToStorage } from 'src/utils/storage'
 
 const customState = {
   router: {
@@ -14,16 +16,16 @@ const customState = {
   },
 }
 
-beforeEach(() => {
-  // Including an id that doesn't exist in the remote apps to check that there's no error
-  localStorage.setItem('v2_RINKEBY__PINNED_SAFE_APP_IDS', JSON.stringify(['14', '24', '228']))
+beforeEach(async () => {
+  // Includes an id that doesn't exist in the remote apps to check that there's no error
+  await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [14, 24, 228])
 
-  localStorage.setItem(
-    'v2_RINKEBY__APPS_STORAGE_KEY',
-    JSON.stringify({
+  // populate custom app
+  await saveToStorage(appUtils.APPS_STORAGE_KEY, [
+    {
       url: 'https://apps.gnosis-safe.io/drain-safe',
-    }),
-  )
+    },
+  ])
 
   jest.spyOn(configServiceApi, 'fetchSafeAppsList').mockImplementation(() =>
     Promise.resolve([
@@ -72,7 +74,7 @@ beforeEach(() => {
     ]),
   )
 
-  jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValueOnce(() =>
+  jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValueOnce(
     Promise.resolve({
       id: '36',
       url: 'https://apps.gnosis-safe.io/drain-safe',
@@ -80,9 +82,9 @@ beforeEach(() => {
       iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
       error: false,
       description: 'Transfer all your assets in batch',
-      fetchStatus: 'SUCCESS',
       chainIds: [4],
       provider: null,
+      fetchStatus: FETCH_STATUS.SUCCESS,
     }),
   )
 })
