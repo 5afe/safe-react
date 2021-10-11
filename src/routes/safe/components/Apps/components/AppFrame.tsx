@@ -75,6 +75,7 @@ type Props = {
 
 const NETWORK_NAME = getNetworkName()
 const NETWORK_ID = getNetworkId()
+const APP_LOAD_ERROR_TIMEOUT = 30000
 
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
@@ -108,20 +109,32 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }),
     )
   const timer = useRef<number>()
-  const [appTimeout, setAppTimeout] = useState(false)
+  const [appTimeout, setAppTimeout] = useState<boolean>(false)
+
+  const errorTimeout = useRef<number>()
+  const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
+    const clearTimeouts = () => {
+      clearTimeout(timer.current)
+      clearTimeout(errorTimeout.current)
+    }
+
     if (appIsLoading) {
       timer.current = window.setTimeout(() => {
         setAppTimeout(true)
       }, TIMEOUT)
+      errorTimeout.current = window.setTimeout(() => {
+        setAppLoadError(true)
+      }, APP_LOAD_ERROR_TIMEOUT)
     } else {
-      clearTimeout(timer.current)
+      clearTimeouts()
       setAppTimeout(false)
+      setAppLoadError(false)
     }
 
     return () => {
-      clearTimeout(timer.current)
+      clearTimeouts()
     }
   }, [appIsLoading])
 
@@ -280,6 +293,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     throw Error('App url No provided or it is invalid.')
   }
 
+  if (appLoadError) {
+    throw Error('There was an error loading the Safe app. There might be a problem with the app provider.')
+  }
+
   if (!safeApp) {
     return (
       <LoadingContainer>
@@ -297,7 +314,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
-            {appTimeout && <Title size="xs">The app is taking too long to load, consider refreshing.</Title>}
+            {appTimeout && <Title size="xs">The Safe app is taking too long to load, consider refreshing.</Title>}
             <Loader size="md" />
           </LoadingContainer>
         )}
