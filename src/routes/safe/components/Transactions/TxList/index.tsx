@@ -1,20 +1,28 @@
 import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { ReactElement, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
+import { TRANSACTIONS_PAGE_TABS } from './utils'
 
 const items: Item[] = [
-  { id: 'queue', label: 'Queue' },
-  { id: 'history', label: 'History' },
+  { id: TRANSACTIONS_PAGE_TABS.QUEUE, label: 'Queue' },
+  { id: TRANSACTIONS_PAGE_TABS.HISTORY, label: 'History' },
 ]
 
+interface CustomLocationState {
+  tabId: string
+}
+
 const GatewayTransactions = (): ReactElement => {
-  const [tab, setTab] = useState(items[0].id)
+  const history = useHistory<CustomLocationState>()
+  const activeTab = history.location?.state?.tabId || TRANSACTIONS_PAGE_TABS.HISTORY
+  const [tab, setTab] = useState(activeTab)
 
   const { trackEvent } = useAnalytics()
 
@@ -33,8 +41,8 @@ const GatewayTransactions = (): ReactElement => {
       </Menu>
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
-        {tab === 'queue' && <QueueTransactions />}
-        {tab === 'history' && <HistoryTransactions />}
+        {tab === TRANSACTIONS_PAGE_TABS.QUEUE && <QueueTransactions />}
+        {tab === TRANSACTIONS_PAGE_TABS.HISTORY && <HistoryTransactions />}
       </ContentWrapper>
     </Wrapper>
   )
