@@ -38,14 +38,16 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Run tests
-        run: 'npm run test:ci'
-      
-      - uses: mattallty/jest-github-action@v1.0.3
-        if: success() || failure()
+      - name: Run unit tests & coverage
+        uses: mattallty/jest-github-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: 'echo done'
-          coverage-comment: true
-          changes-only: true
+          test-command: 'npm run test:ci'
+          coverage-comment: false
+
+      - name: Coveralls Report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
