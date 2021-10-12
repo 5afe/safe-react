@@ -25,6 +25,7 @@ describe('chainSpecificSafeAddressPathRegExp', () => {
 
     expect(getByTestId(testId)).toBeInTheDocument()
   })
+
   it('does not render routes without chain-specific addresses', () => {
     const addressedTestId = 'addressed-route'
     const welcomeTestId = 'welcome-route'
@@ -52,6 +53,7 @@ describe('extractPrefixedSafeAddress', () => {
 
     expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName, safeAddress: validSafeAddress })
   })
+
   it('returns the current chain prefix with safe address when a malformed chain is supplied', () => {
     const route = `/fakechain:${validSafeAddress}/balances`
     history.push(route)
@@ -68,6 +70,15 @@ describe('extractPrefixedSafeAddress', () => {
     history.push(route)
 
     expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: '' })
+  })
+
+  it('returns the chain prefix with numbers in in', () => {
+    const shortName = 'arb1'
+
+    const route = `/${shortName}:${ZERO_ADDRESS}/balances`
+    history.push(route)
+
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'arb1', safeAddress: ZERO_ADDRESS })
   })
 })
 
@@ -102,7 +113,8 @@ describe('getPrefixedSafeAddressSlug', () => {
 
     expect(slug).toBe(`${shortName}:${validSafeAddress}`)
   })
-  it('returns the current URL/config chain shortName is none is given', () => {
+
+  it('returns the current URL/config chain shortName if none is given', () => {
     const shortName = 'ewt'
 
     const route = `/${shortName}:${ZERO_ADDRESS}`
@@ -115,6 +127,7 @@ describe('getPrefixedSafeAddressSlug', () => {
 
     expect(slug).toBe(`${shortName}:${validSafeAddress}`)
   })
+
   it('returns the safe address from the URL and current URL/config chain short name without arguments', () => {
     const shortName = 'vt'
     const fakeAddress = ZERO_ADDRESS
