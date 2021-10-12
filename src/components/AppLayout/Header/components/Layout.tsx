@@ -14,7 +14,6 @@ import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { getNetworks } from 'src/config'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 
 const styles = () => ({
@@ -88,7 +87,6 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
 const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const networks = getNetworks()
   const { isDesktop } = window
   const isOpen = open || shouldSwitchChain
 
@@ -116,14 +114,7 @@ const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) =
           )
         }
       />
-      {!isDesktop && (
-        <NetworkSelector
-          open={openNetworks}
-          networks={networks}
-          toggle={toggleNetworks}
-          clickAway={clickAwayNetworks}
-        />
-      )}
+      {!isDesktop && <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />}
     </Row>
   )
 }

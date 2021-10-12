@@ -18,8 +18,9 @@ import {
   hasPrefixedSafeAddressInUrl,
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
+  NETWORK_ROOT_ROUTES,
 } from './routes'
-import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { getCurrentShortChainName } from 'src/config'
 import { setNetwork } from 'src/logic/config/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
@@ -52,10 +53,10 @@ const Routes = (): React.ReactElement => {
     <Switch>
       {
         // Redirection to open network specific welcome pages
-        getNetworks().map(({ id, label }) => (
+        NETWORK_ROOT_ROUTES.map(({ id, route }) => (
           <Route
             key={id}
-            path={`/${label.toLowerCase()}`}
+            path={route}
             render={() => {
               setNetwork(id)
               // Last viewed safe logic will be handled with defaultSafe below

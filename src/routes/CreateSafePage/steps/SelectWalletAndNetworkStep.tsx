@@ -79,7 +79,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
         <StyledDialogContent dividers>
           <List component="div">
             {networks.map((network) => (
-              <NetworkLabelItem key={network.id} role={'button'} onClick={() => onNetworkSwitch(network.id)}>
+              <NetworkLabelItem key={network.id} role="button" onClick={() => onNetworkSwitch(network.id)}>
                 <NetworkLabel networkInfo={network} flexGrow />
               </NetworkLabelItem>
             ))}
@@ -114,6 +114,10 @@ const NetworkLabelItem = styled.div`
   margin: ${lg} auto;
   cursor: pointer;
   max-width: 50%;
+
+  & > span {
+    font-size: 13px;
+  }
 `
 
 export default SelectWalletAndNetworkStep
