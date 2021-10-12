@@ -11,7 +11,7 @@ export const history = createBrowserHistory({
 })
 
 // Safe specific routes
-const chainSpecificSafeAddressPathRegExp = '[a-z]+:0x[0-9A-Fa-f]+'
+const chainSpecificSafeAddressPathRegExp = '[a-z0-9-]{2,}:0x[0-9A-Fa-f]+'
 
 export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
 export const ADDRESSED_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
