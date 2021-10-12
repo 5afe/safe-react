@@ -19,7 +19,8 @@ import {
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
 } from './routes'
-import { getCurrentShortChainName, getNetworks, setNetworkId } from 'src/config'
+import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { setNetwork } from 'src/logic/config/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -56,7 +57,7 @@ const Routes = (): React.ReactElement => {
             key={id}
             path={`/${label.toLowerCase()}`}
             render={() => {
-              setNetworkId(id)
+              setNetwork(id)
               // Last viewed safe logic will be handled with defaultSafe below
               return <Redirect to={ROOT_ROUTE} />
             }}
