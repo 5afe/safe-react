@@ -57,9 +57,23 @@ export enum ETHEREUM_NETWORK {
   VOLTA = '73799',
 }
 
+// Take from: https://chainid.network/shortNameMapping.json
+// Reference shortName here: https://github.com/ethereum-lists/chains
+export enum SHORT_NAME {
+  MAINNET = 'eth',
+  RINKEBY = 'rin',
+  BSC = 'bnb',
+  XDAI = 'xdai',
+  POLYGON = 'matic',
+  ENERGY_WEB_CHAIN = 'ewt',
+  LOCAL = 'local',
+  ARBITRUM = 'arb1',
+  VOLTA = 'vt',
+}
+
 export type NetworkSettings = {
   id: ETHEREUM_NETWORK
-  shortName: string
+  shortName: SHORT_NAME
   backgroundColor: string
   textColor: string
   label: string

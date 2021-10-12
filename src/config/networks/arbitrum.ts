@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -33,7 +34,7 @@ const arbitrum: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.ARBITRUM,
-    shortName: 'arb',
+    shortName: SHORT_NAME.ARBITRUM,
     backgroundColor: '#2A3245',
     textColor: '#ffffff',
     label: 'Arbitrum',

@@ -1,7 +1,8 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
-import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { getCurrentShortChainName } from 'src/config'
+import { SHORT_NAME } from 'src/config/networks/network.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 
@@ -56,8 +57,7 @@ export const SAFE_ROUTES = {
 export type SafeRouteParams = { shortName: string; safeAddress: string }
 
 const isValidShortChainName = (shortName: string): boolean => {
-  if (!shortName) return false
-  const shortNames = getNetworks().map(({ shortName }) => shortName)
+  const shortNames: string[] = Object.values(SHORT_NAME)
   return shortNames.includes(shortName)
 }
 

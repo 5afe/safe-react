@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
@@ -33,7 +34,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.VOLTA,
-    shortName: 'vt',
+    shortName: SHORT_NAME.VOLTA,
     backgroundColor: '#514989',
     textColor: '#ffffff',
     label: 'Volta',

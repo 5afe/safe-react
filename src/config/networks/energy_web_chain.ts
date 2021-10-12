@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
@@ -36,7 +37,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
-    shortName: 'ewt',
+    shortName: SHORT_NAME.ENERGY_WEB_CHAIN,
     backgroundColor: '#A566FF',
     textColor: '#ffffff',
     label: 'EWC',
