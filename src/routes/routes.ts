@@ -1,8 +1,8 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
-import { getCurrentShortChainName } from 'src/config'
-import { SHORT_NAME } from 'src/config/networks/network.d'
+import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { ETHEREUM_NETWORK, SHORT_NAME } from 'src/config/networks/network.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 
@@ -53,6 +53,14 @@ export const SAFE_ROUTES = {
   SETTINGS_SPENDING_LIMIT: `${ADDRESSED_ROUTE}/settings/spending-limit`,
   SETTINGS_ADVANCED: `${ADDRESSED_ROUTE}/settings/advanced`,
 }
+
+// [{ id: '4', route: '/rinkeby'}]
+export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = getNetworks().map(
+  ({ id, label }) => ({
+    id,
+    route: `/${label.toLowerCase()}`,
+  }),
+)
 
 export type SafeRouteParams = { shortName: string; safeAddress: string }
 
