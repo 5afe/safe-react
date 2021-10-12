@@ -294,7 +294,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   }
 
   if (appLoadError) {
-    throw Error('There was an error loading the Safe app. There might be a problem with the app provider.')
+    throw Error('There was an error loading the Safe App. There might be a problem with the app provider.')
   }
 
   if (!safeApp) {
