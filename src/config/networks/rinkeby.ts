@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
@@ -42,7 +43,7 @@ const rinkeby: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.RINKEBY,
-    shortName: 'rin',
+    shortName: SHORT_NAME.RINKEBY,
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
     label: 'Rinkeby',

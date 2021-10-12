@@ -1,5 +1,11 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import {
+  EnvironmentSettings,
+  ETHEREUM_LAYER,
+  ETHEREUM_NETWORK,
+  SHORT_NAME,
+  NetworkConfig,
+} from 'src/config/networks/network.d'
 import { WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
@@ -37,7 +43,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.MAINNET,
-    shortName: 'eth',
+    shortName: SHORT_NAME.MAINNET,
     backgroundColor: '#E8E7E6',
     textColor: '#001428',
     label: 'Mainnet',

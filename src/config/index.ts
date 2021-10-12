@@ -4,6 +4,7 @@ import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   GasPriceOracle,
   NetworkConfig,
@@ -70,7 +71,7 @@ export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY
   getNetworkId(),
 )
 
-export const getCurrentShortChainName = (): string => getConfig().network.shortName
+export const getCurrentShortChainName = (): SHORT_NAME => getConfig().network.shortName
 
 export const getShortChainNameById = (networkId = getNetworkId()): string =>
   getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()

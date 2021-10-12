@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -28,7 +29,7 @@ const bsc: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.BSC,
-    shortName: 'bnb',
+    shortName: SHORT_NAME.BSC,
     backgroundColor: '#d0980b',
     textColor: '#ffffff',
     label: 'BSC',

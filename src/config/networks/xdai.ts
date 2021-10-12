@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -28,7 +29,7 @@ const xDai: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.XDAI,
-    shortName: 'xdai',
+    shortName: SHORT_NAME.XDAI,
     backgroundColor: '#48A8A6',
     textColor: '#ffffff',
     label: 'xDai',

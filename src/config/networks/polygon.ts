@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -38,7 +39,7 @@ const polygon: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.POLYGON,
-    shortName: 'matic',
+    shortName: SHORT_NAME.POLYGON,
     backgroundColor: '#8B50ED',
     textColor: '#ffffff',
     label: 'Polygon',
