@@ -19,7 +19,7 @@ const baseConfig: EnvironmentSettings = {
   networkExplorerApiUrl: 'https://api.bscscan.com/api',
 }
 
-const mainnet: NetworkConfig = {
+const bsc: NetworkConfig = {
   environment: {
     test: baseConfig,
     dev: baseConfig,
@@ -60,4 +60,4 @@ const mainnet: NetworkConfig = {
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
 
-export default mainnet
+export default bsc
