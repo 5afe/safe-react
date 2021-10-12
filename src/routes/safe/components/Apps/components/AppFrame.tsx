@@ -109,27 +109,27 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }),
     )
   const timer = useRef<number>()
-  const [appTimeout, setAppTimeout] = useState<boolean>(false)
+  const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
 
-  const errorTimeout = useRef<number>()
+  const errorTimer = useRef<number>()
   const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
     const clearTimeouts = () => {
       clearTimeout(timer.current)
-      clearTimeout(errorTimeout.current)
+      clearTimeout(errorTimer.current)
     }
 
     if (appIsLoading) {
       timer.current = window.setTimeout(() => {
-        setAppTimeout(true)
+        setIsLoadingSlow(true)
       }, TIMEOUT)
-      errorTimeout.current = window.setTimeout(() => {
+      errorTimer.current = window.setTimeout(() => {
         setAppLoadError(true)
       }, APP_LOAD_ERROR_TIMEOUT)
     } else {
       clearTimeouts()
-      setAppTimeout(false)
+      setIsLoadingSlow(false)
       setAppLoadError(false)
     }
 
@@ -277,6 +277,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         setSafeApp(app)
       } catch (err) {
         logError(Errors._900, `${appUrl}, ${err.message}`)
+        setAppLoadError(true)
       }
     }
     loadApp()
@@ -294,7 +295,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   }
 
   if (appLoadError) {
-    throw Error('There was an error loading the Safe App. There might be a problem with the app provider.')
+    throw Error('There was an error loading the Safe App. There might be a problem with the App provider.')
   }
 
   if (!safeApp) {
@@ -314,7 +315,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
-            {appTimeout && <Title size="xs">The Safe App is taking too long to load, consider refreshing.</Title>}
+            {isLoadingSlow && <Title size="xs">The Safe App is taking too long to load, consider refreshing.</Title>}
             <Loader size="md" />
           </LoadingContainer>
         )}
