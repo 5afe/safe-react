@@ -36,9 +36,14 @@ const StyledList = styled(MuiList)`
 
 const useStyles = makeStyles({
   listItemCollapse: {
+    '&:not(:first-child)': {
+      paddingTop: '10px',
+    },
+
     padding: '0 0 0 0',
     '& > div > div:first-child': {
       paddingLeft: '44px',
+      paddingTop: '0',
     },
   },
 })
