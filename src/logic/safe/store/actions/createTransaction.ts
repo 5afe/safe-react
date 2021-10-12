@@ -34,7 +34,6 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
-import { TRANSACTIONS_PAGE_TABS } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -83,11 +82,10 @@ export const createTransaction =
 
     if (navigateToTransactionsTab) {
       history.push(
-        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, {
+        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
           shortName: getCurrentShortChainName(),
           safeAddress,
         }),
-        { tabId: TRANSACTIONS_PAGE_TABS.QUEUE },
       )
     }
 
