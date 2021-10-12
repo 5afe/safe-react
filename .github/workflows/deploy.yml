@@ -113,6 +113,7 @@ jobs:
             * [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet)
             * [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon)
             * [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc)
+            * [Safe Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arbitrum)
             * Unified app on *dev*: https://safe-team.dev.gnosisdev.com/app/
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
