@@ -22,6 +22,7 @@ Besides the Ethereum Mainnet, the following networks are supported:
 - [xDai](https://gnosis-safe.io/app/xdai)
 - [Polygon](https://gnosis-safe.io/app/polygon)
 - [Binance Smart Chain](https://gnosis-safe.io/app/bsc)
+- [Arbitrum](https://gnosis-safe.io/app/arbitrum)
 - [Energy Web Chain](https://gnosis-safe.io/app/ewc)
 - [Volta Testnet](https://gnosis-safe.io/app/volta)
 
