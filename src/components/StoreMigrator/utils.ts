@@ -36,7 +36,7 @@ function getMigratedNetworks(): NETWORK_TO_MIGRATE[] {
   return migratedNetworks
 }
 
-export function addMigratedNetwork(network: NETWORK_TO_MIGRATE) {
+export function addMigratedNetwork(network: NETWORK_TO_MIGRATE): void {
   const migratedNetworks = getMigratedNetworks()
   if (migratedNetworks.includes(network)) {
     return
