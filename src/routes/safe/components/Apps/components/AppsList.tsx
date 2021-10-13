@@ -73,6 +73,7 @@ const IconBtn = styled(IconButton)`
 
 const CenterIconText = styled(IconText)`
   justify-content: center;
+  margin-right: 55px;
 `
 
 const AppContainer = styled(motion.div)`
