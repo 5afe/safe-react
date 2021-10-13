@@ -47,11 +47,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: 'unit tests already executed'
+          test-command: 'echo unit tests already executed'
           coverage-comment: false
 
       - name: Coveralls Report
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@1.1.3
         if: success() || failure()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
