@@ -43,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: 'npm run test:ci'
+          test-command: 'npm run test:ci -- --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json'
           coverage-comment: false
 
       - name: Coveralls Report
@@ -51,4 +51,3 @@ jobs:
         if: success() || failure()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
