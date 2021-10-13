@@ -14,7 +14,8 @@ const getOnboardConfiguration = () => {
 
   return {
     networkId: parseInt(getNetworkId(), 10),
-    networkName: getNetworkName(),
+    // Is it mandatory for Ledger to work to send network name in lowercase
+    networkName: getNetworkName().toLowerCase(),
     subscriptions: {
       wallet: (wallet: Wallet) => {
         if (wallet.provider) {
