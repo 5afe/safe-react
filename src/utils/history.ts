@@ -3,7 +3,7 @@ import { getCurrentShortChainName, getNetworkIdByShortChainName } from 'src/conf
 import { setNetwork } from 'src/logic/config/utils'
 import { hasPrefixedSafeAddressInUrl, extractPrefixedSafeAddress } from 'src/routes/routes'
 
-export const switchNetworkWithUrl = ({ pathname }: LocationDescriptorObject) => {
+export const switchNetworkWithUrl = ({ pathname }: LocationDescriptorObject): void => {
   if (!hasPrefixedSafeAddressInUrl()) return
 
   const { shortName } = extractPrefixedSafeAddress(pathname)

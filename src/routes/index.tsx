@@ -22,6 +22,7 @@ import {
 } from './routes'
 import { getCurrentShortChainName } from 'src/config'
 import { switchNetworkWithUrl } from 'src/utils/history'
+import { setNetwork } from 'src/logic/config/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -60,7 +61,14 @@ const Routes = (): React.ReactElement => {
       {
         // Redirection to open network specific welcome pages
         NETWORK_ROOT_ROUTES.map(({ id, route }) => (
-          <Route key={id} path={route} render={() => <Redirect to={ROOT_ROUTE} />} />
+          <Route
+            key={id}
+            path={route}
+            render={() => {
+              setNetwork(id)
+              return <Redirect to={ROOT_ROUTE} />
+            }}
+          />
         ))
       }
       <Route
