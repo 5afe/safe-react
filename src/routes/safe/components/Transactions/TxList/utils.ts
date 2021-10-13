@@ -8,12 +8,6 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const NOT_AVAILABLE = 'n/a'
-
-export enum TRANSACTIONS_PAGE_TABS {
-  HISTORY = 'history',
-  QUEUE = 'queue',
-}
-
 interface AmountData {
   decimals?: number | string
   symbol?: string

@@ -1,28 +1,23 @@
-import { Menu, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
-import { Tab, Tabs } from '@material-ui/core'
 import { ReactElement, useEffect } from 'react'
-import { Route, Switch, useHistory } from 'react-router-dom'
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
-import { TRANSACTIONS_PAGE_TABS } from './utils'
 
-const items: Item[] = [
-  { id: TRANSACTIONS_PAGE_TABS.QUEUE, label: 'Queue' },
-  { id: TRANSACTIONS_PAGE_TABS.HISTORY, label: 'History' },
+const TRANSACTION_TABS: Item[] = [
+  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
+  { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
 ]
 
-interface CustomLocationState {
-  tabId: string
-}
-
 const GatewayTransactions = (): ReactElement => {
-  const history = useHistory<CustomLocationState>()
+  const history = useHistory()
+  const { path: selectedTab } = useRouteMatch()
 
   const { trackEvent } = useAnalytics()
 
@@ -30,13 +25,7 @@ const GatewayTransactions = (): ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
   }, [trackEvent])
 
-  const handleChange = (event) => {
-    const slug = `/${event.target.innerHTML.toLowerCase()}`
-    const { pathname } = history.location
-    const baseTransactionURL = pathname.substring(0, pathname.lastIndexOf('/'))
-    const newUrl = baseTransactionURL + slug
-    history.push(newUrl)
-  }
+  const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 
   return (
     <Wrapper>
@@ -47,11 +36,7 @@ const GatewayTransactions = (): ReactElement => {
           </Breadcrumb>
         </Col>
       </Menu>
-      <Tabs onChange={handleChange}>
-        {items.map((item) => (
-          <Tab label={item.label} key={item.id} />
-        ))}
-      </Tabs>
+      <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={selectedTab} />
       <ContentWrapper>
         <Switch>
           <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />
