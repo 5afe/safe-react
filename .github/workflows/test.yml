@@ -38,12 +38,16 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Run unit tests & coverage
+      - name: Run tests
+        run: 'npm run test:ci'
+
+      - name: Comment in failing tests
         uses: mattallty/jest-github-action@v1.0.3
+        if: success() || failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          test-command: 'npm run test:ci -- --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json'
+          test-command: 'unit tests already executed'
           coverage-comment: false
 
       - name: Coveralls Report
