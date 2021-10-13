@@ -12,7 +12,7 @@ import Col from 'src/components/layout/Col'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_SLUG } from 'src/routes/routes'
+import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
 const Advanced = lazy(() => import('./Advanced'))
@@ -37,7 +37,7 @@ const Settings = (): React.ReactElement => {
   const granted = useSelector(grantedSelector)
 
   // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
-  const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_SLUG}?`)
+  const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const currentSafeRoutes = generatePrefixedAddressRoutes({
     shortName: getCurrentShortChainName(),
