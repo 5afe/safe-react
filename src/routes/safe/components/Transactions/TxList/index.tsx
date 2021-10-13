@@ -11,8 +11,8 @@ import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
 
 const TRANSACTION_TABS: Item[] = [
-  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
   { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
+  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
 ]
 
 const GatewayTransactions = (): ReactElement => {
