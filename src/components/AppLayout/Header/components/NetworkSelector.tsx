@@ -16,8 +16,6 @@ import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 import { getNetworkConfigById } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { setNetwork } from 'src/logic/config/utils'
 import { NETWORK_ROOT_ROUTES, ROOT_ROUTE } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -86,10 +84,10 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
   const chainId = useSelector(currentChainId)
 
   const onNetworkSwitch = useCallback(
-    (e: React.SyntheticEvent, networkId: ETHEREUM_NETWORK) => {
+    (e: React.SyntheticEvent) => {
       e.preventDefault()
       clickAway()
-      setNetwork(networkId)
+      // setNetwork occurs via history.listen
       history.push(ROOT_ROUTE)
     },
     [clickAway, history],
@@ -120,7 +118,7 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
                 <List className={classes.network} component="div">
                   {NETWORK_ROOT_ROUTES.map(({ id, route }) => (
                     <Fragment key={id}>
-                      <StyledLink onClick={(e) => onNetworkSwitch(e, id)} href={route}>
+                      <StyledLink onClick={onNetworkSwitch} href={route}>
                         <NetworkLabel networkInfo={getNetworkConfigById(id)?.network} />
 
                         {chainId === id && <Icon type="check" size="md" color="primary" />}

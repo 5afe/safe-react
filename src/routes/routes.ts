@@ -64,17 +64,17 @@ export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }>
 
 export type SafeRouteParams = { shortName: string; safeAddress: string }
 
-const isValidShortChainName = (shortName: string): boolean => {
+export const isValidShortChainName = (shortName: string): boolean => {
   const shortNames: string[] = Object.values(SHORT_NAME)
   return shortNames.includes(shortName)
 }
 
 // Due to hoisting issues, these functions should remain here
-export const extractPrefixedSafeAddress = (path = ADDRESSED_ROUTE): SafeRouteParams => {
+export const extractPrefixedSafeAddress = (path = history.location.pathname): SafeRouteParams => {
   const currentChainShortName = getCurrentShortChainName()
 
-  const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    path,
+  const match = matchPath<SafeRouteSlugs>(path, {
+    path: ADDRESSED_ROUTE,
   })
 
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]

@@ -13,6 +13,7 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
+import { isValidShortChainName } from 'src/routes/routes'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -23,7 +24,8 @@ import {
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
 
-export const getNetworks = (): NetworkInfo[] => {
+// Must be a function due to hoisting issues
+export function getNetworks(): NetworkInfo[] {
   const { local, ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,
@@ -34,9 +36,9 @@ export const getNetworks = (): NetworkInfo[] => {
   }))
 }
 
-export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
-  const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
 
+export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const { pathname } = window.location
   const network = getNetworks().find(({ shortName }) => {
     return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
@@ -75,6 +77,11 @@ export const getCurrentShortChainName = (): SHORT_NAME => getConfig().network.sh
 
 export const getShortChainNameById = (networkId = getNetworkId()): string =>
   getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
+
+export const getNetworkIdByShortChainName = (shortName: string): ETHEREUM_NETWORK => {
+  if (!isValidShortChainName(shortName)) return DEFAULT_NETWORK_ID
+  return getNetworks().find((network) => network.shortName === shortName)?.id || DEFAULT_NETWORK_ID
+}
 
 export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {
   switch (APP_ENV) {
