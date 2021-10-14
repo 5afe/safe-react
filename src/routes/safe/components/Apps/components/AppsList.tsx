@@ -109,7 +109,7 @@ const AppsList = (): React.ReactElement => {
           <Collapse
             title={
               <Text color="placeHolder" strong size="md">
-                PINNED APPS
+                BOOKMARKED APPS
               </Text>
             }
             defaultExpanded

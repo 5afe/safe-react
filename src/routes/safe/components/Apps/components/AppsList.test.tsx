@@ -112,7 +112,7 @@ describe('Safe Apps -> AppsList', () => {
 
     await waitFor(() => {
       expect(screen.getByText('ALL APPS')).toBeInTheDocument()
-      expect(screen.getByText('PINNED APPS')).toBeInTheDocument()
+      expect(screen.getByText('BOOKMARKED APPS')).toBeInTheDocument()
       expect(screen.getByText('CUSTOM APPS')).toBeInTheDocument()
     })
   })
@@ -205,7 +205,11 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     render(<AppsList />, customState)
 
     const tut = await waitFor(() =>
-      screen.getByText('Simply hover over an app to pin it to this section for convenient access'),
+      screen.getByText(
+        (content) =>
+          content.startsWith('Simply hover over an app and click on the') &&
+          content.endsWith('to bookmark the app here for convenient access'),
+      ),
     )
     expect(tut).toBeInTheDocument()
   })

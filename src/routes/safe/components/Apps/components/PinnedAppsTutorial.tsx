@@ -1,5 +1,7 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import Card from '@material-ui/core/Card'
+import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
+
 import styled from 'styled-components'
 import InfoIcon from 'src/assets/icons/info.svg'
 import Img from 'src/components/layout/Img'
@@ -16,10 +18,19 @@ const NoAppsFoundTextContainer = styled(Card)`
   gap: ${({ theme }) => theme.margin.sm};
 `
 
+const StyledBookmarkIcon = styled(BookmarkBorder)`
+  height: 16px;
+  vertical-align: middle;
+`
+
 const PinnedAppsTutorial = (): React.ReactElement => (
   <NoAppsFoundTextContainer>
     <Img alt="Info" src={InfoIcon} />
-    <Text size="xl">Simply hover over an app to pin it to this section for convenient access</Text>
+    <Text size="xl">
+      Simply hover over an app and click on the
+      <StyledBookmarkIcon />
+      to bookmark the app here for convenient access
+    </Text>
   </NoAppsFoundTextContainer>
 )
 
