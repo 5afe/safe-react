@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 export type RemoteAppData = {
@@ -9,7 +8,7 @@ export type RemoteAppData = {
   name: string
   iconUrl: string
   description: string
-  chainIds: ETHEREUM_NETWORK[]
+  chainIds: number[]
 }
 
 enum Endpoints {

@@ -26,17 +26,25 @@ const useCustomSafeApps = (): ReturnType => {
 
   const updateCustomSafeApps = useCallback((newCustomSafeApps: SafeApp[]) => {
     setCustomSafeApps(newCustomSafeApps)
-    saveToStorage(APPS_STORAGE_KEY, newCustomSafeApps)
+    saveToStorage(
+      APPS_STORAGE_KEY,
+      newCustomSafeApps.map(({ url }) => ({ url })),
+    )
   }, [])
 
   useEffect(() => {
     const fetchAppCallback = (res: SafeApp, error = false) => {
       setCustomSafeApps((prev) => {
-        const cpPrevStatus = [...prev]
-        const appIndex = cpPrevStatus.findIndex((a) => a.url === res.url)
-        const newStatus = error ? FETCH_STATUS.ERROR : FETCH_STATUS.SUCCESS
-        cpPrevStatus[appIndex] = { ...res, fetchStatus: newStatus }
-        return cpPrevStatus
+        const prevAppsCopy = [...prev]
+        const appIndex = prevAppsCopy.findIndex((a) => a.url === res.url)
+
+        if (error) {
+          prevAppsCopy.splice(appIndex, 1)
+        } else {
+          prevAppsCopy[appIndex] = { ...res, fetchStatus: FETCH_STATUS.SUCCESS }
+        }
+
+        return prevAppsCopy
       })
     }
 
@@ -49,6 +57,7 @@ const useCustomSafeApps = (): ReturnType => {
           ...getEmptySafeApp(),
           ...app,
           url: app.url.trim(),
+          id: app.url.trim(),
           custom: true,
         }),
       )
