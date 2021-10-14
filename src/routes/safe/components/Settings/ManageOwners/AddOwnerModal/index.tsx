@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -15,6 +15,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -28,9 +29,11 @@ export const sendAddOwner = async (
   safeVersion: string,
   txParameters: TxParameters,
   dispatch: Dispatch,
+  connectedWalletAddress: string,
 ): Promise<void> => {
-  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-  const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+  const safeTx = await sdk.getAddOwnerTx(values.ownerAddress, +values.threshold)
+  const txData = safeTx.data.data
 
   const txHash = await dispatch(
     createTransaction({
@@ -60,6 +63,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
     () => () => {
@@ -98,7 +102,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch)
+      await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch, connectedWalletAddress)
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
       console.error('Error while removing an owner', error)
