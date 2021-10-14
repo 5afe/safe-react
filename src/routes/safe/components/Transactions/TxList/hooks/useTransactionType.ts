@@ -22,7 +22,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
-  const knownAddress = useKnownAddress(toAddress?.value || '0x', {
+  const knownAddressBookAddress = useKnownAddress(toAddress?.value || '0x', {
     name: toAddress?.name || undefined,
     image: toAddress?.logoUri || undefined,
   })
@@ -30,12 +30,16 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
   useEffect(() => {
     switch (tx.txInfo.type) {
       case 'Creation': {
-        setType({ icon: SettingsTxIcon, text: 'Safe created' })
+        setType({ icon: toAddress?.logoUri || SettingsTxIcon, text: 'Safe created' })
         break
       }
       case 'Transfer': {
         const isSendTx = tx.txInfo.direction === 'OUTGOING'
-        setType({ icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon, text: isSendTx ? 'Send' : 'Receive' })
+
+        setType({
+          icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
+          text: knownAddressBookAddress.name || toAddress?.name || (isSendTx ? 'Send' : 'Receive'),
+        })
         break
       }
       case 'SettingsChange': {
@@ -59,16 +63,23 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
-        const hasKnownName = tx.txInfo.to.name
         setType({
-          icon: knownAddress.isAddressBook ? CustomTxIcon : knownAddress.image || CustomTxIcon,
-          fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
-          text: hasKnownName ? knownAddress.name : 'Contract interaction',
+          icon: knownAddressBookAddress.isAddressBook
+            ? CustomTxIcon
+            : knownAddressBookAddress.image || toAddress?.logoUri || CustomTxIcon,
+          fallbackIcon: knownAddressBookAddress.isAddressBook ? undefined : CustomTxIcon,
+          text: knownAddressBookAddress.name || toAddress?.name || 'Contract interaction',
         })
         break
       }
     }
-  }, [tx, safeAddress, knownAddress.name, knownAddress.image, knownAddress.isAddressBook])
+  }, [
+    tx,
+    safeAddress,
+    knownAddressBookAddress.name,
+    knownAddressBookAddress.image,
+    knownAddressBookAddress.isAddressBook,
+  ])
 
   return type
 }
