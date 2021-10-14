@@ -26,7 +26,6 @@ export type OwnerValues = {
 export const sendAddOwner = async (
   values: OwnerValues,
   safeAddress: string,
-  safeVersion: string,
   txParameters: TxParameters,
   dispatch: Dispatch,
   connectedWalletAddress: string,
@@ -62,7 +61,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
-  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress = '' } = useSelector(currentSafe) ?? {}
   const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
@@ -102,7 +101,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch, connectedWalletAddress)
+      await sendAddOwner(values, safeAddress, txParameters, dispatch, connectedWalletAddress)
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
       console.error('Error while removing an owner', error)
