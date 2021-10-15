@@ -12,7 +12,6 @@ import Img from 'src/components/layout/Img'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { Token } from 'src/logic/tokens/store/model/token'
-
 import { useSelectStyles, useSelectedTokenStyles } from './style'
 
 interface SelectTokenProps {

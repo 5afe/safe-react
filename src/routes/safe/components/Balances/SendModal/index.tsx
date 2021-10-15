@@ -1,5 +1,5 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { Suspense, useEffect, useState, lazy } from 'react'
 
 import Modal from 'src/components/Modal'
@@ -30,15 +30,17 @@ const SendCustomTx = lazy(() => import('./screens/ContractInteraction/SendCustom
 
 const ReviewCustomTx = lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
-const useStyles = makeStyles({
-  loaderStyle: {
-    height: '500px',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-})
+const useStyles = makeStyles(
+  createStyles({
+    loaderStyle: {
+      height: '500px',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }),
+)
 
 export type TxType =
   | 'chooseTxType'

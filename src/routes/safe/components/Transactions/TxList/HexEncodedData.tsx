@@ -6,17 +6,17 @@ import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { textShortener } from 'src/utils/strings'
 
-export const styles = createStyles({
-  txDataParagraph: {
-    whiteSpace: 'normal',
-  },
-  linkTxData: {
-    textDecoration: 'underline',
-    cursor: 'pointer',
-  },
-})
-
-const useStyles = makeStyles(styles)
+export const useStyles = makeStyles(
+  createStyles({
+    txDataParagraph: {
+      whiteSpace: 'normal',
+    },
+    linkTxData: {
+      textDecoration: 'underline',
+      cursor: 'pointer',
+    },
+  }),
+)
 
 export const HexEncodedData = ({
   hexData,

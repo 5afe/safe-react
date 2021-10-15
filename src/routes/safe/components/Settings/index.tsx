@@ -1,11 +1,10 @@
 import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/styles'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { styles } from './style'
+import { useStyles } from './style'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
@@ -28,8 +27,6 @@ export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 const INITIAL_STATE = {
   showRemoveSafe: false,
 }
-
-const useStyles = makeStyles(styles)
 
 const Settings = (): React.ReactElement => {
   const classes = useStyles()

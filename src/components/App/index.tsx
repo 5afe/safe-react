@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
 import { useRouteMatch, useHistory } from 'react-router-dom'
@@ -39,20 +39,22 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const useStyles = makeStyles(({ palette }) => ({
-  success: {
-    background: palette.surface01dp[palette.type],
-  },
-  error: {
-    background: '#ffe6ea',
-  },
-  warning: {
-    background: '#fff3e2',
-  },
-  info: {
-    background: palette.surface01dp[palette.type],
-  },
-}))
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    success: {
+      background: palette.surface01dp[palette.type],
+    },
+    error: {
+      background: palette.rejection[palette.type],
+    },
+    warning: {
+      background: '#fff3e2',
+    },
+    info: {
+      background: palette.surface01dp[palette.type],
+    },
+  }),
+)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()

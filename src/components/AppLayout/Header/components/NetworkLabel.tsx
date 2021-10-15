@@ -4,20 +4,20 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
-import { NetworkInfo, NetworkSettings } from 'src/config/networks/network'
+import { NetworkInfo } from 'src/config/networks/network'
 
-const StyledCol = styled(Col)`
+const StyledCol = styled(Col)<{ onClick: () => unknown }>`
   flex-grow: 0;
   padding: 0 ${sm};
-  cursor: ${(props) => (props.onClick ? 'pointer' : 'inherit')};
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
   @media (min-width: ${screenSm}px) {
     padding-left: ${md};
     padding-right: ${md};
   }
 `
-const StyledParagraph = styled(Paragraph)<{ network: Partial<NetworkSettings> }>`
-  background-color: ${(props) => props.network?.backgroundColor ?? border};
-  color: ${(props) => props.network?.textColor ?? fontColor};
+const StyledParagraph = styled(Paragraph)<{ network: NetworkInfo }>`
+  background-color: ${({ network }) => network.backgroundColor || border};
+  color: ${({ network }) => network.textColor || fontColor};
   border-radius: 3px;
   line-height: normal;
   text-transform: capitalize;

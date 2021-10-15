@@ -1,5 +1,4 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { ReactElement } from 'react'
 
@@ -7,9 +6,7 @@ import ChainIndicator from 'src/components/ChainIndicator'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getNetworkInfo } from 'src/config'
-import { styles } from './style'
-
-const useStyles = makeStyles(styles)
+import { useStyles } from './style'
 
 interface HeaderProps {
   onClose: () => void

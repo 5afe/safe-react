@@ -1,7 +1,7 @@
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import styled from 'styled-components'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { Fragment, ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -34,14 +34,16 @@ const StyledList = styled(MuiList)`
   padding: 0;
 `
 
-const useStyles = makeStyles({
-  listItemCollapse: {
-    padding: '0 0 0 0',
-    '& > div > div:first-child': {
-      paddingLeft: '44px',
+const useStyles = makeStyles(
+  createStyles({
+    listItemCollapse: {
+      padding: '0 0 0 0',
+      '& > div > div:first-child': {
+        paddingLeft: '44px',
+      },
     },
-  },
-})
+  }),
+)
 
 type Props = {
   onSafeClick: () => void

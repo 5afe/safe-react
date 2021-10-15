@@ -1,14 +1,17 @@
-import { lg, md } from 'src/theme/variables'
-import { createStyles } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/core'
 
-export const styles = createStyles({
-  formContainer: {
-    padding: `${md} ${lg}`,
-    minHeight: '340px',
-  },
-  buttonRow: {
-    height: '84px',
-    justifyContent: 'center',
-    gap: '16px',
-  },
-})
+import { lg, md } from 'src/theme/variables'
+
+export const useStyles = makeStyles(
+  createStyles({
+    formContainer: {
+      padding: `${md} ${lg}`,
+      minHeight: '340px',
+    },
+    buttonRow: {
+      height: '84px',
+      justifyContent: 'center',
+      gap: '16px',
+    },
+  }),
+)

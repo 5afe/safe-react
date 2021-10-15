@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import { ReactElement } from 'react'
 
@@ -8,29 +8,31 @@ import { border, fancy, screenSm, warning } from 'src/theme/variables'
 import KeyIcon from '../assets/key.svg'
 import TriangleIcon from '../assets/triangle.svg'
 
-const useStyles = makeStyles(({ palette }) => ({
-  root: {
-    display: 'none',
-    [`@media (min-width: ${screenSm}px)`]: {
-      display: 'flex',
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    root: {
+      display: 'none',
+      [`@media (min-width: ${screenSm}px)`]: {
+        display: 'flex',
+      },
     },
-  },
-  dot: {
-    position: 'relative',
-    backgroundColor: palette.surface01dp[palette.type],
-    color: fancy,
-  },
-  key: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: border,
-  },
-  warning: {
-    position: 'relative',
-    top: '-2px',
-  },
-}))
+    dot: {
+      position: 'relative',
+      backgroundColor: palette.surface01dp[palette.type],
+      color: fancy,
+    },
+    key: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: border,
+    },
+    warning: {
+      position: 'relative',
+      top: '-2px',
+    },
+  }),
+)
 
 const buildKeyStyleFrom = (size, center, dotSize) => ({
   width: `${size}px`,

@@ -3,7 +3,6 @@ import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { makeStyles } from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
 import Close from '@material-ui/icons/Close'
 
@@ -28,7 +27,7 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -51,8 +50,6 @@ type Props = {
   switchMethod: () => void
   contractAddress?: string
 }
-
-const useStyles = makeStyles(styles)
 
 const SendCustomTx = ({
   initialValues,

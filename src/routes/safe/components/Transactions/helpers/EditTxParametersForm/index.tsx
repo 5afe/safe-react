@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import { makeStyles } from '@material-ui/core/styles'
 import { Title, Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
@@ -9,7 +8,7 @@ import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { styles } from './style'
+import { useStyles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { minValue } from 'src/components/forms/validator'
@@ -55,7 +54,6 @@ const StyledText = styled(Text)`
 const StyledTextMt = styled(Text)`
   margin: 16px 0 4px 0;
 `
-const useStyles = makeStyles(styles)
 
 interface Props {
   txParameters: TxParameters

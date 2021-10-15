@@ -127,14 +127,14 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 borderRadius: 8,
               },
               fileSizeInfo: {
-                color: '#001428',
+                color: palette.highEmphasis[palette.type],
                 lineHeight: 1,
                 position: 'absolute',
                 left: '10px',
                 top: '12px',
               },
               fileNameInfo: {
-                color: importError === '' ? palette.secondary[palette.type] : '#DB3A3D',
+                color: (importError ? palette.error : palette.secondary)[palette.type], // Before dark mode - error: #DB3A3D
                 backgroundColor: palette.surface01dp[palette.type],
                 fontSize: 14,
                 lineHeight: 1.4,
@@ -147,7 +147,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 backgroundColor: palette.secondary[palette.type],
               },
               removeButton: {
-                color: '#DB3A3D',
+                color: palette.error[palette.type], // Before dark mode - error: #DB3A3D
               },
             }}
           >

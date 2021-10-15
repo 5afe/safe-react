@@ -1,5 +1,5 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, createStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
@@ -8,7 +8,7 @@ import Col from 'src/components/layout/Col'
 import Divider from 'src/components/layout/Divider'
 import { screenSm, sm } from 'src/theme/variables'
 
-const styles = () => ({
+const styles = createStyles({
   root: {
     alignItems: 'center',
     display: 'flex',
@@ -65,4 +65,4 @@ class Provider extends React.Component<any> {
   }
 }
 
-export default withStyles(styles as any)(Provider)
+export default withStyles(styles)(Provider)

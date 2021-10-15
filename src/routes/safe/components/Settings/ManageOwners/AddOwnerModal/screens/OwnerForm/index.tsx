@@ -1,11 +1,8 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { Mutator } from 'final-form'
-
 import { useSelector } from 'react-redux'
 import { OnChange } from 'react-final-form-listeners'
 
-import { styles } from './style'
-
+import { useStyles } from './style'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
@@ -26,7 +23,6 @@ import Row from 'src/components/layout/Row'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { isValidAddress } from 'src/utils/isValidAddress'
-
 import { OwnerValues } from '../..'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
@@ -46,8 +42,6 @@ const formMutators: Record<
     utils.changeValue(state, 'ownerName', () => args[0])
   },
 }
-
-const useStyles = makeStyles(styles)
 
 type OwnerFormProps = {
   onClose: () => void

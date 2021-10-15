@@ -1,5 +1,4 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/styles'
 import { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -21,9 +20,8 @@ import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { getExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-
 import { CollectibleSelectField } from './CollectibleSelectField'
-import { styles } from './style'
+import { useStyles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
@@ -39,8 +37,6 @@ const formMutators = {
     utils.changeValue(state, 'recipientAddress', () => args[0])
   },
 }
-
-const useStyles = makeStyles(styles)
 
 type SendCollectibleProps = {
   initialValues: any

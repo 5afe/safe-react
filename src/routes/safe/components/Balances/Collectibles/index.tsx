@@ -12,7 +12,7 @@ import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 
-const useStyles = makeStyles(
+const useStyles = makeStyles(({ palette }) =>
   createStyles({
     cardInner: {
       boxSizing: 'border-box',
@@ -65,7 +65,7 @@ const useStyles = makeStyles(
       margin: '0',
     },
     titleFiller: {
-      backgroundColor: '#e8e7e6',
+      backgroundColor: palette.grey4[palette.type],
       flexGrow: 1,
       height: '2px',
       marginLeft: '40px',

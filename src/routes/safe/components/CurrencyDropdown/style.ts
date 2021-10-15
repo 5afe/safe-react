@@ -1,13 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-const buttonWidth = '140px'
-export const useDropdownStyles = makeStyles(({ palette }) => ({
+const defaultButtonWidth = '140px'
+export const useDropdownStyles = makeStyles<Theme, { buttonWidth?: string }>(({ palette }) => ({
   listItem: {
-    maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
+    maxWidth: ({ buttonWidth }) => buttonWidth || defaultButtonWidth,
     boxSizing: 'border-box',
   },
   listItemSearch: {
-    maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
+    maxWidth: ({ buttonWidth }) => buttonWidth || defaultButtonWidth,
     padding: '0',
     boxSizing: 'border-box',
   },
@@ -32,18 +32,18 @@ export const useDropdownStyles = makeStyles(({ palette }) => ({
     marginLeft: '18px',
   },
   button: {
-    backgroundColor: '#e8e7e6',
+    backgroundColor: palette.grey4[palette.type],
     border: 'none',
     borderRadius: '3px',
     boxSizing: 'border-box',
-    color: '#5d6d74',
+    color: palette.secondaryLabel[palette.type],
     cursor: 'pointer',
     fontSize: '12px',
     fontWeight: 'normal',
     height: '24px',
     lineHeight: '1.33',
     marginRight: '20px',
-    minWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
+    minWidth: ({ buttonWidth }) => buttonWidth || defaultButtonWidth,
     outline: 'none',
     padding: '0',
     textAlign: 'left',
@@ -62,7 +62,7 @@ export const useDropdownStyles = makeStyles(({ palette }) => ({
     '&::after': {
       borderLeft: '5px solid transparent',
       borderRight: '5px solid transparent',
-      borderTop: '5px solid #5d6d74',
+      borderTop: `5px solid ${palette.secondaryLabel[palette.type]}`,
       content: '""',
       height: '0',
       position: 'absolute',
@@ -73,7 +73,7 @@ export const useDropdownStyles = makeStyles(({ palette }) => ({
   },
   openMenuButton: {
     '&::after': {
-      borderBottom: '5px solid #5d6d74',
+      borderBottom: `5px solid ${palette.secondaryLabel[palette.type]}`,
       borderLeft: '5px solid transparent',
       borderRight: '5px solid transparent',
       borderTop: 'none',
@@ -106,11 +106,11 @@ export const useDropdownStyles = makeStyles(({ palette }) => ({
     transform: 'translateY(-50%)',
     width: '18px',
     '& path': {
-      fill: '#b2b5b2',
+      fill: palette.grey2[palette.type],
     },
   },
   inputRoot: {
-    color: '#5d6d74',
+    color: `5px solid ${palette.secondaryLabel[palette.type]}`,
     fontSize: '14px',
     fontWeight: 'normal',
     lineHeight: '1.43',

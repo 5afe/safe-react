@@ -1,9 +1,10 @@
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
-import Popper from '@material-ui/core/Popper'
-import { withStyles } from '@material-ui/core/styles'
+import Popper, { PopperProps } from '@material-ui/core/Popper'
 import { Link } from 'react-router-dom'
+import { makeStyles, createStyles } from '@material-ui/core'
+import { ReactElement } from 'react'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
@@ -17,51 +18,60 @@ import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworks } from 'src/config'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 
-const styles = () => ({
-  root: {
-    backgroundColor: 'white',
-    borderRadius: sm,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-    marginTop: '11px',
-    minWidth: '280px',
-    padding: 0,
-  },
-  summary: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    flexWrap: 'nowrap',
-    height: headerHeight,
-    position: 'fixed',
-    width: '100%',
-    zIndex: 1301,
-  },
-  logo: {
-    flexBasis: '140px',
-    flexShrink: '0',
-    flexGrow: '0',
-    maxWidth: '55px',
-    padding: sm,
-    marginTop: '4px',
-    [`@media (min-width: ${screenSm}px)`]: {
-      maxWidth: 'none',
-      paddingLeft: md,
-      paddingRight: md,
+const useStyles = makeStyles(
+  createStyles({
+    root: {
+      backgroundColor: 'white',
+      borderRadius: sm,
+      boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+      marginTop: '11px',
+      minWidth: '280px',
+      padding: 0,
     },
-  },
-  popper: {
-    zIndex: 1301,
-  },
-  network: {
-    backgroundColor: 'white',
-    borderRadius: sm,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-    marginTop: '11px',
-    minWidth: '180px',
-    padding: '0',
-  },
-})
+    summary: {
+      alignItems: 'center',
+      backgroundColor: 'white',
+      flexWrap: 'nowrap',
+      height: headerHeight,
+      position: 'fixed',
+      width: '100%',
+      zIndex: 1301,
+    },
+    logo: {
+      flexBasis: '140px',
+      flexShrink: 0,
+      flexGrow: 0,
+      maxWidth: '55px',
+      padding: sm,
+      marginTop: '4px',
+      [`@media (min-width: ${screenSm}px)`]: {
+        maxWidth: 'none',
+        paddingLeft: md,
+        paddingRight: md,
+      },
+    },
+    popper: {
+      zIndex: 1301,
+    },
+    network: {
+      backgroundColor: 'white',
+      borderRadius: sm,
+      boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+      marginTop: '11px',
+      minWidth: '180px',
+      padding: '0',
+    },
+  }),
+)
 
-const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
+type WalletPopupProps = {
+  anchorEl: PopperProps['anchorEl']
+  providerDetails: ReactElement
+  open: boolean
+  onClose: () => unknown
+}
+const WalletPopup = ({ anchorEl, providerDetails, open, onClose }: WalletPopupProps): ReactElement => {
+  const classes = useStyles()
   return (
     <Popper
       anchorEl={anchorEl}
@@ -85,7 +95,14 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
   )
 }
 
-const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
+type LayoutProps = {
+  providerDetails: ReactElement
+  providerInfo: ReactElement
+  shouldSwitchChain: boolean
+}
+
+const Layout = ({ providerDetails, providerInfo, shouldSwitchChain }: LayoutProps): ReactElement => {
+  const classes = useStyles()
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const networks = getNetworks()
@@ -110,7 +127,6 @@ const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) =
               anchorEl={providerRef.current}
               providerDetails={providerDetails}
               open={isOpen}
-              classes={classes}
               onClose={clickAway}
             />
           )
@@ -128,4 +144,4 @@ const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) =
   )
 }
 
-export default withStyles(styles as any)(Layout)
+export default Layout

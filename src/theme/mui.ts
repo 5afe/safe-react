@@ -26,6 +26,11 @@ import {
   darkColors,
   background,
   surface01dp,
+  rejection,
+  grey4,
+  grey2,
+  secondaryLabel,
+  highEmphasis,
 } from './variables'
 
 // declare module '@material-ui/core/styles/createTheme' {
@@ -44,13 +49,25 @@ import {
 declare module '@material-ui/core/styles/createPalette' {
   interface Palette {
     backgroundColor: Palette['primary']
+    secondaryBackground: Palette['primary']
     secondaryText: Palette['primary']
     surface01dp: Palette['primary']
+    rejection: Palette['primary']
+    grey2: Palette['primary']
+    grey4: Palette['primary']
+    secondaryLabel: Palette['primary']
+    highEmphasis: Palette['primary']
   }
   interface PaletteOptions {
     backgroundColor: PaletteOptions['primary']
+    secondaryBackground: PaletteOptions['primary']
     secondaryText: PaletteOptions['primary']
     surface01dp: PaletteOptions['primary']
+    rejection: PaletteOptions['primary']
+    grey2: PaletteOptions['primary']
+    grey4: PaletteOptions['primary']
+    secondaryLabel: PaletteOptions['primary']
+    highEmphasis: PaletteOptions['primary']
   }
 }
 
@@ -80,6 +97,10 @@ const palette: PaletteOptions = {
     main: background,
     dark: darkColors.background,
   },
+  secondaryBackground: {
+    main: secondaryBackground,
+    dark: darkColors.secondaryBackground,
+  },
   secondaryText: {
     main: secondaryText,
     dark: darkColors.secondaryTextOrSvg,
@@ -87,6 +108,26 @@ const palette: PaletteOptions = {
   surface01dp: {
     main: surface01dp,
     dark: darkColors.surface01dp,
+  },
+  rejection: {
+    main: rejection,
+    dark: darkColors.rejection,
+  },
+  grey2: {
+    main: grey2,
+    dark: darkColors.grey2,
+  },
+  grey4: {
+    main: grey4,
+    dark: darkColors.grey4,
+  },
+  secondaryLabel: {
+    main: secondaryLabel,
+    dark: darkColors.secondaryLabel,
+  },
+  highEmphasis: {
+    main: highEmphasis,
+    dark: darkColors.highEmphasis,
   },
 }
 

@@ -1,9 +1,8 @@
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
-import { makeStyles } from '@material-ui/core/styles'
 
-import { selectStyles, selectedTokenStyles } from './style'
+import { useSelectStyles as useTokenSelectFieldStyles, useSelectedTokenStyles } from './style'
 
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
@@ -14,8 +13,6 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
 import { NFTAssets } from 'src/logic/collectibles/sources/collectibles.d'
-
-const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 
 type SelectedTokenProps = {
   assetAddress?: string
@@ -48,8 +45,6 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.Reac
     </MenuItem>
   )
 }
-
-const useTokenSelectFieldStyles = makeStyles(selectStyles)
 
 type TokenSelectFieldProps = {
   assets: NFTAssets

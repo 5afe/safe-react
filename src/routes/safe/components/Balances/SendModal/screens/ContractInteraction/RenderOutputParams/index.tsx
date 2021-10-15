@@ -1,21 +1,23 @@
 import { ReactElement } from 'react'
 import { useField } from 'react-final-form'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import TextField from 'src/components/forms/TextField'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
-const useStyles = makeStyles({
-  output: {
-    '& > div > textarea': {
-      letterSpacing: '-0.5px',
-      lineHeight: '20px',
-      height: '40px',
-      overflowY: 'auto',
+const useStyles = makeStyles(
+  createStyles({
+    output: {
+      '& > div > textarea': {
+        letterSpacing: '-0.5px',
+        lineHeight: '20px',
+        height: '40px',
+        overflowY: 'auto',
+      },
     },
-  },
-})
+  }),
+)
 
 export const RenderOutputParams = (): ReactElement | null => {
   const classes = useStyles()

@@ -1,11 +1,9 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { styles } from './style'
-
+import { useStyles } from './style'
 import Modal from 'src/components/Modal'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -26,7 +24,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
-
 import {
   currentSafe,
   latestMasterContractVersion as latestMasterContractVersionSelector,
@@ -39,8 +36,6 @@ import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeCo
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
 export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
-
-const useStyles = makeStyles(styles)
 
 const StyledLink = styled(Link)`
   margin: 12px 0 0 0;

@@ -1,10 +1,8 @@
 import MenuItem from '@material-ui/core/MenuItem'
-import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
-import { styles } from './style'
-
+import { useStyles } from './style'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import SelectField from 'src/components/forms/SelectField'
@@ -19,8 +17,6 @@ import { Modal } from 'src/components/Modal'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
-
-const useStyles = makeStyles(styles)
 
 type SubmitProps = {
   threshold: number

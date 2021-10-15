@@ -14,7 +14,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_ROUTES, history, extractSafeAddress, generateSafeRoute } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
-const useStyles = makeStyles(
+const useStyles = makeStyles(({ palette }) =>
   createStyles({
     container: {
       display: 'flex',
@@ -25,7 +25,7 @@ const useStyles = makeStyles(
       borderRadius: '50%',
       transition: 'background-color .2s ease-in-out',
       '&:hover': {
-        backgroundColor: '#F0EFEE',
+        backgroundColor: palette.secondaryBackground[palette.type],
       },
       outline: 'none',
     },

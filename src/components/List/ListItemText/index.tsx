@@ -1,14 +1,15 @@
-import MuiListItemText from '@material-ui/core/ListItemText'
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-const styles = {
+import MuiListItemText from '@material-ui/core/ListItemText'
+
+const styles = createStyles({
   itemTextSecondary: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   },
-}
+})
 
 class ListItemText extends React.PureComponent<any> {
   render() {
@@ -24,4 +25,4 @@ class ListItemText extends React.PureComponent<any> {
   }
 }
 
-export default withStyles(styles as any)(ListItemText)
+export default withStyles(styles)(ListItemText)

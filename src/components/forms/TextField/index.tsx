@@ -9,16 +9,15 @@ const overflowStyle = {
   width: '100%',
 }
 
-const styles = () =>
+const useStyles = makeStyles(
   createStyles({
     root: {
       paddingTop: lg,
       paddingBottom: '12px',
       lineHeight: 0,
     },
-  })
-
-const useStyles = makeStyles(styles)
+  }),
+)
 
 type Props = {
   input: {

@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
@@ -10,55 +10,57 @@ import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { getNetworkLabel } from 'src/config'
 
-const useStyles = makeStyles(({ palette }) => ({
-  network: {
-    fontFamily: 'Averta, sans-serif',
-  },
-  networkLabel: {
-    '& div': {
+const useStyles = makeStyles(({ palette }) =>
+  createStyles({
+    network: {
+      fontFamily: 'Averta, sans-serif',
+    },
+    networkLabel: {
+      '& div': {
+        paddingRight: sm,
+        paddingLeft: sm,
+      },
+    },
+    identicon: {
+      display: 'none',
+      [`@media (min-width: ${screenSm}px)`]: {
+        display: 'block',
+      },
+    },
+    dot: {
+      backgroundColor: palette.surface01dp[palette.type],
+      borderRadius: '15px',
+      color: connectedBg,
+      display: 'none',
+      height: '15px',
+      position: 'relative',
+      right: '10px',
+      top: '12px',
+      width: '15px',
+      [`@media (min-width: ${screenSm}px)`]: {
+        display: 'block',
+      },
+    },
+    providerContainer: {
+      display: 'flex',
+      flex: 1,
+      alignItems: 'center',
+      width: '100px',
+    },
+    account: {
+      alignItems: 'start',
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+      justifyContent: 'left',
       paddingRight: sm,
-      paddingLeft: sm,
     },
-  },
-  identicon: {
-    display: 'none',
-    [`@media (min-width: ${screenSm}px)`]: {
-      display: 'block',
+    address: {
+      marginLeft: '5px',
+      letterSpacing: '-0.5px',
     },
-  },
-  dot: {
-    backgroundColor: palette.surface01dp[palette.type],
-    borderRadius: '15px',
-    color: connectedBg,
-    display: 'none',
-    height: '15px',
-    position: 'relative',
-    right: '10px',
-    top: '12px',
-    width: '15px',
-    [`@media (min-width: ${screenSm}px)`]: {
-      display: 'block',
-    },
-  },
-  providerContainer: {
-    display: 'flex',
-    flex: 1,
-    alignItems: 'center',
-    width: '100px',
-  },
-  account: {
-    alignItems: 'start',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    justifyContent: 'left',
-    paddingRight: sm,
-  },
-  address: {
-    marginLeft: '5px',
-    letterSpacing: '-0.5px',
-  },
-}))
+  }),
+)
 
 interface ProviderInfoProps {
   connected: boolean

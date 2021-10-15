@@ -9,97 +9,96 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { fontColor, sm, xs } from 'src/theme/variables'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 
-const useStyles = makeStyles<Theme & { backgroundColor: string; granted: boolean }>(
-  ({ palette, backgroundColor, granted }) => ({
-    item: {
-      backgroundColor: palette.surface01dp[palette.type],
-      borderRadius: '8px',
-      boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.10)',
-      boxSizing: 'border-box',
-      cursor: granted ? 'pointer' : 'default',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      minHeight: '250px',
-      minWidth: '0',
-      position: 'relative',
+const useStyles = makeStyles<Theme, { backgroundColor: string; granted: boolean }>(({ palette }) => ({
+  item: {
+    backgroundColor: palette.surface01dp[palette.type],
+    borderRadius: '8px',
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.10)',
+    boxSizing: 'border-box',
+    cursor: ({ granted }) => (granted ? 'pointer' : 'default'),
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    minHeight: '250px',
+    minWidth: '0',
+    position: 'relative',
 
-      '&:hover .showOnHover': {
-        opacity: '1',
-      },
-      '&:active .showOnHover': {
-        opacity: '1',
-      },
+    '&:hover .showOnHover': {
+      opacity: '1',
     },
-    mainContent: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      position: 'relative',
-      zIndex: 1,
+    '&:active .showOnHover': {
+      opacity: '1',
     },
-    extraContent: {
-      alignItems: 'center',
-      backgroundColor: 'rgba(255, 243, 226, 0.6)',
-      bottom: '0',
-      cursor: 'pointer',
-      display: 'flex',
-      justifyContent: 'center',
-      left: '0',
-      opacity: '0',
-      position: 'absolute',
-      right: '0',
-      top: '0',
-      transition: 'opacity 0.15s ease-out',
-      zIndex: 5,
-    },
-    image: {
-      backgroundColor: `#${backgroundColor}` || '#f0efee',
-      backgroundPosition: '50% 50%',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'contain',
-      borderRadius: '8px',
-      height: '178px',
-      flexGrow: 1,
-      width: '100%',
-    },
-    textContainer: {
-      boxSizing: 'border-box',
-      color: fontColor,
-      flexShrink: 0,
-      fontSize: '12px',
-      lineHeight: '1.4',
-      padding: '15px 22px 20px',
-    },
-    title: {
-      fontWeight: 'bold',
-      margin: '0',
-      maxWidth: '100%',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-    },
-    text: {
-      margin: '0',
-      maxWidth: '100%',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-    },
-    buttonIcon: {
-      fontSize: 16,
-      marginRight: sm,
-    },
-    sendButton: {
-      borderRadius: xs,
-      minWidth: '85px',
+  },
+  mainContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    position: 'relative',
+    zIndex: 1,
+  },
+  extraContent: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 243, 226, 0.6)',
+    bottom: '0',
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+    left: '0',
+    opacity: '0',
+    position: 'absolute',
+    right: '0',
+    top: '0',
+    transition: 'opacity 0.15s ease-out',
+    zIndex: 5,
+  },
+  image: {
+    backgroundColor: ({ backgroundColor }) =>
+      backgroundColor ? `#${backgroundColor}` : palette.secondaryBackground[palette.type],
+    backgroundPosition: '50% 50%',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
+    borderRadius: '8px',
+    height: '178px',
+    flexGrow: 1,
+    width: '100%',
+  },
+  textContainer: {
+    boxSizing: 'border-box',
+    color: fontColor,
+    flexShrink: 0,
+    fontSize: '12px',
+    lineHeight: '1.4',
+    padding: '15px 22px 20px',
+  },
+  title: {
+    fontWeight: 'bold',
+    margin: '0',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  text: {
+    margin: '0',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  buttonIcon: {
+    fontSize: 16,
+    marginRight: sm,
+  },
+  sendButton: {
+    borderRadius: xs,
+    minWidth: '85px',
 
-      '& > span': {
-        fontSize: '14px',
-      },
+    '& > span': {
+      fontSize: '14px',
     },
-  }),
-)
+  },
+}))
 
 const Item = ({ data, onSend }: { data: NFTToken; onSend: () => unknown }): ReactElement => {
   const granted = useSelector(grantedSelector)

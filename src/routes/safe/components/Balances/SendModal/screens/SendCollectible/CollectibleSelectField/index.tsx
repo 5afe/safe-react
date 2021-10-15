@@ -1,10 +1,11 @@
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
-import { makeStyles } from '@material-ui/core/styles'
 
-import { selectStyles, selectedTokenStyles } from './style'
-
+import {
+  useSelectStyles as useCollectibleSelectFieldStyles,
+  useSelectedTokenStyles as useSelectedCollectibleStyles,
+} from './style'
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
 import { required } from 'src/components/forms/validator'
@@ -13,8 +14,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
-
-const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
 type SelectedCollectibleProps = {
   tokenId?: number | string
@@ -47,8 +46,6 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): Rea
     </MenuItem>
   )
 }
-
-const useCollectibleSelectFieldStyles = makeStyles(selectStyles)
 
 type CollectibleSelectFieldProps = {
   initialValue?: number | string

@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -12,11 +11,8 @@ import Row from 'src/components/layout/Row'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-
 import { ChangeThresholdModal } from './ChangeThreshold'
-import { styles } from './style'
-
-const useStyles = makeStyles(styles)
+import { useStyles } from './style'
 
 const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()

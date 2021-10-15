@@ -1,4 +1,9 @@
 const surface01dp = '#fff'
+const rejection = '#ffe6ea'
+const grey2 = '#b2b5b2'
+const grey4 = '#e8e7e6'
+const secondaryLabel = '#5d6d74'
+const highEmphasis = '#001428'
 const background = '#f7f5f5'
 const border = '#e8e7e6'
 const connectedColor = '#008C73'
@@ -22,6 +27,11 @@ const xxl = '40px'
 
 const darkColors = {
   surface01dp: '#1e1e1e',
+  rejection: '#3b2c2c',
+  grey2: '#626269',
+  grey4: '#3a3a3c',
+  secondaryLabel: '#8d8d93',
+  highEmphasis: '#ffffff',
   background: '#1C1C1E',
   border: '#3A3A3C',
   disabled: '#8D8D93',
@@ -82,4 +92,9 @@ module.exports = {
   xxlFontSize: '32px',
   darkColors,
   surface01dp,
+  rejection,
+  grey2,
+  grey4,
+  secondaryLabel,
+  highEmphasis,
 }

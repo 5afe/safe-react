@@ -1,15 +1,17 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { ReactElement, useState } from 'react'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'
 import Img from 'src/components/layout/Img'
 
-const useStyles = makeStyles({
-  qrCodeBtn: {
-    cursor: 'pointer',
-  },
-})
+const useStyles = makeStyles(
+  createStyles({
+    qrCodeBtn: {
+      cursor: 'pointer',
+    },
+  }),
+)
 
 type Props = {
   handleScan: (dataResult: string, closeQrModal: () => void) => void

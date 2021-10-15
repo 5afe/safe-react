@@ -1,7 +1,7 @@
 import { ReactElement, useRef, Fragment, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
@@ -21,45 +21,45 @@ import { NetworkInfo } from 'src/config/networks/network'
 import { setNetwork } from 'src/logic/config/utils'
 import { ROOT_ROUTE } from 'src/routes/routes'
 
-const styles = {
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '100%',
+const useStyles = makeStyles(
+  createStyles({
+    root: {
+      alignItems: 'center',
+      display: 'flex',
+      height: '100%',
 
-    [`@media (min-width: ${screenSm}px)`]: {
-      flexBasis: '180px',
-      marginRight: '20px',
+      [`@media (min-width: ${screenSm}px)`]: {
+        flexBasis: '180px',
+        marginRight: '20px',
+      },
     },
-  },
-  networkList: {
-    alignItems: 'center',
-    cursor: 'pointer',
-    display: 'flex',
-    flex: '1 1 auto',
-    justifyContent: 'space-between',
-    [`@media (min-width: ${screenSm}px)`]: {
-      paddingRight: sm,
+    networkList: {
+      alignItems: 'center',
+      cursor: 'pointer',
+      display: 'flex',
+      flex: '1 1 auto',
+      justifyContent: 'space-between',
+      [`@media (min-width: ${screenSm}px)`]: {
+        paddingRight: sm,
+      },
     },
-  },
-  expand: {
-    height: '30px',
-    width: '30px',
-  },
-  popper: {
-    zIndex: 1301,
-  },
-  network: {
-    backgroundColor: 'white',
-    borderRadius: sm,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-    marginTop: '11px',
-    minWidth: '180px',
-    padding: '0',
-  },
-}
-
-const useStyles = makeStyles(styles)
+    expand: {
+      height: '30px',
+      width: '30px',
+    },
+    popper: {
+      zIndex: 1301,
+    },
+    network: {
+      backgroundColor: 'white',
+      borderRadius: sm,
+      boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+      marginTop: '11px',
+      minWidth: '180px',
+      padding: '0',
+    },
+  }),
+)
 
 const StyledLink = styled.a`
   margin: 0;

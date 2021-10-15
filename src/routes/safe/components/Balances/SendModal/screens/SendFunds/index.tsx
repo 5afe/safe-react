@@ -1,5 +1,4 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { makeStyles } from '@material-ui/core/styles'
 import { BigNumber } from 'bignumber.js'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -28,7 +27,6 @@ import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/SpendingLimitRow'
@@ -37,8 +35,7 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { currentSafeSpendingLimits } from 'src/logic/safe/store/selectors'
 import { sameString } from 'src/utils/strings'
-
-import { styles } from './style'
+import { useStyles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
@@ -61,8 +58,6 @@ const formMutators = {
     utils.changeValue(state, 'txType', () => args[0])
   },
 }
-
-const useStyles = makeStyles(styles)
 
 export type SendFundsTx = {
   amount?: string

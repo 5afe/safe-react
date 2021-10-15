@@ -10,17 +10,17 @@ import { useSelector } from 'react-redux'
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-const styles = createStyles({
-  executionWarningRow: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  warningIcon: {
-    marginRight: sm,
-  },
-})
-
-const useStyles = makeStyles(styles)
+const useStyles = makeStyles(
+  createStyles({
+    executionWarningRow: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    warningIcon: {
+      marginRight: sm,
+    },
+  }),
+)
 
 type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus

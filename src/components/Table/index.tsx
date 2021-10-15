@@ -2,7 +2,7 @@ import { Loader } from '@gnosis.pm/safe-react-components'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TablePagination from '@material-ui/core/TablePagination'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, createStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import TableHead from 'src/components/Table/TableHead'
@@ -10,7 +10,7 @@ import { getSorting, stableSort } from 'src/components/Table/sorting'
 import Row from 'src/components/layout/Row'
 import { sm, xl, xxl } from 'src/theme/variables'
 
-const styles = {
+const styles = createStyles({
   root: {
     backgroundColor: 'white',
     borderTopRightRadius: sm,
@@ -34,7 +34,7 @@ const styles = {
   loader: {
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
-}
+})
 
 const FIXED_EMPTY_HEIGHT = 255
 
@@ -192,4 +192,4 @@ class GnoTable extends React.Component<any, any> {
   }
 }
 
-export default withStyles(styles as any)(GnoTable)
+export default withStyles(styles)(GnoTable)
