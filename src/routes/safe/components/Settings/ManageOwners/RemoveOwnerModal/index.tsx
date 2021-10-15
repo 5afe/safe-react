@@ -10,7 +10,7 @@ import { ThresholdForm } from './screens/ThresholdForm'
 import Modal from 'src/components/Modal'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { currentSafe } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
@@ -55,7 +55,7 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<OwnerValues>({ ...owner, threshold: '' })
   const dispatch = useDispatch()
-  const { address: safeAddress = '' } = useSelector(currentSafe) ?? {}
+  const safeAddress = useSelector(safeAddressFromUrl)
   const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
