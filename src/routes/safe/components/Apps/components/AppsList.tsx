@@ -82,7 +82,7 @@ const AppsList = (): React.ReactElement => {
   const showPinnedApps = !appSearch
 
   const handleAppPin = (app: SafeApp) => {
-    togglePin(app.id)
+    togglePin(app)
   }
 
   if (isLoading || !safeAddress) {

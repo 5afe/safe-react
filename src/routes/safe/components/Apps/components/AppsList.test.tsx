@@ -4,6 +4,7 @@ import * as configServiceApi from 'src/logic/configService'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { saveToStorage } from 'src/utils/storage'
+import * as googleAnalytics from 'src/utils/googleAnalytics'
 
 const customState = {
   router: {
@@ -16,6 +17,8 @@ const customState = {
   },
 }
 
+const spyTrackEventGA = jest.fn()
+
 beforeEach(async () => {
   // Includes an id that doesn't exist in the remote apps to check that there's no error
   await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [14, 24, 228])
@@ -26,6 +29,11 @@ beforeEach(async () => {
       url: 'https://apps.gnosis-safe.io/drain-safe',
     },
   ])
+
+  jest.spyOn(googleAnalytics, 'useAnalytics').mockImplementation(() => ({
+    trackPage: jest.fn(),
+    trackEvent: spyTrackEventGA,
+  }))
 
   jest.spyOn(configServiceApi, 'fetchSafeAppsList').mockImplementation(() =>
     Promise.resolve([
@@ -222,6 +230,8 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
     })
 
+    expect(spyTrackEventGA).not.toHaveBeenCalled()
+
     const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
     const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
     act(() => {
@@ -231,6 +241,11 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
+      expect(spyTrackEventGA).toHaveBeenCalledWith({
+        action: 'pin',
+        category: 'Safe App',
+        label: 'Compound',
+      })
     })
 
     const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')
@@ -240,6 +255,11 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
 
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
+      expect(spyTrackEventGA).toHaveBeenCalledWith({
+        action: 'unpin',
+        category: 'Safe App',
+        label: 'Compound',
+      })
     })
   })
 })
