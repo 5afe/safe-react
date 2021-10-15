@@ -2,7 +2,7 @@ import { createStyles, makeStyles } from '@material-ui/core'
 
 import { lg, md } from 'src/theme/variables'
 
-export const useStyles = makeStyles(
+export const useStyles = makeStyles(({ palette }) =>
   createStyles({
     heading: {
       padding: `${md} ${lg}`,
@@ -12,7 +12,7 @@ export const useStyles = makeStyles(
     },
     annotation: {
       letterSpacing: '-1px',
-      color: '#a2a8ba',
+      color: palette.tertiary[palette.type], // Before dark mode: #a2a8ba
       marginRight: 'auto',
       marginLeft: '20px',
     },

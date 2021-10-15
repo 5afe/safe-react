@@ -21,6 +21,7 @@ const secondaryTextOrSvg = '#B2B5B2'
 const secondaryBackground = '#f0efee'
 const sm = '8px'
 const warningColor = '#ffc05f'
+const lightWarning = '#fff3e2'
 const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
@@ -32,6 +33,7 @@ const darkColors = {
   grey4: '#3a3a3c',
   secondaryLabel: '#8d8d93',
   highEmphasis: '#ffffff',
+  lightWarning: '#0a0600',
   background: '#1C1C1E',
   border: '#3A3A3C',
   disabled: '#8D8D93',
@@ -50,7 +52,9 @@ module.exports = {
   border,
   buttonLargeFontSize: '16px',
   connected: connectedColor,
+  lightWarning,
   disabled,
+  secondaryTextOrSvg,
   error: errorColor,
   extraBoldFont: 800,
   extraLargeFontSize: '20px',

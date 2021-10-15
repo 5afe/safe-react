@@ -48,7 +48,7 @@ const useStyles = makeStyles(({ palette }) =>
       background: palette.rejection[palette.type],
     },
     warning: {
-      background: '#fff3e2',
+      background: palette.rejection[palette.type],
     },
     info: {
       background: palette.surface01dp[palette.type],

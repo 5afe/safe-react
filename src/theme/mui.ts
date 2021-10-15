@@ -31,6 +31,8 @@ import {
   grey2,
   secondaryLabel,
   highEmphasis,
+  secondaryTextOrSvg,
+  lightWarning,
 } from './variables'
 
 // declare module '@material-ui/core/styles/createTheme' {
@@ -57,6 +59,8 @@ declare module '@material-ui/core/styles/createPalette' {
     grey4: Palette['primary']
     secondaryLabel: Palette['primary']
     highEmphasis: Palette['primary']
+    tertiary: Palette['primary']
+    lightWarning: Palette['primary']
   }
   interface PaletteOptions {
     backgroundColor: PaletteOptions['primary']
@@ -68,6 +72,8 @@ declare module '@material-ui/core/styles/createPalette' {
     grey4: PaletteOptions['primary']
     secondaryLabel: PaletteOptions['primary']
     highEmphasis: PaletteOptions['primary']
+    tertiary: PaletteOptions['primary']
+    lightWarning: PaletteOptions['primary']
   }
 }
 
@@ -128,6 +134,14 @@ const palette: PaletteOptions = {
   highEmphasis: {
     main: highEmphasis,
     dark: darkColors.highEmphasis,
+  },
+  tertiary: {
+    main: secondaryTextOrSvg,
+    dark: darkColors.secondaryTextOrSvg,
+  },
+  lightWarning: {
+    main: lightWarning,
+    dark: darkColors.lightWarning,
   },
 }
 
