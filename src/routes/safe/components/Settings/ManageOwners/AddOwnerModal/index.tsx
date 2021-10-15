@@ -30,25 +30,29 @@ export const sendAddOwner = async (
   dispatch: Dispatch,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-  const safeTx = await sdk.getAddOwnerTx(values.ownerAddress, +values.threshold)
-  const txData = safeTx.data.data
+  try {
+    const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+    const safeTx = await sdk.getAddOwnerTx(values.ownerAddress, +values.threshold)
+    const txData = safeTx.data.data
 
-  const txHash = await dispatch(
-    createTransaction({
-      safeAddress,
-      to: safeAddress,
-      valueInWei: '0',
-      txData,
-      txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas,
-      ethParameters: txParameters,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-    }),
-  )
+    const txHash = await dispatch(
+      createTransaction({
+        safeAddress,
+        to: safeAddress,
+        valueInWei: '0',
+        txData,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas,
+        ethParameters: txParameters,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      }),
+    )
 
-  if (txHash) {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
+    if (txHash) {
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
+    }
+  } catch (error) {
+    console.error('Error calculating ERC721 transfer data:', error.message)
   }
 }
 

@@ -27,22 +27,26 @@ export const sendRemoveOwner = async (
   txParameters: TxParameters,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-  const safeTx = await sdk.getRemoveOwnerTx(ownerAddressToRemove, +values.threshold)
-  const txData = safeTx.data.data
+  try {
+    const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+    const safeTx = await sdk.getRemoveOwnerTx(ownerAddressToRemove, +values.threshold)
+    const txData = safeTx.data.data
 
-  dispatch(
-    createTransaction({
-      safeAddress,
-      to: safeAddress,
-      valueInWei: '0',
-      txData,
-      txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas,
-      ethParameters: txParameters,
-      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-    }),
-  )
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: safeAddress,
+        valueInWei: '0',
+        txData,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas,
+        ethParameters: txParameters,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      }),
+    )
+  } catch (error) {
+    console.error('Error calculating ERC721 transfer data:', error.message)
+  }
 }
 
 type RemoveOwnerProps = {
