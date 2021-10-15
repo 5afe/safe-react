@@ -1,6 +1,6 @@
 import { Button } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
 import { ReactElement } from 'react'
@@ -16,58 +16,56 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { NetworkSettings } from 'src/config/networks/network'
 
 const useStyles = (networkInfo: NetworkSettings) =>
-  makeStyles(({ palette }) =>
-    createStyles({
-      heading: {
-        padding: `${md} ${lg}`,
-        justifyContent: 'space-between',
-        height: '74px',
-        boxSizing: 'border-box',
+  makeStyles(({ palette }) => ({
+    heading: {
+      padding: `${md} ${lg}`,
+      justifyContent: 'space-between',
+      height: '74px',
+      boxSizing: 'border-box',
+    },
+    close: {
+      height: lg,
+      width: lg,
+      fill: palette.secondaryText[palette.type],
+    },
+    qrContainer: {
+      backgroundColor: palette.surface01dp[palette.type],
+      padding: md,
+      borderRadius: '6px',
+      border: `1px solid ${palette.secondaryText[palette.type]}`,
+    },
+    networkInfo: {
+      backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
+      color: `${networkInfo?.textColor ?? fontColor}`,
+      padding: md,
+      marginBottom: 0,
+    },
+    annotation: {
+      margin: lg,
+      marginBottom: 0,
+    },
+    safeName: {
+      margin: `${md} 0`,
+    },
+    buttonRow: {
+      height: '84px',
+      justifyContent: 'center',
+      '& > button': {
+        fontFamily: 'Averta',
+        fontSize: md,
+        boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
       },
-      close: {
-        height: lg,
-        width: lg,
-        fill: palette.secondaryText[palette.type],
-      },
-      qrContainer: {
-        backgroundColor: palette.surface01dp[palette.type],
-        padding: md,
-        borderRadius: '6px',
-        border: `1px solid ${palette.secondaryText[palette.type]}`,
-      },
-      networkInfo: {
-        backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
-        color: `${networkInfo?.textColor ?? fontColor}`,
-        padding: md,
-        marginBottom: 0,
-      },
-      annotation: {
-        margin: lg,
-        marginBottom: 0,
-      },
-      safeName: {
-        margin: `${md} 0`,
-      },
-      buttonRow: {
-        height: '84px',
-        justifyContent: 'center',
-        '& > button': {
-          fontFamily: 'Averta',
-          fontSize: md,
-          boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-        },
-      },
-      addressContainer: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        margin: `${lg} 0`,
+    },
+    addressContainer: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      margin: `${lg} 0`,
 
-        [`@media (min-width: ${screenSm}px)`]: {
-          flexDirection: 'row',
-        },
+      [`@media (min-width: ${screenSm}px)`]: {
+        flexDirection: 'row',
       },
-    }),
-  )()
+    },
+  }))()
 
 type Props = {
   onClose: () => void

@@ -1,36 +1,35 @@
-import { sm } from 'src/theme/variables'
-import { createStyles, makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
-export const useStyles = makeStyles(({ palette }) =>
-  createStyles({
-    iconSmall: {
-      fontSize: 16,
+import { sm } from 'src/theme/variables'
+
+export const useStyles = makeStyles(({ palette }) => ({
+  iconSmall: {
+    fontSize: 16,
+  },
+  tooltipInfo: {
+    position: 'relative',
+    top: '3px',
+    left: '3px',
+  },
+  hide: {
+    '&:hover': {
+      backgroundColor: palette.backgroundColor[palette.type],
     },
-    tooltipInfo: {
-      position: 'relative',
-      top: '3px',
-      left: '3px',
+    '&:hover $actions': {
+      visibility: 'initial',
     },
-    hide: {
-      '&:hover': {
-        backgroundColor: palette.backgroundColor[palette.type],
-      },
-      '&:hover $actions': {
-        visibility: 'initial',
-      },
-      '&:focus $actions': {
-        visibility: 'initial',
-      },
+    '&:focus $actions': {
+      visibility: 'initial',
     },
-    actions: {
-      justifyContent: 'flex-end',
-      visibility: 'hidden',
-    },
-    leftIcon: {
-      marginRight: sm,
-    },
-    currencyValueRow: {
-      textAlign: 'right',
-    },
-  }),
-)
+  },
+  actions: {
+    justifyContent: 'flex-end',
+    visibility: 'hidden',
+  },
+  leftIcon: {
+    marginRight: sm,
+  },
+  currencyValueRow: {
+    textAlign: 'right',
+  },
+}))

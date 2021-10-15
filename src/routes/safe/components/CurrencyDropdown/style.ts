@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const buttonWidth = '140px'
-export const useDropdownStyles = makeStyles({
+export const useDropdownStyles = makeStyles(({ palette }) => ({
   listItem: {
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
     boxSizing: 'border-box',
@@ -86,9 +86,9 @@ export const useDropdownStyles = makeStyles({
   search: {
     position: 'relative',
     borderRadius: '0',
-    backgroundColor: '#fff',
+    backgroundColor: palette.surface01dp[palette.type],
     '&:hover': {
-      backgroundColor: '#fff',
+      backgroundColor: palette.surface01dp[palette.type],
     },
     marginRight: 0,
     width: '100%',
@@ -122,4 +122,4 @@ export const useDropdownStyles = makeStyles({
     padding: '12px 12px 12px 40px',
     width: '100%',
   },
-})
+}))

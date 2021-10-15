@@ -1,63 +1,62 @@
-import { lg, md, sm } from 'src/theme/variables'
-import { createStyles, makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
-export const useStyles = makeStyles(({ palette }) =>
-  createStyles({
-    formContainer: {
-      minHeight: '250px',
+import { lg, md, sm } from 'src/theme/variables'
+
+export const useStyles = makeStyles(({ palette }) => ({
+  formContainer: {
+    minHeight: '250px',
+  },
+  title: {
+    padding: lg,
+    paddingBottom: 0,
+  },
+  annotation: {
+    paddingLeft: lg,
+  },
+  hide: {
+    '&:hover': {
+      backgroundColor: palette.backgroundColor[palette.type],
     },
-    title: {
-      padding: lg,
-      paddingBottom: 0,
+    '&:hover $actions': {
+      visibility: 'initial',
     },
-    annotation: {
-      paddingLeft: lg,
+  },
+  actions: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    visibility: 'hidden',
+    minWidth: '100px',
+    gap: md,
+  },
+  noBorderBottom: {
+    '& > td': {
+      borderBottom: 'none',
     },
-    hide: {
-      '&:hover': {
-        backgroundColor: palette.backgroundColor[palette.type],
-      },
-      '&:hover $actions': {
-        visibility: 'initial',
-      },
-    },
-    actions: {
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      visibility: 'hidden',
-      minWidth: '100px',
-      gap: md,
-    },
-    noBorderBottom: {
-      '& > td': {
-        borderBottom: 'none',
-      },
-    },
-    controlsRow: {
-      backgroundColor: 'white',
-      padding: lg,
-      borderRadius: sm,
-    },
-    editEntryButton: {
-      cursor: 'pointer',
-    },
-    editEntryButtonNonOwner: {
-      cursor: 'pointer',
-    },
-    removeEntryButton: {
-      cursor: 'pointer',
-    },
-    removeEntryButtonDisabled: {
-      cursor: 'default',
-    },
-    removeEntryButtonNonOwner: {
-      cursor: 'pointer',
-    },
-    leftIcon: {
-      marginRight: sm,
-    },
-    iconSmall: {
-      fontSize: 16,
-    },
-  }),
-)
+  },
+  controlsRow: {
+    backgroundColor: 'white',
+    padding: lg,
+    borderRadius: sm,
+  },
+  editEntryButton: {
+    cursor: 'pointer',
+  },
+  editEntryButtonNonOwner: {
+    cursor: 'pointer',
+  },
+  removeEntryButton: {
+    cursor: 'pointer',
+  },
+  removeEntryButtonDisabled: {
+    cursor: 'default',
+  },
+  removeEntryButtonNonOwner: {
+    cursor: 'pointer',
+  },
+  leftIcon: {
+    marginRight: sm,
+  },
+  iconSmall: {
+    fontSize: 16,
+  },
+}))
