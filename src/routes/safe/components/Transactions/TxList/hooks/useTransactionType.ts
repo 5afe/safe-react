@@ -77,6 +77,8 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
     knownAddressBookAddress.name,
     knownAddressBookAddress.image,
     knownAddressBookAddress.isAddressBook,
+    toAddress?.logoUri,
+    toAddress?.name,
   ])
 
   return type
