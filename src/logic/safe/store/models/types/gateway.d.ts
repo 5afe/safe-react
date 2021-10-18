@@ -2,7 +2,6 @@ import {
   ConflictHeader,
   Custom,
   DateLabel,
-  GatewayDefinitions,
   Label,
   ModuleExecutionDetails,
   MultisigExecutionDetails,
@@ -10,9 +9,9 @@ import {
   TransactionSummary,
   Transfer,
   TransactionDetails as GWTransactionDetails,
+  TransactionListItem,
+  TransactionListPage,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-
-type TokenInfo = GatewayDefinitions['TokenInfo']
 
 export type Transaction = TransactionSummary & {
   txDetails?: ExpandedTxDetails
@@ -34,13 +33,13 @@ type TxHistoryLocation = 'history'
 
 export type TxLocation = TxHistoryLocation | TxQueuedLocation
 
-type HistoryGatewayResult = GatewayDefinitions['TransactionListItem']
+type HistoryGatewayResult = TransactionListItem
 
-type HistoryGatewayResponse = GatewayDefinitions['TransactionListPage']
+type HistoryGatewayResponse = TransactionListPage
 
-type QueuedGatewayResult = GatewayDefinitions['TransactionListItem']
+type QueuedGatewayResult = TransactionListItem
 
-type QueuedGatewayResponse = GatewayDefinitions['TransactionListPage']
+type QueuedGatewayResponse = TransactionListPage
 
 export type TransactionDetails = {
   count: number

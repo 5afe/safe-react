@@ -35,7 +35,6 @@ import {
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
-import { currentChainId } from 'src/logic/config/store/selectors'
 import ChainIndicator from 'src/components/ChainIndicator'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
@@ -64,8 +63,8 @@ const SafeDetails = (): ReactElement => {
     address: safeAddress,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
+    chainId,
   } = useSelector(currentSafe)
-  const chainId = useSelector(currentChainId)
   const safeNamesMap = useSelector(safesWithNamesAsMap)
   const safeName = safeNamesMap[safeAddress]?.name
 
@@ -162,9 +161,7 @@ const SafeDetails = (): ReactElement => {
 
           <Block className={classes.formContainer}>
             <Heading tag="h2">Blockchain Network</Heading>
-            <StyledParagraph>
-              <ChainIndicator chainId={chainId} />
-            </StyledParagraph>
+            <StyledParagraph>{chainId && <ChainIndicator chainId={chainId} />}</StyledParagraph>
           </Block>
 
           {safeName != null && (
