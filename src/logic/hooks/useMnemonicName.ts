@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { getNetworkLabel } from 'src/config'
 import { animalsDict, adjectivesDict } from './useMnemonicName.dict'
 
@@ -17,9 +17,9 @@ export const getRandomName = (noun = getRandomItem<string>(animals)): string => 
 export const useMnemonicName = (noun?: string): string => {
   const name = useRef<string>('')
 
-  if (!name.current) {
+  useEffect(() => {
     name.current = getRandomName(noun)
-  }
+  }, [noun])
 
   return name.current
 }
