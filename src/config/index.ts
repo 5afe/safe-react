@@ -25,7 +25,8 @@ import {
 } from 'src/utils/constants'
 
 export const getNetworks = (): NetworkInfo[] => {
-  const { local, ...usefulNetworks } = networks
+  // NETWORK_ROOT_ROUTES follows the same destructuring
+  const { local: _, ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,
     shortName: networkObj.network.shortName,

@@ -57,7 +57,8 @@ export const SAFE_ROUTES = {
 
 // [{ id: '4', route: '/rinkeby'}]
 // Mapping networks directly instead of getNetworks() due to hoisting issues
-export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = Object.values(networks).map(
+const { local: _, ...usefulNetworks } = networks
+export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = Object.values(usefulNetworks).map(
   ({ network: { id, label } }) => ({
     id,
     route: `/${label.toLowerCase()}`,
