@@ -1,5 +1,5 @@
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export const remoteSafeInfoWithModules = {
   address: {
@@ -46,6 +46,9 @@ export const remoteSafeInfoWithModules = {
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
   version: '1.3.0',
+  collectiblesTag: '1634550387',
+  txQueuedTag: '1634550387',
+  txHistoryTag: '1633430459',
 } as unknown as SafeInfo
 
 export const remoteSafeInfoWithoutModules = {
@@ -86,6 +89,9 @@ export const remoteSafeInfoWithoutModules = {
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
   version: '1.3.0',
+  collectiblesTag: '1634550387',
+  txQueuedTag: '1634550387',
+  txHistoryTag: '1633430459',
 } as unknown as SafeInfo
 
 export const localSafesInfo = {
@@ -162,6 +168,9 @@ export const localSafesInfo = {
     currentVersion: '1.1.1',
     needsUpdate: false,
     featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+    collectiblesTag: '1634550387',
+    txQueuedTag: '1634550387',
+    txHistoryTag: '1633430459',
   },
 }
 
@@ -238,4 +247,7 @@ export const inMemoryPartialSafeInformation = {
   currentVersion: '1.3.0',
   needsUpdate: false,
   featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+  collectiblesTag: '1634550387',
+  txQueuedTag: '1634550387',
+  txHistoryTag: '1633430459',
 }

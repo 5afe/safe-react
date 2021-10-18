@@ -161,7 +161,9 @@ const SafeDetails = (): ReactElement => {
 
           <Block className={classes.formContainer}>
             <Heading tag="h2">Blockchain Network</Heading>
-            <StyledParagraph>{chainId && <ChainIndicator chainId={chainId} />}</StyledParagraph>
+            <StyledParagraph>
+              <ChainIndicator chainId={chainId} />
+            </StyledParagraph>
           </Block>
 
           {safeName != null && (
