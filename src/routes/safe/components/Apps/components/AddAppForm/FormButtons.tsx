@@ -2,8 +2,8 @@ import { ReactElement, useMemo } from 'react'
 import { useFormState } from 'react-final-form'
 
 import { Modal } from 'src/components/Modal'
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { isAppManifestValid } from 'src/routes/safe/components/Apps/utils'
+import { SafeApp } from '../../types'
 
 interface Props {
   appInfo: SafeApp
@@ -19,6 +19,7 @@ export const FormButtons = ({ appInfo, onCancel }: Props): ReactElement => {
     // if non visited, fields were not evaluated yet. Then, the default value is considered invalid
     const fieldsVisited = visited?.agreementAccepted && visited?.appUrl
 
+    // @ts-expect-error adding this because isAppManifestValid only checks name and description which are both present in the SafeApp type
     return validating || !valid || !fieldsVisited || !isAppManifestValid(appInfo)
   }, [validating, valid, visited, appInfo])
 

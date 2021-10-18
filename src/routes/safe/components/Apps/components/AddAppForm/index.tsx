@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { generatePath, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import { Modal } from 'src/components/Modal'
@@ -12,8 +12,7 @@ import { Modal } from 'src/components/Modal'
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
-import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
@@ -77,9 +76,10 @@ const DEFAULT_APP_INFO = getEmptySafeApp()
 interface AddAppProps {
   appList: SafeApp[]
   closeModal: () => void
+  onAddApp: (app: SafeApp) => void
 }
 
-const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
+const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const appsPath = generatePath(SAFE_ROUTES.APPS, {
     safeAddress,
@@ -90,16 +90,10 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(async () => {
-    const persistedAppList =
-      (await loadFromStorage<(StoredSafeApp & { disabled?: number[] })[]>(APPS_STORAGE_KEY)) || []
-    const newAppList = [
-      { url: appInfo.url, disabled: false },
-      ...persistedAppList.map(({ url, disabled }) => ({ url, disabled })),
-    ]
-    saveToStorage(APPS_STORAGE_KEY, newAppList)
+    onAddApp(appInfo)
     const goToApp = `${appsPath}?appUrl=${encodeURI(appInfo.url)}`
     history.push(goToApp)
-  }, [appInfo.url, history, appsPath])
+  }, [history, appsPath, appInfo, onAddApp])
 
   useEffect(() => {
     if (isLoading) {
