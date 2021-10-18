@@ -1,4 +1,5 @@
 import { getRandomName, useMnemonicName, useMnemonicSafeName } from '../useMnemonicName'
+import { renderHook } from '@testing-library/react-hooks'
 
 jest.mock('react', () => {
   const original = jest.requireActual('react')
@@ -16,14 +17,17 @@ describe('useMnemonicName tests', () => {
   })
 
   it('should work as a hook', () => {
-    expect(useMnemonicName()).toMatch(/^[a-z-]+-[a-z]+$/)
+    const result = renderHook(() => useMnemonicName())
+    expect(result).toMatch(/^[a-z-]+-[a-z]+$/)
   })
 
   it('should work as a hook with a noun param', () => {
-    expect(useMnemonicName('test')).toMatch(/^[a-z-]+-test$/)
+    const result = renderHook(() => useMnemonicName('test'))
+    expect(result).toMatch(/^[a-z-]+-test$/)
   })
 
   it('should return a random safe name', () => {
-    expect(useMnemonicSafeName()).toMatch(/^[a-z-]+-rinkeby-safe$/)
+    const result = renderHook(() => useMnemonicSafeName())
+    expect(result).toMatch(/^[a-z-]+-rinkeby-safe$/)
   })
 })
