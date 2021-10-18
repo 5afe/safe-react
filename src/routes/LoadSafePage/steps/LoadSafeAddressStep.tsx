@@ -13,7 +13,7 @@ import TextField from 'src/components/forms/TextField'
 import AddressInput from 'src/components/forms/AddressInput'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
-import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { lg, secondary } from 'src/theme/variables'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
@@ -55,7 +55,7 @@ function LoadSafeAddressStep(): ReactElement {
       if (isValidSafeAddress) {
         try {
           setIsSafeInfoLoading(true)
-          const { owners, threshold }: SafeInfo = await getSafeInfo(safeAddress)
+          const { owners, threshold } = await getSafeInfo(safeAddress)
           const ownersWithName = owners.map(({ value: address }) =>
             makeAddressBookEntry(addressBook[address] || { address, name: '' }),
           )
