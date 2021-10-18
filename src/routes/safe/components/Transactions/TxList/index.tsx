@@ -1,34 +1,31 @@
-import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
-import { ReactElement, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { ReactElement, useEffect } from 'react'
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
+import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
-import { TRANSACTIONS_PAGE_TABS } from './utils'
 
-const items: Item[] = [
-  { id: TRANSACTIONS_PAGE_TABS.QUEUE, label: 'Queue' },
-  { id: TRANSACTIONS_PAGE_TABS.HISTORY, label: 'History' },
+const TRANSACTION_TABS: Item[] = [
+  { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
+  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
 ]
 
-interface CustomLocationState {
-  tabId: string
-}
-
 const GatewayTransactions = (): ReactElement => {
-  const history = useHistory<CustomLocationState>()
-  const activeTab = history.location?.state?.tabId || TRANSACTIONS_PAGE_TABS.HISTORY
-  const [tab, setTab] = useState(activeTab)
+  const history = useHistory()
+  const { path: selectedTab } = useRouteMatch()
 
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
   }, [trackEvent])
+
+  const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 
   return (
     <Wrapper>
@@ -39,10 +36,12 @@ const GatewayTransactions = (): ReactElement => {
           </Breadcrumb>
         </Col>
       </Menu>
-      <Tab items={items} onChange={setTab} selectedTab={tab} />
+      <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={selectedTab} />
       <ContentWrapper>
-        {tab === TRANSACTIONS_PAGE_TABS.QUEUE && <QueueTransactions />}
-        {tab === TRANSACTIONS_PAGE_TABS.HISTORY && <HistoryTransactions />}
+        <Switch>
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_HISTORY} render={() => <HistoryTransactions />} />
+        </Switch>
       </ContentWrapper>
     </Wrapper>
   )
