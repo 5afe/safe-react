@@ -24,8 +24,7 @@ import {
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
 
-// Must be a function due to hoisting issues
-export function getNetworks(): NetworkInfo[] {
+export const getNetworks = (): NetworkInfo[] => {
   const { local, ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,
@@ -36,7 +35,7 @@ export function getNetworks(): NetworkInfo[] {
   }))
 }
 
-const DEFAULT_NETWORK_ID = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
 
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const { pathname } = window.location
@@ -44,7 +43,7 @@ export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
     return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
   })
 
-  return network?.id || DEFAULT_NETWORK_ID
+  return network?.id || DEFAULT_NETWORK
 }
 
 let networkId = getInitialNetworkId()
@@ -79,8 +78,8 @@ export const getShortChainNameById = (networkId = getNetworkId()): string =>
   getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
 
 export const getNetworkIdByShortChainName = (shortName: string): ETHEREUM_NETWORK => {
-  if (!isValidShortChainName(shortName)) return DEFAULT_NETWORK_ID
-  return getNetworks().find((network) => network.shortName === shortName)?.id || DEFAULT_NETWORK_ID
+  if (!isValidShortChainName(shortName)) return DEFAULT_NETWORK
+  return getNetworks().find((network) => network.shortName === shortName)?.id || DEFAULT_NETWORK
 }
 
 export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {

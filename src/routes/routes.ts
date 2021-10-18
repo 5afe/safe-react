@@ -1,7 +1,8 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
-import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { getCurrentShortChainName } from 'src/config'
+import networks from 'src/config/networks'
 import { ETHEREUM_NETWORK, SHORT_NAME } from 'src/config/networks/network.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
@@ -55,8 +56,9 @@ export const SAFE_ROUTES = {
 }
 
 // [{ id: '4', route: '/rinkeby'}]
-export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = getNetworks().map(
-  ({ id, label }) => ({
+// Mapping networks directly instead of getNetworks() due to hoisting issues
+export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = Object.values(networks).map(
+  ({ network: { id, label } }) => ({
     id,
     route: `/${label.toLowerCase()}`,
   }),
