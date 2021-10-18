@@ -14,6 +14,7 @@ import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 type OwnerValues = OwnerData & {
   threshold: string
@@ -45,7 +46,7 @@ export const sendRemoveOwner = async (
       }),
     )
   } catch (error) {
-    console.error('Error calculating ERC721 transfer data:', error.message)
+    logError(Errors._614, error.message)
   }
 }
 

@@ -16,6 +16,7 @@ import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -52,7 +53,7 @@ export const sendAddOwner = async (
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
     }
   } catch (error) {
-    console.error('Error calculating ERC721 transfer data:', error.message)
+    logError(Errors._613, error.message)
   }
 }
 

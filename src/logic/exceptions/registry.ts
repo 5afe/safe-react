@@ -25,6 +25,8 @@ enum ErrorCodes {
   _610 = '610: Error fetching safes by owner',
   _611 = '611: Error fetching gasPrice',
   _612 = '612: Error estimating gas',
+  _613 = '613: Error adding a Safe owner',
+  _614 = '614: Error removing a Safe owner',
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
