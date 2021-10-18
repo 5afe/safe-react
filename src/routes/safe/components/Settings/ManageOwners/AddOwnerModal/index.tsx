@@ -53,7 +53,7 @@ export const sendAddOwner = async (
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
     }
   } catch (error) {
-    logError(Errors._613, error.message)
+    logError(Errors._608, error.message)
   }
 }
 

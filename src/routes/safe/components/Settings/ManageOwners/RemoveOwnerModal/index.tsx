@@ -46,7 +46,7 @@ export const sendRemoveOwner = async (
       }),
     )
   } catch (error) {
-    logError(Errors._614, error.message)
+    logError(Errors._609, error.message)
   }
 }
 

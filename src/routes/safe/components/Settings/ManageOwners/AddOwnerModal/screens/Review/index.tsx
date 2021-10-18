@@ -77,7 +77,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           setData(txData)
         }
       } catch (error) {
-        logError(Errors._613, error.message)
+        logError(Errors._608, error.message)
       }
     }
     calculateAddOwnerData()
