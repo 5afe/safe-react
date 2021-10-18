@@ -45,12 +45,18 @@ const Collapse: React.FC<CollapseProps> = ({
   const [open, setOpen] = useState(defaultExpanded)
 
   const handleClick = () => {
-    setOpen(!open)
+    setOpen((prevOpen) => !prevOpen)
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      setOpen((prevOpen) => !prevOpen)
+    }
   }
 
   return (
     <Wrapper>
-      <HeaderWrapper onClick={handleClick}>
+      <HeaderWrapper tabIndex={0} role="button" aria-pressed="false" onClick={handleClick} onKeyDown={handleKeyDown}>
         <TitleWrapper>{title}</TitleWrapper>
         <Header>
           <IconButton disableRipple size="small">

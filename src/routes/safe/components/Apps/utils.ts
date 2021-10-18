@@ -1,22 +1,21 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp, SAFE_APP_FETCH_STATUS } from './types'
-
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
+import { FETCH_STATUS } from 'src/utils/requests'
 
-interface AppData {
-  data?: {
-    name: string
-    iconPath: string
-    description: string
-    providedBy: string
-    error?: string
-  }
+import { SafeApp } from './types'
+
+export interface AppManifest {
+  name: string
+  iconPath: string
+  description: string
+  providedBy: string
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
+export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
@@ -31,15 +30,13 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
-export const isAppManifestValid = (appInfo: AppData['data'] | SafeApp | undefined): boolean =>
+export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
   appInfo.name !== 'unknown' &&
   // `description` exists
-  !!appInfo.description &&
-  // no `error` (or `error` undefined)
-  !appInfo.error
+  !!appInfo.description
 
 export const getEmptySafeApp = (): SafeApp => {
   return {
@@ -47,9 +44,8 @@ export const getEmptySafeApp = (): SafeApp => {
     url: '',
     name: 'unknown',
     iconUrl: appsIconSvg,
-    error: false,
     description: '',
-    fetchStatus: SAFE_APP_FETCH_STATUS.LOADING,
+    fetchStatus: FETCH_STATUS.LOADING,
   }
 }
 
@@ -57,7 +53,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   let res = {
     ...getEmptySafeApp(),
     error: true,
-    loadingStatus: SAFE_APP_FETCH_STATUS.ERROR,
+    loadingStatus: FETCH_STATUS.ERROR,
   }
 
   if (!appUrl?.length) {
@@ -67,16 +63,17 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   res.url = appUrl.trim()
   const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
-  let appInfo: AppData | undefined
+  let appInfo: AppManifest | undefined
   try {
-    appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
+    const response = await axios.get<AppManifest>(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
+    appInfo = response.data
   } catch (error) {
     throw Error('Failed to fetch app manifest')
   }
 
-  // verify imported app fulfill safe requirements
-  if (!appInfo?.data || !isAppManifestValid(appInfo.data)) {
-    throw Error('App manifest does not fulfill the required structure.')
+  // verify imported app fulfil safe requirements
+  if (!appInfo || !isAppManifestValid(appInfo)) {
+    throw Error('App manifest does not fulfil the required structure.')
   }
 
   // the DB origin field has a limit of 100 characters
@@ -85,21 +82,21 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   const remainingSpace = originFieldSize - res.url.length - jsonDataLength
 
   const appInfoData = {
-    name: appInfo.data.name,
-    iconPath: appInfo.data.iconPath,
-    description: appInfo.data.description,
-    providedBy: appInfo.data.providedBy,
+    name: appInfo.name,
+    iconPath: appInfo.iconPath,
+    description: appInfo.description,
+    providedBy: appInfo.providedBy,
   }
 
   res = {
     ...res,
     ...appInfoData,
-    id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
+    id: JSON.stringify({ url: res.url, name: appInfo.name.substring(0, remainingSpace) }),
     error: false,
-    loadingStatus: SAFE_APP_FETCH_STATUS.SUCCESS,
+    loadingStatus: FETCH_STATUS.SUCCESS,
   }
 
-  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
+  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.iconPath}`
   if (await canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
