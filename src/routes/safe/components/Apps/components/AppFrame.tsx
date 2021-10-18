@@ -277,7 +277,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         setSafeApp(app)
       } catch (err) {
         logError(Errors._900, `${appUrl}, ${err.message}`)
-        setAppLoadError(true)
       }
     }
     loadApp()
@@ -300,7 +299,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   if (!safeApp) {
     return (
-      <LoadingContainer>
+      <LoadingContainer style={{ flexDirection: 'column' }}>
+        {isLoadingSlow && (
+          <Title size="xs">
+            The Safe App is taking too long to load. There might be a problem with the App provider.
+          </Title>
+        )}
         <Loader size="md" />
       </LoadingContainer>
     )
