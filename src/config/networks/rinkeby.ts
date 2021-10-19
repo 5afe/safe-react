@@ -14,12 +14,7 @@ const baseConfig: EnvironmentSettings = {
   safeUrl: 'https://rinkeby.gnosis-safe.io/app',
   gasPriceOracles: [
     {
-      url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
-      gasParameter: 'fast',
-      gweiFactor: '1',
-    },
-    {
-      url: 'https://ethgasstation.info/json/ethgasAPI.json',
+      url: 'https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}',
       gasParameter: 'fast',
       gweiFactor: '1e8',
     },

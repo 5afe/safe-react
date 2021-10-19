@@ -1,6 +1,7 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 import { WALLETS } from 'src/config/networks/network.d'
+import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
@@ -8,12 +9,7 @@ const baseConfig: EnvironmentSettings = {
   safeUrl: 'https://gnosis-safe.io/app',
   gasPriceOracles: [
     {
-      url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
-      gasParameter: 'fast',
-      gweiFactor: '1',
-    },
-    {
-      url: 'https://ethgasstation.info/json/ethgasAPI.json',
+      url: 'https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}',
       gasParameter: 'fast',
       gweiFactor: '1e8',
     },

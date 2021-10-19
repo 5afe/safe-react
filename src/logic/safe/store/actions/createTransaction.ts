@@ -152,7 +152,7 @@ export const createTransaction =
         from,
         value: 0,
         gas: ethParameters?.ethGasLimit,
-        gasPrice: ethParameters?.ethGasPriceInGWei,
+        maxFeePerGas: ethParameters?.ethGasPriceInGWei,
         nonce: ethParameters?.ethNonce,
       }
 
