@@ -12,7 +12,7 @@ export const EMPTY_DATA = '0x'
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { url, gasParameter, gweiFactor } = gasPriceOracle
   const { data: response } = await axios.get(url)
-  const data = response.data || response // Sometimes the data comes with a data parameter
+  const data = response.data || response.result || response // Sometimes the data comes with a data parameter
   return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
 }
 
