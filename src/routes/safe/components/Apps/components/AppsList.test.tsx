@@ -3,7 +3,7 @@ import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-
 import * as configServiceApi from 'src/logic/configService'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
-import { saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import * as googleAnalytics from 'src/utils/googleAnalytics'
 
 const customState = {
@@ -21,7 +21,7 @@ const spyTrackEventGA = jest.fn()
 
 beforeEach(async () => {
   // Includes an id that doesn't exist in the remote apps to check that there's no error
-  await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [14, 24, 228])
+  await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, ['14', '24', '228'])
 
   // populate custom app
   await saveToStorage(appUtils.APPS_STORAGE_KEY, [
@@ -209,7 +209,8 @@ describe('Safe Apps -> AppsList -> Search', () => {
 
 describe('Safe Apps -> AppsList -> Pinning apps', () => {
   it('Shows a tutorial message when there are no pinned apps', async () => {
-    localStorage.setItem('v2_RINKEBY__PINNED_SAFE_APP_IDS', JSON.stringify([]))
+    await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [])
+
     render(<AppsList />, customState)
 
     const tut = await waitFor(() =>
@@ -261,5 +262,23 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
         label: 'Compound',
       })
     })
+  })
+
+  // see #2847 for more info
+  it('Removes pinned Safe Apps from localStorage when they are not included in the remote list', async () => {
+    render(<AppsList />, customState)
+
+    await waitFor(() => {
+      expect(screen.getByText('ALL APPS')).toBeInTheDocument()
+      expect(screen.getByText('BOOKMARKED APPS')).toBeInTheDocument()
+      expect(screen.getByText('CUSTOM APPS')).toBeInTheDocument()
+    })
+
+    const pinnedAppsInLocalStorage = await loadFromStorage<string[]>(appUtils.PINNED_SAFE_APP_IDS)
+
+    // '228' App id should be removed from pinnedApps ['14', '24', '228'] because is not included in the remote list
+    expect(pinnedAppsInLocalStorage).toContain('14')
+    expect(pinnedAppsInLocalStorage).toContain('24')
+    expect(pinnedAppsInLocalStorage).not.toContain('228')
   })
 })
