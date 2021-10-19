@@ -1,9 +1,9 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react'
+import { Erc721Transfer, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ReactElement, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { Erc721Transfer, Transfer } from 'src/logic/safe/store/models/types/gateway.d'
 import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { AddressInfo } from './AddressInfo'
@@ -38,7 +38,7 @@ export const TxInfoDetails = ({
     // is transfer type by context
     isTransferType &&
     // not a Collectible
-    txInfo?.transferInfo.type !== 'ERC721' &&
+    txInfo?.transferInfo.type !== TokenType.ERC721 &&
     // in history list
     txLocation === 'history' &&
     // it's outgoing
@@ -66,7 +66,7 @@ export const TxInfoDetails = ({
 
   useEffect(() => {
     if (txInfo) {
-      const isCollectible = txInfo.transferInfo.type === 'ERC721'
+      const isCollectible = txInfo.transferInfo.type === TokenType.ERC721
       const { address, value, decimals } = getTxTokenData(txInfo)
 
       setSendModalParams((prev) => ({

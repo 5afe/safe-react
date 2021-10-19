@@ -12,7 +12,7 @@ import {
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { tryOffChainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -29,7 +29,7 @@ import { PayableTx } from 'src/types/contracts/types'
 
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
+import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
@@ -46,9 +46,9 @@ interface ProcessTransactionArgs {
     data: string
     operation: Operation
     nonce: number
-    safeTxGas: number
+    safeTxGas: string
     safeTxHash: string
-    baseGas: number
+    baseGas: string
     gasPrice: string
     gasToken: string
     refundReceiver: string
@@ -74,12 +74,12 @@ export const processTransaction =
     const state = getState()
 
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+    const safeVersion = currentSafeCurrentVersion(state) as string
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
     const lastTx = await getLastTx(safeAddress)
     const nonce = await getNewTxNonce(lastTx, safeInstance)
     const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
-    const safeVersion = await getCurrentSafeVersion(safeInstance)
 
     const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
     let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
@@ -122,7 +122,9 @@ export const processTransaction =
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
+          dispatch(
+            updateTransactionStatus({ txStatus: TransactionStatus.PENDING, safeAddress, nonce: tx.nonce, id: tx.id }),
+          )
           await saveTxToHistory({ ...txArgs, signature })
 
           dispatch(fetchTransactions(safeAddress))
@@ -148,7 +150,7 @@ export const processTransaction =
 
           dispatch(
             updateTransactionStatus({
-              txStatus: 'PENDING',
+              txStatus: TransactionStatus.PENDING,
               safeAddress,
               nonce: tx.nonce,
               // if we provide the tx ID that sole tx will have the _pending_ status.
@@ -158,20 +160,20 @@ export const processTransaction =
           )
 
           try {
-            await saveTxToHistory({ ...txArgs, txHash })
+            await saveTxToHistory({ ...txArgs })
 
             // store the pending transaction's nonce
             isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
             dispatch(fetchTransactions(safeAddress))
           } catch (e) {
-            console.error(e)
+            logError(Errors._804, e.message)
           }
         })
         .on('error', () => {
           dispatch(
             updateTransactionStatus({
-              txStatus: 'PENDING_FAILED',
+              txStatus: TransactionStatus.PENDING_FAILED,
               safeAddress,
               nonce: tx.nonce,
               id: tx.id,
@@ -200,7 +202,7 @@ export const processTransaction =
 
       dispatch(
         updateTransactionStatus({
-          txStatus: 'PENDING_FAILED',
+          txStatus: TransactionStatus.PENDING_FAILED,
           safeAddress,
           nonce: tx.nonce,
           id: tx.id,

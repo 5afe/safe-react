@@ -15,6 +15,7 @@ export enum WALLETS {
   OPERA = 'opera',
   OPERA_TOUCH = 'operaTouch',
   LATTICE = 'lattice',
+  KEYSTONE = 'keystone',
 }
 
 export enum FEATURES {
@@ -23,6 +24,7 @@ export enum FEATURES {
   SAFE_APPS = 'SAFE_APPS',
   CONTRACT_INTERACTION = 'CONTRACT_INTERACTION',
   DOMAIN_LOOKUP = 'DOMAIN_LOOKUP',
+  SPENDING_LIMIT = 'SPENDING_LIMIT',
 }
 
 type Token = {
@@ -33,18 +35,26 @@ type Token = {
   logoUri?: string
 }
 
+export enum ETHEREUM_LAYER {
+  L1 = '1',
+  L2 = '2',
+}
+
 export enum ETHEREUM_NETWORK {
-  UNKNOWN = 0,
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  XDAI = 100,
-  ENERGY_WEB_CHAIN = 246,
-  LOCAL = 4447,
-  VOLTA = 73799,
+  UNKNOWN = '0',
+  MAINNET = '1',
+  MORDEN = '2',
+  ROPSTEN = '3',
+  RINKEBY = '4',
+  GOERLI = '5',
+  KOVAN = '42',
+  BSC = '56',
+  XDAI = '100',
+  POLYGON = '137',
+  ENERGY_WEB_CHAIN = '246',
+  LOCAL = '4447',
+  ARBITRUM = '42161',
+  VOLTA = '73799',
 }
 
 export type NetworkSettings = {
@@ -54,6 +64,7 @@ export type NetworkSettings = {
   textColor: string
   label: string
   isTestNet: boolean
+  ethereumLayer: ETHEREUM_LAYER
   nativeCoin: Token
 }
 
@@ -69,27 +80,28 @@ export type GasPriceOracle = {
   // Different gas api providers can use a different name to reflect different gas levels based on tx speed
   // For example in ethGasStation for ETHEREUM_MAINNET = safeLow | average | fast
   gasParameter: string
+  // Some providers may not use the most common standard, gwei to return the gas price value
+  // This is the case of Ethgasstation that returns price as gwei x 10.
+  gweiFactor: string
 }
 
 type GasPrice =
   | {
       gasPrice: number
-      gasPriceOracle?: GasPriceOracle
+      gasPriceOracles?: GasPriceOracle[]
     }
   | {
       gasPrice?: number
       // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-      gasPriceOracle: GasPriceOracle
+      gasPriceOracles: GasPriceOracle[]
     }
 
 export type EnvironmentSettings = GasPrice & {
   clientGatewayUrl: string
   txServiceUrl: string
-  // TODO: Shall we keep a reference to the relay?
-  relayApiUrl?: string
-  safeAppsUrl: string
   safeUrl: string
   rpcServiceUrl: string
+  safeAppsRpcServiceUrl: string
   networkExplorerName: string
   networkExplorerUrl: string
   networkExplorerApiUrl: string
@@ -101,7 +113,7 @@ type SafeEnvironments = {
   production: EnvironmentSettings
 }
 
-export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'nativeCoin'> & { safeUrl: string }
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'ethereumLayer' | 'nativeCoin'> & { safeUrl: string }
 
 export interface NetworkConfig {
   network: NetworkSettings

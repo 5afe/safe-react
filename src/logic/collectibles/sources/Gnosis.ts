@@ -1,10 +1,11 @@
+import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
 import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
-import { TokenType } from 'src/logic/safe/store/models/types/gateway.d'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 type FetchResult = {
@@ -19,7 +20,7 @@ class Gnosis {
       logoUri,
       name: tokenName,
       symbol: tokenSymbol,
-      type: 'ERC721' as TokenType,
+      type: TokenType.ERC721,
     }))
 
     return assets
@@ -33,8 +34,8 @@ class Gnosis {
 
     try {
       const tokens = await fetchSafeCollectibles(safeAddress)
-      collectibles.erc721Assets = this._getAssetsFromTokens(tokens.data)
-      collectibles.erc721Tokens = tokens.data || []
+      collectibles.erc721Assets = this._getAssetsFromTokens(tokens)
+      collectibles.erc721Tokens = tokens || []
     } catch (error) {
       logError(Errors._604, error.message)
     }

@@ -10,6 +10,8 @@ enum ErrorCodes {
   _101 = '101: Failed to resolve the address',
   _102 = '102: Error getting an address checksum',
   _200 = '200: Failed migrating to the address book v2',
+  _300 = '300: Error switching the wallet network',
+  _301 = '301: Error adding a new wallet network',
   _600 = '600: Error fetching token list',
   _601 = '601: Error fetching balances',
   _602 = '602: Error fetching history txs',
@@ -20,6 +22,9 @@ enum ErrorCodes {
   _607 = '607: Error fetching available currencies',
   _608 = '608: No next page',
   _609 = '609: Failed to retrieve SpendingLimits module information',
+  _610 = '610: Error fetching safes by owner',
+  _611 = '611: Error fetching gasPrice',
+  _612 = '612: Error estimating gas',
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
@@ -28,9 +33,13 @@ enum ErrorCodes {
   _802 = '802: Error submitting a transaction, safeAddress not found',
   _803 = '803: Error creating a transaction',
   _804 = '804: Error processing a transaction',
+  _805 = '805: TX monitor error',
+  _806 = '806: Failed to remove module',
+  _807 = '806: Failed to remove guard',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',
+  _903 = '903: Error loading Safe App manifest',
 }
 
 export default ErrorCodes

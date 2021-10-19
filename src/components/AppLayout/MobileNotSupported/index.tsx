@@ -1,7 +1,7 @@
 import { Button, Text, Card, Icon } from '@gnosis.pm/safe-react-components'
-import { fade } from '@material-ui/core/styles/colorManipulator'
+import { alpha } from '@material-ui/core/styles/colorManipulator'
 import styled from 'styled-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { MobileView } from 'react-device-detect'
 
 import Phone from 'src/components/AppLayout/MobileStart/assets/phone@2x.png'
@@ -12,7 +12,7 @@ const Overlay = styled.div`
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  background-color: ${({ theme }) => fade(theme.colors.overlay.color, 0.75)};
+  background-color: ${({ theme }) => alpha(theme.colors.overlay.color, 0.75)};
   z-index: 2147483009; /* on top of Intercom Button */
 `
 

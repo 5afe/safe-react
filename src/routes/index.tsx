@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
-
-import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
-
+import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
-import { defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
-import { useAnalytics } from 'src/utils/googleAnalytics'
-import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
+
+import {
+  LOAD_ADDRESS,
+  OPEN_ADDRESS,
+  SAFELIST_ADDRESS,
+  SAFE_PARAM_ADDRESS,
+  SAFE_ROUTES,
+  WELCOME_ADDRESS,
+} from 'src/routes/routes'
+
 import { LoadingContainer } from 'src/components/LoaderContainer'
+import { useAnalytics } from 'src/utils/googleAnalytics'
+import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
-
 const Open = React.lazy(() => import('./open/container/Open'))
-
 const Safe = React.lazy(() => import('./safe/container'))
-
 const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
@@ -27,7 +31,7 @@ const Routes = (): React.ReactElement => {
     path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
   })
 
-  const defaultSafe = useSelector(defaultSafeSelector)
+  const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
@@ -60,7 +64,7 @@ const Routes = (): React.ReactElement => {
             return <Redirect to={WELCOME_ADDRESS} />
           }
 
-          if (defaultSafe === DEFAULT_SAFE_INITIAL_STATE) {
+          if (defaultSafe === null) {
             return (
               <LoadingContainer>
                 <Loader size="md" />
@@ -69,7 +73,13 @@ const Routes = (): React.ReactElement => {
           }
 
           if (defaultSafe) {
-            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}/balances`} />
+            return (
+              <Redirect
+                to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                  safeAddress: defaultSafe,
+                })}
+              />
+            )
           }
 
           return <Redirect to={WELCOME_ADDRESS} />
@@ -78,7 +88,7 @@ const Routes = (): React.ReactElement => {
       <Route component={Welcome} exact path={WELCOME_ADDRESS} />
       <Route component={Open} exact path={OPEN_ADDRESS} />
       <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Load} exact path={LOAD_ADDRESS} />
+      <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
       <Redirect to="/" />
     </Switch>
   )

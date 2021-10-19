@@ -1,8 +1,7 @@
 name: Build/Release Mainnet desktop app
 
 # this will help you specify where to run
-on:
-  workflow_dispatch
+on: workflow_dispatch
 
 env:
   REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
@@ -30,19 +29,6 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: sudo apt-get update && sudo apt-get install libudev-dev libusb-1.0-0-dev
 
-      # Windows build patches
-      - name: Patch node gyp on windows to support Visual Studio 2019
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: |
-          yarn global add --production windows-build-tools --vs2015 --msvs_version=2015
-      - name: Install node-gyp
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: |
-          yarn global add node-gyp
-          yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
-
       # Load node_modules cache action
       - uses: actions/cache@v2
         with:
@@ -55,7 +41,7 @@ jobs:
           node-version: 14
 
       - name: Run yarn install
-        run: yarn install --frozen-lockfile --network-concurrency 1
+        run: yarn install --frozen-lockfile --network-timeout 1000000
 
       - name: Build/Release Desktop App
         env:

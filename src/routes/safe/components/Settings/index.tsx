@@ -1,47 +1,76 @@
-import { IconText, Loader, Icon } from '@gnosis.pm/safe-react-components'
+import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import Badge from '@material-ui/core/Badge'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
-import * as React from 'react'
-import { useState } from 'react'
+import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
+import { generatePath, Route, Switch, useRouteMatch } from 'react-router-dom'
 
-import { Advanced } from './Advanced'
-import { SpendingLimitSettings } from './SpendingLimit'
-import ManageOwners from './ManageOwners'
-import { RemoveSafeModal } from './RemoveSafeModal'
-import SafeDetails from './SafeDetails'
-import ThresholdSettings from './ThresholdSettings'
 import { styles } from './style'
 
+import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+
+const Advanced = lazy(() => import('./Advanced'))
+const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
+const ManageOwners = lazy(() => import('./ManageOwners'))
+const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
+const SafeDetails = lazy(() => import('./SafeDetails'))
+const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
 const INITIAL_STATE = {
   showRemoveSafe: false,
-  menuOptionIndex: 1,
 }
 
 const useStyles = makeStyles(styles)
 
-const Settings: React.FC = () => {
+const Settings = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const { owners, needsUpdate, loadedViaUrl } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
+  const matchSafeWithAction = useRouteMatch({
+    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+  }) as {
+    url: string
+    params: Record<string, string>
+  }
 
-  const handleChange = (menuOptionIndex) => () => {
-    setState((prevState) => ({ ...prevState, menuOptionIndex }))
+  let settingsSection
+  switch (matchSafeWithAction.url) {
+    case generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
+      safeAddress,
+    }):
+      settingsSection = 'Safe Details'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
+      safeAddress,
+    }):
+      settingsSection = 'Owners'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
+      safeAddress,
+    }):
+      settingsSection = 'Policies'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
+      safeAddress,
+    }):
+      settingsSection = 'Spending Limit'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
+      safeAddress,
+    }):
+      settingsSection = 'Advanced'
+      break
+    default:
+      settingsSection = ''
   }
 
   const onShow = (action) => () => {
@@ -52,7 +81,7 @@ const Settings: React.FC = () => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
-  const { menuOptionIndex, showRemoveSafe } = state
+  const { showRemoveSafe } = state
 
   return !owners ? (
     <LoadingContainer>
@@ -60,94 +89,65 @@ const Settings: React.FC = () => {
     </LoadingContainer>
   ) : (
     <>
-      <Row className={classes.message}>
-        {!loadedViaUrl && (
-          <>
+      <Menu>
+        <Col start="sm" sm={6} xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="settings" text="SETTINGS" />
+            <BreadcrumbElement text={settingsSection} color="placeHolder" />
+          </Breadcrumb>
+        </Col>
+        {!loadedViaUrl ? (
+          <Col end="sm" sm={6} xs={12}>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
               <Span className={classes.links}>Remove Safe</Span>
               <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
             </ButtonLink>
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
-          </>
+          </Col>
+        ) : (
+          <Col end="sm" sm={6} xs={12}></Col>
         )}
-      </Row>
+      </Menu>
       <Block className={classes.root}>
-        <Col className={classes.menuWrapper} layout="column">
-          <Block className={classes.menu}>
-            <Row className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)} onClick={handleChange(1)}>
-              <Badge
-                badgeContent=" "
-                color="error"
-                invisible={!needsUpdate || !granted}
-                style={{ paddingRight: '10px' }}
-                variant="dot"
-              >
-                <IconText
-                  iconSize="sm"
-                  textSize="xl"
-                  iconType="info"
-                  text="Safe Details"
-                  color={menuOptionIndex === 1 ? 'primary' : 'secondary'}
-                />
-              </Badge>
-            </Row>
-            <Hairline className={classes.hairline} />
-            <Row
-              className={cn(classes.menuOption, menuOptionIndex === 2 && classes.active)}
-              onClick={handleChange(2)}
-              testId={OWNERS_SETTINGS_TAB_TEST_ID}
-            >
-              <IconText
-                iconSize="sm"
-                textSize="xl"
-                iconType="owners"
-                text="Owners"
-                color={menuOptionIndex === 2 ? 'primary' : 'secondary'}
-              />
-              <Paragraph className={classes.counter} size="xs">
-                {owners.length}
-              </Paragraph>
-            </Row>
-            <Hairline className={classes.hairline} />
-            <Row className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)} onClick={handleChange(3)}>
-              <IconText
-                iconSize="sm"
-                textSize="xl"
-                iconType="requiredConfirmations"
-                text="Policies"
-                color={menuOptionIndex === 3 ? 'primary' : 'secondary'}
-              />
-            </Row>
-            <Hairline className={classes.hairline} />
-            <Row className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)} onClick={handleChange(4)}>
-              <IconText
-                iconSize="sm"
-                textSize="xl"
-                iconType="fuelIndicator"
-                text="Spending limit"
-                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
-              />
-            </Row>
-            <Hairline className={classes.hairline} />
-            <Row className={cn(classes.menuOption, menuOptionIndex === 5 && classes.active)} onClick={handleChange(5)}>
-              <IconText
-                iconSize="sm"
-                textSize="xl"
-                iconType="settingsTool"
-                text="Advanced"
-                color={menuOptionIndex === 5 ? 'primary' : 'secondary'}
-              />
-            </Row>
-            <Hairline className={classes.hairline} />
-          </Block>
-        </Col>
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>
-            {menuOptionIndex === 1 && <SafeDetails />}
-            {menuOptionIndex === 2 && <ManageOwners granted={granted} owners={owners} />}
-            {menuOptionIndex === 3 && <ThresholdSettings />}
-            {menuOptionIndex === 4 && <SpendingLimitSettings />}
-            {menuOptionIndex === 5 && <Advanced />}
+            <Switch>
+              <Route
+                path={generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
+                  safeAddress,
+                })}
+                exact
+                render={() => <SafeDetails />}
+              ></Route>
+              <Route
+                path={generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
+                  safeAddress,
+                })}
+                exact
+                render={() => <ManageOwners granted={granted} owners={owners} />}
+              ></Route>
+              <Route
+                path={generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
+                  safeAddress,
+                })}
+                exact
+                render={() => <ThresholdSettings />}
+              ></Route>
+              <Route
+                path={generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
+                  safeAddress,
+                })}
+                exact
+                render={() => <SpendingLimitSettings />}
+              ></Route>
+              <Route
+                path={generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
+                  safeAddress,
+                })}
+                exact
+                render={() => <Advanced />}
+              ></Route>
+            </Switch>
           </Block>
         </Col>
       </Block>

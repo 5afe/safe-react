@@ -1,14 +1,8 @@
+import { Custom, SettingsChange, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import {
-  Custom,
-  isCustomTxInfo,
-  isSettingsChangeTxInfo,
-  isTransferTxInfo,
-  SettingsChange,
-  TransactionInfo,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { isCustomTxInfo, isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export type TokenTransferAsset = {
@@ -41,11 +35,11 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
 
   useEffect(() => {
     if (isTransferTxInfo(txInfo)) {
-      const { direction, transferInfo } = txInfo
+      const { direction, transferInfo } = txInfo as Transfer
       const directionSign = direction === 'INCOMING' ? '+' : '-'
 
       switch (transferInfo.type) {
-        case 'ERC20': {
+        case TokenType.ERC20: {
           setAsset({
             type: 'Transfer',
             name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
@@ -56,7 +50,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'ERC721': {
+        case TokenType.ERC721: {
           setAsset({
             type: 'Transfer',
             name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
@@ -67,7 +61,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'ETHER': {
+        case TokenType.NATIVE_COIN: {
           const { nativeCoin } = getNetworkInfo()
 
           setAsset({
@@ -85,12 +79,12 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
     }
 
     if (isSettingsChangeTxInfo(txInfo)) {
-      setAsset(txInfo)
+      setAsset(txInfo as SettingsChange)
       return
     }
 
     if (isCustomTxInfo(txInfo)) {
-      setAsset(txInfo)
+      setAsset(txInfo as Custom)
     }
   }, [txInfo, amountWithSymbol])
 

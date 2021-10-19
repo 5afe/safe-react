@@ -1,6 +1,6 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
+import { isKeystoneError, METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
 import { getEIP712Signer } from './EIP712Signer'
 import { ethSigner } from './ethSigner'
 
@@ -42,12 +42,14 @@ export const tryOffChainSigning = async (
   const signerByWallet = getSupportedSigners(isHW, safeVersion)
   for (const signingFunc of signerByWallet) {
     try {
-      signature = await signingFunc({ ...txArgs, safeTxHash })
+      signature = await signingFunc({ ...txArgs, safeTxHash, safeVersion })
 
       break
     } catch (err) {
-      console.error(err)
       if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+        throw err
+      }
+      if (isKeystoneError(err)) {
         throw err
       }
     }

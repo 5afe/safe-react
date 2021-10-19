@@ -27,7 +27,7 @@ export default handleActions<AppReduxState['notifications'], Payloads>(
       const { dismissAll, key } = action.payload
 
       if (key && state.get(key)) {
-        return state.update(key, (notification) => {
+        return state.update(key, (notification: Notification) => {
           if (notification) {
             return {
               ...notification,
@@ -55,5 +55,5 @@ export default handleActions<AppReduxState['notifications'], Payloads>(
       return state.delete(key)
     },
   },
-  Map(),
+  Map<string, Notification>(),
 )

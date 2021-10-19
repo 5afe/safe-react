@@ -3,7 +3,6 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
@@ -18,6 +17,7 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworks } from 'src/config'
+import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 const styles = () => ({
   root: {
@@ -51,7 +51,7 @@ const styles = () => ({
     },
   },
   popper: {
-    zIndex: 2000,
+    zIndex: 1301,
   },
   network: {
     backgroundColor: 'white',
@@ -67,6 +67,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const networks = getNetworks()
+
   const { isDesktop } = window
   return (
     <Row className={classes.summary}>
@@ -80,27 +81,29 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
         info={providerInfo}
         open={open}
         toggle={toggle}
-        render={(providerRef) => (
-          <Popper
-            anchorEl={providerRef.current}
-            className={classes.popper}
-            open={open}
-            placement="bottom"
-            popperOptions={{ positionFixed: true }}
-          >
-            {({ TransitionProps }) => (
-              <Grow {...TransitionProps}>
-                <>
-                  <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                    <List className={classes.root} component="div">
-                      {providerDetails}
-                    </List>
-                  </ClickAwayListener>
-                </>
-              </Grow>
-            )}
-          </Popper>
-        )}
+        render={(providerRef) =>
+          providerRef.current && (
+            <Popper
+              anchorEl={providerRef.current}
+              className={classes.popper}
+              open={open || shouldSwitchNetwork()}
+              placement="bottom"
+              popperOptions={{ positionFixed: true }}
+            >
+              {({ TransitionProps }) => (
+                <Grow {...TransitionProps}>
+                  <>
+                    <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
+                      <List className={classes.root} component="div">
+                        {providerDetails}
+                      </List>
+                    </ClickAwayListener>
+                  </>
+                </Grow>
+              )}
+            </Popper>
+          )
+        }
       />
       {!isDesktop && (
         <NetworkSelector

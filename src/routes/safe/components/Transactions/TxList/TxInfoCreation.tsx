@@ -1,11 +1,12 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
-import { Creation, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
+import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
   const txInfo = transaction.txInfo as Creation
@@ -40,10 +41,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           </Text>
           <InlineEthHashInfo
             textSize="xl"
-            hash={txInfo.creator}
+            hash={txInfo.creator.value}
             shortenHash={4}
             showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.creator)}
+            explorerUrl={getExplorerInfo(txInfo.creator.value)}
           />
         </div>
         <div className="tx-factory">
@@ -53,10 +54,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           {txInfo.factory ? (
             <InlineEthHashInfo
               textSize="xl"
-              hash={txInfo.factory}
+              hash={txInfo.factory.value}
               shortenHash={4}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.factory)}
+              explorerUrl={getExplorerInfo(txInfo.factory.value)}
             />
           ) : (
             <Text size="xl" as="span">
@@ -71,10 +72,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           {txInfo.implementation ? (
             <InlineEthHashInfo
               textSize="xl"
-              hash={txInfo.implementation}
+              hash={txInfo.implementation.value}
               shortenHash={4}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.implementation)}
+              explorerUrl={getExplorerInfo(txInfo.implementation.value)}
             />
           ) : (
             <Text size="xl" as="span">

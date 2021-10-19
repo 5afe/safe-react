@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -14,11 +14,11 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
+import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
+import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -75,10 +75,9 @@ const useTxData = (
 
       let txData = EMPTY_DATA
       if (!isSendingNativeToken) {
-        const StandardToken = await getHumanFriendlyToken()
-        const tokenInstance = await StandardToken.at(txToken.address as string)
+        const ERC20TokenInstance = getERC20TokenContract(txToken.address)
         const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
-        txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
+        txData = ERC20TokenInstance.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
       }
       setData(txData)
     }
@@ -99,7 +98,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -165,7 +164,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         valueInWei: txValue,
         txData: data,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
       }),
@@ -174,10 +173,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -198,7 +197,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (

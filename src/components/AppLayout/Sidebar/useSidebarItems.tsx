@@ -1,69 +1,153 @@
-import React, { useMemo } from 'react'
-import { useRouteMatch } from 'react-router-dom'
+import { useMemo, useCallback } from 'react'
+import { useSelector } from 'react-redux'
+import { generatePath, useRouteMatch } from 'react-router-dom'
 
+import { isFeatureEnabled } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFELIST_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
-import { useSelector } from 'react-redux'
-import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+
+type SafeRouteWithAction = {
+  url: string
+  params: Record<string, string>
+}
+
+type IsSelectedProps = {
+  route: string
+  matchSafeWithAction: SafeRouteWithAction
+}
+
+const isSelected = ({ route, matchSafeWithAction }: IsSelectedProps): boolean => {
+  const currentRoute = matchSafeWithAction.url
+  const expectedRoute = generatePath(route, {
+    safeAddress: matchSafeWithAction.params.safeAddress,
+  })
+
+  return currentRoute === expectedRoute
+}
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const safeAppsEnabled = Boolean(featuresEnabled?.includes(FEATURES.SAFE_APPS))
+  const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
+  const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
+  const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
+  const { address: safeAddress, needsUpdate } = useSelector(currentSafeWithNames)
+  const granted = useSelector(grantedSelector)
+
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
-  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-  const matchSafeWithAction = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction` }) as {
-    url: string
-    params: Record<string, string>
-  }
+  const matchSafeWithAction = useRouteMatch({
+    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+  }) as SafeRouteWithAction
+
+  const makeEntryItem = useCallback(
+    ({ label, disabled, badge, iconType, route, subItems }) => {
+      return {
+        label,
+        badge,
+        disabled,
+        icon: <ListIcon type={iconType} />,
+        selected: isSelected({ route, matchSafeWithAction }),
+        href: generatePath(route, { safeAddress }),
+        subItems,
+      }
+    },
+    [matchSafeWithAction, safeAddress],
+  )
 
   return useMemo((): ListItemType[] => {
-    if (!matchSafe || !matchSafeWithAddress || !featuresEnabled) {
+    if (!matchSafe || !matchSafeWithAction || !featuresEnabled || !safeAddress) {
       return []
     }
 
-    const settingsItem = {
-      label: 'Settings',
-      icon: <ListIcon type="settings" />,
-      selected: matchSafeWithAction?.params.safeAction === 'settings',
-      href: `${matchSafeWithAddress?.url}/settings`,
-    }
+    const assetsSubItems = [
+      makeEntryItem({
+        label: 'Coins',
+        iconType: 'assets',
+        route: SAFE_ROUTES.ASSETS_BALANCES,
+      }),
+      makeEntryItem({
+        disabled: !isCollectiblesEnabled,
+        label: 'Collectibles',
+        iconType: 'collectibles',
+        route: SAFE_ROUTES.ASSETS_COLLECTIBLES,
+      }),
+    ]
 
-    const safeSidebar = safeAppsEnabled
-      ? [
-          {
-            label: 'Apps',
-            icon: <ListIcon type="apps" />,
-            selected: matchSafeWithAction?.params.safeAction === 'apps',
-            href: `${matchSafeWithAddress?.url}/apps`,
-          },
-          settingsItem,
-        ]
-      : [settingsItem]
+    const settingsSubItems = [
+      makeEntryItem({
+        label: 'Safe Details',
+        badge: needsUpdate && granted,
+        iconType: 'info',
+        route: SAFE_ROUTES.SETTINGS_DETAILS,
+      }),
+      makeEntryItem({
+        label: 'Owners',
+        iconType: 'owners',
+        route: SAFE_ROUTES.SETTINGS_OWNERS,
+      }),
+      makeEntryItem({
+        label: 'Policies',
+        iconType: 'requiredConfirmations',
+        route: SAFE_ROUTES.SETTINGS_POLICIES,
+      }),
+      makeEntryItem({
+        disabled: !isSpendingLimitEnabled,
+        label: 'Spending Limit',
+        iconType: 'fuelIndicator',
+        route: SAFE_ROUTES.SETTINGS_SPENDING_LIMIT,
+      }),
+      makeEntryItem({
+        label: 'Advanced',
+        iconType: 'settingsTool',
+        route: SAFE_ROUTES.SETTINGS_ADVANCED,
+      }),
+    ]
 
     return [
-      {
+      makeEntryItem({
         label: 'ASSETS',
-        icon: <ListIcon type="assets" />,
-        selected: matchSafeWithAction?.params.safeAction === 'balances',
-        href: `${matchSafeWithAddress?.url}/balances`,
-      },
-      {
+        iconType: 'assets',
+        route: SAFE_ROUTES.ASSETS_BALANCES,
+        subItems: assetsSubItems,
+      }),
+      makeEntryItem({
         label: 'TRANSACTIONS',
-        icon: <ListIcon type="transactionsInactive" />,
-        selected: matchSafeWithAction?.params.safeAction === 'transactions',
-        href: `${matchSafeWithAddress?.url}/transactions`,
-      },
-      {
+        iconType: 'transactionsInactive',
+        route: SAFE_ROUTES.TRANSACTIONS,
+      }),
+      makeEntryItem({
         label: 'ADDRESS BOOK',
-        icon: <ListIcon type="addressBook" />,
-        selected: matchSafeWithAction?.params.safeAction === 'address-book',
-        href: `${matchSafeWithAddress?.url}/address-book`,
-      },
-      ...safeSidebar,
+        iconType: 'addressBook',
+        route: SAFE_ROUTES.ADDRESS_BOOK,
+      }),
+      makeEntryItem({
+        disabled: !safeAppsEnabled,
+        label: 'Apps',
+        iconType: 'apps',
+        route: SAFE_ROUTES.APPS,
+      }),
+      makeEntryItem({
+        label: 'Settings',
+        iconType: 'settings',
+        route: SAFE_ROUTES.SETTINGS_DETAILS,
+        subItems: settingsSubItems,
+      }),
     ]
-  }, [matchSafe, matchSafeWithAction, matchSafeWithAddress, safeAppsEnabled, featuresEnabled])
+  }, [
+    featuresEnabled,
+    granted,
+    isCollectiblesEnabled,
+    isSpendingLimitEnabled,
+    makeEntryItem,
+    matchSafe,
+    matchSafeWithAction,
+    needsUpdate,
+    safeAddress,
+    safeAppsEnabled,
+  ])
 }
 
 export { useSidebarItems }

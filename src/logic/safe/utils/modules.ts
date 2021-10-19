@@ -1,7 +1,10 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import { CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 /**
  * Builds a collection of tuples with (prev, module) module addresses
@@ -36,9 +39,9 @@ export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | n
   return null
 }
 
-export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string): string => {
+export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string, safeVersion: string): string => {
   const [previousModule, module] = modulePair
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
   return safeInstance.methods.disableModule(previousModule, module).encodeABI()
 }
@@ -46,16 +49,25 @@ export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: stri
 type EnableModuleParams = {
   moduleAddress: string
   safeAddress: string
+  safeVersion: string
 }
-export const enableModuleTx = ({ moduleAddress, safeAddress }: EnableModuleParams): CreateTransactionArgs => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+export const enableModuleTx = ({
+  moduleAddress,
+  safeAddress,
+  safeVersion,
+}: EnableModuleParams): CreateTransactionArgs => {
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
   return {
     safeAddress,
     to: safeAddress,
-    operation: CALL,
+    operation: Operation.CALL,
     valueInWei: '0',
     txData: safeInstance.methods.enableModule(moduleAddress).encodeABI(),
     notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
   }
+}
+
+export const isModuleEnabled = (modules: string[], moduleAddress: string): boolean => {
+  return modules?.some((module) => sameAddress(module, moduleAddress)) ?? false
 }

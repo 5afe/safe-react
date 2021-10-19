@@ -1,30 +1,24 @@
 import ReactGA from 'react-ga'
 import { Dispatch } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
 
 import addProvider from './addProvider'
 
-import { getNetworkId, getNetworkInfo } from 'src/config'
+import { getNetworkInfo } from 'src/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
-import { makeProvider, ProviderProps } from 'src/logic/wallets/store/model/provider'
+import { makeProvider } from 'src/logic/wallets/store/model/provider'
 
-export const processProviderResponse = (dispatch: Dispatch, provider: ProviderProps): void => {
+export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)
   dispatch(addProvider(walletRecord))
 }
 
-const handleProviderNotification = (provider: ProviderProps, dispatch: ThunkDispatch<any, any, any>): void => {
-  const { available, loaded, network } = provider
+const handleProviderNotification = (provider, dispatch) => {
+  const { available, loaded } = provider
 
   if (!loaded) {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
-    return
-  }
-
-  if (network !== getNetworkId()) {
-    dispatch(enqueueSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG))
     return
   }
 
@@ -52,6 +46,6 @@ export default (providerName: string) =>
   async (dispatch: Dispatch): Promise<void> => {
     const web3 = getWeb3()
     const providerInfo = await getProviderInfo(web3, providerName)
-    handleProviderNotification(providerInfo, dispatch)
+    await handleProviderNotification(providerInfo, dispatch)
     processProviderResponse(dispatch, providerInfo)
   }

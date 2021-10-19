@@ -1,5 +1,5 @@
-import { createMuiTheme } from '@material-ui/core/styles'
-import { fade } from '@material-ui/core/styles/colorManipulator'
+import { createTheme } from '@material-ui/core/styles'
+import { alpha } from '@material-ui/core/styles/colorManipulator'
 
 import {
   boldFont,
@@ -45,7 +45,7 @@ const palette = {
 
 // see https://material-ui-next.com/customization/themes/
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     fontFamily: mainFontFamily,
     useNextVariants: true,
@@ -193,16 +193,19 @@ const theme = createMuiTheme({
       },
       underline: {
         '&::before': {
-          borderBottomColor: primary,
+          visibility: 'hidden',
+          borderBottomColor: secondary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
+        // after pseudo element in the underline is used for the focus border
         '&::after': {
-          borderBottomColor: primary,
+          borderBottomColor: secondary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
         '&.isValid::before': {
+          visibility: 'visible',
           borderBottomColor: `${secondary} !important`,
         },
         '&.isInvalid::after': {
@@ -210,6 +213,12 @@ const theme = createMuiTheme({
         },
         '&.isValid::after': {
           display: 'none',
+        },
+        '&:focus': {
+          visibility: 'visible',
+        },
+        '&:hover': {
+          visibility: 'visible',
         },
       },
       formControl: {
@@ -219,12 +228,10 @@ const theme = createMuiTheme({
     MuiFilledInput: {
       underline: {
         '&::before': {
-          borderBottomColor: primary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
         '&::after': {
-          borderBottomColor: primary,
           borderBottomStyle: 'solid',
           borderBottomWidth: '2px !important',
         },
@@ -384,6 +391,7 @@ const theme = createMuiTheme({
       root: {
         backdropFilter: 'blur(1px)',
         backgroundColor: 'rgba(228, 232, 241, 0.75)',
+        top: '52px',
       },
     },
     MuiMenuItem: {
@@ -412,7 +420,7 @@ const theme = createMuiTheme({
     MuiCheckbox: {
       colorSecondary: {
         '&$disabled': {
-          color: fade(secondary, 0.5),
+          color: alpha(secondary, 0.5),
         },
       },
     },

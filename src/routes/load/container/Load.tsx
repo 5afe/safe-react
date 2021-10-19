@@ -1,15 +1,21 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { generatePath } from 'react-router-dom'
 
 import Layout from 'src/routes/load/components/Layout'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
-import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
+import {
+  FIELD_LOAD_SAFE_NAME,
+  FIELD_LOAD_CUSTOM_SAFE_NAME,
+  FIELD_LOAD_ADDRESS,
+  THRESHOLD,
+} from 'src/routes/load/components/fields'
 
 import Page from 'src/components/layout/Page'
 import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
@@ -31,16 +37,18 @@ export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordPr
 
 interface ReviewSafeCreationValues {
   confirmations: string
-  name: string
+  [FIELD_LOAD_SAFE_NAME]: string
+  [FIELD_LOAD_CUSTOM_SAFE_NAME]?: string
   owner0Address: string
   owner0Name: string
   safeCreationSalt: number
 }
 
 interface LoadForm {
-  name: string
-  address: string
-  threshold: string
+  [FIELD_LOAD_SAFE_NAME]: string
+  [FIELD_LOAD_CUSTOM_SAFE_NAME]?: string
+  [FIELD_LOAD_ADDRESS]: string
+  [THRESHOLD]: string
   owner0Address: string
   owner0Name: string
 }
@@ -77,15 +85,21 @@ const Load = (): ReactElement => {
       }
       return acc
     }, [] as AddressBookEntry[])
-    const safe = makeAddressBookEntry({ address: safeAddress, name: values.name })
+    const safe = makeAddressBookEntry({
+      address: safeAddress,
+      name: values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SAFE_NAME],
+    })
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
     try {
       safeAddress = checksumAddress(safeAddress)
       await loadSafe(safeAddress, addSafeHandler)
 
-      const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances`
-      history.push(url)
+      history.push(
+        generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+          safeAddress,
+        }),
+      )
     } catch (error) {
       console.error('Error while loading the Safe', error)
     }

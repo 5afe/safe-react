@@ -1,4 +1,3 @@
-import React from 'react'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
@@ -7,7 +6,7 @@ import { Text } from '@gnosis.pm/safe-react-components'
 
 type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus
-  gasCostFormatted: string
+  gasCostFormatted?: string
   isExecution: boolean
   isCreation: boolean
   isOffChainSignature: boolean
@@ -35,19 +34,21 @@ export const TransactionFees = ({
 
   return (
     <>
-      <Paragraph size="lg" align="center">
-        You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently connected
-        wallet.{' '}
-        {!isOffChainSignature && (
-          <>
-            Make sure you have{' '}
-            <Text size="lg" as="span" color="text" strong>
-              {gasCostFormatted}
-            </Text>{' '}
-            (fee price) {nativeCoin.name} in this wallet to fund this confirmation.
-          </>
-        )}
-      </Paragraph>
+      {gasCostFormatted != null && (
+        <Paragraph size="lg" align="center">
+          You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently
+          connected wallet.{' '}
+          {!isOffChainSignature && (
+            <>
+              Make sure you have{' '}
+              <Text size="lg" as="span" color="text" strong>
+                {gasCostFormatted}
+              </Text>{' '}
+              (fee price) {nativeCoin.name} in this wallet to fund this confirmation.
+            </>
+          )}
+        </Paragraph>
+      )}
       <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
     </>
   )

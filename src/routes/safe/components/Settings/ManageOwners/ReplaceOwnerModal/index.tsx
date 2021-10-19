@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
@@ -6,7 +6,7 @@ import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -26,11 +26,12 @@ export type OwnerValues = {
 export const sendReplaceOwner = async (
   newOwner: OwnerValues,
   safeAddress: string,
+  safeVersion: string,
   ownerAddressToRemove: string,
   dispatch: Dispatch,
   txParameters: TxParameters,
 ): Promise<void> => {
-  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -43,7 +44,7 @@ export const sendReplaceOwner = async (
       valueInWei: '0',
       txData,
       txNonce: txParameters.safeNonce,
-      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
@@ -66,6 +67,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
   const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeAddressFromUrl)
+  const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   useEffect(
     () => () => {
@@ -90,7 +92,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
   const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
     try {
-      await sendReplaceOwner(newOwner, safeAddress, owner.address, dispatch, txParameters)
+      await sendReplaceOwner(newOwner, safeAddress, safeVersion, owner.address, dispatch, txParameters)
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
     } catch (error) {
       console.error('Error while removing an owner', error)

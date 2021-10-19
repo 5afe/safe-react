@@ -1,8 +1,9 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { FormApi } from 'final-form'
+import { useParams } from 'react-router'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
@@ -10,17 +11,15 @@ import { StepperPageFormProps } from 'src/components/Stepper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import {
-  mustBeEthereumAddress,
-  noErrorsOn,
-  required,
-  composeValidators,
-  validAddressBookName,
-} from 'src/components/forms/validator'
+import { mustBeEthereumAddress, noErrorsOn } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
+import {
+  FIELD_LOAD_ADDRESS,
+  FIELD_LOAD_CUSTOM_SAFE_NAME,
+  FIELD_LOAD_SAFE_NAME,
+} from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
@@ -46,7 +45,9 @@ export const SAFE_ADDRESS_NOT_VALID = 'Address given is not a valid Safe address
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
 // Don't mind to check if everything is OK inside this function :)
-export const safeFieldsValidation = async (values): Promise<Record<string, string>> => {
+export const safeFieldsValidation = async (values: {
+  [FIELD_LOAD_ADDRESS]: string
+}): Promise<Record<string, string>> => {
   const errors = {}
   const address = values[FIELD_LOAD_ADDRESS]
 
@@ -66,10 +67,12 @@ export const safeFieldsValidation = async (values): Promise<Record<string, strin
 interface DetailsFormProps {
   errors: Record<string, string>
   form: FormApi
+  safeName: string
 }
 
-const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
+const DetailsForm = ({ errors, form, safeName }: DetailsFormProps): ReactElement => {
   const classes = useStyles()
+  const { safeAddress } = useParams<{ safeAddress?: string }>()
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
     form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
@@ -102,11 +105,10 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
         <Col xs={11}>
           <Field
             component={TextField}
-            name={FIELD_LOAD_NAME}
-            placeholder="Name of the Safe*"
+            name={FIELD_LOAD_CUSTOM_SAFE_NAME}
+            placeholder={safeName}
             text="Safe name"
             type="text"
-            validate={composeValidators(required, validAddressBookName)}
             testId="load-safe-name-field"
           />
         </Col>
@@ -114,6 +116,7 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
           <AddressInput
+            defaultValue={safeAddress}
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
@@ -156,10 +159,14 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
 }
 
 const DetailsPage = () =>
-  function LoadSafeDetails(controls: ReactNode, { errors, form }: StepperPageFormProps): ReactElement {
+  function LoadSafeDetails(controls: ReactNode, { errors, form, values }: StepperPageFormProps): ReactElement {
     return (
       <OpenPaper controls={controls}>
-        <DetailsForm errors={errors} form={form} />
+        <DetailsForm
+          errors={errors}
+          form={form}
+          safeName={values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SAFE_NAME]}
+        />
       </OpenPaper>
     )
   }

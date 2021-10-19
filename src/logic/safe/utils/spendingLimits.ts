@@ -1,17 +1,19 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { AbiItem } from 'web3-utils'
 
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
-import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { enableModuleTx } from 'src/logic/safe/utils/modules'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { enableModuleTx, isModuleEnabled } from 'src/logic/safe/utils/modules'
 import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getSpendingLimitContract, MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
+import { encodeMultiSendCall, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameString } from 'src/utils/strings'
@@ -117,11 +119,8 @@ const requestAllowancesByDelegatesAndTokens = async (
   )
 }
 
-export const getSpendingLimits = async (
-  modules: string[] | undefined,
-  safeAddress: string,
-): Promise<SpendingLimit[] | null> => {
-  const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
+export const getSpendingLimits = async (modules: string[], safeAddress: string): Promise<SpendingLimit[] | null> => {
+  const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
 
   try {
     if (isSpendingLimitEnabled) {
@@ -142,21 +141,17 @@ type DeleteAllowanceParams = {
 }
 
 export const getDeleteAllowanceTxData = ({ beneficiary, tokenAddress }: DeleteAllowanceParams): string => {
-  const web3 = getWeb3()
-  const spendingLimitContract = new web3.eth.Contract(
-    SpendingLimitModule.abi as AbiItem[],
-    SPENDING_LIMIT_MODULE_ADDRESS,
-  )
+  const spendingLimitContract = getSpendingLimitContract()
 
   return spendingLimitContract.methods.deleteAllowance(beneficiary, tokenAddress).encodeABI()
 }
 
-export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string): MultiSendTx => {
-  const multiSendTx = enableModuleTx({ moduleAddress: SPENDING_LIMIT_MODULE_ADDRESS, safeAddress })
+export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string, safeVersion: string): MultiSendTx => {
+  const multiSendTx = enableModuleTx({ moduleAddress: SPENDING_LIMIT_MODULE_ADDRESS, safeAddress, safeVersion })
 
   return {
     to: multiSendTx.to,
-    value: Number(multiSendTx.valueInWei),
+    value: multiSendTx.valueInWei,
     data: multiSendTx.txData as string,
   }
 }
@@ -166,7 +161,7 @@ export const addSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string): Mul
 
   return {
     to: SPENDING_LIMIT_MODULE_ADDRESS,
-    value: 0,
+    value: '0',
     data: spendingLimitContract.methods.addDelegate(beneficiary).encodeABI(),
   }
 }
@@ -176,7 +171,7 @@ export const getResetSpendingLimitTx = (beneficiary: string, token: string): Mul
 
   return {
     to: SPENDING_LIMIT_MODULE_ADDRESS,
-    value: 0,
+    value: '0',
     data: spendingLimitContract.methods.resetAllowance(beneficiary, token).encodeABI(),
   }
 }
@@ -205,7 +200,7 @@ export const setSpendingLimitTx = ({
     txData: spendingLimitContract.methods
       .setAllowance(beneficiary, token, spendingLimitInWei, resetTimeMin, resetBaseMin)
       .encodeABI(),
-    operation: CALL,
+    operation: Operation.CALL,
     notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   }
 
@@ -217,7 +212,7 @@ export const setSpendingLimitMultiSendTx = (args: SpendingLimitTxParams): MultiS
 
   return {
     to: tx.to,
-    value: Number(tx.valueInWei),
+    value: tx.valueInWei,
     data: tx.txData as string,
   }
 }
@@ -231,11 +226,11 @@ export const spendingLimitMultiSendTx = ({
   safeAddress,
 }: SpendingLimitMultiSendTx): CreateTransactionArgs => ({
   safeAddress,
-  to: MULTI_SEND_ADDRESS,
+  to: getMultisendContractAddress(),
   valueInWei: ZERO_VALUE,
-  txData: getEncodedMultiSendCallData(transactions, getWeb3()),
+  txData: encodeMultiSendCall(transactions),
   notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-  operation: DELEGATE_CALL,
+  operation: Operation.DELEGATE,
 })
 
 type SpendingLimitAllowedBalance = GetTokenByAddress & {

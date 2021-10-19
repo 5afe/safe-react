@@ -1,5 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -58,7 +58,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeAddressFromUrl)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
@@ -106,7 +106,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           valueInWei: txInfo?.txAmount,
           txData: txInfo?.txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -118,10 +118,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -142,7 +142,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
@@ -171,7 +171,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             </Row>
             <Row align="center" margin="md">
               <Col xs={1}>
-                <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+                <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
               </Col>
               <Col layout="column" xs={11}>
                 <Block justify="left">
@@ -197,7 +197,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               const value: string = getValueFromTxInputs(key, type, tx)
 
               return (
-                <React.Fragment key={key}>
+                <Fragment key={key}>
                   <Row margin="xs">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       {name} ({type})
@@ -208,7 +208,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                       {value}
                     </Paragraph>
                   </Row>
-                </React.Fragment>
+                </Fragment>
               )
             })}
             <Row margin="xs">

@@ -3,7 +3,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -89,7 +89,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
       </Row>
       <Hairline />
       <Paragraph className={classes.networkInfo} noMargin size="lg" weight="bolder">
-        {networkInfo.label} Network only send {networkInfo.label} assets to this Safe.
+        {networkInfo.label} Network–only send {networkInfo.label} assets to this Safe.
       </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
         This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send{' '}

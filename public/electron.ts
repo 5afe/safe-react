@@ -1,47 +1,42 @@
-const electron = require('electron')
-const express = require('express')
-const log = require('electron-log')
-const fs = require('fs')
-const Menu = electron.Menu
-const https = require('https')
-const detect = require('detect-port')
-const autoUpdater = require('./auto-updater')
+import express from 'express'
+import log from 'electron-log'
+import fs from 'fs'
+import electron from 'electron'
+import https from 'https'
+import { autoUpdater } from 'electron-updater'
+import detect from 'detect-port'
+import path from 'path'
 
-const { app, session, BrowserWindow, shell } = electron
-
-const path = require('path')
-const isDev = require('electron-is-dev')
-
+const { app, session, BrowserWindow, shell, Menu } = electron
+const isDev = !app.isPackaged
+const DEFAULT_PORT = 5000
+app.allowRendererProcessReuse = false
 const options = {
   key: fs.readFileSync(path.join(__dirname, './ssl/server.key')),
   cert: fs.readFileSync(path.join(__dirname, './ssl/server.crt')),
   ca: fs.readFileSync(path.join(__dirname, './ssl/rootCA.crt')),
 }
 
-const DEFAULT_PORT = 5000
+async function getFreePort(): Promise<number> {
+  const port = await detect(DEFAULT_PORT)
 
-const createServer = async () => {
+  return port
+}
+
+function createServer(port: number): void {
   const app = express()
   const staticRoute = path.join(__dirname, '../build')
+
   app.use(express.static(staticRoute))
-  let selectedPort = DEFAULT_PORT
-  try {
-    const _port = await detect(DEFAULT_PORT)
-    if (_port !== DEFAULT_PORT) selectedPort = _port
-    https.createServer(options, app).listen(selectedPort)
-  } catch (e) {
-    log.error(e)
-  } finally {
-    return selectedPort
-  }
+  https.createServer(options, app).listen(port)
 }
 
 let mainWindow
 
-function getOpenedWindow(url, options) {
-  let display = electron.screen.getPrimaryDisplay()
-  let width = display.bounds.width
-  let height = display.bounds.height
+function getOpenedWindow(url: string, options) {
+  const display = electron.screen.getPrimaryDisplay()
+  const width = display.bounds.width
+  const height = display.bounds.height
 
   // filter all requests to trezor-bridge and change origin to make it work
   const filter = {
@@ -64,7 +59,6 @@ function getOpenedWindow(url, options) {
       x: width - 1300,
       parent: mainWindow,
       y: height - (process.platform === 'win32' ? 750 : 200),
-      webContents: options.webContents, // use existing webContents if provided
       fullscreen: false,
       show: false,
     })
@@ -90,9 +84,8 @@ function createWindow(port = DEFAULT_PORT) {
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
       experimentalFeatures: true,
-      nodeIntegration: true,
-      // allowRunningInsecureContent: true,
       enableRemoteModule: true,
+      contextIsolation: false,
       nativeWindowOpen: true, // need to be set in order to display modal
     },
     icon: electron.nativeImage.createFromPath(path.join(__dirname, '../build/resources/safe.png')),
@@ -106,15 +99,14 @@ function createWindow(port = DEFAULT_PORT) {
 
   if (isDev) {
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
+    mainWindow.webContents.openDevTools()
   }
 
   mainWindow.setMenu(null)
   mainWindow.setMenuBarVisibility(false)
 
   mainWindow.webContents.on('new-window', function (event, url, frameName, disposition, options) {
-    event.preventDefault()
     const win = getOpenedWindow(url, options)
     if (win) {
       win.once('ready-to-show', () => win.show())
@@ -128,7 +120,7 @@ function createWindow(port = DEFAULT_PORT) {
   })
 
   mainWindow.webContents.on('did-finish-load', () => {
-    autoUpdater.init(mainWindow)
+    autoUpdater.checkForUpdatesAndNotify()
   })
 
   mainWindow.webContents.on('crashed', (event) => {
@@ -146,17 +138,17 @@ process.on('uncaughtException', function (error) {
 app.userAgentFallback =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/11.3.0 Safari/537.36'
 
-// We have one non-context-aware module in node_modules/usb. This is used by @ledgerhq/hw-transport-node-hid
-// This type of modules will be impossible to use after electron 10
-app.allowRendererProcessReuse = false
-
 app.commandLine.appendSwitch('ignore-certificate-errors')
-app.on('ready', async () => {
+app.whenReady().then(async () => {
   // Hide the menu
   Menu.setApplicationMenu(null)
-  let usedPort = DEFAULT_PORT
-  if (!isDev) usedPort = await createServer()
-  createWindow(usedPort)
+
+  const port = await getFreePort()
+  if (!isDev) {
+    createServer(port)
+  }
+
+  createWindow(port)
 })
 
 app.on('window-all-closed', () => {

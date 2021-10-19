@@ -1,7 +1,8 @@
 import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
-import React from 'react'
+import { useState, Fragment } from 'react'
+
 import { useSelector } from 'react-redux'
 
 import { generateColumns, ModuleAddressColumn, MODULES_TABLE_ADDRESS_ID } from './dataFetcher'
@@ -32,10 +33,10 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
 
   const granted = useSelector(grantedSelector)
 
-  const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
+  const [viewRemoveModuleModal, setViewRemoveModuleModal] = useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
-  const [selectedModulePair, setSelectedModulePair] = React.useState<ModulePair>()
+  const [selectedModulePair, setSelectedModulePair] = useState<ModulePair>()
   const triggerRemoveSelectedModule = (modulePair: ModulePair): void => {
     setSelectedModulePair(modulePair)
     setViewRemoveModuleModal(true)
@@ -68,7 +69,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                   const [, moduleAddress] = rowElement
 
                   return (
-                    <React.Fragment key={`${columnId}-${index}`}>
+                    <Fragment key={`${columnId}-${index}`}>
                       <TableCell align={column.align} component="td" key={columnId}>
                         {columnId === MODULES_TABLE_ADDRESS_ID ? (
                           <Block justify="left">
@@ -95,7 +96,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                           )}
                         </Row>
                       </TableCell>
-                    </React.Fragment>
+                    </Fragment>
                   )
                 })}
               </TableRow>

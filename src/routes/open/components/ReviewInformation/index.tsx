@@ -1,5 +1,5 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { ReactElement, useEffect, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo, Fragment } from 'react'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -14,7 +14,7 @@ import {
   getSafeCreationSaltFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
 
-import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
+import { FIELD_CONFIRMATIONS, FIELD_CUSTOM_SAFE_NAME, FIELD_SAFE_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
@@ -61,11 +61,11 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
                 className={classes.name}
                 color="primary"
                 noMargin
-                size="lg"
+                size="md"
                 weight="bolder"
                 data-testid="create-safe-review-name"
               >
-                {values[FIELD_NAME]}
+                {values[FIELD_CUSTOM_SAFE_NAME] || values[FIELD_SAFE_NAME]}
               </Paragraph>
             </Block>
             <Block margin="lg">
@@ -75,7 +75,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
               <Paragraph
                 color="primary"
                 noMargin
-                size="lg"
+                size="md"
                 weight="bolder"
                 data-testid={`create-safe-review-req-owners-${values[FIELD_CONFIRMATIONS]}`}
               >
@@ -93,9 +93,9 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
             </Block>
             <Hairline />
             {names.map((name, index) => (
-              <React.Fragment key={`name${index}`}>
+              <Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={12}>
+                  <Col align="center" xs={12} data-testid={`create-safe-owner-details-${index}`}>
                     <EthHashInfo
                       data-testid={`create-safe-owner-name-${index}`}
                       hash={addresses[index]}
@@ -107,7 +107,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
                   </Col>
                 </Row>
                 <Hairline />
-              </React.Fragment>
+              </Fragment>
             ))}
           </TableContainer>
         </Col>

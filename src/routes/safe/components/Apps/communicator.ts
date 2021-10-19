@@ -6,7 +6,6 @@ import {
   Methods,
   ErrorResponse,
   MessageFormatter,
-  METHODS,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
 import { trackError, Errors } from 'src/logic/exceptions/CodedException'
@@ -38,7 +37,7 @@ class AppCommunicator {
   private isValidMessage = (msg: SDKMessageEvent): boolean => {
     // @ts-expect-error .parent doesn't exist on some possible types
     const sentFromIframe = msg.source.parent === window.parent
-    const knownMethod = Object.values(METHODS).includes(msg.data.method)
+    const knownMethod = Object.values(Methods).includes(msg.data.method)
 
     return sentFromIframe && knownMethod
   }

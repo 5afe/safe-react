@@ -29,7 +29,7 @@ export const getBalanceData = (safeTokens: List<Token>, currencySelected?: strin
     return {
       [BALANCE_TABLE_ASSET_ID]: {
         name: token.name,
-        logoUri: token.logoUri,
+        logoUri: token.logoUri || '',
         address: token.address,
         symbol: token.symbol,
       },

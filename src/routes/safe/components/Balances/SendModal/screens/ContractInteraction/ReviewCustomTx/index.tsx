@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
@@ -82,7 +82,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           valueInWei: txValue,
           txData,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -139,7 +139,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
               <Paragraph className={classes.value} noMargin size="md">
                 {tx.value || 0}
                 {' ' + nativeCoin.name}

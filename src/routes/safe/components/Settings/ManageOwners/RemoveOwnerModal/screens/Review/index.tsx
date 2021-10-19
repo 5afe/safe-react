@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -43,9 +43,14 @@ export const ReviewRemoveOwnerModal = ({
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const numOptions = owners ? owners.length - 1 : 0
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -80,7 +85,7 @@ export const ReviewRemoveOwnerModal = ({
       try {
         // FixMe: if the order returned by the service is the same as in the contracts
         //  the data lookup can be removed from here
-        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -98,13 +103,13 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, owner.address, threshold])
+  }, [safeAddress, safeVersion, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -125,7 +130,7 @@ export const ReviewRemoveOwnerModal = ({
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
@@ -179,7 +184,7 @@ export const ReviewRemoveOwnerModal = ({
                 {owners?.map(
                   (safeOwner) =>
                     !sameAddress(safeOwner.address, owner.address) && (
-                      <React.Fragment key={safeOwner.address}>
+                      <Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
@@ -192,7 +197,7 @@ export const ReviewRemoveOwnerModal = ({
                           </Col>
                         </Row>
                         <Hairline />
-                      </React.Fragment>
+                      </Fragment>
                     ),
                 )}
                 <Row align="center" className={classes.info}>

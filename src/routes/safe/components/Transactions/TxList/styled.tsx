@@ -1,23 +1,10 @@
-import {
-  Text,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  EthHashInfo,
-  IconText,
-} from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`
-
-export const Breadcrumb = styled(IconText)`
-  p {
-    font-weight: bold;
-  }
 `
 
 export const ContentWrapper = styled.div`
@@ -98,6 +85,12 @@ export const StyledTransactions = styled.div`
 
     &:last-child {
       border-bottom: none;
+    }
+
+    &:last-of-type {
+      div {
+        row-gap: 0px;
+      }
     }
   }
 `
@@ -500,7 +493,7 @@ export const StyledScrollableBar = styled.div`
 `
 
 export const ScrollableTransactionsContainer = styled(StyledScrollableBar)`
-  height: calc(100vh - 225px);
+  height: calc(100vh - 170px);
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
@@ -515,7 +508,7 @@ export const Centered = styled.div<{ padding?: number }>`
 `
 
 export const HorizontallyCentered = styled(Centered)<{ isVisible: boolean }>`
-  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
+  display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
   height: 100px;
 `
 

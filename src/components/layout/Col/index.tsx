@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind'
-import * as React from 'react'
+import { ReactElement } from 'react'
 
 import styles from './index.module.scss'
 
@@ -30,7 +30,7 @@ const Col = ({
   xs,
   xsOffset,
   ...props
-}: any) => {
+}: any): ReactElement => {
   const colClassNames = cx(
     'col',
     center ? capitalize(center, 'center') : undefined,

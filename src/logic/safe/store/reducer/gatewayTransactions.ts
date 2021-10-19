@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash.get'
 import merge from 'lodash.merge'
 import { Action, handleActions } from 'redux-actions'
@@ -12,11 +13,11 @@ import {
   isConflictHeader,
   isDateLabel,
   isLabel,
+  isMultisigExecutionInfo,
   isTransactionSummary,
   QueuedGatewayResponse,
   StoreStructure,
   Transaction,
-  TransactionStatus,
   TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
@@ -78,16 +79,17 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
 
         if (isTransactionSummary(value)) {
-          const startOfDate = getLocalStartOfDate(value.transaction.timestamp)
+          const transaction = (value as any).transaction as TransactionSummary
+          const startOfDate = getLocalStartOfDate(transaction.timestamp)
 
           if (typeof history[startOfDate] === 'undefined') {
             history[startOfDate] = []
           }
 
-          const txExist = history[startOfDate].some(({ id }) => sameString(id, value.transaction.id))
+          const txExist = history[startOfDate].some(({ id }) => sameString(id, transaction.id))
 
           if (!txExist) {
-            history[startOfDate].push(value.transaction)
+            history[startOfDate].push(transaction)
             // pushing a newer transaction to the existing list messes the transactions order
             // this happens when most recent transactions are added to the existing txs in the store
             history[startOfDate] = history[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
@@ -130,7 +132,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           return
         }
 
-        if (isTransactionSummary(value)) {
+        if (isTransactionSummary(value) && isMultisigExecutionInfo(value.transaction.executionInfo)) {
           const txNonce = value.transaction.executionInfo?.nonce
 
           if (typeof txNonce === 'undefined') {
@@ -150,12 +152,12 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 if (txIndex !== -1) {
                   const storedTransaction = next[txNonce][txIndex]
                   const updateFromService =
-                    storedTransaction.executionInfo?.confirmationsSubmitted !==
+                    (storedTransaction.executionInfo as MultisigExecutionInfo).confirmationsSubmitted !==
                     value.transaction.executionInfo?.confirmationsSubmitted
 
-                  if (storedTransaction.txStatus === 'PENDING' && !updateFromService) {
-                    // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
-                    value.transaction.txStatus = 'PENDING'
+                  if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
+                    // we're waiting for a tx resolution. Thus, we'll prioritize TransactionStatus.PENDING status
+                    value.transaction.txStatus = TransactionStatus.PENDING
                   }
 
                   next[txNonce][txIndex] = updateFromService
@@ -188,12 +190,12 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 if (txIndex !== -1) {
                   const storedTransaction = queued[txNonce][txIndex]
                   const updateFromService =
-                    storedTransaction.executionInfo?.confirmationsSubmitted !==
+                    (storedTransaction.executionInfo as MultisigExecutionInfo).confirmationsSubmitted !==
                     value.transaction.executionInfo?.confirmationsSubmitted
 
-                  if (storedTransaction.txStatus === 'PENDING' && !updateFromService) {
-                    // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
-                    value.transaction.txStatus = 'PENDING'
+                  if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
+                    // we're waiting for a tx resolution. Thus, we'll prioritize TransactionStatus.PENDING status
+                    value.transaction.txStatus = TransactionStatus.PENDING
                   }
 
                   queued[txNonce][txIndex] = updateFromService
@@ -303,7 +305,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         txLocation = 'queued.queued'
       } else {
         Object.entries(history).forEach(([timestamp, transactions]) => {
-          const txIndex = transactions.findIndex((transaction) => Number(transaction.executionInfo?.nonce) === nonce)
+          const txIndex = transactions.findIndex(
+            (transaction) => Number((transaction.executionInfo as MultisigExecutionInfo).nonce) === nonce,
+          )
 
           if (txIndex !== -1) {
             txLocation = 'history'
@@ -327,7 +331,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         case 'queued.next': {
           queued.next[nonce] = queued.next[nonce].map((txToUpdate) => {
             // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
-            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+            if (txStatus === TransactionStatus.PENDING_FAILED && txToUpdate.txStatus !== TransactionStatus.PENDING) {
               return txToUpdate
             }
 
@@ -346,7 +350,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
             // TODO: review if is this `PENDING` status required under `queued.queued` list
             // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
-            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+            if (txStatus === TransactionStatus.PENDING_FAILED && txToUpdate.txStatus !== TransactionStatus.PENDING) {
               return txToUpdate
             }
 

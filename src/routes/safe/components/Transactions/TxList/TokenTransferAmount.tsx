@@ -1,5 +1,6 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import Img from 'src/components/layout/Img'
@@ -29,7 +30,7 @@ export const TokenTransferAmount = ({ assetInfo }: TokenTransferAmountProps): Re
         height={26}
         onError={(error) => {
           error.currentTarget.onerror = null
-          error.currentTarget.src = assetInfo.tokenType === 'ERC721' ? NFTIcon : TokenPlaceholder
+          error.currentTarget.src = assetInfo.tokenType === TokenType.ERC721 ? NFTIcon : TokenPlaceholder
         }}
         src={assetInfo.logoUri}
       />

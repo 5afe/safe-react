@@ -37,6 +37,10 @@ export type SafeRecordProps = {
   needsUpdate: boolean
   featuresEnabled: Array<FEATURES>
   loadedViaUrl: boolean
+  guard: string
+  collectiblesTag: string
+  txQueuedTag: string
+  txHistoryTag: string
 }
 
 const makeSafe = Record<SafeRecordProps>({
@@ -54,6 +58,10 @@ const makeSafe = Record<SafeRecordProps>({
   needsUpdate: false,
   featuresEnabled: [],
   loadedViaUrl: true,
+  guard: '',
+  collectiblesTag: '0',
+  txQueuedTag: '0',
+  txHistoryTag: '0',
 })
 
 export type SafeRecord = RecordOf<SafeRecordProps>

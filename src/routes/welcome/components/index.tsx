@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import {
   Card,
@@ -44,7 +43,7 @@ const CardsCol = styled.div`
   width: 50%;
 `
 const StyledButton = styled(Button)`
-  margin-top: auto;
+  margin-top: auto !important;
   text-decoration: none;
 `
 const TitleWrapper = styled.div`

@@ -1,11 +1,13 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { push } from 'connected-react-router'
+import { generatePath } from 'react-router-dom'
+import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
-  CALL,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -13,11 +15,11 @@ import {
 } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -25,7 +27,6 @@ import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/sa
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-import { AnyAction } from 'redux'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
@@ -44,7 +45,7 @@ export interface CreateTransactionArgs {
   txData?: string
   txNonce?: number | string
   valueInWei: string
-  safeTxGas?: number
+  safeTxGas?: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
 }
 
@@ -53,6 +54,10 @@ type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
+
+export const isKeystoneError = (err: Error): boolean => {
+  return err.message.startsWith('#ktek_error')
+}
 
 export const createTransaction =
   (
@@ -63,7 +68,7 @@ export const createTransaction =
       txData = EMPTY_DATA,
       notifiedTransaction,
       txNonce,
-      operation = CALL,
+      operation = Operation.CALL,
       navigateToTransactionsTab = true,
       origin = null,
       safeTxGas: safeTxGasArg,
@@ -76,27 +81,33 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+      dispatch(
+        push(
+          generatePath(SAFE_ROUTES.TRANSACTIONS, {
+            safeAddress,
+          }),
+        ),
+      )
     }
 
     const ready = await onboardUser()
     if (!ready) return
 
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+    const safeVersion = currentSafeCurrentVersion(state) as string
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
     const lastTx = await getLastTx(safeAddress)
     const nextNonce = await getNewTxNonce(lastTx, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-    const safeVersion = await getCurrentSafeVersion(safeInstance)
-    let safeTxGas = safeTxGasArg || 0
+    let safeTxGas = safeTxGasArg || '0'
     try {
       if (safeTxGasArg === undefined) {
         safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
       }
     } catch (error) {
-      safeTxGas = safeTxGasArg || 0
+      safeTxGas = safeTxGasArg || '0'
     }
 
     const sigs = getPreValidatedSignatures(from)
@@ -112,16 +123,17 @@ export const createTransaction =
       operation,
       nonce: Number.parseInt(nonce),
       safeTxGas,
-      baseGas: 0,
+      baseGas: '0',
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
       refundReceiver: ZERO_ADDRESS,
       sender: from,
       sigs,
     }
-    const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
 
     try {
+      const safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
+
       if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
         const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 
@@ -152,15 +164,21 @@ export const createTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          await saveTxToHistory({ ...txArgs, txHash, origin })
+          try {
+            await saveTxToHistory({ ...txArgs, origin })
+          } catch (err) {
+            logError(Errors._803, err.message)
+
+            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
+            if (!isExecution) {
+              return
+            }
+          }
 
           // store the pending transaction's nonce
           isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
           dispatch(fetchTransactions(safeAddress))
-        })
-        .on('error', () => {
-          onError?.()
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(safeAddress))
@@ -168,6 +186,8 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
+      onError?.()
+
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {

@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
@@ -46,8 +46,14 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners, threshold = 1 } = useSelector(currentSafeWithNames)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    threshold = 1,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
@@ -73,7 +79,7 @@ export const ReviewReplaceOwnerModal = ({
   useEffect(() => {
     let isCurrent = true
     const calculateReplaceOwnerData = async () => {
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -87,13 +93,13 @@ export const ReviewReplaceOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [owner.address, safeAddress, newOwner.address])
+  }, [owner.address, safeAddress, safeVersion, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -114,7 +120,7 @@ export const ReviewReplaceOwnerModal = ({
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
@@ -166,7 +172,7 @@ export const ReviewReplaceOwnerModal = ({
                 {owners?.map(
                   (safeOwner) =>
                     !sameAddress(safeOwner.address, owner.address) && (
-                      <React.Fragment key={safeOwner.address}>
+                      <Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
@@ -179,7 +185,7 @@ export const ReviewReplaceOwnerModal = ({
                           </Col>
                         </Row>
                         <Hairline />
-                      </React.Fragment>
+                      </Fragment>
                     ),
                 )}
                 <Row align="center" className={classes.info}>
@@ -188,7 +194,7 @@ export const ReviewReplaceOwnerModal = ({
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwnerRemoved}>
+                <Row className={classes.selectedOwnerRemoved} data-testid="remove-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={owner.address}
@@ -205,7 +211,7 @@ export const ReviewReplaceOwnerModal = ({
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwnerAdded}>
+                <Row className={classes.selectedOwnerAdded} data-testid="add-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={newOwner.address}

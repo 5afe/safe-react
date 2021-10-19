@@ -9,7 +9,7 @@ describe('Test JS', () => {
       owner2Address: 'baz',
       owners: 3,
       confirmations: '0',
-      name: '',
+      safeName: '',
       safeCreationSalt: 0,
     }
 
@@ -25,7 +25,7 @@ describe('Test JS', () => {
       owner2Address: '0x',
       owners: 3,
       confirmations: '0',
-      name: '',
+      safeName: '',
       safeCreationSalt: 0,
     }
 
@@ -41,7 +41,7 @@ describe('Test JS', () => {
       owner2Address: 'bazAddress',
       owners: 1,
       confirmations: '0',
-      name: '',
+      safeName: '',
       safeCreationSalt: 0,
     }
 
@@ -58,7 +58,7 @@ describe('Test JS', () => {
       owner0Address: 'fooAddress',
       owners: 1,
       confirmations: '0',
-      name: '',
+      safeName: '',
       safeCreationSalt: 0,
     }
 
@@ -68,7 +68,7 @@ describe('Test JS', () => {
   it('return the number of required confirmations', () => {
     const safe = {
       confirmations: '1',
-      name: '',
+      safeName: '',
       safeCreationSalt: 0,
     }
 

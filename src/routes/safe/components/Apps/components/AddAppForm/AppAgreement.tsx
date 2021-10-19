@@ -1,5 +1,5 @@
 import { Checkbox, Text } from '@gnosis.pm/safe-react-components'
-import React from 'react'
+
 import { useFormState } from 'react-final-form'
 import styled from 'styled-components'
 

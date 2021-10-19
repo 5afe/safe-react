@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import React, { ReactElement, Reducer, useCallback, useReducer } from 'react'
+import { ReactElement, Reducer, useCallback, useReducer } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Modal } from 'src/components/Modal'

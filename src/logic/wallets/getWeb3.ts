@@ -1,13 +1,15 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
+import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
+
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
-import { NODE_ENV } from 'src/utils/constants'
 import { getRpcServiceUrl } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -25,6 +27,7 @@ export enum WALLET_PROVIDER {
   LEDGER = 'LEDGER',
   TREZOR = 'TREZOR',
   LATTICE = 'LATTICE',
+  KEYSTONE = 'KEYSTONE',
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
@@ -47,11 +50,6 @@ export const resetWeb3 = (): void => {
 
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
-
-  if (NODE_ENV === 'test' && window.testAccountIndex) {
-    return accounts[window.testAccountIndex]
-  }
-
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
@@ -60,9 +58,16 @@ export const getNetworkIdFrom = (web3Provider: Web3): Promise<number> => web3Pro
 const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
 
-const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
-  const contractCode = await web3Provider.eth.getCode(account)
-
+export const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
+  if (!account) {
+    return false
+  }
+  let contractCode = ''
+  try {
+    contractCode = await web3Provider.eth.getCode(account)
+  } catch (e) {
+    // ignore
+  }
   return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
@@ -71,15 +76,14 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
   const network = await getNetworkIdFrom(web3Instance)
   const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)
-
-  const available = account !== null
+  const available = Boolean(account)
 
   return {
     name: providerName,
     available,
     loaded: true,
     account,
-    network,
+    network: network.toString() as ETHEREUM_NETWORK,
     smartContractWallet,
     hardwareWallet,
   }
@@ -100,5 +104,12 @@ export const setWeb3 = (provider: Provider): void => {
 
 export const isTxPendingError = (err: Error): boolean => {
   const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
-  return err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
+  return (err.message || '').startsWith(WEB3_TX_NOT_MINED_ERROR)
+}
+
+export const getSDKWeb3Adapter = (signerAddress: string): Web3Adapter => {
+  return new Web3Adapter({
+    web3: getWeb3(),
+    signerAddress,
+  })
 }

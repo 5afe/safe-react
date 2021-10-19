@@ -1,17 +1,21 @@
+import { Fragment } from 'react'
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
 import { Icon } from '@gnosis.pm/safe-react-components'
-import * as React from 'react'
+
+import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { DefaultSafe } from 'src/logic/safe/store/reducer/types/safe'
 import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
+import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
+import { OwnedAddress } from 'src/components/SafeListSidebar/SafeList/OwnedAddress'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { background } from 'src/theme/variables'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
@@ -29,11 +33,17 @@ const useStyles = makeStyles({
   listItemRoot: {
     paddingTop: 0,
     paddingBottom: 0,
-    '&:hover .safeListMakeDefaultButton': {
-      visibility: 'initial',
+    '&:hover': {
+      backgroundColor: background,
     },
-    '&:focus .safeListMakeDefaultButton': {
-      visibility: 'initial',
+  },
+  listItemCollapse: {
+    paddingTop: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingBottom: '50px',
+    '& > div > div:first-child': {
+      paddingLeft: '44px',
     },
   },
   noIcon: {
@@ -44,35 +54,62 @@ const useStyles = makeStyles({
 
 type Props = {
   currentSafeAddress: string | undefined
-  defaultSafeAddress: DefaultSafe
   safes: SafeRecordWithNames[]
+  ownedSafes: string[]
   onSafeClick: () => void
 }
 
-export const SafeList = ({ currentSafeAddress, defaultSafeAddress, onSafeClick, safes }: Props): React.ReactElement => {
+const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean => {
+  return addedSafes.some((safe) => sameAddress(safe.address, address))
+}
+
+export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }: Props): React.ReactElement => {
   const classes = useStyles()
+  const ownedSafesExpanded = ownedSafes.some((address) => {
+    return address === currentSafeAddress && !isAddressAdded(safes, address)
+  })
+
+  const getLink = (address: string): React.ReactElement =>
+    sameAddress(currentSafeAddress, address) ? (
+      <StyledIcon type="check" size="md" color="primary" />
+    ) : (
+      <div className={classes.noIcon}>placeholder</div>
+    )
 
   return (
     <MuiList className={classes.list}>
       {safes.map((safe) => (
-        <React.Fragment key={safe.address}>
+        <Fragment key={safe.address}>
           <Link
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
             onClick={onSafeClick}
-            to={`${SAFELIST_ADDRESS}/${safe.address}/balances`}
+            to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              safeAddress: safe.address,
+            })}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
-              {sameAddress(currentSafeAddress, safe.address) ? (
-                <StyledIcon type="check" size="md" color="primary" />
-              ) : (
-                <div className={classes.noIcon}>placeholder</div>
-              )}
-              <AddressWrapper safe={safe} defaultSafeAddress={defaultSafeAddress} />
+              {getLink(safe.address)}
+              <AddressWrapper safe={safe} />
             </ListItem>
           </Link>
           <Hairline />
-        </React.Fragment>
+        </Fragment>
       ))}
+
+      {ownedSafes.length > 0 && (
+        <ListItem classes={{ root: classes.listItemCollapse }}>
+          <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
+            {ownedSafes.map((address: string) => (
+              <Fragment key={address}>
+                <OwnedAddress address={address} onClick={onSafeClick} isAdded={isAddressAdded(safes, address)}>
+                  {getLink(address)}
+                </OwnedAddress>
+                <Hairline />
+              </Fragment>
+            ))}
+          </Collapse>
+        </ListItem>
+      )}
     </MuiList>
   )
 }

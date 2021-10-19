@@ -1,28 +1,33 @@
-import React, { useState } from 'react'
-import styled, { css } from 'styled-components'
+import { IconText, Loader, Menu, Text, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { IconText, Loader, Menu, Text, Icon } from '@gnosis.pm/safe-react-components'
-import IconButton from '@material-ui/core/IconButton'
+import { generatePath } from 'react-router-dom'
+import styled, { css } from 'styled-components'
+import { motion, AnimatePresence } from 'framer-motion'
 
+import Collapse from 'src/components/Collapse'
+import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
-import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
-import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
-import { useRouteMatch, Link } from 'react-router-dom'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { AppCard, AddCustomAppCard } from 'src/routes/safe/components/Apps/components/AppCard'
+import { SAFE_ROUTES } from 'src/routes/routes'
+import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
-import { useAppList } from '../hooks/useAppList'
-import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
+import { SearchInputCard } from './SearchInputCard'
+import { NoAppsFound } from './NoAppsFound'
+import { SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
+import { useAppList } from '../hooks/appList/useAppList'
+import { useAppsSearch } from '../hooks/useAppsSearch'
+import { PinnedAppsTutorial } from './PinnedAppsTutorial'
+
+export const PINNED_APPS_LIST_TEST_ID = 'safe_apps__pinned-apps-container'
+export const ALL_APPS_LIST_TEST_ID = 'safe_apps__all-apps-container'
 
 const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-`
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
 `
 
 const centerCSS = css`
@@ -37,62 +42,50 @@ const LoadingContainer = styled.div`
   ${centerCSS};
 `
 
-const CardsWrapper = styled.div`
+const CardsWrapper = styled(motion.div)`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(243px, 1fr));
   column-gap: 20px;
   row-gap: 20px;
   justify-content: space-evenly;
-  margin: 0 0 16px 0;
 `
 
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   flex-grow: 1;
   align-items: center;
 `
-const Breadcrumb = styled.div`
-  height: 51px;
+
+const SectionHeading = styled(Text)`
+  width: 100%;
+  margin: ${({ theme }) => `${theme.margin.xl} 0 ${theme.margin.md} 0`};
 `
 
-const IconBtn = styled(IconButton)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
-  padding: 5px;
-  opacity: 0;
-
-  transition: opacity 0.2s ease-in-out;
+const CenterIconText = styled(IconText)`
+  justify-content: center;
+  margin-right: 55px;
 `
-
-const AppContainer = styled.div`
-  position: relative;
-
-  &:hover {
-    ${IconBtn} {
-      opacity: 1;
-    }
-  }
-`
-
-const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
-const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
-  return appsList.some(({ url, custom }) => url === appUrl && custom)
-}
 
 const AppsList = (): React.ReactElement => {
-  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAddress = useSelector(safeAddressFromUrl)
-  const { appList, removeApp, isLoading } = useAppList()
-  const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
+  const appsPath = generatePath(SAFE_ROUTES.APPS, {
+    safeAddress,
+  })
+  const [appSearch, setAppSearch] = useState('')
+  const { allApps, appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
+  const apps = useAppsSearch(appList, appSearch)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
-  const openAddAppModal = () => setIsAddAppModalOpen(true)
+  const { open: isAddAppModalOpen, toggle: openAddAppModal, clickAway: closeAddAppModal } = useStateHandler()
+  const noAppsFound = apps.length === 0 && appSearch
+  const showCustomApps = !!customApps.length && !appSearch
+  const showPinnedApps = !appSearch
 
-  const closeAddAppModal = () => setIsAddAppModalOpen(false)
+  const handleAppPin = (app: SafeApp) => {
+    togglePin(app)
+  }
+
   if (isLoading || !safeAddress) {
     return (
       <LoadingContainer>
@@ -100,55 +93,98 @@ const AppsList = (): React.ReactElement => {
       </LoadingContainer>
     )
   }
+
   return (
     <Wrapper>
       <Menu>
-        {/* TODO: Add navigation breadcrumb. Empty for now to give some top margin */}
-        <Breadcrumb />
+        <Col start="sm" xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="apps" text="Apps" />
+          </Breadcrumb>
+        </Col>
       </Menu>
-
       <ContentWrapper>
-        <CardsWrapper>
-          <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
+        <SearchInputCard value={appSearch} onValueChange={(value) => setAppSearch(value.replace(/\s{2,}/g, ' '))} />
 
-          {appList
-            .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
-            .map((a) => (
-              <AppContainer key={a.url}>
-                <StyledLink key={a.url} to={`${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(a.url)}`}>
-                  <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
-                </StyledLink>
-                {isCustomApp(a.url, appList) && (
-                  <IconBtn
-                    title="Remove"
-                    onClick={(e) => {
-                      e.stopPropagation()
+        {showPinnedApps && (
+          <Collapse
+            title={
+              <Text color="placeHolder" strong size="md">
+                BOOKMARKED APPS
+              </Text>
+            }
+            defaultExpanded
+          >
+            {pinnedSafeApps.length === 0 && <PinnedAppsTutorial />}
+            <AnimatePresence>
+              <CardsWrapper data-testid={PINNED_APPS_LIST_TEST_ID}>
+                {pinnedSafeApps.map((a) => (
+                  <AppCard
+                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                    key={a.id}
+                    app={a}
+                    pinned
+                    onPin={handleAppPin}
+                  />
+                ))}
+              </CardsWrapper>
+            </AnimatePresence>
+          </Collapse>
+        )}
 
-                      setAppToRemove(a)
-                    }}
-                  >
-                    <Icon size="sm" type="delete" color="error" />
-                  </IconBtn>
-                )}
-              </AppContainer>
+        {showCustomApps && (
+          <Collapse
+            title={
+              <Text color="placeHolder" strong size="md">
+                CUSTOM APPS
+              </Text>
+            }
+            defaultExpanded
+          >
+            <AnimatePresence>
+              <CardsWrapper>
+                {customApps.map((a) => (
+                  <AppCard to={`${appsPath}?appUrl=${encodeURI(a.url)}`} key={a.id} app={a} onRemove={setAppToRemove} />
+                ))}
+              </CardsWrapper>
+            </AnimatePresence>
+          </Collapse>
+        )}
+
+        <SectionHeading color="placeHolder" strong size="md">
+          {appSearch ? 'SEARCH RESULTS' : 'ALL APPS'}
+        </SectionHeading>
+        {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
+        <AnimatePresence>
+          <CardsWrapper data-testid={ALL_APPS_LIST_TEST_ID}>
+            {!appSearch && <AddCustomAppCard onClick={openAddAppModal} />}
+            {apps.map((a) => (
+              <AppCard
+                to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                key={a.id}
+                app={a}
+                onPin={handleAppPin}
+                pinned={pinnedSafeApps.some((pinnedApp) => pinnedApp.id === a.id)}
+              />
             ))}
-        </CardsWrapper>
-
-        <IconText
-          color="secondary"
-          iconSize="sm"
-          iconType="info"
-          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk. Any communication within the Apps is for informational purposes only and must not be construed as investment advice to engage in any transaction."
-          textSize="sm"
-        />
+          </CardsWrapper>
+        </AnimatePresence>
       </ContentWrapper>
+
+      <CenterIconText
+        color="secondary"
+        iconSize="sm"
+        iconType="info"
+        text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk. Any communication within the Apps is for informational purposes only and must not be construed as investment advice to engage in any transaction."
+        textSize="sm"
+      />
 
       {isAddAppModalOpen && (
         <Modal title="Add app" description="Add a custom app to the list of apps" handleClose={closeAddAppModal}>
           <Modal.Header onClose={closeAddAppModal}>
             <Modal.Header.Title>Add custom app</Modal.Header.Title>
           </Modal.Header>
-          <AddAppForm closeModal={closeAddAppModal} appList={appList} />
+          <AddAppForm closeModal={closeAddAppModal} appList={allApps} onAddApp={addCustomApp} />
         </Modal>
       )}
 
@@ -172,7 +208,7 @@ const AppsList = (): React.ReactElement => {
               confirmButtonProps={{
                 color: 'error',
                 onClick: () => {
-                  removeApp(appToRemove.url)
+                  removeApp(appToRemove.id)
                   setAppToRemove(null)
                 },
                 text: 'Remove',

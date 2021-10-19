@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -50,7 +50,7 @@ export const SpentVsAmount = ({ amount, spent, tokenAddress }: SpentVsAmountProp
 
   return spentInfo && tokenInfo ? (
     <StyledImageName>
-      {showIcon && <StyledImage alt={tokenInfo.name} onError={setImageToPlaceholder} src={tokenInfo.logoUri} />}
+      {showIcon && <StyledImage alt={tokenInfo.name} onError={setImageToPlaceholder} src={tokenInfo.logoUri || ''} />}
       <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${tokenInfo.symbol}`}</Text>
     </StyledImageName>
   ) : null

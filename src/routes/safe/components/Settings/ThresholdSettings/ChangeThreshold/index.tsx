@@ -1,8 +1,8 @@
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import Close from '@material-ui/icons/Close'
-import React, { ReactElement, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { ReactElement, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -13,6 +13,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -43,8 +44,9 @@ export const ChangeThresholdModal = ({
 }: ChangeThresholdModalProps): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const safeVersion = useSelector(currentSafeCurrentVersion) as string
   const [data, setData] = useState('')
-  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
@@ -72,7 +74,7 @@ export const ChangeThresholdModal = ({
   useEffect(() => {
     let isCurrent = true
     const calculateChangeThresholdData = () => {
-      const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+      const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
       const txData = safeInstance.methods.changeThreshold(editedThreshold).encodeABI()
       if (isCurrent) {
         setData(txData)
@@ -83,7 +85,7 @@ export const ChangeThresholdModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, editedThreshold])
+  }, [safeAddress, safeVersion, editedThreshold])
 
   const handleThreshold = ({ target }) => {
     const value = parseInt(target.value)
@@ -99,7 +101,7 @@ export const ChangeThresholdModal = ({
         valueInWei: '0',
         txData: data,
         txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       }),
@@ -108,10 +110,10 @@ export const ChangeThresholdModal = ({
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = Number(gasPriceFormatted)
-    const newGasPrice = Number(txParameters.ethGasPrice)
-    const oldSafeTxGas = Number(gasEstimation)
-    const newSafeTxGas = Number(txParameters.safeTxGas)
+    const oldGasPrice = gasPriceFormatted
+    const newGasPrice = txParameters.ethGasPrice
+    const oldSafeTxGas = gasEstimation
+    const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -132,7 +134,7 @@ export const ChangeThresholdModal = ({
       isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (

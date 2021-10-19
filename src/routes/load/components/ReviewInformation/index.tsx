@@ -1,6 +1,6 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { Fragment, ReactElement, ReactNode } from 'react'
+import { Fragment, ReactElement, ReactNode } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -9,7 +9,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
-import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME, THRESHOLD } from 'src/routes/load/components/fields'
+import {
+  FIELD_LOAD_ADDRESS,
+  FIELD_LOAD_SAFE_NAME,
+  FIELD_LOAD_CUSTOM_SAFE_NAME,
+  THRESHOLD,
+} from 'src/routes/load/components/fields'
 import { getNumOwnersFrom, getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useStyles } from './styles'
@@ -60,7 +65,7 @@ const ReviewComponent = ({ userAddress, values }: Props): ReactElement => {
               weight="bolder"
               data-testid="load-form-review-safe-name"
             >
-              {values[FIELD_LOAD_NAME]}
+              {values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SAFE_NAME]}
             </Paragraph>
           </Block>
           <Block margin="lg">

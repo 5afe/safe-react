@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -28,7 +28,7 @@ const TokenInfo = ({ amount, title, token }: TokenInfoProps): ReactElement => {
   return (
     <DataDisplay title={title}>
       <StyledImageName>
-        <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />
+        <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri || ''} />
         <Text size="lg">
           {amount} {token.symbol}
         </Text>

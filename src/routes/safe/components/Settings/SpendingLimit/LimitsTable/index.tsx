@@ -1,7 +1,7 @@
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
-import React, { ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ButtonHelper from 'src/components/ButtonHelper'

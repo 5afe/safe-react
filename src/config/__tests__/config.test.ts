@@ -45,15 +45,12 @@ describe('Config Services', () => {
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.dev?.txServiceUrl
-    const SAFE_APPS_URL = mainnet.environment.dev?.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
-    const safeAppsUrl = getGnosisSafeAppsUrl()
 
     // Then
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
-    expect(SAFE_APPS_URL).toBe(safeAppsUrl)
   })
 
   it(`should load 'mainnet.staging' network config`, () => {
@@ -62,17 +59,14 @@ describe('Config Services', () => {
       NODE_ENV: 'production',
       NETWORK: 'MAINNET',
     }))
-    const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
+    const { getTxServiceUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.staging?.txServiceUrl
-    const SAFE_APPS_URL = mainnet.environment.staging?.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
-    const safeAppsUrl = getGnosisSafeAppsUrl()
 
     // Then
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
-    expect(SAFE_APPS_URL).toBe(safeAppsUrl)
   })
 
   it(`should load 'mainnet.production' network config`, () => {
@@ -84,15 +78,12 @@ describe('Config Services', () => {
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
-    const SAFE_APPS_URL = mainnet.environment.production.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
-    const safeAppsUrl = getGnosisSafeAppsUrl()
 
     // Then
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
-    expect(SAFE_APPS_URL).toBe(safeAppsUrl)
   })
 
   it(`should load 'xdai.production' network config`, () => {
@@ -104,14 +95,11 @@ describe('Config Services', () => {
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
-    const SAFE_APPS_URL = xdai.environment.production.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
-    const safeAppsUrl = getGnosisSafeAppsUrl()
     // Then
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
-    expect(SAFE_APPS_URL).toBe(safeAppsUrl)
   })
 
   it(`should default to 'xdai.dev' network config if no environment is found`, () => {
@@ -122,14 +110,11 @@ describe('Config Services', () => {
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
-    const SAFE_APPS_URL = xdai.environment.dev?.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
-    const safeAppsUrl = getGnosisSafeAppsUrl()
 
     // Then
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
-    expect(SAFE_APPS_URL).toBe(safeAppsUrl)
   })
 })

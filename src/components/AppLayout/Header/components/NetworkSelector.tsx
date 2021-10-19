@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, Fragment } from 'react'
+import { ReactElement, useRef, Fragment } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -45,7 +45,7 @@ const styles = {
     width: '30px',
   },
   popper: {
-    zIndex: 2000,
+    zIndex: 1301,
   },
   network: {
     backgroundColor: 'white',

@@ -60,6 +60,7 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
     },
     [ADDRESS_BOOK_ACTIONS.SAFE_LOAD]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.IMPORT]: batchLoadEntries,
+    [ADDRESS_BOOK_ACTIONS.SYNC]: (_, action: Action<AddressBookState>): AddressBookState => action.payload,
   },
   [],
 )

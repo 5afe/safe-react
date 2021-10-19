@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { Text, EthHashInfo, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
@@ -49,14 +49,31 @@ const ElementWrapper = styled.div`
   margin-bottom: 15px;
 `
 
+export const getByteLength = (data: string | string[]): number => {
+  try {
+    if (!Array.isArray(data)) {
+      data = data.split(',')
+    }
+    // Return the sum of the byte sizes of each hex string
+    return data.reduce((result, hex) => {
+      const bytes = web3.utils.hexToBytes(hex)
+      return result + bytes.length
+    }, 0)
+  } catch (err) {
+    return 0
+  }
+}
+
 export const BasicTxInfo = ({
   txRecipient,
   txData,
   txValue,
+  recipientName,
 }: {
   txRecipient: string
   txData: string
   txValue: string
+  recipientName?: string
 }): ReactElement => {
   const { nativeCoin } = getNetworkInfo()
 
@@ -72,6 +89,7 @@ export const BasicTxInfo = ({
           showAvatar
           textSize="lg"
           showCopyBtn
+          name={recipientName}
           explorerUrl={getExplorerInfo(txRecipient)}
         />
       </>
@@ -81,7 +99,7 @@ export const BasicTxInfo = ({
           Data (hex encoded):
         </Text>
         <FlexWrapper margin={5}>
-          <Text size="lg">{txData ? web3.utils.hexToBytes(txData).length : 0} bytes</Text>
+          <Text size="lg">{txData ? getByteLength(txData) : 0} bytes</Text>
           <CopyToClipboardBtn textToCopy={txData} />
         </FlexWrapper>
       </>
@@ -107,7 +125,7 @@ export const getParameterElement = (parameter: DecodedDataBasicParameter, index:
   if (parameter.type.startsWith('bytes')) {
     valueElement = (
       <FlexWrapper margin={5}>
-        <Text size="lg">{web3.utils.hexToBytes(parameter.value).length} bytes</Text>
+        <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
         <CopyToClipboardBtn textToCopy={parameter.value} />
       </FlexWrapper>
     )

@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
 import { PromiEvent } from 'web3-core'
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ContractOptions, ContractSendMethod, DeployOptions, EventData, PastEventOptions } from 'web3-eth-contract'
 import {
   ConfirmationServiceModel,

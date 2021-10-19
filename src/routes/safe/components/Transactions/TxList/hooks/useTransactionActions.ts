@@ -1,7 +1,8 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -10,7 +11,7 @@ import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxLis
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState } from 'src/store'
 
-export const isThresholdReached = (executionInfo: ExecutionInfo): boolean => {
+export const isThresholdReached = (executionInfo: MultisigExecutionInfo): boolean => {
   const { confirmationsSubmitted, confirmationsRequired } = executionInfo
   return confirmationsSubmitted >= confirmationsRequired
 }
@@ -29,11 +30,15 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   const safeAddress = useSelector(safeAddressFromUrl)
   const isUserAnOwner = useSelector(grantedSelector)
   const { txLocation } = useContext(TxLocationContext)
-  const { confirmationsSubmitted = 0, confirmationsRequired = 0, missingSigners } = transaction.executionInfo ?? {}
+  const {
+    confirmationsSubmitted = 0,
+    confirmationsRequired = 0,
+    missingSigners,
+  } = (transaction.executionInfo as MultisigExecutionInfo) ?? {}
   const transactionsByNonce = useSelector((state: AppReduxState) =>
     getQueuedTransactionsByNonce(state)({
       attributeName: 'nonce',
-      attributeValue: transaction.executionInfo?.nonce ?? -1,
+      attributeValue: (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? -1,
       txLocation,
     }),
   )
@@ -49,7 +54,7 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
 
   useEffect(() => {
     if (isUserAnOwner && txLocation !== 'history' && transaction.executionInfo) {
-      const currentUserSigned = !missingSigners?.some((missingSigner) => sameAddress(missingSigner, currentUser))
+      const currentUserSigned = !missingSigners?.some((missingSigner) => sameAddress(missingSigner.value, currentUser))
 
       const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
       const canConfirm = ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned

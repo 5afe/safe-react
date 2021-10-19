@@ -2,7 +2,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import Divider from 'src/components/Divider'
@@ -17,7 +17,6 @@ import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
@@ -28,6 +27,7 @@ import { sameString } from 'src/utils/strings'
 import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
+import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -95,7 +95,7 @@ const SendCollectible = ({
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
 
-  React.useMemo(() => {
+  useMemo(() => {
     if (selectedEntry === null && pristine) {
       setPristine(false)
     }
@@ -137,7 +137,10 @@ const SendCollectible = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook[scannedAddress]?.name ?? ''
+            const scannedName =
+              addressBook.find(({ address }) => {
+                return sameAddress(scannedAddress, address)
+              })?.name ?? ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
               name: scannedName ?? '',
