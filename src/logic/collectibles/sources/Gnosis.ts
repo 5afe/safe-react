@@ -1,19 +1,18 @@
-import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeCollectibleResponse, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
-import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 type FetchResult = {
   erc721Assets: TokenResult[]
-  erc721Tokens: CollectibleResult[]
+  erc721Tokens: SafeCollectibleResponse[]
 }
 class Gnosis {
-  _getAssetsFromTokens = (tokens: CollectibleResult[]): TokenResult[] => {
+  _getAssetsFromTokens = (tokens: SafeCollectibleResponse[]): TokenResult[] => {
     const assets: TokenResult[] = tokens.map(({ address, logoUri, tokenName, tokenSymbol }) => ({
       address,
       decimals: undefined,
@@ -72,7 +71,7 @@ class Gnosis {
     return extractedAssets
   }
 
-  static extractTokens(tokens: CollectibleResult[]): NFTTokens {
+  static extractTokens(tokens: SafeCollectibleResponse[]): NFTTokens {
     return tokens.map((token) => ({
       assetAddress: token.address,
       color: 'red',

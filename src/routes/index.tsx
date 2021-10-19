@@ -2,7 +2,7 @@ import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
@@ -21,6 +21,7 @@ import {
   NETWORK_ROOT_ROUTES,
 } from './routes'
 import { getCurrentShortChainName } from 'src/config'
+import { switchNetworkWithUrl } from 'src/utils/history'
 import { setNetwork } from 'src/logic/config/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
@@ -31,6 +32,7 @@ const Safe = React.lazy(() => import('./safe/container'))
 const Routes = (): React.ReactElement => {
   const [isInitialLoad, setInitialLoad] = useState(true)
   const location = useLocation()
+  const history = useHistory()
   const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
@@ -39,6 +41,11 @@ const Routes = (): React.ReactElement => {
       setInitialLoad(false)
     }
   }, [location.pathname, isInitialLoad])
+
+  useEffect(() => {
+    const unsubscribe = history.listen(switchNetworkWithUrl)
+    return unsubscribe
+  }, [history])
 
   useEffect(() => {
     // Anonymize safe address when tracking page views
@@ -59,7 +66,6 @@ const Routes = (): React.ReactElement => {
             path={route}
             render={() => {
               setNetwork(id)
-              // Last viewed safe logic will be handled with defaultSafe below
               return <Redirect to={ROOT_ROUTE} />
             }}
           />
