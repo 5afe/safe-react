@@ -8,7 +8,7 @@ import * as React from 'react'
 import TableHead from 'src/components/Table/TableHead'
 import { getSorting, stableSort } from 'src/components/Table/sorting'
 import Row from 'src/components/layout/Row'
-import { sm, xl, xxl } from 'src/theme/variables'
+import { sm, xxl } from 'src/theme/variables'
 
 const styles = {
   root: {
@@ -27,7 +27,7 @@ const styles = {
   paginationRoot: {
     backgroundColor: 'white',
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-    marginBottom: xl,
+    marginBottom: '90px',
     borderBottomRightRadius: sm,
     borderBottomLeftRadius: sm,
   },
