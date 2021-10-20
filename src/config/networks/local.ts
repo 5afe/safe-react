@@ -12,11 +12,6 @@ const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'http://localhost:8000/api/v1',
   gasPriceOracles: [
     {
-      url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
-      gasParameter: 'fast',
-      gweiFactor: '1',
-    },
-    {
       url: 'https://ethgasstation.info/json/ethgasAPI.json',
       gasParameter: 'fast',
       gweiFactor: '1e8',
