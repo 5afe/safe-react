@@ -1,11 +1,7 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 
-import { useDispatch, useSelector } from 'react-redux'
-
+import { useDispatch } from 'react-redux'
 import { useStyles } from './style'
-
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
@@ -15,8 +11,6 @@ import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -24,6 +18,8 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { extractSafeAddress } from 'src/routes/routes'
 
 type Props = {
   isOpen: boolean
@@ -33,7 +29,7 @@ type Props = {
 
 export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = extractSafeAddress()
   const classes = useStyles()
 
   const {
@@ -97,14 +93,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Row align="center" className={classes.heading} grow>
-                <Paragraph className={classes.headingText} noMargin weight="bolder">
-                  Reject transaction
-                </Paragraph>
-                <IconButton disableRipple onClick={onClose}>
-                  <Close className={classes.closeIcon} />
-                </IconButton>
-              </Row>
+              <ModalHeader onClose={onClose} title="Reject transaction" />
               <Hairline />
               <Block className={classes.container}>
                 <Row>

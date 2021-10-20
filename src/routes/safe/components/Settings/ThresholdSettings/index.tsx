@@ -37,7 +37,7 @@ const ThresholdSettings = (): React.ReactElement => {
   return (
     <>
       <Block className={classes.container}>
-        <Heading tag="h2">Required confirmations</Heading>
+        <Heading tag="h2">Required Confirmations</Heading>
         <Paragraph>Any transaction requires the confirmation of:</Paragraph>
         <Paragraph className={classes.ownersText} size="lg">
           <Bold>{threshold}</Bold> out of <Bold>{owners?.length || 0}</Bold> owners

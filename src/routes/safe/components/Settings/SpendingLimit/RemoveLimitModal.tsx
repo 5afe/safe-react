@@ -1,16 +1,17 @@
 import cn from 'classnames'
 import { ReactElement, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -18,11 +19,11 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-
 import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
+import { extractSafeAddress } from 'src/routes/routes'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -35,7 +36,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
 
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = extractSafeAddress()
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
@@ -138,11 +139,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Modal.Header onClose={onClose}>
-                <Modal.Header.Title size="xs" withoutMargin>
-                  Remove spending limit
-                </Modal.Header.Title>
-              </Modal.Header>
+              <ModalHeader onClose={onClose} title="Remove spending limit" />
+              <Hairline />
 
               <Modal.Body>
                 <Col margin="lg">

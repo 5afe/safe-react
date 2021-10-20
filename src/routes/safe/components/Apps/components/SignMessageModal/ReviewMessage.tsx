@@ -19,7 +19,6 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { BasicTxInfo } from 'src/components/DecodeTxs'
 import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
-
 import { SignMessageModalProps } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'

@@ -2,6 +2,7 @@ import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+import semverSatisfies from 'semver/functions/satisfies'
 
 import { getModuleData } from './dataFetcher'
 import { useStyles } from './style'
@@ -34,9 +35,10 @@ const NoTransactionGuardLegend = (): ReactElement => (
 
 const Advanced = (): ReactElement => {
   const classes = useStyles()
-  const { nonce, modules, guard } = useSelector(currentSafe) ?? {}
+  const { nonce, modules, guard, currentVersion } = useSelector(currentSafe) ?? {}
 
   const moduleData = modules ? getModuleData(modules) ?? null : null
+  const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
@@ -55,7 +57,7 @@ const Advanced = (): ReactElement => {
           which transaction will be executed next. You can find the nonce for a transaction in the transaction details.
         </InfoText>
         <InfoText color="secondaryLight" size="xl">
-          Current Nonce: <Bold>{nonce}</Bold>
+          Current Nonce: <Bold data-testid={'current-nonce'}>{nonce}</Bold>
         </InfoText>
       </Block>
 
@@ -81,26 +83,28 @@ const Advanced = (): ReactElement => {
       </Block>
 
       {/* Transaction guard */}
-      <Block className={classes.container}>
-        <Title size="xs" withoutMargin>
-          Transaction guard
-        </Title>
-        <InfoText size="lg">
-          Transaction guards impose additional constraints that are checked prior to executing a Safe transaction.
-          Transaction guards are potentially risky, so make sure to only use modules from trusted sources. Learn more
-          about transaction guards{' '}
-          <a
-            href="https://help.gnosis-safe.io/en/articles/5324092-what-is-a-transaction-guard"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            here
-          </a>
-          .
-        </InfoText>
+      {isVersionWithGuards && (
+        <Block className={classes.container}>
+          <Title size="xs" withoutMargin>
+            Transaction Guard
+          </Title>
+          <InfoText size="lg">
+            Transaction guards impose additional constraints that are checked prior to executing a Safe transaction.
+            Transaction guards are potentially risky, so make sure to only use modules from trusted sources. Learn more
+            about transaction guards{' '}
+            <a
+              href="https://help.gnosis-safe.io/en/articles/5324092-what-is-a-transaction-guard"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              here
+            </a>
+            .
+          </InfoText>
 
-        {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
-      </Block>
+          {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
+        </Block>
+      )}
     </>
   )
 }

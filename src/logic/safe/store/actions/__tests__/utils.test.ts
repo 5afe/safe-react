@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { FEATURES } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,
@@ -180,17 +180,18 @@ describe('extractRemoteSafeInfo', () => {
 
   it('should build a Partial SafeRecord without modules information', async () => {
     const extractedRemoteSafeInfo: Partial<SafeRecordProps> = {
+      chainId: '4' as ETHEREUM_NETWORK,
+      collectiblesTag: '1634550387',
       modules: undefined,
       spendingLimits: undefined,
       nonce: 492,
       threshold: 2,
+      txHistoryTag: '1633430459',
+      txQueuedTag: '1634550387',
       currentVersion: '1.3.0',
       needsUpdate: false,
       guard: undefined,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
-      collectiblesTag: undefined,
-      txHistoryTag: undefined,
-      txQueuedTag: undefined,
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules as any)
@@ -203,17 +204,18 @@ describe('extractRemoteSafeInfo', () => {
     spendingLimits.getSpendingLimits.mockImplementationOnce(async () => inMemoryPartialSafeInformation.spendingLimits)
 
     const extractedRemoteSafeInfo: Partial<SafeRecordProps> = {
+      chainId: '4' as ETHEREUM_NETWORK,
+      collectiblesTag: '1634550387',
       modules: inMemoryPartialSafeInformation.modules as SafeRecordProps['modules'],
       spendingLimits: inMemoryPartialSafeInformation.spendingLimits,
       nonce: 492,
       threshold: 2,
+      txHistoryTag: '1633430459',
+      txQueuedTag: '1634550387',
       currentVersion: '1.3.0',
       needsUpdate: false,
       guard: '0x4f8a82d73729A33E0165aDeF3450A7F85f007528',
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
-      collectiblesTag: undefined,
-      txHistoryTag: undefined,
-      txQueuedTag: undefined,
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules as any)

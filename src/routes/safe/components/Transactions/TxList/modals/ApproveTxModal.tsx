@@ -8,8 +8,6 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -23,7 +21,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -33,12 +30,14 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { isThresholdReached } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { extractSafeAddress } from 'src/routes/routes'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -68,7 +67,7 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
 
 const useTxInfo = (transaction: Props['transaction']) => {
   const t = useRef(transaction)
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = extractSafeAddress()
 
   const confirmations = useMemo(
     () =>
@@ -215,7 +214,7 @@ export const ApproveTxModal = ({
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = extractSafeAddress()
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
   const executionInfo = transaction.executionInfo as MultisigExecutionInfo
   const thresholdReached = !!(transaction.executionInfo && isThresholdReached(executionInfo))
@@ -336,15 +335,7 @@ export const ApproveTxModal = ({
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              {/* Header */}
-              <Row align="center" className={classes.heading} grow>
-                <Paragraph className={classes.headingText} noMargin weight="bolder">
-                  {title}
-                </Paragraph>
-                <IconButton disableRipple onClick={onClose}>
-                  <Close className={classes.closeIcon} />
-                </IconButton>
-              </Row>
+              <ModalHeader onClose={onClose} title={title} />
 
               <Hairline />
 

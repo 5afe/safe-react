@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import { useLocation, matchPath } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
-import { WELCOME_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
 
 import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
+import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 
 const Container = styled.div`
   height: 100vh;
@@ -96,7 +96,7 @@ const Layout: React.FC<Props> = ({
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
   const hasFooter = !!matchPath(pathname, {
-    path: [SAFE_ROUTES.SETTINGS_BASE_ROUTE, WELCOME_ADDRESS],
+    path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
   return (

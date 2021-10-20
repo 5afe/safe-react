@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
@@ -12,7 +13,6 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
-  safeUrl: 'https://ewc.gnosis-safe.io/app',
   gasPriceOracles: [
     {
       url: 'https://station.energyweb.org',
@@ -30,20 +30,14 @@ const baseConfig: EnvironmentSettings = {
 
 const mainnet: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-ewc.staging.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-ewc.staging.gnosisdev.com/app/',
-    },
-    production: {
-      ...baseConfig,
-    },
+    test: baseConfig,
+    dev: baseConfig,
+    staging: baseConfig,
+    production: baseConfig,
   },
   network: {
     id: ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+    shortName: SHORT_NAME.ENERGY_WEB_CHAIN,
     backgroundColor: '#A566FF',
     textColor: '#ffffff',
     label: 'EWC',

@@ -1,19 +1,18 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
 import ReceiveModal from 'src/components/App/ReceiveModal'
-
-import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
+import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
+import { getCurrentShortChainName } from 'src/config'
 
 const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -31,17 +30,11 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-export const COINS_LOCATION_REGEX = /\/balances\/?$/
-export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
-
 const Balances = (): ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
-  const matchSafeWithAction = useRouteMatch({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
-  }) as {
-    url: string
-    params: Record<string, string>
-  }
+
+  // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
+  const matchSafeWithBalancesSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
@@ -84,16 +77,17 @@ const Balances = (): ReactElement => {
 
   const { erc721Enabled, sendFunds, showReceive } = state
 
+  const currentSafeRoutes = generatePrefixedAddressRoutes({
+    shortName: getCurrentShortChainName(),
+    safeAddress,
+  })
+
   let balancesSection
-  switch (matchSafeWithAction.url) {
-    case generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-      safeAddress,
-    }):
+  switch (matchSafeWithBalancesSection?.url) {
+    case currentSafeRoutes.ASSETS_BALANCES:
       balancesSection = 'Coins'
       break
-    case generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-      safeAddress,
-    }):
+    case currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES:
       balancesSection = 'Collectibles'
       break
     default:
@@ -111,30 +105,22 @@ const Balances = (): ReactElement => {
         </Col>
         <Switch>
           <Route
-            path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-              safeAddress,
-            })}
+            path={SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES}
             exact
             render={() => {
               return !erc721Enabled ? (
-                <Redirect
-                  to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                    safeAddress,
-                  })}
-                />
+                <Redirect to={SAFE_ROUTES.ASSETS_BALANCES} />
               ) : (
                 <Col end="sm" sm={6} xs={12}></Col>
               )
             }}
           />
           <Route
-            path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-              safeAddress,
-            })}
+            path={SAFE_ROUTES.ASSETS_BALANCES}
             exact
             render={() => (
               <Col end="sm" sm={6} xs={12}>
-                <CurrencyDropdown />
+                <CurrencyDropdown testId={'balances-currency-dropdown'} />
               </Col>
             )}
           />
@@ -142,9 +128,7 @@ const Balances = (): ReactElement => {
       </Menu>
       <Switch>
         <Route
-          path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-            safeAddress,
-          })}
+          path={SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES}
           exact
           render={() => {
             if (erc721Enabled) {
@@ -154,9 +138,7 @@ const Balances = (): ReactElement => {
           }}
         />
         <Route
-          path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            safeAddress,
-          })}
+          path={SAFE_ROUTES.ASSETS_BALANCES}
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}
