@@ -7,11 +7,6 @@ const baseConfig: EnvironmentSettings = {
   safeUrl: 'http://localhost:3000/app',
   gasPriceOracles: [
     {
-      url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
-      gasParameter: 'fast',
-      gweiFactor: '1',
-    },
-    {
       url: 'https://ethgasstation.info/json/ethgasAPI.json',
       gasParameter: 'fast',
       gweiFactor: '1e8',

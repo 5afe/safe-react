@@ -1,8 +1,8 @@
 diff --git a/node_modules/web3-eth/src/getNetworkType.js b/node_modules/web3-eth/src/getNetworkType.js
-index 3be3a20..88edbd9 100644
+index 5f9b9b3..8c83b18 100644
 --- a/node_modules/web3-eth/src/getNetworkType.js
 +++ b/node_modules/web3-eth/src/getNetworkType.js
-@@ -63,6 +63,14 @@ var getNetworkType = function (callback) {
+@@ -61,6 +61,14 @@ var getNetworkType = function (callback) {
                  id === 42) {
                  returnValue = 'kovan';
              }
@@ -15,5 +15,5 @@ index 3be3a20..88edbd9 100644
 +                returnValue = 'volta';
 +            }
  
-             if (_.isFunction(callback)) {
+             if (typeof callback === 'function') {
                  callback(null, returnValue);
