@@ -25,9 +25,8 @@ const usePinnedSafeApps = (remoteSafeApps: SafeApp[], remoteAppsFetchStatus: FET
 
       const isRemoteSafeAppsListLoaded = remoteAppsFetchStatus === FETCH_STATUS.SUCCESS
       if (isRemoteSafeAppsListLoaded) {
-        // we remove pinned Safe Apps that are not included in the remote list, see #2847
         const filteredPinnedAppsIds = pinnedAppIds.filter((pinnedAppId) =>
-          remoteSafeApps.map((app) => app.id).includes(pinnedAppId),
+          remoteSafeApps.some((app) => app.id === pinnedAppId),
         )
         saveToStorage(PINNED_SAFE_APP_IDS, filteredPinnedAppsIds)
         setPinnedSafeAppIds(filteredPinnedAppsIds)
