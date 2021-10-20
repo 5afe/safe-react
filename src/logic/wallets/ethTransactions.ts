@@ -2,7 +2,7 @@ import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
-import { getSDKWeb3Adapter, getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getSDKWeb3Adapter, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { GasPriceOracle } from 'src/config/networks/network'
 import { CodedException, Errors } from '../exceptions/CodedException'
@@ -41,6 +41,7 @@ export const calculateGasPrice = async (): Promise<string> => {
   }
 
   // A fallback based on the latest mined blocks when none of the oracles are working
+  const web3ReadOnly = getWeb3ReadOnly()
   const fixedFee = web3ReadOnly.utils.toWei(FIXED_GAS_FEE, 'gwei')
   const lastFee = await web3ReadOnly.eth.getGasPrice()
   return BigNumber.sum(fixedFee, lastFee).toString()
