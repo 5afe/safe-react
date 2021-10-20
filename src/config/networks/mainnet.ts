@@ -11,7 +11,7 @@ const baseConfig: EnvironmentSettings = {
     {
       url: `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${ETHERSCAN_API_KEY}`,
       gasParameter: 'FastGasPrice',
-      gweiFactor: '1e8',
+      gweiFactor: '1e9',
     },
     {
       url: `https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}`,
