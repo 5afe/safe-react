@@ -57,7 +57,7 @@ const Advanced = (): ReactElement => {
           which transaction will be executed next. You can find the nonce for a transaction in the transaction details.
         </InfoText>
         <InfoText color="secondaryLight" size="xl">
-          Current Nonce: <Bold>{nonce}</Bold>
+          Current Nonce: <Bold data-testid={'current-nonce'}>{nonce}</Bold>
         </InfoText>
       </Block>
 
