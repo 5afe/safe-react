@@ -9,8 +9,6 @@ import Hairline from 'src/components/layout/Hairline'
 import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode.d'
 import { BasicTxInfo, getParameterElement } from 'src/components/DecodeTxs'
 
-const { nativeCoin } = getNetworkInfo()
-
 const Container = styled.div`
   max-width: 480px;
   padding: ${md} ${lg};
@@ -28,6 +26,7 @@ type Props = {
 }
 
 export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
+  const { nativeCoin } = getNetworkInfo()
   let body
   // If we are dealing with a multiSend
   // decodedTxData is of type DataDecodedParameter

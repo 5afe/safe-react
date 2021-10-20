@@ -1,5 +1,5 @@
 import { render, screen } from 'src/utils/test-utils'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import { SignMessageModal } from './'
 import { getEmptySafeApp } from '../../utils'
@@ -21,6 +21,7 @@ jest.mock('src/logic/hooks/useEstimateTransactionGas', () => ({
 }))
 
 describe('SignMessageModal Component', () => {
+  const web3ReadOnly = getWeb3ReadOnly()
   test('Converts message from HEX to UTF-8', () => {
     const hexMessage = '0x74657374206d657373616765'
     const utf8Message = web3ReadOnly.utils.hexToUtf8(hexMessage)

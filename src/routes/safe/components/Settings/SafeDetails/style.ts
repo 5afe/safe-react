@@ -15,10 +15,7 @@ export const styles = createStyles({
   },
   controlsRow: {
     borderTop: `2px solid ${border}`,
-    bottom: 0,
-    boxSizing: 'border-box',
     padding: lg,
-    position: 'absolute',
-    width: '100%',
+    marginTop: sm,
   },
 })

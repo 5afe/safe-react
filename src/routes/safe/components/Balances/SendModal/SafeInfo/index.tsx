@@ -9,8 +9,6 @@ import Bold from 'src/components/layout/Bold'
 import { border, xs } from 'src/theme/variables'
 import Block from 'src/components/layout/Block'
 
-const { nativeCoin } = getNetworkInfo()
-
 const StyledBlock = styled(Block)`
   font-size: 12px;
   line-height: 1.08;
@@ -25,6 +23,7 @@ const StyledBlock = styled(Block)`
 
 const SafeInfo = (): React.ReactElement => {
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
+  const { nativeCoin } = getNetworkInfo()
 
   return (
     <>

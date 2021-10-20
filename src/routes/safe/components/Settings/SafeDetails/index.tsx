@@ -35,6 +35,7 @@ import {
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
+import ChainIndicator from 'src/components/ChainIndicator'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -50,6 +51,9 @@ const StyledIcon = styled(Icon)`
   top: 3px;
   left: 6px;
 `
+const StyledParagraph = styled(Paragraph)`
+  margin-bottom: 0;
+`
 
 const SafeDetails = (): ReactElement => {
   const classes = useStyles()
@@ -59,6 +63,7 @@ const SafeDetails = (): ReactElement => {
     address: safeAddress,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
+    chainId,
   } = useSelector(currentSafe)
   const safeNamesMap = useSelector(safesWithNamesAsMap)
   const safeName = safeNamesMap[safeAddress]?.name
@@ -153,9 +158,17 @@ const SafeDetails = (): ReactElement => {
               </Row>
             ) : null}
           </Block>
+
+          <Block className={classes.formContainer}>
+            <Heading tag="h2">Blockchain Network</Heading>
+            <StyledParagraph>
+              <ChainIndicator chainId={chainId} />
+            </StyledParagraph>
+          </Block>
+
           {safeName != null && (
             <Block className={classes.formContainer}>
-              <Heading tag="h2">Modify Safe name</Heading>
+              <Heading tag="h2">Modify Safe Name</Heading>
               <Paragraph>
                 You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
                 any third parties.
@@ -174,6 +187,7 @@ const SafeDetails = (): ReactElement => {
               </Block>
             </Block>
           )}
+
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
               <Button

@@ -1,8 +1,8 @@
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const IS_PRODUCTION = APP_ENV === 'production'
-export const NETWORK = process.env.REACT_APP_NETWORK?.toUpperCase() || 'RINKEBY'
-export const INTERCOM_ID = APP_ENV === 'production' ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
+export const PUBLIC_URL = process.env.PUBLIC_URL
+export const INTERCOM_ID = IS_PRODUCTION ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
 export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || ''
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID ?? '852b763d-f28b-4463-80cb-846d7ec5806b'

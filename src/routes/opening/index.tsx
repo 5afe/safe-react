@@ -25,89 +25,6 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 250px auto;
-  grid-template-rows: 43px auto;
-  margin-bottom: 30px;
-`
-
-const Title = styled(Heading)`
-  grid-column: 1/3;
-  grid-row: 1;
-  margin: 7px 0 0 0 !important;
-`
-
-const Nav = styled.div`
-  grid-column: 1;
-  grid-row: 2;
-`
-
-const Body = styled.div`
-  grid-column: 2;
-  grid-row: 2;
-  text-align: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  border-radius: 5px;
-  min-width: 700px;
-  padding-top: 70px;
-  box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
-
-  display: grid;
-  grid-template-rows: 100px 50px 110px 1fr;
-`
-
-const CardTitle = styled.div`
-  font-size: 20px;
-  padding-top: 10px;
-`
-
-interface FullParagraphProps {
-  inversecolors: string
-  $stepIndex: number
-}
-
-const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${({ $stepIndex }) => ($stepIndex === 0 ? connected : background)};
-  color: ${({ theme, $stepIndex }) => ($stepIndex === 0 ? theme.colors.white : fontColor)};
-  padding: 28px;
-  font-size: 20px;
-  margin-bottom: 16px;
-  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-`
-
-const BodyImage = styled.div`
-  grid-row: 1;
-`
-const BodyDescription = styled.div`
-  grid-row: 2;
-`
-const BodyInstruction = styled.div`
-  grid-row: 3;
-  margin: 27px 0;
-`
-const BodyFooter = styled.div`
-  grid-row: 4;
-
-  padding: 10px 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-`
-
-const BackButton = styled(Button)`
-  grid-column: 2;
-  margin: 20px auto 0;
-`
-
-type Props = {
-  creationTxHash?: string
-  submittedPromise?: Promise<TransactionReceipt>
-  onRetry: () => void
-  onSuccess: (createdSafeAddress: string) => void
-  onCancel: () => void
-}
-
 export const SafeDeployment = ({
   creationTxHash,
   onCancel,
@@ -317,7 +234,11 @@ export const SafeDeployment = ({
   }, [safeCreationTxHash, waitingSafeDeployed, onError])
 
   if (loading || stepIndex === undefined) {
-    return <Loader size="sm" />
+    return (
+      <LoaderContainer data-testid={'create-safe-loader'}>
+        <Loader size="md" />
+      </LoaderContainer>
+    )
   }
 
   let FooterComponent
@@ -380,3 +301,93 @@ export const SafeDeployment = ({
     </Wrapper>
   )
 }
+
+type Props = {
+  creationTxHash?: string
+  submittedPromise?: Promise<TransactionReceipt>
+  onRetry: () => void
+  onSuccess: (createdSafeAddress: string) => void
+  onCancel: () => void
+}
+
+interface FullParagraphProps {
+  inversecolors: string
+  $stepIndex: number
+}
+
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 250px auto;
+  grid-template-rows: 43px auto;
+  margin-bottom: 30px;
+`
+
+const Title = styled(Heading)`
+  grid-column: 1/3;
+  grid-row: 1;
+  margin: 7px 0 0 0 !important;
+`
+
+const Nav = styled.div`
+  grid-column: 1;
+  grid-row: 2;
+`
+
+const Body = styled.div`
+  grid-column: 2;
+  grid-row: 2;
+  text-align: center;
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 5px;
+  min-width: 700px;
+  padding-top: 70px;
+  box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
+
+  display: grid;
+  grid-template-rows: 100px 50px 110px 1fr;
+`
+
+const CardTitle = styled.div`
+  font-size: 20px;
+  padding-top: 10px;
+`
+
+const FullParagraph = styled(Paragraph)<FullParagraphProps>`
+  background-color: ${({ $stepIndex }) => ($stepIndex === 0 ? connected : background)};
+  color: ${({ theme, $stepIndex }) => ($stepIndex === 0 ? theme.colors.white : fontColor)};
+  padding: 28px;
+  font-size: 20px;
+  margin-bottom: 16px;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+`
+
+const BodyImage = styled.div`
+  grid-row: 1;
+`
+const BodyDescription = styled.div`
+  grid-row: 2;
+`
+const BodyInstruction = styled.div`
+  grid-row: 3;
+  margin: 27px 0;
+`
+const BodyFooter = styled.div`
+  grid-row: 4;
+
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+`
+
+const BackButton = styled(Button)`
+  grid-column: 2;
+  margin: 20px auto 0;
+`

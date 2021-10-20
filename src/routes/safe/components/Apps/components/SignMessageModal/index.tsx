@@ -1,7 +1,7 @@
-import { ReactElement } from 'react'
 import { RequestId, calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
+import { ReactElement } from 'react'
 
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getSignMessageLibContractInstance, getSignMessageLibAddress } from 'src/logic/contracts/safeContracts'
 import Modal from 'src/components/Modal'
@@ -25,12 +25,13 @@ export type SignMessageModalProps = {
 const networkId = getNetworkId()
 
 const convertToHumanReadableMessage = (message: string): string => {
-  const isHex = web3ReadOnly.utils.isHexStrict(message.toString())
+  const web3 = getWeb3ReadOnly()
+  const isHex = web3.utils.isHexStrict(message.toString())
 
   let humanReadableMessage = message
   if (isHex) {
     try {
-      humanReadableMessage = web3ReadOnly.utils.hexToUtf8(message)
+      humanReadableMessage = web3.utils.hexToUtf8(message)
     } catch (e) {
       // do nothing
     }
@@ -40,8 +41,9 @@ const convertToHumanReadableMessage = (message: string): string => {
 }
 
 export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalProps): ReactElement => {
+  const web3 = getWeb3ReadOnly()
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
-  const txData = getSignMessageLibContractInstance(web3ReadOnly, networkId)
+  const txData = getSignMessageLibContractInstance(web3, networkId)
     .methods.signMessage(calculateMessageHash(message))
     .encodeABI()
 

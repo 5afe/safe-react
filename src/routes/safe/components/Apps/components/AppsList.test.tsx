@@ -6,6 +6,14 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { saveToStorage } from 'src/utils/storage'
 import * as googleAnalytics from 'src/utils/googleAnalytics'
 
+jest.mock('src/routes/routes', () => {
+  const original = jest.requireActual('src/routes/routes')
+  return {
+    ...original,
+    extractSafeAddress: () => '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
+  }
+})
+
 const customState = {
   router: {
     location: {

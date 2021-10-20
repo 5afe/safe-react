@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -11,7 +12,6 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
-  safeUrl: 'https://xdai.gnosis-safe.io/app',
   gasPrice: 1e9,
   rpcServiceUrl: 'https://dai.poa.network/',
   safeAppsRpcServiceUrl: 'https://dai.poa.network/',
@@ -22,20 +22,14 @@ const baseConfig: EnvironmentSettings = {
 
 const xDai: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-xdai.staging.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-xdai.staging.gnosisdev.com/app/',
-    },
-    production: {
-      ...baseConfig,
-    },
+    test: baseConfig,
+    dev: baseConfig,
+    staging: baseConfig,
+    production: baseConfig,
   },
   network: {
     id: ETHEREUM_NETWORK.XDAI,
+    shortName: SHORT_NAME.XDAI,
     backgroundColor: '#48A8A6',
     textColor: '#ffffff',
     label: 'xDai',

@@ -28,6 +28,7 @@ enum ErrorCodes {
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
+  _703 = '703: Error migrating localStorage',
   _800 = '800: Safe creation tx failed',
   _801 = '801: Failed to send a tx with a spending limit',
   _802 = '802: Error submitting a transaction, safeAddress not found',

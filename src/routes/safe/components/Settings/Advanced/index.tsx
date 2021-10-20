@@ -83,7 +83,7 @@ const Advanced = (): ReactElement => {
       {/* Transaction guard */}
       <Block className={classes.container}>
         <Title size="xs" withoutMargin>
-          Transaction guard
+          Transaction Guard
         </Title>
         <InfoText size="lg">
           Transaction guards impose additional constraints that are checked prior to executing a Safe transaction.

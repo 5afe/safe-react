@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
@@ -10,7 +11,6 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
-  safeUrl: 'https://volta.gnosis-safe.io/app',
   gasPriceOracles: [
     {
       url: 'https://station.energyweb.org',
@@ -27,20 +27,14 @@ const baseConfig: EnvironmentSettings = {
 
 const mainnet: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-volta.staging.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-volta.staging.gnosisdev.com/app/',
-    },
-    production: {
-      ...baseConfig,
-    },
+    test: baseConfig,
+    dev: baseConfig,
+    staging: baseConfig,
+    production: baseConfig,
   },
   network: {
     id: ETHEREUM_NETWORK.VOLTA,
+    shortName: SHORT_NAME.VOLTA,
     backgroundColor: '#514989',
     textColor: '#ffffff',
     label: 'Volta',
