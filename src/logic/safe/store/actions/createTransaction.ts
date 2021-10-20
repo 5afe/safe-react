@@ -34,6 +34,8 @@ import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 's
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -148,11 +150,12 @@ export const createTransaction =
       }
 
       const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+      const gasParam = getNetworkId() === ETHEREUM_NETWORK.MAINNET ? 'maxFeePerGas' : 'gasPrice'
       const sendParams: PayableTx = {
         from,
         value: 0,
         gas: ethParameters?.ethGasLimit,
-        maxFeePerGas: ethParameters?.ethGasPriceInGWei,
+        [gasParam]: ethParameters?.ethGasPriceInGWei,
         nonce: ethParameters?.ethNonce,
       }
 
