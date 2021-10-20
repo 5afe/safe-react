@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import Close from '@material-ui/icons/Close'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -18,6 +16,7 @@ import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
@@ -43,15 +42,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Remove owner
-        </Paragraph>
-        <Paragraph className={classes.annotation}>2 of 3</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} subTitle="2 of 3" title="Remove owner" />
       <Hairline />
       <GnoForm
         initialValues={{ threshold: initialValues.threshold || defaultThreshold.toString() }}

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getNetworkId } from 'src/config'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
+import { NetworkConfig } from '../config/model/networkConfig'
 
 export type RemoteAppData = {
   id: number
@@ -13,6 +14,12 @@ export type RemoteAppData = {
 
 enum Endpoints {
   SAFE_APPS = '/safe-apps/',
+}
+
+export const fetchSafeConfig = async (networkId: string): Promise<NetworkConfig> => {
+  const url = `${CONFIG_SERVICE_URL}/chains/${networkId}`
+
+  return axios.post(url).then(({ data }) => data)
 }
 
 export const fetchSafeAppsList = async (): Promise<RemoteAppData[]> => {

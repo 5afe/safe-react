@@ -24,12 +24,13 @@ This repository contains the code for the frontend code hosted at https://gnosis
 
 Besides the Ethereum Mainnet, the following networks are supported:
 
-- [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
-- [xDai](https://xdai.gnosis-safe.io/app/)
-- [Polygon](https://polygon.gnosis-safe.io/app/)
-- [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
-- [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
-- [Volta Testnet](https://volta.gnosis-safe.io/app/)
+- [Rinkeby Testnet](https://gnosis-safe.io/app/rinkeby)
+- [xDai](https://gnosis-safe.io/app/xdai)
+- [Polygon](https://gnosis-safe.io/app/polygon)
+- [Binance Smart Chain](https://gnosis-safe.io/app/bsc)
+- [Arbitrum](https://gnosis-safe.io/app/arbitrum)
+- [Energy Web Chain](https://gnosis-safe.io/app/ewc)
+- [Volta Testnet](https://gnosis-safe.io/app/volta)
 
 ## Getting Started
 

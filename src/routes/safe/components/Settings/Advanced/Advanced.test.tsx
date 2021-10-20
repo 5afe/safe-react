@@ -1,9 +1,13 @@
 import { REMOVE_GUARD_BTN_TEST_ID } from 'src/routes/safe/components/Settings/Advanced/TransactionGuard'
 import { render, screen, getByText, fireEvent } from 'src/utils/test-utils'
+import { history } from 'src/routes/routes'
 import Advanced from '.'
 
 const networkId = '4'
 const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
+// Set route to settings/advanced
+const url = `/rin:${safeAddress}/settings/advanced`
+history.location.pathname = url
 
 jest.mock('src/logic/hooks/useEstimateTransactionGas', () => ({
   useEstimateTransactionGas: () => ({
@@ -44,15 +48,6 @@ describe('Advanced Settings Component', () => {
           },
         },
       },
-      router: {
-        location: {
-          pathname: `/safes/${safeAddress}/settings/advanced`,
-          search: '',
-          hash: '',
-          query: {},
-        },
-        action: 'PUSH',
-      },
     }
 
     render(<Advanced />, customState)
@@ -84,20 +79,11 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
-        },
       }
 
       render(<Advanced />, customState)
 
-      expect(screen.getByText('Transaction guard')).toBeInTheDocument()
+      expect(screen.getByText('Transaction Guard')).toBeInTheDocument()
     })
 
     it('Hides Transaction guard Section if version is less than 1.3.0', () => {
@@ -121,15 +107,6 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.0.0',
             },
           },
-        },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
         },
       }
 
@@ -159,15 +136,6 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
-        },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
         },
       }
 
@@ -199,15 +167,6 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
-        },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
         },
       }
 
@@ -244,15 +203,6 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
-        },
       }
 
       render(<Advanced />, customState)
@@ -260,11 +210,11 @@ describe('Advanced Settings Component', () => {
       const removeGuardBtnNode = screen.getByTestId(`${guardAddress}-${REMOVE_GUARD_BTN_TEST_ID}`)
       expect(removeGuardBtnNode).toBeInTheDocument()
 
-      expect(screen.queryByText('Remove Transaction Guard')).not.toBeInTheDocument()
+      expect(screen.queryByText('Remove Guard')).not.toBeInTheDocument()
 
       fireEvent.click(removeGuardBtnNode)
 
-      expect(screen.queryByText('Remove Transaction Guard')).toBeInTheDocument()
+      expect(screen.queryByText('Remove Guard')).toBeInTheDocument()
     })
   })
 
@@ -290,15 +240,6 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
-        },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
         },
       }
 
@@ -329,15 +270,6 @@ describe('Advanced Settings Component', () => {
               modules: [['0x0000000000000000000000000000000000000001', safeModuleAddress]],
             },
           },
-        },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
         },
       }
 
@@ -371,15 +303,6 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
-        },
-        router: {
-          location: {
-            pathname: `/safes/${safeAddress}/settings/advanced`,
-            search: '',
-            hash: '',
-            query: {},
-          },
-          action: 'PUSH',
         },
       }
 

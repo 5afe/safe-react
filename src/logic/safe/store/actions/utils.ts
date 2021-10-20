@@ -4,12 +4,13 @@ import axios from 'axios'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
-import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {
@@ -94,6 +95,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.collectiblesTag = remoteSafeInfo.collectiblesTag
   safeInfo.txQueuedTag = remoteSafeInfo.txQueuedTag
   safeInfo.txHistoryTag = remoteSafeInfo.txHistoryTag
+  safeInfo.chainId = remoteSafeInfo.chainId as ETHEREUM_NETWORK
 
   return safeInfo
 }

@@ -8,7 +8,6 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const NOT_AVAILABLE = 'n/a'
-
 interface AmountData {
   decimals?: number | string
   symbol?: string
@@ -60,8 +59,6 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
   }
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 type txTokenData = {
   address: string
   value: string
@@ -69,6 +66,7 @@ type txTokenData = {
 }
 
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
+  const { nativeCoin } = getNetworkInfo()
   switch (txInfo.transferInfo.type) {
     case TokenType.ERC20:
       return {

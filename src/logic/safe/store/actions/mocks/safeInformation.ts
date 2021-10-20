@@ -1,7 +1,11 @@
+import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+
 export const remoteSafeInfoWithModules = {
   address: {
     value: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
   },
+  chainId: '4',
   nonce: 492,
   threshold: 2,
   owners: [
@@ -42,11 +46,16 @@ export const remoteSafeInfoWithModules = {
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
   version: '1.3.0',
-}
+  collectiblesTag: '1634550387',
+  txQueuedTag: '1634550387',
+  txHistoryTag: '1633430459',
+} as unknown as SafeInfo
+
 export const remoteSafeInfoWithoutModules = {
   address: {
     value: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
   },
+  chainId: '4',
   nonce: 492,
   threshold: 2,
   owners: [
@@ -80,11 +89,16 @@ export const remoteSafeInfoWithoutModules = {
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
   version: '1.3.0',
-}
+  collectiblesTag: '1634550387',
+  txQueuedTag: '1634550387',
+  txHistoryTag: '1633430459',
+} as unknown as SafeInfo
+
 export const localSafesInfo = {
   '0xe414604Ad49602C0b9c0b08D0781ECF96740786a': {
     name: 'Safe A',
     address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
+    chainId: ETHEREUM_NETWORK.RINKEBY,
     threshold: 2,
     owners: [
       '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
@@ -154,11 +168,16 @@ export const localSafesInfo = {
     currentVersion: '1.1.1',
     needsUpdate: false,
     featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+    collectiblesTag: '1634550387',
+    txQueuedTag: '1634550387',
+    txHistoryTag: '1633430459',
   },
 }
+
 export const inMemoryPartialSafeInformation = {
   name: 'Safe A',
   address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
+  chainId: ETHEREUM_NETWORK.RINKEBY,
   threshold: 2,
   owners: [
     '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
@@ -228,4 +247,7 @@ export const inMemoryPartialSafeInformation = {
   currentVersion: '1.3.0',
   needsUpdate: false,
   featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+  collectiblesTag: '1634550387',
+  txQueuedTag: '1634550387',
+  txHistoryTag: '1633430459',
 }

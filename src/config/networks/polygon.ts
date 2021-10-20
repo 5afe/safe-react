@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -11,7 +12,6 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction-polygon.staging.gnosisdev.com/api/v1',
-  safeUrl: 'https://polygon.gnosis-safe.io/app',
   gasPriceOracles: [
     {
       url: 'https://gasstation-mainnet.matic.network',
@@ -28,14 +28,9 @@ const baseConfig: EnvironmentSettings = {
 
 const polygon: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-polygon.staging.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-polygon.staging.gnosisdev.com/app/',
-    },
+    test: baseConfig,
+    dev: baseConfig,
+    staging: baseConfig,
     production: {
       ...baseConfig,
       clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
@@ -44,6 +39,7 @@ const polygon: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.POLYGON,
+    shortName: SHORT_NAME.POLYGON,
     backgroundColor: '#8B50ED',
     textColor: '#ffffff',
     label: 'Polygon',

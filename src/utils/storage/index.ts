@@ -9,11 +9,15 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
-const PREFIX = `v2_${getNetworkName()}`
+// We need this to update on run time depending on selected network name
+export const getStoragePrefix = (networkName = getNetworkName()): string => `v2_${networkName}`
 
-export const loadFromStorage = async <T = unknown>(key: string): Promise<T | undefined> => {
+export const loadFromStorage = async <T = unknown>(
+  key: string,
+  prefix = getStoragePrefix(),
+): Promise<T | undefined> => {
   try {
-    const stringifiedValue = await storage.get(`${PREFIX}__${key}`)
+    const stringifiedValue = await storage.get(`${prefix}__${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
       return undefined
     }
@@ -28,15 +32,25 @@ export const loadFromStorage = async <T = unknown>(key: string): Promise<T | und
 export const saveToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
   try {
     const stringifiedValue = JSON.stringify(value)
-    await storage.set(`${PREFIX}__${key}`, stringifiedValue)
+    await storage.set(`${getStoragePrefix()}__${key}`, stringifiedValue)
   } catch (err) {
     logError(Errors._701, `key ${key} – ${err.message}`)
   }
 }
 
+// This function is only meant to be used in L2-UX migration to gather information from other networks
+export const saveMigratedKeyToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
+  try {
+    const stringifiedValue = JSON.stringify(value)
+    await storage.set(key, stringifiedValue)
+  } catch (err) {
+    logError(Errors._703, `key ${key} – ${err.message}`)
+  }
+}
+
 export const removeFromStorage = async (key: string): Promise<void> => {
   try {
-    await storage.remove(`${PREFIX}__${key}`)
+    await storage.remove(`${getStoragePrefix()}__${key}`)
   } catch (err) {
     logError(Errors._702, `key ${key} – ${err.message}`)
   }

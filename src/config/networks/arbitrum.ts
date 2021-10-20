@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -11,7 +12,6 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.arbitrum.gnosis.io/api/v1',
-  safeUrl: 'https://arbitrum.gnosis-safe.io/app',
   gasPrice: 2e9,
   rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   safeAppsRpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
@@ -34,6 +34,7 @@ const arbitrum: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.ARBITRUM,
+    shortName: SHORT_NAME.ARBITRUM,
     backgroundColor: '#2A3245',
     textColor: '#ffffff',
     label: 'Arbitrum',

@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import '@testing-library/jest-dom/extend-expect'
 import * as sdkGatewayEndpoints from '@gnosis.pm/safe-react-gateway-sdk'
 import { mockGetSafeInfoResponse } from './logic/safe/utils/mocks/getSafeMock'
+import { mockTokenCurrenciesBalancesResponse } from 'src/logic/safe/utils/mocks/mockTokenCurrenciesBalancesResponse'
 
 function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
@@ -22,15 +23,15 @@ function mockedGetRandomValues(buf) {
   buf.set(bytes)
 }
 
-jest.mock('bnc-onboard', () =>
-  jest.fn(() => ({
-    config: jest.fn(),
-    getState: jest.fn(),
-    walletCheck: jest.fn(),
-    walletReset: jest.fn(),
-    walletSelect: jest.fn(), // returns true or false
+jest.mock('bnc-onboard', () => () => ({
+  config: jest.fn(),
+  getState: jest.fn(() => ({
+    appNetworkId: 4,
   })),
-)
+  walletCheck: jest.fn(),
+  walletReset: jest.fn(),
+  walletSelect: jest.fn(), // returns true or false
+}))
 
 jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
   __esModule: true,
@@ -53,6 +54,10 @@ export let mockedEndpoints = {}
 function mockAllEndpointsByDefault() {
   mockedEndpoints.getSafeInfo = sdkGatewayEndpoints.getSafeInfo.mockImplementation(
     () => new Promise((resolve) => resolve(mockGetSafeInfoResponse)),
+  )
+
+  mockedEndpoints.getBalances = sdkGatewayEndpoints.getBalances.mockImplementation(
+    () => new Promise((resolve) => resolve(mockTokenCurrenciesBalancesResponse)),
   )
 }
 
@@ -83,5 +88,5 @@ const originalLocationHref = window.location.href
 
 beforeEach(() => {
   mockAllEndpointsByDefault()
-  window.location.href = originalLocationHref // Restore the url to http://localhost/
+  window.history.pushState(null, '', originalLocationHref) // Restore the url to http://localhost/
 })

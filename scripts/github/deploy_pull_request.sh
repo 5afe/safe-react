@@ -11,7 +11,7 @@ function deploy_pull_request {
   APP_PATH="./build"
 
   # Deploy pull request
-  aws s3 sync $APP_PATH s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/${REACT_APP_NETWORK}/app --delete
+  aws s3 sync $APP_PATH s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/app --delete
 }
 
 # Only:

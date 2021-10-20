@@ -1,8 +1,10 @@
 import memoize from 'lodash.memoize'
+
 import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   GasPriceOracle,
   NetworkConfig,
@@ -11,22 +13,50 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
+import { isValidShortChainName } from 'src/routes/routes'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
   GOOGLE_ANALYTICS_ID,
   INFURA_TOKEN,
-  NETWORK,
+  IS_PRODUCTION,
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
-import { ensureOnce } from 'src/utils/singleton'
 
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
+export const getNetworks = (): NetworkInfo[] => {
+  // NETWORK_ROOT_ROUTES follows the same destructuring
+  const { local: _, ...usefulNetworks } = networks
+  return Object.values(usefulNetworks).map((networkObj) => ({
+    id: networkObj.network.id,
+    shortName: networkObj.network.shortName,
+    label: networkObj.network.label,
+    backgroundColor: networkObj.network.backgroundColor,
+    textColor: networkObj.network.textColor,
+  }))
+}
 
-export const getNetworkName = (): string => {
+export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+
+export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
+  const { pathname } = window.location
+  const network = getNetworks().find(({ shortName }) => {
+    return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
+  })
+
+  return network?.id || DEFAULT_NETWORK
+}
+
+let networkId = getInitialNetworkId()
+
+export const setNetworkId = (id: ETHEREUM_NETWORK): void => {
+  networkId = id
+}
+export const getNetworkId = (): ETHEREUM_NETWORK => networkId
+
+export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
-  const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == getNetworkId())
+  const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == networkId)
   return name || ''
 }
 
@@ -34,7 +64,7 @@ export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | unde
   return Object.values(networks).find((cfg) => cfg.network.id === id)
 }
 
-export const getNetworkLabel = (id: ETHEREUM_NETWORK): string => {
+export const getNetworkLabel = (id: ETHEREUM_NETWORK = getNetworkId()): string => {
   const cfg = getNetworkConfigById(id)
   return cfg ? cfg.network.label : ''
 }
@@ -43,39 +73,40 @@ export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY
   getNetworkId(),
 )
 
-const getCurrentEnvironment = (): string => {
-  switch (NODE_ENV) {
+export const getCurrentShortChainName = (): SHORT_NAME => getConfig().network.shortName
+
+export const getShortChainNameById = (networkId = getNetworkId()): string =>
+  getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
+
+export const getNetworkIdByShortChainName = (shortName: string): ETHEREUM_NETWORK => {
+  if (!isValidShortChainName(shortName)) return DEFAULT_NETWORK
+  return getNetworks().find((network) => network.shortName === shortName)?.id || DEFAULT_NETWORK
+}
+
+export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {
+  switch (APP_ENV) {
     case 'test': {
       return 'test'
     }
     case 'production': {
-      return APP_ENV === 'production' ? 'production' : 'staging'
+      return 'production'
     }
+    case 'dev':
     default: {
-      return 'dev'
+      // We need to check NODE_ENV calling jest outside of scripts
+      return NODE_ENV === 'test' ? 'test' : 'dev'
     }
   }
 }
 
-type NetworkSpecificConfiguration = EnvironmentSettings & {
+export type NetworkSpecificConfiguration = EnvironmentSettings & {
   network: NetworkSettings
   disabledFeatures?: SafeFeatures
   disabledWallets?: Wallets
 }
 
-const configuration = (): NetworkSpecificConfiguration => {
+export const getConfig = (): NetworkSpecificConfiguration => {
   const currentEnvironment = getCurrentEnvironment()
-
-  // special case for test environment
-  if (currentEnvironment === 'test') {
-    const configFile = networks.local
-
-    return {
-      ...configFile.environment.production,
-      network: configFile.network,
-      disabledFeatures: configFile.disabledFeatures,
-    }
-  }
 
   // lookup the config file based on the network specified in the NETWORK variable
   const configFile = networks[getNetworkName().toLowerCase()]
@@ -90,19 +121,6 @@ const configuration = (): NetworkSpecificConfiguration => {
   }
 }
 
-export const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
-
-export const getNetworks = (): NetworkInfo[] => {
-  const { local, ...usefulNetworks } = networks
-  return Object.values(usefulNetworks).map((networkObj) => ({
-    id: networkObj.network.id,
-    label: networkObj.network.label,
-    backgroundColor: networkObj.network.backgroundColor,
-    textColor: networkObj.network.textColor,
-    safeUrl: networkObj.environment[getCurrentEnvironment()].safeUrl,
-  }))
-}
-
 export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
 
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
@@ -111,33 +129,29 @@ export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracles = (): GasPriceOracle[] | undefined => getConfig()?.gasPriceOracles
 
+const useInfuraRPC = () => {
+  return [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(getNetworkId())
+}
+
 export const getSafeAppsRpcServiceUrl = (): string =>
-  usesInfuraRPC ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
+  useInfuraRPC() ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
 
 export const getRpcServiceUrl = (): string =>
-  usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
+  useInfuraRPC() ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
 export const getTokensServiceBaseUrl = () => `${getTxServiceUrl()}/tokens`
-
-export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => ({
-  name: getConfig().networkExplorerName,
-  url: getConfig().networkExplorerUrl,
-  apiUrl: getConfig().networkExplorerApiUrl,
-})
-
-export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig().disabledFeatures || []
 
 /**
  * Checks if a particular feature is enabled in the current network configuration
  * @params {FEATURES} feature
  * @returns boolean
  */
-export const isFeatureEnabled = memoize((feature: FEATURES): boolean => {
-  const disabledFeatures = getNetworkConfigDisabledFeatures()
-  return !disabledFeatures.some((disabledFeature) => disabledFeature === feature)
-})
+export const isFeatureEnabled = (feature: FEATURES): boolean => {
+  const { disabledFeatures } = getConfig()
+  return !disabledFeatures?.some((disabledFeature) => disabledFeature === feature)
+}
 
 export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
 
@@ -176,6 +190,15 @@ const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefin
     default: {
       return undefined
     }
+  }
+}
+
+const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => {
+  const cfg = getConfig()
+  return {
+    name: cfg.networkExplorerName,
+    url: cfg.networkExplorerUrl,
+    apiUrl: cfg.networkExplorerApiUrl,
   }
 }
 

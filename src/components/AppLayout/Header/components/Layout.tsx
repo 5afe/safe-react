@@ -7,17 +7,14 @@ import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
-
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { getNetworks } from 'src/config'
-import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
+import { WELCOME_ROUTE } from 'src/routes/routes'
 
 const styles = () => ({
   root: {
@@ -63,56 +60,61 @@ const styles = () => ({
   },
 })
 
-const Layout = ({ classes, providerDetails, providerInfo }) => {
+const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
+  return (
+    <Popper
+      anchorEl={anchorEl}
+      className={classes.popper}
+      open={open}
+      placement="bottom"
+      popperOptions={{ positionFixed: true }}
+    >
+      {({ TransitionProps }) => (
+        <Grow {...TransitionProps}>
+          <>
+            <ClickAwayListener mouseEvent="onClick" onClickAway={onClose} touchEvent={false}>
+              <List className={classes.root} component="div">
+                {providerDetails}
+              </List>
+            </ClickAwayListener>
+          </>
+        </Grow>
+      )}
+    </Popper>
+  )
+}
+
+const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const networks = getNetworks()
-
   const { isDesktop } = window
+  const isOpen = open || shouldSwitchChain
+
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
-        <Link to="/">
+        <Link to={WELCOME_ROUTE}>
           <Img alt="Gnosis Team Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
         </Link>
       </Col>
       <Spacer />
       <Provider
         info={providerInfo}
-        open={open}
+        open={isOpen}
         toggle={toggle}
         render={(providerRef) =>
           providerRef.current && (
-            <Popper
+            <WalletPopup
               anchorEl={providerRef.current}
-              className={classes.popper}
-              open={open || shouldSwitchNetwork()}
-              placement="bottom"
-              popperOptions={{ positionFixed: true }}
-            >
-              {({ TransitionProps }) => (
-                <Grow {...TransitionProps}>
-                  <>
-                    <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                      <List className={classes.root} component="div">
-                        {providerDetails}
-                      </List>
-                    </ClickAwayListener>
-                  </>
-                </Grow>
-              )}
-            </Popper>
+              providerDetails={providerDetails}
+              open={isOpen}
+              classes={classes}
+              onClose={clickAway}
+            />
           )
         }
       />
-      {!isDesktop && (
-        <NetworkSelector
-          open={openNetworks}
-          networks={networks}
-          toggle={toggleNetworks}
-          clickAway={clickAwayNetworks}
-        />
-      )}
+      {!isDesktop && <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />}
     </Row>
   )
 }
