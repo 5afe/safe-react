@@ -6,8 +6,6 @@ import {
   Operation,
   TokenType,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -38,11 +36,15 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
+import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
-const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
+const getModalTitleAndDescription = (
+  thresholdReached: boolean,
+  isCancelTx: boolean,
+): { title: string; description: string } => {
   const modalInfo = {
     title: 'Execute transaction rejection',
     description: 'This action will execute this transaction.',
@@ -260,10 +262,8 @@ export const ApproveTxModal = ({
     manualGasPrice,
     manualGasLimit,
   })
-
+  const doExecute = isExecution && approveAndExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
-
-  const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = (txParameters: TxParameters) => {
     if (thresholdReached && confirmations.size < _threshold) {
@@ -324,7 +324,7 @@ export const ApproveTxModal = ({
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={doExecute}
         parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
@@ -357,15 +357,7 @@ export const ApproveTxModal = ({
                           ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
                       </Paragraph>
 
-                      {!isCancelTx && (
-                        <FormControlLabel
-                          control={
-                            <Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />
-                          }
-                          label="Execute transaction"
-                          data-testid="execute-checkbox"
-                        />
-                      )}
+                      {!isCancelTx && <ExecuteCheckbox onChange={setApproveAndExecute} />}
                     </>
                   )}
 
@@ -376,7 +368,7 @@ export const ApproveTxModal = ({
                       onEdit={toggleEditMode}
                       parametersStatus={getParametersStatus()}
                       isTransactionCreation={isCreation}
-                      isTransactionExecution={isExecution}
+                      isTransactionExecution={doExecute}
                       isOffChainSignature={isOffChainSignature}
                     />
                   )}
@@ -387,7 +379,7 @@ export const ApproveTxModal = ({
                 <Block className={classes.gasCostsContainer}>
                   <TransactionFees
                     gasCostFormatted={gasCostFormatted}
-                    isExecution={isExecution}
+                    isExecution={doExecute}
                     isCreation={isCreation}
                     isOffChainSignature={isOffChainSignature}
                     txEstimationExecutionStatus={txEstimationExecutionStatus}

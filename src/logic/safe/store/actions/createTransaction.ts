@@ -48,6 +48,7 @@ export interface CreateTransactionArgs {
   valueInWei: string
   safeTxGas?: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  delayExecution?: boolean
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
@@ -74,6 +75,7 @@ export const createTransaction =
       origin = null,
       safeTxGas: safeTxGasArg,
       ethParameters,
+      delayExecution = false,
     }: CreateTransactionArgs,
     onUserConfirm?: ConfirmEventHandler,
     onError?: ErrorEventHandler,
@@ -101,7 +103,7 @@ export const createTransaction =
     const nextNonce = await getNewTxNonce(lastTx, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
-    const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const isExecution = !delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
     let safeTxGas = safeTxGasArg || '0'
     try {
       if (safeTxGasArg === undefined) {

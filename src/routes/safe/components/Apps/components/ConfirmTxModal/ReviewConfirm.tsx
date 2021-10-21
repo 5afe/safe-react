@@ -29,6 +29,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 
 const Container = styled.div`
   max-width: 480px;
@@ -124,6 +125,8 @@ export const ReviewConfirm = ({
   })
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const doExecute = isExecution && executionApproved
 
   // Decode tx data.
   useEffect(() => {
@@ -162,6 +165,7 @@ export const ReviewConfirm = ({
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          delayExecution: !executionApproved,
         },
         handleUserConfirmation,
         handleTxRejection,
@@ -197,7 +201,7 @@ export const ReviewConfirm = ({
       safeTxGas={Math.max(parseInt(gasEstimation), params?.safeTxGas || 0).toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={doExecute}
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
@@ -225,13 +229,17 @@ export const ReviewConfirm = ({
             <DecodeTxsWrapper>
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
             </DecodeTxsWrapper>
+
             {!isMultiSend && <Divider />}
+
+            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={doExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Container>
@@ -241,7 +249,7 @@ export const ReviewConfirm = ({
             <TransactionFeesWrapper>
               <TransactionFees
                 gasCostFormatted={isOwner ? gasCostFormatted : undefined}
-                isExecution={isExecution}
+                isExecution={doExecute}
                 isCreation={isCreation}
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
