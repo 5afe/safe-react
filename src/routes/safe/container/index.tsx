@@ -1,13 +1,13 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { currentSafeFeaturesEnabled, currentSafeOwners, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -24,7 +24,6 @@ const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList
 const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
-  const safeAddress = useSelector(safeAddressFromUrl)
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const owners = useSelector(currentSafeOwners)
   const isSafeLoaded = owners.length > 0
@@ -45,13 +44,6 @@ const Container = (): React.ReactElement => {
     )
   }
 
-  const balancesBaseRoute = generatePath(SAFE_ROUTES.ASSETS_BASE_ROUTE, {
-    safeAddress,
-  })
-  const settingsBaseRoute = generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
-    safeAddress,
-  })
-
   const closeGenericModal = () => {
     if (modal.onClose) {
       modal.onClose?.()
@@ -69,43 +61,34 @@ const Container = (): React.ReactElement => {
   return (
     <>
       <Switch>
-        <Route exact path={`${balancesBaseRoute}/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route
           exact
-          path={generatePath(SAFE_ROUTES.TRANSACTIONS, {
-            safeAddress,
-          })}
-          render={() => wrapInSuspense(<TxList />, null)}
+          path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}
+          render={() => wrapInSuspense(<Balances />, null)}
         />
         <Route
           exact
-          path={generatePath(SAFE_ROUTES.APPS, {
-            safeAddress,
-          })}
+          path={SAFE_ROUTES.TRANSACTIONS}
+          render={() => <Redirect to={SAFE_ROUTES.TRANSACTIONS_HISTORY} />}
+        />
+        <Route
+          exact
+          path={[SAFE_ROUTES.TRANSACTIONS_HISTORY, SAFE_ROUTES.TRANSACTIONS_QUEUE]}
+          render={() => wrapInSuspense(<TxList />, null)}
+        />
+        <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />, null)} />
+        <Route
+          exact
+          path={SAFE_ROUTES.APPS}
           render={({ history }) => {
             if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
-              history.push(
-                generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                  safeAddress,
-                }),
-              )
+              history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, extractPrefixedSafeAddress()))
             }
             return wrapInSuspense(<Apps />, null)
           }}
         />
-        <Route exact path={`${settingsBaseRoute}/:section`} render={() => wrapInSuspense(<Settings />, null)} />
-        <Route
-          exact
-          path={generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-            safeAddress,
-          })}
-          render={() => wrapInSuspense(<AddressBookTable />, null)}
-        />
-        <Redirect
-          to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            safeAddress,
-          })}
-        />
+        <Route path={SAFE_ROUTES.SETTINGS} render={() => wrapInSuspense(<Settings />, null)} />
+        <Redirect to={SAFE_ROUTES.ASSETS_BALANCES} />
       </Switch>
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>

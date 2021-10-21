@@ -2,6 +2,7 @@ import { Action, handleActions } from 'redux-actions'
 
 import { LOAD_CURRENT_SESSION } from 'src/logic/currentSession/store/actions/loadCurrentSession'
 import { UPDATE_VIEWED_SAFES } from 'src/logic/currentSession/store/actions/updateViewedSafes'
+import { CLEAR_CURRENT_SESSION } from 'src/logic/currentSession/store/actions/clearCurrentSession'
 import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 import { AppReduxState } from 'src/store'
 
@@ -38,6 +39,9 @@ export default handleActions<AppReduxState['currentSession'], CurrentSessionPayl
       saveCurrentSessionToStorage(newState)
 
       return newState
+    },
+    [CLEAR_CURRENT_SESSION]: () => {
+      return initialState
     },
   },
   initialState,

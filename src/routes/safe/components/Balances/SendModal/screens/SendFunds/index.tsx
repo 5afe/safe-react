@@ -1,7 +1,5 @@
-import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -47,6 +45,7 @@ import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelp
 import { getNetworkInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
+import { ModalHeader } from '../ModalHeader'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -175,15 +174,7 @@ const SendFunds = ({
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow data-testid="modal-title-send-funds">
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send funds
-        </Paragraph>
-        <Paragraph className={classes.annotation}>1 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send funds" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}

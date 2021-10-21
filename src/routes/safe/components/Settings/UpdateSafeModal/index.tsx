@@ -20,6 +20,7 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 type Props = {
   onClose: () => void
@@ -88,12 +89,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Modal.Header onClose={onClose}>
-            <Modal.Header.Title size="xs" withoutMargin>
-              Update to new Safe version
-            </Modal.Header.Title>
-          </Modal.Header>
-
+          <ModalHeader onClose={onClose} title="Update safe version" />
           <Block className={classes.modalContent}>
             <Row>
               <Paragraph noMargin>

@@ -3,6 +3,7 @@ import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
   ETHEREUM_NETWORK,
+  SHORT_NAME,
   FEATURES,
   NetworkConfig,
   WALLETS,
@@ -11,7 +12,6 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.bsc.gnosis.io/api/v1',
-  safeUrl: 'https://bsc.gnosis-safe.io/app',
   gasPrice: 5e9,
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   safeAppsRpcServiceUrl: 'https://bsc-dataseed.binance.org',
@@ -20,22 +20,16 @@ const baseConfig: EnvironmentSettings = {
   networkExplorerApiUrl: 'https://api.bscscan.com/api',
 }
 
-const mainnet: NetworkConfig = {
+const bsc: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-bsc.staging.gnosisdev.com/app/',
-    },
-    staging: {
-      ...baseConfig,
-      safeUrl: 'https://safe-team-bsc.staging.gnosisdev.com/app/',
-    },
-    production: {
-      ...baseConfig,
-    },
+    test: baseConfig,
+    dev: baseConfig,
+    staging: baseConfig,
+    production: baseConfig,
   },
   network: {
     id: ETHEREUM_NETWORK.BSC,
+    shortName: SHORT_NAME.BSC,
     backgroundColor: '#d0980b',
     textColor: '#ffffff',
     label: 'BSC',
@@ -67,4 +61,4 @@ const mainnet: NetworkConfig = {
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
 
-export default mainnet
+export default bsc

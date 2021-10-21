@@ -1,21 +1,18 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import { useState, ReactElement, useCallback, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { generatePath, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
+
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import { Modal } from 'src/components/Modal'
-
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
 import { getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
-import { SAFE_ROUTES } from 'src/routes/routes'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 
 const FORM_ID = 'add-apps-form'
 
@@ -80,10 +77,6 @@ interface AddAppProps {
 }
 
 const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement => {
-  const safeAddress = useSelector(safeAddressFromUrl)
-  const appsPath = generatePath(SAFE_ROUTES.APPS, {
-    safeAddress,
-  })
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
@@ -91,9 +84,11 @@ const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement =>
 
   const handleSubmit = useCallback(async () => {
     onAddApp(appInfo)
-    const goToApp = `${appsPath}?appUrl=${encodeURI(appInfo.url)}`
-    history.push(goToApp)
-  }, [history, appsPath, appInfo, onAddApp])
+    history.push({
+      pathname: generateSafeRoute(SAFE_ROUTES.APPS, extractPrefixedSafeAddress()),
+      search: `?appUrl=${encodeURIComponent(appInfo.url)}`,
+    })
+  }, [history, appInfo, onAddApp])
 
   useEffect(() => {
     if (isLoading) {

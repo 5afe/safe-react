@@ -8,6 +8,7 @@ export enum ADDRESS_BOOK_ACTIONS {
   ADD_OR_UPDATE = 'addressBook/addOrUpdate',
   REMOVE = 'addressBook/remove',
   IMPORT = 'addressBook/import',
+  MIGRATE = 'addressBook/migrate',
   SAFE_LOAD = 'addressBook/safeLoad',
   SYNC = 'addressBook/sync',
 }
@@ -16,4 +17,5 @@ export const addressBookAddOrUpdate = createAction<AddressBookEntry>(ADDRESS_BOO
 export const addressBookRemove = createAction<AddressBookEntry>(ADDRESS_BOOK_ACTIONS.REMOVE)
 export const addressBookSafeLoad = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.SAFE_LOAD)
 export const addressBookImport = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.IMPORT)
+export const addressBookMigrate = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.MIGRATE)
 export const addressBookSync = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.SYNC)

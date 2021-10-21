@@ -50,7 +50,9 @@ const providerWatcherMware = (store) => (next) => async (action) => {
       }
       case REMOVE_PROVIDER:
         clearInterval(watcherInterval)
-        removeFromStorage(LAST_USED_PROVIDER_KEY)
+        if (!action.payload?.keepStorageKey) {
+          removeFromStorage(LAST_USED_PROVIDER_KEY)
+        }
         break
       default:
         break
