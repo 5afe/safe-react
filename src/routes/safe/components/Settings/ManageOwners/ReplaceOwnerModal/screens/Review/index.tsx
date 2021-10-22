@@ -73,21 +73,26 @@ export const ReviewReplaceOwnerModal = ({
 
   useEffect(() => {
     let isCurrent = true
-    const calculateReplaceOwnerData = async () => {
-      const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-      const safeTx = await sdk.getSwapOwnerTx(owner.address, newOwner.address)
-      const txData = safeTx.data.data
 
-      if (isCurrent) {
-        setData(txData)
+    const calculateReplaceOwnerData = async () => {
+      try {
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+        const safeTx = await sdk.getSwapOwnerTx(owner.address, newOwner.address)
+        const txData = safeTx.data.data
+
+        if (isCurrent) {
+          setData(txData)
+        }
+      } catch (error) {
+        console.error('Error calculating ERC721 transfer data for replacing a Safe owner', error.message)
       }
     }
-
     calculateReplaceOwnerData()
+
     return () => {
       isCurrent = false
     }
-  }, [owner.address, safeAddress, connectedWalletAddress, newOwner.address])
+  }, [safeAddress, connectedWalletAddress, owner.address, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted

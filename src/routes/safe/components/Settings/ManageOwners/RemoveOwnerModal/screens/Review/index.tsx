@@ -23,7 +23,6 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -88,7 +87,7 @@ export const ReviewRemoveOwnerModal = ({
           setData(txData)
         }
       } catch (error) {
-        logError(Errors._609, error.message)
+        console.error('Error calculating ERC721 transfer data for removing a Safe owner', error.message)
       }
     }
     calculateRemoveOwnerData()

@@ -23,7 +23,6 @@ import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -77,7 +76,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           setData(txData)
         }
       } catch (error) {
-        logError(Errors._608, error.message)
+        console.error('Error calculating ERC721 transfer data for adding a Safe owner', error.message)
       }
     }
     calculateAddOwnerData()
