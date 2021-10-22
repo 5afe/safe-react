@@ -31,29 +31,25 @@ export const sendAddOwner = async (
   dispatch: Dispatch,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  try {
-    const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-    const safeTx = await sdk.getAddOwnerTx(values.ownerAddress, +values.threshold)
-    const txData = safeTx.data.data
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+  const safeTx = await sdk.getAddOwnerTx(values.ownerAddress, +values.threshold)
+  const txData = safeTx.data.data
 
-    const txHash = await dispatch(
-      createTransaction({
-        safeAddress,
-        to: safeAddress,
-        valueInWei: '0',
-        txData,
-        txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas,
-        ethParameters: txParameters,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      }),
-    )
+  const txHash = await dispatch(
+    createTransaction({
+      safeAddress,
+      to: safeAddress,
+      valueInWei: '0',
+      txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas,
+      ethParameters: txParameters,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+    }),
+  )
 
-    if (txHash) {
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
-    }
-  } catch (error) {
-    logError(Errors._608, error.message)
+  if (txHash) {
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
   }
 }
 
@@ -109,7 +105,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
       await sendAddOwner(values, safeAddress, txParameters, dispatch, connectedWalletAddress)
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
-      console.error('Error while removing an owner', error)
+      logError(Errors._808, error.message)
     }
   }
 

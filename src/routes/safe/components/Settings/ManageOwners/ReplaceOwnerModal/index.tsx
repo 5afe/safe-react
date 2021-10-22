@@ -17,6 +17,7 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 import { extractSafeAddress } from 'src/routes/routes'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type OwnerValues = {
   address: string
@@ -49,7 +50,6 @@ export const sendReplaceOwner = async (
   )
 
   if (txHash) {
-    // update the AB
     dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
   }
 }
@@ -89,11 +89,12 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
 
   const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
+
     try {
       await sendReplaceOwner(newOwner, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
     } catch (error) {
-      console.error('Error while removing an owner', error)
+      logError(Errors._810, error.message)
     }
   }
 

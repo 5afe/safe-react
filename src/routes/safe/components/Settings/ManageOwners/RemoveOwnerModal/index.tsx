@@ -28,26 +28,22 @@ export const sendRemoveOwner = async (
   txParameters: TxParameters,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  try {
-    const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-    const safeTx = await sdk.getRemoveOwnerTx(ownerAddressToRemove, +values.threshold)
-    const txData = safeTx.data.data
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+  const safeTx = await sdk.getRemoveOwnerTx(ownerAddressToRemove, +values.threshold)
+  const txData = safeTx.data.data
 
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: safeAddress,
-        valueInWei: '0',
-        txData,
-        txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas,
-        ethParameters: txParameters,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      }),
-    )
-  } catch (error) {
-    logError(Errors._609, error.message)
-  }
+  dispatch(
+    createTransaction({
+      safeAddress,
+      to: safeAddress,
+      valueInWei: '0',
+      txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas,
+      ethParameters: txParameters,
+      notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+    }),
+  )
 }
 
 type RemoveOwnerProps = {
@@ -90,7 +86,12 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
 
   const onRemoveOwner = (txParameters: TxParameters) => {
     onClose()
-    sendRemoveOwner(values, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
+
+    try {
+      sendRemoveOwner(values, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
+    } catch (error) {
+      logError(Errors._809, error.message)
+    }
   }
 
   return (

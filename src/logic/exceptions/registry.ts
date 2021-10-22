@@ -39,6 +39,7 @@ enum ErrorCodes {
   _807 = '807: Failed to remove guard',
   _808 = '808: Error adding a Safe owner',
   _809 = '809: Error removing a Safe owner',
+  _810 = '810: Error replacing a Safe owner',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',
