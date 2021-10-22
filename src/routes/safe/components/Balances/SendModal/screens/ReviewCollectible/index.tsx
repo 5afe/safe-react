@@ -116,6 +116,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             safeTxGas: txParameters.safeTxGas,
             ethParameters: txParameters,
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+            delayExecution: !executionApproved,
           }),
         )
       } else {
