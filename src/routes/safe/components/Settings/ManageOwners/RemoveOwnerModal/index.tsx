@@ -84,11 +84,11 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
     setActiveScreen('reviewRemoveOwner')
   }
 
-  const onRemoveOwner = (txParameters: TxParameters) => {
+  const onRemoveOwner = async (txParameters: TxParameters) => {
     onClose()
 
     try {
-      sendRemoveOwner(values, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
+      await sendRemoveOwner(values, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
     } catch (error) {
       logError(Errors._809, error.message)
     }
