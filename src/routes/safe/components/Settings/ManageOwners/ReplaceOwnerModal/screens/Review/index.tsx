@@ -23,6 +23,7 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 import { useStyles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -84,7 +85,7 @@ export const ReviewReplaceOwnerModal = ({
           setData(txData)
         }
       } catch (error) {
-        console.error('Error calculating ERC721 transfer data for replacing a Safe owner', error.message)
+        logError(Errors._813, error.message)
       }
     }
     calculateReplaceOwnerData()
