@@ -92,18 +92,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
           transaction before it gets executed. In general, the more confirmations required, the more secure your Safe
           is.
-          <StyledLink
-            href="https://help.gnosis-safe.io/en/articles/4772567-what-gnosis-safe- setup-should-i-use"
-            target="_blank"
-            rel="noreferrer"
-            title="Learn about which Safe setup to use"
-          >
-            <Text size="xl" as="span" color="primary">
-              Learn about which Safe setup to use
-            </Text>
-            <Icon size="sm" type="externalLink" color="primary" />
-          </StyledLink>
-          . The new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
       </BlockWithPadding>
       <Hairline />

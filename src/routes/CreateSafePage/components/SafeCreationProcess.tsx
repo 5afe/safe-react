@@ -81,15 +81,29 @@ function SafeCreationProcess(): ReactElement {
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
 
+  const onNetworkChange = async (chainId) => {
+    const { wallet } = onboard().getState()
+    try {
+      await switchNetwork(wallet, chainId)
+    } catch (e) {
+      e.log('fallback not supported')
+      // Fallback to the onboard popup if switching isn't supported
+      await onboard().walletCheck()
+    }
+  }
+
   const createNewSafe = useCallback(
     async (networkToDeploy) => {
       console.log('Network to Deploy', networkToDeploy)
 
+      console.log(deployedNetworks)
+
       if (networkToDeploy !== onboard().getState().wallet) {
-        console.log(getNetworkId())
+        console.log(deployedNetworks)
+        console.log('getNetworkid: ', getNetworkId())
         console.log(deployedNetworks[networkToDeploy])
-        console.log(ETHEREUM_NETWORK[deployedNetworks[networkToDeploy]])
-        await switchNetwork(onboard().getState().wallet, ETHEREUM_NETWORK[deployedNetworks[networkToDeploy]])
+        console.log('Network: ', ETHEREUM_NETWORK[deployedNetworks[networkToDeploy]])
+        await onNetworkChange(ETHEREUM_NETWORK[deployedNetworks[networkToDeploy]])
       } else {
         console.log('On the right network')
       }
@@ -143,8 +157,9 @@ function SafeCreationProcess(): ReactElement {
               // } else {
               //   localStorage.setItem(network.id, network.id)
               // }
-              deployedNetworks.reverse().pop() // remove the first network
               localStorage.removeItem(deployedNetworks[networkToDeploy])
+              deployedNetworks.reverse().pop() // remove the first network
+              console.log('deployedNetworks: ', deployedNetworks)
               if (deployedNetworks.length > 0) {
                 console.log('Moving to the next network', deployedNetworks)
                 createNewSafe(0)
@@ -274,7 +289,7 @@ function SafeCreationProcess(): ReactElement {
         onSuccess={onSafeCreated}
         submittedPromise={creationTxPromise}
       />
-      {showModal && (
+      {/* {showModal && (
         <GenericModal
           onClose={onClickModalButton}
           title="Safe Created!"
@@ -307,7 +322,7 @@ function SafeCreationProcess(): ReactElement {
             </ButtonContainer>
           }
         />
-      )}
+      )} */}
     </>
   )
 }
