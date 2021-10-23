@@ -72,8 +72,6 @@ function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
 
-  const counter = 0
-
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
@@ -178,8 +176,6 @@ function SafeCreationProcess(): ReactElement {
   useEffect(() => {
     const load = async () => {
       const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
-
-      console.log('didnty work')
 
       if (!safeCreationFormValues) {
         goToWelcomePage()

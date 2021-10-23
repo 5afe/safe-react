@@ -22,9 +22,9 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Dispatch<
     return
   }
 
-  if (getNetworkInfo().isTestNet) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TESTNET_VERSION_MSG)))
-  }
+  // if (getNetworkInfo().isTestNet) {
+  //   dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TESTNET_VERSION_MSG)))
+  // }
 
   if (available) {
     // NOTE:

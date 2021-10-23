@@ -43,28 +43,6 @@ function SelectNetworkStep(): ReactElement {
           Switch Network
         </ButtonLink>
       </SwitchNetworkContainer>
-      <Dialog
-        onClose={() => setIsNetworkSelectorPopupOpen(false)}
-        aria-labelledby="select-network"
-        data-testid={'select-network-popup'}
-        open={isNetworkSelectorPopupOpen}
-      >
-        <StyledDialogTitle disableTypography>
-          <Typography variant={'h5'}>Select Network</Typography>
-          <IconButton aria-label="close" onClick={() => setIsNetworkSelectorPopupOpen(false)}>
-            <CloseIcon />
-          </IconButton>
-        </StyledDialogTitle>
-        <StyledDialogContent dividers>
-          <List component="div">
-            {networks.map((network) => (
-              <NetworkLabelItem key={network.id} role="button" onClick={() => onNetworkSwitch(network.id)}>
-                <NetworkLabel networkInfo={network} flexGrow />
-              </NetworkLabelItem>
-            ))}
-          </List>
-        </StyledDialogContent>
-      </Dialog>
     </Container>
   )
 }
