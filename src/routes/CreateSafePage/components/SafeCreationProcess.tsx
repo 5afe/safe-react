@@ -35,6 +35,16 @@ import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 
+import networks from 'src/config/networks'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { canSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
+import { getNetworkId } from 'src/config'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+
+import { removeProvider } from 'src/logic/wallets/store/actions'
+import onboard from 'src/logic/wallets/onboard'
+import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
+
 type ModalDataType = {
   safeAddress: string
   safeName?: string
@@ -45,9 +55,24 @@ const goToWelcomePage = () => {
   history.push(WELCOME_ROUTE)
 }
 
+let deployedNetworks: string[] = []
+
+for (let key in networks) {
+  let stored = localStorage.getItem(networks[key].network.id)
+  if (stored) {
+    for (let i in ETHEREUM_NETWORK) {
+      if (stored == ETHEREUM_NETWORK[i]) {
+        deployedNetworks.push(i)
+      }
+    }
+  }
+}
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
+
+  const counter = 0
 
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
@@ -56,60 +81,90 @@ function SafeCreationProcess(): ReactElement {
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
 
-  const createNewSafe = useCallback(async () => {
-    const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+  const createNewSafe = useCallback(
+    async (networkToDeploy) => {
+      console.log('Network to Deploy', networkToDeploy)
 
-    if (!safeCreationFormValues) {
-      goToWelcomePage()
-      return
-    }
+      if (networkToDeploy !== onboard().getState().wallet) {
+        console.log(getNetworkId())
+        console.log(deployedNetworks[networkToDeploy])
+        console.log(ETHEREUM_NETWORK[deployedNetworks[networkToDeploy]])
+        await switchNetwork(onboard().getState().wallet, ETHEREUM_NETWORK[deployedNetworks[networkToDeploy]])
+      } else {
+        console.log('On the right network')
+      }
 
-    setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
+      const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
 
-    setCreationTxPromise(
-      new Promise((resolve, reject) => {
-        const confirmations = safeCreationFormValues[FIELD_NEW_SAFE_THRESHOLD]
-        const ownerFields = safeCreationFormValues[FIELD_SAFE_OWNERS_LIST]
-        const ownerAddresses = ownerFields.map(({ addressFieldName }) => safeCreationFormValues[addressFieldName])
-        const safeCreationSalt = safeCreationFormValues[FIELD_NEW_SAFE_PROXY_SALT]
-        const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
-        const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+      if (!safeCreationFormValues) {
+        goToWelcomePage()
+        return
+      }
 
-        deploymentTx
-          .send({
-            from: userAddressAccount,
-            gas: gasLimit,
-          })
-          .once('transactionHash', (txHash) => {
-            saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
-              [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
-              ...safeCreationFormValues,
+      setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
+
+      setCreationTxPromise(
+        new Promise((resolve, reject) => {
+          const confirmations = safeCreationFormValues[FIELD_NEW_SAFE_THRESHOLD]
+          const ownerFields = safeCreationFormValues[FIELD_SAFE_OWNERS_LIST]
+          const ownerAddresses = ownerFields.map(({ addressFieldName }) => safeCreationFormValues[addressFieldName])
+          const safeCreationSalt = safeCreationFormValues[FIELD_NEW_SAFE_PROXY_SALT]
+          const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
+          const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+
+          deploymentTx
+            .send({
+              from: userAddressAccount,
+              gas: gasLimit,
             })
+            .once('transactionHash', (txHash) => {
+              saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
+                [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
+                ...safeCreationFormValues,
+              })
 
-            // Monitor the latest block to find a potential speed-up tx
-            txMonitor({ sender: userAddressAccount, hash: txHash, data: deploymentTx.encodeABI() })
-              .then((txReceipt) => {
-                console.log('Speed up tx mined:', txReceipt)
-                resolve(txReceipt)
-              })
-              .catch((error) => {
-                reject(error)
-              })
-          })
-          .then((txReceipt) => {
-            console.log('First tx mined:', txReceipt)
-            resolve(txReceipt)
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      }),
-    )
-  }, [userAddressAccount])
+              // Monitor the latest block to find a potential speed-up tx
+              txMonitor({ sender: userAddressAccount, hash: txHash, data: deploymentTx.encodeABI() })
+                .then((txReceipt) => {
+                  console.log('Speed up tx mined:', txReceipt)
+                  resolve(txReceipt)
+                })
+                .catch((error) => {
+                  reject(error)
+                })
+            })
+            .then((txReceipt) => {
+              console.log('First tx mined:', txReceipt)
+              resolve(txReceipt)
+              // checking if all networks are deployed
+              console.log(deployedNetworks)
+              // if (localStorage.getItem(network.id)) {
+              //   localStorage.removeItem(network.id)
+              // } else {
+              //   localStorage.setItem(network.id, network.id)
+              // }
+              deployedNetworks.reverse().pop() // remove the first network
+              localStorage.removeItem(deployedNetworks[networkToDeploy])
+              if (deployedNetworks.length > 0) {
+                console.log('Moving to the next network', deployedNetworks)
+                createNewSafe(0)
+                return
+              }
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        }),
+      )
+    },
+    [userAddressAccount],
+  )
 
   useEffect(() => {
     const load = async () => {
       const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+
+      console.log('didnty work')
 
       if (!safeCreationFormValues) {
         goToWelcomePage()
@@ -120,10 +175,9 @@ function SafeCreationProcess(): ReactElement {
       if (safeCreationTxHash) {
         setSafeCreationTxHash(safeCreationTxHash)
       } else {
-        createNewSafe()
+        createNewSafe(0)
       }
     }
-
     load()
   }, [createNewSafe])
 
@@ -188,7 +242,7 @@ function SafeCreationProcess(): ReactElement {
     setSafeCreationTxHash(undefined)
     delete safeCreationFormValues.safeCreationTxHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, safeCreationFormValues)
-    createNewSafe()
+    createNewSafe(0)
   }
 
   const onCancel = () => {

@@ -70,7 +70,7 @@ export const createTransaction =
       notifiedTransaction,
       txNonce,
       operation = Operation.CALL,
-      navigateToTransactionsTab = true,
+      navigateToTransactionsTab = false,
       origin = null,
       safeTxGas: safeTxGasArg,
       ethParameters,
@@ -114,6 +114,8 @@ export const createTransaction =
     const sigs = getPreValidatedSignatures(from)
     const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
     const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
+
+    console.log('Creating')
 
     let txHash
     const txArgs: TxArgs = {

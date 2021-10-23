@@ -336,7 +336,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             <Modal.Footer.Buttons
               cancelButtonProps={{
                 onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
-                text: 'Stop',
+                text: 'Back',
               }}
               confirmButtonProps={{
                 onClick: () => handleSubmit(txParameters),
