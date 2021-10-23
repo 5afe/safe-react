@@ -13,6 +13,8 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { FIELD_CREATE_CUSTOM_SAFE_NAME, FIELD_CREATE_SUGGESTED_SAFE_NAME } from '../fields/createSafeFields'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import networks from 'src/config/networks'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export const nameNewSafeStepLabel = 'Name'
 
@@ -31,14 +33,32 @@ function NameNewSafeStep(): ReactElement {
 
   const formValues = createNewSafeForm.getState().values
 
+  let deployedNetworks: string[] = []
+
+  for (let key in networks) {
+    let stored = localStorage.getItem(networks[key].network.id)
+    if (stored) {
+      for (let i in ETHEREUM_NETWORK) {
+        if (stored == ETHEREUM_NETWORK[i]) {
+          deployedNetworks.push(i)
+        }
+      }
+    }
+  }
+
   return (
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
           You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
           wallet a name. This name is only stored locally and will never be shared with Gnosis or any third parties. The
-          new Safe will ONLY be available on <NetworkLabel />
+          new Safe will be available on the following chains
         </Paragraph>
+        {deployedNetworks.map((n) => (
+          <Paragraph>
+            <b>{n}</b>
+          </Paragraph>
+        ))}
       </Block>
       <label htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
       <FieldContainer margin="lg">

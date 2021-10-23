@@ -33,6 +33,7 @@ import { FIELD_MAX_OWNER_NUMBER, FIELD_NEW_SAFE_THRESHOLD, FIELD_SAFE_OWNERS_LIS
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import networks from 'src/config/networks'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -55,6 +56,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
   const owners = createSafeFormValues[FIELD_SAFE_OWNERS_LIST]
   const threshold = createSafeFormValues[FIELD_NEW_SAFE_THRESHOLD]
   const maxOwnerNumber = createSafeFormValues[FIELD_MAX_OWNER_NUMBER]
+
+  console.log(networks)
 
   function onClickAddNewOwner() {
     const newEmptyOwner = {

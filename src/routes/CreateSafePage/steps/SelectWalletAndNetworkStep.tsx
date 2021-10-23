@@ -19,18 +19,40 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { setNetwork } from 'src/logic/config/utils'
+import { render } from '@testing-library/react'
 
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 
 function SelectWalletAndNetworkStep(): ReactElement {
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
   const isWalletConnected = !!useSelector(providerNameSelector)
+  const [isChecked, setIsChecked] = useState(false)
 
   function openNetworkSelectorPopup() {
     setIsNetworkSelectorPopupOpen(true)
   }
 
   const networks = getNetworks()
+  let networkList = [
+    { id: 1, isChecked: false },
+    { id: 4, isChecked: false },
+    { id: 42, isChecked: false },
+    { id: 5, isChecked: false },
+    { id: 56, isChecked: false },
+    { id: 100, isChecked: false },
+    { id: 137, isChecked: false },
+    { id: 246, isChecked: false },
+    { id: 1285, isChecked: false },
+    { id: 1287, isChecked: false },
+    { id: 4002, isChecked: false },
+    { id: 42161, isChecked: false },
+    { id: 42220, isChecked: false },
+    { id: 43114, isChecked: false },
+    { id: 73799, isChecked: false },
+    { id: 33399, isChecked: false },
+  ]
+
+  const Checkbox = (props) => <input type="checkbox" {...props} />
 
   const onNetworkSwitch = useCallback((networkId: ETHEREUM_NETWORK) => {
     setNetwork(networkId)
@@ -41,8 +63,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
     <Container data-testid={'select-network-step'}>
       {isWalletConnected ? (
         <Paragraph color="primary" noMargin size="lg">
-          Select network on which to create your Safe. You are currently connected to{' '}
-          <NetworkLabel onClick={openNetworkSelectorPopup} />
+          Select network on which to create your Safe. You will deploy to all chains selected below.
         </Paragraph>
       ) : (
         <Paragraph color="primary" noMargin size="lg">
@@ -52,14 +73,31 @@ function SelectWalletAndNetworkStep(): ReactElement {
 
       <SwitchNetworkContainer>
         {isWalletConnected ? (
-          <ButtonLink
-            type="button"
-            onClick={openNetworkSelectorPopup}
-            color="primary"
-            data-testid={'switch-network-link'}
-          >
-            Switch Network
-          </ButtonLink>
+          <>
+            <List component="div">
+              {networks.map((network) => (
+                <>
+                  <NetworkLabelItem key={network.id} role="button">
+                    <label>
+                      <Checkbox
+                        key={network.id}
+                        checked={localStorage.getItem(network.id)}
+                        onChange={() => {
+                          if (localStorage.getItem(network.id)) {
+                            localStorage.removeItem(network.id)
+                          } else {
+                            localStorage.setItem(network.id, network.id)
+                          }
+                          setIsChecked(false)
+                        }}
+                      />
+                      <span>{network.label}</span>
+                    </label>
+                  </NetworkLabelItem>
+                </>
+              ))}
+            </List>
+          </>
         ) : (
           <ConnectButton data-testid="heading-connect-btn" />
         )}

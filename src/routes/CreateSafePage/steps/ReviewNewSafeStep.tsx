@@ -25,6 +25,9 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
+import networks from 'src/config/networks'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
@@ -55,6 +58,19 @@ function ReviewNewSafeStep(): ReactElement | null {
     safeCreationSalt,
   })
   const { nativeCoin } = getNetworkInfo()
+
+  let deployedNetworks: string[] = []
+
+  for (let key in networks) {
+    let stored = localStorage.getItem(networks[key].network.id)
+    if (stored) {
+      for (let i in ETHEREUM_NETWORK) {
+        if (stored == ETHEREUM_NETWORK[i]) {
+          deployedNetworks.push(i)
+        }
+      }
+    }
+  }
 
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
@@ -130,11 +146,20 @@ function ReviewNewSafeStep(): ReactElement | null {
         </TableContainer>
       </Col>
       <DescriptionContainer align="center">
-        <Paragraph color="primary" noMargin size="lg">
-          You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
-          currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The
-          exact amount will be determined by your wallet.
-        </Paragraph>
+        <Block margin="md">
+          <Paragraph color="primary" noMargin size="lg">
+            You&apos;re about to create a new Safe on
+          </Paragraph>
+          {deployedNetworks.map((n) => (
+            <Paragraph>
+              <b>{n}</b>
+            </Paragraph>
+          ))}
+          <Paragraph color="primary" noMargin size="lg">
+            and will have to confirm a transaction with your currently connected wallet. You will pay fees for each
+            chain.
+          </Paragraph>
+        </Block>
       </DescriptionContainer>
     </Row>
   )

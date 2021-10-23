@@ -122,7 +122,6 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
                     <Fragment key={id}>
                       <StyledLink onClick={(e) => onNetworkSwitch(e, id)} href={route}>
                         <NetworkLabel networkInfo={getNetworkConfigById(id)?.network} />
-
                         {chainId === id && <Icon type="check" size="md" color="primary" />}
                       </StyledLink>
                       <StyledDivider />
