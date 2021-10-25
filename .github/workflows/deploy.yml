@@ -18,7 +18,8 @@ env:
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
-  REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY_MAINNET }}
+  REACT_APP_ETHERSCAN_API_KEY: ${{ secrets.REACT_APP_ETHERSCAN_API_KEY }}
+  REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY }}
 
 jobs:
   debug:
@@ -123,7 +124,7 @@ jobs:
 
       # Script to deploy to the dev environment
       - name: 'Deploy to S3: Dev'
-        if: github.ref == 'refs/heads/l2-ux'
+        if: github.ref == 'refs/heads/dev'
         run: aws s3 sync build s3://${{ secrets.AWS_DEV_BUCKET_NAME }}/app --delete
 
       # Script to deploy to staging environment

@@ -33,8 +33,8 @@ import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
-import { TRANSACTIONS_PAGE_TABS } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { getCurrentShortChainName, getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -83,11 +83,10 @@ export const createTransaction =
 
     if (navigateToTransactionsTab) {
       history.push(
-        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, {
+        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
           shortName: getCurrentShortChainName(),
           safeAddress,
         }),
-        { tabId: TRANSACTIONS_PAGE_TABS.QUEUE },
       )
     }
 
@@ -150,11 +149,12 @@ export const createTransaction =
       }
 
       const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+      const gasParam = getNetworkId() === ETHEREUM_NETWORK.MAINNET ? 'maxFeePerGas' : 'gasPrice'
       const sendParams: PayableTx = {
         from,
         value: 0,
         gas: ethParameters?.ethGasLimit,
-        gasPrice: ethParameters?.ethGasPriceInGWei,
+        [gasParam]: ethParameters?.ethGasPriceInGWei,
         nonce: ethParameters?.ethNonce,
       }
 

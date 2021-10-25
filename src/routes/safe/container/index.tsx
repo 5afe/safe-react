@@ -66,7 +66,16 @@ const Container = (): React.ReactElement => {
           path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}
           render={() => wrapInSuspense(<Balances />, null)}
         />
-        <Route exact path={SAFE_ROUTES.TRANSACTIONS} render={() => wrapInSuspense(<TxList />, null)} />
+        <Route
+          exact
+          path={SAFE_ROUTES.TRANSACTIONS}
+          render={() => <Redirect to={SAFE_ROUTES.TRANSACTIONS_HISTORY} />}
+        />
+        <Route
+          exact
+          path={[SAFE_ROUTES.TRANSACTIONS_HISTORY, SAFE_ROUTES.TRANSACTIONS_QUEUE]}
+          render={() => wrapInSuspense(<TxList />, null)}
+        />
         <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Route
           exact

@@ -89,7 +89,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                           {granted && (
                             <ButtonHelper
                               onClick={() => triggerRemoveSelectedModule(rowElement)}
-                              data-testid={REMOVE_MODULE_BTN_TEST_ID}
+                              dataTestId={`${moduleAddress}-${REMOVE_MODULE_BTN_TEST_ID}`}
                             >
                               <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
                             </ButtonHelper>

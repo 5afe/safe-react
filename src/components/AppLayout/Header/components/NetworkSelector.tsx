@@ -90,7 +90,7 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       e.preventDefault()
       clickAway()
       setNetwork(networkId)
-      history.push(ROOT_ROUTE)
+      history.replace(ROOT_ROUTE)
     },
     [clickAway, history],
   )

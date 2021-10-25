@@ -1,7 +1,8 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
-import { getCurrentShortChainName, getNetworks } from 'src/config'
+import { getCurrentShortChainName } from 'src/config'
+import networks from 'src/config/networks'
 import { ETHEREUM_NETWORK, SHORT_NAME } from 'src/config/networks/network.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
@@ -44,6 +45,8 @@ export const SAFE_ROUTES = {
   ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
   ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
   TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
+  TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
+  TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
@@ -55,8 +58,10 @@ export const SAFE_ROUTES = {
 }
 
 // [{ id: '4', route: '/rinkeby'}]
-export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = getNetworks().map(
-  ({ id, label }) => ({
+// Mapping networks directly instead of getNetworks() due to hoisting issues
+const { local: _, ...usefulNetworks } = networks
+export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = Object.values(usefulNetworks).map(
+  ({ network: { id, label } }) => ({
     id,
     route: `/${label.toLowerCase()}`,
   }),
@@ -64,17 +69,17 @@ export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }>
 
 export type SafeRouteParams = { shortName: string; safeAddress: string }
 
-const isValidShortChainName = (shortName: string): boolean => {
+export const isValidShortChainName = (shortName: string): boolean => {
   const shortNames: string[] = Object.values(SHORT_NAME)
   return shortNames.includes(shortName)
 }
 
 // Due to hoisting issues, these functions should remain here
-export const extractPrefixedSafeAddress = (path = ADDRESSED_ROUTE): SafeRouteParams => {
+export const extractPrefixedSafeAddress = (path = history.location.pathname): SafeRouteParams => {
   const currentChainShortName = getCurrentShortChainName()
 
-  const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    path,
+  const match = matchPath<SafeRouteSlugs>(path, {
+    path: ADDRESSED_ROUTE,
   })
 
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]

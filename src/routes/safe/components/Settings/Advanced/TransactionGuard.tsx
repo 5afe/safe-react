@@ -16,8 +16,8 @@ import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import { getExplorerInfo } from 'src/config'
 
-const REMOVE_GUARD_BTN_TEST_ID = 'remove-guard-btn'
-const GUARDS_ROW_TEST_ID = 'guards-row'
+export const REMOVE_GUARD_BTN_TEST_ID = 'remove-guard-btn'
+export const GUARDS_ROW_TEST_ID = 'guards-row'
 
 interface TransactionGuardProps {
   address: string
@@ -62,7 +62,10 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                       <TableCell component="td">
                         <Row align="end" className={classes.actions}>
                           {granted && (
-                            <ButtonHelper onClick={triggerRemoveSelectedGuard} data-testid={REMOVE_GUARD_BTN_TEST_ID}>
+                            <ButtonHelper
+                              onClick={triggerRemoveSelectedGuard}
+                              dataTestId={`${row}-${REMOVE_GUARD_BTN_TEST_ID}`}
+                            >
                               <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
                             </ButtonHelper>
                           )}

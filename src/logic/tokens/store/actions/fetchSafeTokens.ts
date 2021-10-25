@@ -1,11 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { Dispatch } from 'redux'
 
-import {
-  BalanceEndpoint,
-  fetchTokenCurrenciesBalances,
-  TokenBalance,
-} from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
@@ -15,6 +11,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { SafeBalanceResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export type BalanceRecord = {
   tokenAddress?: string
@@ -61,7 +58,7 @@ export const fetchSafeTokens =
     }
     const selectedCurrency = currency ?? currentCurrencySelector(state)
 
-    let tokenCurrenciesBalances: BalanceEndpoint
+    let tokenCurrenciesBalances: SafeBalanceResponse
     try {
       tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
         safeAddress,

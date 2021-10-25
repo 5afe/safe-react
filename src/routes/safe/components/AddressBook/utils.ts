@@ -3,15 +3,16 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
 export const FILE_SIZE_TOO_BIG_ERROR = 'The size of the file is over 1 MB'
-export const FILE_BYTES_LIMIT = 1000000
-export const IMPORT_SUPPORTED_FORMATS = [
+
+const FILE_BYTES_LIMIT = 1000000
+const IMPORT_SUPPORTED_FORMATS = [
   '',
   'text/csv',
+  'text/plain',
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ]
-
-const CSV_EXTENSION_REGEX = /([a-zA-Z0-9\s_\\.\-:])+(.csv|.ods|.xls|.xlsx)$/
+const CSV_EXTENSION_REGEX = /[^.]+\.(txt|csv|tsv|ods|xls|xlsx)$/
 
 export type CsvDataType = { data: string[] }[]
 
@@ -27,9 +28,9 @@ export const validateFile = (file: File): string | undefined => {
   return
 }
 
-const isValidChainId = (chainId) => {
+const isValidChainId = (chainId: string | number): boolean => {
   return Object.keys(ETHEREUM_NETWORK).some((network) => {
-    return ETHEREUM_NETWORK[network] == chainId
+    return ETHEREUM_NETWORK[network] === chainId.toString()
   })
 }
 
