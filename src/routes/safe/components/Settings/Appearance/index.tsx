@@ -1,7 +1,7 @@
 import FormGroup from '@material-ui/core/FormGroup/FormGroup'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import styled from 'styled-components'
@@ -20,7 +20,7 @@ const Container = styled(Block)`
   padding: ${lg};
 `
 
-const Appearance = () => {
+const Appearance = (): ReactElement => {
   const dispatch = useDispatch()
   const copyShortName = useSelector(copyShortNameSelector)
   const showShortName = useSelector(showShortNameSelector)
