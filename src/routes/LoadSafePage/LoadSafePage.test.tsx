@@ -37,10 +37,13 @@ describe('<LoadSafePage>', () => {
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  it('hides Select network step if loading a pre-selected safe', () => {
+  it('hides Select network step if loading a pre-selected safe', async () => {
     history.push('/load/rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
 
     render(<LoadSafePage />)
+
+    // we wait for the validation of the safe address input
+    await screen.findByTestId('safeAddress-valid-address-adornment')
 
     expect(screen.queryByText('Select network')).not.toBeInTheDocument()
     expect(screen.getByText('Name and address')).toBeInTheDocument()
