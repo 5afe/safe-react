@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
-import { ReactElement, useEffect, useState, lazy } from 'react'
+import { ReactElement, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
@@ -20,82 +20,42 @@ const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
 
-const INITIAL_STATE = {
-  erc721Enabled: false,
-  showToken: false,
-  sendFunds: {
-    isOpen: false,
-    selectedToken: '',
-  },
-  showReceive: false,
+enum SECTION_NAME {
+  coins = 'Coins',
+  collectibles = 'Collectibles',
 }
 
 const Balances = (): ReactElement => {
-  const [state, setState] = useState(INITIAL_STATE)
+  const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
+  const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
+  const [showReceive, setShowReceive] = useState<boolean>(false)
+  const [sentToken, setSentToken] = useState<string>('')
 
   // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
   const matchSafeWithBalancesSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
-
-  const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
-
-  useEffect(() => {
-    const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))
-
-    setState((prevState) => ({
-      ...prevState,
-      erc721Enabled,
-    }))
-  }, [featuresEnabled])
-
-  const onShow = (action) => {
-    setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
-  }
-
-  const onHide = (action) => {
-    setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
-  }
-
-  const showSendFunds = (tokenAddress: string): void => {
-    setState((prevState) => ({
-      ...prevState,
-      sendFunds: {
-        isOpen: true,
-        selectedToken: tokenAddress,
-      },
-    }))
-  }
-
-  const hideSendFunds = () => {
-    setState((prevState) => ({
-      ...prevState,
-      sendFunds: {
-        isOpen: false,
-        selectedToken: '',
-      },
-    }))
-  }
-
-  const { erc721Enabled, sendFunds, showReceive } = state
 
   const currentSafeRoutes = generatePrefixedAddressRoutes({
     shortName: getCurrentShortChainName(),
     safeAddress,
   })
 
-  let balancesSection
+  let balancesSection: SECTION_NAME | '' = ''
   switch (matchSafeWithBalancesSection?.url) {
     case currentSafeRoutes.ASSETS_BALANCES:
-      balancesSection = 'Coins'
+      balancesSection = SECTION_NAME.coins
       break
     case currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES:
-      balancesSection = 'Collectibles'
+      balancesSection = SECTION_NAME.collectibles
       break
-    default:
-      balancesSection = ''
   }
+
+  const openReceive = () => setShowReceive(true)
+  const closeReceive = () => setShowReceive(false)
+  const closeSendFunds = () => setSentToken('')
 
   return (
     <>
+      {/* Breadcrumbs & Currency Selector */}
       <Menu>
         <Col start="sm" sm={6} xs={12}>
           <Breadcrumb>
@@ -103,61 +63,37 @@ const Balances = (): ReactElement => {
             <BreadcrumbElement text={balancesSection} color="placeHolder" />
           </Breadcrumb>
         </Col>
-        <Switch>
-          <Route
-            path={SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES}
-            exact
-            render={() => {
-              return !erc721Enabled ? (
-                <Redirect to={SAFE_ROUTES.ASSETS_BALANCES} />
-              ) : (
-                <Col end="sm" sm={6} xs={12}></Col>
-              )
-            }}
-          />
-          <Route
-            path={SAFE_ROUTES.ASSETS_BALANCES}
-            exact
-            render={() => (
-              <Col end="sm" sm={6} xs={12}>
-                <CurrencyDropdown testId={'balances-currency-dropdown'} />
-              </Col>
-            )}
-          />
-        </Switch>
+
+        <Col end="sm" sm={6} xs={12}>
+          {balancesSection === SECTION_NAME.coins && <CurrencyDropdown testId={'balances-currency-dropdown'} />}
+        </Col>
       </Menu>
+
+      {/* Coins & Collectibles sub-router */}
       <Switch>
         <Route
           path={SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES}
           exact
-          render={() => {
-            if (erc721Enabled) {
-              return wrapInSuspense(<Collectibles />)
-            }
-            return null
-          }}
+          render={() => (erc721Enabled ? wrapInSuspense(<Collectibles />) : null)}
         />
         <Route
           path={SAFE_ROUTES.ASSETS_BALANCES}
-          render={() => {
-            return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
-          }}
+          render={() => wrapInSuspense(<Coins showReceiveFunds={openReceive} showSendFunds={setSentToken} />)}
         />
       </Switch>
-      <SendModal
-        activeScreenType="sendFunds"
-        isOpen={sendFunds.isOpen}
-        onClose={hideSendFunds}
-        selectedToken={sendFunds.selectedToken}
-      />
+
+      {/* Send Funds modal */}
+      <SendModal activeScreenType="sendFunds" isOpen={!!sentToken} onClose={closeSendFunds} selectedToken={sentToken} />
+
+      {/* Receive Tokens modal */}
       <Modal
         description="Receive Tokens Form"
-        handleClose={() => onHide('Receive')}
+        handleClose={closeReceive}
         open={showReceive}
         paperClassName="receive-modal"
         title="Receive Tokens"
       >
-        <ReceiveModal safeAddress={safeAddress} safeName={safeName} onClose={() => onHide('Receive')} />
+        <ReceiveModal safeAddress={safeAddress} safeName={safeName} onClose={closeReceive} />
       </Modal>
     </>
   )
