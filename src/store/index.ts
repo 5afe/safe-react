@@ -38,13 +38,14 @@ import currencyValues, {
 import networkConfig, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
 import { NetworkState } from 'src/logic/config/model/networkConfig'
 import { configMiddleware } from 'src/logic/config/store/middleware'
+import appearance, { AppearanceState, APPEARANCE_REDUCER_ID } from 'src/logic/appearance/reducer/appearance'
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const currencyLocalStorageKey = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
 const localStorageConfig = {
-  states: [ADDRESS_BOOK_REDUCER_ID, currencyLocalStorageKey],
+  states: [ADDRESS_BOOK_REDUCER_ID, currencyLocalStorageKey, APPEARANCE_REDUCER_ID],
   namespace: 'SAFE',
   namespaceSeparator: '__',
   disableWarnings: true,
@@ -78,6 +79,7 @@ const reducers = combineReducers({
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
   [NETWORK_CONFIG_REDUCER_ID]: networkConfig,
+  [APPEARANCE_REDUCER_ID]: appearance,
 })
 
 export type AppReduxState = CombinedState<{
@@ -93,6 +95,7 @@ export type AppReduxState = CombinedState<{
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
   [NETWORK_CONFIG_REDUCER_ID]: NetworkState
+  [APPEARANCE_REDUCER_ID]: AppearanceState
 }>
 
 // Address Book v2 migration
