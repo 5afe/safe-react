@@ -1,6 +1,6 @@
 import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 
@@ -30,17 +30,10 @@ const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
 const Safe = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
-  const [isInitialLoad, setInitialLoad] = useState(true)
   const location = useLocation()
   const history = useHistory()
   const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
-
-  useEffect(() => {
-    if (isInitialLoad && location.pathname !== ROOT_ROUTE) {
-      setInitialLoad(false)
-    }
-  }, [location.pathname, isInitialLoad])
 
   useEffect(() => {
     const unsubscribe = history.listen(switchNetworkWithUrl)
@@ -75,10 +68,6 @@ const Routes = (): React.ReactElement => {
         exact
         path={ROOT_ROUTE}
         render={() => {
-          if (!isInitialLoad) {
-            return <Redirect to={WELCOME_ROUTE} />
-          }
-
           if (defaultSafe === null) {
             return (
               <LoadingContainer>
