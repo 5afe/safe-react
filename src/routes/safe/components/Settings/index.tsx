@@ -50,6 +50,9 @@ const Settings = (): React.ReactElement => {
     case currentSafeRoutes.SETTINGS_DETAILS:
       settingsSection = 'Safe Details'
       break
+    case currentSafeRoutes.SETTINGS_APPEARANCE:
+      settingsSection = 'Appearance'
+      break
     case currentSafeRoutes.SETTINGS_OWNERS:
       settingsSection = 'Owners'
       break
