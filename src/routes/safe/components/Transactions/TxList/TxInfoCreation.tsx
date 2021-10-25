@@ -7,24 +7,23 @@ import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
 import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { useKnownAddress } from './hooks/useKnownAddress'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
   const txInfo = transaction.txInfo as Creation
   const timestamp = transaction.timestamp
 
-  const creator = useKnownAddress(txInfo.creator.value || ZERO_ADDRESS, {
-    name: txInfo.creator?.name || undefined,
-    image: txInfo.creator?.logoUri || undefined,
+  const creator = useKnownAddress(txInfo.creator.value, {
+    name: txInfo.creator?.name,
+    image: txInfo.creator?.logoUri,
   })
-  const factory = useKnownAddress(txInfo.factory?.value || ZERO_ADDRESS, {
-    name: txInfo.factory?.name || undefined,
-    image: txInfo.factory?.logoUri || undefined,
+  const factory = useKnownAddress(txInfo.factory?.value, {
+    name: txInfo.factory?.name,
+    image: txInfo.factory?.logoUri,
   })
-  const implementation = useKnownAddress(txInfo.implementation?.value || ZERO_ADDRESS, {
-    name: txInfo.implementation?.name || undefined,
-    image: txInfo.implementation?.logoUri || undefined,
+  const implementation = useKnownAddress(txInfo.implementation?.value, {
+    name: txInfo.implementation?.name,
+    image: txInfo.implementation?.logoUri,
   })
 
   return (
