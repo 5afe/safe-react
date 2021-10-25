@@ -6,11 +6,11 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { extractSafeAddress } from 'src/routes/routes'
 
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
@@ -62,7 +62,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeAddress = extractSafeAddress()
   const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
