@@ -9,6 +9,7 @@ import {
   ADDRESSED_ROUTE,
   history,
   isValidShortChainName,
+  LOAD_SPECIFIC_SAFE_ROUTE,
 } from './routes'
 import { Route, Switch } from 'react-router'
 import { render } from 'src/utils/test-utils'
@@ -89,7 +90,18 @@ describe('extractPrefixedSafeAddress', () => {
     const route = `/${shortName}:${ZERO_ADDRESS}/balances`
     history.push(route)
 
-    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'arb1', safeAddress: ZERO_ADDRESS })
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName, safeAddress: ZERO_ADDRESS })
+  })
+
+  it('extracts address and shortName from a custom route', () => {
+    const shortName = 'ewt'
+    const path = `/load/${shortName}:${ZERO_ADDRESS}`
+    history.push(path)
+
+    expect(extractPrefixedSafeAddress(path, LOAD_SPECIFIC_SAFE_ROUTE)).toStrictEqual({
+      shortName,
+      safeAddress: ZERO_ADDRESS,
+    })
   })
 })
 
