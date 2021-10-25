@@ -62,7 +62,7 @@ const SectionHeading = styled(Text)`
 
 const CenterIconText = styled(IconText)`
   justify-content: center;
-  margin-right: 55px;
+  margin: 16px 55px 20px 0;
 `
 
 const AppsList = (): React.ReactElement => {
