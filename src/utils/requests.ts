@@ -1,0 +1,6 @@
+export enum FETCH_STATUS {
+  NOT_ASKED = 'NOT_ASKED',
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+}

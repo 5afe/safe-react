@@ -1,26 +1,31 @@
-import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect } from 'react'
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
+import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
 
-const items: Item[] = [
-  { id: 'queue', label: 'Queue' },
-  { id: 'history', label: 'History' },
+const TRANSACTION_TABS: Item[] = [
+  { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
+  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
 ]
 
 const GatewayTransactions = (): ReactElement => {
-  const [tab, setTab] = useState(items[0].id)
+  const history = useHistory()
+  const { path: selectedTab } = useRouteMatch()
 
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
   }, [trackEvent])
+
+  const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 
   return (
     <Wrapper>
@@ -31,10 +36,12 @@ const GatewayTransactions = (): ReactElement => {
           </Breadcrumb>
         </Col>
       </Menu>
-      <Tab items={items} onChange={setTab} selectedTab={tab} />
+      <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={selectedTab} />
       <ContentWrapper>
-        {tab === 'queue' && <QueueTransactions />}
-        {tab === 'history' && <HistoryTransactions />}
+        <Switch>
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_HISTORY} render={() => <HistoryTransactions />} />
+        </Switch>
       </ContentWrapper>
     </Wrapper>
   )

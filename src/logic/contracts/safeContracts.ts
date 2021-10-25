@@ -21,7 +21,7 @@ import { ProxyFactory } from 'src/types/contracts/proxy_factory.d'
 import { CompatibilityFallbackHandler } from 'src/types/contracts/compatibility_fallback_handler.d'
 import { SignMessageLib } from 'src/types/contracts/sign_message_lib.d'
 import { MultiSend } from 'src/types/contracts/multi_send.d'
-import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
@@ -165,7 +165,7 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
   let masterCopyAddress: string | undefined
   try {
     const res = await getSafeInfo(proxyAddress)
-    masterCopyAddress = (res as SafeInfo)?.implementation.value
+    masterCopyAddress = res.implementation.value
     if (!masterCopyAddress) {
       console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
     }

@@ -1,6 +1,4 @@
 import { Map } from 'immutable'
-import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
-import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
 import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
@@ -33,37 +31,41 @@ import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {
-  CURRENCY_VALUES_KEY,
+  CURRENCY_REDUCER_ID,
   CurrencyValuesState,
+  initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware/currencyValuesStorageMiddleware'
-
-export const history = createHashHistory()
+import networkConfig, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
+import { NetworkState } from 'src/logic/config/model/networkConfig'
+import { configMiddleware } from 'src/logic/config/store/middleware'
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
+const currencyLocalStorageKey = `${CURRENCY_REDUCER_ID}.selectedCurrency`
+
 const localStorageConfig = {
-  states: [ADDRESS_BOOK_REDUCER_ID],
+  states: [ADDRESS_BOOK_REDUCER_ID, currencyLocalStorageKey],
   namespace: 'SAFE',
   namespaceSeparator: '__',
   disableWarnings: true,
+  preloadedState: {
+    [CURRENCY_REDUCER_ID]: initialCurrencyState,
+  },
 }
 
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
     save(localStorageConfig),
-    routerMiddleware(history),
     notificationsMiddleware,
     safeStorageMiddleware,
     providerWatcher,
     addressBookMiddleware,
-    currencyValuesStorageMiddleware,
+    configMiddleware,
   ),
 )
 
 const reducers = combineReducers({
-  router: connectRouter(history),
   [PROVIDER_REDUCER_ID]: provider,
   [SAFE_REDUCER_ID]: safe,
   [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
@@ -71,10 +73,11 @@ const reducers = combineReducers({
   [TOKEN_REDUCER_ID]: tokens,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
-  [CURRENCY_VALUES_KEY]: currencyValues,
+  [CURRENCY_REDUCER_ID]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
+  [NETWORK_CONFIG_REDUCER_ID]: networkConfig,
 })
 
 export type AppReduxState = CombinedState<{
@@ -83,13 +86,13 @@ export type AppReduxState = CombinedState<{
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
-  [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
+  [GATEWAY_TRANSACTIONS_ID]: Record<string, Record<string, StoreStructure>>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
-  [CURRENCY_VALUES_KEY]: CurrencyValuesState
+  [CURRENCY_REDUCER_ID]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
-  router: RouterState<{ pathname: string }>
+  [NETWORK_CONFIG_REDUCER_ID]: NetworkState
 }>
 
 // Address Book v2 migration

@@ -1,6 +1,6 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
-import { onboard } from 'src/components/ConnectButton'
-import { getConfig, getNetworkId } from 'src/config'
+import onboard from 'src/logic/wallets/onboard'
+import { getConfig, getNetworkId, getRpcServiceUrl } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { numberToHex } from 'web3-utils'
@@ -45,7 +45,7 @@ const requestAdd = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): Promise<vo
           symbol: cfg.network.nativeCoin.symbol,
           decimals: cfg.network.nativeCoin.decimals,
         },
-        rpcUrls: [cfg.rpcServiceUrl],
+        rpcUrls: [getRpcServiceUrl()],
         blockExplorerUrls: [cfg.networkExplorerUrl],
       },
     ],
@@ -79,12 +79,12 @@ export const switchNetwork = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): 
   }
 }
 
-export const shouldSwitchNetwork = (wallet = onboard.getState()?.wallet): boolean => {
-  const desiredNetwork = String(getNetworkId())
+export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
+  const desiredNetwork = getNetworkId()
   const currentNetwork = wallet?.provider?.networkVersion
-  return currentNetwork ? desiredNetwork !== currentNetwork : false
+  return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
 }
 
-export const canSwitchNetwork = (wallet = onboard.getState()?.wallet): boolean => {
+export const canSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
   return wallet?.provider?.isMetaMask || false
 }

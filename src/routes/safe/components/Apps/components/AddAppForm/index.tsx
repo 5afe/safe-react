@@ -1,22 +1,18 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import { useState, ReactElement, useCallback, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { generatePath, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
-import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import { Modal } from 'src/components/Modal'
-
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
-import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 
 const FORM_ID = 'add-apps-form'
 
@@ -77,29 +73,22 @@ const DEFAULT_APP_INFO = getEmptySafeApp()
 interface AddAppProps {
   appList: SafeApp[]
   closeModal: () => void
+  onAddApp: (app: SafeApp) => void
 }
 
-const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
-  const safeAddress = useSelector(safeAddressFromUrl)
-  const appsPath = generatePath(SAFE_ROUTES.APPS, {
-    safeAddress,
-  })
+const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement => {
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(async () => {
-    const persistedAppList =
-      (await loadFromStorage<(StoredSafeApp & { disabled?: number[] })[]>(APPS_STORAGE_KEY)) || []
-    const newAppList = [
-      { url: appInfo.url, disabled: false },
-      ...persistedAppList.map(({ url, disabled }) => ({ url, disabled })),
-    ]
-    saveToStorage(APPS_STORAGE_KEY, newAppList)
-    const goToApp = `${appsPath}?appUrl=${encodeURI(appInfo.url)}`
-    history.push(goToApp)
-  }, [appInfo.url, history, appsPath])
+    onAddApp(appInfo)
+    history.push({
+      pathname: generateSafeRoute(SAFE_ROUTES.APPS, extractPrefixedSafeAddress()),
+      search: `?appUrl=${encodeURIComponent(appInfo.url)}`,
+    })
+  }, [history, appInfo, onAddApp])
 
   useEffect(() => {
     if (isLoading) {

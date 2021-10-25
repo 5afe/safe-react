@@ -2,17 +2,22 @@ import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
-import { getSDKWeb3Adapter, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getSDKWeb3Adapter, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { GasPriceOracle } from 'src/config/networks/network'
 import { CodedException, Errors } from '../exceptions/CodedException'
 
 export const EMPTY_DATA = '0x'
+/**
+ * The magic number is from web3.js
+ * @see https://github.com/ChainSafe/web3.js/blob/c70722b919ac81e45760b9648c4b92fd8d0eeee1/packages/web3-core-method/src/index.js#L869
+ */
+const FIXED_GAS_FEE = '2.5'
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { url, gasParameter, gweiFactor } = gasPriceOracle
   const { data: response } = await axios.get(url)
-  const data = response.data || response // Sometimes the data comes with a data parameter
+  const data = response.data || response.result || response // Sometimes the data comes with a data parameter
   return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
 }
 
@@ -34,9 +39,12 @@ export const calculateGasPrice = async (): Promise<string> => {
       }
     }
   }
-  // If no oracle worked we return an error
-  const err = new CodedException(Errors._611, 'gasPrice or gasPriceOracle not set in config')
-  return Promise.reject(err)
+
+  // A fallback based on the latest mined blocks when none of the oracles are working
+  const web3ReadOnly = getWeb3ReadOnly()
+  const fixedFee = web3ReadOnly.utils.toWei(FIXED_GAS_FEE, 'gwei')
+  const lastFee = await web3ReadOnly.eth.getGasPrice()
+  return BigNumber.sum(fixedFee, lastFee).toString()
 }
 
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {

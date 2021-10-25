@@ -1,6 +1,6 @@
 import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Loader, Card } from '@gnosis.pm/safe-react-components'
+import { Loader, Card, Title } from '@gnosis.pm/safe-react-components'
 import {
   GetBalanceParams,
   GetTxBySafeTxHashParams,
@@ -10,19 +10,17 @@ import {
   SignMessageParams,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { generatePath, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getCurrentShortChainName, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
-
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
@@ -34,8 +32,10 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
+import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -73,8 +73,7 @@ type Props = {
   appUrl: string
 }
 
-const NETWORK_NAME = getNetworkName()
-const NETWORK_ID = getNetworkId()
+const APP_LOAD_ERROR_TIMEOUT = 30000
 
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
@@ -89,6 +88,7 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
+  const networkId = useSelector(currentChainId)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const history = useHistory()
@@ -102,27 +102,34 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
 
   const redirectToBalance = () =>
-    history.push(
-      generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        safeAddress,
-      }),
-    )
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
   const timer = useRef<number>()
-  const [appTimeout, setAppTimeout] = useState(false)
+  const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
+
+  const errorTimer = useRef<number>()
   const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
+    const clearTimeouts = () => {
+      clearTimeout(timer.current)
+      clearTimeout(errorTimer.current)
+    }
+
     if (appIsLoading) {
       timer.current = window.setTimeout(() => {
-        setAppTimeout(true)
+        setIsLoadingSlow(true)
       }, TIMEOUT)
+      errorTimer.current = window.setTimeout(() => {
+        setAppLoadError(true)
+      }, APP_LOAD_ERROR_TIMEOUT)
     } else {
-      clearTimeout(timer.current)
-      setAppTimeout(false)
+      clearTimeouts()
+      setIsLoadingSlow(false)
+      setAppLoadError(false)
     }
 
     return () => {
-      clearTimeout(timer.current)
+      clearTimeouts()
     }
   }, [appIsLoading])
 
@@ -159,7 +166,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
+        network: getNetworkName().toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
@@ -182,8 +189,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: NETWORK_NAME,
-      chainId: parseInt(NETWORK_ID, 10),
+      network: getNetworkName(),
+      chainId: parseInt(networkId, 10),
       owners,
       threshold,
     }))
@@ -234,7 +241,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       openSignMessageModal(message, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, networkId])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
@@ -264,7 +271,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
       } catch (err) {
-        setAppLoadError(true)
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
@@ -282,13 +288,18 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     throw Error('App url No provided or it is invalid.')
   }
 
-  if (appTimeout || appLoadError) {
-    throw Error('There was an error loading the Safe App. There might be a problem with the app provider.')
+  if (appLoadError) {
+    throw Error('There was an error loading the Safe App. There might be a problem with the App provider.')
   }
 
   if (!safeApp) {
     return (
-      <LoadingContainer>
+      <LoadingContainer style={{ flexDirection: 'column' }}>
+        {isLoadingSlow && (
+          <Title size="xs">
+            The Safe App is taking too long to load. There might be a problem with the App provider.
+          </Title>
+        )}
         <Loader size="md" />
       </LoadingContainer>
     )
@@ -303,6 +314,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
+            {isLoadingSlow && <Title size="xs">The Safe App is taking too long to load, consider refreshing.</Title>}
             <Loader size="md" />
           </LoadingContainer>
         )}

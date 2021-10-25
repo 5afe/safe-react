@@ -109,7 +109,12 @@ describe('fetchSafe', () => {
         type: UPDATE_SAFE,
         payload: {
           address: SAFE_ADDRESS,
+          chainId: '4',
+          collectiblesTag: '1634550387',
+          guard: undefined,
           threshold: 2,
+          txHistoryTag: '1633430459',
+          txQueuedTag: '1634550387',
           owners: [
             '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
             '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',

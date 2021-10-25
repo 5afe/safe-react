@@ -19,7 +19,6 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
-
 import { getExplorerInfo, getNetworkId } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
@@ -29,7 +28,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
-import { addressBookFromQueryParams, currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
@@ -48,6 +47,8 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import { useHistory } from 'react-router'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -73,18 +74,16 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const chainId = getNetworkId()
-const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
-
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
   const dispatch = useDispatch()
   const safesList = useSelector(safesAsList)
-  const entryAddressToEditOrCreateNew = useSelector(addressBookFromQueryParams)
   const addressBook = useSelector(currentNetworkAddressBook)
+  const networkId = useSelector(currentChainId)
   const granted = useSelector(grantedSelector)
+  const initialEntryState: Entry = { entry: { address: '', name: '', chainId: getNetworkId(), isNew: true } }
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [importEntryModalOpen, setImportEntryModalOpen] = useState(false)
@@ -92,6 +91,10 @@ const AddressBookTable = (): ReactElement => {
   const [exportEntriesModalOpen, setExportEntriesModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
   const { trackEvent } = useAnalytics()
+
+  const history = useHistory()
+  const queryParams = Object.fromEntries(new URLSearchParams(history.location.search))
+  const entryAddressToEditOrCreateNew = queryParams?.entryAddress
 
   useEffect(() => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
@@ -117,13 +120,13 @@ const AddressBookTable = (): ReactElement => {
           entry: {
             name: '',
             address,
-            chainId,
+            chainId: networkId,
             isNew: true,
           },
         })
       }
     }
-  }, [addressBook, entryAddressToEditOrCreateNew])
+  }, [addressBook, entryAddressToEditOrCreateNew, networkId])
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
     // close the modal

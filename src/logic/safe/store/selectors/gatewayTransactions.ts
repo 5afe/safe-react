@@ -3,9 +3,10 @@ import { createSelector } from 'reselect'
 
 import { StoreStructure, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
 import { AppReduxState } from 'src/store'
+import { extractSafeAddress } from 'src/routes/routes'
 
 export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewayTransactions'] => {
   return state[GATEWAY_TRANSACTIONS_ID]
@@ -13,17 +14,19 @@ export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewa
 
 export const historyTransactions = createHashBasedSelector(
   gatewayTransactions,
-  safeAddressFromUrl,
-  (gatewayTransactions, safeAddress): StoreStructure['history'] | undefined => {
-    return safeAddress ? gatewayTransactions[safeAddress]?.history : undefined
+  currentChainId,
+  (gatewayTransactions, chainId): StoreStructure['history'] | undefined => {
+    const safeAddress = extractSafeAddress()
+    return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.history : undefined
   },
 )
 
 export const pendingTransactions = createSelector(
   gatewayTransactions,
-  safeAddressFromUrl,
-  (gatewayTransactions, safeAddress): StoreStructure['queued'] | undefined => {
-    return safeAddress ? gatewayTransactions[safeAddress]?.queued : undefined
+  currentChainId,
+  (gatewayTransactions, chainId): StoreStructure['queued'] | undefined => {
+    const safeAddress = extractSafeAddress()
+    return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.queued : undefined
   },
 )
 
@@ -51,12 +54,13 @@ type TxByLocation = {
 
 const getTransactionsByLocation = createHashBasedSelector(
   gatewayTransactions,
-  safeAddressFromUrl,
-  (gatewayTransactions, safeAddress) =>
+  currentChainId,
+  extractSafeAddress,
+  (gatewayTransactions, chainId, safeAddress) =>
     (rest: TxByLocationAttr): TxByLocation => ({
       attributeName: rest.attributeName,
       attributeValue: rest.attributeValue,
-      transactions: safeAddress ? get(gatewayTransactions[safeAddress], rest.txLocation) : [],
+      transactions: chainId && safeAddress ? get(gatewayTransactions[chainId][safeAddress], rest.txLocation) : [],
     }),
 )
 

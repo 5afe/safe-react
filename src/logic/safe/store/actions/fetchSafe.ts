@@ -1,9 +1,11 @@
 import { Dispatch } from 'redux'
 import { Action } from 'redux-actions'
+
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
-import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
@@ -11,6 +13,7 @@ import { store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import { getNetworkId } from 'src/config'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -92,7 +95,7 @@ export const fetchSafe =
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || !isSafeLoaded) {
-        dispatch(fetchTransactions(safeAddress))
+        dispatch(fetchTransactions(getNetworkId(), safeAddress))
       }
     }
 

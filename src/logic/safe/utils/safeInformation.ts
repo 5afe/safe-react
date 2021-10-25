@@ -1,8 +1,10 @@
-import { getSafeInfo as fetchSafeInfo, GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getSafeInfo as fetchSafeInfo, SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { getClientGatewayUrl, getNetworkId } from 'src/config'
-
-export type SafeInfo = GatewayDefinitions['SafeAppInfo']
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { SafeRecordProps } from '../store/models/safe'
+import { SafeRecordWithNames } from '../store/selectors'
 
 export const getSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
   try {
@@ -11,3 +13,6 @@ export const getSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
     throw new CodedException(Errors._605, e.message)
   }
 }
+
+export const isSafeAdded = (addedSafes: SafeRecordWithNames[] | SafeRecordProps[], address: string): boolean =>
+  addedSafes.some((safe: SafeRecordWithNames | SafeRecordProps) => sameAddress(safe.address, address))

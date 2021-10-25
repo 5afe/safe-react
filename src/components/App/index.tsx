@@ -9,18 +9,16 @@ import AlertIcon from 'src/assets/icons/alert.svg'
 import CheckIcon from 'src/assets/icons/check.svg'
 import ErrorIcon from 'src/assets/icons/error.svg'
 import InfoIcon from 'src/assets/icons/info.svg'
-
 import AppLayout from 'src/components/AppLayout'
 import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
@@ -29,10 +27,10 @@ import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUp
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
+import { extractSafeAddress, ADDRESSED_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 
 const notificationStyles = {
   success: {
@@ -56,19 +54,18 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const desiredNetwork = getNetworkId()
-
 const useStyles = makeStyles(notificationStyles)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
+  const desiredNetwork = useSelector(currentChainId)
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
+  const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
   const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
-  const addressFromUrl = useSelector(safeAddressFromUrl)
+  const addressFromUrl = extractSafeAddress()
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
@@ -84,8 +81,7 @@ const App: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (matchSafe?.isExact) {
-      history.push(WELCOME_ADDRESS)
-      return
+      history.push(WELCOME_ROUTE)
     }
   }, [matchSafe, history])
 

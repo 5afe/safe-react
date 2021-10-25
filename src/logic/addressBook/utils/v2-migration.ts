@@ -20,9 +20,9 @@ interface StorageConfig {
  * @note If the Safe name is an invalid AB name, it's renamed to "Migrated from: {safe.name}"
  */
 const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
-  const prefix = `v2_${getNetworkName()}`
-  const safesKey = `_immortal|${prefix}__SAFES`
-  const storedSafes = localStorage.getItem(safesKey)
+  const SAFES_KEY = `_immortal|v2_${getNetworkName()}__SAFES`
+
+  const storedSafes = localStorage.getItem(SAFES_KEY)
 
   if (!storedSafes) {
     // nothing left to migrate
@@ -71,7 +71,7 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
   localStorage.setItem(addressBookKey, JSON.stringify(addressBookToStore))
 
   // update stored safe
-  localStorage.setItem(safesKey, JSON.stringify(migratedSafes))
+  localStorage.setItem(SAFES_KEY, JSON.stringify(migratedSafes))
   saveSafes(migratedSafes).then(() => console.info('Safe objects migrated'))
 }
 

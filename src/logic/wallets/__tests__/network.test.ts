@@ -10,7 +10,7 @@ jest.mock('src/config', () => {
   const original = jest.requireActual('src/config')
   return {
     ...original,
-    getNetworkId: () => 1,
+    getNetworkId: () => '1',
   }
 })
 
