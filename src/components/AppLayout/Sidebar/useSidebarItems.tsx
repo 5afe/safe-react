@@ -14,6 +14,7 @@ import {
   SAFE_SUBSECTION_ROUTE,
   generatePrefixedAddressRoutes,
 } from 'src/routes/routes'
+import { IS_PRODUCTION } from 'src/utils/constants'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
@@ -75,11 +76,13 @@ const useSidebarItems = (): ListItemType[] => {
         iconType: 'info',
         href: currentSafeRoutes.SETTINGS_DETAILS,
       }),
-      makeEntryItem({
-        label: 'Appearance',
-        iconType: 'eye',
-        href: currentSafeRoutes.SETTINGS_APPEARANCE,
-      }),
+      IS_PRODUCTION
+        ? null
+        : makeEntryItem({
+            label: 'Appearance',
+            iconType: 'eye',
+            href: currentSafeRoutes.SETTINGS_APPEARANCE,
+          }),
       makeEntryItem({
         label: 'Owners',
         iconType: 'owners',
@@ -101,7 +104,7 @@ const useSidebarItems = (): ListItemType[] => {
         iconType: 'settingsTool',
         href: currentSafeRoutes.SETTINGS_ADVANCED,
       }),
-    ]
+    ].filter(Boolean)
 
     return [
       makeEntryItem({
