@@ -15,6 +15,7 @@ import FlexSpacer from 'src/components/FlexSpacer'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { NetworkSettings } from 'src/config/networks/network.d'
 import { border, fontColor } from 'src/theme/variables'
+import { usePrefixedAddress } from 'src/logic/hooks/usePrefixedAddress'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -116,6 +117,8 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const { getAddressToCopy, getAddressToDisplay } = usePrefixedAddress()
+
   if (!address) {
     return (
       <Container>
@@ -153,12 +156,12 @@ const SafeHeader = ({
         <Text size="lg" center>
           {safeName}
         </Text>
-        <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
+        <StyledEthHashInfo hash={getAddressToDisplay(address)} shortenHash={4} textSize="sm" />
         <IconContainer>
           <ButtonHelper onClick={onReceiveClick}>
             <Icon size="sm" type="qrCode" tooltip="Show QR" />
           </ButtonHelper>
-          <CopyToClipboardBtn textToCopy={address} />
+          <CopyToClipboardBtn textToCopy={getAddressToCopy(address)} />
           <ExplorerButton explorerUrl={explorerUrl} />
         </IconContainer>
 
