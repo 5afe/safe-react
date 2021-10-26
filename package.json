@@ -20,7 +20,6 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build-desktop": "yarn compile-electron && cross-env REACT_APP_BUILD_FOR_DESKTOP=true REACT_APP_ENV=production yarn build-mainnet",
-    "build-mainnet": "cross-env REACT_APP_NETWORK=mainnet yarn build",
     "build": "cross-env REACT_APP_APP_VERSION=$npm_package_version rescripts --max-old-space-size=8192 build",
     "compile-electron": "tsc --project tsconfig.electron.json",
     "eject": "rescripts eject",
