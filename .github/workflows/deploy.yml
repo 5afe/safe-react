@@ -1,4 +1,4 @@
-name: Deploy to Mainnet network
+name: Deploy
 
 # Run on pushes to main or PRs
 on:
@@ -13,7 +13,6 @@ on:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REACT_APP_NETWORK: 'mainnet'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_MAINNET_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
@@ -78,7 +77,7 @@ jobs:
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'main'
 
-      - name: Build ${{ env.REACT_APP_NETWORK }} app
+      - name: Build app
         run: yarn build
         env:
           REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
@@ -103,8 +102,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           PR_NUMBER: ${{ github.event.number }}
           REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-          REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
-          TRAVIS_TAG: ${{ github.event.release.tag_name }}
 
       - name: 'PRaul: Comment PR with app URLs'
         uses: mshick/add-pr-comment@v1
@@ -143,7 +140,6 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     PR_NUMBER: ${{ github.event.number }}
       #     REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-      #     REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
       #     VERSION_TAG: ${{ github.event.release.tag_name }}
 
       # Script to prepare production deployments
@@ -159,5 +155,5 @@ jobs:
         if: success() && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG}}
-          SENTRY_PROJECT: gnosis-safe-multisig-${{ env.REACT_APP_NETWORK }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
