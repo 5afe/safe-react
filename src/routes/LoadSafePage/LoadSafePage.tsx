@@ -99,7 +99,14 @@ function Load(): ReactElement {
           </BackIcon>
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
-        <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
+
+        {/* key={safeAddress} ensures that it goes to step 1 when the address changes */}
+        <StepperForm
+          initialValues={initialFormValues}
+          testId="load-safe-form"
+          onSubmit={onSubmitLoadSafe}
+          key={safeAddress}
+        >
           {safeAddress && shortName ? null : (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />
