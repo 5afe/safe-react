@@ -36,7 +36,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         setType({
           icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
-          text: knownAddressBookAddress.name || toAddress?.name || (isSendTx ? 'Send' : 'Receive'),
+          text: isSendTx ? 'Send' : 'Receive',
         })
         break
       }
