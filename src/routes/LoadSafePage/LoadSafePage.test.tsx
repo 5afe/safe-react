@@ -5,7 +5,6 @@ import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
-import { generatePath } from 'react-router-dom'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
@@ -22,11 +21,6 @@ const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
 const validSafeENSNameDomain = 'testENSDomain.eth'
 
 describe('<LoadSafePage>', () => {
-  afterEach(() => {
-    const constants = require('src/utils/constants')
-    Object.defineProperty(constants, 'IS_PRODUCTION', { value: false })
-  })
-
   it('renders LoadSafePage Form', () => {
     render(<LoadSafePage />)
 
@@ -34,7 +28,7 @@ describe('<LoadSafePage>', () => {
     expect(screen.getByTestId('load-safe-form')).toBeInTheDocument()
   })
 
-  it('shows all steps if we are not in production env', () => {
+  it('shows all steps', () => {
     render(<LoadSafePage />)
 
     expect(screen.getByText('Select network')).toBeInTheDocument()
@@ -43,27 +37,20 @@ describe('<LoadSafePage>', () => {
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  it('hides Select network step if we are in production env', () => {
-    const constants = require('src/utils/constants')
-    Object.defineProperty(constants, 'IS_PRODUCTION', { value: true })
+  it('hides Select network step if loading a pre-selected safe', async () => {
+    history.push('/load/rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
 
-    const customState = {
-      providers: {
-        name: 'MetaMask',
-        loaded: true,
-        available: true,
-        account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
-        network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
-      },
-    }
-    render(<LoadSafePage />, customState)
+    render(<LoadSafePage />)
+
+    // we wait for the validation of the safe address input
+    await screen.findByTestId('safeAddress-valid-address-adornment')
 
     expect(screen.queryByText('Select network')).not.toBeInTheDocument()
     expect(screen.getByText('Name and address')).toBeInTheDocument()
     expect(screen.getByText('Owners')).toBeInTheDocument()
     expect(screen.getByText('Review')).toBeInTheDocument()
+
+    history.push('/load')
   })
 
   describe('Step 1: Select network', () => {
@@ -153,15 +140,6 @@ describe('<LoadSafePage>', () => {
   })
 
   describe('Step 2: Name and address', () => {
-    it('Shows a No account detected error message if no wallet is connected in production environment', () => {
-      const constants = require('src/utils/constants')
-      Object.defineProperty(constants, 'IS_PRODUCTION', { value: true })
-
-      render(<LoadSafePage />)
-
-      expect(screen.getByText('No account detected')).toBeInTheDocument()
-    })
-
     it('Checks if the Safe Address is a valid Safe Address', async () => {
       render(<LoadSafePage />)
 

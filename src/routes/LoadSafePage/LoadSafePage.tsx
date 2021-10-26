@@ -1,5 +1,5 @@
 import { ReactElement, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
@@ -9,7 +9,6 @@ import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { secondary, sm } from 'src/theme/variables'
 import SelectNetworkStep, { selectNetworkStepLabel } from './steps/SelectNetworkStep'
 import LoadSafeAddressStep, {
@@ -35,20 +34,14 @@ import {
   FIELD_SAFE_OWNER_LIST,
   LoadSafeFormValues,
 } from './fields/loadFields'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getCurrentShortChainName } from 'src/config'
 
 function Load(): ReactElement {
-  const provider = useSelector(providerNameSelector)
-
   const dispatch = useDispatch()
   const history = useHistory()
-
-  const { safeAddress } = extractPrefixedSafeAddress(LOAD_SPECIFIC_SAFE_ROUTE)
-
+  const { safeAddress, shortName } = extractPrefixedSafeAddress(undefined, LOAD_SPECIFIC_SAFE_ROUTE)
   const safeRandomName = useMnemonicSafeName()
-
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
 
   useEffect(() => {
@@ -93,12 +86,11 @@ function Load(): ReactElement {
     storedSafes[checksumSafeAddress] = safeProps
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
+
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
   }
 
-  return IS_PRODUCTION && !provider ? (
-    <div>No account detected</div>
-  ) : (
+  return (
     <Page>
       <Block>
         <Row align="center">
@@ -107,8 +99,15 @@ function Load(): ReactElement {
           </BackIcon>
           <Heading tag="h2">Add existing Safe</Heading>
         </Row>
-        <StepperForm initialValues={initialFormValues} testId={'load-safe-form'} onSubmit={onSubmitLoadSafe}>
-          {!IS_PRODUCTION && (
+
+        {/* key={safeAddress} ensures that it goes to step 1 when the address changes */}
+        <StepperForm
+          initialValues={initialFormValues}
+          testId="load-safe-form"
+          onSubmit={onSubmitLoadSafe}
+          key={safeAddress}
+        >
+          {safeAddress && shortName ? null : (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">
               <SelectNetworkStep />
             </StepFormElement>
