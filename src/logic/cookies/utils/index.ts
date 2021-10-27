@@ -1,9 +1,7 @@
 import Cookies, { CookieAttributes } from 'js-cookie'
-import { getNetworkName } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
-const VERSION_PREFIX = 'v1_'
-const PREFIX = `${VERSION_PREFIX}${getNetworkName()}__`
+const PREFIX = 'v1_MAINNET__'
 
 export const loadFromCookie = async (key: string, withoutPrefix = false): Promise<undefined | Record<string, any>> => {
   const prefix = withoutPrefix ? '' : PREFIX
