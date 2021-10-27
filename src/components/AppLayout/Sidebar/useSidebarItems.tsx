@@ -36,8 +36,7 @@ const useSidebarItems = (): ListItemType[] => {
       badge,
       disabled,
       icon: <ListIcon type={iconType} />,
-      // Remove trailing slash if it exists
-      selected: href === matchSafeWithSidebarSection?.url?.replace(/\/+$/, ''),
+      selected: href === matchSafeWithSidebarSection?.url,
       href,
       subItems,
     }),

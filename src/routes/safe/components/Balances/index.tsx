@@ -40,8 +40,7 @@ const Balances = (): ReactElement => {
   })
 
   let balancesSection: SECTION_NAME | '' = ''
-  // Remove trailing slash if it exists
-  switch (matchSafeWithBalancesSection?.url?.replace(/\/+$/, '')) {
+  switch (matchSafeWithBalancesSection?.url) {
     case currentSafeRoutes.ASSETS_BALANCES:
       balancesSection = SECTION_NAME.coins
       break

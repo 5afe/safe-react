@@ -52,6 +52,18 @@ const Routes = (): React.ReactElement => {
   return (
     <Switch>
       {
+        // Remove all trailing slashes
+        location.pathname.endsWith('/') && (
+          <Route
+            path={[
+              '/:url', // Match all* pathnames
+              `${ADDRESSED_ROUTE}`, // *slugged
+            ]}
+            render={() => <Redirect to={location.pathname.replace(/\/+$/, `${location.search}${location.hash}`)} />}
+          />
+        )
+      }
+      {
         // Redirection to open network specific welcome pages
         NETWORK_ROOT_ROUTES.map(({ id, route }) => (
           <Route
