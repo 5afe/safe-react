@@ -36,13 +36,13 @@ import {
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getCurrentShortChainName } from 'src/config'
-import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { addressBookName } from 'src/logic/addressBook/store/selectors'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
   const { safeAddress, shortName } = extractPrefixedSafeAddress(undefined, LOAD_SPECIFIC_SAFE_ROUTE)
-  const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
+  const safeName = useSelector((state) => addressBookName(state, { address: safeAddress }))
   const safeRandomName = useMnemonicSafeName()
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
 

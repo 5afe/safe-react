@@ -6,6 +6,9 @@ import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-ut
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
+import { addressBookSync } from 'src/logic/addressBook/store/actions'
+import { useDispatch } from 'react-redux'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
@@ -37,20 +40,48 @@ describe('<LoadSafePage>', () => {
     expect(screen.getByText('Review')).toBeInTheDocument()
   })
 
-  it('hides Select network step if loading a pre-selected safe', async () => {
-    history.push('/load/rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+  describe('Loading a specific Safe from URL', () => {
+    beforeAll(() => {
+      history.push('/load/rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+    })
 
-    render(<LoadSafePage />)
+    afterAll(() => {
+      history.push('/load')
+    })
 
-    // we wait for the validation of the safe address input
-    await screen.findByTestId('safeAddress-valid-address-adornment')
+    it('hides Select network step if loading a pre-selected safe', async () => {
+      render(<LoadSafePage />)
 
-    expect(screen.queryByText('Select network')).not.toBeInTheDocument()
-    expect(screen.getByText('Name and address')).toBeInTheDocument()
-    expect(screen.getByText('Owners')).toBeInTheDocument()
-    expect(screen.getByText('Review')).toBeInTheDocument()
+      // we wait for the validation of the safe address input
+      await screen.findByTestId('safeAddress-valid-address-adornment')
 
-    history.push('/load')
+      expect(screen.queryByText('Select network')).not.toBeInTheDocument()
+      const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
+      const safeNameInputNode = screen.getByTestId('load-safe-name-field')
+      expect(safeNameInputNode?.getAttribute('placeholder')).toMatch(/.+-rinkeby-safe/)
+      expect((safeAddressInputNode as HTMLInputElement).value).toBe('0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+    })
+
+    it('uses a name from Address Book if available', async () => {
+      render(<LoadSafePage />, {
+        addressBook: [
+          {
+            address: '0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A',
+            name: 'Test Safe',
+            chainId: ETHEREUM_NETWORK.RINKEBY,
+          },
+        ],
+      })
+
+      // we wait for the validation of the safe address input
+      await screen.findByTestId('safeAddress-valid-address-adornment')
+
+      expect(screen.queryByText('Select network')).not.toBeInTheDocument()
+      const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
+      const safeNameInputNode = screen.getByTestId('load-safe-name-field')
+      expect(safeNameInputNode?.getAttribute('placeholder')).toBe('Test Safe')
+      expect((safeAddressInputNode as HTMLInputElement).value).toBe('0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+    })
   })
 
   describe('Step 1: Select network', () => {
