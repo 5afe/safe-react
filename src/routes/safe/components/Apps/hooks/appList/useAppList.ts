@@ -36,7 +36,7 @@ const pinAppGAEvent: SafeAppsGAEvent = {
 const useAppList = (): UseAppListReturnType => {
   const { remoteSafeApps, status: remoteAppsFetchStatus } = useRemoteSafeApps()
   const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
-  const { pinnedSafeAppIds, updatePinnedSafeApps } = usePinnedSafeApps()
+  const { pinnedSafeAppIds, updatePinnedSafeApps } = usePinnedSafeApps(remoteSafeApps, remoteAppsFetchStatus)
   const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
 
   const { trackEvent } = useAnalytics()

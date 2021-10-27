@@ -37,6 +37,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
+import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 
 const useStyles = makeStyles(styles)
 
@@ -124,6 +125,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
+  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const doExecute = isExecution && executionApproved
 
   const submitTx = async (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
@@ -168,6 +171,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        delayExecution: !executionApproved,
       }),
     )
     onClose()
@@ -195,7 +199,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={doExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -249,6 +253,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               </Paragraph>
             </Row>
 
+            {isExecution && !isSpendingLimit && <ExecuteCheckbox onChange={setExecutionApproved} />}
+
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
             {!isSpendingLimit && (
@@ -256,7 +262,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 txParameters={txParameters}
                 onEdit={toggleEditMode}
                 isTransactionCreation={isCreation}
-                isTransactionExecution={isExecution}
+                isTransactionExecution={doExecute}
                 isOffChainSignature={isOffChainSignature}
               />
             )}
@@ -268,7 +274,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             <div className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
+                isExecution={doExecute}
                 isCreation={isCreation}
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}

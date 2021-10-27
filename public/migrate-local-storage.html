@@ -7,7 +7,7 @@
         const parentHostnames = [
           'https://gnosis-safe.io',
           'https://safe-team.staging.gnosisdev.com',
-          'https://pr2695--safereact.review-safe.gnosisdev.com',
+          'https://safe-team.dev.gnosisdev.com',
           'http://localhost:3000',
         ]
 
@@ -18,7 +18,7 @@
           messageTargetOrigin = parentHostnames[0]
         } else if (hostname.includes('staging.gnosisdev.com')) {
           messageTargetOrigin = parentHostnames[1]
-        } else if (hostname.includes('.gnosisdev.com')) {
+        } else if (hostname.includes('dev.gnosisdev.com')) {
           messageTargetOrigin = parentHostnames[2]
         } else if (hostname.includes('localhost')) {
           messageTargetOrigin = parentHostnames[3]

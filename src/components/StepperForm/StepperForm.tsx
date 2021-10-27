@@ -9,7 +9,7 @@ type StepperFormProps = {
   testId: string
   onSubmit: (values) => void
   initialValues?: any
-  children: (JSX.Element | false)[]
+  children: (JSX.Element | false | null)[]
 }
 
 function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormProps): ReactElement {
@@ -17,29 +17,31 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
   const [onSubmitForm, setOnSubmitForm] = useState<(values) => void>()
   const steps = useMemo(
     () =>
-      React.Children.toArray(children).map(function Step(step: any, index) {
-        function ComponentStep() {
-          const { setCurrentStep } = useStepper()
-          useEffect(() => {
-            const isLastStep = index === children.length - 1
-            setValidate(() => step.props.validate)
-            if (isLastStep) {
-              setOnSubmitForm(() => (values) => onSubmit(values))
-            } else {
-              setOnSubmitForm(() => () => {
-                setCurrentStep((step) => step + 1)
-              })
-            }
-          }, [setCurrentStep])
-          return step.props.children
-        }
+      React.Children.toArray(children)
+        .filter(Boolean)
+        .map((step: ReactElement, index, list) => {
+          function ComponentStep() {
+            const { setCurrentStep } = useStepper()
+            useEffect(() => {
+              const isLastStep = index === list.length - 1
+              setValidate(() => step.props.validate)
+              if (isLastStep) {
+                setOnSubmitForm(() => (values) => onSubmit(values))
+              } else {
+                setOnSubmitForm(() => () => {
+                  setCurrentStep((step) => step + 1)
+                })
+              }
+            }, [setCurrentStep])
+            return step.props.children
+          }
 
-        return (
-          <StepElement key={step.props.label} nextButtonType={'submit'} {...step.props}>
-            <ComponentStep />
-          </StepElement>
-        )
-      }),
+          return (
+            <StepElement key={step.props.label} nextButtonType={'submit'} {...step.props}>
+              <ComponentStep />
+            </StepElement>
+          )
+        }),
     [children, onSubmit],
   )
   return (

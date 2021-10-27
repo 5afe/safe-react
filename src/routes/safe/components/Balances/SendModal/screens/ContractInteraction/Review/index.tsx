@@ -31,6 +31,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
+import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 
 const useStyles = makeStyles(styles)
 
@@ -59,6 +60,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
   const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
 
   const [txInfo, setTxInfo] = useState<{
@@ -85,6 +87,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     manualGasLimit,
   })
 
+  const doExecute = isExecution && executionApproved
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
@@ -107,6 +110,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          delayExecution: !executionApproved,
         }),
       )
     } else {
@@ -137,7 +141,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={doExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -222,19 +226,21 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Col>
             </Row>
 
+            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={doExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Block>
           <div className={classes.gasCostsContainer}>
             <TransactionFees
               gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
+              isExecution={doExecute}
               isCreation={isCreation}
               isOffChainSignature={isOffChainSignature}
               txEstimationExecutionStatus={txEstimationExecutionStatus}

@@ -50,6 +50,7 @@ export const SAFE_ROUTES = {
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
+  SETTINGS_APPEARANCE: `${ADDRESSED_ROUTE}/settings/appearance`,
   SETTINGS_DETAILS: `${ADDRESSED_ROUTE}/settings/details`,
   SETTINGS_OWNERS: `${ADDRESSED_ROUTE}/settings/owners`,
   SETTINGS_POLICIES: `${ADDRESSED_ROUTE}/settings/policies`,
@@ -75,11 +76,14 @@ export const isValidShortChainName = (shortName: string): boolean => {
 }
 
 // Due to hoisting issues, these functions should remain here
-export const extractPrefixedSafeAddress = (path = history.location.pathname): SafeRouteParams => {
+export const extractPrefixedSafeAddress = (
+  path = history.location.pathname,
+  route = ADDRESSED_ROUTE,
+): SafeRouteParams => {
   const currentChainShortName = getCurrentShortChainName()
 
   const match = matchPath<SafeRouteSlugs>(path, {
-    path: ADDRESSED_ROUTE,
+    path: route,
   })
 
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]

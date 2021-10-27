@@ -15,7 +15,6 @@ import { history } from 'src/routes/routes'
 import { sm, secondary } from 'src/theme/variables'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import {
   CreateSafeFormValues,
   FIELD_CREATE_CUSTOM_SAFE_NAME,
@@ -96,15 +95,13 @@ function CreateSafePage(): ReactElement {
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
         <StepperForm initialValues={initialFormValues} onSubmit={showSafeCreationProcess} testId={'create-safe-form'}>
-          {!IS_PRODUCTION && (
-            <StepFormElement
-              label={selectWalletAndNetworkStepLabel}
-              nextButtonLabel="Continue"
-              disableNextButton={!provider}
-            >
-              <SelectWalletAndNetworkStep />
-            </StepFormElement>
-          )}
+          <StepFormElement
+            label={selectWalletAndNetworkStepLabel}
+            nextButtonLabel="Continue"
+            disableNextButton={!provider}
+          >
+            <SelectWalletAndNetworkStep />
+          </StepFormElement>
           <StepFormElement label={nameNewSafeStepLabel} nextButtonLabel="Continue">
             <NameNewSafeStep />
           </StepFormElement>

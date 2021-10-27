@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -27,6 +27,7 @@ import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
+import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -48,6 +49,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const { nativeCoin } = getNetworkInfo()
+  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
 
   const {
     gasLimit,
@@ -64,6 +66,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
   })
 
+  const doExecute = isExecution && executionApproved
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const submitTx = (txParameters: TxParameters) => {
@@ -82,6 +85,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          delayExecution: !executionApproved,
         }),
       )
     } else {
@@ -93,7 +97,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={doExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -147,12 +151,14 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               </Col>
             </Row>
 
+            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={doExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Block>
@@ -160,7 +166,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
             <Block className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
+                isExecution={doExecute}
                 isCreation={isCreation}
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
