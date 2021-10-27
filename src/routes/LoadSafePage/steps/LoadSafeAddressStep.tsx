@@ -34,6 +34,7 @@ function LoadSafeAddressStep(): ReactElement {
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
+  const [addressBookSafeName, setAddressBookSafeName] = useState<string | undefined>()
 
   const loadSafeForm = useForm()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
@@ -59,15 +60,19 @@ function LoadSafeAddressStep(): ReactElement {
           const ownersWithName = owners.map(({ value: address }) =>
             makeAddressBookEntry(addressBook[address] || { address, name: '' }),
           )
+          setAddressBookSafeName(addressBook[safeAddress]?.name)
           setOwnersWithName(ownersWithName)
           setThreshold(threshold)
           setIsValidSafeAddress(true)
         } catch (error) {
+          setAddressBookSafeName(undefined)
           setOwnersWithName([])
           setThreshold(undefined)
           setIsValidSafeAddress(false)
         }
         setIsSafeInfoLoading(false)
+      } else {
+        setAddressBookSafeName(undefined)
       }
     }
 
@@ -96,7 +101,8 @@ function LoadSafeAddressStep(): ReactElement {
   }
 
   const formValues = loadSafeForm.getState().values
-  const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
+  const safeName =
+    formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || addressBookSafeName || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
 
   return (
     <Container data-testid={'load-safe-address-step'}>

@@ -1,5 +1,5 @@
 import { ReactElement, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
@@ -36,25 +36,23 @@ import {
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getCurrentShortChainName } from 'src/config'
-import { addressBookName } from 'src/logic/addressBook/store/selectors'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
   const history = useHistory()
   const { safeAddress, shortName } = extractPrefixedSafeAddress(undefined, LOAD_SPECIFIC_SAFE_ROUTE)
-  const safeName = useSelector((state) => addressBookName(state, { address: safeAddress }))
   const safeRandomName = useMnemonicSafeName()
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
 
   useEffect(() => {
     const initialValues = {
-      [FIELD_LOAD_SUGGESTED_SAFE_NAME]: safeName || safeRandomName,
+      [FIELD_LOAD_SUGGESTED_SAFE_NAME]: safeRandomName,
       [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
       [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
       [FIELD_SAFE_OWNER_LIST]: [],
     }
     setInitialFormValues(initialValues)
-  }, [safeAddress, safeRandomName, safeName])
+  }, [safeAddress, safeRandomName])
 
   const onSubmitLoadSafe = async (values) => {
     const safeName = values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SUGGESTED_SAFE_NAME]

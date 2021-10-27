@@ -81,6 +81,12 @@ describe('<LoadSafePage>', () => {
       const safeNameInputNode = screen.getByTestId('load-safe-name-field')
       expect(safeNameInputNode?.getAttribute('placeholder')).toBe('Test Safe')
       expect((safeAddressInputNode as HTMLInputElement).value).toBe('0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+
+      // Change the address and check that the placeholder isn't taken from the AB anymore
+      fireEvent.change(safeAddressInputNode, { target: { value: '' } })
+      fireEvent.change(safeAddressInputNode, { target: { value: '0x3F4b507632681059a136701188bF6217F58c6A10' } })
+      await screen.findByTestId('safeAddress-valid-address-adornment')
+      expect(safeNameInputNode?.getAttribute('placeholder')).toMatch(/.+-rinkeby-safe/)
     })
   })
 
