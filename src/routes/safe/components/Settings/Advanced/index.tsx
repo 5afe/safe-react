@@ -33,7 +33,7 @@ const NoTransactionGuardLegend = (): ReactElement => (
   </InfoText>
 )
 
-const MODULES_LINK = 'https://docs.gnosis-safe.io/contracts/modules-1'
+const DOCS_LINK = 'https://docs.gnosis-safe.io/contracts/modules-1'
 
 const Advanced = (): ReactElement => {
   const classes = useStyles()
@@ -71,7 +71,7 @@ const Advanced = (): ReactElement => {
         <InfoText size="lg">
           Modules allow you to customize the access-control logic of your Safe. Modules are potentially risky, so make
           sure to only use modules from trusted sources. Learn more about modules{' '}
-          <a href={MODULES_LINK} rel="noopener noreferrer" target="_blank">
+          <a href={DOCS_LINK} rel="noopener noreferrer" target="_blank">
             here
           </a>
           .
