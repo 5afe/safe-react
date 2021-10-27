@@ -21,11 +21,12 @@ import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
-  FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
+  LoadSafeFormValues,
 } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { getLoadSafeName } from '../fields/utils'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -50,7 +51,7 @@ function LoadSafeAddressStep(): ReactElement {
   }, [safeAddress])
 
   useEffect(() => {
-    async function checkSafeAddress() {
+    const checkSafeAddress = async () => {
       const isValidSafeAddress = safeAddress && !mustBeEthereumAddress(safeAddress)
       if (isValidSafeAddress) {
         try {
@@ -95,8 +96,8 @@ function LoadSafeAddressStep(): ReactElement {
     closeQrModal()
   }
 
-  const formValues = loadSafeForm.getState().values
-  const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
+  const formValues = loadSafeForm.getState().values as LoadSafeFormValues
+  const safeName = getLoadSafeName(formValues, addressBook)
 
   return (
     <Container data-testid={'load-safe-address-step'}>

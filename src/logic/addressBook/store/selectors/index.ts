@@ -13,7 +13,7 @@ export const addressBookAddresses = createSelector([addressBookState], (addressB
   return addressBook.map(({ address }) => address)
 })
 
-type AddressBookMap = {
+export type AddressBookMap = {
   [address: string]: AddressBookEntry
 }
 
