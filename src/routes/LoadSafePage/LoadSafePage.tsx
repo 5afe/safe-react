@@ -71,7 +71,7 @@ function Load(): ReactElement {
       .filter((owner) => !!owner.name)
 
     const safeEntry = makeAddressBookEntry({
-      address: checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS]!),
+      address: checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS] || ''),
       name: getLoadSafeName(values, addressBook),
     })
 
@@ -86,7 +86,7 @@ function Load(): ReactElement {
 
     updateAddressBook(values)
 
-    const checksummedAddress = checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS]!)
+    const checksummedAddress = checksumAddress(address || '')
     const safeProps = await buildSafe(checksummedAddress)
     const storedSafes = (await loadStoredSafes()) || {}
     storedSafes[checksummedAddress] = safeProps

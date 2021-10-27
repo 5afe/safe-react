@@ -32,7 +32,7 @@ function ReviewLoadStep(): ReactElement {
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
   const safeName = getLoadSafeName(formValues, addressBook)
-  const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS]!
+  const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
 
