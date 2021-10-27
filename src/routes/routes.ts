@@ -76,11 +76,14 @@ export const isValidShortChainName = (shortName: string): boolean => {
 }
 
 // Due to hoisting issues, these functions should remain here
-export const extractPrefixedSafeAddress = (path = history.location.pathname): SafeRouteParams => {
+export const extractPrefixedSafeAddress = (
+  path = history.location.pathname,
+  route = ADDRESSED_ROUTE,
+): SafeRouteParams => {
   const currentChainShortName = getCurrentShortChainName()
 
   const match = matchPath<SafeRouteSlugs>(path, {
-    path: ADDRESSED_ROUTE,
+    path: route,
   })
 
   const prefixedSafeAddress = match?.params?.[SAFE_ADDRESS_SLUG]
