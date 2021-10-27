@@ -6,8 +6,6 @@ import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-ut
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
-import { addressBookSync } from 'src/logic/addressBook/store/actions'
-import { useDispatch } from 'react-redux'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
@@ -555,6 +553,38 @@ describe('<LoadSafePage>', () => {
       // Connected wallet
       const safeAddressNameNode = screen.getByTestId('load-form-review-safe-name')
       expect(getByText(safeAddressNameNode, customSafeAddressName)).toBeInTheDocument()
+    })
+
+    it('shows name from Address Book', async () => {
+      const customSafeAddress = '0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A'
+      const abName = 'Test Safe'
+
+      const { container } = render(<LoadSafePage />, {
+        addressBook: [
+          {
+            address: customSafeAddress,
+            name: abName,
+            chainId: ETHEREUM_NETWORK.RINKEBY,
+          },
+        ],
+      })
+
+      fireEvent.click(screen.getByText('Continue'))
+
+      const safeAddressInputNode = screen.getByTestId('load-safe-address-field') as HTMLInputElement
+
+      fireEvent.change(safeAddressInputNode, { target: { value: customSafeAddress } })
+
+      // we wait for the validation of the safe address input
+      await screen.findByTestId('safeAddress-valid-address-adornment')
+      fireEvent.click(screen.getByText('Next'))
+
+      // Go to the review step
+      const reviewButtonNode = container.querySelector('button[type=submit]') as HTMLButtonElement
+      fireEvent.click(reviewButtonNode)
+
+      const nameDisplay = screen.getByTestId('load-form-review-safe-name')
+      expect(nameDisplay.textContent).toBe(abName)
     })
   })
 

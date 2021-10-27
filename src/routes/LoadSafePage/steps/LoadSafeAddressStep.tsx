@@ -21,11 +21,12 @@ import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
-  FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
+  LoadSafeFormValues,
 } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { getLoadSafeName } from '../fields/utils'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -34,7 +35,6 @@ function LoadSafeAddressStep(): ReactElement {
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
-  const [addressBookSafeName, setAddressBookSafeName] = useState<string | undefined>()
 
   const loadSafeForm = useForm()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
@@ -51,7 +51,7 @@ function LoadSafeAddressStep(): ReactElement {
   }, [safeAddress])
 
   useEffect(() => {
-    async function checkSafeAddress() {
+    const checkSafeAddress = async () => {
       const isValidSafeAddress = safeAddress && !mustBeEthereumAddress(safeAddress)
       if (isValidSafeAddress) {
         try {
@@ -60,19 +60,15 @@ function LoadSafeAddressStep(): ReactElement {
           const ownersWithName = owners.map(({ value: address }) =>
             makeAddressBookEntry(addressBook[address] || { address, name: '' }),
           )
-          setAddressBookSafeName(addressBook[safeAddress]?.name)
           setOwnersWithName(ownersWithName)
           setThreshold(threshold)
           setIsValidSafeAddress(true)
         } catch (error) {
-          setAddressBookSafeName(undefined)
           setOwnersWithName([])
           setThreshold(undefined)
           setIsValidSafeAddress(false)
         }
         setIsSafeInfoLoading(false)
-      } else {
-        setAddressBookSafeName(undefined)
       }
     }
 
@@ -100,9 +96,8 @@ function LoadSafeAddressStep(): ReactElement {
     closeQrModal()
   }
 
-  const formValues = loadSafeForm.getState().values
-  const safeName =
-    formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || addressBookSafeName || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
+  const formValues = loadSafeForm.getState().values as LoadSafeFormValues
+  const safeName = getLoadSafeName(formValues, addressBook)
 
   return (
     <Container data-testid={'load-safe-address-step'}>
