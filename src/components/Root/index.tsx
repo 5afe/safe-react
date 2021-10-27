@@ -14,22 +14,26 @@ import './index.module.scss'
 import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
+import LegacyRouteRedirection from './LegacyRouteRedirection'
 
 const Root = (): React.ReactElement => {
   return (
-    <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
-      <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
-        <App>
-          {wrapInSuspense(
-            <AppRoutes />,
-            <LoadingContainer>
-              <Loader size="md" />
-            </LoadingContainer>,
-          )}
-          <StoreMigrator />
-        </App>
-      </Sentry.ErrorBoundary>
-    </Providers>
+    <>
+      <LegacyRouteRedirection history={history} />
+      <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
+        <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
+          <App>
+            {wrapInSuspense(
+              <AppRoutes />,
+              <LoadingContainer>
+                <Loader size="md" />
+              </LoadingContainer>,
+            )}
+            <StoreMigrator />
+          </App>
+        </Sentry.ErrorBoundary>
+      </Providers>
+    </>
   )
 }
 
