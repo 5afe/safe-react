@@ -31,17 +31,16 @@ const useSidebarItems = (): ListItemType[] => {
   const matchSafeWithSidebarSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const makeEntryItem = useCallback(
-    ({ label, disabled, badge, iconType, href, subItems }) => {
-      return {
-        label,
-        badge,
-        disabled,
-        icon: <ListIcon type={iconType} />,
-        selected: href === matchSafeWithSidebarSection?.url,
-        href,
-        subItems,
-      }
-    },
+    ({ label, disabled, badge, iconType, href, subItems }) => ({
+      label,
+      badge,
+      disabled,
+      icon: <ListIcon type={iconType} />,
+      // Remove trailing slash if it exists
+      selected: href === matchSafeWithSidebarSection?.url?.replace(/\/+$/, ''),
+      href,
+      subItems,
+    }),
     [matchSafeWithSidebarSection],
   )
 

@@ -46,7 +46,8 @@ const Settings = (): React.ReactElement => {
   })
 
   let settingsSection
-  switch (matchSafeWithSettingSection?.url) {
+  // Remove trailing slash if it exists
+  switch (matchSafeWithSettingSection?.url?.replace(/\/+$/, '')) {
     case currentSafeRoutes.SETTINGS_DETAILS:
       settingsSection = 'Safe Details'
       break

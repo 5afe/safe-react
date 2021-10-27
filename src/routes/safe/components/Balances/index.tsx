@@ -40,7 +40,8 @@ const Balances = (): ReactElement => {
   })
 
   let balancesSection: SECTION_NAME | '' = ''
-  switch (matchSafeWithBalancesSection?.url) {
+  // Remove trailing slash if it exists
+  switch (matchSafeWithBalancesSection?.url?.replace(/\/+$/, '')) {
     case currentSafeRoutes.ASSETS_BALANCES:
       balancesSection = SECTION_NAME.coins
       break
@@ -78,6 +79,7 @@ const Balances = (): ReactElement => {
         />
         <Route
           path={SAFE_ROUTES.ASSETS_BALANCES}
+          exact
           render={() => wrapInSuspense(<Coins showReceiveFunds={openReceive} showSendFunds={setSentToken} />)}
         />
       </Switch>
