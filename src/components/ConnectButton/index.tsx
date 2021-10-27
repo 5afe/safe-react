@@ -7,12 +7,7 @@ import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/netw
 
 const checkWallet = async (): Promise<boolean> => {
   if (shouldSwitchNetwork()) {
-    try {
-      await switchNetwork(onboard().getState().wallet, getNetworkId())
-      return true
-    } catch (e) {
-      e.log()
-    }
+    switchNetwork(onboard().getState().wallet, getNetworkId()).catch((e) => e.log())
   }
 
   return await onboard().walletCheck()
