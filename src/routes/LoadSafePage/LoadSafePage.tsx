@@ -1,5 +1,5 @@
 import { ReactElement, useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
@@ -20,14 +20,13 @@ import ReviewLoadStep, { reviewLoadStepLabel } from './steps/ReviewLoadStep'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { loadStoredSafes, saveSafes } from 'src/logic/safe/utils'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
-  FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
@@ -36,6 +35,8 @@ import {
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getCurrentShortChainName } from 'src/config'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { getLoadSafeName } from './fields/utils'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -43,9 +44,10 @@ function Load(): ReactElement {
   const { safeAddress, shortName } = extractPrefixedSafeAddress(undefined, LOAD_SPECIFIC_SAFE_ROUTE)
   const safeRandomName = useMnemonicSafeName()
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
+  const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   useEffect(() => {
-    const initialValues = {
+    const initialValues: LoadSafeFormValues = {
       [FIELD_LOAD_SUGGESTED_SAFE_NAME]: safeRandomName,
       [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
       [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
@@ -54,16 +56,10 @@ function Load(): ReactElement {
     setInitialFormValues(initialValues)
   }, [safeAddress, safeRandomName])
 
-  const onSubmitLoadSafe = async (values) => {
-    const safeName = values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SUGGESTED_SAFE_NAME]
-    const safeAddress = values[FIELD_LOAD_SAFE_ADDRESS]
-    const ownerList = values[FIELD_SAFE_OWNER_LIST]
+  const updateAddressBook = (values: LoadSafeFormValues) => {
+    const ownerList = values[FIELD_SAFE_OWNER_LIST] as AddressBookEntry[]
 
-    if (!isValidAddress(safeAddress)) {
-      return
-    }
-
-    const ownerListWithNames = ownerList
+    const ownerEntries = ownerList
       .map((owner) => {
         const ownerFieldName = `owner-address-${owner.address}`
         const ownerNameValue = values[ownerFieldName]
@@ -74,20 +70,37 @@ function Load(): ReactElement {
       })
       .filter((owner) => !!owner.name)
 
-    const safeAddressBook = makeAddressBookEntry({
-      address: safeAddress,
-      name: safeName,
+    const safeEntry = makeAddressBookEntry({
+      address: checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS] || ''),
+      name: getLoadSafeName(values, addressBook),
     })
-    dispatch(addressBookSafeLoad([...ownerListWithNames, safeAddressBook]))
 
-    const checksumSafeAddress = checksumAddress(safeAddress)
-    const safeProps = await buildSafe(checksumSafeAddress)
+    dispatch(addressBookSafeLoad([...ownerEntries, safeEntry]))
+  }
+
+  const onSubmitLoadSafe = async (values: LoadSafeFormValues) => {
+    const address = values[FIELD_LOAD_SAFE_ADDRESS]
+    if (!isValidAddress(address)) {
+      return
+    }
+
+    updateAddressBook(values)
+
+    const checksummedAddress = checksumAddress(address || '')
+    const safeProps = await buildSafe(checksummedAddress)
     const storedSafes = (await loadStoredSafes()) || {}
-    storedSafes[checksumSafeAddress] = safeProps
+    storedSafes[checksummedAddress] = safeProps
+
     await saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
 
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
+    // Go to the newly added Safe
+    history.push(
+      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+        shortName: getCurrentShortChainName(),
+        safeAddress: checksummedAddress,
+      }),
+    )
   }
 
   return (

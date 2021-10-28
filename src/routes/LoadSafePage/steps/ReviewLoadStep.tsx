@@ -14,24 +14,25 @@ import { getExplorerInfo } from 'src/config'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import Hairline from 'src/components/layout/Hairline'
 import {
-  FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_SAFE_ADDRESS,
-  FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
+  LoadSafeFormValues,
 } from '../fields/loadFields'
+import { getLoadSafeName } from '../fields/utils'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
 export const reviewLoadStepLabel = 'Review'
 
 function ReviewLoadStep(): ReactElement {
   const loadSafeForm = useForm()
   const userAddress = useSelector(userAccountSelector)
+  const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
-  const formValues = loadSafeForm.getState().values
-
-  const safeName = formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] || formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
-  const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS]
+  const formValues = loadSafeForm.getState().values as LoadSafeFormValues
+  const safeName = getLoadSafeName(formValues, addressBook)
+  const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
 
