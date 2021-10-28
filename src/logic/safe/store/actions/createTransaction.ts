@@ -210,6 +210,7 @@ export const createTransaction =
           .encodeABI()
         try {
           const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+          // TODO: errMsg seemingly contains error from contract
           logError(Errors._803, errMsg)
         } catch (e) {
           logError(Errors._803, e.message)

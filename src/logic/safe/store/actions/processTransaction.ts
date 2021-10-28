@@ -229,6 +229,7 @@ export const processTransaction =
         const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
         try {
           const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
+          // TODO: errMsg seemingly contains error from contract
           logError(Errors._804, errMsg)
         } catch (e) {
           logError(Errors._804, e.message)
