@@ -6,6 +6,7 @@ import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { extractShortChainName } from 'src/routes/routes'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -90,6 +91,35 @@ export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnT
   }
   return result
 })
+
+// a cache is needed because the input is updating the value without its prefix
+const previousAddressCache: {
+  address: string
+  error: string | undefined
+} = {
+  address: '',
+  error: undefined,
+}
+
+export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
+  const errorMessage = "The current network doesn't match the given address"
+
+  const addressSplit = value.split(':')
+  const hasPrefixDefined = addressSplit.length > 1
+
+  if (hasPrefixDefined) {
+    const [prefix, address] = addressSplit
+    const isInValidPrefix = prefix !== extractShortChainName()
+    previousAddressCache.address = address
+    previousAddressCache.error = isInValidPrefix ? errorMessage : undefined
+
+    return previousAddressCache.error
+  }
+
+  const isTheSameAddress = previousAddressCache.address === value
+
+  return isTheSameAddress ? previousAddressCache.error : undefined
+}
 
 export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {
   const contractCode = await getWeb3().eth.getCode(address)
