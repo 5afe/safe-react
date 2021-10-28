@@ -78,7 +78,7 @@ export const ReviewReplaceOwnerModal = ({
     const calculateReplaceOwnerData = async () => {
       try {
         const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-        const safeTx = await sdk.getSwapOwnerTx(owner.address, newOwner.address)
+        const safeTx = await sdk.getSwapOwnerTx({ oldOwnerAddress: owner.address, newOwnerAddress: newOwner.address })
         const txData = safeTx.data.data
 
         if (isCurrent) {
