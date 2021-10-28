@@ -1,19 +1,25 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
 import { getNetworks, getNetworkId, getShortChainNameById } from 'src/config'
-import { history } from 'src/routes/routes'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
+import { History } from 'history'
+
+type Props = {
+  history: History
+}
 
 const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
-const LegacyRouteRedirection = (): ReactElement | null => {
-  const { pathname, hash, search } = location
+
+const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
+  const { pathname, hash, search } = window.location
 
   const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
 
   if (!isLegacyRoute) return null
 
-  const match = matchPath<{ [LEGACY_SAFE_ADDRESS_SLUG]: string }>(history.location.hash, {
+  // :subdir was '/safes' or '/load'
+  const match = matchPath<{ [LEGACY_SAFE_ADDRESS_SLUG]: string }>(hash, {
     path: `#/:subdir/:${LEGACY_SAFE_ADDRESS_SLUG}`,
   })
 
@@ -27,7 +33,7 @@ const LegacyRouteRedirection = (): ReactElement | null => {
     )
   }
 
-  const networkLabel = window.location.hostname.split('.')[0] // rinkeby
+  const networkLabel = window.location.hostname.split('.')[0] // 'rinkeby'
   const networkId = getNetworks().find(({ label }) => sameString(label, networkLabel))?.id || getNetworkId()
   const shortName = getShortChainNameById(networkId)
 

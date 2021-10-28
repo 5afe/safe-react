@@ -1,8 +1,7 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
-import { useRouteMatch, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import AlertIcon from 'src/assets/icons/alert.svg'
@@ -30,7 +29,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
-import { extractSafeAddress, ADDRESSED_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const notificationStyles = {
   success: {
@@ -62,8 +61,6 @@ const App: React.FC = ({ children }) => {
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
-  const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
   const addressFromUrl = extractSafeAddress()
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
@@ -78,12 +75,6 @@ const App: React.FC = ({ children }) => {
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
-
-  useEffect(() => {
-    if (matchSafe?.isExact) {
-      history.push(WELCOME_ROUTE)
-    }
-  }, [matchSafe, history])
 
   const onReceiveShow = () => onShow('Receive')
   const onReceiveHide = () => onHide('Receive')
