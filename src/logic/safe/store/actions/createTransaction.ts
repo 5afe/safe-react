@@ -193,7 +193,9 @@ export const createTransaction =
       onError?.()
       logError(Errors._803, err.message)
 
-      let contractError
+      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+
+      let contractError: undefined | string
 
       if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
         const executeDataUsedSignatures = safeInstance.methods
@@ -216,7 +218,6 @@ export const createTransaction =
             }`,
           }
 
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
       dispatch(enqueueSnackbar({ key: err.code, ...notification }))
     }
 

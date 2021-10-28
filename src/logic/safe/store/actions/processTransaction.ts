@@ -203,6 +203,8 @@ export const processTransaction =
     } catch (err) {
       logError(Errors._804, err.message)
 
+      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+
       dispatch(
         updateTransactionStatus({
           chainId,
@@ -213,7 +215,7 @@ export const processTransaction =
         }),
       )
 
-      let contractError
+      let contractError: undefined | string
 
       if (txHash) {
         const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
@@ -234,7 +236,6 @@ export const processTransaction =
             }`,
           }
 
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
       dispatch(enqueueSnackbar({ key: err.code, ...notification }))
     }
 
