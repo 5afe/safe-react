@@ -22,12 +22,9 @@ import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
-import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
 import { Dispatch, DispatchReturn } from './types'
 import { PayableTx } from 'src/types/contracts/types'
-
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
@@ -35,6 +32,7 @@ import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { decodeContractError, getContractError } from 'src/logic/contracts/safeContractErrors'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -203,15 +201,7 @@ export const processTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
-      const notification = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationsQueue.afterExecutionError,
-            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
-          }
-
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
+      logError(Errors._804, err.message)
 
       dispatch(
         updateTransactionStatus({
@@ -223,18 +213,29 @@ export const processTransaction =
         }),
       )
 
-      logError(Errors._804, err.message)
+      let contractError
 
       if (txHash) {
         const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
         try {
-          const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
-          // TODO: errMsg seemingly contains error from contract
-          logError(Errors._804, errMsg)
+          contractError = await getContractError(safeInstance.options.address, 0, executeData, from)
+          logError(Errors._804, contractError)
         } catch (e) {
           logError(Errors._804, e.message)
         }
       }
+
+      const notification = isTxPendingError(err)
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationsQueue.afterExecutionError,
+            message: `${notificationsQueue.afterExecutionError.message} - ${
+              contractError ? decodeContractError(contractError) : err.message
+            }`,
+          }
+
+      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
     }
 
     return txHash

@@ -21,7 +21,6 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
-import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { PayableTx } from 'src/types/contracts/types.d'
@@ -35,6 +34,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { decodeContractError, getContractError } from 'src/logic/contracts/safeContractErrors'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -191,31 +191,33 @@ export const createTransaction =
         })
     } catch (err) {
       onError?.()
-
-      const notification = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationsQueue.afterExecutionError,
-            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
-          }
-
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
-
       logError(Errors._803, err.message)
+
+      let contractError
 
       if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
         const executeDataUsedSignatures = safeInstance.methods
           .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
           .encodeABI()
         try {
-          const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-          // TODO: errMsg seemingly contains error from contract
-          logError(Errors._803, errMsg)
+          contractError = await getContractError(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+          logError(Errors._803, contractError)
         } catch (e) {
           logError(Errors._803, e.message)
         }
       }
+
+      const notification = isTxPendingError(err)
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationsQueue.afterExecutionError,
+            message: `${notificationsQueue.afterExecutionError.message} - ${
+              contractError ? decodeContractError(contractError) : err.message
+            }`,
+          }
+
+      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
     }
 
     return txHash

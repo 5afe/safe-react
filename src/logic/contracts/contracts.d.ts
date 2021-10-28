@@ -1,5 +1,5 @@
 // https://github.com/gnosis/safe-contracts/blob/main/docs/error_codes.md
-export enum CONTRACT_ERROR_CODES {
+export enum CONTRACT_ERRORS {
   // General init related
   GS000 = 'Could not finish initialization',
   GS001 = 'Threshold needs to be defined',
@@ -41,3 +41,5 @@ export enum CONTRACT_ERROR_CODES {
   // Guard management related
   GS300 = 'Guard does not implement IERC165',
 }
+
+export const CONTRACT_ERROR_CODES = Object.keys(CONTRACTERRORS)
