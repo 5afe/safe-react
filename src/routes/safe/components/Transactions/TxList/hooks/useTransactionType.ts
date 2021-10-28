@@ -20,9 +20,9 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const safeAddress = extractSafeAddress()
   const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
-  const knownAddressBookAddress = useKnownAddress(toAddress?.value || '0x', {
-    name: toAddress?.name || undefined,
-    image: toAddress?.logoUri || undefined,
+  const knownAddressBookAddress = useKnownAddress(toAddress?.value, {
+    name: toAddress?.name,
+    image: toAddress?.logoUri,
   })
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         setType({
           icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
-          text: knownAddressBookAddress.name || toAddress?.name || (isSendTx ? 'Send' : 'Receive'),
+          text: isSendTx ? 'Send' : 'Receive',
         })
         break
       }
