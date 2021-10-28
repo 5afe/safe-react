@@ -92,33 +92,17 @@ export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnT
   return result
 })
 
-// a cache is needed because the input is updating the value without its prefix
-const previousAddressCache: {
-  address: string
-  error: string | undefined
-} = {
-  address: '',
-  error: undefined,
-}
-
 export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
   const errorMessage = "The current network doesn't match the given address"
 
   const addressSplit = value.split(':')
+  const [prefix] = addressSplit
+
   const hasPrefixDefined = addressSplit.length > 1
+  const isInValidPrefix = prefix !== extractShortChainName()
+  const showNetworkPrefixError = hasPrefixDefined && isInValidPrefix
 
-  if (hasPrefixDefined) {
-    const [prefix, address] = addressSplit
-    const isInValidPrefix = prefix !== extractShortChainName()
-    previousAddressCache.address = address
-    previousAddressCache.error = isInValidPrefix ? errorMessage : undefined
-
-    return previousAddressCache.error
-  }
-
-  const isTheSameAddress = previousAddressCache.address === value
-
-  return isTheSameAddress ? previousAddressCache.error : undefined
+  return showNetworkPrefixError ? errorMessage : undefined
 }
 
 export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {

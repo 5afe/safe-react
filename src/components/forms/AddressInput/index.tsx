@@ -42,6 +42,11 @@ export interface AddressInputProps {
   className?: string
 }
 
+type PrefixValidationCacheType = {
+  address: string
+  error: string | undefined
+}
+
 const AddressInput = ({
   className = '',
   name = 'recipientAddress',
@@ -54,6 +59,30 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): React.ReactElement => {
+  const prefixValidationCache = React.useRef<PrefixValidationCacheType>({
+    address: '',
+    error: undefined,
+  })
+
+  const prefixValidationWithCache = (value) => {
+    const addressSplit = value.split(':')
+    const hasPrefixDefined = addressSplit.length > 1
+
+    if (hasPrefixDefined) {
+      const [, address] = addressSplit
+
+      const validation = checkNetworkPrefix(value)
+      // we update the cache
+      prefixValidationCache.current = {
+        address,
+        error: validation,
+      }
+      return validation
+    } else {
+      return prefixValidationCache.current.error
+    }
+  }
+
   const showChainPrefix = useSelector(showShortNameSelector)
   const { getAddressWithoutPrefix, getAddressToCopy } = usePrefixedAddress()
 
@@ -82,9 +111,14 @@ const AddressInput = ({
             const address = getAddressToCopy(e.target.value, populatedPrefix)
             copyToClipboard(address)
           },
-          onPaste: () => {
+          onPaste: (e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            const data = e.clipboardData.getData('Text')
+
             // restore to default when paste
             setPopulatedPrefix(getCurrentShortChainName())
+            fieldMutator(data)
           },
         }}
         inputAdornment={{
@@ -101,7 +135,7 @@ const AddressInput = ({
         text={text}
         type="text"
         spellCheck={false}
-        validate={composeValidators(required, checkNetworkPrefix, mustBeEthereumAddress, ...validators)}
+        validate={composeValidators(required, prefixValidationWithCache, mustBeEthereumAddress, ...validators)}
       />
       <OnChange name={name}>
         {async (value: string) => {
