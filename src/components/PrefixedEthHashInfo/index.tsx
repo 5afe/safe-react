@@ -26,6 +26,7 @@ interface Props {
 const PrefixedEthHashInfo: React.FC<Props> = ({ hash, ...rest }) => {
   const showChainPrefix = useSelector(showShortNameSelector)
   const copyChainPrefix = useSelector(copyShortNameSelector)
+
   return (
     <EthHashInfo
       hash={hash}

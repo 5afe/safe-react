@@ -12,7 +12,8 @@ import { copyShortNameSelector, showShortNameSelector } from 'src/logic/appearan
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowShortName } from 'src/logic/appearance/actions/setShowShortName'
 import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
-import { extractPrefixedSafeAddress } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -24,8 +25,7 @@ const Appearance = (): ReactElement => {
   const dispatch = useDispatch()
   const copyShortName = useSelector(copyShortNameSelector)
   const showShortName = useSelector(showShortNameSelector)
-
-  const { shortName, safeAddress } = extractPrefixedSafeAddress()
+  const safeAddress = extractSafeAddress()
 
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
     dispatch(setShowShortName({ showShortName: checked }))
@@ -37,8 +37,7 @@ const Appearance = (): ReactElement => {
       <Heading tag="h2">Use Chain-Specific Addresses</Heading>
       <Paragraph>You can choose whether to prepend EIP-3770 short chain names accross Safes.</Paragraph>
       <Paragraph>
-        {showShortName && <strong>{shortName}:</strong>}
-        {safeAddress}
+        <PrefixedEthHashInfo hash={safeAddress} />
       </Paragraph>
       <FormGroup>
         <FormControlLabel
