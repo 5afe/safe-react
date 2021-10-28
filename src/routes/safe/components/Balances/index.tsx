@@ -78,6 +78,7 @@ const Balances = (): ReactElement => {
         />
         <Route
           path={SAFE_ROUTES.ASSETS_BALANCES}
+          exact
           render={() => wrapInSuspense(<Coins showReceiveFunds={openReceive} showSendFunds={setSentToken} />)}
         />
       </Switch>

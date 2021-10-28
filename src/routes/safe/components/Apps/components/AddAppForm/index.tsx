@@ -70,6 +70,8 @@ const INITIAL_VALUES: AddAppFormValues = {
 
 const DEFAULT_APP_INFO = getEmptySafeApp()
 
+const CUSTOM_SAFE_APPS_LINK = 'https://docs.gnosis-safe.io/build/sdks/safe-apps'
+
 interface AddAppProps {
   appList: SafeApp[]
   closeModal: () => void
@@ -115,7 +117,7 @@ const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement =>
                 Safe Apps are third-party extensions.
               </Text>
               <StyledLink
-                href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
+                href={CUSTOM_SAFE_APPS_LINK}
                 target="_blank"
                 rel="noreferrer"
                 title="Learn more about building Safe Apps"
