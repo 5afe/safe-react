@@ -21,5 +21,5 @@ export const decodeContractError = (error: string): string => {
     return error.toUpperCase().includes(code.toUpperCase())
   })
 
-  return code ? `${code}:${CONTRACT_ERRORS[code]}` : error
+  return code ? `${code}: ${CONTRACT_ERRORS[code]}` : error
 }

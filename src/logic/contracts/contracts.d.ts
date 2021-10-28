@@ -42,4 +42,4 @@ export enum CONTRACT_ERRORS {
   GS300 = 'Guard does not implement IERC165',
 }
 
-export const CONTRACT_ERROR_CODES = Object.keys(CONTRACTERRORS)
+export const CONTRACT_ERROR_CODES = Object.keys(CONTRACT_ERRORS)
