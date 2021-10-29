@@ -3,6 +3,8 @@ import MuiTextField from '@material-ui/core/TextField'
 import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
 import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+import InputAdornment from '@material-ui/core/InputAdornment'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { isFeatureEnabled } from 'src/config'
@@ -20,6 +22,8 @@ import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import useNetworkPrefixedAddressInput from 'src/logic/hooks/useNetworkPrefixedAddressInput'
+import { fontColor } from 'src/theme/variables'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -54,12 +58,31 @@ const BaseAddressBookInput = ({
     fieldMutator(addressEntry.address)
   }
 
-  const validateAddress = (address: string): AddressBookEntry | string | undefined => {
+  const {
+    networkPrefix,
+    networkPrefixError,
+    getAddressWithoutPrefix,
+    updateNetworkPrefix,
+    networkPrefixValidationWithCache,
+    onCopyPrefixedAddressField,
+    // onPastePrefixedAddressField,
+  } = useNetworkPrefixedAddressInput()
+
+  const validateAddress = (value: string): AddressBookEntry | string | undefined => {
+    const address = getAddressWithoutPrefix(value)
     const addressErrorMessage = mustBeEthereumAddress(address)
     setIsValidAddress(!addressErrorMessage)
 
     if (addressErrorMessage) {
       setValidationText(addressErrorMessage)
+      return
+    }
+
+    const prefixErrorMessage = networkPrefixValidationWithCache(value)
+    setIsValidAddress(!prefixErrorMessage)
+
+    if (prefixErrorMessage) {
+      setValidationText(prefixErrorMessage)
       return
     }
 
@@ -93,6 +116,7 @@ const BaseAddressBookInput = ({
     switch (reason) {
       case 'input': {
         const normalizedValue = trimSpaces(value)
+        updateNetworkPrefix(normalizedValue)
 
         if (!normalizedValue) {
           break
@@ -133,6 +157,9 @@ const BaseAddressBookInput = ({
         // ETH address validation
         const validatedAddress = validateAddress(normalizedValue)
 
+        const addressWithoutPrefix = getAddressWithoutPrefix(normalizedValue)
+        fieldMutator(addressWithoutPrefix)
+
         if (!validatedAddress) {
           fieldMutator('')
           break
@@ -167,18 +194,35 @@ const BaseAddressBookInput = ({
       onInputChange={onInputChange}
       options={addressBookEntries}
       id="address-book-input"
-      renderInput={(params) => (
-        <MuiTextField
-          {...params}
-          autoFocus={true}
-          error={!!validationText}
-          fullWidth
-          variant="filled"
-          label={validationText ? validationText : label}
-          InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}
-          InputProps={{ ...params.InputProps, classes: inputStyles }}
-        />
-      )}
+      renderInput={(params) => {
+        const inputProps = params.inputProps as any
+        console.log(inputProps.value)
+        return (
+          <MuiTextField
+            {...params}
+            autoFocus={true}
+            error={!!validationText}
+            fullWidth
+            variant="filled"
+            label={validationText ? validationText : label}
+            InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}
+            InputProps={{
+              ...params.InputProps,
+              classes: inputStyles,
+              startAdornment: (
+                <InputAdornment position="start" style={{ marginTop: 0 }}>
+                  <NetWorkPrefixLabel error={networkPrefixError}>{networkPrefix}:</NetWorkPrefixLabel>
+                </InputAdornment>
+              ),
+            }}
+            inputProps={{
+              ...params.inputProps,
+              value: getAddressWithoutPrefix(inputProps.value), // we remove the prefix from input
+              onCopy: onCopyPrefixedAddressField,
+            }}
+          />
+        )
+      }}
       getOptionLabel={({ address }) => address}
       renderOption={({ address, name }) => <EthHashInfo hash={address} name={name} showAvatar />}
       role="listbox"
@@ -245,3 +289,7 @@ export const ContractsAddressBookInput = ({
     />
   )
 }
+
+const NetWorkPrefixLabel = styled.span<{ error: boolean }>`
+  color: ${(props) => (props.error ? 'red' : fontColor)};
+`

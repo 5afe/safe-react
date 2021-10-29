@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, SyntheticEvent, ClipboardEvent } from 'react'
 import { useSelector } from 'react-redux'
 import { checkNetworkPrefix } from 'src/components/forms/validator'
 import { getCurrentShortChainName } from 'src/config'
@@ -12,15 +12,18 @@ type PrefixValidationCacheType = {
 
 type prefixedAddressInputReturnType = {
   networkPrefix: string
-  updateNetworkPrefix: (value: any) => void
+  updateNetworkPrefix: (value: string) => void
   showNetworkPrefix: boolean
   networkPrefixError: boolean
   restoreNetworkPrefix: () => void
 
   networkPrefixValidationWithCache: (value: any) => string | undefined
 
-  onCopyPrefixedAddressField: (e: any) => void
-  onPastePrefixedAddressField: (e: any, fieldMutator: (address: string) => void) => void
+  onCopyPrefixedAddressField: (e: ClipboardEvent<HTMLInputElement>) => void
+  onPastePrefixedAddressField: (
+    e: ClipboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+    fieldMutator: (address: string) => void,
+  ) => void
 
   getAddressWithoutPrefix: (address: string) => string
 }
@@ -48,7 +51,7 @@ function useNetworkPrefixedAddressInput(): prefixedAddressInputReturnType {
     }
   }
 
-  function updateNetworkPrefix(value) {
+  function updateNetworkPrefix(value: string) {
     const addressSplit = value.split(':')
     const hasPrefixDefined = addressSplit.length > 1
     if (hasPrefixDefined) {
@@ -57,7 +60,7 @@ function useNetworkPrefixedAddressInput(): prefixedAddressInputReturnType {
     }
   }
 
-  const networkPrefixValidationWithCache = (value) => {
+  const networkPrefixValidationWithCache = (value: string) => {
     const addressSplit = value.split(':')
     const hasPrefixDefined = addressSplit.length > 1
 
@@ -76,15 +79,16 @@ function useNetworkPrefixedAddressInput(): prefixedAddressInputReturnType {
     }
   }
 
-  function onCopyPrefixedAddressField(e) {
+  function onCopyPrefixedAddressField(e: SyntheticEvent<HTMLInputElement>) {
     e.stopPropagation()
     e.preventDefault()
-    const content = e.target.value
+    const target = e.target as HTMLInputElement
+    const content = target.value
     const contentWithPrefix = copyChainPrefix ? `${networkPrefix}:${content}` : content
     copyToClipboard(contentWithPrefix)
   }
 
-  function onPastePrefixedAddressField(e, fieldMutator) {
+  function onPastePrefixedAddressField(e: ClipboardEvent<HTMLInputElement>, fieldMutator: (address: string) => void) {
     e.stopPropagation()
     e.preventDefault()
     const data = e.clipboardData.getData('Text')
