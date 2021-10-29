@@ -1,10 +1,14 @@
 import { useForm, Form } from 'react-final-form'
-import { render, screen, fireEvent } from 'src/utils/test-utils'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+
+import { render, screen, fireEvent, waitFor } from 'src/utils/test-utils'
 import AddressInput from '.'
 
 const fieldName = 'test-field'
 const fieldTestId = 'test-field-id'
 const invalidNetworkErrorMessage = "The current network doesn't match the given address"
+
+const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
 describe('<AddressInput>', () => {
   it('Renders AddressInput Component', () => {
@@ -134,6 +138,60 @@ describe('<AddressInput>', () => {
 
         // no error is showed
         expect(screen.queryByText(invalidNetworkErrorMessage)).not.toBeInTheDocument()
+      })
+
+      it('Validates the network prefix even if its disabled in settings', () => {
+        const customState = {
+          appearance: {
+            copyShortName: false,
+            showShortName: false,
+          },
+        }
+        const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+        const onSubmit = jest.fn()
+
+        renderAddressInputWithinForm(onSubmit, customState)
+
+        expect(screen.queryByText('rin:')).not.toBeInTheDocument()
+
+        // now we update the field with an invalid address network
+        fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: inValidPrefixedAddress } })
+
+        // show error
+        expect(screen.queryByText(invalidNetworkErrorMessage)).toBeInTheDocument()
+      })
+
+      it('Restores the correct prefix if its a valid ENS', async () => {
+        const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+        const addressWithOutPrefix = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+        // mock getAddress fn to return the Safe Address Domain
+        getENSAddressSpy.mockImplementation(() => new Promise((resolve) => resolve(addressWithOutPrefix)))
+        const onSubmit = jest.fn()
+
+        renderAddressInputWithinForm(onSubmit)
+
+        expect(screen.queryByText('rin:')).toBeInTheDocument()
+
+        // populates the field with an invalid address network
+        fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: inValidPrefixedAddress } })
+
+        // show error
+        expect(screen.queryByText(invalidNetworkErrorMessage)).toBeInTheDocument()
+        expect(screen.queryByText('vt:')).toBeInTheDocument()
+
+        // now we use a ENS name
+        fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: 'test.eth' } })
+
+        await waitFor(() => {
+          const inputNode = screen.getByTestId(fieldTestId) as HTMLInputElement
+          // ENS resolved with the valid address and prefix
+          expect(inputNode.value).toBe(addressWithOutPrefix)
+          expect(screen.queryByText('rin:')).toBeInTheDocument()
+
+          // no error is present
+          expect(screen.queryByText(invalidNetworkErrorMessage)).not.toBeInTheDocument()
+          getENSAddressSpy.mockClear()
+        })
       })
     })
   })
