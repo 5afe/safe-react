@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
@@ -21,6 +20,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { Modal } from 'src/components/Modal'
 import { ScanQRModal } from 'src/components/ScanQRModal'
 import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
@@ -186,7 +186,7 @@ const SendCustomTx = ({
                     </Row>
                     <Row align="center" margin="md">
                       <Col xs={12}>
-                        <EthHashInfo
+                        <PrefixedEthHashInfo
                           hash={selectedEntry.address}
                           name={selectedEntry.name}
                           showAvatar

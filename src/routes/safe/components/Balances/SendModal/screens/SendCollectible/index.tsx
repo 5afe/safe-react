@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -13,6 +12,7 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -173,7 +173,7 @@ const SendCollectible = ({
                     </Row>
                     <Row align="center" margin="md">
                       <Col xs={12}>
-                        <EthHashInfo
+                        <PrefixedEthHashInfo
                           hash={selectedEntry.address}
                           name={selectedEntry.name}
                           showAvatar
