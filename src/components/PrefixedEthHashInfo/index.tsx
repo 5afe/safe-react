@@ -1,29 +1,12 @@
-import { EllipsisMenuItem, EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { ThemeColors, ThemeIdenticonSize, ThemeTextSize } from '@gnosis.pm/safe-react-components/dist/theme'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { copyShortNameSelector, showShortNameSelector } from 'src/logic/appearance/selectors'
 import { extractShortChainName } from 'src/routes/routes'
 
-type ExplorerInfo = () => { url: string; alt: string }
+type Props = Omit<Parameters<typeof EthHashInfo>[0], 'shortName' | 'shouldShowShortName' | 'shouldCopyShortName'>
 
-interface Props {
-  className?: string
-  hash: string
-  showHash?: boolean
-  shortenHash?: number
-  name?: string
-  textColor?: ThemeColors
-  textSize?: ThemeTextSize
-  showAvatar?: boolean
-  customAvatar?: string
-  customAvatarFallback?: string
-  avatarSize?: ThemeIdenticonSize
-  showCopyBtn?: boolean
-  menuItems?: EllipsisMenuItem[]
-  explorerUrl?: ExplorerInfo
-}
-
-const PrefixedEthHashInfo: React.FC<Props> = ({ hash, ...rest }) => {
+const PrefixedEthHashInfo = ({ hash, ...rest }: Props): ReactElement => {
   const showChainPrefix = useSelector(showShortNameSelector)
   const copyChainPrefix = useSelector(copyShortNameSelector)
 
