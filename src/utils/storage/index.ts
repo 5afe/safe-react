@@ -76,7 +76,7 @@ export const saveToSessionStorage = <T = unknown>(key: string, value: T): void =
 
     sessionStorage.setItem(key, stringifiedValue)
   } catch (err) {
-    logError(Errors._704, `key ${key} – ${err.message}`)
+    logError(Errors._705, `key ${key} – ${err.message}`)
   }
 }
 
