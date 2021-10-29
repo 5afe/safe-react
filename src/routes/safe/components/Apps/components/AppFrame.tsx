@@ -86,6 +86,9 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
   timeout: 10_000,
 })
 
+const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
+const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
+
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const networkId = useSelector(currentChainId)
@@ -107,10 +110,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
 
   const errorTimer = useRef<number>()
-  const [appLoadError, setAppLoadError] = useState<boolean>(false)
+  const [, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!consentReceived && !appLoadError) {
+    if (!consentReceived) {
       return
     }
 
@@ -124,18 +127,19 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         setIsLoadingSlow(true)
       }, TIMEOUT)
       errorTimer.current = window.setTimeout(() => {
-        setAppLoadError(true)
+        setAppLoadError(() => {
+          throw Error(APP_LOAD_ERROR)
+        })
       }, APP_LOAD_ERROR_TIMEOUT)
     } else {
       clearTimeouts()
       setIsLoadingSlow(false)
-      setAppLoadError(false)
     }
 
     return () => {
       clearTimeouts()
     }
-  }, [appIsLoading, consentReceived, appLoadError])
+  }, [appIsLoading, consentReceived])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
@@ -270,15 +274,22 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   }
 
   useEffect(() => {
+    if (!appUrl) {
+      throw Error(URL_NOT_PROVIDED_ERROR)
+    }
+
     const loadApp = async () => {
       try {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
       } catch (err) {
-        setAppLoadError(true)
+        setAppLoadError(() => {
+          throw Error(APP_LOAD_ERROR)
+        })
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
+
     loadApp()
   }, [appUrl])
 
@@ -288,14 +299,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: safeApp.name })
     }
   }, [safeApp, trackEvent])
-
-  if (!appUrl) {
-    throw Error('App url No provided or it is invalid.')
-  }
-
-  if (appLoadError) {
-    throw Error('There was an error loading the Safe App. There might be a problem with the App provider.')
-  }
 
   if (!safeApp) {
     return (
