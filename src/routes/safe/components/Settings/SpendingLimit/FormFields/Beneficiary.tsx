@@ -1,10 +1,10 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { KeyboardEvent, ReactElement, useEffect, useState } from 'react'
 import { useForm, useFormState } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -77,7 +77,7 @@ const Beneficiary = (): ReactElement => {
       onKeyDown={handleOnKeyDown}
       onClick={handleOnClick}
     >
-      <EthHashInfo
+      <PrefixedEthHashInfo
         hash={selectedEntry.address}
         name={selectedEntry.name}
         showCopyBtn
