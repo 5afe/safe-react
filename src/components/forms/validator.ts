@@ -95,6 +95,10 @@ export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnT
 export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
   const errorMessage = "The current network doesn't match the given address"
 
+  if (!value) {
+    return undefined
+  }
+
   const addressSplit = value.split(':')
   const [prefix] = addressSplit
 

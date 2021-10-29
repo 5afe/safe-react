@@ -58,13 +58,17 @@ function useNetworkPrefixedAddressInput(): prefixedAddressInputReturnType {
       const newPrefix = addressSplit[0]
       setNetworkPrefix(newPrefix)
     }
+
+    if (!value) {
+      restoreNetworkPrefix()
+    }
   }
 
   const networkPrefixValidationWithCache = (value: string) => {
     const addressSplit = value.split(':')
     const hasPrefixDefined = addressSplit.length > 1
 
-    if (hasPrefixDefined) {
+    if (hasPrefixDefined || !value) {
       const [, address] = addressSplit
 
       const validation = checkNetworkPrefix(value)

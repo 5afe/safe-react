@@ -122,6 +122,7 @@ const BaseAddressBookInput = ({
         updateNetworkPrefix(normalizedValue)
 
         if (!normalizedValue) {
+          setValidationText('')
           break
         }
 
