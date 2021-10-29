@@ -84,8 +84,6 @@ function useNetworkPrefixedAddressInput(): prefixedAddressInputReturnType {
   }
 
   function onCopyPrefixedAddressField(e: SyntheticEvent<HTMLInputElement>) {
-    e.stopPropagation()
-    e.preventDefault()
     const target = e.target as HTMLInputElement
     const content = target.value
     const contentWithPrefix = copyChainPrefix ? `${networkPrefix}:${content}` : content
