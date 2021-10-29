@@ -60,12 +60,13 @@ const BaseAddressBookInput = ({
 
   const {
     networkPrefix,
-    networkPrefixError,
-    getAddressWithoutPrefix,
     updateNetworkPrefix,
+    showNetworkPrefix,
+    networkPrefixError,
+    restoreNetworkPrefix,
     networkPrefixValidationWithCache,
     onCopyPrefixedAddressField,
-    restoreNetworkPrefix,
+    getAddressWithoutPrefix,
   } = useNetworkPrefixedAddressInput()
 
   const validateAddress = (value: string): AddressBookEntry | string | undefined => {
@@ -210,7 +211,7 @@ const BaseAddressBookInput = ({
             InputProps={{
               ...params.InputProps,
               classes: inputStyles,
-              startAdornment: (
+              startAdornment: showNetworkPrefix && (
                 <InputAdornment position="start" style={{ marginTop: 0 }}>
                   <NetWorkPrefixLabel error={networkPrefixError}>{networkPrefix}:</NetWorkPrefixLabel>
                 </InputAdornment>
