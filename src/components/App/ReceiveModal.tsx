@@ -6,7 +6,6 @@ import QRCode from 'qrcode.react'
 import { ChangeEvent, ReactElement, useState } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -14,6 +13,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
 import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/variables'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { NetworkSettings } from 'src/config/networks/network'
@@ -124,7 +124,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           />
         )}
         <Block className={classes.addressContainer} justify="center">
-          <EthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
+          <PrefixedEthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
         </Block>
       </Col>
       <Hairline />

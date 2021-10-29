@@ -2,7 +2,6 @@ import { ReactElement } from 'react'
 import { useForm } from 'react-final-form'
 import styled from 'styled-components'
 import TableContainer from '@material-ui/core/TableContainer'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -11,6 +10,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { disabled, extraSmallFontSize, lg, md, sm } from 'src/theme/variables'
 import { minMaxLength } from 'src/components/forms/validator'
 import { getExplorerInfo } from 'src/config'
@@ -56,7 +56,7 @@ function LoadSafeOwnersStep(): ReactElement {
                 </Col>
                 <Col xs={8}>
                   <OwnerAddressContainer>
-                    <EthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getExplorerInfo(address)} />
+                    <PrefixedEthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getExplorerInfo(address)} />
                   </OwnerAddressContainer>
                 </Col>
               </OwnerContainer>

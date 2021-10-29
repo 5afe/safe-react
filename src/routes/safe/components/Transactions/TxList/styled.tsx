@@ -428,7 +428,7 @@ export const OwnerList = styled.ul`
       margin: 5px;
     }
 
-    span {
+    span::first-of-type {
       color: #008c73;
       font-weight: bold;
     }

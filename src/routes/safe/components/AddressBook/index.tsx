@@ -3,7 +3,6 @@ import {
   BreadcrumbElement,
   Button,
   ButtonLink,
-  EthHashInfo,
   FixedIcon,
   Icon,
   Menu,
@@ -26,6 +25,7 @@ import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
@@ -232,7 +232,7 @@ const AddressBookTable = (): ReactElement => {
                         <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                           {column.id === AB_ADDRESS_ID ? (
                             <Block justify="left">
-                              <EthHashInfo
+                              <PrefixedEthHashInfo
                                 hash={row[column.id]}
                                 showCopyBtn
                                 showAvatar
