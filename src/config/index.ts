@@ -23,6 +23,7 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
+import { loadFromSessionStorage } from 'src/utils/storage'
 
 export const getNetworks = (): NetworkInfo[] => {
   // NETWORK_ROOT_ROUTES follows the same destructuring
@@ -38,7 +39,9 @@ export const getNetworks = (): NetworkInfo[] => {
 
 export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
 
-const isNetworkId = (id: any): id is ETHEREUM_NETWORK => Object.values(ETHEREUM_NETWORK).includes(id)
+const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
+  return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
+}
 
 export const NETWORK_ID_KEY = 'SAFE__networkId'
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
@@ -53,7 +56,7 @@ export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   }
 
   try {
-    const networkId = sessionStorage.getItem(NETWORK_ID_KEY)
+    const networkId = loadFromSessionStorage(NETWORK_ID_KEY)
     return isNetworkId(networkId) ? networkId : DEFAULT_NETWORK
   } catch {
     return DEFAULT_NETWORK
