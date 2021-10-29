@@ -54,11 +54,10 @@ export const handleChunkError = (error: Error): boolean => {
 
   if (!isChunkError) return false
 
-  const lastReloadString = loadFromSessionStorage<number>(LAST_CHUNK_FAILURE_RELOAD_KEY)
-  const lastReload = lastReloadString ? +lastReloadString : 0
+  const lastReload = loadFromSessionStorage<number>(LAST_CHUNK_FAILURE_RELOAD_KEY)
 
   // Not a number in the sessionStorage
-  if (isNaN(lastReload)) {
+  if (typeof lastReload !== 'number' || isNaN(lastReload)) {
     removeFromSessionStorage(LAST_CHUNK_FAILURE_RELOAD_KEY)
     return false
   }
