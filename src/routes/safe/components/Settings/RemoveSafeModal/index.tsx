@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,6 +8,7 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 import { getExplorerInfo } from 'src/config'
@@ -51,7 +51,7 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
       <Block className={classes.container}>
         <Row className={classes.owner}>
           <Col align="center" xs={12}>
-            <EthHashInfo
+            <PrefixedEthHashInfo
               hash={safeAddress}
               name={safeName}
               showAvatar

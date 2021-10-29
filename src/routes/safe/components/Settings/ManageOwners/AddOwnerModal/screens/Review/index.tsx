@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -9,6 +8,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -158,7 +158,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                   <Fragment key={owner.address}>
                     <Row className={classes.owner}>
                       <Col align="center" xs={12}>
-                        <EthHashInfo
+                        <PrefixedEthHashInfo
                           hash={owner.address}
                           name={owner.name}
                           showCopyBtn
@@ -178,7 +178,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 <Hairline />
                 <Row className={classes.selectedOwner} data-testid="add-owner-review">
                   <Col align="center" xs={12}>
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={values.ownerAddress}
                       name={values.ownerName}
                       showCopyBtn
