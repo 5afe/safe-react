@@ -110,6 +110,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
+    if (!consentReceived) {
+      return
+    }
+
     const clearTimeouts = () => {
       clearTimeout(timer.current)
       clearTimeout(errorTimer.current)
@@ -131,7 +135,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     return () => {
       clearTimeouts()
     }
-  }, [appIsLoading])
+  }, [appIsLoading, consentReceived])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
