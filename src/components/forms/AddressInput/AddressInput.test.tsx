@@ -157,8 +157,15 @@ describe('<AddressInput>', () => {
         // now we update the field with an invalid address network
         fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: inValidPrefixedAddress } })
 
+        // Input value without network prefix
+        expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(
+          '0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33',
+        )
+
         // show error
         expect(screen.queryByText(invalidNetworkErrorMessage)).toBeInTheDocument()
+        expect(screen.queryByText('rin:')).not.toBeInTheDocument()
+        expect(screen.queryByText('vt:')).not.toBeInTheDocument()
       })
 
       it('Restores the correct prefix if its a valid ENS', async () => {

@@ -95,6 +95,8 @@ const BaseAddressBookInput = ({
       checkedAddr = address
     }
 
+    setValidationText('')
+
     const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: checkedAddr })
     return filteredEntries.length === 1 ? filteredEntries[0] : checkedAddr
   }
@@ -198,7 +200,6 @@ const BaseAddressBookInput = ({
       id="address-book-input"
       renderInput={(params) => {
         const inputProps = params.inputProps as any
-        console.log(inputProps.value)
         return (
           <MuiTextField
             {...params}
@@ -219,6 +220,7 @@ const BaseAddressBookInput = ({
             }}
             inputProps={{
               ...params.inputProps,
+              'data-testid': 'address-book-input',
               value: getAddressWithoutPrefix(inputProps.value), // we remove the prefix from input
               onCopy: onCopyPrefixedAddressField,
               onPaste: (e) => {
