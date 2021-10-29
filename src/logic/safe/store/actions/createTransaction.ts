@@ -203,11 +203,12 @@ export const createTransaction =
           .encodeABI()
         try {
           contractError = await getContractError(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-          logError(Errors._803, contractError)
         } catch (e) {
-          logError(Errors._803, e.message)
+          contractError = e.message
         }
       }
+
+      logError(Errors._803, contractError)
 
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG

@@ -221,11 +221,12 @@ export const processTransaction =
         const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
         try {
           contractError = await getContractError(safeInstance.options.address, 0, executeData, from)
-          logError(Errors._804, contractError)
         } catch (e) {
-          logError(Errors._804, e.message)
+          contractError = e.message
         }
       }
+
+      logError(Errors._804, contractError)
 
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
