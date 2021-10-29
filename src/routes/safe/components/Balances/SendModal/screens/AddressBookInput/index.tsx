@@ -65,7 +65,7 @@ const BaseAddressBookInput = ({
     updateNetworkPrefix,
     networkPrefixValidationWithCache,
     onCopyPrefixedAddressField,
-    // onPastePrefixedAddressField,
+    restoreNetworkPrefix,
   } = useNetworkPrefixedAddressInput()
 
   const validateAddress = (value: string): AddressBookEntry | string | undefined => {
@@ -130,6 +130,7 @@ const BaseAddressBookInput = ({
           let address = ''
           try {
             address = await getAddressFromDomain(normalizedValue)
+            restoreNetworkPrefix()
           } catch (err) {
             logError(Errors._101, err.message)
           }
@@ -219,6 +220,14 @@ const BaseAddressBookInput = ({
               ...params.inputProps,
               value: getAddressWithoutPrefix(inputProps.value), // we remove the prefix from input
               onCopy: onCopyPrefixedAddressField,
+              onPaste: (e) => {
+                const data = e.clipboardData.getData('Text')
+                const target = e.target as any
+                target.value = data
+                // restore to default when paste
+                restoreNetworkPrefix()
+                onInputChange(e, data, 'input')
+              },
             }}
           />
         )
