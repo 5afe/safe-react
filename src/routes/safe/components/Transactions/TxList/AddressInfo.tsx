@@ -4,13 +4,18 @@ import { ReactElement } from 'react'
 import { getExplorerInfo } from 'src/config'
 import { useKnownAddress } from './hooks/useKnownAddress'
 
-type Props = {
+type EthHashInfoRestProps = Omit<
+  Parameters<typeof EthHashInfo>[0],
+  'hash' | 'name' | 'showAvatar' | 'customAvatar' | 'showCopyBtn' | 'explorerUrl'
+>
+
+type Props = EthHashInfoRestProps & {
   address: string
   name?: string | undefined
   avatarUrl?: string | undefined
 }
 
-export const AddressInfo = ({ address, name, avatarUrl }: Props): ReactElement | null => {
+export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): ReactElement | null => {
   const toInfo = useKnownAddress(address, { name, image: avatarUrl })
 
   if (address === '') {
@@ -25,6 +30,7 @@ export const AddressInfo = ({ address, name, avatarUrl }: Props): ReactElement |
       customAvatar={toInfo.image}
       showCopyBtn
       explorerUrl={getExplorerInfo(address)}
+      {...rest}
     />
   )
 }

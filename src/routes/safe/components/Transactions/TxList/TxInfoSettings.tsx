@@ -1,4 +1,3 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import { SettingsChange } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
 
@@ -17,20 +16,26 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
 
   switch (settingsInfo.type) {
     case 'SET_FALLBACK_HANDLER': {
-      return <InfoDetails title="Set fallback handler:">{settingsInfo.handler}</InfoDetails>
-    }
-    case 'ADD_OWNER': {
       return (
-        <InfoDetails title="Add owner:">
-          <AddressInfo address={settingsInfo.owner.value} />
-          <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
+        <InfoDetails title="Set fallback handler:">
+          <AddressInfo
+            address={settingsInfo.handler.value}
+            name={settingsInfo.handler?.name || undefined}
+            avatarUrl={settingsInfo.handler?.logoUri || undefined}
+          />
         </InfoDetails>
       )
     }
+    case 'ADD_OWNER':
     case 'REMOVE_OWNER': {
+      const title = settingsInfo.type === 'ADD_OWNER' ? 'Add owner:' : 'Remove owner:'
       return (
-        <InfoDetails title="Remove owner:">
-          <AddressInfo address={settingsInfo.owner.value} />
+        <InfoDetails title={title}>
+          <AddressInfo
+            address={settingsInfo.owner.value}
+            name={settingsInfo.owner?.name || undefined}
+            avatarUrl={settingsInfo.owner?.logoUri || undefined}
+          />
           <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
         </InfoDetails>
       )
@@ -38,8 +43,18 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     case 'SWAP_OWNER': {
       return (
         <InfoDetails title="Swap owner:">
-          <TxInfoDetails title="Old owner" address={settingsInfo.oldOwner.value} />
-          <TxInfoDetails title="New owner" address={settingsInfo.newOwner.value} />
+          <TxInfoDetails
+            title="Old owner"
+            address={settingsInfo.oldOwner.value}
+            name={settingsInfo.oldOwner?.name || undefined}
+            avatarUrl={settingsInfo.oldOwner?.logoUri || undefined}
+          />
+          <TxInfoDetails
+            title="New owner"
+            address={settingsInfo.newOwner.value}
+            name={settingsInfo.newOwner?.name || undefined}
+            avatarUrl={settingsInfo.newOwner?.logoUri || undefined}
+          />
         </InfoDetails>
       )
     }
@@ -49,23 +64,24 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     case 'CHANGE_IMPLEMENTATION': {
       return (
         <InfoDetails title="Change implementation:">
-          <Text size="md" strong>
-            {settingsInfo.implementation}
-          </Text>
+          <AddressInfo
+            address={settingsInfo.implementation.value}
+            name={settingsInfo.implementation?.name || undefined}
+            avatarUrl={settingsInfo.implementation?.logoUri || undefined}
+          />
         </InfoDetails>
       )
     }
-    case 'ENABLE_MODULE': {
-      return (
-        <InfoDetails title="Enable module:">
-          <AddressInfo address={settingsInfo.module.value} />
-        </InfoDetails>
-      )
-    }
+    case 'ENABLE_MODULE':
     case 'DISABLE_MODULE': {
+      const title = settingsInfo.type === 'ENABLE_MODULE' ? 'Enable module:' : 'Disable module:'
       return (
-        <InfoDetails title="Disable module:">
-          <AddressInfo address={settingsInfo.module.value} />
+        <InfoDetails title={title}>
+          <AddressInfo
+            address={settingsInfo.module.value}
+            name={settingsInfo.module?.name || undefined}
+            avatarUrl={settingsInfo.module?.logoUri || undefined}
+          />
         </InfoDetails>
       )
     }

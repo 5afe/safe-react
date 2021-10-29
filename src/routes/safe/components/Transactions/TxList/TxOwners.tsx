@@ -6,7 +6,7 @@ import Img from 'src/components/layout/Img'
 import { ExpandedTxDetails, isModuleExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import TransactionListActive from './assets/transactions-list-active.svg'
 import TransactionListInactive from './assets/transactions-list-inactive.svg'
-import { OwnerRow } from './OwnerRow'
+import { AddressInfo } from './AddressInfo'
 import { OwnerList, OwnerListItem } from './styled'
 import { isCancelTxDetails } from './utils'
 
@@ -60,7 +60,12 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             <Text color="primary" size="xl" strong>
               Confirmed
             </Text>
-            <OwnerRow address={signer.value} />
+            <AddressInfo
+              address={signer.value}
+              name={signer?.name || undefined}
+              avatarUrl={signer?.logoUri || undefined}
+              shortenHash={4}
+            />
           </div>
         </OwnerListItem>
       ))}
@@ -77,7 +82,14 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             <Text color="primary" size="xl" strong>
               {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
             </Text>
-            {detailedExecutionInfo.executor && <OwnerRow address={detailedExecutionInfo.executor.value} />}
+            {detailedExecutionInfo.executor && (
+              <AddressInfo
+                address={detailedExecutionInfo.executor.value}
+                name={detailedExecutionInfo.executor?.name || undefined}
+                avatarUrl={detailedExecutionInfo.executor?.logoUri || undefined}
+                shortenHash={4}
+              />
+            )}
           </div>
         </OwnerListItem>
       ) : (
