@@ -55,12 +55,8 @@ export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
     return network.id
   }
 
-  try {
-    const networkId = loadFromSessionStorage(NETWORK_ID_KEY)
-    return isNetworkId(networkId) ? networkId : DEFAULT_NETWORK
-  } catch {
-    return DEFAULT_NETWORK
-  }
+  const networkId = loadFromSessionStorage(NETWORK_ID_KEY)
+  return isNetworkId(networkId) ? networkId : DEFAULT_NETWORK
 }
 
 // TODO: Centralise networkId and sessionStorage in store under currentSession.networkId
