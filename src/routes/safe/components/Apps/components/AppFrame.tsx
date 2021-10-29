@@ -110,7 +110,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [appLoadError, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!consentReceived) {
+    if (!consentReceived && !appLoadError) {
       return
     }
 
@@ -135,7 +135,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     return () => {
       clearTimeouts()
     }
-  }, [appIsLoading, consentReceived])
+  }, [appIsLoading, consentReceived, appLoadError])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
@@ -275,6 +275,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
       } catch (err) {
+        setAppLoadError(true)
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
