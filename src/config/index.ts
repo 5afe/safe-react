@@ -23,7 +23,7 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
-import { loadFromSessionStorage } from 'src/utils/storage'
+import { loadFromSessionStorage } from 'src/utils/storage/session'
 
 export const getNetworks = (): NetworkInfo[] => {
   // NETWORK_ROOT_ROUTES follows the same destructuring
