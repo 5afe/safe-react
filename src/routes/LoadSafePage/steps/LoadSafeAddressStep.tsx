@@ -13,6 +13,7 @@ import TextField from 'src/components/forms/TextField'
 import AddressInput from 'src/components/forms/AddressInput'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import { isChecksumAddress } from 'src/utils/checksumAddress'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { lg, secondary } from 'src/theme/variables'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -52,24 +53,27 @@ function LoadSafeAddressStep(): ReactElement {
 
   useEffect(() => {
     const checkSafeAddress = async () => {
-      const isValidSafeAddress = isValidAddress(safeAddress)
-      if (isValidSafeAddress) {
-        try {
-          setIsSafeInfoLoading(true)
-          const { owners, threshold } = await getSafeInfo(safeAddress)
-          setIsSafeInfoLoading(false)
-          const ownersWithName = owners.map(({ value: address }) =>
-            makeAddressBookEntry(addressBook[address] || { address, name: '' }),
-          )
-          setOwnersWithName(ownersWithName)
-          setThreshold(threshold)
-          setIsValidSafeAddress(true)
-        } catch (error) {
-          setOwnersWithName([])
-          setThreshold(undefined)
-          setIsValidSafeAddress(false)
-        }
+      const isValidSafeAddress = isValidAddress(safeAddress) && isChecksumAddress(safeAddress)
+      if (!isValidSafeAddress) {
+        return
       }
+
+      setIsSafeInfoLoading(true)
+      try {
+        const { owners, threshold } = await getSafeInfo(safeAddress)
+        setIsSafeInfoLoading(false)
+        const ownersWithName = owners.map(({ value: address }) =>
+          makeAddressBookEntry(addressBook[address] || { address, name: '' }),
+        )
+        setOwnersWithName(ownersWithName)
+        setThreshold(threshold)
+        setIsValidSafeAddress(true)
+      } catch (error) {
+        setOwnersWithName([])
+        setThreshold(undefined)
+        setIsValidSafeAddress(false)
+      }
+      setIsSafeInfoLoading(false)
     }
 
     checkSafeAddress()
