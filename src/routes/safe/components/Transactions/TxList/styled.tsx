@@ -467,7 +467,7 @@ export const OwnerListItem = styled.li`
   }
 `
 
-export const InlineEthHashInfo = styled(PrefixedEthHashInfo)`
+export const PrefixedInlineEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
 
   span {
