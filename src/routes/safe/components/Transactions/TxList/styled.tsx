@@ -469,6 +469,10 @@ export const OwnerListItem = styled.li`
 
 export const InlineEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
+
+  span {
+    font-weight: normal;
+  }
 `
 
 export const StyledScrollableBar = styled.div`
