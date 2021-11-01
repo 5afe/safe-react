@@ -21,6 +21,10 @@ const Container = styled(Block)`
   padding: ${lg};
 `
 
+const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  margin-bottom: 1em;
+`
+
 const Appearance = (): ReactElement => {
   const dispatch = useDispatch()
   const copyShortName = useSelector(copyShortNameSelector)
@@ -36,9 +40,7 @@ const Appearance = (): ReactElement => {
     <Container>
       <Heading tag="h2">Use Chain-Specific Addresses</Heading>
       <Paragraph>You can choose whether to prepend EIP-3770 short chain names accross Safes.</Paragraph>
-      <Paragraph>
-        <PrefixedEthHashInfo hash={safeAddress} />
-      </Paragraph>
+      <StyledPrefixedEthHashInfo hash={safeAddress} />
       <FormGroup>
         <FormControlLabel
           control={<Checkbox checked={showShortName} onChange={handleShowChange} name="showShortName" />}
