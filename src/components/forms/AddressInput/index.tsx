@@ -1,6 +1,8 @@
-import * as React from 'react'
+import { ReactElement, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import TextField from 'src/components/forms/TextField'
 import { Validator, composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
@@ -19,7 +21,7 @@ export interface AddressInputProps {
   name?: string
   text?: string
   placeholder?: string
-  inputAdornment?: { endAdornment: React.ReactElement } | undefined | false
+  inputAdornment?: { endAdornment: ReactElement } | undefined | false
   testId: string
   validators?: Validator[]
   defaultValue?: string
@@ -39,50 +41,65 @@ const AddressInput = ({
   validators = [],
   defaultValue,
   disabled,
-}: AddressInputProps): React.ReactElement => (
-  <>
-    <Field
-      className={className}
-      component={TextField as any}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      inputAdornment={inputAdornment}
-      name={name}
-      placeholder={placeholder}
-      testId={testId}
-      text={text}
-      type="text"
-      spellCheck={false}
-      validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
-    />
-    <OnChange name={name}>
-      {async (value: string) => {
-        const address = trimSpaces(value)
-        // A crypto domain name
-        if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-          try {
-            const resolverAddr = await getAddressFromDomain(address)
-            const formattedAddress = checksumAddress(resolverAddr)
-            fieldMutator(formattedAddress)
-          } catch (err) {
-            logError(Errors._101, err.message)
-          }
-        } else {
-          // A regular address hash
-          let checkedAddress = address
-          // Automatically checksum valid (either already checksummed, or lowercase addresses)
-          if (isValidAddress(address)) {
+}: AddressInputProps): ReactElement => {
+  const [isVerifying, setIsVerifying] = useState<boolean>(false)
+  const adornment = isVerifying
+    ? {
+        endAdornment: (
+          <InputAdornment position="end">
+            <CircularProgress size="16px" />
+          </InputAdornment>
+        ),
+      }
+    : inputAdornment
+  return (
+    <>
+      <Field
+        className={className}
+        component={TextField as any}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        readOnly={isVerifying}
+        inputAdornment={adornment}
+        name={name}
+        placeholder={placeholder}
+        testId={testId}
+        text={text}
+        type="text"
+        spellCheck={false}
+        validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
+      />
+      <OnChange name={name}>
+        {async (value: string) => {
+          setIsVerifying(true)
+          const address = trimSpaces(value)
+          // A crypto domain name
+          if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
             try {
-              checkedAddress = checksumAddress(address)
+              const resolverAddr = await getAddressFromDomain(address)
+              const formattedAddress = checksumAddress(resolverAddr)
+              fieldMutator(formattedAddress)
             } catch (err) {
-              // ignore
+              logError(Errors._101, err.message)
             }
+          } else {
+            // A regular address hash
+            let checkedAddress = address
+            // Automatically checksum valid (either already checksummed, or lowercase addresses)
+            if (isValidAddress(address)) {
+              try {
+                checkedAddress = checksumAddress(address)
+              } catch (err) {
+                // ignore
+              }
+            }
+            fieldMutator(checkedAddress)
           }
-          fieldMutator(checkedAddress)
-        }
-      }}
-    </OnChange>
-  </>
-)
+          setIsVerifying(false)
+        }}
+      </OnChange>
+    </>
+  )
+}
 
 export default AddressInput
