@@ -71,10 +71,10 @@ const AddressInput = ({
       />
       <OnChange name={name}>
         {async (value: string) => {
-          setIsVerifying(true)
           const address = trimSpaces(value)
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+            setIsVerifying(true)
             try {
               const resolverAddr = await getAddressFromDomain(address)
               const formattedAddress = checksumAddress(resolverAddr)
@@ -82,6 +82,7 @@ const AddressInput = ({
             } catch (err) {
               logError(Errors._101, err.message)
             }
+            setIsVerifying(false)
           } else {
             // A regular address hash
             let checkedAddress = address
@@ -95,7 +96,6 @@ const AddressInput = ({
             }
             fieldMutator(checkedAddress)
           }
-          setIsVerifying(false)
         }}
       </OnChange>
     </>
