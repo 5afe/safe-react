@@ -1,9 +1,11 @@
-import { useRef, useEffect, useCallback, useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
-export const useAsyncAbortable = <Args extends unknown[], Res extends unknown>(
-  asyncFn: (...args: Args) => Promise<Res>,
+type AsyncFn = (...args: unknown[]) => Promise<unknown>
+
+export const useAsyncAbortable = <T extends AsyncFn>(
+  asyncFn: T,
 ): {
-  abortableFn: (...args: Args) => Promise<Res>
+  abortableFn: (...args: Parameters<T>) => Promise<ReturnType<T>>
   isLoading: boolean
   abort: () => void | undefined
 } => {
@@ -11,36 +13,25 @@ export const useAsyncAbortable = <Args extends unknown[], Res extends unknown>(
 
   const abortControllerRef = useRef<AbortController>()
 
-  const asyncWrapper = useCallback(
-    async (...args: Args) => {
-      // Cancel previous async calls
-      abortControllerRef.current?.abort()
+  const abort = () => abortControllerRef.current?.abort()
 
-      const abortController = new AbortController()
-      abortControllerRef.current = abortController
+  const abortableFn = async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
 
-      try {
-        setIsLoading(true)
+    try {
+      setIsLoading(true)
+      return await asyncFn(...args)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-        return await asyncFn(...args)
-      } finally {
-        setIsLoading(false)
-
-        // Reset abort controller ref
-        if (abortControllerRef.current === abortController) {
-          abortControllerRef.current = undefined
-        }
-      }
-    },
-    [asyncFn],
-  )
-
-  // Cleanup async calls on unmount
-  useEffect(() => abortControllerRef.current?.abort(), [])
+  useEffect(abort, [])
 
   return {
-    abortableFn: (...args) => asyncWrapper(...args),
     isLoading,
-    abort: () => abortControllerRef.current?.abort(),
+    abort,
+    abortableFn,
   }
 }

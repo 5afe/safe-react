@@ -72,6 +72,9 @@ const AddressInput = ({
       />
       <OnChange name={name}>
         {async (value: string) => {
+          // Abort previous domain lookup
+          abort()
+
           const address = trimSpaces(value)
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
@@ -83,7 +86,6 @@ const AddressInput = ({
               logError(Errors._101, err.message)
             }
           } else {
-            abort()
             // A regular address hash
             let checkedAddress = address
             // Automatically checksum valid (either already checksummed, or lowercase addresses)
