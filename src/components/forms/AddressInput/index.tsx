@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -12,7 +12,6 @@ import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAd
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { useAsyncAbortable } from 'src/logic/hooks/useAsyncAbortable'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -43,9 +42,9 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): ReactElement => {
-  const { isLoading, abortableFn, abort } = useAsyncAbortable(getAddressFromDomain)
+  const [isVerifying, setIsVerifying] = useState<boolean>(false)
 
-  const adornment = isLoading
+  const adornment = isVerifying
     ? {
         endAdornment: (
           <InputAdornment position="end">
@@ -72,18 +71,18 @@ const AddressInput = ({
       />
       <OnChange name={name}>
         {async (value: string) => {
-          // Abort previous domain lookup
-          abort()
-
           const address = trimSpaces(value)
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
             try {
-              const resolverAddr = await abortableFn(address)
+              setIsVerifying(true)
+              const resolverAddr = await getAddressFromDomain(address)
               const formattedAddress = checksumAddress(resolverAddr)
               fieldMutator(formattedAddress)
             } catch (err) {
               logError(Errors._101, err.message)
+            } finally {
+              setIsVerifying(false)
             }
           } else {
             // A regular address hash
