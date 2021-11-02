@@ -305,4 +305,5 @@ export const ContractsAddressBookInput = ({
 
 const NetWorkPrefixLabel = styled.span<{ error: boolean }>`
   color: ${(props) => (props.error ? 'red' : fontColor)};
+  margin-left: 4px;
 `
