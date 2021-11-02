@@ -81,7 +81,7 @@ export const ContinueFooter = ({
     >
       {continueButtonDisabled ? (
         <>
-          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your safe</LoaderText>
+          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your Safe</LoaderText>
         </>
       ) : (
         <>Get started</>

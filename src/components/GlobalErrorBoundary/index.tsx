@@ -3,6 +3,7 @@ import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-compon
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { FallbackRender } from '@sentry/react/dist/errorboundary'
 import { ROOT_ROUTE } from 'src/routes/routes'
+import { loadFromSessionStorage, removeFromSessionStorage, saveToSessionStorage } from 'src/utils/storage/session'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -53,12 +54,13 @@ export const handleChunkError = (error: Error): boolean => {
 
   if (!isChunkError) return false
 
-  const lastReloadString = sessionStorage.getItem(LAST_CHUNK_FAILURE_RELOAD_KEY)
-  const lastReload = lastReloadString ? +lastReloadString : 0
+  const lastReload = loadFromSessionStorage<number>(LAST_CHUNK_FAILURE_RELOAD_KEY)
+
+  const isTimestamp = typeof lastReload === 'number' && !isNaN(lastReload)
 
   // Not a number in the sessionStorage
-  if (isNaN(lastReload)) {
-    sessionStorage.removeItem(LAST_CHUNK_FAILURE_RELOAD_KEY)
+  if (!isTimestamp) {
+    removeFromSessionStorage(LAST_CHUNK_FAILURE_RELOAD_KEY)
     return false
   }
 
@@ -68,7 +70,7 @@ export const handleChunkError = (error: Error): boolean => {
 
   if (hasJustReloaded) return false
 
-  sessionStorage.setItem(LAST_CHUNK_FAILURE_RELOAD_KEY, now.toString())
+  saveToSessionStorage(LAST_CHUNK_FAILURE_RELOAD_KEY, now.toString())
   window.location.reload()
   return true
 }
