@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -12,6 +12,7 @@ import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAd
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import { useAsyncAbortable } from 'src/logic/hooks/useAsyncAbortable'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -42,8 +43,9 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): ReactElement => {
-  const [isVerifying, setIsVerifying] = useState<boolean>(false)
-  const adornment = isVerifying
+  const { isLoading, abortableFn } = useAsyncAbortable(getAddressFromDomain)
+
+  const adornment = isLoading
     ? {
         endAdornment: (
           <InputAdornment position="end">
@@ -59,7 +61,6 @@ const AddressInput = ({
         component={TextField as any}
         defaultValue={defaultValue}
         disabled={disabled}
-        readOnly={isVerifying}
         inputAdornment={adornment}
         name={name}
         placeholder={placeholder}
@@ -74,15 +75,13 @@ const AddressInput = ({
           const address = trimSpaces(value)
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-            setIsVerifying(true)
             try {
-              const resolverAddr = await getAddressFromDomain(address)
+              const resolverAddr = await abortableFn(address)
               const formattedAddress = checksumAddress(resolverAddr)
               fieldMutator(formattedAddress)
             } catch (err) {
               logError(Errors._101, err.message)
             }
-            setIsVerifying(false)
           } else {
             // A regular address hash
             let checkedAddress = address

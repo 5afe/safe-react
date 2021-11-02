@@ -57,7 +57,6 @@ const TextField = (props: Props): React.ReactElement => {
     rows,
     testId,
     text,
-    readOnly = false,
     ...rest
   } = props
   const classes = useStyles()
@@ -79,7 +78,6 @@ const TextField = (props: Props): React.ReactElement => {
   }
   const inputRootProps = {
     ...inputAdornment,
-    readOnly,
     className: `${inputRoot} ${statusClasses}`,
     disableUnderline: disableUnderline,
   }
