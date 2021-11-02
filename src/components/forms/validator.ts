@@ -6,6 +6,7 @@ import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { extractShortChainName } from 'src/routes/routes'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -90,6 +91,23 @@ export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnT
   }
   return result
 })
+
+export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
+  const errorMessage = "The current network doesn't match the given address"
+
+  if (!value) {
+    return undefined
+  }
+
+  const addressSplit = value.split(':')
+  const [prefix] = addressSplit
+
+  const hasPrefixDefined = addressSplit.length > 1
+  const isInValidPrefix = prefix !== extractShortChainName()
+  const showNetworkPrefixError = hasPrefixDefined && isInValidPrefix
+
+  return showNetworkPrefixError ? errorMessage : undefined
+}
 
 export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {
   const contractCode = await getWeb3().eth.getCode(address)

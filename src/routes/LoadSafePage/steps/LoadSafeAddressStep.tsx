@@ -38,6 +38,7 @@ function LoadSafeAddressStep(): ReactElement {
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
 
   const loadSafeForm = useForm()
+  const loadSafeFormValues = loadSafeForm.getState().values
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   const {
@@ -154,6 +155,7 @@ function LoadSafeAddressStep(): ReactElement {
                 ),
               }
             }
+            value={loadSafeFormValues[FIELD_LOAD_SAFE_ADDRESS]}
             name={FIELD_LOAD_SAFE_ADDRESS}
             placeholder="Safe Address*"
             text="Safe Address"

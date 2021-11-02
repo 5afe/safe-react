@@ -142,6 +142,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                         createSafeForm.change(nameFieldName, addressName)
                       }
                     }}
+                    value={createSafeFormValues[addressFieldName]}
                     inputAdornment={
                       !hasOwnerAddressError && {
                         endAdornment: (

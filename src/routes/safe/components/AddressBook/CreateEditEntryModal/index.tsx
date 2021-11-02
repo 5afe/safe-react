@@ -105,6 +105,7 @@ export const CreateEditEntryModal = ({
                         fieldMutator={mutators.setOwnerAddress}
                         name="address"
                         placeholder="Address*"
+                        value={formState.values.address}
                         testId={CREATE_ENTRY_INPUT_ADDRESS_ID}
                         text="Address*"
                         validators={[(value?: string) => (isNew ? isUniqueAddress(value) : undefined)]}

@@ -10,6 +10,7 @@ import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAd
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import useNetworkPrefixedAddressInput from 'src/logic/hooks/useNetworkPrefixedAddressInput'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -26,6 +27,7 @@ export interface AddressInputProps {
   disabled?: boolean
   spellCheck?: boolean
   className?: string
+  value?: string
 }
 
 const AddressInput = ({
@@ -38,51 +40,85 @@ const AddressInput = ({
   inputAdornment,
   validators = [],
   defaultValue,
+  value = '',
   disabled,
-}: AddressInputProps): React.ReactElement => (
-  <>
-    <Field
-      className={className}
-      component={TextField as any}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      inputAdornment={inputAdornment}
-      name={name}
-      placeholder={placeholder}
-      testId={testId}
-      text={text}
-      type="text"
-      spellCheck={false}
-      validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
-    />
-    <OnChange name={name}>
-      {async (value: string) => {
-        const address = trimSpaces(value)
-        // A crypto domain name
-        if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-          try {
-            const resolverAddr = await getAddressFromDomain(address)
-            const formattedAddress = checksumAddress(resolverAddr)
-            fieldMutator(formattedAddress)
-          } catch (err) {
-            logError(Errors._101, err.message)
-          }
-        } else {
-          // A regular address hash
-          let checkedAddress = address
-          // Automatically checksum valid (either already checksummed, or lowercase addresses)
-          if (isValidAddress(address)) {
+}: AddressInputProps): React.ReactElement => {
+  const {
+    updateNetworkPrefix,
+    showNetworkPrefix,
+    restoreNetworkPrefix,
+
+    valueWithPrefix,
+    setValueWithPrefix,
+
+    networkPrefixValidationWithCache,
+
+    onCopyPrefixedAddressField,
+    onPastePrefixedAddressField,
+
+    getAddressWithoutPrefix,
+  } = useNetworkPrefixedAddressInput(value)
+
+  return (
+    <>
+      <Field
+        className={className}
+        component={TextField as any}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        inputAdornment={inputAdornment}
+        name={name}
+        inputProps={{
+          value: showNetworkPrefix ? valueWithPrefix : value,
+          onChange: (e) => {
+            const value = e.target.value
+            setValueWithPrefix(value)
+          },
+          onCopy: onCopyPrefixedAddressField,
+          onPaste: (e) => onPastePrefixedAddressField(e, fieldMutator),
+        }}
+        placeholder={placeholder}
+        testId={testId}
+        text={text}
+        type="text"
+        spellCheck={false}
+        validate={composeValidators(required, networkPrefixValidationWithCache, mustBeEthereumAddress, ...validators)}
+      />
+      <OnChange name={name}>
+        {async (value: string) => {
+          const trimmedValue = trimSpaces(value)
+
+          // split the value in network prefix and address
+          const address = getAddressWithoutPrefix(trimmedValue)
+          updateNetworkPrefix(trimmedValue)
+
+          // A crypto domain name
+          if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
             try {
-              checkedAddress = checksumAddress(address)
+              const resolverAddr = await getAddressFromDomain(address)
+              const formattedAddress = checksumAddress(resolverAddr)
+              restoreNetworkPrefix()
+              fieldMutator(formattedAddress)
             } catch (err) {
-              // ignore
+              logError(Errors._101, err.message)
             }
+          } else {
+            // A regular address hash
+            let checkedAddress = address
+            // Automatically checksum valid (either already checksummed, or lowercase addresses)
+            if (isValidAddress(address)) {
+              try {
+                checkedAddress = checksumAddress(address)
+              } catch (err) {
+                // ignore
+              }
+            }
+            fieldMutator(checkedAddress)
           }
-          fieldMutator(checkedAddress)
-        }
-      }}
-    </OnChange>
-  </>
-)
+        }}
+      </OnChange>
+    </>
+  )
+}
 
 export default AddressInput
