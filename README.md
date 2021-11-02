@@ -126,10 +126,6 @@ When pushing to the `main` branch, the code will be automatically deployed to [s
 
 Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
 
-## Configuring the app for running on different networks
-
-[Please check the network configuration documentation](./docs/networks.md)
-
 ## Built With
 
 - [React](https://reactjs.org/) - A JS library for building user interfaces

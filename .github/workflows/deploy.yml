@@ -74,7 +74,12 @@ jobs:
         run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
         if: github.ref != 'refs/heads/main'
 
-      # Set production flag
+      # Set production flag on staging
+      - name: Set production flag for staging
+        run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
+        if: github.ref == 'refs/heads/main'
+
+      # Set production flag on prod
       - name: Set production flag for release PR or tagged build
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'main'
