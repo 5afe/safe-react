@@ -5,10 +5,10 @@ import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import AppFrame from './components/AppFrame'
-import AppsList from './components/AppsList'
-import LegalDisclaimer from './components/LegalDisclaimer'
-import { useLegalConsent } from './hooks/useLegalConsent'
+import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
+import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
+import LegalDisclaimer from 'src/routes/safe/components/Apps/components/LegalDisclaimer'
+import { useLegalConsent } from 'src/routes/safe/components/Apps/hooks/useLegalConsent'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()
