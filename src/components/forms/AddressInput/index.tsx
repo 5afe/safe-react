@@ -43,7 +43,7 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): ReactElement => {
-  const { isLoading, abortableFn } = useAsyncAbortable(getAddressFromDomain)
+  const { isLoading, abortableFn, abort } = useAsyncAbortable(getAddressFromDomain)
 
   const adornment = isLoading
     ? {
@@ -83,6 +83,7 @@ const AddressInput = ({
               logError(Errors._101, err.message)
             }
           } else {
+            abort()
             // A regular address hash
             let checkedAddress = address
             // Automatically checksum valid (either already checksummed, or lowercase addresses)
