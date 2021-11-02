@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useRef } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -42,9 +42,9 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): ReactElement => {
-  const [isVerifying, setIsVerifying] = useState<boolean>(false)
+  const isResolving = useRef<boolean>(false)
 
-  const adornment = isVerifying
+  const adornment = isResolving.current
     ? {
         endAdornment: (
           <InputAdornment position="end">
@@ -71,18 +71,20 @@ const AddressInput = ({
       />
       <OnChange name={name}>
         {async (value: string) => {
+          isResolving.current = false
+
           const address = trimSpaces(value)
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
             try {
-              setIsVerifying(true)
+              isResolving.current = true
               const resolverAddr = await getAddressFromDomain(address)
               const formattedAddress = checksumAddress(resolverAddr)
-              fieldMutator(formattedAddress)
+              if (isResolving.current) fieldMutator(formattedAddress)
             } catch (err) {
               logError(Errors._101, err.message)
             } finally {
-              setIsVerifying(false)
+              isResolving.current = false
             }
           } else {
             // A regular address hash
