@@ -10,21 +10,19 @@ import {
   SignMessageParams,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { useHistory } from 'react-router-dom'
+
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getCurrentShortChainName, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { useLegalConsent } from '../hooks/useLegalConsent'
-import LegalDisclaimer from './LegalDisclaimer'
 import { getAppInfoFromUrl } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
@@ -35,7 +33,6 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
-import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -94,29 +91,18 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const networkId = useSelector(currentChainId)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
-  const history = useHistory()
-  const { consentReceived, onConsentReceipt } = useLegalConsent()
-
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
-
-  const redirectToBalance = () =>
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName: getCurrentShortChainName(), safeAddress }))
   const timer = useRef<number>()
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
-
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!consentReceived) {
-      return
-    }
-
     const clearTimeouts = () => {
       clearTimeout(timer.current)
       clearTimeout(errorTimer.current)
@@ -139,7 +125,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     return () => {
       clearTimeouts()
     }
-  }, [appIsLoading, consentReceived])
+  }, [appIsLoading])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
@@ -283,9 +269,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
       } catch (err) {
-        setAppLoadError(() => {
-          throw Error(APP_LOAD_ERROR)
-        })
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
@@ -311,10 +294,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         <Loader size="md" />
       </LoadingContainer>
     )
-  }
-
-  if (consentReceived === false) {
-    return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
   }
 
   return (
