@@ -23,6 +23,7 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
+import { loadFromSessionStorage } from 'src/utils/storage/session'
 
 export const getNetworks = (): NetworkInfo[] => {
   // NETWORK_ROOT_ROUTES follows the same destructuring
@@ -38,15 +39,28 @@ export const getNetworks = (): NetworkInfo[] => {
 
 export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
 
+const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
+  return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
+}
+
+export const NETWORK_ID_KEY = 'SAFE__networkId'
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const { pathname } = window.location
+
   const network = getNetworks().find(({ shortName }) => {
     return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
   })
 
-  return network?.id || DEFAULT_NETWORK
+  if (network?.id) {
+    return network.id
+  }
+
+  const networkId = loadFromSessionStorage(NETWORK_ID_KEY)
+  return isNetworkId(networkId) ? networkId : DEFAULT_NETWORK
 }
 
+// TODO: Centralise networkId and sessionStorage in store under currentSession.networkId
+// May be able to make extraction of the shortName in URL a bit better
 let networkId = getInitialNetworkId()
 
 export const setNetworkId = (id: ETHEREUM_NETWORK): void => {
