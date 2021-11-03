@@ -17,6 +17,8 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement | nul
   }
 
   useEffect(() => {
+    if (!safeAddress) return
+
     const checkLastTx = async () => {
       const lastTx = await getLastTx(safeAddress)
       setVisible(!lastTx || lastTx.isExecuted)

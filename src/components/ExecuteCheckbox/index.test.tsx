@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor, act } from 'src/utils/test-utils'
+import { history } from 'src/routes/routes'
 import ExecuteCheckbox from '.'
 
 jest.mock('src/logic/safe/store/actions/utils', () => {
@@ -14,6 +15,7 @@ jest.mock('src/logic/safe/store/actions/utils', () => {
 describe('ExecuteCheckbox', () => {
   it('should call onChange when checked/unchecked', async () => {
     const onChange = jest.fn()
+    history.push('/rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A/balances')
 
     await act(async () => {
       render(<ExecuteCheckbox onChange={onChange} />)
