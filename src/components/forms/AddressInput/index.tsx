@@ -3,14 +3,22 @@ import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 
 import TextField from 'src/components/forms/TextField'
-import { Validator, composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
+import {
+  Validator,
+  composeValidators,
+  mustBeEthereumAddress,
+  required,
+  checkNetworkPrefix,
+} from 'src/components/forms/validator'
 import { trimSpaces } from 'src/utils/strings'
 import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import useNetworkPrefixedAddressInput from 'src/logic/hooks/useNetworkPrefixedAddressInput'
+import { useSelector } from 'react-redux'
+import { showShortNameSelector } from 'src/logic/appearance/selectors'
+import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -43,21 +51,9 @@ const AddressInput = ({
   value = '',
   disabled,
 }: AddressInputProps): React.ReactElement => {
-  const {
-    updateNetworkPrefix,
-    showNetworkPrefix,
-    restoreNetworkPrefix,
-
-    valueWithPrefix,
-    setValueWithPrefix,
-
-    networkPrefixValidationWithCache,
-
-    onCopyPrefixedAddressField,
-    onPastePrefixedAddressField,
-
-    getAddressWithoutPrefix,
-  } = useNetworkPrefixedAddressInput(value)
+  const [prefixedAddress, setPrefixedAddress] = React.useState(value)
+  const [prefixedError, setPrefixedError] = React.useState(false)
+  const showNetworkPrefix = useSelector(showShortNameSelector)
 
   return (
     <>
@@ -69,36 +65,38 @@ const AddressInput = ({
         inputAdornment={inputAdornment}
         name={name}
         inputProps={{
-          value: showNetworkPrefix ? valueWithPrefix : value,
+          value: showNetworkPrefix ? prefixedAddress : value,
           onChange: (e) => {
             const value = e.target.value
-            setValueWithPrefix(value)
+            setPrefixedAddress(value)
+
+            const hasPrefixedError = !!checkNetworkPrefix(value)
+
+            setPrefixedError(hasPrefixedError)
+
+            fieldMutator(value)
           },
-          onCopy: onCopyPrefixedAddressField,
-          onPaste: (e) => onPastePrefixedAddressField(e, fieldMutator),
         }}
         placeholder={placeholder}
         testId={testId}
         text={text}
         type="text"
         spellCheck={false}
-        validate={composeValidators(required, networkPrefixValidationWithCache, mustBeEthereumAddress, ...validators)}
+        validate={composeValidators(required, checkNetworkPrefix, mustBeEthereumAddress, ...validators)}
       />
       <OnChange name={name}>
-        {async (value: string) => {
-          const trimmedValue = trimSpaces(value)
+        {async (newValue: string) => {
+          const trimmedValue = trimSpaces(newValue)
 
-          // split the value in network prefix and address
-          const address = getAddressWithoutPrefix(trimmedValue)
-          updateNetworkPrefix(trimmedValue)
+          const address = prefixedError ? trimmedValue : getAddressWithoutNetworkPrefix(trimmedValue)
 
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
             try {
               const resolverAddr = await getAddressFromDomain(address)
               const formattedAddress = checksumAddress(resolverAddr)
-              restoreNetworkPrefix()
               fieldMutator(formattedAddress)
+              setPrefixedAddress(formattedAddress)
             } catch (err) {
               logError(Errors._101, err.message)
             }
@@ -114,6 +112,14 @@ const AddressInput = ({
               }
             }
             fieldMutator(checkedAddress)
+            // setPrefixedAddress(checkedAddress)
+          }
+
+          // needed to update the input when loads the value from a QR
+          const formHasMutatedTheField = newValue !== value
+
+          if (formHasMutatedTheField) {
+            setPrefixedAddress(newValue)
           }
         }}
       </OnChange>

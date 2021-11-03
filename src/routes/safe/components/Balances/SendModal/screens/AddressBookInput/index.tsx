@@ -24,7 +24,7 @@ import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import useNetworkPrefixedAddressInput from 'src/logic/hooks/useNetworkPrefixedAddressInput'
+import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -59,10 +59,8 @@ const BaseAddressBookInput = ({
     fieldMutator(addressEntry.address)
   }
 
-  const { getAddressWithoutPrefix } = useNetworkPrefixedAddressInput('')
-
   const validateAddress = (value: string): AddressBookEntry | string | undefined => {
-    const address = getAddressWithoutPrefix(value)
+    const address = getAddressWithoutNetworkPrefix(value)
     const addressErrorMessage = mustBeEthereumAddress(address)
     setIsValidAddress(!addressErrorMessage)
 
@@ -110,7 +108,7 @@ const BaseAddressBookInput = ({
   ) => {
     switch (reason) {
       case 'input': {
-        const normalizedValue = getAddressWithoutPrefix(trimSpaces(value))
+        const normalizedValue = getAddressWithoutNetworkPrefix(trimSpaces(value))
 
         if (!normalizedValue) {
           setValidationText('')
