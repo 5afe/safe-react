@@ -32,7 +32,7 @@ import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { decodeContractError, getContractError } from 'src/logic/contracts/safeContractErrors'
+import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -215,26 +215,22 @@ export const processTransaction =
         }),
       )
 
-      let contractError: undefined | string
+      const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
+      const contractErrorMessage = await getContractErrorMessage({
+        safeInstance,
+        from,
+        data: executeData,
+      })
 
-      if (txHash) {
-        const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
-        try {
-          contractError = await getContractError(safeInstance.options.address, 0, executeData, from)
-        } catch (e) {
-          contractError = e.message
-        }
-      }
-
-      logError(Errors._804, contractError)
+      logError(Errors._804, contractErrorMessage)
 
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {
             ...notificationsQueue.afterExecutionError,
-            message: `${notificationsQueue.afterExecutionError.message} - ${
-              contractError ? decodeContractError(contractError) : err.message
-            }`,
+            ...(contractErrorMessage && {
+              message: `${notificationsQueue.afterExecutionError.message} - ${contractErrorMessage}`,
+            }),
           }
 
       dispatch(enqueueSnackbar({ key: err.code, ...notification }))

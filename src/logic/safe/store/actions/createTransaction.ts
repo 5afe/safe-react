@@ -34,7 +34,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { decodeContractError, getContractError } from 'src/logic/contracts/safeContractErrors'
+import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -195,28 +195,25 @@ export const createTransaction =
 
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-      let contractError: undefined | string
+      const executeDataUsedSignatures = safeInstance.methods
+        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+        .encodeABI()
 
-      if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
-        const executeDataUsedSignatures = safeInstance.methods
-          .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-          .encodeABI()
-        try {
-          contractError = await getContractError(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-        } catch (e) {
-          contractError = e.message
-        }
-      }
+      const contractErrorMessage = await getContractErrorMessage({
+        safeInstance,
+        from,
+        data: executeDataUsedSignatures,
+      })
 
-      logError(Errors._803, contractError)
+      logError(Errors._803, contractErrorMessage)
 
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {
             ...notificationsQueue.afterExecutionError,
-            message: `${notificationsQueue.afterExecutionError.message} - ${
-              contractError ? decodeContractError(contractError) : err.message
-            }`,
+            ...(contractErrorMessage && {
+              message: `${notificationsQueue.afterExecutionError.message} - ${contractErrorMessage}`,
+            }),
           }
 
       dispatch(enqueueSnackbar({ key: err.code, ...notification }))

@@ -2,24 +2,42 @@ import abi from 'ethereumjs-abi'
 
 import { CONTRACT_ERRORS, CONTRACT_ERROR_CODES } from 'src/logic/contracts/contracts.d'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 
-export const getContractError = async (to: string, value: number, data: string, from: string): Promise<string> => {
-  const web3 = getWeb3()
-  const returnData = await web3.eth.call({
-    to,
-    from,
-    value,
-    data,
+export const decodeContractError = (contractError: string): string => {
+  const code = CONTRACT_ERROR_CODES.find((code) => {
+    return contractError.toUpperCase().includes(code.toUpperCase())
   })
-  const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
 
-  return abi.rawDecode(['string'], returnBuffer.slice(4))[0]
+  return code ? `${code}: ${CONTRACT_ERRORS[code]}` : contractError
 }
 
-export const decodeContractError = (error: string): string => {
-  const code = CONTRACT_ERROR_CODES.find((code) => {
-    return error.toUpperCase().includes(code.toUpperCase())
-  })
+export const getContractErrorMessage = async ({
+  safeInstance,
+  from,
+  data,
+}: {
+  safeInstance: GnosisSafe
+  from: string
+  data: string
+}): Promise<string> => {
+  const web3 = getWeb3()
 
-  return code ? `${code}: ${CONTRACT_ERRORS[code]}` : error
+  let contractError: string
+
+  try {
+    const returnData = await web3.eth.call({
+      to: safeInstance.options.address,
+      from,
+      value: 0,
+      data,
+    })
+
+    const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
+    contractError = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
+  } catch (e) {
+    contractError = e.message
+  }
+
+  return decodeContractError(contractError)
 }
