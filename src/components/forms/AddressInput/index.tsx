@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -42,56 +42,60 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): ReactElement => {
-  const isResolving = useRef<boolean>(false)
   const [address, setAddress] = useState<string>('')
+  const [shouldResolve, setShouldResolve] = useState<boolean>(false)
 
   useEffect(() => {
-    let isCurrentResolution = true
-
     const handleAddressInput = async () => {
-      isResolving.current = false
+      setShouldResolve(false)
 
       // A crypto domain name
       if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-        try {
-          // Trigger loading spinner
-          isResolving.current = true
-
-          const resolverAddr = await getAddressFromDomain(address)
-          const formattedAddress = checksumAddress(resolverAddr)
-
-          // If resolving current address/current effect not cleaned up
-          if (isResolving.current && isCurrentResolution) fieldMutator(formattedAddress)
-        } catch (err) {
-          logError(Errors._101, err.message)
-        } finally {
-          isResolving.current = false
-        }
+        // Trigger resolution/loading spinner
+        setShouldResolve(true)
       } else {
-        // A regular address hash
+        // A regular address hash// A regular address hash
         let checkedAddress = address
 
         // Automatically checksum valid (either already checksummed, or lowercase addresses)
         if (isValidAddress(address)) {
           try {
             checkedAddress = checksumAddress(address)
-          } catch (err) {
-            // Ignore
-          }
+          } catch {}
         }
         fieldMutator(checkedAddress)
       }
     }
-
     handleAddressInput()
-
-    // Effect is no longer current when address changes
-    return () => {
-      isCurrentResolution = false
-    }
   }, [address])
 
-  const adornment = isResolving.current
+  // Closure scope means a side-effect is necessary
+  // https://stackoverflow.com/questions/62586245/how-to-update-react-usestate-without-delay
+  useEffect(() => {
+    if (!shouldResolve) return
+
+    let isCurrentResolution = true
+
+    const resolveDomain = async () => {
+      try {
+        const resolverAddr = await getAddressFromDomain(address)
+        const formattedAddress = checksumAddress(resolverAddr)
+        if (shouldResolve && isCurrentResolution) fieldMutator(formattedAddress)
+      } catch (err) {
+        logError(Errors._101, err.message)
+      } finally {
+        setShouldResolve(false)
+      }
+    }
+    resolveDomain()
+
+    return () => {
+      // Effect is no longer current when address changes
+      isCurrentResolution = false
+    }
+  }, [shouldResolve, address, fieldMutator])
+
+  const adornment = shouldResolve
     ? {
         endAdornment: (
           <InputAdornment position="end">
