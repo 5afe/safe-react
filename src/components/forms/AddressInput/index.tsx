@@ -19,6 +19,7 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 import { useSelector } from 'react-redux'
 import { showShortNameSelector } from 'src/logic/appearance/selectors'
 import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
+import getNetworkPrefix from 'src/utils/getNetworkPrefix'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -35,7 +36,7 @@ export interface AddressInputProps {
   disabled?: boolean
   spellCheck?: boolean
   className?: string
-  value?: string
+  value: string
 }
 
 const AddressInput = ({
@@ -76,6 +77,7 @@ const AddressInput = ({
 
             fieldMutator(value)
           },
+          'data-testid': testId,
         }}
         placeholder={placeholder}
         testId={testId}
@@ -107,19 +109,20 @@ const AddressInput = ({
             if (isValidAddress(address)) {
               try {
                 checkedAddress = checksumAddress(address)
+                const prefix = getNetworkPrefix(prefixedAddress)
+
+                // checksum the address in the input
+                if (prefix) {
+                  setPrefixedAddress(`${prefix}:${checkedAddress}`)
+                } else {
+                  const containsTwoDots = prefixedAddress.includes(':')
+                  setPrefixedAddress(containsTwoDots ? `:${checkedAddress}` : checkedAddress)
+                }
               } catch (err) {
                 // ignore
               }
             }
             fieldMutator(checkedAddress)
-            // setPrefixedAddress(checkedAddress)
-          }
-
-          // needed to update the input when loads the value from a QR
-          const formHasMutatedTheField = newValue !== value
-
-          if (formHasMutatedTheField) {
-            setPrefixedAddress(newValue)
           }
         }}
       </OnChange>

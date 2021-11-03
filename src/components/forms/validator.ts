@@ -7,6 +7,7 @@ import { FEATURES } from 'src/config/networks/network.d'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { extractShortChainName } from 'src/routes/routes'
+import getNetworkPrefix from 'src/utils/getNetworkPrefix'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -99,14 +100,11 @@ export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
     return undefined
   }
 
-  const addressSplit = value.split(':')
-  const [prefix] = addressSplit
+  const prefix = getNetworkPrefix(value)
 
-  const hasPrefixDefined = addressSplit.length > 1
-  const isInValidPrefix = prefix !== extractShortChainName()
-  const showNetworkPrefixError = hasPrefixDefined && isInValidPrefix
+  const isInValidPrefix = prefix && prefix !== extractShortChainName()
 
-  return showNetworkPrefixError ? errorMessage : undefined
+  return isInValidPrefix ? errorMessage : undefined
 }
 
 export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {
