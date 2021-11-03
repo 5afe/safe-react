@@ -18,7 +18,7 @@ jest.spyOn(safeVersion, 'getSafeVersionInfo').mockImplementation(async () => ({
 
 const rinkebyNetworkId = '4'
 const validSafeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
-const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
+const invalidSafeAddress = 'this-is–a-invalid-safe-address-value'
 const validSafeENSNameDomain = 'testENSDomain.eth'
 
 describe('<LoadSafePage>', () => {
@@ -192,6 +192,20 @@ describe('<LoadSafePage>', () => {
       })
     })
 
+    it('Checksums valid addresses', async () => {
+      render(<LoadSafePage />)
+
+      fireEvent.click(screen.getByText('Continue'))
+
+      const safeAddressInputNode: HTMLInputElement = screen.getByTestId('load-safe-address-field')
+
+      await waitFor(() => {
+        fireEvent.change(safeAddressInputNode, { target: { value: '0X9913B9180C20C6B0F21B6480C84422F6EBC4B808' } })
+      })
+
+      expect(safeAddressInputNode.value).toBe('0x9913B9180C20C6b0F21B6480c84422F6ebc4B808')
+    })
+
     it('Shows an error if the Safe Address is an invalid Safe Address', () => {
       render(<LoadSafePage />)
 
@@ -199,7 +213,7 @@ describe('<LoadSafePage>', () => {
 
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
 
-      fireEvent.change(safeAddressInputNode, { target: { value: inValidSafeAddress } })
+      fireEvent.change(safeAddressInputNode, { target: { value: invalidSafeAddress } })
 
       expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(0)
 
@@ -208,7 +222,7 @@ describe('<LoadSafePage>', () => {
       expect(screen.getByText(errorText)).toBeInTheDocument()
     })
 
-    it('Shows an error if the Safe Address is not found', async () => {
+    it('Shows an error if the Safe with a given address is not found', async () => {
       // simulating a 404 error by returning a rejected promise
       mockedEndpoints.getSafeInfo.mockImplementation(() =>
         Promise.reject({
@@ -260,7 +274,7 @@ describe('<LoadSafePage>', () => {
       })
     })
 
-    it('Shows an error if it the ENS Name Domain is not registered', () => {
+    it('Shows an error if a given ENS name is not registered', () => {
       const notExistingENSNameDomain = 'notExistingENSDomain.eth'
 
       // we do not want annoying warnings in the console caused by our mock in getENSAddress
@@ -292,7 +306,7 @@ describe('<LoadSafePage>', () => {
       getENSAddressSpy.mockClear()
     })
 
-    it('Shows an error if a NO valid Safe Address is registered in the ENS Name Domain', async () => {
+    it('Shows an error if NO valid Safe Address is registered as an ENS name', async () => {
       // simulating a 404 error by returning a rejected promise
       mockedEndpoints.getSafeInfo.mockImplementation(() =>
         Promise.reject({
