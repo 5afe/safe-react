@@ -139,6 +139,20 @@ describe('<AddressInput>', () => {
       expect(screen.queryByText(invalidNetworkPrefixErrorMessage)).not.toBeInTheDocument()
     })
 
+    it('Keeps the two dots (:) char in the input value if no prefix is present', () => {
+      const addressWithoutTwoDots = ':0x680cde08860141F9D223cE4E620B10Cd6741037E'
+
+      renderAddressInputWithinForm()
+
+      fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: addressWithoutTwoDots } })
+
+      // Input value without network prefix
+      expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(addressWithoutTwoDots)
+
+      // no error is showed
+      expect(screen.queryByText(invalidNetworkPrefixErrorMessage)).not.toBeInTheDocument()
+    })
+
     it('Validates the network prefix even if its disabled in settings', () => {
       const customState = {
         appearance: {

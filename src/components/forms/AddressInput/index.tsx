@@ -115,6 +115,7 @@ const AddressInput = ({
                 if (prefix) {
                   setPrefixedAddress(`${prefix}:${checkedAddress}`)
                 } else {
+                  // this is needed to avoid remove the : char and no prefix is present
                   const containsTwoDots = prefixedAddress.includes(':')
                   setPrefixedAddress(containsTwoDots ? `:${checkedAddress}` : checkedAddress)
                 }
