@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Field, useFormState } from 'react-final-form'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -44,35 +44,27 @@ const AddressInput = ({
   const { values } = useFormState()
   const address = trimSpaces(values[name])
 
-  const isResolving = useRef<boolean>(false)
   const [showLoadingSpinner, setShowLoadingSpinner] = useState<boolean>(false)
-
-  useEffect(() => {
-    setShowLoadingSpinner(isResolving.current)
-  }, [isResolving.current])
 
   useEffect(() => {
     let isCurrentResolution = true
     const handleAddressInput = async () => {
-      // Kill previous loading spinners (triggered in above effect)
-      isResolving.current = false
-
       // A crypto domain name
       if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+        setShowLoadingSpinner(true)
         // Trigger resolution/loading spinner
         try {
-          isResolving.current = true
           const resolverAddr = await getAddressFromDomain(address)
           const formattedAddress = checksumAddress(resolverAddr)
 
           // Set field if current resolution in current effect
-          if (isResolving.current && isCurrentResolution) {
+          if (isCurrentResolution) {
             fieldMutator(formattedAddress)
           }
         } catch (err) {
           logError(Errors._101, err.message)
         } finally {
-          isResolving.current = false
+          setShowLoadingSpinner(false)
         }
       } else {
         // A regular address hash// A regular address hash
@@ -93,7 +85,7 @@ const AddressInput = ({
       // Effect is no longer current when address changes
       isCurrentResolution = false
     }
-  }, [address])
+  }, [address, fieldMutator])
 
   const adornment = showLoadingSpinner
     ? {
