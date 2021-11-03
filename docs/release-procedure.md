@@ -3,8 +3,14 @@
 We prepare at least one release every sprint. Sprints are two weeks long.
 
 ### Prepare a branch
-* A code-freeze branch named `release/X.Y.Z` is created
-* A commit that bumps the version in the `package.json` is made
+* Create a code-freeze branch named `release/X.Y.Z`
+* Bump the version in the `package.json`
+* Create a PR with the list of changes
+
+💡 To generate a quick changelog:
+```
+git log origin/main..origin/dev --pretty=format:'* %s'
+```
 
 ### QA
 * The QA team do regression testing on this branch
@@ -13,11 +19,12 @@ We prepare at least one release every sprint. Sprints are two weeks long.
 * `main` is automatically deployed to staging – some extra QA can be done there if needed
 
 ### Tag & release
-* A version tag must be created and pushed.
+* Create and push a new version tag :
 ```
-git tag v3.7.0
+git tag v3.15.0
 git push --tags
 ```
-* Devops are notified on Slack to deploy the tag to production
-* A [GitHub release](https://github.com/gnosis/safe-react/releases) is created
-* `main` is back-merged into the `dev` branch
+
+* Create a [GitHub release](https://github.com/gnosis/safe-react/releases) for this tag
+* Notify devops on Slack and send them the release link to deploy to production
+* Back-merge `main` into the `dev` branch to keep them in sync
