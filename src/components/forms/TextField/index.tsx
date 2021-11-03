@@ -45,7 +45,6 @@ type Props = {
   disabled?: boolean
   rowsMax?: number
   className?: string
-  readOnly?: boolean
 }
 
 const TextField = (props: Props): React.ReactElement => {
