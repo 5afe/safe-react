@@ -1,6 +1,5 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { Field } from 'react-final-form'
-import { OnChange } from 'react-final-form-listeners'
+import { ReactElement, useEffect, useRef, useState } from 'react'
+import { Field, useFormState } from 'react-final-form'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
@@ -42,17 +41,39 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): ReactElement => {
-  const [address, setAddress] = useState<string>('')
-  const [shouldResolve, setShouldResolve] = useState<boolean>(false)
+  const { values } = useFormState()
+  const address = trimSpaces(values[name])
+
+  const isResolving = useRef<boolean>(false)
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState<boolean>(false)
 
   useEffect(() => {
+    setShowLoadingSpinner(isResolving.current)
+  }, [isResolving.current])
+
+  useEffect(() => {
+    let isCurrentResolution = true
     const handleAddressInput = async () => {
-      setShouldResolve(false)
+      // Kill previous loading spinners (triggered in above effect)
+      isResolving.current = false
 
       // A crypto domain name
       if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
         // Trigger resolution/loading spinner
-        setShouldResolve(true)
+        try {
+          isResolving.current = true
+          const resolverAddr = await getAddressFromDomain(address)
+          const formattedAddress = checksumAddress(resolverAddr)
+
+          // Set field if current resolution in current effect
+          if (isResolving.current && isCurrentResolution) {
+            fieldMutator(formattedAddress)
+          }
+        } catch (err) {
+          logError(Errors._101, err.message)
+        } finally {
+          isResolving.current = false
+        }
       } else {
         // A regular address hash// A regular address hash
         let checkedAddress = address
@@ -67,35 +88,14 @@ const AddressInput = ({
       }
     }
     handleAddressInput()
-  }, [address])
-
-  // Closure scope means a side-effect is necessary
-  // https://stackoverflow.com/questions/62586245/how-to-update-react-usestate-without-delay
-  useEffect(() => {
-    if (!shouldResolve) return
-
-    let isCurrentResolution = true
-
-    const resolveDomain = async () => {
-      try {
-        const resolverAddr = await getAddressFromDomain(address)
-        const formattedAddress = checksumAddress(resolverAddr)
-        if (shouldResolve && isCurrentResolution) fieldMutator(formattedAddress)
-      } catch (err) {
-        logError(Errors._101, err.message)
-      } finally {
-        setShouldResolve(false)
-      }
-    }
-    resolveDomain()
 
     return () => {
       // Effect is no longer current when address changes
       isCurrentResolution = false
     }
-  }, [shouldResolve, address, fieldMutator])
+  }, [address])
 
-  const adornment = shouldResolve
+  const adornment = showLoadingSpinner
     ? {
         endAdornment: (
           <InputAdornment position="end">
@@ -104,24 +104,22 @@ const AddressInput = ({
         ),
       }
     : inputAdornment
+
   return (
-    <>
-      <Field
-        className={className}
-        component={TextField as any}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        inputAdornment={adornment}
-        name={name}
-        placeholder={placeholder}
-        testId={testId}
-        text={text}
-        type="text"
-        spellCheck={false}
-        validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
-      />
-      <OnChange name={name}>{(value: string) => setAddress(trimSpaces(value))}</OnChange>
-    </>
+    <Field
+      className={className}
+      component={TextField as any}
+      defaultValue={defaultValue}
+      disabled={disabled}
+      inputAdornment={adornment}
+      name={name}
+      placeholder={placeholder}
+      testId={testId}
+      text={text}
+      type="text"
+      spellCheck={false}
+      validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
+    />
   )
 }
 
