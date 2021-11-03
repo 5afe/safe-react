@@ -194,6 +194,7 @@ const BaseAddressBookInput = ({
           label={validationText ? validationText : label}
           InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}
           InputProps={{ ...params.InputProps, classes: inputStyles }}
+          inputProps={{ ...params.inputProps, 'data-testid': 'address-book-input' }}
         />
       )}
       getOptionLabel={({ address }) => address}
