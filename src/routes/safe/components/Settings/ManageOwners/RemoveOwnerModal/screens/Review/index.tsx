@@ -82,7 +82,10 @@ export const ReviewRemoveOwnerModal = ({
     const calculateRemoveOwnerData = async () => {
       try {
         const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-        const safeTx = await sdk.getRemoveOwnerTx({ ownerAddress: owner.address, threshold: +threshold })
+        const safeTx = await sdk.getRemoveOwnerTx(
+          { ownerAddress: owner.address, threshold: +threshold },
+          { safeTxGas: 0 },
+        )
         const txData = safeTx.data.data
 
         if (isCurrent) {

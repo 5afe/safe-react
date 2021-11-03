@@ -29,7 +29,10 @@ export const sendRemoveOwner = async (
   connectedWalletAddress: string,
 ): Promise<void> => {
   const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-  const safeTx = await sdk.getRemoveOwnerTx({ ownerAddress: ownerAddressToRemove, threshold: +values.threshold })
+  const safeTx = await sdk.getRemoveOwnerTx(
+    { ownerAddress: ownerAddressToRemove, threshold: +values.threshold },
+    { safeTxGas: 0 },
+  )
   const txData = safeTx.data.data
 
   dispatch(

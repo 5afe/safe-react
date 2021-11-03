@@ -32,7 +32,10 @@ export const sendAddOwner = async (
   connectedWalletAddress: string,
 ): Promise<void> => {
   const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-  const safeTx = await sdk.getAddOwnerTx({ ownerAddress: values.ownerAddress, threshold: +values.threshold })
+  const safeTx = await sdk.getAddOwnerTx(
+    { ownerAddress: values.ownerAddress, threshold: +values.threshold },
+    { safeTxGas: 0 },
+  )
   const txData = safeTx.data.data
 
   const txHash = await dispatch(

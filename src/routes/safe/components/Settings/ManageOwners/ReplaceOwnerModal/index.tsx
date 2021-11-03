@@ -33,7 +33,10 @@ export const sendReplaceOwner = async (
   connectedWalletAddress: string,
 ): Promise<void> => {
   const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-  const safeTx = await sdk.getSwapOwnerTx({ oldOwnerAddress: ownerAddressToRemove, newOwnerAddress: newOwner.address })
+  const safeTx = await sdk.getSwapOwnerTx(
+    { oldOwnerAddress: ownerAddressToRemove, newOwnerAddress: newOwner.address },
+    { safeTxGas: 0 },
+  )
   const txData = safeTx.data.data
 
   const txHash = await dispatch(
