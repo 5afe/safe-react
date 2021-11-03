@@ -19,6 +19,7 @@ const wallets = (): Wallet[] => {
       preferred: true,
       // as stated in the documentation, `infuraKey` is not mandatory if rpc is provided
       rpc: { [getNetworkId()]: rpcUrl },
+      networkId: parseInt(getNetworkId(), 10),
       desktop: true,
       bridge: 'https://safe-walletconnect.gnosis.io/',
     },
