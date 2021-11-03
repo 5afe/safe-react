@@ -10,9 +10,17 @@ type Props = {
 }
 
 const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
+const LEGACY_HOST_RE = /-?(rinkeby|xdai|arbitrum|ewc|volta|polygon|bsc)(?=\.)/
 
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
-  const { pathname, hash, search } = window.location
+  const { href, host, pathname, hash, search } = window.location
+
+  // Redirect https://xdai.gnosis-safe.io to https://gnosis-safe.io
+  if (LEGACY_HOST_RE.test(host)) {
+    const newUrl = href.replace(LEGACY_HOST_RE, '')
+    window.location.replace(newUrl)
+    return null
+  }
 
   const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
 
