@@ -1,4 +1,4 @@
-import { ReactElement, useRef } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -43,6 +43,53 @@ const AddressInput = ({
   disabled,
 }: AddressInputProps): ReactElement => {
   const isResolving = useRef<boolean>(false)
+  const [address, setAddress] = useState<string>('')
+
+  useEffect(() => {
+    let isCurrentResolution = true
+
+    const handleAddressInput = async () => {
+      isResolving.current = false
+
+      // A crypto domain name
+      if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+        try {
+          // Trigger loading spinner
+          isResolving.current = true
+
+          const resolverAddr = await getAddressFromDomain(address)
+          const formattedAddress = checksumAddress(resolverAddr)
+
+          // If resolving current address/current effect not cleaned up
+          if (isResolving.current && isCurrentResolution) fieldMutator(formattedAddress)
+        } catch (err) {
+          logError(Errors._101, err.message)
+        } finally {
+          isResolving.current = false
+        }
+      } else {
+        // A regular address hash
+        let checkedAddress = address
+
+        // Automatically checksum valid (either already checksummed, or lowercase addresses)
+        if (isValidAddress(address)) {
+          try {
+            checkedAddress = checksumAddress(address)
+          } catch (err) {
+            // Ignore
+          }
+        }
+        fieldMutator(checkedAddress)
+      }
+    }
+
+    handleAddressInput()
+
+    // Effect is no longer current when address changes
+    return () => {
+      isCurrentResolution = false
+    }
+  }, [address])
 
   const adornment = isResolving.current
     ? {
@@ -69,38 +116,7 @@ const AddressInput = ({
         spellCheck={false}
         validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
       />
-      <OnChange name={name}>
-        {async (value: string) => {
-          isResolving.current = false
-
-          const address = trimSpaces(value)
-          // A crypto domain name
-          if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-            try {
-              isResolving.current = true
-              const resolverAddr = await getAddressFromDomain(address)
-              const formattedAddress = checksumAddress(resolverAddr)
-              if (isResolving.current) fieldMutator(formattedAddress)
-            } catch (err) {
-              logError(Errors._101, err.message)
-            } finally {
-              isResolving.current = false
-            }
-          } else {
-            // A regular address hash
-            let checkedAddress = address
-            // Automatically checksum valid (either already checksummed, or lowercase addresses)
-            if (isValidAddress(address)) {
-              try {
-                checkedAddress = checksumAddress(address)
-              } catch (err) {
-                // ignore
-              }
-            }
-            fieldMutator(checkedAddress)
-          }
-        }}
-      </OnChange>
+      <OnChange name={name}>{(value: string) => setAddress(trimSpaces(value))}</OnChange>
     </>
   )
 }
