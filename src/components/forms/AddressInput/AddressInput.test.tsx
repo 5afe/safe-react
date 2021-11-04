@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Form } from 'react-final-form'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import addNetworkPrefix from 'src/utils/addNetworkPrefix'
 
 import { render, screen, fireEvent, waitFor } from 'src/utils/test-utils'
 import AddressInput from '.'
@@ -36,7 +37,7 @@ describe('<AddressInput>', () => {
     await waitFor(() => {
       const inputNode = screen.getByTestId(fieldTestId) as HTMLInputElement
       // ENS resolved with the valid address
-      expect(inputNode.value).toBe(address)
+      expect(inputNode.value).toBe(addNetworkPrefix(address))
 
       getENSAddressSpy.mockClear()
     })
@@ -132,7 +133,52 @@ describe('<AddressInput>', () => {
       // address without prefix
       fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: addressWithoutPrefix } })
 
-      // Input value without network prefix
+      // Input value with network prefix
+      expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(addNetworkPrefix(addressWithoutPrefix))
+
+      // no error is showed
+      expect(screen.queryByText(invalidNetworkPrefixErrorMessage)).not.toBeInTheDocument()
+    })
+
+    it('Prefix network is not added to the given address if its disabled in settings', () => {
+      const customState = {
+        appearance: {
+          copyShortName: false,
+          showShortName: false,
+        },
+      }
+      const onSubmit = jest.fn()
+      const addressWithoutPrefix = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+
+      renderAddressInputWithinForm(onSubmit, customState)
+
+      // address without prefix
+      fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: addressWithoutPrefix } })
+
+      // Input value with network prefix
+      expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(addressWithoutPrefix)
+
+      // no error is showed
+      expect(screen.queryByText(invalidNetworkPrefixErrorMessage)).not.toBeInTheDocument()
+    })
+
+    it('Removes prefix network from the address if its disabled in settings', () => {
+      const customState = {
+        appearance: {
+          copyShortName: false,
+          showShortName: false,
+        },
+      }
+      const onSubmit = jest.fn()
+      const addressWithPrefix = 'rin:0x680cde08860141F9D223cE4E620B10Cd6741037E'
+      const addressWithoutPrefix = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+
+      renderAddressInputWithinForm(onSubmit, customState)
+
+      // address without prefix
+      fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: addressWithPrefix } })
+
+      // Input value with network prefix
       expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(addressWithoutPrefix)
 
       // no error is showed
@@ -177,10 +223,10 @@ describe('<AddressInput>', () => {
 
     it('Resolver ENS names even if a network prefix error is present', async () => {
       const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
-      const addressWithOutPrefix = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+      const addressFromENS = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
       const ENSNameAddress = 'test.eth'
       // mock getAddress fn to return the Address
-      getENSAddressSpy.mockImplementation(() => new Promise((resolve) => resolve(addressWithOutPrefix)))
+      getENSAddressSpy.mockImplementation(() => new Promise((resolve) => resolve(addressFromENS)))
 
       renderAddressInputWithinForm()
 
@@ -196,7 +242,7 @@ describe('<AddressInput>', () => {
       await waitFor(() => {
         const inputNode = screen.getByTestId(fieldTestId) as HTMLInputElement
         // ENS resolved with the valid address and prefix
-        expect(inputNode.value).toBe(addressWithOutPrefix)
+        expect(inputNode.value).toBe(addNetworkPrefix(addressFromENS))
 
         // no error is present
         expect(screen.queryByText(invalidNetworkPrefixErrorMessage)).not.toBeInTheDocument()
@@ -214,7 +260,7 @@ describe('<AddressInput>', () => {
         fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: rawAddress } })
 
         // input value with checksum address
-        expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(checksumAddress)
+        expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(addNetworkPrefix(checksumAddress))
       })
 
       it('Checksum valid address with prefix', () => {

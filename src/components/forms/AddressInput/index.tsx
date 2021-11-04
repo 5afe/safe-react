@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux'
 import { showShortNameSelector } from 'src/logic/appearance/selectors'
 import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 import getNetworkPrefix from 'src/utils/getNetworkPrefix'
+import addNetworkPrefix from 'src/utils/addNetworkPrefix'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -52,9 +53,9 @@ const AddressInput = ({
   value = '',
   disabled,
 }: AddressInputProps): React.ReactElement => {
-  const [prefixedAddress, setPrefixedAddress] = React.useState(value)
-  const [prefixedError, setPrefixedError] = React.useState(false)
   const showNetworkPrefix = useSelector(showShortNameSelector)
+  const [prefixedAddress, setPrefixedAddress] = React.useState(() => addNetworkPrefix(value, showNetworkPrefix))
+  const [prefixedError, setPrefixedError] = React.useState(false)
 
   return (
     <>
@@ -98,7 +99,7 @@ const AddressInput = ({
               const resolverAddr = await getAddressFromDomain(address)
               const formattedAddress = checksumAddress(resolverAddr)
               fieldMutator(formattedAddress)
-              setPrefixedAddress(formattedAddress)
+              setPrefixedAddress(addNetworkPrefix(formattedAddress, showNetworkPrefix))
             } catch (err) {
               logError(Errors._101, err.message)
             }
@@ -113,11 +114,13 @@ const AddressInput = ({
 
                 // checksum the address in the input
                 if (prefix) {
-                  setPrefixedAddress(`${prefix}:${checkedAddress}`)
+                  setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, prefix))
                 } else {
                   // this is needed to avoid remove the : char and no prefix is present
                   const containsTwoDots = prefixedAddress.includes(':')
-                  setPrefixedAddress(containsTwoDots ? `:${checkedAddress}` : checkedAddress)
+                  setPrefixedAddress(
+                    containsTwoDots ? `:${checkedAddress}` : addNetworkPrefix(checkedAddress, showNetworkPrefix),
+                  )
                 }
               } catch (err) {
                 // ignore

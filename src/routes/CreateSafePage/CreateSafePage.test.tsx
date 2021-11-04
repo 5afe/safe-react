@@ -12,6 +12,7 @@ import CreateSafePage from './CreateSafePage'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import * as ethTransactions from 'src/logic/wallets/ethTransactions'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
+import addNetworkPrefix from 'src/utils/addNetworkPrefix'
 
 const mockedDateValue = 1487076708000
 const DateSpy = jest.spyOn(global.Date, 'now')
@@ -266,8 +267,12 @@ describe('<CreateSafePage>', () => {
   })
 
   describe('Step 3: Owners and Confirmations', () => {
-    it('Shows user Account as a default owner', async () => {
+    it('Shows user Account as a default owner with network prefix if its enabled in settings', async () => {
       const customState = {
+        appearance: {
+          copyShortName: true,
+          showShortName: true,
+        },
         providers: {
           name: 'MetaMask',
           loaded: true,
@@ -288,9 +293,39 @@ describe('<CreateSafePage>', () => {
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
 
-      const userAccount = customState.providers.account
+      const userAccountWithNetworkPrefix = addNetworkPrefix(customState.providers.account)
       const defaultOwner = screen.getByTestId('owner-address-0') as HTMLInputElement
-      expect(defaultOwner.value).toBe(userAccount)
+      expect(defaultOwner.value).toBe(userAccountWithNetworkPrefix)
+    })
+
+    it('Shows user Account as a default owner without network prefix if its disabled in settings', async () => {
+      const customState = {
+        appearance: {
+          copyShortName: false,
+          showShortName: false,
+        },
+        providers: {
+          name: 'MetaMask',
+          loaded: true,
+          available: true,
+          account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+          network: '4',
+          smartContractWallet: false,
+          hardwareWallet: false,
+        },
+      }
+
+      render(<CreateSafePage />, customState)
+      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+
+      fireEvent.click(screen.getByText('Continue'))
+      await waitFor(() => expect(screen.getByTestId('create-safe-owners-confirmation-step')).toBeInTheDocument())
+
+      const defaultOwner = screen.getByTestId('owner-address-0') as HTMLInputElement
+      expect(defaultOwner.value).toBe(customState.providers.account)
     })
 
     it('Shows an error if a owner address field is empty', async () => {
@@ -448,7 +483,7 @@ describe('<CreateSafePage>', () => {
       fireEvent.change(defaultOwnerInput, { target: { value: validENSNameDomain } })
 
       await waitFor(() => {
-        expect(defaultOwnerInput.value).toBe(secondOwnerAddress)
+        expect(defaultOwnerInput.value).toBe(addNetworkPrefix(secondOwnerAddress))
         getENSAddressSpy.mockClear()
       })
     })
