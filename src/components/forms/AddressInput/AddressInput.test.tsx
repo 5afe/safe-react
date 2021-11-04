@@ -213,7 +213,7 @@ describe('<AddressInput>', () => {
 
         fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: rawAddress } })
 
-        // input value with the network prefix
+        // input value with checksum address
         expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(checksumAddress)
       })
 
@@ -225,7 +225,7 @@ describe('<AddressInput>', () => {
 
         fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: rawAddressWithPrefix } })
 
-        // input value with the network prefix
+        // input value with the network prefix and checksum address
         expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(checksumAddressWithPrefix)
       })
 
