@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { Field, useFormState } from 'react-final-form'
-import CircularProgress from '@material-ui/core/CircularProgress'
+// import CircularProgress from '@material-ui/core/CircularProgress'
 
 import TextField from 'src/components/forms/TextField'
 import { Validator, composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
@@ -88,7 +88,7 @@ const AddressInput = ({
 
   const adornment = showLoadingSpinner
     ? {
-        endAdornment: <CircularProgress size="16px" />,
+        endAdornment: null, //<CircularProgress size="16px" />,
       }
     : inputAdornment
 
