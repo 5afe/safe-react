@@ -6,6 +6,33 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>Gnosis Safe</title>
+
+    <script>
+      // Redirect https://<chain>.gnosis-safe.io to https://gnosis-safe.io
+      (function () {
+        const SHORT_NAMES = {
+          arbitrum: 'arb1',
+          bsc: 'bnb',
+          ewc: 'ewt',
+          polygon: 'matic',
+          rinkeby: 'rin',
+          volta: 'vt',
+          xdai: 'xdai'
+        };
+        const host = window.location.host;
+        const chain = Object.keys(SHORT_NAMES).find(function (key) {
+          return host.includes(key);
+        });
+        if (chain) {
+          const newUrl = window.location.href
+            .replace(`safe-team-${chain}`, 'safe-team') // staging
+            .replace(`${chain}\.gnosis-safe\.io`, 'gnosis-safe.io') // prod
+            .replace('#/safes/', `${SHORT_NAMES[chain]}:`) // EIP-3770 prefix
+            .replace('#/', `${chain}/`); // old-style chain in the path
+          window.location.replace(newUrl);
+        }
+      }())
+    </script>
   </head>
   <style>
     .safe-preloader-animation {
