@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { Field, useFormState } from 'react-final-form'
-import InputAdornment from '@material-ui/core/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import TextField from 'src/components/forms/TextField'
@@ -89,11 +88,7 @@ const AddressInput = ({
 
   const adornment = showLoadingSpinner
     ? {
-        endAdornment: (
-          <InputAdornment position="end">
-            <CircularProgress size="16px" />
-          </InputAdornment>
-        ),
+        endAdornment: <CircularProgress size="16px" />,
       }
     : inputAdornment
 
