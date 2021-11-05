@@ -50,6 +50,7 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
   const closeDecodedTxDetail = () => {
     hideDecodedTxData()
     props.onClose()
+    props.onTxReject(props.requestId)
   }
 
   if (invalidTransactions) {
