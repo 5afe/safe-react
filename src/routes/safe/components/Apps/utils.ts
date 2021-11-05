@@ -38,10 +38,10 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `description` exists
   !!appInfo.description
 
-export const getEmptySafeApp = (): SafeApp => {
+export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
     id: Math.random().toString(),
-    url: '',
+    url,
     name: 'unknown',
     iconUrl: appsIconSvg,
     description: '',
