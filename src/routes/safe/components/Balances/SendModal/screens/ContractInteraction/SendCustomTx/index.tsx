@@ -76,9 +76,9 @@ const SendCustomTx = ({
       const submitValues = { ...values }
 
       if (!values.contractAddress) {
-        submitValues.contractAddress = values.address?.address
+        submitValues.contractAddress = values.contractAddress?.address
       }
-      submitValues.contractName = values.address?.name
+      submitValues.contractName = values.contractAddress?.name
 
       onNext(submitValues, submit)
     }
