@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer'
 import { SafeList } from './SafeList'
 import useSidebarStyles from './style'
 import Hairline from 'src/components/layout/Hairline'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import AddSafeButton from 'src/components/SafeListSidebar/AddSafeButton'
 
 export const SafeListSidebarContext = createContext({
@@ -24,7 +24,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
 
   const toggleSidebar = () => {
     if (!isOpen) {
-      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Safe List Sidebar' })
+      trackEvent(SAFE_EVENTS.SIDEBAR)
     }
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
