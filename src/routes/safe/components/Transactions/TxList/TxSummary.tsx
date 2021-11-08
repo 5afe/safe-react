@@ -7,16 +7,21 @@ import { formatDateTime } from 'src/utils/date'
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
+import TxShareButton from './TxShareButton'
 
-export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement => {
+type Props = { txDetails: ExpandedTxDetails }
+
+export const TxSummary = ({ txDetails }: Props): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData } = txDetails
   const explorerUrl = txHash ? getExplorerInfo(txHash) : null
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
   const safeTxHash = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.safeTxHash : undefined
+  const hasSafeTxHash = safeTxHash !== undefined
 
   return (
     <>
+      <div style={{ float: 'right' }}>{hasSafeTxHash && <TxShareButton safeTxHash={safeTxHash} />}</div>
       <div className="tx-hash">
         <Text size="xl" strong as="span">
           Transaction hash:{' '}
@@ -29,7 +34,7 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
           </Text>
         )}
       </div>
-      {safeTxHash !== undefined && (
+      {hasSafeTxHash && (
         <div className="tx-hash">
           <Text size="xl" strong as="span">
             SafeTxHash:{' '}

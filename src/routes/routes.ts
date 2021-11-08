@@ -12,7 +12,10 @@ export const history = createBrowserHistory({
 })
 
 // Safe specific routes
-const chainSpecificSafeAddressPathRegExp = '[a-z0-9-]{2,}:0x[0-9A-Fa-f]{40}'
+const hashRegExp = '0x[0-9A-Fa-f]'
+
+const txHashPathRegExp = `${hashRegExp}{64}`
+const chainSpecificSafeAddressPathRegExp = `[a-z0-9-]{2,}:${hashRegExp}{40}`
 
 export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
 export const ADDRESSED_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
@@ -25,11 +28,14 @@ export const SAFE_SECTION_ROUTE = `${ADDRESSED_ROUTE}/:${SAFE_SECTION_SLUG}`
 export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
 export const SAFE_SUBSECTION_ROUTE = `${SAFE_SECTION_ROUTE}/:${SAFE_SUBSECTION_SLUG}`
 
+export const TRANSACTION_HASH_SLUG = `txHash`
+
 // URL: gnosis-safe.io/app/:[SAFE_ADDRESS_SLUG]/:[SAFE_SECTION_SLUG]/:[SAFE_SUBSECTION_SLUG]
 export type SafeRouteSlugs = {
   [SAFE_ADDRESS_SLUG]?: string
   [SAFE_SECTION_SLUG]?: string
   [SAFE_SUBSECTION_SLUG]?: string
+  [TRANSACTION_HASH_SLUG]?: string
 }
 
 export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
@@ -44,7 +50,7 @@ export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By prov
 export const SAFE_ROUTES = {
   ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
   ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
-  TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
+  TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_HASH_SLUG}(${txHashPathRegExp})?`, // [TRANSACTION_HASH_SLUG] === 'txHash', optional hash
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
