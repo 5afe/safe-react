@@ -83,6 +83,8 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
         subscription={{ submitting: true, pristine: true, values: true }}
       >
         {(submitting, validating, rest, mutators) => {
+          const handleClickSendMax = () => mutators.setMax(ethBalance)
+          const handleToggleAbi = () => saveForm(rest.values)
           return (
             <>
               <Block className={classes.formContainer}>
@@ -98,7 +100,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       Value
                     </Paragraph>
-                    <ButtonLink onClick={() => mutators.setMax(ethBalance)} weight="bold">
+                    <ButtonLink onClick={handleClickSendMax} weight="bold">
                       Send max
                     </ButtonLink>
                   </Col>
@@ -130,7 +132,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                   </Col>
                 </Row>
                 <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
-                  <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
+                  <Switch checked={!isABI} onChange={handleToggleAbi} />
                   Use custom data (hex encoded)
                 </Paragraph>
               </Block>
