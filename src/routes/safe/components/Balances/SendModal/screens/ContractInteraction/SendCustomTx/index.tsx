@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -43,28 +43,14 @@ type Props = {
   onNext: (tx: CreatedTx, submit: boolean) => void
   isABI: boolean
   switchMethod: () => void
-  contractAddress?: string
 }
 
 const useStyles = makeStyles(styles)
 
-const SendCustomTx = ({
-  contractAddress,
-  initialValues,
-  isABI,
-  onClose,
-  onNext,
-  switchMethod,
-}: Props): ReactElement => {
+const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: Props): ReactElement => {
   const classes = useStyles()
   const { nativeCoin } = getNetworkInfo()
   const ethBalance = useSelector(currentSafeEthBalance)
-
-  useMemo(() => {
-    if (contractAddress) {
-      initialValues.contractAddress = contractAddress
-    }
-  }, [contractAddress, initialValues])
 
   const saveForm = async (values) => {
     await handleSubmit(values, false)

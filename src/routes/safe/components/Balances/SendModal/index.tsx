@@ -175,7 +175,6 @@ const SendModal = ({
 
         {activeScreen === 'contractInteraction' && !isABI && (
           <SendCustomTx
-            contractAddress={recipient}
             initialValues={tx as CustomTxProps}
             isABI={isABI}
             onClose={onClose}
