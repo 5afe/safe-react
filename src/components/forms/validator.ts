@@ -102,9 +102,9 @@ export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
 
   const prefix = getNetworkPrefix(value)
 
-  const isInValidPrefix = prefix && prefix !== extractShortChainName()
+  const isInvalidPrefix = prefix && prefix !== extractShortChainName()
 
-  return isInValidPrefix ? errorMessage : undefined
+  return isInvalidPrefix ? errorMessage : undefined
 }
 
 export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {

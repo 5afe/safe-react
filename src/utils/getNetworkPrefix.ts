@@ -1,7 +1,7 @@
 function getNetworkPrefix(address = ''): string {
-  const splittedAddress = address.split(':')
-  const [prefix] = splittedAddress
-  const hasPrefixDefined = splittedAddress.length > 1
+  const splitAddress = address.split(':')
+  const [prefix] = splitAddress
+  const hasPrefixDefined = splitAddress.length > 1
   return hasPrefixDefined ? prefix : ''
 }
 

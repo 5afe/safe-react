@@ -21,6 +21,7 @@ import { showShortNameSelector } from 'src/logic/appearance/selectors'
 import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 import getNetworkPrefix from 'src/utils/getNetworkPrefix'
 import addNetworkPrefix from 'src/utils/addNetworkPrefix'
+import { getCurrentShortChainName } from 'src/config'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -109,18 +110,16 @@ const AddressInput = ({
             // Automatically checksum valid (either already checksummed, or lowercase addresses)
             if (isValidAddress(address)) {
               try {
+                // checksum the address in the input
                 checkedAddress = checksumAddress(address)
                 const prefix = getNetworkPrefix(prefixedAddress)
+                const isPrefixed = prefix || prefixedAddress.includes(':')
 
-                // checksum the address in the input
-                if (prefix) {
+                // we set the correct network prefix in the state
+                if (isPrefixed) {
                   setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, prefix))
                 } else {
-                  // this is needed to avoid remove the : char and no prefix is present
-                  const containsTwoDots = prefixedAddress.includes(':')
-                  setPrefixedAddress(
-                    containsTwoDots ? `:${checkedAddress}` : addNetworkPrefix(checkedAddress, showNetworkPrefix),
-                  )
+                  setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, getCurrentShortChainName()))
                 }
               } catch (err) {
                 // ignore
