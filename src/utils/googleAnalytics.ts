@@ -54,11 +54,11 @@ const SAFE_APP_EVENT = 'Safe App'
 export const SAFE_APP_EVENTS: Record<string, EventArgs> = {
   PIN: {
     category: SAFE_APP_EVENT,
-    action: 'unpin',
+    action: 'Unpin',
   },
   UNPIN: {
     category: SAFE_APP_EVENT,
-    action: 'pin',
+    action: 'Pin',
   },
 }
 
