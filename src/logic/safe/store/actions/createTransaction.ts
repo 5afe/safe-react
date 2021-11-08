@@ -205,7 +205,9 @@ export const createTransaction =
         data: executeDataUsedSignatures,
       })
 
-      logError(Errors._803, contractErrorMessage)
+      if (contractErrorMessage) {
+        logError(Errors._803, contractErrorMessage)
+      }
 
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG

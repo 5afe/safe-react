@@ -49,7 +49,7 @@ const Routes = (): React.ReactElement => {
     trackPage(pathname + location.search)
 
     // Track when pathname changes
-  }, [location.pathname, trackPage])
+  }, [location.pathname, location.search, trackPage])
 
   return (
     <Switch>

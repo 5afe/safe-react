@@ -20,10 +20,8 @@ export const getContractErrorMessage = async ({
   safeInstance: GnosisSafe
   from: string
   data: string
-}): Promise<string> => {
+}): Promise<string | null> => {
   const web3 = getWeb3()
-
-  let contractError: string
 
   try {
     const returnData = await web3.eth.call({
@@ -34,10 +32,12 @@ export const getContractErrorMessage = async ({
     })
 
     const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
-    contractError = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
+
+    // Will throw if there was an error
+    abi.rawDecode(['string'], returnBuffer.slice(4))[0]
   } catch (e) {
-    contractError = e.message
+    return decodeContractError(e.message)
   }
 
-  return decodeContractError(contractError)
+  return null
 }

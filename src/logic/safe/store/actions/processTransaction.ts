@@ -222,7 +222,9 @@ export const processTransaction =
         data: executeData,
       })
 
-      logError(Errors._804, contractErrorMessage)
+      if (contractErrorMessage) {
+        logError(Errors._804, contractErrorMessage)
+      }
 
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
