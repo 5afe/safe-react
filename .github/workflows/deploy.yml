@@ -15,7 +15,7 @@ on:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  STAGING_BUCKET_NAME: ${{ secrets.STAGING_MAINNET_BUCKET_NAME }}
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
@@ -74,7 +74,12 @@ jobs:
         run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
         if: github.ref != 'refs/heads/main'
 
-      # Set production flag
+      # Set production flag on staging
+      - name: Set production flag for staging
+        run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
+        if: github.ref == 'refs/heads/main'
+
+      # Set production flag on prod
       - name: Set production flag for release PR or tagged build
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'main'
