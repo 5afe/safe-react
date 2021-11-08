@@ -160,12 +160,12 @@ const SendModal = ({
 
         {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction
-            isABI={isABI}
-            switchMethod={handleSwitchMethod}
             contractAddress={recipient}
             initialValues={tx as ContractInteractionTx}
+            isABI={isABI}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
+            switchMethod={handleSwitchMethod}
           />
         )}
 
@@ -175,12 +175,12 @@ const SendModal = ({
 
         {activeScreen === 'contractInteraction' && !isABI && (
           <SendCustomTx
+            contractAddress={recipient}
             initialValues={tx as CustomTxProps}
             isABI={isABI}
-            switchMethod={handleSwitchMethod}
             onClose={onClose}
             onNext={handleCustomTxCreation}
-            contractAddress={recipient}
+            switchMethod={handleSwitchMethod}
           />
         )}
 
