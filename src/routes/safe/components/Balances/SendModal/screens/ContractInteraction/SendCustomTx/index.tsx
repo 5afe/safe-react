@@ -71,16 +71,9 @@ const SendCustomTx = ({
     switchMethod()
   }
 
-  const handleSubmit = (values: any, submit = true) => {
-    if (values.data || values.value) {
-      const submitValues = { ...values }
-
-      if (!values.contractAddress) {
-        submitValues.contractAddress = values.contractAddress?.address
-      }
-      submitValues.contractName = values.contractAddress?.name
-
-      onNext(submitValues, submit)
+  const handleSubmit = ({ contractAddress, data, value, ...values }, submit = true) => {
+    if (data || value) {
+      onNext({ ...values, contractAddress, data, value }, submit)
     }
   }
 
