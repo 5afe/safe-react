@@ -250,6 +250,21 @@ describe('<AddressInput>', () => {
       })
     })
 
+    it('Validates unsupported shortNames', () => {
+      const unsupportedPrefixedAddress = 'xxxx:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+
+      renderAddressInputWithinForm()
+
+      // invalid address network prefix
+      fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: unsupportedPrefixedAddress } })
+
+      // input value with the network prefix
+      expect((screen.getByTestId(fieldTestId) as HTMLInputElement).value).toBe(unsupportedPrefixedAddress)
+
+      // show prefix error
+      expect(screen.queryByText('Unsupported network prefix')).toBeInTheDocument()
+    })
+
     describe('Checksum address', () => {
       it('Checksum address', () => {
         const rawAddress = '0X9913B9180C20C6B0F21B6480C84422F6EBC4B808'

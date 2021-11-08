@@ -6,7 +6,7 @@ import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
-import { extractShortChainName } from 'src/routes/routes'
+import { extractShortChainName, isValidShortChainName } from 'src/routes/routes'
 import getNetworkPrefix from 'src/utils/getNetworkPrefix'
 
 type ValidatorReturnType = string | undefined
@@ -94,13 +94,15 @@ export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnT
 })
 
 export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
-  const errorMessage = "The current network doesn't match the given address"
-
   if (!value) {
     return undefined
   }
 
   const prefix = getNetworkPrefix(value)
+
+  const errorMessage = isValidShortChainName(prefix)
+    ? "The current network doesn't match the given address"
+    : 'Unsupported network prefix'
 
   const isInvalidPrefix = prefix && prefix !== extractShortChainName()
 
