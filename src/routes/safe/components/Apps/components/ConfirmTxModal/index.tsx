@@ -47,10 +47,14 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
   const showDecodedTxData = setDecodedTxDetails
   const hideDecodedTxData = () => setDecodedTxDetails(undefined)
 
-  const closeDecodedTxDetail = () => {
-    hideDecodedTxData()
+  const rejectTransaction = () => {
     props.onClose()
     props.onTxReject(props.requestId)
+  }
+
+  const closeDecodedTxDetail = () => {
+    hideDecodedTxData()
+    rejectTransaction()
   }
 
   if (invalidTransactions) {
@@ -71,7 +75,12 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
         />
       )}
 
-      <ReviewConfirm {...props} showDecodedTxData={showDecodedTxData} hidden={!!decodedTxDetails} />
+      <ReviewConfirm
+        {...props}
+        onReject={rejectTransaction}
+        showDecodedTxData={showDecodedTxData}
+        hidden={!!decodedTxDetails}
+      />
     </Modal>
   )
 }
