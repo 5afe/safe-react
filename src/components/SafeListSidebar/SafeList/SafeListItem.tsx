@@ -1,4 +1,4 @@
-import { EthHashInfo, Text, Icon } from '@gnosis.pm/safe-react-components'
+import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import { useEffect, useRef, ReactElement } from 'react'
 import { useHistory } from 'react-router'
 import ListItem from '@material-ui/core/ListItem/ListItem'
@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import Link from 'src/components/layout/Link'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
@@ -77,7 +78,7 @@ const SafeListItem = ({
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
-      <EthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
+      <PrefixedEthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
