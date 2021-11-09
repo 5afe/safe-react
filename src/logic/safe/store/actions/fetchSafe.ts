@@ -70,11 +70,11 @@ export const fetchSafe =
     let safeInfo: Partial<SafeRecordProps> = {}
     let remoteSafeInfo: SafeInfo | null = null
 
-    // if there's no remote info, we keep what's in memory
     try {
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
+      return
     }
 
     // remote (client-gateway)
