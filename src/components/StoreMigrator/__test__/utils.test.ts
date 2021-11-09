@@ -54,7 +54,7 @@ describe('getNetworksToMigrate', () => {
     })
 
     const networks = migrationUtils.getNetworksToMigrate()
-    expect(networks).toEqual(['polygon', 'bsc', 'rinkeby', 'xdai', 'ewc', 'volta'])
+    expect(networks).toEqual(['arbitrum', 'bsc', 'ewc', 'polygon', 'rinkeby', 'volta', 'xdai'])
   })
 
   it('returns non-migrated networks', () => {
@@ -64,13 +64,15 @@ describe('getNetworksToMigrate', () => {
     })
 
     const networks = migrationUtils.getNetworksToMigrate()
-    expect(networks).toEqual(['polygon', 'xdai', 'ewc', 'volta'])
+    expect(networks).toEqual(['arbitrum', 'ewc', 'polygon', 'volta', 'xdai'])
   })
 
   it('returns an empty array when all networks are migrated', () => {
     Object.defineProperty(window, 'localStorage', {
       writable: true,
-      value: { getItem: jest.fn(() => JSON.stringify(['polygon', 'bsc', 'rinkeby', 'xdai', 'ewc', 'volta'])) },
+      value: {
+        getItem: jest.fn(() => JSON.stringify(['arbitrum', 'bsc', 'polygon', 'rinkeby', 'xdai', 'ewc', 'volta'])),
+      },
     })
 
     const networks = migrationUtils.getNetworksToMigrate()

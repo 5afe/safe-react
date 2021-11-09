@@ -1,6 +1,7 @@
-import * as React from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import { Field } from 'react-final-form'
-import { OnChange } from 'react-final-form-listeners'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import TextField from 'src/components/forms/TextField'
 import {
@@ -31,7 +32,7 @@ export interface AddressInputProps {
   name?: string
   text?: string
   placeholder?: string
-  inputAdornment?: { endAdornment: React.ReactElement } | undefined | false
+  inputAdornment?: { endAdornment: ReactElement } | undefined | false
   testId: string
   validators?: Validator[]
   defaultValue?: string
@@ -53,83 +54,103 @@ const AddressInput = ({
   defaultValue,
   value = '',
   disabled,
-}: AddressInputProps): React.ReactElement => {
+}: AddressInputProps): ReactElement => {
   const showNetworkPrefix = useSelector(showShortNameSelector)
-  const [prefixedAddress, setPrefixedAddress] = React.useState(() => addNetworkPrefix(value, showNetworkPrefix))
-  const [prefixedError, setPrefixedError] = React.useState(false)
+  const [prefixedAddress, setPrefixedAddress] = useState(() => addNetworkPrefix(value, showNetworkPrefix))
+  const [prefixedError, setPrefixedError] = useState(false)
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState<boolean>(false)
+
+  useEffect(() => {
+    let isCurrentResolution = true
+    const handleAddressInput = async () => {
+      const trimmedValue = trimSpaces(value)
+      const address = prefixedError ? trimmedValue : getAddressWithoutNetworkPrefix(trimmedValue)
+
+      // A crypto domain name
+      if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+        try {
+          setShowLoadingSpinner(true)
+          const resolverAddr = await getAddressFromDomain(address)
+          const formattedAddress = checksumAddress(resolverAddr)
+          if (isCurrentResolution) {
+            fieldMutator(formattedAddress)
+            setPrefixedAddress(addNetworkPrefix(formattedAddress, showNetworkPrefix))
+          }
+        } catch (err) {
+          logError(Errors._101, err.message)
+        } finally {
+          setShowLoadingSpinner(false)
+        }
+      } else {
+        // A regular address hash
+        let checkedAddress = address
+        // Automatically checksum valid (either already checksummed, or lowercase addresses)
+        if (isValidAddress(address)) {
+          try {
+            // checksum the address in the input
+            checkedAddress = checksumAddress(address)
+            const prefix = getNetworkPrefix(prefixedAddress)
+            const isPrefixed = prefix || prefixedAddress.includes(':')
+
+            // we set the correct network prefix in the component state
+            if (isPrefixed) {
+              setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, prefix))
+            } else {
+              setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, getCurrentShortChainName()))
+            }
+          } catch (err) {
+            // ignore
+          }
+        }
+        fieldMutator(checkedAddress)
+      }
+    }
+    handleAddressInput()
+    return () => {
+      // Effect is no longer current when address changes
+      isCurrentResolution = false
+    }
+  }, [value, fieldMutator, prefixedAddress, prefixedError, showNetworkPrefix])
+
+  const adornment = showLoadingSpinner
+    ? {
+        endAdornment: (
+          <InputAdornment position="end">
+            <CircularProgress size="16px" />
+          </InputAdornment>
+        ),
+      }
+    : inputAdornment
 
   return (
-    <>
-      <Field
-        className={className}
-        component={TextField as any}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        inputAdornment={inputAdornment}
-        name={name}
-        inputProps={{
-          value: showNetworkPrefix ? prefixedAddress : value,
-          onChange: (e) => {
-            const value = e.target.value
-            setPrefixedAddress(value)
+    <Field
+      className={className}
+      component={TextField as any}
+      defaultValue={defaultValue}
+      disabled={disabled || showLoadingSpinner}
+      inputAdornment={adornment}
+      name={name}
+      inputProps={{
+        value: showNetworkPrefix ? prefixedAddress : value,
+        onChange: (e) => {
+          const value = e.target.value
+          setPrefixedAddress(value)
 
-            const hasPrefixedError = !!checkNetworkPrefix(value)
+          const hasPrefixedError = !!checkNetworkPrefix(value)
 
-            setPrefixedError(hasPrefixedError)
+          setPrefixedError(hasPrefixedError)
 
-            fieldMutator(value)
-          },
-          'data-testid': testId,
-        }}
-        placeholder={placeholder}
-        testId={testId}
-        text={text}
-        type="text"
-        spellCheck={false}
-        validate={composeValidators(required, checkNetworkPrefix, mustBeEthereumAddress, ...validators)}
-      />
-      <OnChange name={name}>
-        {async (newValue: string) => {
-          const trimmedValue = trimSpaces(newValue)
-
-          const address = prefixedError ? trimmedValue : getAddressWithoutNetworkPrefix(trimmedValue)
-
-          // A crypto domain name
-          if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-            try {
-              const resolverAddr = await getAddressFromDomain(address)
-              const formattedAddress = checksumAddress(resolverAddr)
-              fieldMutator(formattedAddress)
-              setPrefixedAddress(addNetworkPrefix(formattedAddress, showNetworkPrefix))
-            } catch (err) {
-              logError(Errors._101, err.message)
-            }
-          } else {
-            // A regular address hash
-            let checkedAddress = address
-            // Automatically checksum valid (either already checksummed, or lowercase addresses)
-            if (isValidAddress(address)) {
-              try {
-                // checksum the address in the input
-                checkedAddress = checksumAddress(address)
-                const prefix = getNetworkPrefix(prefixedAddress)
-                const isPrefixed = prefix || prefixedAddress.includes(':')
-
-                // we set the correct network prefix in the state
-                if (isPrefixed) {
-                  setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, prefix))
-                } else {
-                  setPrefixedAddress(addNetworkPrefix(checkedAddress, showNetworkPrefix, getCurrentShortChainName()))
-                }
-              } catch (err) {
-                // ignore
-              }
-            }
-            fieldMutator(checkedAddress)
-          }
-        }}
-      </OnChange>
-    </>
+          fieldMutator(value)
+        },
+        'data-testid': testId,
+      }}
+      placeholder={placeholder}
+      testId={testId}
+      text={text}
+      type="text"
+      spellCheck={false}
+      validate={composeValidators(required, checkNetworkPrefix, mustBeEthereumAddress, ...validators)}
+    />
   )
 }
 

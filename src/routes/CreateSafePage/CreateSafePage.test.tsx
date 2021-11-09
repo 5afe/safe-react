@@ -528,10 +528,14 @@ describe('<CreateSafePage>', () => {
       const defaultOwnerInput = screen.getByTestId('owner-address-0')
       fireEvent.change(defaultOwnerInput, { target: { value: notExistingENSNameDomain } })
 
-      const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
+      await waitFor(() => {
+        // the loader is not present
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+        const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
 
-      expect(errorTextNode).toBeInTheDocument()
-      getENSAddressSpy.mockClear()
+        expect(errorTextNode).toBeInTheDocument()
+        getENSAddressSpy.mockClear()
+      })
     })
 
     it('Shows an error if a owner address is already introduced', async () => {

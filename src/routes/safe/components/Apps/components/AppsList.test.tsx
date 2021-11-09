@@ -14,17 +14,6 @@ jest.mock('src/routes/routes', () => {
   }
 })
 
-const customState = {
-  router: {
-    location: {
-      pathname: '/safes/0x75096d02718d1B56BEaE4273b178d34F6695F097/balances',
-    },
-    // had to include this because of checks in connected-react-router
-    // https://github.com/supasate/connected-react-router/issues/312#issuecomment-500968504
-    action: 'truthy',
-  },
-}
-
 const spyTrackEventGA = jest.fn()
 
 beforeEach(async () => {
@@ -107,7 +96,7 @@ beforeEach(async () => {
 
 describe('Safe Apps -> AppsList', () => {
   it('Shows apps from the Remote app list', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     await waitFor(() => {
       expect(screen.getByText('Compound')).toBeInTheDocument()
@@ -116,7 +105,7 @@ describe('Safe Apps -> AppsList', () => {
   })
 
   it('Shows apps from the Custom app list', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     await waitFor(() => {
       expect(screen.getByText('Drain safe')).toBeInTheDocument()
@@ -124,7 +113,7 @@ describe('Safe Apps -> AppsList', () => {
   })
 
   it('Shows different app sections', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     await waitFor(() => {
       expect(screen.getByText('ALL APPS')).toBeInTheDocument()
@@ -136,7 +125,7 @@ describe('Safe Apps -> AppsList', () => {
 
 describe('Safe Apps -> AppsList -> Search', () => {
   it('Shows apps matching the search query', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
@@ -147,7 +136,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Shows app matching the name first for a query that matches in name and description of multiple apps', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
@@ -165,7 +154,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Shows "no apps found" message when not able to find apps matching the query and a button to search for the WalletConnect Safe app', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const query = 'not-a-real-app'
     const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
@@ -181,7 +170,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Clears the search result when you press on clear button and shows all apps again', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
@@ -193,7 +182,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it("Doesn't display custom/pinned apps irrelevant to the search (= hides pinned/custom sections)", async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
@@ -204,7 +193,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   })
 
   it('Hides pinned/custom sections when you search', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
 
@@ -219,7 +208,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
   it('Shows a tutorial message when there are no pinned apps', async () => {
     await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [])
 
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     const tut = await waitFor(() =>
       screen.getByText(
@@ -232,7 +221,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
   })
 
   it('allows to pin and unpin an app', async () => {
-    render(<AppsList />, customState)
+    render(<AppsList />)
 
     // check the app is not pinned
     await waitFor(() => {
@@ -279,7 +268,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     expect(defaultPinnedAppsInLocalStorage).toContain('24')
     expect(defaultPinnedAppsInLocalStorage).toContain('228')
 
-    render(<AppsList />, customState)
+    render(<AppsList />)
     await waitFor(() => {
       expect(screen.getByText('ALL APPS')).toBeInTheDocument()
       expect(screen.getByText('BOOKMARKED APPS')).toBeInTheDocument()

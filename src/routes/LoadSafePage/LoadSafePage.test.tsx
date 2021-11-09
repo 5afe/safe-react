@@ -290,13 +290,15 @@ describe('<LoadSafePage>', () => {
       fireEvent.change(safeAddressInputNode, { target: { value: validSafeENSNameDomain } })
 
       await waitFor(() => {
+        // the loader is not present
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
         expect(safeAddressInputNode.value).toBe(addNetworkPrefix(validSafeAddress))
         expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
         getENSAddressSpy.mockClear()
       })
     })
 
-    it('Shows an error if a given ENS name is not registered', () => {
+    it('Shows an error if a given ENS name is not registered', async () => {
       const notExistingENSNameDomain = 'notExistingENSDomain.eth'
 
       // we do not want annoying warnings in the console caused by our mock in getENSAddress
@@ -321,11 +323,16 @@ describe('<LoadSafePage>', () => {
       fireEvent.change(safeAddressInputNode, { target: { value: notExistingENSNameDomain } })
 
       expect(safeAddressInputNode.value).toBe(notExistingENSNameDomain)
-      expect(mockedEndpoints.getSafeInfo).not.toHaveBeenCalled()
-      const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
 
-      expect(errorTextNode).toBeInTheDocument()
-      getENSAddressSpy.mockClear()
+      await waitFor(() => {
+        // the loader is not present
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+        expect(mockedEndpoints.getSafeInfo).not.toHaveBeenCalled()
+        const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
+
+        expect(errorTextNode).toBeInTheDocument()
+        getENSAddressSpy.mockClear()
+      })
     })
 
     it('Shows an error if NO valid Safe Address is registered as an ENS name', async () => {

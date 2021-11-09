@@ -43,6 +43,33 @@ describe('<AddressInput>', () => {
     })
   })
 
+  it('Shows a loader while ENS resolution is loading', async () => {
+    const address = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+    const ENSNameAddress = 'test.eth'
+
+    // mock getAddress fn to return the Address
+    getENSAddressSpy.mockImplementation(() => new Promise((resolve) => resolve(address)))
+
+    renderAddressInputWithinForm()
+
+    fireEvent.change(screen.getByTestId(fieldTestId), { target: { value: ENSNameAddress } })
+
+    // get the loader by role=progressbar
+    const loaderNode = screen.getByRole('progressbar')
+
+    expect(loaderNode).toBeInTheDocument()
+
+    await waitFor(() => {
+      // the loader is not present
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+      const inputNode = screen.getByTestId(fieldTestId) as HTMLInputElement
+      // ENS resolved with the valid address
+      expect(inputNode.value).toBe(addNetworkPrefix(address))
+
+      getENSAddressSpy.mockClear()
+    })
+  })
+
   describe('Address validation', () => {
     it('validates address', () => {
       const invalidAddress = 'this-is-an-invalid-address'
