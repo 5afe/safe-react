@@ -89,9 +89,9 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       e.preventDefault()
       clickAway()
 
-      const newRoute = NETWORK_ROOT_ROUTES.find((item) => item.id === networkId)
+      const newRoute = NETWORK_ROOT_ROUTES.find(({ id }) => id === networkId)
       if (newRoute) {
-        history.replace(newRoute.route)
+        history.push(newRoute.route)
       }
     },
     [clickAway, history],
