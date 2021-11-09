@@ -21,7 +21,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement | nul
 
     const checkLastTx = async () => {
       const lastTx = await getLastTx(safeAddress)
-      setVisible(!lastTx || lastTx.isExecuted)
+      setVisible(!lastTx || !lastTx.isExecuted)
     }
     checkLastTx()
   }, [safeAddress, setVisible])
