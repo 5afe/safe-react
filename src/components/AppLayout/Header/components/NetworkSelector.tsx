@@ -17,8 +17,7 @@ import { screenSm, sm } from 'src/theme/variables'
 import { getNetworkConfigById } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { setNetwork } from 'src/logic/config/utils'
-import { NETWORK_ROOT_ROUTES, ROOT_ROUTE } from 'src/routes/routes'
+import { NETWORK_ROOT_ROUTES } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
 
@@ -89,8 +88,11 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
     (e: React.SyntheticEvent, networkId: ETHEREUM_NETWORK) => {
       e.preventDefault()
       clickAway()
-      setNetwork(networkId)
-      history.replace(ROOT_ROUTE)
+
+      const newRoute = NETWORK_ROOT_ROUTES.find(({ id }) => id === networkId)
+      if (newRoute) {
+        history.push(newRoute.route)
+      }
     },
     [clickAway, history],
   )
