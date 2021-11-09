@@ -349,16 +349,8 @@ export const ApproveTxModal = ({
                     <Bold className={classes.nonceNumber}>{nonce}</Bold>
                   </Paragraph>
 
-                  {oneConfirmationLeft && canExecute && (
-                    <>
-                      <Paragraph color="error">
-                        Approving this transaction executes it right away.
-                        {!isCancelTx &&
-                          ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
-                      </Paragraph>
-
-                      {!isCancelTx && <ExecuteCheckbox onChange={setApproveAndExecute} />}
-                    </>
+                  {oneConfirmationLeft && canExecute && !isCancelTx && (
+                    <ExecuteCheckbox onChange={setApproveAndExecute} />
                   )}
 
                   {/* Tx Parameters */}
