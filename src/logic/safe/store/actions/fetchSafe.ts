@@ -74,12 +74,6 @@ export const fetchSafe =
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
-
-      // Crash the app when Safe is not found
-      if (err.content === Errors._605) {
-        throw err
-      }
-
       return
     }
 
