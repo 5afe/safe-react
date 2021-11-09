@@ -19,7 +19,6 @@ import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
-import { TxSummary } from './TxSummary'
 
 const TRANSACTION_TABS: Item[] = [
   { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
@@ -38,36 +37,32 @@ const GatewayTransactions = (): ReactElement => {
   }, [trackEvent])
 
   // Default to the history tab to suppress MUI error
-  const [selectedTab, setSelectedTab] = useState<string>(txHash ? SAFE_ROUTES.TRANSACTIONS_HISTORY : path)
   const [txDetails, setTxDetails] = useState<TransactionDetails>()
 
+  const selectedTab = txDetails
+    ? isHistoricalStatus(txDetails.txStatus)
+      ? SAFE_ROUTES.TRANSACTIONS_HISTORY
+      : SAFE_ROUTES.TRANSACTIONS_QUEUE
+    : path
+
   useEffect(() => {
+    let isCurrent = true
+
     if (!txHash) {
-      setSelectedTab(path)
       return
     }
 
-    let isCurrent = true
-
-    const getSelectedTab = async (): Promise<void> => {
-      let tx: TransactionDetails | undefined
-      let tabToSelect = path
+    const getTransaction = async (): Promise<void> => {
       try {
-        tx = await fetchSafeTransaction(txHash)
-
-        tabToSelect = isHistoricalStatus(tx.txStatus)
-          ? SAFE_ROUTES.TRANSACTIONS_HISTORY
-          : SAFE_ROUTES.TRANSACTIONS_QUEUE
-      } catch (e) {
-        logError(Errors._613, e.message)
-      } finally {
+        const tx = await fetchSafeTransaction(txHash)
         if (isCurrent) {
-          setSelectedTab(tabToSelect)
           setTxDetails(tx)
         }
+      } catch (e) {
+        logError(Errors._613, e.message)
       }
     }
-    getSelectedTab()
+    getTransaction()
 
     return () => {
       isCurrent = false
@@ -75,6 +70,7 @@ const GatewayTransactions = (): ReactElement => {
   }, [txHash, path])
 
   const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
+
   return (
     <Wrapper>
       <Menu>
@@ -92,7 +88,15 @@ const GatewayTransactions = (): ReactElement => {
             path={SAFE_ROUTES.TRANSACTIONS}
             render={() => {
               if (!txDetails) return null
-              return <TxSummary txDetails={txDetails} />
+
+              /**
+               * TODO:
+               * - Add TxList with transaction found by id (to be returned from endpoint)
+               *   const TxList = isHistoricalStatus(txDetails.txStatus) ? HistoryTxList : QueueTxList
+               * - Add custom copy logo via updating SRC copy button component
+               */
+
+              return null
             }}
           />
           <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />

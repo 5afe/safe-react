@@ -359,6 +359,10 @@ export const TxDetailsContainer = styled.div`
   .tx-summary {
   }
 
+  .tx-share {
+    float: right;
+  }
+
   .tx-details {
     &.not-executed {
       grid-row-end: span 2;

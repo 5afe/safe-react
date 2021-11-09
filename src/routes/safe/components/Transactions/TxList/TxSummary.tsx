@@ -21,7 +21,11 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      <div style={{ float: 'right' }}>{hasSafeTxHash && <TxShareButton safeTxHash={safeTxHash} />}</div>
+      {hasSafeTxHash && (
+        <div className="tx-share">
+          <TxShareButton safeTxHash={safeTxHash} />
+        </div>
+      )}
       <div className="tx-hash">
         <Text size="xl" strong as="span">
           Transaction hash:{' '}
