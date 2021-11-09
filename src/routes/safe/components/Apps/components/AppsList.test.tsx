@@ -251,7 +251,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
       expect(spyTrackEventGA).toHaveBeenCalledWith({
-        action: 'pin',
+        action: 'Pin',
         category: 'Safe App',
         label: 'Compound',
       })
@@ -265,7 +265,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
       expect(spyTrackEventGA).toHaveBeenCalledWith({
-        action: 'unpin',
+        action: 'Unpin',
         category: 'Safe App',
         label: 'Compound',
       })
