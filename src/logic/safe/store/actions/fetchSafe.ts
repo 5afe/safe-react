@@ -14,7 +14,6 @@ import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { getNetworkId } from 'src/config'
-import { history, WELCOME_ROUTE } from 'src/routes/routes'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -71,12 +70,16 @@ export const fetchSafe =
     let safeInfo: Partial<SafeRecordProps> = {}
     let remoteSafeInfo: SafeInfo | null = null
 
-    // if there's no remote info, we redirect to /welcome
     try {
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
-      history.push(WELCOME_ROUTE)
+
+      // Crash the app when Safe is not found
+      if (err.content === Errors._605) {
+        throw err
+      }
+
       return
     }
 
