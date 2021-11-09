@@ -22,7 +22,9 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
     const fetchData = async () => {
       if (safeAddress) {
         await dispatch(fetchLatestMasterContractVersion())
-        await dispatch(fetchSafe(safeAddress, isSafeLoaded))
+        const isSuccess = await dispatch(fetchSafe(safeAddress, isSafeLoaded))
+        if (!isSuccess) return
+
         setIsSafeLoaded(true)
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(chainId, safeAddress))
