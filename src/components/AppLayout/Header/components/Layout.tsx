@@ -84,8 +84,8 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
   )
 }
 
-const Layout = ({ classes, providerDetails, providerInfo }) => {
-  const { clickAway, open, toggle } = useStateHandler()
+const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
+  const { clickAway, open, toggle } = useStateHandler(shouldSwitchChain)
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const { isDesktop } = window
 

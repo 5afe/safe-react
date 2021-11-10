@@ -11,6 +11,7 @@ import {
   availableSelector,
   loadedSelector,
   providerNameSelector,
+  shouldSwitchWalletChain,
   userAccountSelector,
 } from 'src/logic/wallets/store/selectors'
 import { removeProvider } from 'src/logic/wallets/store/actions'
@@ -26,6 +27,9 @@ const HeaderComponent = (): React.ReactElement => {
   const available = useSelector(availableSelector)
   const dispatch = useDispatch()
   const showSwitchButton = canSwitchNetwork()
+
+  const shouldSwitchWallet = useSelector(shouldSwitchWalletChain)
+  const shouldSwitchChain = !!(userAddress && shouldSwitchWallet)
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
@@ -86,7 +90,14 @@ const HeaderComponent = (): React.ReactElement => {
   const info = getProviderInfoBased()
   const details = getProviderDetailsBased()
 
-  return <Layout providerDetails={details} providerInfo={info} />
+  return (
+    <Layout
+      providerDetails={details}
+      providerInfo={info}
+      shouldSwitchChain={shouldSwitchChain}
+      key={String(shouldSwitchChain)}
+    />
+  )
 }
 
 export default HeaderComponent
