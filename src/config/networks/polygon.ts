@@ -43,7 +43,6 @@ const polygon: NetworkConfig = {
     backgroundColor: '#8B50ED',
     textColor: '#ffffff',
     label: 'Polygon',
-    isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
