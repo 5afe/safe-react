@@ -62,6 +62,7 @@ const SafeListItem = ({
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
   const showAddSafeLink = !isSafeAdded(loadedSafes, address)
+  const shortName = getShortChainNameById(networkId)
 
   useEffect(() => {
     if (isCurrentSafe && shouldScrollToSafe) {
@@ -87,7 +88,7 @@ const SafeListItem = ({
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
-      <StyledPrefixedEthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
+      <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
