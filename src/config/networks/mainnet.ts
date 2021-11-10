@@ -48,7 +48,6 @@ const mainnet: NetworkConfig = {
     backgroundColor: '#E8E7E6',
     textColor: '#001428',
     label: 'Mainnet',
-    isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',

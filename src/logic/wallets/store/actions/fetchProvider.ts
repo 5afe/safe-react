@@ -2,7 +2,6 @@ import { Dispatch } from 'redux'
 
 import addProvider from './addProvider'
 
-import { getNetworkInfo } from 'src/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -20,10 +19,6 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Dispatch<
   if (!loaded) {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
     return
-  }
-
-  if (getNetworkInfo().isTestNet) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TESTNET_VERSION_MSG)))
   }
 
   if (available) {

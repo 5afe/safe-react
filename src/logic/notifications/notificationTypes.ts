@@ -39,7 +39,6 @@ enum NOTIFICATION_IDS {
   SETTINGS_CHANGE_EXECUTED_MSG,
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG,
   SETTINGS_CHANGE_FAILED_MSG,
-  TESTNET_VERSION_MSG,
   SIGN_NEW_SPENDING_LIMIT_MSG,
   NEW_SPENDING_LIMIT_REJECTED_MSG,
   NEW_SPENDING_LIMIT_EXECUTED_MSG,
@@ -201,12 +200,6 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   REMOVE_SPENDING_LIMIT_FAILED_MSG: {
     message: 'Remove spending limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
-  },
-
-  // Network
-  TESTNET_VERSION_MSG: {
-    message: "Testnet Version: Don't send production assets to this Safe",
-    options: { variant: WARNING, persist: false, preventDuplicate: true, autoHideDuration: longDuration },
   },
 
   // Address book
