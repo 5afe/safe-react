@@ -76,6 +76,13 @@ const StyledTextLabel = styled(Text)`
   color: ${(props: StyledTextLabelProps) => props.networkInfo?.textColor ?? fontColor};
   background-color: ${(props: StyledTextLabelProps) => props.networkInfo?.backgroundColor ?? border};
 `
+
+const StyldTextSafeName = styled(Text)`
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 const StyledEthHashInfo = styled(EthHashInfo)`
   p {
     color: ${({ theme }) => theme.colors.placeHolder};
@@ -150,9 +157,9 @@ const SafeHeader = ({
         </IdenticonContainer>
 
         {/* SafeInfo */}
-        <Text size="lg" center>
+        <StyldTextSafeName size="lg" center>
           {safeName}
-        </Text>
+        </StyldTextSafeName>
         <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <ButtonHelper onClick={onReceiveClick}>

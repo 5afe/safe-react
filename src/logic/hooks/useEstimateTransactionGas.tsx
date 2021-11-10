@@ -198,11 +198,11 @@ export const useEstimateTransactionGas = ({
 
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
-        const estimatedGasCosts = ethGasLimitEstimation * parseInt(gasPrice, 10)
-        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-        const gasCostFormatted = formatAmount(gasCost)
         const extraGasMult = EXTRA_GAS_FACTOR[getNetworkId()] || 1
         const gasLimit = manualGasLimit || Math.round(ethGasLimitEstimation * extraGasMult).toString()
+        const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
+        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const gasCostFormatted = formatAmount(gasCost)
 
         if (isExecution) {
           transactionCallSuccess = await checkTransactionExecution({

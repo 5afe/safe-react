@@ -32,10 +32,11 @@ import {
   latestMasterContractVersion as latestMasterContractVersionSelector,
   safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
+import { getNetworkId } from 'src/config'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -63,7 +64,7 @@ const SafeDetails = (): ReactElement => {
     address: safeAddress,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
-    chainId,
+    chainId = getNetworkId(),
   } = useSelector(currentSafe)
   const safeNamesMap = useSelector(safesWithNamesAsMap)
   const safeName = safeNamesMap[safeAddress]?.name
@@ -110,7 +111,7 @@ const SafeDetails = (): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Details' })
+    trackEvent(SETTINGS_EVENTS.DETAILS)
   }, [trackEvent])
 
   useEffect(() => {
