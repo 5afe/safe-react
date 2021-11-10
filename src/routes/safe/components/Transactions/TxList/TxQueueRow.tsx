@@ -5,9 +5,10 @@ import { ReactElement, useContext, useEffect, useState } from 'react'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useTransactionActions } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
-import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
+import { TxStoreDetails } from './TxStoreDetails'
+import { shouldExpandTxAccordion } from './utils'
 
 type TxQueueRowProps = {
   isGrouped?: boolean
@@ -35,12 +36,13 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         unmountOnExit: true,
         appear: true,
       }}
+      expanded={shouldExpandTxAccordion()}
     >
       <StyledAccordionSummary>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} actions={actions} />
       </StyledAccordionSummary>
       <AccordionDetails>
-        <TxDetails transaction={tx} actions={actions} />
+        <TxStoreDetails transaction={transaction} actions={actions} />
       </AccordionDetails>
     </NoPaddingAccordion>
   )

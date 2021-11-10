@@ -1,11 +1,12 @@
 import { AddressEx, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
+import { matchPath } from 'react-router'
 
 import { getNetworkInfo } from 'src/config'
 import { isCustomTxInfo, isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { history, SAFE_ROUTES, TRANSACTION_HASH_SLUG } from 'src/routes/routes'
 
 export const NOT_AVAILABLE = 'n/a'
 interface AmountData {
@@ -107,4 +108,12 @@ export const getTxTo = (tx: Transaction): AddressEx | undefined => {
       return tx.txInfo.factory || undefined
     }
   }
+}
+
+export const shouldExpandTxAccordion = (): undefined | boolean => {
+  const match = matchPath(history.location.pathname, { path: SAFE_ROUTES.TRANSACTIONS })
+  const safeTxHash = match?.params?.[TRANSACTION_HASH_SLUG]
+
+  // Accordion takes a prop 'expanded' that shoudn't be set by default when multiple txs are displayed
+  return safeTxHash === undefined ? undefined : !!safeTxHash
 }

@@ -111,7 +111,7 @@ export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is
   return value === 'WILL_BE_REPLACED'
 }
 
-export const isHistoricalStatus = (value: Transacton['txStatus']): boolean => {
+export const isHistoricalTxStatus = (value: Transacton['txStatus']): boolean => {
   return [
     TransactionStatus.CANCELLED,
     TransactionStatus.FAILED,
