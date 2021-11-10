@@ -151,7 +151,8 @@ export const createTransaction =
       }
 
       const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-      const gasParam = getNetworkId() === ETHEREUM_NETWORK.MAINNET ? 'maxFeePerGas' : 'gasPrice'
+      const EIP_1559_COMPATIBLE_NETWORK = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY]
+      const gasParam = EIP_1559_COMPATIBLE_NETWORK.includes(getNetworkId()) ? 'maxFeePerGas' : 'gasPrice'
       const sendParams: PayableTx = {
         from,
         value: 0,
