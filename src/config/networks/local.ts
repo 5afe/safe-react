@@ -35,7 +35,6 @@ const local: NetworkConfig = {
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
     label: 'LocalRPC',
-    isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',

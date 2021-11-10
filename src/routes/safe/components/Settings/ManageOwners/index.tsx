@@ -24,7 +24,7 @@ import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
@@ -69,7 +69,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+    trackEvent(SETTINGS_EVENTS.OWNERS)
   }, [trackEvent])
 
   const columns = generateColumns()

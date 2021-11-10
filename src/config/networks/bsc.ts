@@ -33,7 +33,6 @@ const bsc: NetworkConfig = {
     backgroundColor: '#d0980b',
     textColor: '#ffffff',
     label: 'BSC',
-    isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',

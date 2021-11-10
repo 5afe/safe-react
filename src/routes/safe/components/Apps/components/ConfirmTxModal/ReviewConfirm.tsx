@@ -60,6 +60,7 @@ const StyledBlock = styled(Block)`
 `
 
 type Props = ConfirmTxModalProps & {
+  onReject: () => void
   showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
   hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
@@ -78,7 +79,7 @@ export const ReviewConfirm = ({
   hidden,
   onUserConfirm,
   onClose,
-  onTxReject,
+  onReject,
   requestId,
   showDecodedTxData,
 }: Props): ReactElement => {
@@ -139,11 +140,6 @@ export const ReviewConfirm = ({
     decodeTxData()
   }, [txData])
 
-  const handleTxRejection = () => {
-    onTxReject(requestId)
-    onClose()
-  }
-
   const handleUserConfirmation = (safeTxHash: string): void => {
     onUserConfirm(safeTxHash, requestId)
     onClose()
@@ -169,7 +165,7 @@ export const ReviewConfirm = ({
           delayExecution: !executionApproved,
         },
         handleUserConfirmation,
-        handleTxRejection,
+        onReject,
       ),
     )
 
@@ -206,7 +202,7 @@ export const ReviewConfirm = ({
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
-          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={onReject} />
 
           <Hairline />
 
@@ -261,7 +257,7 @@ export const ReviewConfirm = ({
           {/* Buttons */}
           <Modal.Footer withoutBorder={txEstimationExecutionStatus !== EstimationStatus.LOADING}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: handleTxRejection }}
+              cancelButtonProps={{ onClick: onReject }}
               confirmButtonProps={{
                 onClick: () => confirmTransactions(txParameters),
                 disabled: !isOwner,

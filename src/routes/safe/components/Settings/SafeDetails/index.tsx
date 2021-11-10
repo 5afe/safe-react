@@ -32,7 +32,7 @@ import {
   latestMasterContractVersion as latestMasterContractVersionSelector,
   safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
@@ -111,7 +111,7 @@ const SafeDetails = (): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Details' })
+    trackEvent(SETTINGS_EVENTS.DETAILS)
   }, [trackEvent])
 
   useEffect(() => {

@@ -142,12 +142,12 @@ describe('fetchSafe', () => {
 
     expect(store.getActions()).toEqual(expectedActions)
   })
-  it('should dispatch an updateSafe with only `address` if `remoteSafeInfo` is not present', async () => {
+  it('should not dispatch updateSafe if `remoteSafeInfo` is not present', async () => {
     jest.spyOn(global.console, 'error').mockImplementationOnce(() => {})
     mockedGateway.getSafeInfo.mockImplementationOnce(async () => {
       throw new Error('-- test -- no resource available')
     })
-    const expectedActions = [{ type: UPDATE_SAFE, payload: { address: SAFE_ADDRESS } }]
+    const expectedActions = []
 
     const store = mockStore(
       Map({
