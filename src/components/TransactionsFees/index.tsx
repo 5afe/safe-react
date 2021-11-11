@@ -4,7 +4,7 @@ import { getNetworkInfo } from 'src/config'
 import { TransactionFailText } from 'src/components/TransactionFailText'
 import { Text } from '@gnosis.pm/safe-react-components'
 
-type TransactionFailTextProps = {
+export type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus
   gasCostFormatted?: string
   isExecution: boolean
