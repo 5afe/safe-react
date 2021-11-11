@@ -10,6 +10,7 @@ import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
 import TxSingularDetails from './TxSingularDetails'
+import { isDeeplinkedTx } from './utils'
 
 const TRANSACTION_TABS: Item[] = [
   { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
@@ -20,6 +21,7 @@ const GatewayTransactions = (): ReactElement => {
   const history = useHistory()
   const { path } = useRouteMatch<SafeRouteSlugs>()
 
+  //TODO: fix selectedTab
   const selectedTab = TRANSACTION_TABS.find(({ id }) => path.includes(id))?.id || ''
 
   const { trackEvent } = useAnalytics()
@@ -42,10 +44,13 @@ const GatewayTransactions = (): ReactElement => {
       <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={selectedTab} />
       <ContentWrapper>
         <Switch>
-          <Route exact path={SAFE_ROUTES.TRANSACTIONS} render={() => <TxSingularDetails />} />
           <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />
           <Route exact path={SAFE_ROUTES.TRANSACTIONS_HISTORY} render={() => <HistoryTransactions />} />
-          <Redirect to={SAFE_ROUTES.TRANSACTIONS_HISTORY} />
+          {isDeeplinkedTx() ? (
+            <Route exact path={SAFE_ROUTES.TRANSACTIONS} render={() => <TxSingularDetails />} />
+          ) : (
+            <Redirect to={SAFE_ROUTES.TRANSACTIONS_HISTORY} />
+          )}
         </Switch>
       </ContentWrapper>
     </Wrapper>

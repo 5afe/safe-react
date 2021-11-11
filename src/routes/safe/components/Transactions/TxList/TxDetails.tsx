@@ -1,4 +1,4 @@
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import { ReactElement, useContext } from 'react'
 import styled from 'styled-components'
@@ -12,7 +12,8 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionActions } from './hooks/useTransactionActions'
-import { TxDetailsContainer, AlignItemsWithMargin } from './styled'
+import { useTransactionDetails } from './hooks/useTransactionDetails'
+import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
@@ -76,29 +77,46 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
   return <TxData txData={txDetails.txData} txInfo={txDetails.txInfo} />
 }
 
-type TransactionWithDetails = Omit<Transaction, 'txDetails'> & Required<Pick<Transaction, 'txDetails'>>
 type TxDetailsProps = {
-  transaction: TransactionWithDetails
+  transaction: Transaction
   actions?: TransactionActions
 }
 
 export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const { txDetails } = transaction
+  const { data, loading } = useTransactionDetails(transaction)
+
+  if (loading) {
+    return (
+      <Centered padding={10}>
+        <Loader size="sm" />
+      </Centered>
+    )
+  }
+
+  if (!data) {
+    return (
+      <TxDetailsContainer>
+        <Text size="xl" strong>
+          No data available
+        </Text>
+      </TxDetailsContainer>
+    )
+  }
 
   return (
     <TxDetailsContainer>
       <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
-        <TxSummary txDetails={txDetails} />
+        <TxSummary txDetails={data} />
       </div>
       <div
         className={cn('tx-details', {
-          'no-padding': isMultiSendTxInfo(transaction.txInfo),
-          'not-executed': !txDetails?.executedAt,
+          'no-padding': isMultiSendTxInfo(data.txInfo),
+          'not-executed': !data.executedAt,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
-        <TxDataGroup txDetails={txDetails} />
+        <TxDataGroup txDetails={data} />
       </div>
       <div
         className={cn('tx-owners', {
@@ -106,9 +124,9 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
-        <TxOwners txDetails={txDetails} />
+        <TxOwners txDetails={data} />
       </div>
-      {!txDetails?.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
+      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>

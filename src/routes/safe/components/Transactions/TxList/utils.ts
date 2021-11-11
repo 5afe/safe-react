@@ -110,10 +110,12 @@ export const getTxTo = (tx: Transaction): AddressEx | undefined => {
   }
 }
 
-export const shouldExpandTxAccordion = (): undefined | boolean => {
+export const getTxAccordionExpandedProp = (): undefined | boolean => {
   const match = matchPath(history.location.pathname, { path: SAFE_ROUTES.TRANSACTIONS })
   const safeTxHash = match?.params?.[TRANSACTION_HASH_SLUG]
 
   // Accordion takes a prop 'expanded' that shoudn't be set by default when multiple txs are displayed
   return safeTxHash === undefined ? undefined : !!safeTxHash
 }
+
+export const isDeeplinkedTx = (): boolean => !!getTxAccordionExpandedProp()

@@ -7,8 +7,8 @@ import { useTransactionActions } from 'src/routes/safe/components/Transactions/T
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxHoverContext } from './TxHoverProvider'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
-import { TxStoreDetails } from './TxStoreDetails'
-import { shouldExpandTxAccordion } from './utils'
+import { TxDetails } from './TxDetails'
+import { getTxAccordionExpandedProp } from './utils'
 
 type TxQueueRowProps = {
   isGrouped?: boolean
@@ -36,13 +36,13 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         unmountOnExit: true,
         appear: true,
       }}
-      expanded={shouldExpandTxAccordion()}
+      expanded={getTxAccordionExpandedProp()}
     >
       <StyledAccordionSummary>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} actions={actions} />
       </StyledAccordionSummary>
       <AccordionDetails>
-        <TxStoreDetails transaction={transaction} actions={actions} />
+        <TxDetails transaction={transaction} actions={actions} />
       </AccordionDetails>
     </NoPaddingAccordion>
   )

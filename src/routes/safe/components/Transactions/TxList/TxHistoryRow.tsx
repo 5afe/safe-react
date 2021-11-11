@@ -5,8 +5,8 @@ import { isCreationTxInfo, Transaction } from 'src/logic/safe/store/models/types
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxHistoryCollapsed } from './TxHistoryCollapsed'
 import { TxInfoCreation } from './TxInfoCreation'
-import { shouldExpandTxAccordion } from './utils'
-import { TxStoreDetails } from './TxStoreDetails'
+import { getTxAccordionExpandedProp } from './utils'
+import { TxDetails } from './TxDetails'
 
 export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): ReactElement => (
   <NoPaddingAccordion
@@ -15,7 +15,7 @@ export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): Rea
       unmountOnExit: true,
       appear: true,
     }}
-    expanded={shouldExpandTxAccordion()}
+    expanded={getTxAccordionExpandedProp()}
   >
     <StyledAccordionSummary>
       <TxHistoryCollapsed transaction={transaction} />
@@ -24,7 +24,7 @@ export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): Rea
       {isCreationTxInfo(transaction.txInfo) ? (
         <TxInfoCreation transaction={transaction} />
       ) : (
-        <TxStoreDetails transaction={transaction} />
+        <TxDetails transaction={transaction} />
       )}
     </AccordionDetails>
   </NoPaddingAccordion>

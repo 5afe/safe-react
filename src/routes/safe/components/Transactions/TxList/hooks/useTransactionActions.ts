@@ -25,6 +25,7 @@ export type TransactionActions = {
   oneToGo: boolean
 }
 
+// TODO: Fix location
 export const useTransactionActions = (transaction: Transaction): TransactionActions => {
   const currentUser = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()

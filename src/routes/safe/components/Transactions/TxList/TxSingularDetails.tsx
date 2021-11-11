@@ -18,11 +18,10 @@ import { QueueTxList } from './QueueTxList'
 import { Centered } from './styled'
 
 // Our store does not match the details returned from the endpoint
-const formatTx = ({ executedAt, txId, safeAppInfo, ...rest }: TransactionDetails): Transaction => ({
-  ...rest,
-  id: txId,
-  timestamp: executedAt || 0,
-})
+const formatTx = (txDetails: TransactionDetails): Transaction => {
+  const { executedAt, txId, safeAppInfo, ...rest } = txDetails
+  return { ...rest, txDetails, id: txId, timestamp: executedAt || 0 }
+}
 
 const TxSingularDetails = (): ReactElement | null => {
   const { [TRANSACTION_HASH_SLUG]: safeTxHash = false } = useParams<SafeRouteSlugs>()
