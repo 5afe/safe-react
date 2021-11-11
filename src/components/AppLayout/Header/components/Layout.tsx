@@ -84,10 +84,11 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
   )
 }
 
-const Layout = ({ classes, providerDetails, providerInfo }) => {
+const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const { isDesktop } = window
+  const isOpen = open || shouldSwitchChain
 
   return (
     <Row className={classes.summary}>
@@ -99,14 +100,14 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Spacer />
       <Provider
         info={providerInfo}
-        open={open}
+        open={isOpen}
         toggle={toggle}
         render={(providerRef) =>
           providerRef.current && (
             <WalletPopup
               anchorEl={providerRef.current}
               providerDetails={providerDetails}
-              open={open}
+              open={isOpen}
               classes={classes}
               onClose={clickAway}
             />
