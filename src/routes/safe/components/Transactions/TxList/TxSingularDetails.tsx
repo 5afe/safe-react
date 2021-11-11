@@ -1,14 +1,20 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
-import { MultisigExecutionDetails, MultisigExecutionInfo, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  MultisigExecutionDetails,
+  MultisigExecutionInfo,
+  TransactionDetails as GWTransactionDetails,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import { Loader } from '@gnosis.pm/safe-react-components'
 
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import {
   isModuleExecutionInfo,
   isMultiSigExecutionDetails,
+  isMultisigExecutionInfo,
   StoreStructure,
   Transaction,
+  TransactionDetails,
   TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
@@ -29,15 +35,16 @@ import {
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { useSelector } from 'react-redux'
 import { isTxPending } from 'src/logic/safe/store/actions/utils'
+import { TxLocationContext } from './TxLocationProvider'
 
 // Our store does not match the details returned from the endpoint
-const formatTx = (txDetails: TransactionDetails): Transaction => {
+const makeTx = (txDetails: GWTransactionDetails): Transaction => {
   const getMissingSigners = ({
     signers,
     confirmations,
   }: MultisigExecutionDetails): MultisigExecutionInfo['missingSigners'] => {
     const missingSigners = signers.filter(({ value }) => {
-      const hasConfirmed = confirmations?.some(({ signer }) => signer.value === value)
+      const hasConfirmed = confirmations?.some(({ signer }) => signer?.value === value)
       return !hasConfirmed
     })
 
@@ -46,7 +53,7 @@ const formatTx = (txDetails: TransactionDetails): Transaction => {
 
   const getMultisigExecutionInfo = ({
     detailedExecutionInfo,
-  }: TransactionDetails): MultisigExecutionInfo | undefined => {
+  }: GWTransactionDetails): MultisigExecutionInfo | undefined => {
     if (!isMultiSigExecutionDetails(detailedExecutionInfo)) return undefined
 
     return {
@@ -76,7 +83,7 @@ const formatTx = (txDetails: TransactionDetails): Transaction => {
 }
 
 const getTxLocation = (
-  txDetails: TransactionDetails,
+  txDetails: GWTransactionDetails,
   nextTxs: StoreStructure['queued']['next'] | undefined,
 ): TxLocation => {
   if (!isTxPending(txDetails.txStatus)) {
@@ -112,7 +119,7 @@ const TxSingularDetails = (): ReactElement | null => {
         const txDetails = await fetchSafeTransaction(safeTxHash)
 
         if (isCurrent) {
-          const tx = formatTx(txDetails)
+          const tx = makeTx(txDetails)
           setTx(tx)
 
           const txLocation = getTxLocation(txDetails, nextTxs)
@@ -143,12 +150,18 @@ const TxSingularDetails = (): ReactElement | null => {
     )
   }
 
-  const TxList = isTxPending(tx.txStatus) ? QueueTxList : HistoryTxList
+  const label = isMultisigExecutionInfo(tx.executionInfo) ? tx.executionInfo.nonce : tx.timestamp
+  const transactions: TransactionDetails['transactions'] = [[label.toString(), [tx]]]
 
-  const nonce = (tx.txDetails?.detailedExecutionInfo as MultisigExecutionDetails)?.nonce
-  const label = nonce || tx.timestamp
-
-  return <TxList transactions={[[label.toString(), [tx]]]} />
+  if (isTxPending(tx.txStatus)) {
+    return (
+      <TxLocationContext.Provider value={{ txLocation }}>
+        <QueueTxList transactions={transactions} />
+      </TxLocationContext.Provider>
+    )
+  } else {
+    return <HistoryTxList transactions={transactions} />
+  }
 }
 
 export default TxSingularDetails
