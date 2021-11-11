@@ -370,9 +370,10 @@ export const ApproveTxModal = ({
               {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
-                  isExecution={doExecute}
                   isCreation={isCreation}
+                  isExecution={doExecute}
                   isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               )}

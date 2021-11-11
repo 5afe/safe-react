@@ -231,9 +231,10 @@ export const ReviewReplaceOwnerModal = ({
 
           <ReviewInfoText
             gasCostFormatted={gasCostFormatted}
-            isExecution={isExecution}
             isCreation={isCreation}
+            isExecution={isExecution}
             isOffChainSignature={isOffChainSignature}
+            safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />
           <Modal.Footer withoutBorder>

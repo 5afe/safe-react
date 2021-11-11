@@ -239,9 +239,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </Block>
           <ReviewInfoText
             gasCostFormatted={gasCostFormatted}
-            isExecution={doExecute}
             isCreation={isCreation}
+            isExecution={doExecute}
             isOffChainSignature={isOffChainSignature}
+            safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />
 

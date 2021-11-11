@@ -170,9 +170,10 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
               <Row className={classes.modalDescription}>
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
                   isCreation={isCreation}
+                  isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               </Row>

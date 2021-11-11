@@ -273,11 +273,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           {!isSpendingLimit && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
-              isExecution={doExecute}
               isCreation={isCreation}
+              isExecution={doExecute}
               isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
               safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           )}
 

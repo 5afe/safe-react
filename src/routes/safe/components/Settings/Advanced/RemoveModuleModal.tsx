@@ -164,9 +164,10 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               <Row className={classes.modalDescription}>
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
                   isCreation={isCreation}
+                  isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               </Row>

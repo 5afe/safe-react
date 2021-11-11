@@ -129,9 +129,10 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
               isCreation={isCreation}
+              isExecution={isExecution}
               isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           )}

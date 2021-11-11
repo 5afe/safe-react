@@ -240,9 +240,10 @@ export const ReviewConfirm = ({
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <ReviewInfoText
               gasCostFormatted={isOwner ? gasCostFormatted : undefined}
-              isExecution={doExecute}
               isCreation={isCreation}
+              isExecution={doExecute}
               isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           )}

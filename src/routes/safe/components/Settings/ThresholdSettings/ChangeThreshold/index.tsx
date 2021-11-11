@@ -186,9 +186,10 @@ export const ChangeThresholdModal = ({
                 {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                   <ReviewInfoText
                     gasCostFormatted={gasCostFormatted}
-                    isExecution={isExecution}
                     isCreation={isCreation}
+                    isExecution={isExecution}
                     isOffChainSignature={isOffChainSignature}
+                    safeNonce={txParameters.safeNonce}
                     txEstimationExecutionStatus={txEstimationExecutionStatus}
                   />
                 )}

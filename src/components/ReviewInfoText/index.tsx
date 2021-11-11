@@ -16,11 +16,11 @@ const ReviewInfoTextWrapper = styled.div`
 
 export const ReviewInfoText = ({
   gasCostFormatted,
-  isExecution,
   isCreation,
+  isExecution,
   isOffChainSignature,
-  txEstimationExecutionStatus,
   safeNonce,
+  txEstimationExecutionStatus,
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
   const transactionsToGo = parseInt(safeNonce || '', 10) - nonce
@@ -40,8 +40,8 @@ export const ReviewInfoText = ({
       ) : (
         <TransactionFees
           gasCostFormatted={gasCostFormatted}
-          isExecution={isExecution}
           isCreation={isCreation}
+          isExecution={isExecution}
           isOffChainSignature={isOffChainSignature}
           txEstimationExecutionStatus={txEstimationExecutionStatus}
         />

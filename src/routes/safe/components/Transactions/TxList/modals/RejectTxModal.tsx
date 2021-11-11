@@ -121,9 +121,10 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
               {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
                   isCreation={isCreation}
+                  isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               )}
