@@ -6,14 +6,12 @@ import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTrans
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
-import { isDeeplinkedTx } from '../utils'
 
 export type LoadTransactionDetails = {
   data?: ExpandedTxDetails
   loading: boolean
 }
 
-//TODO: When tx changes update
 export const useTransactionDetails = (transaction: Transaction): LoadTransactionDetails => {
   const { txLocation } = useContext(TxLocationContext)
   const dispatch = useRef(useDispatch())
@@ -26,12 +24,7 @@ export const useTransactionDetails = (transaction: Transaction): LoadTransaction
   )
 
   useEffect(() => {
-    if (transaction?.txDetails && isDeeplinkedTx()) {
-      setTxDetails({
-        loading: false,
-        data: transaction.txDetails,
-      })
-    } else if (data) {
+    if (data) {
       setTxDetails({ loading: false, data })
     } else {
       // lookup tx details

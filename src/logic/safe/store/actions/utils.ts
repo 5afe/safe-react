@@ -9,7 +9,7 @@ import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeInfo, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
@@ -120,3 +120,5 @@ export const buildSafeOwners = (
   // nothing to do without remote owners, so we return the stored list
   return localSafeOwners
 }
+
+export const isTxPending = (txStatus: TransactionDetails['txStatus']): boolean => !!txStatus?.match(/^PENDING.*/)

@@ -60,7 +60,7 @@ const getTransactionsByLocation = createHashBasedSelector(
     (rest: TxByLocationAttr): TxByLocation => ({
       attributeName: rest.attributeName,
       attributeValue: rest.attributeValue,
-      transactions: chainId && safeAddress ? get(gatewayTransactions[chainId]?.[safeAddress], rest.txLocation, []) : [],
+      transactions: chainId && safeAddress ? get(gatewayTransactions[chainId][safeAddress], rest.txLocation) : [],
     }),
 )
 

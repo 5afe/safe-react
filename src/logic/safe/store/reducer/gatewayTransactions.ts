@@ -255,6 +255,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
     },
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
       const { chainId, safeAddress, transactionId, txLocation, value } = action.payload
+
+      if (!state[chainId]) {
+        return state
+      }
+
       const storedTransactions = Object.assign({}, state[chainId][safeAddress])
       const { queued } = storedTransactions
       let { history } = storedTransactions

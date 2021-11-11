@@ -11,7 +11,6 @@ import {
   TransactionDetails as GWTransactionDetails,
   TransactionListItem,
   TransactionListPage,
-  TransactionStatus,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export type Transaction = TransactionSummary & {
@@ -109,15 +108,6 @@ export const isStatusAwaitingConfirmation = (value: Transaction['txStatus']): va
 
 export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is 'WILL_BE_REPLACED' => {
   return value === 'WILL_BE_REPLACED'
-}
-
-export const isHistoricalTxStatus = (value: Transacton['txStatus']): boolean => {
-  return [
-    TransactionStatus.CANCELLED,
-    TransactionStatus.FAILED,
-    TransactionStatus.SUCCESS,
-    TransactionStatus.PENDING_FAILED,
-  ].includes(value)
 }
 
 export const isMultiSigExecutionDetails = (
