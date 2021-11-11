@@ -44,14 +44,14 @@ const AddressInput = ({
 }: AddressInputProps): React.ReactElement => {
   const [currentInput, setCurrentInput] = useState<string>('')
   const [resolutions, setResolutions] = useState<Record<string, string | undefined>>({})
-  const isResolving = resolutions[currentInput] === ''
+  const resolvedAddress = resolutions[currentInput]
+  const isResolving = resolvedAddress === ''
 
   useEffect(() => {
-    const resolvedAddress = resolutions[currentInput]
     if (resolvedAddress) {
       fieldMutator(resolvedAddress)
     }
-  }, [resolutions[currentInput]])
+  }, [resolvedAddress, fieldMutator])
 
   const adornment = isResolving
     ? {
