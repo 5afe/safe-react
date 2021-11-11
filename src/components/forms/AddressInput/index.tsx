@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -42,9 +42,16 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): React.ReactElement => {
-  const [currentAddress, setCurrentAddress] = useState<string>('')
-  const [resolvingAddress, setResolvingAddress] = useState<string>('')
-  const isResolving = resolvingAddress && resolvingAddress === currentAddress
+  const [currentInput, setCurrentInput] = useState<string>('')
+  const [resolutions, setResolutions] = useState<Record<string, string | undefined>>({})
+  const isResolving = resolutions[currentInput] === ''
+
+  useEffect(() => {
+    const resolvedAddress = resolutions[currentInput]
+    if (resolvedAddress) {
+      fieldMutator(resolvedAddress)
+    }
+  }, [resolutions[currentInput]])
 
   const adornment = isResolving
     ? {
@@ -75,19 +82,19 @@ const AddressInput = ({
       <OnChange name={name}>
         {async (value: string) => {
           const address = trimSpaces(value)
-          setCurrentAddress(address)
+          setCurrentInput(address)
 
           // A crypto domain name
           if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-            setResolvingAddress(address)
+            setResolutions((prev) => ({ ...prev, [address]: '' }))
             try {
               const resolverAddr = await getAddressFromDomain(address)
               const formattedAddress = checksumAddress(resolverAddr)
-              fieldMutator(formattedAddress)
+              setResolutions((prev) => ({ ...prev, [address]: formattedAddress }))
             } catch (err) {
+              setResolutions((prev) => ({ ...prev, [address]: undefined }))
               logError(Errors._101, err.message)
             }
-            setResolvingAddress((prev) => (prev === address ? '' : prev))
           } else {
             // A regular address hash
             let checkedAddress = address
