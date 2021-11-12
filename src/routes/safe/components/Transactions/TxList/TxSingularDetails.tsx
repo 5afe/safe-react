@@ -1,17 +1,11 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
-import {
-  MultisigExecutionDetails,
-  MultisigExecutionInfo,
-  TransactionDetails as GWTransactionDetails,
-} from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionDetails as GWTransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import {
-  isModuleExecutionInfo,
-  isMultiSigExecutionDetails,
   StoreStructure,
   Transaction,
   TransactionDetails,
@@ -35,51 +29,7 @@ import {
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxLocationContext } from './TxLocationProvider'
 import { isTxQueued } from 'src/logic/safe/store/actions/utils'
-
-// Our store does not match the details returned from the endpoint
-const makeTx = (txDetails: GWTransactionDetails): Transaction => {
-  const getMissingSigners = ({
-    signers,
-    confirmations,
-  }: MultisigExecutionDetails): MultisigExecutionInfo['missingSigners'] => {
-    const missingSigners = signers.filter(({ value }) => {
-      const hasConfirmed = confirmations?.some(({ signer }) => signer?.value === value)
-      return !hasConfirmed
-    })
-
-    return !!missingSigners.length ? missingSigners : null
-  }
-
-  const getMultisigExecutionInfo = ({
-    detailedExecutionInfo,
-  }: GWTransactionDetails): MultisigExecutionInfo | undefined => {
-    if (!isMultiSigExecutionDetails(detailedExecutionInfo)) return undefined
-
-    return {
-      type: detailedExecutionInfo.type,
-      nonce: detailedExecutionInfo.nonce,
-      confirmationsRequired: detailedExecutionInfo.confirmationsRequired,
-      confirmationsSubmitted: detailedExecutionInfo.confirmations?.length || 0,
-      missingSigners: getMissingSigners(detailedExecutionInfo),
-    }
-  }
-
-  const executionInfo: Transaction['executionInfo'] = isModuleExecutionInfo(txDetails.detailedExecutionInfo)
-    ? txDetails.detailedExecutionInfo
-    : getMultisigExecutionInfo(txDetails)
-
-  const tx: Transaction = {
-    id: txDetails.txId,
-    timestamp: txDetails.executedAt || 0, // TODO: What is the fallback here?
-    txStatus: txDetails.txStatus,
-    txInfo: txDetails.txInfo,
-    executionInfo,
-    safeAppInfo: txDetails?.safeAppInfo || undefined,
-    txDetails,
-  }
-
-  return tx
-}
+import { makeTxSummaryFromTxDetails } from './utils'
 
 const getTxLocation = (
   txDetails: GWTransactionDetails,
@@ -94,7 +44,11 @@ const getTxLocation = (
   return isNext ? 'queued.next' : 'queued.queued'
 }
 
-const TxSingularDetails = (): ReactElement | null => {
+type Props = {
+  setSelectedTab: Dispatch<SetStateAction<string>>
+}
+
+const TxSingularDetails = ({ setSelectedTab }: Props): ReactElement => {
   const { [TRANSACTION_HASH_SLUG]: safeTxHash = false } = useParams<SafeRouteSlugs>()
   const [tx, setTx] = useState<Transaction>()
   const [txLocation, setTxLocation] = useState<TxLocation>()
@@ -119,14 +73,19 @@ const TxSingularDetails = (): ReactElement | null => {
         const txDetails = await fetchSafeTransaction(safeTxHash)
 
         if (isCurrent) {
-          const tx = makeTx(txDetails)
+          const tx = makeTxSummaryFromTxDetails(txDetails)
           setTx(tx)
 
           const txLocation = getTxLocation(txDetails, nextTxs)
           setTxLocation(txLocation)
+
+          const selectedTab = isTxQueued(tx.txStatus)
+            ? SAFE_ROUTES.TRANSACTIONS_QUEUE
+            : SAFE_ROUTES.TRANSACTIONS_HISTORY
+          setSelectedTab(selectedTab)
         }
       } catch (e) {
-        logError(Errors._613, e.message)
+        logError(Errors._614, e.message)
         setTxLoadError(true)
       }
     }
@@ -135,7 +94,7 @@ const TxSingularDetails = (): ReactElement | null => {
     return () => {
       isCurrent = false
     }
-  }, [safeTxHash, isLoaded, nextTxs])
+  }, [safeTxHash, isLoaded, nextTxs, setSelectedTab])
 
   if (txLoadError) {
     const txHistory = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_HISTORY, extractPrefixedSafeAddress())

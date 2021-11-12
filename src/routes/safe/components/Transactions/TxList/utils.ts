@@ -1,9 +1,23 @@
-import { AddressEx, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  AddressEx,
+  TransactionInfo,
+  Transfer,
+  TokenType,
+  TransactionDetails,
+  MultisigExecutionDetails,
+  MultisigExecutionInfo,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router'
 
 import { getNetworkInfo } from 'src/config'
-import { isCustomTxInfo, isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isCustomTxInfo,
+  isModuleExecutionInfo,
+  isMultiSigExecutionDetails,
+  isTransferTxInfo,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { history, SAFE_ROUTES, TRANSACTION_HASH_SLUG } from 'src/routes/routes'
@@ -118,4 +132,47 @@ export const getTxAccordionExpandedProp = (): undefined | boolean => {
   return safeTxHash === undefined ? undefined : !!safeTxHash
 }
 
-export const isDeeplinkedTx = (): boolean => !!getTxAccordionExpandedProp()
+// Our store does not match the details returned from the endpoint
+export const makeTxSummaryFromTxDetails = (txDetails: TransactionDetails): Transaction => {
+  const getMissingSigners = ({
+    signers,
+    confirmations,
+  }: MultisigExecutionDetails): MultisigExecutionInfo['missingSigners'] => {
+    const missingSigners = signers.filter(({ value }) => {
+      const hasConfirmed = confirmations?.some(({ signer }) => signer?.value === value)
+      return !hasConfirmed
+    })
+
+    return !!missingSigners.length ? missingSigners : null
+  }
+
+  const getMultisigExecutionInfo = ({
+    detailedExecutionInfo,
+  }: TransactionDetails): MultisigExecutionInfo | undefined => {
+    if (!isMultiSigExecutionDetails(detailedExecutionInfo)) return undefined
+
+    return {
+      type: detailedExecutionInfo.type,
+      nonce: detailedExecutionInfo.nonce,
+      confirmationsRequired: detailedExecutionInfo.confirmationsRequired,
+      confirmationsSubmitted: detailedExecutionInfo.confirmations?.length || 0,
+      missingSigners: getMissingSigners(detailedExecutionInfo),
+    }
+  }
+
+  const executionInfo: Transaction['executionInfo'] = isModuleExecutionInfo(txDetails.detailedExecutionInfo)
+    ? txDetails.detailedExecutionInfo
+    : getMultisigExecutionInfo(txDetails)
+
+  const tx: Transaction = {
+    id: txDetails.txId,
+    timestamp: txDetails.executedAt || 0, // TODO: What is the fallback here?
+    txStatus: txDetails.txStatus,
+    txInfo: txDetails.txInfo,
+    executionInfo,
+    safeAppInfo: txDetails?.safeAppInfo || undefined,
+    txDetails,
+  }
+
+  return tx
+}
