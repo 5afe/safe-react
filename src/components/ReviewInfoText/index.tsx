@@ -5,9 +5,9 @@ import { useSelector } from 'react-redux'
 import Paragraph from 'src/components/layout/Paragraph'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { lg, sm } from 'src/theme/variables'
-import { TransactionFailTextProps, TransactionFees } from '../TransactionsFees'
+import { TransactionFees } from '../TransactionsFees'
 
-type ReviewInfoTextProps = TransactionFailTextProps & { safeNonce?: string; testId?: string }
+type ReviewInfoTextProps = Parameters<typeof TransactionFees>[0] & { safeNonce?: string; testId?: string }
 
 const ReviewInfoTextWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
