@@ -16,6 +16,7 @@ type TxQueueRowProps = {
 }
 
 export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps): ReactElement => {
+  const shouldExpand = getTxAccordionExpandedProp()
   const { activeHover } = useContext(TxHoverContext)
   const actions = useTransactionActions(transaction)
   const [tx, setTx] = useState<Transaction>(transaction)
@@ -36,9 +37,9 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         unmountOnExit: true,
         appear: true,
       }}
-      expanded={getTxAccordionExpandedProp()}
+      expanded={shouldExpand}
     >
-      <StyledAccordionSummary>
+      <StyledAccordionSummary {...(shouldExpand && { expandIcon: null })}>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} actions={actions} />
       </StyledAccordionSummary>
       <AccordionDetails>

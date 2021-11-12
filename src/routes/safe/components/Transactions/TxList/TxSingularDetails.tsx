@@ -6,12 +6,12 @@ import {
   TransactionDetails as GWTransactionDetails,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Loader } from '@gnosis.pm/safe-react-components'
+import { useSelector } from 'react-redux'
 
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import {
   isModuleExecutionInfo,
   isMultiSigExecutionDetails,
-  isMultisigExecutionInfo,
   StoreStructure,
   Transaction,
   TransactionDetails,
@@ -33,9 +33,8 @@ import {
   nextTransactions,
   queuedTransactions,
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { useSelector } from 'react-redux'
-import { isTxPending } from 'src/logic/safe/store/actions/utils'
 import { TxLocationContext } from './TxLocationProvider'
+import { isTxQueued } from 'src/logic/safe/store/actions/utils'
 
 // Our store does not match the details returned from the endpoint
 const makeTx = (txDetails: GWTransactionDetails): Transaction => {
@@ -86,7 +85,7 @@ const getTxLocation = (
   txDetails: GWTransactionDetails,
   nextTxs: StoreStructure['queued']['next'] | undefined,
 ): TxLocation => {
-  if (!isTxPending(txDetails.txStatus)) {
+  if (!isTxQueued(txDetails.txStatus)) {
     return 'history'
   }
 
@@ -116,6 +115,7 @@ const TxSingularDetails = (): ReactElement | null => {
 
     const getTransaction = async (): Promise<void> => {
       try {
+        // As it is retrieved vis safeTxHash, group transactions are not shown
         const txDetails = await fetchSafeTransaction(safeTxHash)
 
         if (isCurrent) {
@@ -150,10 +150,9 @@ const TxSingularDetails = (): ReactElement | null => {
     )
   }
 
-  const label = isMultisigExecutionInfo(tx.executionInfo) ? tx.executionInfo.nonce : tx.timestamp
-  const transactions: TransactionDetails['transactions'] = [[label.toString(), [tx]]]
+  const transactions: TransactionDetails['transactions'] = [[tx.timestamp.toString(), [tx]]]
 
-  if (isTxPending(tx.txStatus)) {
+  if (isTxQueued(tx.txStatus)) {
     return (
       <TxLocationContext.Provider value={{ txLocation }}>
         <QueueTxList transactions={transactions} />

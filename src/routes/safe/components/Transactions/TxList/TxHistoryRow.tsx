@@ -8,24 +8,27 @@ import { TxInfoCreation } from './TxInfoCreation'
 import { getTxAccordionExpandedProp } from './utils'
 import { TxDetails } from './TxDetails'
 
-export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): ReactElement => (
-  <NoPaddingAccordion
-    TransitionProps={{
-      mountOnEnter: false,
-      unmountOnExit: true,
-      appear: true,
-    }}
-    expanded={getTxAccordionExpandedProp()}
-  >
-    <StyledAccordionSummary>
-      <TxHistoryCollapsed transaction={transaction} />
-    </StyledAccordionSummary>
-    <AccordionDetails>
-      {isCreationTxInfo(transaction.txInfo) ? (
-        <TxInfoCreation transaction={transaction} />
-      ) : (
-        <TxDetails transaction={transaction} />
-      )}
-    </AccordionDetails>
-  </NoPaddingAccordion>
-)
+export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
+  const shouldExpand = getTxAccordionExpandedProp()
+  return (
+    <NoPaddingAccordion
+      TransitionProps={{
+        mountOnEnter: false,
+        unmountOnExit: true,
+        appear: true,
+      }}
+      expanded={shouldExpand}
+    >
+      <StyledAccordionSummary {...(shouldExpand && { expandIcon: null })}>
+        <TxHistoryCollapsed transaction={transaction} />
+      </StyledAccordionSummary>
+      <AccordionDetails>
+        {isCreationTxInfo(transaction.txInfo) ? (
+          <TxInfoCreation transaction={transaction} />
+        ) : (
+          <TxDetails transaction={transaction} />
+        )}
+      </AccordionDetails>
+    </NoPaddingAccordion>
+  )
+}
