@@ -166,7 +166,7 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
 
   const tx: Transaction = {
     id: txDetails.txId,
-    timestamp: txDetails.executedAt || 0, // TODO: What is the fallback here?
+    timestamp: txDetails.executedAt || 0, // Historial transactions always have an executedAt, queued don't use it
     txStatus: txDetails.txStatus,
     txInfo: txDetails.txInfo,
     executionInfo,
