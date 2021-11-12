@@ -5,14 +5,14 @@ import { fetchSafesByOwner } from 'src/logic/safe/api/fetchSafesByOwner'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
 
-const useOwnerSafes = (): string[] => {
+const cache: Record<string, Record<string, string[]>> = {}
+
+const useOwnerSafes = (): Record<string, string[]> => {
   const connectedWalletAddress = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)
-  const [ownerSafes, setOwnerSafes] = useState<string[]>([])
+  const [ownerSafes, setOwnerSafes] = useState<Record<string, string[]>>(cache[connectedWalletAddress] || {})
 
   useEffect(() => {
-    setOwnerSafes([])
-
     if (!connectedWalletAddress) {
       return
     }
@@ -20,13 +20,20 @@ const useOwnerSafes = (): string[] => {
     const load = async () => {
       try {
         const safes = await fetchSafesByOwner(connectedWalletAddress)
-        setOwnerSafes(safes)
+
+        cache[connectedWalletAddress] = {
+          ...(cache[connectedWalletAddress] || {}),
+          [chainId]: safes,
+        }
+
+        setOwnerSafes(cache[connectedWalletAddress])
       } catch (err) {
         logError(Errors._610, err.message)
       }
     }
+
     load()
-  }, [chainId, connectedWalletAddress])
+  }, [chainId, connectedWalletAddress, setOwnerSafes])
 
   return ownerSafes
 }

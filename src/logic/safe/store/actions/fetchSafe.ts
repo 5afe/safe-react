@@ -77,6 +77,12 @@ export const fetchSafe =
       return
     }
 
+    // If the network has changed while the safe was being loaded,
+    // ignore the result
+    if (remoteSafeInfo?.chainId !== getNetworkId()) {
+      return
+    }
+
     // remote (client-gateway)
     if (remoteSafeInfo) {
       safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
