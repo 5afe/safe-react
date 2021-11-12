@@ -19,12 +19,12 @@ export const ReviewInfoText = ({
   isCreation,
   isExecution,
   isOffChainSignature,
-  safeNonce,
+  safeNonce = '',
   txEstimationExecutionStatus,
   testId,
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
-  const transactionsToGo = parseInt(safeNonce || '', 10) - nonce
+  const transactionsToGo = parseInt(safeNonce, 10) - nonce
 
   return (
     <ReviewInfoTextWrapper data-testid={testId}>

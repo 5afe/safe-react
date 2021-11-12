@@ -57,8 +57,8 @@ export const TxParametersDetail = ({
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
-  const { safeNonce } = txParameters
-  const isSafeNonceFuture = parseInt(safeNonce || '', 10) > nonce
+  const { safeNonce = '' } = txParameters
+  const isSafeNonceFuture = parseInt(safeNonce, 10) > nonce
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(isSafeNonceFuture)
 
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
