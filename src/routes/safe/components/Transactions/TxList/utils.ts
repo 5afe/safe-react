@@ -133,7 +133,7 @@ export const getTxAccordionExpandedProp = (): undefined | boolean => {
 }
 
 // Our store does not match the details returned from the endpoint
-export const makeTxSummaryFromTxDetails = (txDetails: TransactionDetails): Transaction => {
+export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction => {
   const getMissingSigners = ({
     signers,
     confirmations,

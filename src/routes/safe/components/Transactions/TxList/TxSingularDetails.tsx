@@ -29,7 +29,7 @@ import {
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxLocationContext } from './TxLocationProvider'
 import { isTxQueued } from 'src/logic/safe/store/actions/utils'
-import { makeTxSummaryFromTxDetails } from './utils'
+import { makeTxFromDetails } from './utils'
 
 const getTxLocation = (
   txDetails: GWTransactionDetails,
@@ -73,7 +73,7 @@ const TxSingularDetails = ({ setSelectedTab }: Props): ReactElement => {
         const txDetails = await fetchSafeTransaction(safeTxHash)
 
         if (isCurrent) {
-          const tx = makeTxSummaryFromTxDetails(txDetails)
+          const tx = makeTxFromDetails(txDetails)
           setTx(tx)
 
           const txLocation = getTxLocation(txDetails, nextTxs)
