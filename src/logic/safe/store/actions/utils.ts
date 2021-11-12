@@ -125,4 +125,9 @@ export const isTxPending = (txStatus: TransactionDetails['txStatus']): boolean =
   [TransactionStatus.PENDING, TransactionStatus.PENDING_FAILED].includes(txStatus)
 
 export const isTxQueued = (txStatus: TransactionDetails['txStatus']): boolean =>
-  [TransactionStatus.AWAITING_CONFIRMATIONS, TransactionStatus.AWAITING_EXECUTION].includes(txStatus)
+  isTxPending(txStatus) ||
+  [
+    TransactionStatus.AWAITING_CONFIRMATIONS,
+    TransactionStatus.AWAITING_EXECUTION,
+    TransactionStatus.WILL_BE_REPLACED,
+  ].includes(txStatus)
