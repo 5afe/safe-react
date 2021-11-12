@@ -8,6 +8,7 @@ import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTr
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { updateAvailableCurrencies } from 'src/logic/currencyValues/store/actions/updateAvailableCurrencies'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { history, WELCOME_ROUTE } from 'src/routes/routes'
 
 export const useLoadSafe = (safeAddress?: string): boolean => {
   const dispatch = useDispatch<Dispatch>()
@@ -22,7 +23,14 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
     const fetchData = async () => {
       if (safeAddress) {
         await dispatch(fetchLatestMasterContractVersion())
-        await dispatch(fetchSafe(safeAddress, isSafeLoaded))
+        const isSuccess = await dispatch(fetchSafe(safeAddress, isSafeLoaded))
+
+        // Redirect to the Welcome page if the Safe wasn't found
+        if (!isSuccess) {
+          history.push(WELCOME_ROUTE)
+          return
+        }
+
         setIsSafeLoaded(true)
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(chainId, safeAddress))

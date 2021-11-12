@@ -18,7 +18,7 @@ import Web3 from 'web3'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
@@ -279,7 +279,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   //track GA
   useEffect(() => {
     if (safeApp) {
-      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: safeApp.name })
+      trackEvent({ ...SAFE_EVENTS.SAFE_APP, label: safeApp.name })
     }
   }, [safeApp, trackEvent])
 
