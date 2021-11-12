@@ -7,7 +7,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { lg, sm } from 'src/theme/variables'
 import { TransactionFailTextProps, TransactionFees } from '../TransactionsFees'
 
-type ReviewInfoTextProps = TransactionFailTextProps & { safeNonce?: string }
+type ReviewInfoTextProps = TransactionFailTextProps & { safeNonce?: string; testId?: string }
 
 const ReviewInfoTextWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
@@ -21,12 +21,13 @@ export const ReviewInfoText = ({
   isOffChainSignature,
   safeNonce,
   txEstimationExecutionStatus,
+  testId,
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
   const transactionsToGo = parseInt(safeNonce || '', 10) - nonce
 
   return (
-    <ReviewInfoTextWrapper>
+    <ReviewInfoTextWrapper data-testid={testId}>
       {transactionsToGo > 0 ? (
         <Paragraph size="lg" align="center">
           <Text size="lg" as="span" color="text" strong>
