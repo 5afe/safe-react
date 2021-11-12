@@ -11,8 +11,8 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import { getNetworkConfigById, getShortChainNameById } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getChainInfoById, getShortNameById } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import {
   generateSafeRoute,
@@ -59,7 +59,7 @@ const SafeListItem = ({
   const currentSafeAddress = extractSafeAddress()
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
-  const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
+  const nativeCoinSymbol = getChainInfoById(networkId)?.nativeCurrency.symbol ?? 'ETH'
   const showAddSafeLink = !isSafeAdded(loadedSafes, address)
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const SafeListItem = ({
   }
 
   const routesSlug: SafeRouteParams = {
-    shortName: getShortChainNameById(networkId),
+    shortName: getShortNameById(networkId),
     safeAddress: address,
   }
 

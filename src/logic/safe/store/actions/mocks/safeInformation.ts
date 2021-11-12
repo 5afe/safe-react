@@ -1,5 +1,5 @@
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { NETWORK_ID } from 'src/config/network.d'
 
 export const remoteSafeInfoWithModules = {
   address: {
@@ -98,7 +98,7 @@ export const localSafesInfo = {
   '0xe414604Ad49602C0b9c0b08D0781ECF96740786a': {
     name: 'Safe A',
     address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
-    chainId: ETHEREUM_NETWORK.RINKEBY,
+    chainId: NETWORK_ID.RINKEBY,
     threshold: 2,
     owners: [
       '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
@@ -177,7 +177,7 @@ export const localSafesInfo = {
 export const inMemoryPartialSafeInformation = {
   name: 'Safe A',
   address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
-  chainId: ETHEREUM_NETWORK.RINKEBY,
+  chainId: NETWORK_ID.RINKEBY,
   threshold: 2,
   owners: [
     '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',

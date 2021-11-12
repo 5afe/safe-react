@@ -68,7 +68,6 @@ const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => !loadedViaU
 
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
-  const networks = getNetworks()
   const currentSafeAddress = extractSafeAddress()
   const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
   const ownedSafes = useOwnerSafes()
@@ -76,10 +75,10 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
 
   return (
     <StyledList>
-      {networks.map(({ id, backgroundColor, textColor, label }) => {
-        const isCurrentNetwork = id === getNetworkId()
-        const localSafesOnNetwork = localSafes[id]
-        const ownedSafesOnNetwork = ownedSafes[id] || []
+      {getNetworks().map(({ chainId, theme, chainName }) => {
+        const isCurrentNetwork = chainId === getNetworkId()
+        const localSafesOnNetwork = localSafes[chainId]
+        const ownedSafesOnNetwork = ownedSafes[chainId] || []
         const shouldExpandOwnedSafes =
           (isCurrentNetwork &&
             ownedSafesOnNetwork.some(
@@ -90,18 +89,18 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         if (!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && !isCurrentNetwork) return null
 
         return (
-          <Fragment key={id}>
+          <Fragment key={chainId}>
             <ListItem selected>
-              <StyledDot backgroundColor={backgroundColor} textColor={textColor} />
-              {label}
+              <StyledDot {...theme} />
+              {chainName}
             </ListItem>
             <MuiList>
               {localSafesOnNetwork.length > 0 &&
                 localSafesOnNetwork.map((safe) => (
                   <SafeListItem
                     key={safe.address}
-                    networkId={id}
-                    onNetworkSwitch={() => setNetwork(id)}
+                    networkId={chainId}
+                    onNetworkSwitch={() => setNetwork(chainId)}
                     onSafeClick={onSafeClick}
                     loadedSafes={loadedSafes}
                     shouldScrollToSafe
@@ -122,7 +121,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                       <Text
                         size="lg"
                         color="placeHolder"
-                      >{`Safes owned on ${label} (${ownedSafesOnNetwork.length})`}</Text>
+                      >{`Safes owned on ${chainName} (${ownedSafesOnNetwork.length})`}</Text>
                     }
                     defaultExpanded={shouldExpandOwnedSafes}
                   >
@@ -130,7 +129,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                       <SafeListItem
                         key={address}
                         address={address}
-                        networkId={id}
+                        networkId={chainId}
                         onSafeClick={onSafeClick}
                         loadedSafes={loadedSafes}
                         shouldScrollToSafe={!isSafeAdded(loadedSafes, address)}

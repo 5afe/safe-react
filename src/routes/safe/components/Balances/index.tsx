@@ -2,6 +2,7 @@ import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-compo
 import { ReactElement, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
@@ -10,7 +11,6 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { FEATURES } from 'src/config/networks/network.d'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
 

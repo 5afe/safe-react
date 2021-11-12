@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { useKnownAddress } from './hooks/useKnownAddress'
 
 type EthHashInfoRestProps = Omit<
@@ -29,7 +29,7 @@ export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): React
       showAvatar
       customAvatar={toInfo.image}
       showCopyBtn
-      explorerUrl={getExplorerInfo(address)}
+      explorerUrl={getBlockExplorerInfo(address)}
       {...rest}
     />
   )

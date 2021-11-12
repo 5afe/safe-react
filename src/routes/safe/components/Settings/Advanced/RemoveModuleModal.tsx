@@ -9,7 +9,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
@@ -140,7 +140,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                       hash={moduleAddress}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(moduleAddress)}
+                      explorerUrl={getBlockExplorerInfo(moduleAddress)}
                     />
                   </Col>
                 </Row>

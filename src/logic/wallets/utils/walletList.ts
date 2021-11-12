@@ -1,7 +1,7 @@
 import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
 
-import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 'src/config'
-import { WALLETS } from 'src/config/networks/network.d'
+import { getNetworkId, getRpcServiceUrl, getDisabledWallets } from 'src/config'
+import { WALLETS } from 'src/config/network.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
 type Wallet = WalletInitOptions & {
@@ -71,7 +71,7 @@ const wallets = (): Wallet[] => {
 }
 
 export const getSupportedWallets = (): WalletInitOptions[] => {
-  const disabledWallets = getNetworkConfigDisabledWallets()
+  const disabledWallets = getDisabledWallets()
 
   const { isDesktop } = window
   /* eslint-disable no-unused-vars */

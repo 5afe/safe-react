@@ -14,7 +14,7 @@ import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 
 export const REMOVE_GUARD_BTN_TEST_ID = 'remove-guard-btn'
 export const GUARDS_ROW_TEST_ID = 'guards-row'
@@ -56,7 +56,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                     <Fragment key={`${columnId}-${index}`}>
                       <TableCell align={column.align} component="td" key={columnId}>
                         <Block justify="left">
-                          <EthHashInfo hash={row} showCopyBtn showAvatar explorerUrl={getExplorerInfo(row)} />
+                          <EthHashInfo hash={row} showCopyBtn showAvatar explorerUrl={getBlockExplorerInfo(row)} />
                         </Block>
                       </TableCell>
                       <TableCell component="td">

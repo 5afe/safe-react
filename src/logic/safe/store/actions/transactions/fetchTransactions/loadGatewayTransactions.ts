@@ -1,8 +1,9 @@
 import { getTransactionHistory, getTransactionQueue } from '@gnosis.pm/safe-react-gateway-sdk'
-import { getClientGatewayUrl, getNetworkId } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
+import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 /*************/
 /*  HISTORY  */
@@ -17,7 +18,7 @@ const historyPointers: { [chainId: string]: { [safeAddress: string]: { next?: st
 export const loadPagedHistoryTransactions = async (
   safeAddress: string,
 ): Promise<{ values: HistoryGatewayResponse['results']; next?: string } | undefined> => {
-  const chainId = getNetworkId().toString()
+  const chainId = getNetworkId()
   // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!historyPointers[chainId][safeAddress]?.next) {
@@ -26,7 +27,7 @@ export const loadPagedHistoryTransactions = async (
 
   try {
     const { results, next, previous } = await getTransactionHistory(
-      getClientGatewayUrl(),
+      CONFIG_SERVICE_URL,
       chainId,
       checksumAddress(safeAddress),
       historyPointers[chainId][safeAddress].next,
@@ -41,10 +42,10 @@ export const loadPagedHistoryTransactions = async (
 }
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
-  const chainId = getNetworkId().toString()
+  const chainId = getNetworkId()
   try {
     const { results, next, previous } = await getTransactionHistory(
-      getClientGatewayUrl(),
+      CONFIG_SERVICE_URL,
       chainId,
       checksumAddress(safeAddress),
     )
@@ -76,7 +77,7 @@ const queuedPointers: { [chainId: string]: { [safeAddress: string]: { next?: str
 export const loadPagedQueuedTransactions = async (
   safeAddress: string,
 ): Promise<{ values: QueuedGatewayResponse['results']; next?: string } | undefined> => {
-  const chainId = getNetworkId().toString()
+  const chainId = getNetworkId()
   // if `queuedPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `queuedPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!queuedPointers[safeAddress]?.next) {
@@ -85,7 +86,7 @@ export const loadPagedQueuedTransactions = async (
 
   try {
     const { results, next, previous } = await getTransactionQueue(
-      getClientGatewayUrl(),
+      CONFIG_SERVICE_URL,
       chainId,
       checksumAddress(safeAddress),
       queuedPointers[chainId][safeAddress].next,
@@ -100,10 +101,10 @@ export const loadPagedQueuedTransactions = async (
 }
 
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
-  const chainId = getNetworkId().toString()
+  const chainId = getNetworkId()
   try {
     const { results, next, previous } = await getTransactionQueue(
-      getClientGatewayUrl(),
+      CONFIG_SERVICE_URL,
       chainId,
       checksumAddress(safeAddress),
     )

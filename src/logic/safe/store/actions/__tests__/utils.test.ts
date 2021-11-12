@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,

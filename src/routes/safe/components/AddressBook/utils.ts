@@ -1,5 +1,5 @@
+import { getNetworks } from 'src/config'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
 export const FILE_SIZE_TOO_BIG_ERROR = 'The size of the file is over 1 MB'
@@ -29,8 +29,8 @@ export const validateFile = (file: File): string | undefined => {
 }
 
 const isValidChainId = (chainId: string | number): boolean => {
-  return Object.keys(ETHEREUM_NETWORK).some((network) => {
-    return ETHEREUM_NETWORK[network] === chainId.toString()
+  return getNetworks().some((network) => {
+    return network.chainId === chainId.toString()
   })
 }
 

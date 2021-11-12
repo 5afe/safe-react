@@ -12,7 +12,7 @@ import { ReplaceOwnerModal } from './ReplaceOwnerModal'
 import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData, OwnerData } from './dataFetcher'
 import { useStyles } from './style'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -111,7 +111,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                             hash={row[column.id]}
                             showCopyBtn
                             showAvatar
-                            explorerUrl={getExplorerInfo(row[column.id])}
+                            explorerUrl={getBlockExplorerInfo(row[column.id])}
                           />
                         </Block>
                       ) : (

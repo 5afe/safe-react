@@ -2,7 +2,7 @@ import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -183,7 +183,7 @@ export const ReviewRemoveOwnerModal = ({
                               name={safeOwner.name}
                               showCopyBtn
                               showAvatar
-                              explorerUrl={getExplorerInfo(safeOwner.address)}
+                              explorerUrl={getBlockExplorerInfo(safeOwner.address)}
                             />
                           </Col>
                         </Row>
@@ -204,7 +204,7 @@ export const ReviewRemoveOwnerModal = ({
                       name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(owner.address)}
+                      explorerUrl={getBlockExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>

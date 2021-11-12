@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -176,7 +176,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
                   name={tx.recipientName}
                   showAvatar
                   showCopyBtn
-                  explorerUrl={getExplorerInfo(tx.recipientAddress)}
+                  explorerUrl={getBlockExplorerInfo(tx.recipientAddress)}
                 />
               </Col>
             </Row>

@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { Modal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -39,7 +39,7 @@ export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): React
               name={owner.name}
               showCopyBtn
               showAvatar
-              explorerUrl={getExplorerInfo(owner.address)}
+              explorerUrl={getBlockExplorerInfo(owner.address)}
             />
           </Col>
         </Row>

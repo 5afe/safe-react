@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getChainInfo, getBlockExplorerInfo, getNativeCurrencyAddress } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -90,15 +90,16 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
-  const { nativeCoin } = getNetworkInfo()
+  const { nativeCurrency } = getChainInfo()
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
+  const tempNativeCurrencyAddressToReplace = getNativeCurrencyAddress() /*nativeCurrency.address*/
   const isSendingNativeToken = useMemo(
-    () => sameAddress(txToken?.address, nativeCoin.address),
-    [txToken, nativeCoin.address],
+    () => sameAddress(txToken?.address, tempNativeCurrencyAddressToReplace),
+    [txToken, tempNativeCurrencyAddressToReplace],
   )
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
-  const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
+  const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCurrency.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -230,7 +231,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                   name={tx.recipientName}
                   showCopyBtn
                   showAvatar
-                  explorerUrl={getExplorerInfo(tx.recipientAddress)}
+                  explorerUrl={getBlockExplorerInfo(tx.recipientAddress)}
                 />
               </Col>
             </Row>

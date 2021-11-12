@@ -2,10 +2,10 @@ import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 

@@ -2,7 +2,7 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
@@ -10,7 +10,7 @@ import { NOT_AVAILABLE } from './utils'
 
 export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData } = txDetails
-  const explorerUrl = txHash ? getExplorerInfo(txHash) : null
+  const explorerUrl = txHash ? getBlockExplorerInfo(txHash) : null
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
   const safeTxHash = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.safeTxHash : undefined

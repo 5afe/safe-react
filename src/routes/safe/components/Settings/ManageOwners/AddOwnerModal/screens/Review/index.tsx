@@ -3,7 +3,7 @@ import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -163,7 +163,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                           name={owner.name}
                           showCopyBtn
                           showAvatar
-                          explorerUrl={getExplorerInfo(owner.address)}
+                          explorerUrl={getBlockExplorerInfo(owner.address)}
                         />
                       </Col>
                     </Row>
@@ -183,7 +183,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       name={values.ownerName}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(values.ownerAddress)}
+                      explorerUrl={getBlockExplorerInfo(values.ownerAddress)}
                     />
                   </Col>
                 </Row>

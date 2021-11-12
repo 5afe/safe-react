@@ -1,7 +1,7 @@
 import Onboard from 'bnc-onboard'
 import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
-import { getNetworkId, getNetworkName } from 'src/config'
+import { getNetworkId, getChainName } from 'src/config'
 import { setWeb3 } from './getWeb3'
 import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
@@ -15,7 +15,7 @@ const getOnboardConfiguration = () => {
   return {
     networkId: parseInt(getNetworkId(), 10),
     // Is it mandatory for Ledger to work to send network name in lowercase
-    networkName: getNetworkName().toLowerCase(),
+    networkName: getChainName().toLowerCase(),
     subscriptions: {
       wallet: (wallet: Wallet) => {
         if (wallet.provider) {

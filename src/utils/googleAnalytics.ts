@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
 import { useSelector } from 'react-redux'
-import { getNetworkInfo, getNetworkId } from 'src/config'
+import { getNetworkId, getChainInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -82,7 +82,7 @@ export const COOKIES_LIST = [
 const shouldUseGoogleAnalytics = IS_PRODUCTION
 
 export const trackAnalyticsEvent = (event: Parameters<typeof ReactGA.event>[0]): void => {
-  const chainName = getNetworkInfo().label
+  const { chainName } = getChainInfo()
 
   // action, category, label, etc. => eventAction, eventCategory, eventLabel, etc.
   const fieldsObject: Parameters<typeof ReactGA.ga>[1] = Object.entries(event).reduce(

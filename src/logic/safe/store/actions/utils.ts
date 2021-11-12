@@ -10,7 +10,7 @@ import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {

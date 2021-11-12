@@ -1,6 +1,6 @@
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
-import { getNetworkName } from 'src/config'
+import { getChainName } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 // Don't use sessionStorage and cookieStorage
@@ -10,7 +10,7 @@ const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
 // We need this to update on run time depending on selected network name
-export const getStoragePrefix = (networkName = getNetworkName()): string => `v2_${networkName}`
+export const getStoragePrefix = (networkName = getChainName()): string => `v2_${networkName}`
 
 export const loadFromStorage = async <T = unknown>(
   key: string,

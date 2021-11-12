@@ -16,7 +16,7 @@ import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 const MODULES_ROW_TEST_ID = 'owners-row'
@@ -77,7 +77,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                               hash={moduleAddress}
                               showCopyBtn
                               showAvatar
-                              explorerUrl={getExplorerInfo(moduleAddress)}
+                              explorerUrl={getBlockExplorerInfo(moduleAddress)}
                             />
                           </Block>
                         ) : (

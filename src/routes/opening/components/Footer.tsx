@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
 
 const StyledText = styled(Text)`
@@ -35,9 +35,8 @@ const LoaderText = styled.span`
 `
 
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
-  const explorerInfo = getExplorerInfo(safeCreationTxHash)
-  const { url, alt } = explorerInfo()
-  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url)
+  const explorerInfo = getBlockExplorerInfo(safeCreationTxHash)
+  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(explorerInfo)
   const explorerDomain = match !== null ? match[2] : 'Network Explorer'
 
   return (
@@ -45,14 +44,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
       <Text size="xl">This process should take a couple of minutes.</Text>
       <StyledText size="xl">
         Follow the progress on{' '}
-        <Link
-          href={url}
-          aria-label={alt}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="safe-create-explorer-link"
-          title="More info about this in Etherscan"
-        >
+        <Link href={explorerInfo} target="_blank" rel="noopener noreferrer" data-testid="safe-create-explorer-link">
           <Text size="xl" as="span" color="primary">
             {explorerDomain}
           </Text>

@@ -18,7 +18,7 @@ import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/sto
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 
@@ -178,7 +178,7 @@ const SendCollectible = ({
                           name={selectedEntry.name}
                           showAvatar
                           showCopyBtn
-                          explorerUrl={getExplorerInfo(selectedEntry.address)}
+                          explorerUrl={getBlockExplorerInfo(selectedEntry.address)}
                         />
                       </Col>
                     </Row>

@@ -1,4 +1,4 @@
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 import { getNetworkId } from 'src/config'
 
 export const ADDRESS_BOOK_DEFAULT_NAME = 'UNKNOWN'

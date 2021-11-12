@@ -12,7 +12,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
 import { useSelector } from 'react-redux'
@@ -112,7 +112,7 @@ export const UserDetails = ({
   provider,
   userAddress,
 }: Props): React.ReactElement => {
-  const explorerUrl = getExplorerInfo(userAddress)
+  const explorerUrl = getBlockExplorerInfo(userAddress)
   const connectedNetwork = useSelector(networkSelector)
   const desiredNetwork = useSelector(currentChainId)
   const classes = useStyles()

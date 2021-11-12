@@ -1,19 +1,8 @@
+import { ChainInfo, FEATURES, GasPriceOracle, GAS_PRICE_TYPE } from '@gnosis.pm/safe-react-gateway-sdk'
 import memoize from 'lodash.memoize'
-
-import networks from 'src/config/networks'
-import {
-  EnvironmentSettings,
-  ETHEREUM_NETWORK,
-  SHORT_NAME,
-  FEATURES,
-  GasPriceOracle,
-  NetworkConfig,
-  NetworkInfo,
-  NetworkSettings,
-  SafeFeatures,
-  Wallets,
-} from 'src/config/networks/network.d'
-import { isValidShortChainName } from 'src/routes/routes'
+import { CHAIN_CONFIG_KEY } from 'src/logic/config/store/actions'
+import { currentShortName } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -21,28 +10,16 @@ import {
   INFURA_TOKEN,
   IS_PRODUCTION,
   NODE_ENV,
-  SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
 import { loadFromSessionStorage } from 'src/utils/storage/session'
+import { ETHEREUM_NETWORK, NETWORK_ID, SHORT_NAME } from './network.d'
 
-export const getNetworks = (): NetworkInfo[] => {
-  // NETWORK_ROOT_ROUTES follows the same destructuring
-  const { local: _, ...usefulNetworks } = networks
-  return Object.values(usefulNetworks).map((networkObj) => ({
-    id: networkObj.network.id,
-    shortName: networkObj.network.shortName,
-    label: networkObj.network.label,
-    backgroundColor: networkObj.network.backgroundColor,
-    textColor: networkObj.network.textColor,
-  }))
-}
+export const getNetworks = (): ChainInfo[] => loadFromSessionStorage(CHAIN_CONFIG_KEY) || []
 
-export const DEFAULT_NETWORK = IS_PRODUCTION ? ETHEREUM_NETWORK.MAINNET : ETHEREUM_NETWORK.RINKEBY
+// Mainnet : Rinkeby
+export const DEFAULT_NETWORK = IS_PRODUCTION ? '1' : '4'
 
-const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
-  return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
-}
-
+// TODO: Move to currentSession.networkId instead of sessionStorage
 export const NETWORK_ID_KEY = 'SAFE__networkId'
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const { pathname } = window.location
@@ -51,15 +28,13 @@ export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
     return pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
   })
 
-  if (network?.id) {
-    return network.id
+  if (network?.chainId) {
+    return network.chainId
   }
 
-  const networkId = loadFromSessionStorage(NETWORK_ID_KEY)
-  return isNetworkId(networkId) ? networkId : DEFAULT_NETWORK
+  return loadFromSessionStorage(NETWORK_ID_KEY) || DEFAULT_NETWORK
 }
 
-// TODO: Centralise networkId and sessionStorage in store under currentSession.networkId
 // May be able to make extraction of the shortName in URL a bit better
 let networkId = getInitialNetworkId()
 
@@ -68,34 +43,22 @@ export const setNetworkId = (id: ETHEREUM_NETWORK): void => {
 }
 export const getNetworkId = (): ETHEREUM_NETWORK => networkId
 
-export const getNetworkName = (networkId: ETHEREUM_NETWORK = getNetworkId()): string => {
-  const networkNames = Object.keys(ETHEREUM_NETWORK)
-  const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == networkId)
-  return name || ''
-}
+export const getChainName = (chainId: ETHEREUM_NETWORK = getNetworkId()): ChainInfo['chainName'] =>
+  getNetworks().find((chain) => chain.chainId === chainId)?.chainName || ''
 
-export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | undefined => {
-  return Object.values(networks).find((cfg) => cfg.network.id === id)
-}
+// FIXME: can be undefined
+export const getChainInfoById = (chainId: ETHEREUM_NETWORK): ChainInfo =>
+  getNetworks().find((chain) => chain.chainId === chainId)!
 
-export const getNetworkLabel = (id: ETHEREUM_NETWORK = getNetworkId()): string => {
-  const cfg = getNetworkConfigById(id)
-  return cfg ? cfg.network.label : ''
-}
+export const usesInfuraRPC = (): boolean =>
+  [NETWORK_ID.MAINNET, NETWORK_ID.RINKEBY, NETWORK_ID.POLYGON].includes(getNetworkId() as NETWORK_ID)
 
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
-  getNetworkId(),
-)
+export const getCurrentShortChainName = (): SHORT_NAME => currentShortName(store)
 
-export const getCurrentShortChainName = (): SHORT_NAME => getConfig().network.shortName
+export const getShortNameById = (networkId = getNetworkId()): SHORT_NAME => getChainInfoById(networkId)?.shortName || ''
 
-export const getShortChainNameById = (networkId = getNetworkId()): string =>
-  getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
-
-export const getNetworkIdByShortChainName = (shortName: string): ETHEREUM_NETWORK => {
-  if (!isValidShortChainName(shortName)) return DEFAULT_NETWORK
-  return getNetworks().find((network) => network.shortName === shortName)?.id || DEFAULT_NETWORK
-}
+export const getChainIdByShortName = (shortName: SHORT_NAME): ETHEREUM_NETWORK =>
+  getNetworks().find((network) => network.shortName === shortName)?.chainId || ''
 
 export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {
   switch (APP_ENV) {
@@ -113,79 +76,51 @@ export const getCurrentEnvironment = (): 'test' | 'production' | 'dev' => {
   }
 }
 
-export type NetworkSpecificConfiguration = EnvironmentSettings & {
-  network: NetworkSettings
-  disabledFeatures?: SafeFeatures
-  disabledWallets?: Wallets
-}
+// FIXME: Is not always defined
+export const getChainInfo = (): ChainInfo => getNetworks().find((network) => network.chainId === getNetworkId())!
 
-export const getConfig = (): NetworkSpecificConfiguration => {
-  const currentEnvironment = getCurrentEnvironment()
+// FIXME: This should be added to CGW
+export const getNativeCurrencyAddress = (): string => ''
 
-  // lookup the config file based on the network specified in the NETWORK variable
-  const configFile = networks[getNetworkName().toLowerCase()]
-  // defaults to 'production' as it's the only environment that is required for the network configs
-  const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
+export const getTxServiceUrl = (): ChainInfo['transactionService'] => getChainInfo()?.transactionService
 
-  return {
-    ...networkBaseConfig,
-    network: configFile.network,
-    disabledFeatures: configFile.disabledFeatures,
-    disabledWallets: configFile.disabledWallets,
-  }
-}
+// FIXME: Typescript error
+export const getGasPriceOracles = (): GasPriceOracle[] =>
+  //@ts-ignore
+  getChainInfo()?.gasPrice?.filter(({ type }) => type === GAS_PRICE_TYPE.ORACLE)
 
-export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
+// FIXME: Not sure if this is correct. We had a fixed gasPrice value before
+export const getGasPrice = (): number => +getGasPriceOracles()[0].gweiFactor
 
-export const getTxServiceUrl = (): string => getConfig().txServiceUrl
+export const getRpcServiceUrl = (): ChainInfo['rpcUri']['value'] =>
+  usesInfuraRPC() ? `${getChainInfo()?.rpcUri.value}/${INFURA_TOKEN}` : getChainInfo()?.rpcUri.value
 
-export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
+export const getSafeServiceBaseUrl = (safeAddress: string): ChainInfo['transactionService'] =>
+  `${getTxServiceUrl()}/safes/${safeAddress}`
 
-export const getGasPriceOracles = (): GasPriceOracle[] | undefined => getConfig()?.gasPriceOracles
-
-const useInfuraRPC = () => {
-  return [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(getNetworkId())
-}
-
-export const getSafeAppsRpcServiceUrl = (): string =>
-  useInfuraRPC() ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
-
-export const getRpcServiceUrl = (): string =>
-  useInfuraRPC() ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
-
-export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
-
-export const getTokensServiceBaseUrl = () => `${getTxServiceUrl()}/tokens`
+export const getTokensServiceBaseUrl = (): ChainInfo['transactionService'] => `${getTxServiceUrl()}/tokens`
 
 /**
  * Checks if a particular feature is enabled in the current network configuration
  * @params {FEATURES} feature
  * @returns boolean
  */
-export const isFeatureEnabled = (feature: FEATURES): boolean => {
-  const { disabledFeatures } = getConfig()
-  return !disabledFeatures?.some((disabledFeature) => disabledFeature === feature)
-}
+export const isFeatureEnabled = (feature: FEATURES): boolean =>
+  !!getChainInfo()?.features?.some((value) => value === feature)
 
-export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
-
-export const getNetworkInfo = (): NetworkSettings => getConfig().network
+export const getDisabledWallets = (): ChainInfo['disabledWallets'] => getChainInfo()?.disabledWallets || []
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID
 
 const fetchContractABI = memoize(
-  async (url: string, contractAddress: string, apiKey?: string) => {
-    let params: Record<string, string> = {
-      module: 'contract',
-      action: 'getAbi',
-      address: contractAddress,
-    }
+  async (url: ChainInfo['blockExplorerUriTemplate']['api'], contractAddress: string, apiKey?: string) => {
+    const apiUrl = url
+      .replace('{{module}}', 'contract')
+      .replace('{{action}}', 'getAbi')
+      .replace('{{address}}', contractAddress)
+      .replace(apiKey ? '{{apiKey}}' : '&apiKey={{apiKey}}', apiKey || '')
 
-    if (apiKey) {
-      params = { ...params, apiKey }
-    }
-
-    const response = await fetch(`${url}?${new URLSearchParams(params)}`)
+    const response = await fetch(apiUrl)
 
     if (!response.ok) {
       return { status: 0, result: [] }
@@ -196,33 +131,24 @@ const fetchContractABI = memoize(
   (url, contractAddress) => `${url}_${contractAddress}`,
 )
 
-const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefined => {
-  switch (networkExplorerName.toLowerCase()) {
-    case 'etherscan': {
-      return ETHERSCAN_API_KEY
-    }
-    default: {
-      return undefined
-    }
-  }
+const getExporerUriTemplate = (): ChainInfo['blockExplorerUriTemplate'] => getChainInfo().blockExplorerUriTemplate
+
+export const getExplorerUrl = (): string => {
+  const { address } = getExporerUriTemplate()
+  return address.replace('{{address}}', '')
 }
 
-const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => {
-  const cfg = getConfig()
-  return {
-    name: cfg.networkExplorerName,
-    url: cfg.networkExplorerUrl,
-    apiUrl: cfg.networkExplorerApiUrl,
-  }
-}
+const getExplorerApiKey = (blockExplorer: string): string | undefined =>
+  blockExplorer.includes('etherscan') ? ETHERSCAN_API_KEY : undefined
 
-export const getContractABI = async (contractAddress: string) => {
-  const { apiUrl, name } = getNetworkExplorerInfo()
+// FIXME: Promise returns our ABI?
+export const getContractABI = async (contractAddress: string): Promise<any> => {
+  const { api } = getExporerUriTemplate()
 
-  const apiKey = getNetworkExplorerApiKey(name)
+  const apiKey = getExplorerApiKey(api)
 
   try {
-    const { result, status } = await fetchContractABI(apiUrl, contractAddress, apiKey)
+    const { result, status } = await fetchContractABI(api, contractAddress, apiKey)
 
     if (status === '0') {
       return []
@@ -235,22 +161,9 @@ export const getContractABI = async (contractAddress: string) => {
   }
 }
 
-export type BlockScanInfo = () => {
-  alt: string
-  url: string
-}
+export const getBlockExplorerInfo = (hash: string): string => {
+  const { txHash, address } = getExporerUriTemplate()
+  const isTx = hash.length > 42
 
-export const getExplorerInfo = (hash: string): BlockScanInfo => {
-  const { name, url } = getNetworkExplorerInfo()
-  const networkInfo = getNetworkInfo()
-
-  switch (networkInfo.id) {
-    default: {
-      const type = hash.length > 42 ? 'tx' : 'address'
-      return () => ({
-        url: `${url}/${type}/${hash}`,
-        alt: name || '',
-      })
-    }
-  }
+  return isTx ? txHash.replace('{{hash}}', hash) : address.replace('{{address}}', hash)
 }

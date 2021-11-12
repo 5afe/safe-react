@@ -13,7 +13,7 @@ import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { disabled, extraSmallFontSize, lg, md, sm } from 'src/theme/variables'
 import { minMaxLength } from 'src/components/forms/validator'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
@@ -56,7 +56,7 @@ function LoadSafeOwnersStep(): ReactElement {
                 </Col>
                 <Col xs={8}>
                   <OwnerAddressContainer>
-                    <EthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getExplorerInfo(address)} />
+                    <EthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getBlockExplorerInfo(address)} />
                   </OwnerAddressContainer>
                 </Col>
               </OwnerContainer>

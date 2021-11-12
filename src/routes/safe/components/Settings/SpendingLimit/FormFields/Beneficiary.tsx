@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
@@ -83,7 +83,7 @@ const Beneficiary = (): ReactElement => {
         showCopyBtn
         showAvatar
         textSize="lg"
-        explorerUrl={getExplorerInfo(selectedEntry.address)}
+        explorerUrl={getBlockExplorerInfo(selectedEntry.address)}
       />
     </BeneficiaryInput>
   ) : (

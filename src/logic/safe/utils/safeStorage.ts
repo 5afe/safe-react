@@ -1,7 +1,7 @@
 import { getStoragePrefix, loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { getNetworkName } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { getChainName } from 'src/config'
 
 export const SAFES_KEY = 'SAFES'
 
@@ -12,7 +12,7 @@ export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
 }
 
 export const loadStoredNetworkSafeById = (id: ETHEREUM_NETWORK): Promise<StoredSafes | undefined> => {
-  const networkName = getNetworkName(id)
+  const networkName = getChainName(id)
   return loadFromStorage<StoredSafes>(SAFES_KEY, getStoragePrefix(networkName))
 }
 

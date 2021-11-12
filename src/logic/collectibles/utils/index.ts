@@ -1,5 +1,5 @@
 import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { NETWORK_ID } from 'src/config/network.d'
 import { getERC721TokenContract, getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
@@ -9,8 +9,8 @@ import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/scr
 //  so we can allow the user to transfer the assets by using `transferFrom` instead of
 //  the standard `safeTransferFrom` method.
 export const CK_ADDRESS = {
-  [ETHEREUM_NETWORK.MAINNET]: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
-  [ETHEREUM_NETWORK.RINKEBY]: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
+  [NETWORK_ID.MAINNET]: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+  [NETWORK_ID.RINKEBY]: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
 }
 
 // safeTransferFrom(address,address,uint256)

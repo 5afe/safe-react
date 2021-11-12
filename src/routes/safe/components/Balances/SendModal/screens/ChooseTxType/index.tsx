@@ -3,6 +3,7 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import Button from 'src/components/layout/Button'
@@ -18,9 +19,8 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
-import { FEATURES } from 'src/config/networks/network.d'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
@@ -80,7 +80,7 @@ const ChooseTxType = ({
               name={recipientName}
               showAvatar
               showCopyBtn
-              explorerUrl={getExplorerInfo(recipientAddress)}
+              explorerUrl={getBlockExplorerInfo(recipientAddress)}
             />
           </Col>
         </Row>

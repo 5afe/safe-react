@@ -1,27 +1,26 @@
 import { useEffect, useState } from 'react'
+import { getNetworks } from 'src/config'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 import { SafeRecordProps } from '../store/models/safe'
 import { getLocalNetworkSafesById } from '../utils'
 
 type EmptyLocalSafes = Record<ETHEREUM_NETWORK, never[]>
 type LocalSafes = Record<ETHEREUM_NETWORK, SafeRecordProps[] | never[]>
 
-const getEmptyLocalSafes = (): EmptyLocalSafes => {
-  const networkIds = Object.values(ETHEREUM_NETWORK)
-  return networkIds.reduce((safes, networkId) => ({ ...safes, [networkId]: [] }), {} as EmptyLocalSafes)
-}
+const getEmptyLocalSafes = (): EmptyLocalSafes =>
+  getNetworks().reduce((safes, { chainId }) => ({ ...safes, [chainId]: [] }), {} as EmptyLocalSafes)
 
 const useLocalSafes = (): LocalSafes => {
   const [localSafes, setLocalSafes] = useState<LocalSafes>(() => getEmptyLocalSafes())
 
   useEffect(() => {
     const getLocalSafes = () => {
-      Object.values(ETHEREUM_NETWORK).forEach(async (id) => {
-        const localSafe = await getLocalNetworkSafesById(id)
+      getNetworks().forEach(async ({ chainId }) => {
+        const localSafe = await getLocalNetworkSafesById(chainId)
         setLocalSafes((prevSafes) => ({
           ...prevSafes,
-          ...(localSafe && { [id]: localSafe }),
+          ...(localSafe && { [chainId]: localSafe }),
         }))
       })
     }

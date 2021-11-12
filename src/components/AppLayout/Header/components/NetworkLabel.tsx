@@ -1,10 +1,10 @@
-import * as React from 'react'
 import styled from 'styled-components'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { getNetworkInfo } from 'src/config'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
-import { NetworkInfo, NetworkSettings } from 'src/config/networks/network'
+import { getChainInfo } from 'src/config'
+import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ReactElement } from 'react'
 
 const StyledCol = styled(Col)`
   flex-grow: 0;
@@ -15,9 +15,9 @@ const StyledCol = styled(Col)`
     padding-right: ${md};
   }
 `
-const StyledParagraph = styled(Paragraph)<{ network: Partial<NetworkSettings> }>`
-  background-color: ${(props) => props.network?.backgroundColor ?? border};
-  color: ${(props) => props.network?.textColor ?? fontColor};
+const StyledParagraph = styled(Paragraph)<{ chainInfo: ChainInfo }>`
+  background-color: ${({ chainInfo }) => chainInfo.theme.backgroundColor ?? border};
+  color: ${({ chainInfo }) => chainInfo.theme.textColor ?? fontColor};
   border-radius: 3px;
   line-height: normal;
   text-transform: capitalize;
@@ -28,21 +28,17 @@ const StyledParagraph = styled(Paragraph)<{ network: Partial<NetworkSettings> }>
 `
 
 const NetworkLabel = ({
-  networkInfo,
+  chainInfo = getChainInfo(),
   onClick,
 }: {
-  networkInfo?: NetworkInfo
+  chainInfo?: ChainInfo
   onClick?: () => void
-}): React.ReactElement => {
-  const selectedNetwork = networkInfo || getNetworkInfo()
-
-  return (
-    <StyledCol middle="xs" start="xs" onClick={onClick}>
-      <StyledParagraph network={selectedNetwork} size="xs">
-        {selectedNetwork.label}
-      </StyledParagraph>
-    </StyledCol>
-  )
-}
+}): ReactElement => (
+  <StyledCol middle="xs" start="xs" onClick={onClick}>
+    <StyledParagraph chainInfo={chainInfo} size="xs">
+      {chainInfo.chainName}
+    </StyledParagraph>
+  </StyledCol>
+)
 
 export default NetworkLabel

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK, NETWORK_ID } from 'src/config/network.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
 import { AppReduxState } from 'src/store'
@@ -18,15 +18,13 @@ export const providerNameSelector = createSelector(providerSelector, (provider: 
 })
 
 export const networkSelector = createSelector(providerSelector, (provider: ProviderState): ETHEREUM_NETWORK => {
-  const networkId = provider.get('network')
-
-  return networkId ?? ETHEREUM_NETWORK.UNKNOWN
+  return provider.get('network').toString()
 })
 
 export const shouldSwitchWalletChain = createSelector(
   providerSelector,
   currentChainId,
-  (provider: ProviderState, currentChainId: ETHEREUM_NETWORK): boolean => {
+  (provider: ProviderState, currentChainId: NETWORK_ID): boolean => {
     const networkId = provider.get('network').toString()
     return networkId !== currentChainId
   },

@@ -27,7 +27,7 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { useStyles } from './style'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
@@ -117,7 +117,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                       name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(owner.address)}
+                      explorerUrl={getBlockExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>

@@ -36,7 +36,7 @@ import currencyValues, {
   initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import networkConfig, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
-import { NetworkState } from 'src/logic/config/model/networkConfig'
+import { NetworkConfig } from 'src/logic/config/model/networkConfig'
 import { configMiddleware } from 'src/logic/config/store/middleware'
 import appearance, { AppearanceState, APPEARANCE_REDUCER_ID } from 'src/logic/appearance/reducer/appearance'
 
@@ -94,7 +94,7 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
-  [NETWORK_CONFIG_REDUCER_ID]: NetworkState
+  [NETWORK_CONFIG_REDUCER_ID]: NetworkConfig
   [APPEARANCE_REDUCER_ID]: AppearanceState
 }>
 

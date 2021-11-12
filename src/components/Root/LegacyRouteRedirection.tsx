@@ -1,6 +1,6 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
-import { getNetworks, getNetworkId, getShortChainNameById } from 'src/config'
+import { getNetworks, getNetworkId, getShortNameById } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { History } from 'history'
@@ -34,8 +34,9 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   }
 
   const networkLabel = window.location.hostname.split('.')[0] // 'rinkeby'
-  const networkId = getNetworks().find(({ label }) => sameString(label, networkLabel))?.id || getNetworkId()
-  const shortName = getShortChainNameById(networkId)
+  const networkId =
+    getNetworks().find(({ chainName }) => sameString(chainName, networkLabel))?.chainId || getNetworkId()
+  const shortName = getShortNameById(networkId)
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')

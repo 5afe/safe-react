@@ -1,9 +1,9 @@
-import React from 'react'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getNetworkLabel } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { getChainInfoById } from 'src/config'
 
 interface Props {
   chainId: ETHEREUM_NETWORK
@@ -19,13 +19,11 @@ const Wrapper = styled.span`
 }
 `
 
-const ChainIndicator = ({ chainId, noLabel }: Props): React.ReactElement => {
-  return (
-    <Wrapper>
-      <CircleDot networkId={chainId} />
-      {!noLabel && getNetworkLabel(chainId)}
-    </Wrapper>
-  )
-}
+const ChainIndicator = ({ chainId, noLabel }: Props): ReactElement => (
+  <Wrapper>
+    <CircleDot networkId={chainId} />
+    {!noLabel && getChainInfoById(chainId)?.chainName}
+  </Wrapper>
+)
 
 export default ChainIndicator

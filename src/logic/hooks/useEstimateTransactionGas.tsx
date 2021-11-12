@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getNetworkId, getNetworkInfo } from 'src/config'
+import { getChainInfo, getNetworkId } from 'src/config'
 import {
   checkTransactionExecution,
   estimateSafeTxGas,
@@ -20,7 +20,7 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { NETWORK_ID } from 'src/config/network.d'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -31,7 +31,7 @@ export enum EstimationStatus {
 // How much to add to gasLimit per network
 // Defaults to x1 (i.e. no extra gas)
 const EXTRA_GAS_FACTOR = {
-  [ETHEREUM_NETWORK.ARBITRUM]: 1.2, // +20%
+  [NETWORK_ID.ARBITRUM]: 1.2, // +20%
 }
 
 export const checkIfTxIsExecution = (
@@ -138,7 +138,7 @@ export const useEstimateTransactionGas = ({
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
   )
-  const { nativeCoin } = getNetworkInfo()
+  const { nativeCurrency } = getChainInfo()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
   useEffect(() => {
@@ -201,7 +201,7 @@ export const useEstimateTransactionGas = ({
         const extraGasMult = EXTRA_GAS_FACTOR[getNetworkId()] || 1
         const gasLimit = manualGasLimit || Math.round(ethGasLimitEstimation * extraGasMult).toString()
         const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
-        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
         if (isExecution) {
@@ -252,7 +252,7 @@ export const useEstimateTransactionGas = ({
     txConfirmations,
     txAmount,
     preApprovingOwner,
-    nativeCoin.decimals,
+    nativeCurrency.decimals,
     threshold,
     from,
     operation,

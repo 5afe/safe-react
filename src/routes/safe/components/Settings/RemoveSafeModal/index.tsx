@@ -11,7 +11,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
 import { WELCOME_ROUTE, history } from 'src/routes/routes'
 
@@ -56,7 +56,7 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
               name={safeName}
               showAvatar
               showCopyBtn
-              explorerUrl={getExplorerInfo(safeAddress)}
+              explorerUrl={getBlockExplorerInfo(safeAddress)}
             />
           </Col>
         </Row>

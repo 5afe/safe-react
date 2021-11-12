@@ -19,7 +19,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getBlockExplorerInfo, getNetworkId } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -236,7 +236,7 @@ const AddressBookTable = (): ReactElement => {
                                 hash={row[column.id]}
                                 showCopyBtn
                                 showAvatar
-                                explorerUrl={getExplorerInfo(row[column.id])}
+                                explorerUrl={getBlockExplorerInfo(row[column.id])}
                               />
                             </Block>
                           ) : (

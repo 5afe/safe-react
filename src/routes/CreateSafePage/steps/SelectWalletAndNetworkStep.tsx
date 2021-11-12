@@ -17,7 +17,7 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Paragraph from 'src/components/layout/Paragraph'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 import { setNetwork } from 'src/logic/config/utils'
 
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
@@ -79,8 +79,8 @@ function SelectWalletAndNetworkStep(): ReactElement {
         <StyledDialogContent dividers>
           <List component="div">
             {networks.map((network) => (
-              <NetworkLabelItem key={network.id} role="button" onClick={() => onNetworkSwitch(network.id)}>
-                <NetworkLabel networkInfo={network} flexGrow />
+              <NetworkLabelItem key={network.chainId} role="button" onClick={() => onNetworkSwitch(network.chainId)}>
+                <NetworkLabel chainInfo={network} flexGrow />
               </NetworkLabelItem>
             ))}
           </List>

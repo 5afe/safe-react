@@ -12,9 +12,9 @@ import {
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { NetworkSettings } from 'src/config/networks/network.d'
+import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { border, fontColor } from 'src/theme/variables'
+import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -65,7 +65,7 @@ const StyledButton = styled(Button)`
 `
 
 type StyledTextLabelProps = {
-  networkInfo: NetworkSettings
+  chainInfo: ChainInfo
 }
 
 const StyledTextLabel = styled(Text)`
@@ -73,8 +73,8 @@ const StyledTextLabel = styled(Text)`
   padding: 4px 8px;
   width: 100%;
   text-align: center;
-  color: ${(props: StyledTextLabelProps) => props.networkInfo?.textColor ?? fontColor};
-  background-color: ${(props: StyledTextLabelProps) => props.networkInfo?.backgroundColor ?? border};
+  color: ${({ chainInfo }: StyledTextLabelProps) => chainInfo.theme.textColor ?? fontColor};
+  background-color: ${({ chainInfo }: StyledTextLabelProps) => chainInfo.theme.backgroundColor ?? border};
 `
 
 const StyldTextSafeName = styled(Text)`
@@ -136,14 +136,14 @@ const SafeHeader = ({
       </Container>
     )
   }
-  const explorerUrl = getExplorerInfo(address)
-  const networkInfo = getNetworkInfo()
+  const explorerUrl = getBlockExplorerInfo(address)
+  const chainInfo = getChainInfo()
 
   return (
     <>
       {/* Network */}
-      <StyledTextLabel size="sm" networkInfo={networkInfo}>
-        {networkInfo.label}
+      <StyledTextLabel size="sm" chainInfo={chainInfo}>
+        {chainInfo.chainName}
       </StyledTextLabel>
 
       <Container>

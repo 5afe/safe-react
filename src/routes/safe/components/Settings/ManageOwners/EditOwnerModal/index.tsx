@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useDispatch } from 'react-redux'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -75,7 +75,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
                       hash={owner.address}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(owner.address)}
+                      explorerUrl={getBlockExplorerInfo(owner.address)}
                     />
                   </Block>
                 </Row>

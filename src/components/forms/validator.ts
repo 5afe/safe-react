@@ -1,9 +1,9 @@
 import memoize from 'lodash.memoize'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { isFeatureEnabled } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
 

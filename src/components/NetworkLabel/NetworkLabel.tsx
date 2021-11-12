@@ -1,24 +1,22 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getNetworkInfo } from 'src/config'
-import { NetworkInfo } from 'src/config/networks/network'
+import { getChainInfo } from 'src/config'
 import { border, extraSmallFontSize, sm, xs, fontColor } from 'src/theme/variables'
+import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type Props = {
-  networkInfo?: NetworkInfo
+  chainInfo?: ChainInfo
   onClick?: () => void
   flexGrow?: boolean
 }
 
-function NetworkLabel({ networkInfo, onClick, flexGrow }: Props): ReactElement {
-  const selectedNetwork = networkInfo || getNetworkInfo()
-  const backgroundColor = selectedNetwork.backgroundColor
-  const textColor = selectedNetwork.textColor
+function NetworkLabel({ chainInfo, onClick, flexGrow }: Props): ReactElement {
+  const { chainName, theme } = chainInfo || getChainInfo()
 
   return (
-    <StyledLabel onClick={onClick} backgroundColor={backgroundColor} textColor={textColor} flexGrow={flexGrow}>
-      {selectedNetwork.label}
+    <StyledLabel onClick={onClick} flexGrow={flexGrow} {...theme}>
+      {chainName}
     </StyledLabel>
   )
 }

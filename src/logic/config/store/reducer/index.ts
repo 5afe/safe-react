@@ -2,18 +2,16 @@ import { Action, handleActions } from 'redux-actions'
 
 import { AppReduxState } from 'src/store'
 import { CONFIG_ACTIONS } from 'src/logic/config/store/actions'
-import { makeNetworkConfig, NetworkState } from 'src/logic/config/model/networkConfig'
-import { getConfig } from 'src/config'
+import { makeNetworkConfig, NetworkConfig } from 'src/logic/config/model/networkConfig'
+import { getChainInfo } from 'src/config'
 
 export const NETWORK_CONFIG_REDUCER_ID = 'networkConfig'
 
-type Payload = NetworkState | string
-
-export default handleActions<AppReduxState['networkConfig'], Payload>(
+export default handleActions<AppReduxState['networkConfig'], NetworkConfig>(
   {
-    [CONFIG_ACTIONS.CONFIG_STORE]: (state, action: Action<NetworkState>) => {
+    [CONFIG_ACTIONS.CONFIGURE_STORE]: (state, action: Action<NetworkConfig>) => {
       return { ...state, ...action.payload }
     },
   },
-  makeNetworkConfig(getConfig()),
+  makeNetworkConfig(getChainInfo()),
 )

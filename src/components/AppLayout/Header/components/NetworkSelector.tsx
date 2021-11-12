@@ -14,12 +14,12 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-import { getNetworkConfigById } from 'src/config'
+import { getChainInfoById } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { NETWORK_ROOT_ROUTES } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 
 const styles = {
   root: {
@@ -123,7 +123,7 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
                   {NETWORK_ROOT_ROUTES.map(({ id, route }) => (
                     <Fragment key={id}>
                       <StyledLink onClick={(e) => onNetworkSwitch(e, id)} href={route}>
-                        <NetworkLabel networkInfo={getNetworkConfigById(id)?.network} />
+                        <NetworkLabel chainInfo={getChainInfoById(id)} />
 
                         {chainId === id && <Icon type="check" size="md" color="primary" />}
                       </StyledLink>

@@ -1,7 +1,7 @@
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
@@ -38,7 +38,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             hash={txInfo.transactionHash}
             shortenHash={8}
             showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.transactionHash)}
+            explorerUrl={getBlockExplorerInfo(txInfo.transactionHash)}
           />
         </div>
         <div className="tx-created">
@@ -59,7 +59,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             textSize="xl"
             hash={txInfo.creator.value}
             showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.creator.value)}
+            explorerUrl={getBlockExplorerInfo(txInfo.creator.value)}
             name={creator.name}
             customAvatar={creator.image}
             showAvatar
@@ -74,7 +74,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               textSize="xl"
               hash={txInfo.factory.value}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.factory.value)}
+              explorerUrl={getBlockExplorerInfo(txInfo.factory.value)}
               name={factory.name}
               customAvatar={factory.image}
               showAvatar
@@ -94,7 +94,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               textSize="xl"
               hash={txInfo.implementation.value}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.implementation.value)}
+              explorerUrl={getBlockExplorerInfo(txInfo.implementation.value)}
               name={implementation.name}
               customAvatar={implementation.image}
               showAvatar

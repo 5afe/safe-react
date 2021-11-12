@@ -1,15 +1,13 @@
-import * as React from 'react'
+import { ReactElement } from 'react'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import { getNetworkConfigById } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { getChainInfoById } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/network.d'
 
 type Props = {
   networkId: ETHEREUM_NETWORK
   className?: string
 }
 
-export const CircleDot = (props: Props): React.ReactElement => {
-  const networkInfo = getNetworkConfigById(props.networkId)?.network
-
-  return <Dot htmlColor={networkInfo?.backgroundColor || '#FF685E'} className={props.className} />
-}
+export const CircleDot = ({ networkId, className }: Props): ReactElement => (
+  <Dot htmlColor={getChainInfoById(networkId)?.theme.backgroundColor || '#FF685E'} className={className} />
+)

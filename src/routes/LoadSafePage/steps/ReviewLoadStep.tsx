@@ -10,7 +10,7 @@ import { border, lg, sm, xs } from 'src/theme/variables'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { getExplorerInfo } from 'src/config'
+import { getBlockExplorerInfo } from 'src/config'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import Hairline from 'src/components/layout/Hairline'
 import {
@@ -82,7 +82,7 @@ function ReviewLoadStep(): ReactElement {
                 shortenHash={4}
                 showAvatar
                 showCopyBtn
-                explorerUrl={getExplorerInfo(safeAddress)}
+                explorerUrl={getBlockExplorerInfo(safeAddress)}
               />
             </SafeAddressContainer>
           </Block>
@@ -121,7 +121,7 @@ function ReviewLoadStep(): ReactElement {
                     name={owner.name}
                     showAvatar
                     showCopyBtn
-                    explorerUrl={getExplorerInfo(owner.address)}
+                    explorerUrl={getBlockExplorerInfo(owner.address)}
                   />
                 </Col>
               </OwnerItemContainer>
