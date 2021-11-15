@@ -2,9 +2,10 @@ import styled from 'styled-components'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
-import { getChainInfo } from 'src/config'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
+import { useSelector } from 'react-redux'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 const StyledCol = styled(Col)`
   flex-grow: 0;
@@ -27,18 +28,15 @@ const StyledParagraph = styled(Paragraph)<{ chainInfo: ChainInfo }>`
   text-align: center;
 `
 
-const NetworkLabel = ({
-  chainInfo = getChainInfo(),
-  onClick,
-}: {
-  chainInfo?: ChainInfo
-  onClick?: () => void
-}): ReactElement => (
-  <StyledCol middle="xs" start="xs" onClick={onClick}>
-    <StyledParagraph chainInfo={chainInfo} size="xs">
-      {chainInfo.chainName}
-    </StyledParagraph>
-  </StyledCol>
-)
+const NetworkLabel = ({ chainInfo, onClick }: { chainInfo?: ChainInfo; onClick?: () => void }): ReactElement => {
+  const network = useSelector(currentNetwork)
+  return (
+    <StyledCol middle="xs" start="xs" onClick={onClick}>
+      <StyledParagraph chainInfo={chainInfo || network} size="xs">
+        {chainInfo?.chainName || network.chainName}
+      </StyledParagraph>
+    </StyledCol>
+  )
+}
 
 export default NetworkLabel

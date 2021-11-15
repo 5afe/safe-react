@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { fetchSafesByOwner } from 'src/logic/safe/api/fetchSafesByOwner'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 
 const cache: Record<string, Record<string, string[]>> = {}
 
 const useOwnerSafes = (): Record<string, string[]> => {
   const connectedWalletAddress = useSelector(userAccountSelector)
-  const chainId = useSelector(currentChainId)
+  const chainId = useSelector(currentNetworkId)
   const [ownerSafes, setOwnerSafes] = useState<Record<string, string[]>>(cache[connectedWalletAddress] || {})
 
   useEffect(() => {

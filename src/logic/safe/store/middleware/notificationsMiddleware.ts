@@ -22,7 +22,7 @@ import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { history, extractSafeAddress, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { currentShortName } from 'src/logic/config/store/selectors'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -115,7 +115,7 @@ const notificationsMiddleware =
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
               generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_HISTORY, {
-                shortName: getCurrentShortChainName(),
+                shortName: currentShortName(state),
                 safeAddress,
               }),
             )
@@ -132,7 +132,6 @@ const notificationsMiddleware =
           break
         }
         case ADD_OR_UPDATE_SAFE: {
-          const state = store.getState()
           const safe = action.payload
           const currentSafeAddress = extractSafeAddress() || safe.address
           if (!currentSafeAddress || !safe.currentVersion) {
@@ -146,7 +145,7 @@ const notificationsMiddleware =
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
               generateSafeRoute(ADDRESSED_ROUTE, {
-                shortName: getCurrentShortChainName(),
+                shortName: currentShortName(state),
                 safeAddress: currentSafeAddress,
               }),
             )

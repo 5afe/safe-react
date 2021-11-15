@@ -1,13 +1,15 @@
 import { ReactElement } from 'react'
 import Button from 'src/components/layout/Button'
-import { getNetworkId } from 'src/config'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import onboard from 'src/logic/wallets/onboard'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
+import { store } from 'src/store'
 
 const checkWallet = async (): Promise<boolean> => {
   if (shouldSwitchNetwork()) {
-    switchNetwork(onboard().getState().wallet, getNetworkId()).catch((e) => e.log())
+    const networkId = currentNetworkId(store.getState())
+    switchNetwork(onboard().getState().wallet, networkId).catch((e) => e.log())
   }
 
   return await onboard().walletCheck()

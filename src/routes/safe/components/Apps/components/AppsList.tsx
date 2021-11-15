@@ -15,8 +15,9 @@ import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
 import { generateSafeRoute, extractSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
 import { PinnedAppsTutorial } from './PinnedAppsTutorial'
+import { currentShortName } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 export const PINNED_APPS_LIST_TEST_ID = 'safe_apps__pinned-apps-container'
 export const ALL_APPS_LIST_TEST_ID = 'safe_apps__all-apps-container'
@@ -67,8 +68,9 @@ const CenterIconText = styled(IconText)`
 
 const AppsList = (): React.ReactElement => {
   const safeAddress = extractSafeAddress()
+  const shortName = useSelector(currentShortName)
   const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-    shortName: getCurrentShortChainName(),
+    shortName,
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')

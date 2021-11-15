@@ -1,9 +1,10 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getChainInfo } from 'src/config'
 import { border, extraSmallFontSize, sm, xs, fontColor } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { currentNetwork } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 type Props = {
   chainInfo?: ChainInfo
@@ -12,7 +13,8 @@ type Props = {
 }
 
 function NetworkLabel({ chainInfo, onClick, flexGrow }: Props): ReactElement {
-  const { chainName, theme } = chainInfo || getChainInfo()
+  const network = useSelector(currentNetwork)
+  const { chainName, theme } = chainInfo || network
 
   return (
     <StyledLabel onClick={onClick} flexGrow={flexGrow} {...theme}>

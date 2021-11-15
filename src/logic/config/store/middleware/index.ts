@@ -11,7 +11,7 @@ export const configMiddleware = (store) => (next) => async (action) => {
   if (watchedActions.includes(action.type)) {
     const { dispatch } = store
     switch (action.type) {
-      case CONFIG_ACTIONS.CONFIGURE_STORE: {
+      case CONFIG_ACTIONS.LOAD_CHAINS: {
         // Enforce clearing safe information and current session
         // so app waits until local storage is loaded into state
         dispatch(clearSafeList())

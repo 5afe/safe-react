@@ -12,9 +12,11 @@ import {
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
-import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { border, fontColor } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -123,6 +125,9 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address || ''))
+  const chainInfo = useSelector(currentNetwork)
+
   if (!address) {
     return (
       <Container>
@@ -136,8 +141,6 @@ const SafeHeader = ({
       </Container>
     )
   }
-  const explorerUrl = getBlockExplorerInfo(address)
-  const chainInfo = getChainInfo()
 
   return (
     <>

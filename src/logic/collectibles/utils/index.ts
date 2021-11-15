@@ -1,8 +1,9 @@
-import { getNetworkId } from 'src/config'
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
 import { getERC721TokenContract, getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
+import { store } from 'src/store'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 
 // CryptoKitties Contract Addresses by network
 // This is an exception made for a popular NFT that's not ERC721 standard-compatible,
@@ -22,7 +23,8 @@ export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
  * @returns string
  */
 export const getTransferMethodByContractAddress = (contractAddress: string): string => {
-  if (sameAddress(contractAddress, CK_ADDRESS[getNetworkId()])) {
+  const networkId = currentNetworkId(store.getState())
+  if (sameAddress(contractAddress, CK_ADDRESS[networkId])) {
     // on mainnet `transferFrom` seems to work fine but we can assure that `transfer` will work on both networks
     // so that's the reason why we're falling back to `transfer` for CryptoKitties
     return 'transfer'

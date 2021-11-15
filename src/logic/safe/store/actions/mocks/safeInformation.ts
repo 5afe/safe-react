@@ -1,5 +1,5 @@
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
 
 export const remoteSafeInfoWithModules = {
   address: {

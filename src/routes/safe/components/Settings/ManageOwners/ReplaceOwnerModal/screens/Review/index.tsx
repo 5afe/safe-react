@@ -2,7 +2,6 @@ import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getBlockExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -22,6 +21,9 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 
 import { useStyles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -55,6 +57,9 @@ export const ReviewReplaceOwnerModal = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+
+  const ownerExplorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
+  const newOwnerExplorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, newOwner.address))
 
   const {
     gasLimit,
@@ -161,23 +166,7 @@ export const ReviewReplaceOwnerModal = ({
                 </Row>
                 <Hairline />
                 {owners?.map(
-                  (safeOwner) =>
-                    !sameAddress(safeOwner.address, owner.address) && (
-                      <Fragment key={safeOwner.address}>
-                        <Row className={classes.owner}>
-                          <Col align="center" xs={12}>
-                            <EthHashInfo
-                              hash={safeOwner.address}
-                              name={safeOwner.name}
-                              showCopyBtn
-                              showAvatar
-                              explorerUrl={getBlockExplorerInfo(safeOwner.address)}
-                            />
-                          </Col>
-                        </Row>
-                        <Hairline />
-                      </Fragment>
-                    ),
+                  (safeOwner) => !sameAddress(safeOwner.address, owner.address) && <SafeOwner safeOwner={safeOwner} />,
                 )}
                 <Row align="center" className={classes.info}>
                   <Paragraph color="primary" noMargin size="md" weight="bolder">
@@ -192,7 +181,7 @@ export const ReviewReplaceOwnerModal = ({
                       name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getBlockExplorerInfo(owner.address)}
+                      explorerUrl={ownerExplorerUrl}
                     />
                   </Col>
                 </Row>
@@ -209,7 +198,7 @@ export const ReviewReplaceOwnerModal = ({
                       name={newOwner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getBlockExplorerInfo(newOwner.address)}
+                      explorerUrl={newOwnerExplorerUrl}
                     />
                   </Col>
                 </Row>
@@ -253,5 +242,26 @@ export const ReviewReplaceOwnerModal = ({
         </>
       )}
     </EditableTxParameters>
+  )
+}
+
+const SafeOwner = ({ safeOwner }: { safeOwner: AddressBookEntry }) => {
+  const classes = useStyles()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeOwner.address))
+  return (
+    <Fragment key={safeOwner.address}>
+      <Row className={classes.owner}>
+        <Col align="center" xs={12}>
+          <EthHashInfo
+            hash={safeOwner.address}
+            name={safeOwner.name}
+            showCopyBtn
+            showAvatar
+            explorerUrl={explorerUrl}
+          />
+        </Col>
+      </Row>
+      <Hairline />
+    </Fragment>
   )
 }

@@ -2,11 +2,12 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { ReactElement } from 'react'
+import { useSelector } from 'react-redux'
 
 import ChainIndicator from 'src/components/ChainIndicator'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getChainInfo } from 'src/config'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 import { styles } from './style'
 
 const useStyles = makeStyles(styles)
@@ -20,7 +21,7 @@ interface HeaderProps {
 
 export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps): ReactElement => {
   const classes = useStyles()
-  const { chainId } = getChainInfo()
+  const { chainId } = useSelector(currentNetwork)
 
   return (
     <Row align="center" className={classes.heading} grow>

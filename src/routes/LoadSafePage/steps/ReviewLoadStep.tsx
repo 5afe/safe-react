@@ -10,7 +10,6 @@ import { border, lg, sm, xs } from 'src/theme/variables'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { getBlockExplorerInfo } from 'src/config'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import Hairline from 'src/components/layout/Hairline'
 import {
@@ -18,10 +17,13 @@ import {
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
+  OwnerFieldListItem,
 } from '../fields/loadFields'
 import { getLoadSafeName } from '../fields/utils'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 export const reviewLoadStepLabel = 'Review'
 
@@ -46,6 +48,7 @@ function ReviewLoadStep(): ReactElement {
   })
 
   const isUserConnectedWalletASAfeOwner = checkIfUserAddressIsAnOwner(ownerList, userAddress)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeAddress))
 
   return (
     <Row data-testid={'load-safe-review-step'}>
@@ -77,13 +80,7 @@ function ReviewLoadStep(): ReactElement {
               Safe address
             </Paragraph>
             <SafeAddressContainer>
-              <EthHashInfo
-                hash={safeAddress}
-                shortenHash={4}
-                showAvatar
-                showCopyBtn
-                explorerUrl={getBlockExplorerInfo(safeAddress)}
-              />
+              <EthHashInfo hash={safeAddress} shortenHash={4} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             </SafeAddressContainer>
           </Block>
           <Block margin="lg">
@@ -113,24 +110,33 @@ function ReviewLoadStep(): ReactElement {
           </OwnersContainer>
           <Hairline />
           {ownerListWithNames.map((owner, index) => (
-            <Fragment key={owner.address}>
-              <OwnerItemContainer testId={'load-safe-review-owner-name-' + index}>
-                <Col align="center" xs={12}>
-                  <EthHashInfo
-                    hash={owner.address}
-                    name={owner.name}
-                    showAvatar
-                    showCopyBtn
-                    explorerUrl={getBlockExplorerInfo(owner.address)}
-                  />
-                </Col>
-              </OwnerItemContainer>
-              {index !== ownerList.length - 1 && <Hairline />}
-            </Fragment>
+            <Owner owner={owner} index={index} numberOfOwners={ownerList.length - 1} key={owner.address} />
           ))}
         </TableContainer>
       </Col>
     </Row>
+  )
+}
+
+const Owner = ({
+  owner,
+  index,
+  numberOfOwners,
+}: {
+  owner: OwnerFieldListItem
+  index: number
+  numberOfOwners: number
+}) => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
+  return (
+    <Fragment>
+      <OwnerItemContainer testId={'load-safe-review-owner-name-' + index}>
+        <Col align="center" xs={12}>
+          <EthHashInfo hash={owner.address} name={owner.name} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+        </Col>
+      </OwnerItemContainer>
+      {index !== numberOfOwners && <Hairline />}
+    </Fragment>
   )
 }
 

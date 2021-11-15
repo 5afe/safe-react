@@ -11,8 +11,7 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import { getChainInfoById, getShortNameById } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import {
   generateSafeRoute,
@@ -21,6 +20,8 @@ import {
   SAFE_ROUTES,
   SafeRouteParams,
 } from 'src/routes/routes'
+import { getNetworkById } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -59,7 +60,7 @@ const SafeListItem = ({
   const currentSafeAddress = extractSafeAddress()
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
-  const nativeCoinSymbol = getChainInfoById(networkId)?.nativeCurrency.symbol ?? 'ETH'
+  const { nativeCurrency, shortName } = useSelector((state: AppReduxState) => getNetworkById(state, networkId))
   const showAddSafeLink = !isSafeAdded(loadedSafes, address)
 
   useEffect(() => {
@@ -74,7 +75,7 @@ const SafeListItem = ({
   }
 
   const routesSlug: SafeRouteParams = {
-    shortName: getShortNameById(networkId),
+    shortName,
     safeAddress: address,
   }
 
@@ -89,7 +90,7 @@ const SafeListItem = ({
       <StyledEthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
-          `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
+          `${formatAmount(ethBalance)} ${nativeCurrency.symbol}`
         ) : showAddSafeLink ? (
           <Link to={generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug)} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">

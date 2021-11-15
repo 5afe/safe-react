@@ -4,8 +4,10 @@ import styled from 'styled-components'
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
-import { getBlockExplorerInfo } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
+import { useSelector } from 'react-redux'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 const StyledText = styled(Text)`
   display: inline-flex;
@@ -35,8 +37,8 @@ const LoaderText = styled.span`
 `
 
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
-  const explorerInfo = getBlockExplorerInfo(safeCreationTxHash)
-  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(explorerInfo)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeCreationTxHash))
+  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(explorerUrl)
   const explorerDomain = match !== null ? match[2] : 'Network Explorer'
 
   return (
@@ -44,7 +46,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
       <Text size="xl">This process should take a couple of minutes.</Text>
       <StyledText size="xl">
         Follow the progress on{' '}
-        <Link href={explorerInfo} target="_blank" rel="noopener noreferrer" data-testid="safe-create-explorer-link">
+        <Link href={explorerUrl} target="_blank" rel="noopener noreferrer" data-testid="safe-create-explorer-link">
           <Text size="xl" as="span" color="primary">
             {explorerDomain}
           </Text>

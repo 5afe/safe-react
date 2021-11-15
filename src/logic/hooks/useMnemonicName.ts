@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getChainInfo } from 'src/config'
+import { useSelector } from 'react-redux'
+import { currentNetwork } from '../config/store/selectors'
 import { animalsDict, adjectivesDict } from './useMnemonicName.dict'
 
 const animals: string[] = animalsDict.trim().split(/\s+/)
@@ -25,6 +26,6 @@ export const useMnemonicName = (noun?: string): string => {
 }
 
 export const useMnemonicSafeName = (): string => {
-  const { chainName } = getChainInfo()
+  const { chainName } = useSelector(currentNetwork)
   return useMnemonicName(`${chainName.toLowerCase()}-safe`)
 }

@@ -10,7 +10,7 @@ export const EDIT_ENTRY_BUTTON = 'edit-entry-btn'
 export const REMOVE_ENTRY_BUTTON = 'remove-entry-btn'
 export const SEND_ENTRY_BUTTON = 'send-entry-btn'
 
-type AddressBookColumn = {
+export type AddressBookColumn = {
   id: string
   order: boolean
   disablePadding?: boolean

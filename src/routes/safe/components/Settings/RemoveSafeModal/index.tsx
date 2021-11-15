@@ -11,9 +11,10 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { getBlockExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
 import { WELCOME_ROUTE, history } from 'src/routes/routes'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 type RemoveSafeModalProps = {
   isOpen: boolean
@@ -24,6 +25,7 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
   const classes = useStyles()
   const { address: safeAddress, name: safeName } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeAddress))
 
   const onRemoveSafeHandler = async () => {
     dispatch(removeSafe(safeAddress))
@@ -51,13 +53,7 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
       <Block className={classes.container}>
         <Row className={classes.owner}>
           <Col align="center" xs={12}>
-            <EthHashInfo
-              hash={safeAddress}
-              name={safeName}
-              showAvatar
-              showCopyBtn
-              explorerUrl={getBlockExplorerInfo(safeAddress)}
-            />
+            <EthHashInfo hash={safeAddress} name={safeName} showAvatar showCopyBtn explorerUrl={explorerUrl} />
           </Col>
         </Row>
         <Row className={classes.description}>

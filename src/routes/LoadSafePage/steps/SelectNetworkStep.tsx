@@ -10,16 +10,19 @@ import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 
 import Block from 'src/components/layout/Block'
-import { getNetworks } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { lg } from 'src/theme/variables'
 import Paragraph from 'src/components/layout/Paragraph'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { setNetwork } from 'src/logic/config/utils'
+import { useDispatch, useSelector } from 'react-redux'
+import { setNetworkId } from 'src/logic/config/store/actions'
+import { currentNetworks } from 'src/logic/config/store/selectors'
 
 export const selectNetworkStepLabel = 'Select network'
 
 function SelectNetworkStep(): ReactElement {
+  const dispatch = useDispatch()
+  const networks = useSelector(currentNetworks)
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
 
   function openNetworkSelectorPopup() {
@@ -27,7 +30,7 @@ function SelectNetworkStep(): ReactElement {
   }
 
   const onNetworkSwitch = (networkId: ETHEREUM_NETWORK) => {
-    setNetwork(networkId)
+    dispatch(setNetworkId(networkId))
     setIsNetworkSelectorPopupOpen(false)
   }
 
@@ -55,7 +58,7 @@ function SelectNetworkStep(): ReactElement {
         </StyledDialogTitle>
         <StyledDialogContent dividers>
           <List component="div">
-            {getNetworks().map((network) => (
+            {networks.map((network) => (
               <NetworkLabelItem key={network.chainId} role="button" onClick={() => onNetworkSwitch(network.chainId)}>
                 <NetworkLabel chainInfo={network} flexGrow />
               </NetworkLabelItem>

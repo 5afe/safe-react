@@ -1,7 +1,6 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
-import { getBlockExplorerInfo } from 'src/config'
 import { Modal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -12,6 +11,9 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
+import { useSelector } from 'react-redux'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
@@ -23,6 +25,7 @@ interface CheckOwnerProps {
 
 export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): ReactElement => {
   const classes = useStyles()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
 
   return (
     <>
@@ -34,13 +37,7 @@ export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): React
         </Row>
         <Row>
           <Col align="center" xs={12}>
-            <EthHashInfo
-              hash={owner.address}
-              name={owner.name}
-              showCopyBtn
-              showAvatar
-              explorerUrl={getBlockExplorerInfo(owner.address)}
-            />
+            <EthHashInfo hash={owner.address} name={owner.name} showCopyBtn showAvatar explorerUrl={explorerUrl} />
           </Col>
         </Row>
       </Block>

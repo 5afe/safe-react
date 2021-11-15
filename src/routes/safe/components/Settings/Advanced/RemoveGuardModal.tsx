@@ -9,7 +9,6 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
-import { getBlockExplorerInfo } from 'src/config'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -25,6 +24,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 interface RemoveGuardModalProps {
   onClose: () => void
@@ -105,6 +106,8 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
   }
 
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, guardAddress))
+
   return (
     <Modal
       description="Remove the selected Transaction Guard"
@@ -129,12 +132,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
               <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
-                    <EthHashInfo
-                      hash={guardAddress}
-                      showCopyBtn
-                      showAvatar
-                      explorerUrl={getBlockExplorerInfo(guardAddress)}
-                    />
+                    <EthHashInfo hash={guardAddress} showCopyBtn showAvatar explorerUrl={explorerUrl} />
                   </Col>
                 </Row>
                 <Row className={classes.modalDescription}>

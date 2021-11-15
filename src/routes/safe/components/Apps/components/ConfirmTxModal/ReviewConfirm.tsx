@@ -9,7 +9,6 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -30,6 +29,8 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
 
 const Container = styled.div`
   max-width: 480px;
@@ -85,8 +86,8 @@ export const ReviewConfirm = ({
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
-  const { nativeCurrency } = getChainInfo()
-  const explorerUrl = getBlockExplorerInfo(safeAddress)
+  const { nativeCurrency } = useSelector(currentNetwork)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeAddress))
   const isOwner = useSelector(grantedSelector)
 
   const txRecipient: string | undefined = useMemo(

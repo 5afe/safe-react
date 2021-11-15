@@ -16,7 +16,6 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getChainName, getRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -30,9 +29,10 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetwork, currentRpcServiceUrl } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
+import { store } from 'src/store'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -79,7 +79,7 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
-const safeAppWeb3Provider = new Web3.providers.HttpProvider(getRpcServiceUrl(), {
+const safeAppWeb3Provider = new Web3.providers.HttpProvider(currentRpcServiceUrl(store.getState()), {
   timeout: 10_000,
 })
 
@@ -88,7 +88,7 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
-  const networkId = useSelector(currentChainId)
+  const { chainId, chainName, transactionService } = useSelector(currentNetwork)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -135,7 +135,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         requestId,
         params,
       }),
-    [setConfirmTransactionModal],
+    [setConfirmTransactionModal, chainName],
   )
   const closeConfirmationModal = useCallback(
     () => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE),
@@ -160,17 +160,17 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: getChainName().toLowerCase() as LowercaseNetworks,
+        network: chainName.toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
-  }, [ethBalance, safeAddress, appUrl, sendMessageToIframe])
+  }, [ethBalance, safeAddress, appUrl, sendMessageToIframe, chainName])
 
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
   useEffect(() => {
     communicator?.on('getEnvInfo', () => ({
-      txServiceUrl: getTxServiceUrl(),
+      txServiceUrl: transactionService,
     }))
 
     communicator?.on(Methods.getTxBySafeTxHash, async (msg) => {
@@ -183,8 +183,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: getChainName(),
-      chainId: parseInt(networkId, 10),
+      network: chainName,
+      chainId: parseInt(chainId, 10),
       owners,
       threshold,
     }))
@@ -235,7 +235,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       openSignMessageModal(message, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, networkId])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, chainId])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler

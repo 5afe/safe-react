@@ -14,7 +14,6 @@ import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { currentChainId } from 'src/logic/config/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
@@ -29,7 +28,8 @@ import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 import { extractSafeAddress } from 'src/routes/routes'
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 
 const notificationStyles = {
   success: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles(notificationStyles)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
-  const desiredNetwork = useSelector(currentChainId)
+  const desiredNetwork = useSelector(currentNetworkId)
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== NETWORK_ID.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)

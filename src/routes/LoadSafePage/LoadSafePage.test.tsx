@@ -1,12 +1,11 @@
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { getCurrentShortChainName } from 'src/config'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
-import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
+import { extractShortName, generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
@@ -627,7 +626,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         expect(historyPushSpy).toHaveBeenCalledWith(
           generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-            shortName: getCurrentShortChainName(),
+            shortName: extractShortName(),
             safeAddress: validSafeAddress,
           }),
         )

@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getCurrentShortChainName, isFeatureEnabled } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -15,12 +14,14 @@ import {
   generatePrefixedAddressRoutes,
 } from 'src/routes/routes'
 import { IS_PRODUCTION } from 'src/utils/constants'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 const useSidebarItems = (): ListItemType[] => {
-  const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
-  const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
-  const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
+  const safeFeaturesEnabled = useSelector(currentSafeFeaturesEnabled)
+  const { shortName, features } = useSelector(currentNetwork)
+  const safeAppsEnabled = features.includes(FEATURES.SAFE_APPS)
+  const isCollectiblesEnabled = features.includes(FEATURES.ERC721)
+  const isSpendingLimitEnabled = features.includes(FEATURES.SPENDING_LIMIT)
   const { needsUpdate } = useSelector(currentSafeWithNames)
   const safeAddress = extractSafeAddress()
   const granted = useSelector(grantedSelector)
@@ -44,12 +45,12 @@ const useSidebarItems = (): ListItemType[] => {
   )
 
   return useMemo((): ListItemType[] => {
-    if (!matchSafe || !matchSafeWithSidebarSection || !featuresEnabled || !safeAddress) {
+    if (!matchSafe || !matchSafeWithSidebarSection || !safeFeaturesEnabled || !safeAddress) {
       return []
     }
 
     const currentSafeRoutes = generatePrefixedAddressRoutes({
-      shortName: getCurrentShortChainName(),
+      shortName,
       safeAddress,
     })
 
@@ -135,7 +136,7 @@ const useSidebarItems = (): ListItemType[] => {
       }),
     ]
   }, [
-    featuresEnabled,
+    safeFeaturesEnabled,
     granted,
     isCollectiblesEnabled,
     isSpendingLimitEnabled,
@@ -145,6 +146,7 @@ const useSidebarItems = (): ListItemType[] => {
     needsUpdate,
     safeAddress,
     safeAppsEnabled,
+    shortName,
   ])
 }
 

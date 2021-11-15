@@ -1,11 +1,11 @@
 import { AddressEx, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 
-import { getChainInfo, getNativeCurrencyAddress } from 'src/config'
 import { isCustomTxInfo, isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { currentNetwork } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 export const NOT_AVAILABLE = 'n/a'
 interface AmountData {
@@ -44,7 +44,7 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${txInfo.transferInfo.tokenSymbol}`
     case TokenType.NATIVE_COIN: {
-      const { nativeCurrency } = getChainInfo()
+      const { nativeCurrency } = currentNetwork(store.getState())
       return getAmountWithSymbol(
         {
           decimals: nativeCurrency.decimals,
@@ -66,7 +66,6 @@ type txTokenData = {
 }
 
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
-  const { nativeCurrency } = getChainInfo()
   switch (txInfo.transferInfo.type) {
     case TokenType.ERC20:
       return {
@@ -77,8 +76,9 @@ export const getTxTokenData = (txInfo: Transfer): txTokenData => {
     case TokenType.ERC721:
       return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
+      const { nativeCurrency } = currentNetwork(store.getState())
       return {
-        address: getNativeCurrencyAddress() /*nativeCurrency.address*/,
+        address: ZERO_ADDRESS,
         value: txInfo.transferInfo.value,
         decimals: nativeCurrency.decimals,
       }

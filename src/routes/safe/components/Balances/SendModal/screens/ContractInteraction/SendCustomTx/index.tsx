@@ -22,10 +22,10 @@ import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 
 import { styles } from './style'
-import { getChainInfo } from 'src/config'
 import { EthAddressInput } from '../EthAddressInput'
 import { ensResolver, formMutators } from '../utils'
 import Buttons from '../Buttons'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 export interface CreatedTx {
   contractAddress: string
@@ -49,7 +49,7 @@ const useStyles = makeStyles(styles)
 
 const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: Props): ReactElement => {
   const classes = useStyles()
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   const ethBalance = useSelector(currentSafeEthBalance)
 
   const saveForm = async (values) => {

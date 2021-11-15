@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { getTxServiceUrl } from 'src/config'
 import memoize from 'lodash.memoize'
+import { currentTxServiceUrl } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 export enum MasterCopyDeployer {
   GNOSIS = 'Gnosis',
@@ -35,7 +36,8 @@ const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
 }
 
 export const fetchMasterCopies = memoize(async (): Promise<MasterCopy[] | undefined> => {
-  const url = `${getTxServiceUrl()}/about/master-copies/`
+  const txServiceUrl = currentTxServiceUrl(store.getState())
+  const url = `${txServiceUrl}/about/master-copies/`
   try {
     const res = await axios.get<{ address: string; version: string }[]>(url)
     return res.data.map(extractMasterCopyInfo)

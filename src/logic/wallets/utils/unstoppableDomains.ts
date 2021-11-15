@@ -1,14 +1,17 @@
 import UnstoppableResolution from '@unstoppabledomains/resolution'
-import { getRpcServiceUrl } from 'src/config'
+import { currentRpcServiceUrl } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 let unstoppableResolver
 
-export const getAddressFromUnstoppableDomain = (name: string) => {
+export const getAddressFromUnstoppableDomain = (name: string): Promise<string> => {
   if (!unstoppableResolver) {
+    const rpcServiceUrl = currentRpcServiceUrl(store.getState())
+
     unstoppableResolver = new UnstoppableResolution({
       blockchain: {
         cns: {
-          url: getRpcServiceUrl(),
+          url: rpcServiceUrl,
         },
       },
     })

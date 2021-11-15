@@ -19,11 +19,12 @@ import {
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
 } from '../fields/createSafeFields'
-import { getBlockExplorerInfo, getChainInfo } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
 
 export const reviewNewSafeStepLabel = 'Review'
 
@@ -54,7 +55,7 @@ function ReviewNewSafeStep(): ReactElement | null {
     numOwners: numberOfOwners,
     safeCreationSalt,
   })
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
 
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
@@ -110,22 +111,7 @@ function ReviewNewSafeStep(): ReactElement | null {
           {owners.map(({ nameFieldName, addressFieldName }) => {
             const ownerName = createSafeFormValues[nameFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
-            return (
-              <React.Fragment key={`owner-${addressFieldName}`}>
-                <OwnersAddressesContainer>
-                  <Col align="center" xs={12} data-testid={`create-safe-owner-details-${ownerAddress}`}>
-                    <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
-                      showAvatar
-                      showCopyBtn
-                      explorerUrl={getBlockExplorerInfo(ownerAddress)}
-                    />
-                  </Col>
-                </OwnersAddressesContainer>
-                <Hairline />
-              </React.Fragment>
-            )
+            return <Owner key={`owner-${addressFieldName}`} ownerName={ownerName} ownerAddress={ownerAddress} />
           })}
         </TableContainer>
       </Col>
@@ -137,6 +123,20 @@ function ReviewNewSafeStep(): ReactElement | null {
         </Paragraph>
       </DescriptionContainer>
     </Row>
+  )
+}
+
+const Owner = ({ ownerName, ownerAddress }: { ownerName: string; ownerAddress: string }) => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, ownerAddress))
+  return (
+    <React.Fragment>
+      <OwnersAddressesContainer>
+        <Col align="center" xs={12} data-testid={`create-safe-owner-details-${ownerAddress}`}>
+          <EthHashInfo hash={ownerAddress} name={ownerName} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+        </Col>
+      </OwnersAddressesContainer>
+      <Hairline />
+    </React.Fragment>
   )
 }
 
@@ -163,7 +163,7 @@ const OwnersAddressesContainer = styled(Row)`
   padding-left: ${lg};
 `
 const DescriptionContainer = styled(Row)`
-  background-colo: ${background};
+  background-color: ${background};
   padding: ${lg};
   text-align: center;
 `

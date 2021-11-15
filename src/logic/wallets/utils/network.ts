@@ -1,9 +1,10 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import onboard from 'src/logic/wallets/onboard'
-import { getChainInfo, getNetworkId, getRpcServiceUrl } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { numberToHex } from 'web3-utils'
+import { currentExplorerUrl, currentNetwork, currentNetworkId } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
@@ -32,7 +33,9 @@ const requestSwitch = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): Promise
  * @see https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
  */
 const requestAdd = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): Promise<void> => {
-  const { chainName, nativeCurrency } = getChainInfo()
+  const state = store.getState()
+  const { chainName, nativeCurrency, rpcUri } = currentNetwork(state)
+  const blockChainExplorerUrl = currentExplorerUrl(state)
 
   await wallet.provider.request({
     method: 'wallet_addEthereumChain',
@@ -45,8 +48,8 @@ const requestAdd = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): Promise<vo
           symbol: nativeCurrency.symbol,
           decimals: nativeCurrency.decimals,
         },
-        rpcUrls: [getRpcServiceUrl()],
-        blockExplorerUrls: [getBlockExplorerUrl()],
+        rpcUrls: [rpcUri.value],
+        blockExplorerUrls: [blockChainExplorerUrl],
       },
     ],
   })
@@ -80,14 +83,11 @@ export const switchNetwork = async (wallet: Wallet, chainId: ETHEREUM_NETWORK): 
 }
 
 export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
-  const desiredNetwork = getNetworkId()
+  const desiredNetwork = currentNetworkId(store.getState())
   const currentNetwork = wallet?.provider?.networkVersion
   return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
 }
 
 export const canSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
   return wallet?.provider?.isMetaMask || false
-}
-function getBlockExplorerUrl() {
-  throw new Error('Function not implemented.')
 }

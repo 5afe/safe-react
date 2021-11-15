@@ -1,9 +1,8 @@
 import { ReactElement, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
@@ -28,6 +27,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -48,8 +49,11 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const explorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, tx.contractAddress as string),
+  )
 
   const {
     gasLimit,
@@ -122,7 +126,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
                   name={tx.contractName ?? ''}
                   showAvatar
                   showCopyBtn
-                  explorerUrl={getBlockExplorerInfo(tx.contractAddress as string)}
+                  explorerUrl={explorerUrl}
                 />
               </Col>
             </Row>

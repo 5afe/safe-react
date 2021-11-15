@@ -1,4 +1,4 @@
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 

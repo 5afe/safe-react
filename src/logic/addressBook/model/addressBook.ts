@@ -1,5 +1,6 @@
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
-import { getNetworkId } from 'src/config'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 
 export const ADDRESS_BOOK_DEFAULT_NAME = 'UNKNOWN'
 
@@ -12,7 +13,7 @@ export type AddressBookEntry = {
 export const makeAddressBookEntry = ({
   address,
   name,
-  chainId = getNetworkId(),
+  chainId = currentNetworkId(store.getState()),
 }: {
   address: string
   name: string

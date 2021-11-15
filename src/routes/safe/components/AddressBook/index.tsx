@@ -19,7 +19,6 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
-import { getBlockExplorerInfo, getNetworkId } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -39,6 +38,7 @@ import {
   ADDRESS_BOOK_ROW_ID,
   SEND_ENTRY_BUTTON,
   generateColumns,
+  AddressBookColumn,
 } from 'src/routes/safe/components/AddressBook/columns'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safesAsList } from 'src/logic/safe/store/selectors'
@@ -48,7 +48,8 @@ import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentBlockExplorerInfo, currentNetworkId } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -81,9 +82,9 @@ const AddressBookTable = (): ReactElement => {
   const dispatch = useDispatch()
   const safesList = useSelector(safesAsList)
   const addressBook = useSelector(currentNetworkAddressBook)
-  const networkId = useSelector(currentChainId)
+  const networkId = useSelector(currentNetworkId)
   const granted = useSelector(grantedSelector)
-  const initialEntryState: Entry = { entry: { address: '', name: '', chainId: getNetworkId(), isNew: true } }
+  const initialEntryState: Entry = { entry: { address: '', name: '', chainId: networkId, isNew: true } }
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [importEntryModalOpen, setImportEntryModalOpen] = useState(false)
@@ -228,22 +229,7 @@ const AddressBookTable = (): ReactElement => {
                     tabIndex={-1}
                   >
                     {autoColumns.map((column) => {
-                      return (
-                        <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
-                          {column.id === AB_ADDRESS_ID ? (
-                            <Block justify="left">
-                              <EthHashInfo
-                                hash={row[column.id]}
-                                showCopyBtn
-                                showAvatar
-                                explorerUrl={getBlockExplorerInfo(row[column.id])}
-                              />
-                            </Block>
-                          ) : (
-                            row[column.id]
-                          )}
-                        </TableCell>
-                      )
+                      return <AutoColumn column={column} key={column.id} address={row[column.id]} />
                     })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
@@ -330,6 +316,21 @@ const AddressBookTable = (): ReactElement => {
         recipientName={selectedEntry?.entry?.name}
       />
     </>
+  )
+}
+
+const AutoColumn = ({ address, column }: { address: string; column: AddressBookColumn }) => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address))
+  return (
+    <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
+      {column.id === AB_ADDRESS_ID ? (
+        <Block justify="left">
+          <EthHashInfo hash={address} showCopyBtn showAvatar explorerUrl={explorerUrl} />
+        </Block>
+      ) : (
+        address
+      )}
+    </TableCell>
   )
 }
 

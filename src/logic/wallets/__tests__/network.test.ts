@@ -1,5 +1,5 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { switchNetwork, shouldSwitchNetwork, canSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 class CodedError extends Error {

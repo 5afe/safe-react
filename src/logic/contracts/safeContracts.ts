@@ -11,8 +11,7 @@ import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { getChainInfoById, getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
@@ -22,6 +21,8 @@ import { CompatibilityFallbackHandler } from 'src/types/contracts/compatibility_
 import { SignMessageLib } from 'src/types/contracts/sign_message_lib.d'
 import { MultiSend } from 'src/types/contracts/multi_send.d'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { currentNetworkId, getNetworkById } from '../config/store/selectors'
+import { store } from 'src/store'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
@@ -33,10 +34,12 @@ let multiSend: MultiSend
 const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => {
   // We check if version is prior to v1.0.0 as they are not supported but still we want to keep a minimum compatibility
   const useOldestContractVersion = semverSatisfies(safeVersion, '<1.0.0')
+
+  const state = store.getState()
   // We have to check if network is L2
-  const networkId = getNetworkId()
+  const networkId = currentNetworkId(state)
   // We had L1 contracts in three L2 networks, xDai, EWC and Volta so even if network is L2 we have to check that safe version is after v1.3.0
-  const useL2ContractVersion = getChainInfoById(networkId)?.l2 && semverSatisfies(safeVersion, '>=1.3.0')
+  const useL2ContractVersion = getNetworkById(state, networkId).l2 && semverSatisfies(safeVersion, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
   return (
     getDeployment({

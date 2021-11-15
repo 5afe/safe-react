@@ -2,7 +2,6 @@ import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getBlockExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -22,6 +21,9 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -52,6 +54,7 @@ export const ReviewRemoveOwnerModal = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
 
   const {
     gasLimit,
@@ -175,20 +178,7 @@ export const ReviewRemoveOwnerModal = ({
                 {owners?.map(
                   (safeOwner) =>
                     !sameAddress(safeOwner.address, owner.address) && (
-                      <Fragment key={safeOwner.address}>
-                        <Row className={classes.owner}>
-                          <Col align="center" xs={12}>
-                            <EthHashInfo
-                              hash={safeOwner.address}
-                              name={safeOwner.name}
-                              showCopyBtn
-                              showAvatar
-                              explorerUrl={getBlockExplorerInfo(safeOwner.address)}
-                            />
-                          </Col>
-                        </Row>
-                        <Hairline />
-                      </Fragment>
+                      <SafeOwner key={safeOwner.address} safeOwner={safeOwner} />
                     ),
                 )}
                 <Row align="center" className={classes.info}>
@@ -204,7 +194,7 @@ export const ReviewRemoveOwnerModal = ({
                       name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getBlockExplorerInfo(owner.address)}
+                      explorerUrl={explorerUrl}
                     />
                   </Col>
                 </Row>
@@ -250,5 +240,26 @@ export const ReviewRemoveOwnerModal = ({
         </>
       )}
     </EditableTxParameters>
+  )
+}
+
+const SafeOwner = ({ safeOwner }: { safeOwner: AddressBookEntry }) => {
+  const classes = useStyles()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeOwner.address))
+  return (
+    <Fragment key={safeOwner.address}>
+      <Row className={classes.owner}>
+        <Col align="center" xs={12}>
+          <EthHashInfo
+            hash={safeOwner.address}
+            name={safeOwner.name}
+            showCopyBtn
+            showAvatar
+            explorerUrl={explorerUrl}
+          />
+        </Col>
+      </Row>
+      <Hairline />
+    </Fragment>
   )
 }

@@ -1,9 +1,10 @@
 import { Custom, SettingsChange, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
-import { getChainInfo } from 'src/config'
 import { isCustomTxInfo, isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { currentNetwork } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 export type TokenTransferAsset = {
   type: 'Transfer'
@@ -62,7 +63,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           break
         }
         case TokenType.NATIVE_COIN: {
-          const { nativeCurrency } = getChainInfo()
+          const { nativeCurrency } = currentNetwork(store.getState())
 
           setAsset({
             type: 'Transfer',

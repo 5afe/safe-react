@@ -1,4 +1,4 @@
-import { ReactElement, useRef, Fragment, useCallback } from 'react'
+import { ReactElement, useRef, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
@@ -14,12 +14,12 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-import { getChainInfoById } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NETWORK_ROOT_ROUTES } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { currentNetworkId, getNetworkById } from 'src/logic/config/store/selectors'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
+import { AppReduxState } from 'src/store'
 
 const styles = {
   root: {
@@ -80,22 +80,7 @@ type NetworkSelectorProps = ReturnValue
 
 const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): ReactElement => {
   const networkRef = useRef(null)
-  const history = useHistory()
   const classes = useStyles()
-  const chainId = useSelector(currentChainId)
-
-  const onNetworkSwitch = useCallback(
-    (e: React.SyntheticEvent, networkId: ETHEREUM_NETWORK) => {
-      e.preventDefault()
-      clickAway()
-
-      const newRoute = NETWORK_ROOT_ROUTES.find(({ id }) => id === networkId)
-      if (newRoute) {
-        history.push(newRoute.route)
-      }
-    },
-    [clickAway, history],
-  )
 
   return (
     <>
@@ -120,15 +105,8 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
             <>
               <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                 <List className={classes.network} component="div">
-                  {NETWORK_ROOT_ROUTES.map(({ id, route }) => (
-                    <Fragment key={id}>
-                      <StyledLink onClick={(e) => onNetworkSwitch(e, id)} href={route}>
-                        <NetworkLabel chainInfo={getChainInfoById(id)} />
-
-                        {chainId === id && <Icon type="check" size="md" color="primary" />}
-                      </StyledLink>
-                      <StyledDivider />
-                    </Fragment>
+                  {NETWORK_ROOT_ROUTES.map((route) => (
+                    <Network key={route.id} route={route} clickAway={clickAway} />
                   ))}
                 </List>
               </ClickAwayListener>
@@ -136,6 +114,38 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
           </Grow>
         )}
       </Popper>
+    </>
+  )
+}
+
+const Network = ({
+  route,
+  clickAway,
+}: { route: typeof NETWORK_ROOT_ROUTES[number] } & Pick<NetworkSelectorProps, 'clickAway'>) => {
+  const history = useHistory()
+  const networkId = useSelector(currentNetworkId)
+  const routeChainInfo = useSelector((state: AppReduxState) => getNetworkById(state, route.id))
+
+  const onNetworkSwitch = useCallback(
+    (e: React.SyntheticEvent, networkId: ETHEREUM_NETWORK) => {
+      e.preventDefault()
+      clickAway()
+
+      const newRoute = NETWORK_ROOT_ROUTES.find(({ id }) => id === networkId)
+      if (newRoute) {
+        history.push(newRoute.route)
+      }
+    },
+    [clickAway, history],
+  )
+
+  return (
+    <>
+      <StyledLink onClick={(e) => onNetworkSwitch(e, route.id)} href={route.route}>
+        <NetworkLabel chainInfo={routeChainInfo} />
+        {networkId === route.id && <Icon type="check" size="md" color="primary" />}
+      </StyledLink>
+      <StyledDivider />
     </>
   )
 }

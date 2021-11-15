@@ -1,6 +1,6 @@
 import ChainIndicator from '.'
 import { render } from 'src/utils/test-utils'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 
 describe('<ChainIndicator>', () => {
   it('renders Rinkeby indicator', () => {

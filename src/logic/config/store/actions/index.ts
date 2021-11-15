@@ -1,42 +1,27 @@
-import { ChainInfo, getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ChainListResponse, getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Dispatch } from 'redux'
 import { createAction } from 'redux-actions'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 
-import { getNetworkId, getNetworks } from 'src/config'
-import { makeNetworkConfig, NetworkConfig } from 'src/logic/config/model/networkConfig'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 // following the suggested naming convention at
 // https://redux.js.org/style-guide/style-guide#write-action-types-as-domaineventname
 export enum CONFIG_ACTIONS {
-  CONFIGURE_STORE = 'config/configureStore',
+  SET_NETWORK_ID = 'config/setNetworkId',
+  LOAD_CHAINS = 'config/loadChains',
 }
 
-export const configureStore = createAction<NetworkConfig>(CONFIG_ACTIONS.CONFIGURE_STORE)
+export const setNetworkId = createAction<ETHEREUM_NETWORK>(CONFIG_ACTIONS.SET_NETWORK_ID)
 
-export const CHAIN_CONFIG_KEY = 'SAFE__chainConfig'
-const fetchChainConfigs = async (baseUrl = CONFIG_SERVICE_URL): Promise<ChainInfo[]> => {
-  let { next, results } = await getChainsConfig(baseUrl)
-
-  if (next) {
-    results = [...results, ...(await fetchChainConfigs(next))]
-  }
-
-  return results
-}
+export const loadChains = createAction<ChainListResponse>(CONFIG_ACTIONS.LOAD_CHAINS)
 
 export const loadConfig =
   () =>
   async (dispatch: Dispatch): Promise<void> => {
     try {
-      const chains = getNetworks() || (await fetchChainConfigs())
-      const config = chains.find(({ chainId }) => chainId === getNetworkId())
-
-      if (!config) {
-        throw new Error(`No config found for network ${getNetworkId()}`)
-      }
-
-      dispatch(configureStore(makeNetworkConfig(config)))
+      const chains = await getChainsConfig(CONFIG_SERVICE_URL)
+      dispatch(loadChains(chains))
     } catch (err) {
       // TODO: Error handling
     }

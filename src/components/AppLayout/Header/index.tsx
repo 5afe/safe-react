@@ -6,7 +6,7 @@ import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import { UserDetails } from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import {
   availableSelector,
   loadedSelector,
@@ -21,7 +21,7 @@ import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/provid
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
-  const chainId = useSelector(currentChainId)
+  const chainId = useSelector(currentNetworkId)
   const userAddress = useSelector(userAccountSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)

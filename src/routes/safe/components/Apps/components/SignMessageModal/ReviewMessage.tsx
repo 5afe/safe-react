@@ -8,7 +8,6 @@ import styled from 'styled-components'
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -24,8 +23,8 @@ import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
-
-const { nativeCurrency } = getChainInfo()
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
 
 const Container = styled.div`
   max-width: 480px;
@@ -85,8 +84,9 @@ export const ReviewMessage = ({
   txRecipient,
 }: Props): ReactElement => {
   const dispatch = useDispatch()
-  const explorerUrl = getBlockExplorerInfo(safeAddress)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeAddress))
   const isOwner = useSelector(grantedSelector)
+  const { nativeCurrency } = useSelector(currentNetwork)
 
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()

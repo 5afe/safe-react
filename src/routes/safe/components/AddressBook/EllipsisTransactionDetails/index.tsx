@@ -12,7 +12,7 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_ROUTES, history, extractSafeAddress, generateSafeRoute } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { currentShortName } from 'src/logic/config/store/selectors'
 
 const useStyles = makeStyles(
   createStyles({
@@ -48,6 +48,7 @@ export const EllipsisTransactionDetails = ({
   const [anchorEl, setAnchorEl] = useState(null)
 
   const isOwnerConnected = useSelector(grantedSelector)
+  const shortName = useSelector(currentShortName)
 
   const recipientName = useSelector((state) => addressBookEntryName(state, { address }))
   // We have to check that the name returned is not UNKNOWN
@@ -60,7 +61,7 @@ export const EllipsisTransactionDetails = ({
   const addOrEditEntryHandler = () => {
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ADDRESS_BOOK, {
-        shortName: getCurrentShortChainName(),
+        shortName,
         safeAddress: extractSafeAddress(),
       }),
       search: `?entryAddress=${address}`,

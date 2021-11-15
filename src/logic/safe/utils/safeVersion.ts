@@ -7,8 +7,9 @@ import semverValid from 'semver/functions/valid'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { isFeatureEnabled } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { isFeatureEnabled } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 type FeatureConfigByVersion = {
   name: FEATURES
@@ -46,9 +47,10 @@ const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, ver
 }
 
 export const enabledFeatures = (version?: string): FEATURES[] => {
+  const state = store.getState()
   return FEATURES_BY_VERSION.reduce((acc, feature: Feature) => {
-    if (isFeatureEnabled(feature.name) && checkFeatureEnabledByVersion(feature, version)) {
-      acc.push(feature.name)
+    if (isFeatureEnabled(state, feature.name) && checkFeatureEnabledByVersion(feature, version)) {
+      return [...acc, feature.name]
     }
     return acc
   }, [] as FEATURES[])

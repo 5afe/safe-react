@@ -13,7 +13,7 @@ import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { currentShortName } from 'src/logic/config/store/selectors'
 
 const Advanced = lazy(() => import('./Advanced'))
 const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
@@ -36,12 +36,13 @@ const Settings = (): React.ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
+  const shortName = useSelector(currentShortName)
 
   // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
   const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const currentSafeRoutes = generatePrefixedAddressRoutes({
-    shortName: getCurrentShortChainName(),
+    shortName,
     safeAddress,
   })
 

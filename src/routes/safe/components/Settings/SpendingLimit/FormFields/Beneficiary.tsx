@@ -5,11 +5,12 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { getBlockExplorerInfo } from 'src/config'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;
@@ -27,6 +28,10 @@ const Beneficiary = (): ReactElement => {
     address: initialValues?.beneficiary || '',
     name: '',
   })
+
+  const explorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, selectedEntry?.address || ''),
+  )
 
   const [pristine, setPristine] = useState<boolean>(!initialValues?.beneficiary)
 
@@ -83,7 +88,7 @@ const Beneficiary = (): ReactElement => {
         showCopyBtn
         showAvatar
         textSize="lg"
-        explorerUrl={getBlockExplorerInfo(selectedEntry.address)}
+        explorerUrl={explorerUrl}
       />
     </BeneficiaryInput>
   ) : (

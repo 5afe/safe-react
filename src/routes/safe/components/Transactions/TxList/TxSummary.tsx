@@ -2,15 +2,17 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
 
-import { getBlockExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
+import { useSelector } from 'react-redux'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData } = txDetails
-  const explorerUrl = txHash ? getBlockExplorerInfo(txHash) : null
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, txHash || ''))
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
   const safeTxHash = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.safeTxHash : undefined

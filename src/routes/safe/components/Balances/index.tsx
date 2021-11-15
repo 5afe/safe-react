@@ -12,7 +12,7 @@ import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { currentShortName } from 'src/logic/config/store/selectors'
 
 const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -30,12 +30,13 @@ const Balances = (): ReactElement => {
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const [showReceive, setShowReceive] = useState<boolean>(false)
   const [sentToken, setSentToken] = useState<string>('')
+  const shortName = useSelector(currentShortName)
 
   // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
   const matchSafeWithBalancesSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const currentSafeRoutes = generatePrefixedAddressRoutes({
-    shortName: getCurrentShortChainName(),
+    shortName,
     safeAddress,
   })
 

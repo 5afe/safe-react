@@ -1,4 +1,4 @@
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
 import { batchLoadEntries } from '../reducer'
 
 describe('Test AddressBook BatchLoadEntries Reducer', () => {

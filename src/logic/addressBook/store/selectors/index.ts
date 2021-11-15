@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -48,7 +48,7 @@ type GetNameParams = Overwrite<Partial<AddressBookEntry>, { address: string }>
 export const addressBookEntryName = createSelector(
   [
     addressBookAsMap,
-    currentChainId,
+    currentNetworkId,
     (_, { address, chainId }: GetNameParams): { address: string; chainId?: ETHEREUM_NETWORK } => ({
       address,
       chainId,
@@ -62,7 +62,7 @@ export const addressBookEntryName = createSelector(
 export const addressBookName = createSelector(
   [
     addressBookAsMap,
-    currentChainId,
+    currentNetworkId,
     (_, { address, chainId }: GetNameParams): { address: string; chainId?: ETHEREUM_NETWORK } => ({
       address,
       chainId,
@@ -78,7 +78,7 @@ export const addressBookName = createSelector(
 /*********************/
 
 export const currentNetworkAddressBook = createSelector(
-  [addressBookState, currentChainId],
+  [addressBookState, currentNetworkId],
   (addressBook, curChainId): AppReduxState['addressBook'] => {
     return addressBook.filter(({ chainId }) => chainId.toString() === curChainId)
   },

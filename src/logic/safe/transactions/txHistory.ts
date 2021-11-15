@@ -1,9 +1,10 @@
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { getNetworkId, getSafeServiceBaseUrl } from 'src/config'
-
-import { checksumAddress } from 'src/utils/checksumAddress'
 import { proposeTransaction, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { checksumAddress } from 'src/utils/checksumAddress'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
+import { store } from 'src/store'
+import { currentNetworkId, currentSafeServiceBaseUrl } from 'src/logic/config/store/selectors'
 
 const calculateBodyFrom = async (
   safeInstance: GnosisSafe,
@@ -44,8 +45,9 @@ const calculateBodyFrom = async (
 }
 
 export const buildTxServiceUrl = (safeAddress: string): string => {
-  const address = checksumAddress(safeAddress)
-  return `${getSafeServiceBaseUrl(address)}/multisig-transactions/?has_confirmations=True`
+  const state = store.getState()
+  const baseUrl = currentSafeServiceBaseUrl(state, checksumAddress(safeAddress))
+  return `${baseUrl}/multisig-transactions/?has_confirmations=True`
 }
 
 interface SaveTxToHistoryArgs {
@@ -69,6 +71,7 @@ export const saveTxToHistory = async ({
   to,
   valueInWei,
 }: SaveTxToHistoryArgs): Promise<TransactionDetails> => {
+  const networkId = currentNetworkId(store.getState())
   const address = checksumAddress(safeInstance.options.address)
   const body = await calculateBodyFrom(
     safeInstance,
@@ -86,6 +89,6 @@ export const saveTxToHistory = async ({
     origin || null,
     signature,
   )
-  const txDetails = await proposeTransaction(CONFIG_SERVICE_URL, getNetworkId(), address, body)
+  const txDetails = await proposeTransaction(CONFIG_SERVICE_URL, networkId, address, body)
   return txDetails
 }

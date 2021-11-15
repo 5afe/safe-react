@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useHistoryTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
@@ -19,7 +19,7 @@ type PagedTransactions = {
 
 export const usePagedHistoryTransactions = (): PagedTransactions => {
   const { count, transactions } = useHistoryTransactions()
-  const chainId = useSelector(currentChainId)
+  const chainId = useSelector(currentNetworkId)
 
   const dispatch = useRef(useDispatch())
   const safeAddress = useRef(extractSafeAddress())

@@ -1,8 +1,11 @@
 import { getCollectibles, SafeCollectibleResponse } from '@gnosis.pm/safe-react-gateway-sdk'
-import { getNetworkId } from 'src/config'
+
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
+import { store } from 'src/store'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 
 export const fetchSafeCollectibles = async (safeAddress: string): Promise<SafeCollectibleResponse[]> => {
-  return getCollectibles(CONFIG_SERVICE_URL, getNetworkId(), checksumAddress(safeAddress))
+  const state = store.getValue()
+  return getCollectibles(CONFIG_SERVICE_URL, currentNetworkId(state), checksumAddress(safeAddress))
 }

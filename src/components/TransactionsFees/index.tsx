@@ -1,8 +1,9 @@
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
-import { getChainInfo } from 'src/config'
 import { TransactionFailText } from 'src/components/TransactionFailText'
 import { Text } from '@gnosis.pm/safe-react-components'
+import { useSelector } from 'react-redux'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus
@@ -19,7 +20,7 @@ export const TransactionFees = ({
   isOffChainSignature,
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   let transactionAction
   if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
     return null

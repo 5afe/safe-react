@@ -6,7 +6,7 @@ import { TransactionDetailsPayload } from 'src/logic/safe/store/reducer/gatewayT
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
 
 export const UPDATE_TRANSACTION_DETAILS = 'UPDATE_TRANSACTION_DETAILS'
@@ -21,7 +21,7 @@ export const fetchTransactionDetails =
       txLocation,
     })
     const safeAddress = extractSafeAddress()
-    const chainId = currentChainId(getState())
+    const chainId = currentNetworkId(getState())
 
     if (txDetails || !safeAddress) {
       return

@@ -3,13 +3,11 @@ import ListItem from '@material-ui/core/ListItem'
 import styled from 'styled-components'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Fragment, ReactElement } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
 
-import { setNetwork } from 'src/logic/config/utils'
 import { sortedSafeListSelector } from '../selectors'
-import { getNetworkId, getNetworks } from 'src/config'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
@@ -17,6 +15,8 @@ import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
+import { currentNetworkId, currentNetworks } from 'src/logic/config/store/selectors'
+import { setNetworkId } from 'src/logic/config/store/actions'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -72,11 +72,14 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
+  const dispatch = useDispatch()
+  const networks = useSelector(currentNetworks)
+  const networkId = useSelector(currentNetworkId)
 
   return (
     <StyledList>
-      {getNetworks().map(({ chainId, theme, chainName }) => {
-        const isCurrentNetwork = chainId === getNetworkId()
+      {networks.map(({ chainId, theme, chainName }) => {
+        const isCurrentNetwork = chainId === networkId
         const localSafesOnNetwork = localSafes[chainId]
         const ownedSafesOnNetwork = ownedSafes[chainId] || []
         const shouldExpandOwnedSafes =
@@ -100,7 +103,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                   <SafeListItem
                     key={safe.address}
                     networkId={chainId}
-                    onNetworkSwitch={() => setNetwork(chainId)}
+                    onNetworkSwitch={() => dispatch(setNetworkId(chainId))}
                     onSafeClick={onSafeClick}
                     loadedSafes={loadedSafes}
                     shouldScrollToSafe

@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getBlockExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -22,6 +21,9 @@ import { OwnerValues } from '../..'
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AppReduxState } from 'src/store'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -46,6 +48,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, values.ownerAddress))
 
   const {
     gasLimit,
@@ -155,20 +158,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 </Row>
                 <Hairline />
                 {owners?.map((owner) => (
-                  <Fragment key={owner.address}>
-                    <Row className={classes.owner}>
-                      <Col align="center" xs={12}>
-                        <EthHashInfo
-                          hash={owner.address}
-                          name={owner.name}
-                          showCopyBtn
-                          showAvatar
-                          explorerUrl={getBlockExplorerInfo(owner.address)}
-                        />
-                      </Col>
-                    </Row>
-                    <Hairline />
-                  </Fragment>
+                  <Owner key={owner.address} owner={owner} />
                 ))}
                 <Row align="center" className={classes.info}>
                   <Paragraph color="primary" noMargin size="md" weight="bolder">
@@ -183,7 +173,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       name={values.ownerName}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getBlockExplorerInfo(values.ownerAddress)}
+                      explorerUrl={explorerUrl}
                     />
                   </Col>
                 </Row>
@@ -227,5 +217,20 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
         </>
       )}
     </EditableTxParameters>
+  )
+}
+
+const Owner = ({ owner }: { owner: AddressBookEntry }) => {
+  const classes = useStyles()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
+  return (
+    <Fragment key={owner.address}>
+      <Row className={classes.owner}>
+        <Col align="center" xs={12}>
+          <EthHashInfo hash={owner.address} name={owner.name} showCopyBtn showAvatar explorerUrl={explorerUrl} />
+        </Col>
+      </Row>
+      <Hairline />
+    </Fragment>
   )
 }

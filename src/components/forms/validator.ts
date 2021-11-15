@@ -3,9 +3,10 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { isFeatureEnabled } from 'src/config'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { isFeatureEnabled } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -85,7 +86,8 @@ export const mustBeAddressHash = memoize((address: string): ValidatorReturnType 
 export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnType => {
   const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
   const result = mustBeAddressHash(address)
-  if (result !== undefined && isFeatureEnabled(FEATURES.DOMAIN_LOOKUP)) {
+  const isDomainLookupEnabled = isFeatureEnabled(store.getState(), FEATURES.DOMAIN_LOOKUP)
+  if (result !== undefined && isDomainLookupEnabled) {
     return errorMessage
   }
   return result

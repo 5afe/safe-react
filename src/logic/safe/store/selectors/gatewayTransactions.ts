@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 
 import { StoreStructure, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
 import { AppReduxState } from 'src/store'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -14,7 +14,7 @@ export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewa
 
 export const historyTransactions = createHashBasedSelector(
   gatewayTransactions,
-  currentChainId,
+  currentNetworkId,
   (gatewayTransactions, chainId): StoreStructure['history'] | undefined => {
     const safeAddress = extractSafeAddress()
     return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.history : undefined
@@ -23,7 +23,7 @@ export const historyTransactions = createHashBasedSelector(
 
 export const pendingTransactions = createSelector(
   gatewayTransactions,
-  currentChainId,
+  currentNetworkId,
   (gatewayTransactions, chainId): StoreStructure['queued'] | undefined => {
     const safeAddress = extractSafeAddress()
     return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.queued : undefined
@@ -54,7 +54,7 @@ type TxByLocation = {
 
 const getTransactionsByLocation = createHashBasedSelector(
   gatewayTransactions,
-  currentChainId,
+  currentNetworkId,
   extractSafeAddress,
   (gatewayTransactions, chainId, safeAddress) =>
     (rest: TxByLocationAttr): TxByLocation => ({

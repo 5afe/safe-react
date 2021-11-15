@@ -1,13 +1,14 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getChainInfo } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { md, lg } from 'src/theme/variables'
 import ModalTitle from 'src/components/ModalTitle'
 import Hairline from 'src/components/layout/Hairline'
 import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode.d'
 import { BasicTxInfo, getParameterElement } from 'src/components/DecodeTxs'
+import { useSelector } from 'react-redux'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 const Container = styled.div`
   max-width: 480px;
@@ -26,7 +27,7 @@ type Props = {
 }
 
 export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   let body
   // If we are dealing with a multiSend
   // decodedTxData is of type DataDecodedParameter

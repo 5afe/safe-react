@@ -27,7 +27,6 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { useStyles } from './style'
-import { getBlockExplorerInfo } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
@@ -36,6 +35,8 @@ export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 import { OwnerValues } from '../..'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const formMutators: Record<
   string,
@@ -71,6 +72,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
   const { address: safeAddress = '', owners } = useSelector(currentSafe) ?? {}
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
 
   return (
     <>
@@ -117,7 +119,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                       name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getBlockExplorerInfo(owner.address)}
+                      explorerUrl={explorerUrl}
                     />
                   </Col>
                 </Row>

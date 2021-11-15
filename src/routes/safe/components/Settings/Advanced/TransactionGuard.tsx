@@ -14,7 +14,9 @@ import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { getBlockExplorerInfo } from 'src/config'
+import { TableColumn } from 'src/components/Table/types'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 export const REMOVE_GUARD_BTN_TEST_ID = 'remove-guard-btn'
 export const GUARDS_ROW_TEST_ID = 'guards-row'
@@ -28,8 +30,6 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
 
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
-
-  const granted = useSelector(grantedSelector)
 
   const [viewRemoveGuardModal, setViewRemoveGuardModal] = useState(false)
   const hideRemoveGuardModal = () => setViewRemoveGuardModal(false)
@@ -50,30 +50,14 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
                 key={index}
                 tabIndex={-1}
               >
-                {autoColumns.map((column, index) => {
-                  const columnId = column.id
-                  return (
-                    <Fragment key={`${columnId}-${index}`}>
-                      <TableCell align={column.align} component="td" key={columnId}>
-                        <Block justify="left">
-                          <EthHashInfo hash={row} showCopyBtn showAvatar explorerUrl={getBlockExplorerInfo(row)} />
-                        </Block>
-                      </TableCell>
-                      <TableCell component="td">
-                        <Row align="end" className={classes.actions}>
-                          {granted && (
-                            <ButtonHelper
-                              onClick={triggerRemoveSelectedGuard}
-                              dataTestId={`${row}-${REMOVE_GUARD_BTN_TEST_ID}`}
-                            >
-                              <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
-                            </ButtonHelper>
-                          )}
-                        </Row>
-                      </TableCell>
-                    </Fragment>
-                  )
-                })}
+                {autoColumns.map((column, index) => (
+                  <AutoColumn
+                    key={`${column.id}-${index}`}
+                    column={column}
+                    address={row}
+                    triggerRemoveSelectedGuard={triggerRemoveSelectedGuard}
+                  />
+                ))}
               </TableRow>
             ))
           }
@@ -81,5 +65,38 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
       </TableContainer>
       {viewRemoveGuardModal && address && <RemoveGuardModal onClose={hideRemoveGuardModal} guardAddress={address} />}
     </>
+  )
+}
+
+const AutoColumn = ({
+  column,
+  address,
+  triggerRemoveSelectedGuard,
+}: {
+  column: TableColumn
+  address: string
+  triggerRemoveSelectedGuard: () => void
+}) => {
+  const classes = useStyles()
+
+  const granted = useSelector(grantedSelector)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address))
+  return (
+    <Fragment>
+      <TableCell align={column.align} component="td" key={column.id}>
+        <Block justify="left">
+          <EthHashInfo hash={address} showCopyBtn showAvatar explorerUrl={explorerUrl} />
+        </Block>
+      </TableCell>
+      <TableCell component="td">
+        <Row align="end" className={classes.actions}>
+          {granted && (
+            <ButtonHelper onClick={triggerRemoveSelectedGuard} dataTestId={`${address}-${REMOVE_GUARD_BTN_TEST_ID}`}>
+              <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
+            </ButtonHelper>
+          )}
+        </Row>
+      </TableCell>
+    </Fragment>
   )
 }

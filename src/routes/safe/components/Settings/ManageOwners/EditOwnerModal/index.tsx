@@ -1,7 +1,6 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { getBlockExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -18,6 +17,8 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -31,6 +32,7 @@ type OwnProps = {
 export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, owner.address))
 
   const handleSubmit = ({ ownerName }: { ownerName: string }): void => {
     // Update the value only if the ownerName really changed
@@ -71,12 +73,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
                 </Row>
                 <Row>
                   <Block justify="center">
-                    <EthHashInfo
-                      hash={owner.address}
-                      showCopyBtn
-                      showAvatar
-                      explorerUrl={getBlockExplorerInfo(owner.address)}
-                    />
+                    <EthHashInfo hash={owner.address} showCopyBtn showAvatar explorerUrl={explorerUrl} />
                   </Block>
                 </Row>
               </Block>

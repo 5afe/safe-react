@@ -5,9 +5,11 @@ import { Text, EthHashInfo, CopyToClipboardBtn, IconText, FixedIcon } from '@gno
 import get from 'lodash.get'
 import { hexToBytes } from 'web3-utils'
 
-import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
+import { useSelector } from 'react-redux'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
+import { AppReduxState, store } from 'src/store'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -75,7 +77,8 @@ export const BasicTxInfo = ({
   txValue: string
   recipientName?: string
 }): ReactElement => {
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, txRecipient))
 
   return (
     <BasicTxInfoWrapper>
@@ -90,7 +93,7 @@ export const BasicTxInfo = ({
           textSize="lg"
           showCopyBtn
           name={recipientName}
-          explorerUrl={getBlockExplorerInfo(txRecipient)}
+          explorerUrl={explorerUrl}
         />
       </>
       <>
@@ -109,17 +112,10 @@ export const BasicTxInfo = ({
 
 export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
   let valueElement
+  const explorerUrl = currentBlockExplorerInfo(store.getState(), parameter.value)
 
   if (parameter.type === 'address') {
-    valueElement = (
-      <EthHashInfo
-        hash={parameter.value}
-        showAvatar
-        textSize="lg"
-        showCopyBtn
-        explorerUrl={getBlockExplorerInfo(parameter.value)}
-      />
-    )
+    valueElement = <EthHashInfo hash={parameter.value} showAvatar textSize="lg" showCopyBtn explorerUrl={explorerUrl} />
   }
 
   if (parameter.type.startsWith('bytes')) {

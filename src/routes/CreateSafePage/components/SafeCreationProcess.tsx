@@ -33,7 +33,7 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { currentShortName } from 'src/logic/config/store/selectors'
 
 type ModalDataType = {
   safeAddress: string
@@ -52,6 +52,7 @@ function SafeCreationProcess(): ReactElement {
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
+  const shortName = useSelector(currentShortName)
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
@@ -198,7 +199,7 @@ function SafeCreationProcess(): ReactElement {
     const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-        shortName: getCurrentShortChainName(),
+        shortName,
         safeAddress,
       }),
       state: {

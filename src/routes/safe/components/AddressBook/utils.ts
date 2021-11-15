@@ -1,4 +1,5 @@
-import { getNetworks } from 'src/config'
+import { currentNetworks } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 import { isValidAddress } from 'src/utils/isValidAddress'
 
 export const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
@@ -28,8 +29,10 @@ export const validateFile = (file: File): string | undefined => {
   return
 }
 
+// This could also be done by validating against /chains
 const isValidChainId = (chainId: string | number): boolean => {
-  return getNetworks().some((network) => {
+  const networks = currentNetworks(store.getState())
+  return networks.some((network) => {
     return network.chainId === chainId.toString()
   })
 }

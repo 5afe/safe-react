@@ -14,7 +14,7 @@ import Row from 'src/components/layout/Row'
 import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
-import { getChainInfo } from 'src/config'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 const useStyles = makeStyles(styles)
 
@@ -24,7 +24,7 @@ interface NativeCoinValueProps {
 
 export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   const ethBalance = useSelector(currentSafeEthBalance)
 
   const {

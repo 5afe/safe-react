@@ -12,14 +12,14 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
-import { getBlockExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
 import { useSelector } from 'react-redux'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentBlockExplorerInfo, currentNetworkId } from 'src/logic/config/store/selectors'
 import ChainIndicator from 'src/components/ChainIndicator'
+import { AppReduxState } from 'src/store'
 
 const styles = createStyles({
   container: {
@@ -112,9 +112,9 @@ export const UserDetails = ({
   provider,
   userAddress,
 }: Props): React.ReactElement => {
-  const explorerUrl = getBlockExplorerInfo(userAddress)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, userAddress))
   const connectedNetwork = useSelector(networkSelector)
-  const desiredNetwork = useSelector(currentChainId)
+  const desiredNetwork = useSelector(currentNetworkId)
   const classes = useStyles()
 
   return (

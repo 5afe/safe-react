@@ -15,11 +15,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/variables'
-import { getChainInfo, getBlockExplorerInfo } from 'src/config'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const useStyles = ({ theme }: ChainInfo) =>
   makeStyles(
@@ -82,7 +83,9 @@ type Props = {
 }
 
 const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement => {
-  const chainInfo = getChainInfo()
+  const chainInfo = useSelector(currentNetwork)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeAddress))
+
   const classes = useStyles(chainInfo)
 
   const copyShortName = useSelector(copyShortNameSelector)
@@ -124,7 +127,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           />
         )}
         <Block className={classes.addressContainer} justify="center">
-          <EthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getBlockExplorerInfo(safeAddress)} />
+          <EthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
         </Block>
       </Col>
       <Hairline />

@@ -9,7 +9,6 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
-import { getBlockExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
@@ -26,6 +25,8 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -112,6 +113,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
   }
 
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, moduleAddress))
+
   return (
     <Modal
       description="Remove the selected Module"
@@ -136,12 +139,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
-                    <EthHashInfo
-                      hash={moduleAddress}
-                      showCopyBtn
-                      showAvatar
-                      explorerUrl={getBlockExplorerInfo(moduleAddress)}
-                    />
+                    <EthHashInfo hash={moduleAddress} showCopyBtn showAvatar explorerUrl={explorerUrl} />
                   </Col>
                 </Row>
                 <Row className={classes.modalDescription}>

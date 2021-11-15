@@ -6,7 +6,8 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from '../wallets/store/selectors'
-import { getChainInfo } from 'src/config'
+import { currentNetwork } from '../config/store/selectors'
+import { store } from 'src/store'
 
 type EstimateSafeCreationGasProps = {
   addresses: string[]
@@ -31,7 +32,7 @@ const estimateGas = async (
     calculateGasPrice(),
   ])
   const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = currentNetwork(store.getState())
   const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
   const gasCostFormatted = formatAmount(gasCost)
 

@@ -19,8 +19,7 @@ export const safeStorageMiddleware =
     const handledAction = next(action)
 
     if (watchedActions.includes(action.type)) {
-      const state = store.getState()
-      const safesMap = safesAsMap(state)
+      const safesMap = safesAsMap(store.getState())
       await saveSafes(safesMap.filter((safe) => !safe.loadedViaUrl).toJSON())
     }
 

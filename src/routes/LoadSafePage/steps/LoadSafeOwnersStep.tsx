@@ -13,9 +13,11 @@ import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { disabled, extraSmallFontSize, lg, md, sm } from 'src/theme/variables'
 import { minMaxLength } from 'src/components/forms/validator'
-import { getBlockExplorerInfo } from 'src/config'
 import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { useSelector } from 'react-redux'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 export const loadSafeOwnersStepLabel = 'Owners'
 
@@ -38,33 +40,38 @@ function LoadSafeOwnersStep(): ReactElement {
         </HeaderContainer>
         <Hairline />
         <Block margin="md" padding="md">
-          {ownersWithName.map(({ address, name }, index) => {
-            const ownerFieldName = `owner-address-${address}`
-            return (
-              <OwnerContainer key={address} data-testid="owner-row">
-                <Col xs={4}>
-                  <FieldContainer
-                    component={TextField}
-                    initialValue={name}
-                    name={ownerFieldName}
-                    placeholder="Owner Name"
-                    text="Owner Name"
-                    type="text"
-                    validate={minMaxLength(0, 50)}
-                    testId={`load-safe-owner-name-${index}`}
-                  />
-                </Col>
-                <Col xs={8}>
-                  <OwnerAddressContainer>
-                    <EthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={getBlockExplorerInfo(address)} />
-                  </OwnerAddressContainer>
-                </Col>
-              </OwnerContainer>
-            )
-          })}
+          {ownersWithName.map(({ address, name }, index) => (
+            <Owner key={address} data-testid="owner-row" index={index} address={address} name={name} />
+          ))}
         </Block>
       </TableContainer>
     </>
+  )
+}
+
+const Owner = ({ name, address, index }: { name: string; address: string; index: number }) => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address))
+  const ownerFieldName = `owner-address-${address}`
+  return (
+    <OwnerContainer>
+      <Col xs={4}>
+        <FieldContainer
+          component={TextField}
+          initialValue={name}
+          name={ownerFieldName}
+          placeholder="Owner Name"
+          text="Owner Name"
+          type="text"
+          validate={minMaxLength(0, 50)}
+          testId={`load-safe-owner-name-${index}`}
+        />
+      </Col>
+      <Col xs={8}>
+        <OwnerAddressContainer>
+          <EthHashInfo hash={address} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+        </OwnerAddressContainer>
+      </Col>
+    </OwnerContainer>
   )
 }
 

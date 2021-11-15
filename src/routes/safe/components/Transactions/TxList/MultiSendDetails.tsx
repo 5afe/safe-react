@@ -2,13 +2,14 @@ import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
 import { DataDecoded, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
-import { getChainInfo } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { isSpendingLimitMethod } from './SpendingLimitDetails'
 import { ColumnDisplayAccordionDetails, ActionAccordion } from './styled'
 import { TxInfoDetails } from './TxInfoDetails'
+import { useSelector } from 'react-redux'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 type MultiSendTxGroupProps = {
   actionTitle: string
@@ -37,7 +38,7 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
 }
 
 export const MultiSendDetails = ({ txData }: { txData: TransactionData }): ReactElement | null => {
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   // no parameters for the `multiSend`
   if (!txData.dataDecoded?.parameters) {
     // we render the hex encoded data

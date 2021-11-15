@@ -31,10 +31,9 @@ import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 's
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId, currentShortName } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName, getNetworkId } from 'src/config'
-import { NETWORK_ID } from 'src/config/network.d'
+import { NETWORK_ID } from 'src/types/network.d'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -86,7 +85,7 @@ export const createTransaction =
     if (navigateToTransactionsTab) {
       history.push(
         generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
-          shortName: getCurrentShortChainName(),
+          shortName: currentShortName(state),
           safeAddress,
         }),
       )
@@ -98,7 +97,7 @@ export const createTransaction =
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-    const chainId = currentChainId(state)
+    const chainId = currentNetworkId(state)
     const lastTx = await getLastTx(safeAddress)
     const nextNonce = await getNewTxNonce(lastTx, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
@@ -151,7 +150,7 @@ export const createTransaction =
       }
 
       const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-      const gasParam = getNetworkId() === NETWORK_ID.MAINNET ? 'maxFeePerGas' : 'gasPrice'
+      const gasParam = chainId === NETWORK_ID.MAINNET ? 'maxFeePerGas' : 'gasPrice'
       const sendParams: PayableTx = {
         from,
         value: 0,

@@ -1,7 +1,7 @@
 import Onboard from 'bnc-onboard'
 import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
-import { getNetworkId, getChainName } from 'src/config'
+import { currentNetworkId, currentNetworkName } from '../config/store/selectors'
 import { setWeb3 } from './getWeb3'
 import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
@@ -12,10 +12,14 @@ const getOnboardConfiguration = () => {
   let providerName: string | null = null
   let lastNetworkId = ''
 
+  const state = store.getState()
+  const networkId = currentNetworkId(state)
+  const networkName = currentNetworkName(state)
+
   return {
-    networkId: parseInt(getNetworkId(), 10),
+    networkId: parseInt(networkId, 10),
     // Is it mandatory for Ledger to work to send network name in lowercase
-    networkName: getChainName().toLowerCase(),
+    networkName: networkName.toLowerCase(),
     subscriptions: {
       wallet: (wallet: Wallet) => {
         if (wallet.provider) {
@@ -28,7 +32,7 @@ const getOnboardConfiguration = () => {
       address: (address: string) => {
         if (!lastUsedAddress && address && providerName) {
           lastUsedAddress = address
-          lastNetworkId = getNetworkId()
+          lastNetworkId = networkId
           store.dispatch(fetchProvider(providerName))
         }
 
@@ -36,7 +40,7 @@ const getOnboardConfiguration = () => {
         if (!address && lastUsedAddress) {
           lastUsedAddress = ''
           providerName = null
-          store.dispatch(removeProvider({ keepStorageKey: lastNetworkId !== getNetworkId() }))
+          store.dispatch(removeProvider({ keepStorageKey: lastNetworkId !== networkId }))
         }
       },
     },
@@ -56,8 +60,8 @@ const getOnboardConfiguration = () => {
 
 let currentOnboardInstance: API
 export const onboard = (): API => {
-  const chainId = getNetworkId()
-  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
+  const networkId = currentNetworkId(store.getState())
+  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== networkId) {
     currentOnboardInstance = Onboard(getOnboardConfiguration())
   }
 

@@ -5,8 +5,8 @@ import { TextAreaField } from 'src/components/forms/TextAreaField'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { getContractABI } from 'src/config'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
+import { getContractABI } from 'src/utils/config'
 
 export const NO_DATA = 'no data'
 

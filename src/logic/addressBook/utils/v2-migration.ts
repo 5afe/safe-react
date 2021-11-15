@@ -1,10 +1,11 @@
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { saveSafes, StoredSafes } from 'src/logic/safe/utils'
 import { removeFromStorage } from 'src/utils/storage'
-import { getChainName } from 'src/config'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 import { getEntryIndex, isValidAddressBookName } from '.'
+import { currentNetworkName } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 interface StorageConfig {
   states: string[]
@@ -20,7 +21,8 @@ interface StorageConfig {
  * @note If the Safe name is an invalid AB name, it's renamed to "Migrated from: {safe.name}"
  */
 const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
-  const SAFES_KEY = `_immortal|v2_${getChainName()}__SAFES`
+  const networkName = currentNetworkName(store.getState())
+  const SAFES_KEY = `_immortal|v2_${networkName}__SAFES`
 
   const storedSafes = localStorage.getItem(SAFES_KEY)
 
@@ -84,7 +86,8 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
  */
 const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
   const [state] = states
-  const prefix = `v2_${getChainName()}`
+  const networkName = currentNetworkName(store.getState())
+  const prefix = `v2_${networkName}`
   const newKey = `${namespace}${namespaceSeparator}${state}`
   const oldKey = 'ADDRESS_BOOK_STORAGE_KEY'
   const storageKey = `_immortal|${prefix}__${oldKey}`

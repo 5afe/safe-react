@@ -7,12 +7,12 @@ import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { updateAvailableCurrencies } from 'src/logic/currencyValues/store/actions/updateAvailableCurrencies'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { history, WELCOME_ROUTE } from 'src/routes/routes'
 
 export const useLoadSafe = (safeAddress?: string): boolean => {
   const dispatch = useDispatch<Dispatch>()
-  const chainId = useSelector(currentChainId)
+  const chainId = useSelector(currentNetworkId)
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
   useEffect(() => {

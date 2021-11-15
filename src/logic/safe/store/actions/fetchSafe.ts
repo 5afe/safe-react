@@ -13,7 +13,7 @@ import { store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import { getNetworkId } from 'src/config'
+import { currentNetworkId } from 'src/logic/config/store/selectors'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -77,17 +77,17 @@ export const fetchSafe =
       return
     }
 
+    const state = store.getState()
+
     // If the network has changed while the safe was being loaded,
     // ignore the result
-    if (remoteSafeInfo?.chainId !== getNetworkId()) {
+    if (remoteSafeInfo?.chainId !== currentNetworkId(state)) {
       return
     }
 
     // remote (client-gateway)
     if (remoteSafeInfo) {
       safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
-
-      const state = store.getState()
 
       // If these polling timestamps have changed, fetch again
       const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafeWithNames(state)
@@ -101,7 +101,7 @@ export const fetchSafe =
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || !isSafeLoaded) {
-        dispatch(fetchTransactions(getNetworkId(), safeAddress))
+        dispatch(fetchTransactions(currentNetworkId(state), safeAddress))
       }
     }
 

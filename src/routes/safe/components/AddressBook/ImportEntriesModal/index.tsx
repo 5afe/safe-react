@@ -9,7 +9,7 @@ import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
 
 const ImportContainer = styled.div`
   flex-direction: column;

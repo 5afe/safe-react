@@ -1,7 +1,7 @@
 import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
@@ -20,9 +20,9 @@ import {
   LOAD_SAFE_ROUTE,
   NETWORK_ROOT_ROUTES,
 } from './routes'
-import { getCurrentShortChainName } from 'src/config'
 import { switchNetworkWithUrl } from 'src/utils/history'
-import { setNetwork } from 'src/logic/config/utils'
+import { currentShortName } from 'src/logic/config/store/selectors'
+import { setNetworkId } from 'src/logic/config/store/actions'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -34,6 +34,8 @@ const Routes = (): React.ReactElement => {
   const history = useHistory()
   const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
+  const dispatch = useDispatch()
+  const shortName = useSelector(currentShortName)
 
   useEffect(() => {
     const unsubscribe = history.listen(switchNetworkWithUrl)
@@ -63,7 +65,7 @@ const Routes = (): React.ReactElement => {
             key={id}
             path={route}
             render={() => {
-              setNetwork(id)
+              dispatch(setNetworkId(id))
               return <Redirect to={ROOT_ROUTE} />
             }}
           />
@@ -85,7 +87,7 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  shortName: getCurrentShortChainName(),
+                  shortName,
                   safeAddress: defaultSafe,
                 })}
               />

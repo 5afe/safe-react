@@ -1,9 +1,12 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
-import { getNetworks, getNetworkId, getShortNameById } from 'src/config'
+
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { History } from 'history'
+import { AppReduxState } from 'src/store'
+import { currentNetworkId, currentNetworks, getNetworkById } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 type Props = {
   history: History
@@ -15,6 +18,13 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, hash, search } = window.location
 
   const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
+
+  const networks = useSelector(currentNetworks)
+  const currentNetwork = useSelector(currentNetworkId)
+
+  const networkLabel = window.location.hostname.split('.')[0] // 'rinkeby'
+  const networkId = networks.find(({ chainName }) => sameString(chainName, networkLabel))?.chainId || currentNetwork
+  const { shortName } = useSelector((state: AppReduxState) => getNetworkById(state, networkId))
 
   if (!isLegacyRoute) return null
 
@@ -32,11 +42,6 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
       </Router>
     )
   }
-
-  const networkLabel = window.location.hostname.split('.')[0] // 'rinkeby'
-  const networkId =
-    getNetworks().find(({ chainName }) => sameString(chainName, networkLabel))?.chainId || getNetworkId()
-  const shortName = getShortNameById(networkId)
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')

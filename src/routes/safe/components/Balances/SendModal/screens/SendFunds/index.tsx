@@ -4,7 +4,6 @@ import { BigNumber } from 'bignumber.js'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getBlockExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -42,10 +41,11 @@ import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { getChainInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -97,7 +97,7 @@ const SendFunds = ({
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -123,6 +123,9 @@ const SendFunds = ({
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
   const [addressErrorMsg, setAddressErrorMsg] = useState('')
+  const explorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, selectedEntry?.address || ''),
+  )
 
   useEffect(() => {
     if (selectedEntry === null && pristine) {
@@ -270,7 +273,7 @@ const SendFunds = ({
                         name={selectedEntry.name}
                         showAvatar
                         showCopyBtn
-                        explorerUrl={getBlockExplorerInfo(selectedEntry.address)}
+                        explorerUrl={explorerUrl}
                       />
                     </Row>
                   </div>

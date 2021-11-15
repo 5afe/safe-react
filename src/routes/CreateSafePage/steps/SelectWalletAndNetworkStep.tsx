@@ -1,5 +1,5 @@
 import { ReactElement, useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -11,31 +11,33 @@ import Typography from '@material-ui/core/Typography'
 import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
-import { getNetworks } from 'src/config'
 import { lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Paragraph from 'src/components/layout/Paragraph'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
-import { ETHEREUM_NETWORK } from 'src/config/network.d'
-import { setNetwork } from 'src/logic/config/utils'
-
+import { ETHEREUM_NETWORK } from 'src/types/network.d'
+import { currentNetworks } from 'src/logic/config/store/selectors'
+import { setNetworkId } from 'src/logic/config/store/actions'
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 
 function SelectWalletAndNetworkStep(): ReactElement {
+  const dispatch = useDispatch()
+  const networks = useSelector(currentNetworks)
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
   const isWalletConnected = !!useSelector(providerNameSelector)
 
-  function openNetworkSelectorPopup() {
+  const openNetworkSelectorPopup = () => {
     setIsNetworkSelectorPopupOpen(true)
   }
 
-  const networks = getNetworks()
-
-  const onNetworkSwitch = useCallback((networkId: ETHEREUM_NETWORK) => {
-    setNetwork(networkId)
-    setIsNetworkSelectorPopupOpen(false)
-  }, [])
+  const onNetworkSwitch = useCallback(
+    (networkId: ETHEREUM_NETWORK) => {
+      dispatch(setNetworkId(networkId))
+      setIsNetworkSelectorPopupOpen(false)
+    },
+    [dispatch],
+  )
 
   return (
     <Container data-testid={'select-network-step'}>

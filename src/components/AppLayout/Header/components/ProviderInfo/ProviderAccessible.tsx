@@ -7,7 +7,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { getChainInfo } from 'src/config'
+import { currentNetwork } from 'src/logic/config/store/selectors'
+import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles({
   network: {
@@ -68,7 +69,7 @@ interface ProviderInfoProps {
 
 const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
-  const { chainName } = getChainInfo()
+  const { chainName } = useSelector(currentNetwork)
   const addressColor = connected ? 'text' : 'warning'
   return (
     <>

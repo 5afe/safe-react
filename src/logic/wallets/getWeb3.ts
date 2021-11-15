@@ -6,9 +6,10 @@ import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
-import { getRpcServiceUrl, getNetworkId } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
+import { currentNetworkId, currentRpcServiceUrl } from '../config/store/selectors'
+import { store } from 'src/store'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -37,15 +38,20 @@ const httpProviderOptions = {
 
 const web3ReadOnly: Web3[] = []
 export const getWeb3ReadOnly = (): Web3 => {
-  if (!web3ReadOnly[getNetworkId()]) {
-    web3ReadOnly[getNetworkId()] = new Web3(
+  const state = store.getState()
+  const networkId = currentNetworkId(state)
+
+  if (!web3ReadOnly[networkId]) {
+    const rpcServiceUrl = currentRpcServiceUrl(state)
+
+    web3ReadOnly[networkId] = new Web3(
       process.env.NODE_ENV !== 'test'
-        ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
+        ? new Web3.providers.HttpProvider(rpcServiceUrl, httpProviderOptions)
         : 'ws://localhost:8545',
     )
   }
 
-  return web3ReadOnly[getNetworkId()]
+  return web3ReadOnly[networkId]
 }
 
 let web3 = getWeb3ReadOnly()
@@ -54,7 +60,8 @@ export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
 }
 export const resetWeb3 = (): void => {
-  web3 = web3ReadOnly[getNetworkId()]
+  const networkId = currentNetworkId(store.getState())
+  web3 = web3ReadOnly[networkId]
 }
 
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {

@@ -13,10 +13,10 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 
-import { getChainName, getTxServiceUrl } from 'src/config/'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -35,6 +35,7 @@ const useIframeMessageHandler = (
 ): ReturnType => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
+  const { chainName, transactionService } = useSelector(currentNetwork)
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
@@ -82,14 +83,14 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: getChainName().toLowerCase() as LowercaseNetworks,
+              network: chainName.toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
           const envInfoMessage = {
             messageId: INTERFACE_MESSAGES.ENV_INFO,
             data: {
-              txServiceUrl: getTxServiceUrl(),
+              txServiceUrl: transactionService,
             },
           }
 
@@ -135,6 +136,8 @@ const useIframeMessageHandler = (
     safeName,
     selectedApp,
     sendMessageToIframe,
+    chainName,
+    transactionService,
   ])
 
   return {

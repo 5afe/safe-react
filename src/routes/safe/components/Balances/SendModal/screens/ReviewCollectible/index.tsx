@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { getBlockExplorerInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -30,6 +29,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const useStyles = makeStyles(styles)
 
@@ -57,6 +58,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, tx.recipientAddress))
 
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
@@ -176,7 +178,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
                   name={tx.recipientName}
                   showAvatar
                   showCopyBtn
-                  explorerUrl={getBlockExplorerInfo(tx.recipientAddress)}
+                  explorerUrl={explorerUrl}
                 />
               </Col>
             </Row>

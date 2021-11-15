@@ -1,6 +1,11 @@
+import { ETHEREUM_NETWORK, NETWORK_ID } from 'src/types/network.d'
+
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const IS_PRODUCTION = APP_ENV === 'production'
+
+// Fallback network if no matching chainId returned from /chains
+export const DEFAULT_NETWORK = (IS_PRODUCTION ? NETWORK_ID.MAINNET : NETWORK_ID.RINKEBY) as ETHEREUM_NETWORK
 export const PUBLIC_URL = process.env.PUBLIC_URL
 export const INTERCOM_ID = IS_PRODUCTION ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
 export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''

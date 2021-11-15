@@ -17,14 +17,14 @@ import { availableCurrenciesSelector, currentCurrencySelector } from 'src/logic/
 import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import Img from 'src/components/layout/Img/index'
-import { getChainInfo } from 'src/config'
 import { sameString } from 'src/utils/strings'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { currentSafe } from 'src/logic/safe/store/selectors'
+import { currentNetwork } from 'src/logic/config/store/selectors'
 
 export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactElement | null => {
   const dispatch = useDispatch()
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
   const { address } = useSelector(currentSafe)

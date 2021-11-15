@@ -3,9 +3,10 @@ import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
 import { getSDKWeb3Adapter, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors } from '../exceptions/CodedException'
 import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
+import { store } from 'src/store'
+import { currentGasPrice, currentGasPriceOracles } from '../config/store/selectors'
 
 export const EMPTY_DATA = '0x'
 /**
@@ -22,8 +23,9 @@ const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> =>
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
-  const gasPrice = getGasPrice()
-  const gasPriceOracles = getGasPriceOracles()
+  const state = store.getState()
+  const gasPrice = currentGasPrice(state)
+  const gasPriceOracles = currentGasPriceOracles(state)
 
   if (gasPrice) {
     // Fixed gas price in configuration. xDai uses this approach

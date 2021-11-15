@@ -1,7 +1,8 @@
 import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
+import { currentDisabledWallets, currentNetworkId, currentRpcServiceUrl } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
-import { getNetworkId, getRpcServiceUrl, getDisabledWallets } from 'src/config'
-import { WALLETS } from 'src/config/network.d'
+import { WALLETS } from 'src/types/network.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
 type Wallet = WalletInitOptions & {
@@ -10,16 +11,17 @@ type Wallet = WalletInitOptions & {
 }
 
 const wallets = (): Wallet[] => {
-  const rpcUrl = getRpcServiceUrl()
-
+  const state = store.getState()
+  const networkId = currentNetworkId(state)
+  const rpcUrl = currentRpcServiceUrl(state)
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,
       preferred: true,
       // as stated in the documentation, `infuraKey` is not mandatory if rpc is provided
-      rpc: { [getNetworkId()]: rpcUrl },
-      networkId: parseInt(getNetworkId(), 10),
+      rpc: { [networkId]: rpcUrl },
+      networkId: parseInt(networkId, 10),
       desktop: true,
       bridge: 'https://safe-walletconnect.gnosis.io/',
     },
@@ -71,8 +73,6 @@ const wallets = (): Wallet[] => {
 }
 
 export const getSupportedWallets = (): WalletInitOptions[] => {
-  const disabledWallets = getDisabledWallets()
-
   const { isDesktop } = window
   /* eslint-disable no-unused-vars */
   if (isDesktop) {
@@ -83,5 +83,5 @@ export const getSupportedWallets = (): WalletInitOptions[] => {
 
   return wallets()
     .map(({ desktop, ...rest }) => rest)
-    .filter((w) => !disabledWallets.includes(w.walletName))
+    .filter((w) => !currentDisabledWallets(store.getState()).includes(w.walletName))
 }

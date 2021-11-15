@@ -7,7 +7,9 @@ import {
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { HexEncodedData } from './HexEncodedData'
-import { getBlockExplorerInfo } from 'src/config'
+import { useSelector } from 'react-redux'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const NestedWrapper = styled.div`
   padding-left: 4px;
@@ -49,15 +51,16 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, props.value as string))
+
   if (isArrayParameter(type) && isAddress(type)) {
     return (
       <div>
         [
         <NestedWrapper>
-          {(props.value as string[]).map((address) => {
-            const explorerUrl = getBlockExplorerInfo(address)
-            return <EthHashInfo key={address} textSize="xl" hash={address} showCopyBtn explorerUrl={explorerUrl} />
-          })}
+          {(props.value as string[]).map((address) => (
+            <ArrayValue key={address} address={address} />
+          ))}
         </NestedWrapper>
         ]
       </div>
@@ -65,13 +68,17 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
   }
 
   if (isAddress(type)) {
-    const explorerUrl = getBlockExplorerInfo(props.value as string)
     return (
       <EthHashInfo textSize="xl" hash={props.value as string} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
     )
   }
 
   return <GenericValue type={type} {...props} />
+}
+
+const ArrayValue = ({ address }: { address: string }) => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address))
+  return <EthHashInfo textSize="xl" hash={address} showCopyBtn explorerUrl={explorerUrl} />
 }
 
 export default Value

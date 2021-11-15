@@ -19,8 +19,8 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
-
-import { getBlockExplorerInfo } from 'src/config'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
@@ -42,6 +42,7 @@ const ChooseTxType = ({
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, recipientAddress || ''))
 
   React.useEffect(() => {
     let isCurrent = true
@@ -80,7 +81,7 @@ const ChooseTxType = ({
               name={recipientName}
               showAvatar
               showCopyBtn
-              explorerUrl={getBlockExplorerInfo(recipientAddress)}
+              explorerUrl={explorerUrl}
             />
           </Col>
         </Row>

@@ -16,7 +16,9 @@ import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { getBlockExplorerInfo } from 'src/config'
+import { TableColumn } from 'src/components/Table/types'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 const MODULES_ROW_TEST_ID = 'owners-row'
@@ -31,12 +33,11 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const granted = useSelector(grantedSelector)
-
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
   const [selectedModulePair, setSelectedModulePair] = useState<ModulePair>()
+
   const triggerRemoveSelectedModule = (modulePair: ModulePair): void => {
     setSelectedModulePair(modulePair)
     setViewRemoveModuleModal(true)
@@ -63,42 +64,14 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                 key={index}
                 tabIndex={-1}
               >
-                {autoColumns.map((column, index) => {
-                  const columnId = column.id
-                  const rowElement = row[columnId]
-                  const [, moduleAddress] = rowElement
-
-                  return (
-                    <Fragment key={`${columnId}-${index}`}>
-                      <TableCell align={column.align} component="td" key={columnId}>
-                        {columnId === MODULES_TABLE_ADDRESS_ID ? (
-                          <Block justify="left">
-                            <EthHashInfo
-                              hash={moduleAddress}
-                              showCopyBtn
-                              showAvatar
-                              explorerUrl={getBlockExplorerInfo(moduleAddress)}
-                            />
-                          </Block>
-                        ) : (
-                          rowElement
-                        )}
-                      </TableCell>
-                      <TableCell component="td">
-                        <Row align="end" className={classes.actions}>
-                          {granted && (
-                            <ButtonHelper
-                              onClick={() => triggerRemoveSelectedModule(rowElement)}
-                              dataTestId={`${moduleAddress}-${REMOVE_MODULE_BTN_TEST_ID}`}
-                            >
-                              <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
-                            </ButtonHelper>
-                          )}
-                        </Row>
-                      </TableCell>
-                    </Fragment>
-                  )
-                })}
+                {autoColumns.map((column, index) => (
+                  <AutoColumn
+                    key={`${column.id}-${index}`}
+                    column={column}
+                    rowElement={row[column.id]}
+                    triggerRemoveSelectedModule={triggerRemoveSelectedModule}
+                  />
+                ))}
               </TableRow>
             ))
           }
@@ -108,5 +81,46 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
         <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModulePair={selectedModulePair} />
       )}
     </>
+  )
+}
+
+const AutoColumn = ({
+  column,
+  rowElement,
+  triggerRemoveSelectedModule,
+}: {
+  column: TableColumn
+  rowElement: ModulePair
+  triggerRemoveSelectedModule: (modulePair: ModulePair) => void
+}) => {
+  const classes = useStyles()
+
+  const granted = useSelector(grantedSelector)
+  const [, moduleAddress] = rowElement
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, moduleAddress))
+  return (
+    <Fragment>
+      <TableCell align={column.align} component="td" key={column.id}>
+        {column.id === MODULES_TABLE_ADDRESS_ID ? (
+          <Block justify="left">
+            <EthHashInfo hash={moduleAddress} showCopyBtn showAvatar explorerUrl={explorerUrl} />
+          </Block>
+        ) : (
+          rowElement
+        )}
+      </TableCell>
+      <TableCell component="td">
+        <Row align="end" className={classes.actions}>
+          {granted && (
+            <ButtonHelper
+              onClick={() => triggerRemoveSelectedModule(rowElement)}
+              dataTestId={`${moduleAddress}-${REMOVE_MODULE_BTN_TEST_ID}`}
+            >
+              <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
+            </ButtonHelper>
+          )}
+        </Row>
+      </TableCell>
+    </Fragment>
   )
 }

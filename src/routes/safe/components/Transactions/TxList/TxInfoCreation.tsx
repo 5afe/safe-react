@@ -1,13 +1,15 @@
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
-import { getBlockExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
 import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
+import { useSelector } from 'react-redux'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
   const txInfo = transaction.txInfo as Creation
@@ -26,6 +28,17 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
     image: txInfo.implementation?.logoUri,
   })
 
+  const txExplorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, txInfo.transactionHash))
+  const creatorExplorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, txInfo.creator.value),
+  )
+  const factoryExplorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, txInfo.factory?.value || ''),
+  )
+  const implementationExplorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, txInfo.implementation?.value || ''),
+  )
+
   return (
     <TxDetailsContainer>
       <div className="tx-summary">
@@ -38,7 +51,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             hash={txInfo.transactionHash}
             shortenHash={8}
             showCopyBtn
-            explorerUrl={getBlockExplorerInfo(txInfo.transactionHash)}
+            explorerUrl={txExplorerUrl}
           />
         </div>
         <div className="tx-created">
@@ -59,7 +72,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             textSize="xl"
             hash={txInfo.creator.value}
             showCopyBtn
-            explorerUrl={getBlockExplorerInfo(txInfo.creator.value)}
+            explorerUrl={creatorExplorerUrl}
             name={creator.name}
             customAvatar={creator.image}
             showAvatar
@@ -74,7 +87,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               textSize="xl"
               hash={txInfo.factory.value}
               showCopyBtn
-              explorerUrl={getBlockExplorerInfo(txInfo.factory.value)}
+              explorerUrl={factoryExplorerUrl}
               name={factory.name}
               customAvatar={factory.image}
               showAvatar
@@ -94,7 +107,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               textSize="xl"
               hash={txInfo.implementation.value}
               showCopyBtn
-              explorerUrl={getBlockExplorerInfo(txInfo.implementation.value)}
+              explorerUrl={implementationExplorerUrl}
               name={implementation.name}
               customAvatar={implementation.image}
               showAvatar

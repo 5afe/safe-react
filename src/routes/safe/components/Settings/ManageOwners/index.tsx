@@ -12,7 +12,6 @@ import { ReplaceOwnerModal } from './ReplaceOwnerModal'
 import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData, OwnerData } from './dataFetcher'
 import { useStyles } from './style'
 
-import { getBlockExplorerInfo } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -25,6 +24,10 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+import { TableColumn } from 'src/components/Table/types'
+import { useSelector } from 'react-redux'
+import { AppReduxState } from 'src/store'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -103,21 +106,8 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   data-testid={OWNERS_ROW_TEST_ID}
                   key={index}
                 >
-                  {autoColumns.map((column: any) => (
-                    <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
-                      {column.id === OWNERS_TABLE_ADDRESS_ID ? (
-                        <Block justify="left">
-                          <EthHashInfo
-                            hash={row[column.id]}
-                            showCopyBtn
-                            showAvatar
-                            explorerUrl={getBlockExplorerInfo(row[column.id])}
-                          />
-                        </Block>
-                      ) : (
-                        row[column.id]
-                      )}
-                    </TableCell>
+                  {autoColumns.map((column) => (
+                    <AutoColumn key={column.id} column={column} address={row[column.id]} />
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
@@ -179,6 +169,21 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
         </>
       )}
     </>
+  )
+}
+
+const AutoColumn = ({ column, address }: { column: TableColumn; address: string }) => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address))
+  return (
+    <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
+      {column.id === OWNERS_TABLE_ADDRESS_ID ? (
+        <Block justify="left">
+          <EthHashInfo hash={address} showCopyBtn showAvatar explorerUrl={explorerUrl} />
+        </Block>
+      ) : (
+        address
+      )}
+    </TableCell>
   )
 }
 

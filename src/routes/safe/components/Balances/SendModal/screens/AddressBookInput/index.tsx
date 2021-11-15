@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { isFeatureEnabled } from 'src/config'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
@@ -19,7 +18,8 @@ import {
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { currentNetworkId, isFeatureEnabled } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -47,7 +47,7 @@ const BaseAddressBookInput = ({
   setValidationText,
   validationText,
 }: BaseAddressBookInputProps): ReactElement => {
-  const networkId = useSelector(currentChainId)
+  const networkId = useSelector(currentNetworkId)
 
   const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
     setSelectedEntry(addressEntry)
@@ -100,7 +100,7 @@ const BaseAddressBookInput = ({
 
         // ENS-enabled resolve/validation
         if (
-          isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) &&
+          isFeatureEnabled(store.getState(), FEATURES.DOMAIN_LOOKUP) &&
           (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
         ) {
           let address = ''

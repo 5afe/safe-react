@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getChainInfo, getBlockExplorerInfo, getNativeCurrencyAddress } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -38,6 +37,8 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const useStyles = makeStyles(styles)
 
@@ -90,20 +91,17 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
-  const { nativeCurrency } = getChainInfo()
+  const { nativeCurrency } = useSelector(currentNetwork)
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const tempNativeCurrencyAddressToReplace = getNativeCurrencyAddress() /*nativeCurrency.address*/
-  const isSendingNativeToken = useMemo(
-    () => sameAddress(txToken?.address, tempNativeCurrencyAddressToReplace),
-    [txToken, tempNativeCurrencyAddressToReplace],
-  )
+  const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, ZERO_ADDRESS), [txToken])
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCurrency.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, tx.recipientAddress))
 
   const {
     gasCostFormatted,
@@ -231,7 +229,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                   name={tx.recipientName}
                   showCopyBtn
                   showAvatar
-                  explorerUrl={getBlockExplorerInfo(tx.recipientAddress)}
+                  explorerUrl={explorerUrl}
                 />
               </Col>
             </Row>

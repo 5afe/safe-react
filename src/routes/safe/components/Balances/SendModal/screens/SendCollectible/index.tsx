@@ -18,7 +18,6 @@ import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/sto
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
-import { getBlockExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 
@@ -27,6 +26,8 @@ import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -69,6 +70,7 @@ const SendCollectible = ({
   const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
+
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -110,6 +112,10 @@ const SendCollectible = ({
 
     onNext(values)
   }
+
+  const explorerUrl = useSelector((state: AppReduxState) =>
+    currentBlockExplorerInfo(state, selectedEntry?.address || ''),
+  )
 
   return (
     <>
@@ -178,7 +184,7 @@ const SendCollectible = ({
                           name={selectedEntry.name}
                           showAvatar
                           showCopyBtn
-                          explorerUrl={getBlockExplorerInfo(selectedEntry.address)}
+                          explorerUrl={explorerUrl}
                         />
                       </Col>
                     </Row>

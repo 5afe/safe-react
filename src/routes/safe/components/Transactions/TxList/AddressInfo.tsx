@@ -1,7 +1,9 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
+import { useSelector } from 'react-redux'
 
-import { getBlockExplorerInfo } from 'src/config'
+import { currentBlockExplorerInfo } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 import { useKnownAddress } from './hooks/useKnownAddress'
 
 type EthHashInfoRestProps = Omit<
@@ -17,6 +19,7 @@ type Props = EthHashInfoRestProps & {
 
 export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): ReactElement | null => {
   const toInfo = useKnownAddress(address, { name, image: avatarUrl })
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, address))
 
   if (address === '') {
     return null
@@ -29,7 +32,7 @@ export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): React
       showAvatar
       customAvatar={toInfo.image}
       showCopyBtn
-      explorerUrl={getBlockExplorerInfo(address)}
+      explorerUrl={explorerUrl}
       {...rest}
     />
   )
