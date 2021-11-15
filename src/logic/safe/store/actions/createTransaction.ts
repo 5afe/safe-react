@@ -32,9 +32,10 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
+import { generateSafeRoute, history, SAFE_ROUTES, TRANSACTION_HASH_SLUG } from 'src/routes/routes'
 import { getCurrentShortChainName, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { generatePath } from 'react-router-dom'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -82,15 +83,6 @@ export const createTransaction =
   ): CreateTransactionAction =>
   async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
     const state = getState()
-
-    if (navigateToTransactionsTab) {
-      history.push(
-        generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
-          shortName: getCurrentShortChainName(),
-          safeAddress,
-        }),
-      )
-    }
 
     const ready = await onboardUser()
     if (!ready) return
@@ -189,6 +181,19 @@ export const createTransaction =
 
           return receipt.transactionHash
         })
+
+      if (navigateToTransactionsTab) {
+        const routeWithSafeAddress = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, {
+          shortName: getCurrentShortChainName(),
+          safeAddress,
+        })
+
+        history.push(
+          generatePath(routeWithSafeAddress, {
+            [TRANSACTION_HASH_SLUG]: safeTxHash,
+          }),
+        )
+      }
     } catch (err) {
       onError?.()
 
