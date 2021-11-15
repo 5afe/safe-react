@@ -9,21 +9,26 @@ const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
 const url = `/rin:${safeAddress}/settings/advanced`
 history.location.pathname = url
 
-jest.mock('src/logic/hooks/useEstimateTransactionGas', () => ({
-  useEstimateTransactionGas: () => ({
-    txEstimationExecutionStatus: 'SUCCESS',
-    gasEstimation: 0,
-    gasCost: '0',
-    gasCostFormatted: '0',
-    gasPrice: '0',
-    gasPriceFormatted: '0',
-    gasLimit: '0',
-    isExecution: true,
-    isCreation: false,
-    isOffChainSignature: false,
-  }),
-  EstimationStatus: { LOADING: 'LOADING' },
-}))
+jest.mock('src/logic/hooks/useEstimateTransactionGas', () => {
+  const originalModule = jest.requireActual('src/logic/hooks/useEstimateTransactionGas')
+  return {
+    __esModule: true, // Use it when dealing with esModules
+    ...originalModule,
+    useEstimateTransactionGas: () => ({
+      txEstimationExecutionStatus: 'SUCCESS',
+      gasEstimation: 0,
+      gasCost: '0',
+      gasCostFormatted: '0',
+      gasPrice: '0',
+      gasPriceFormatted: '0',
+      gasLimit: '0',
+      isExecution: true,
+      isCreation: false,
+      isOffChainSignature: false,
+    }),
+    EstimationStatus: { LOADING: 'LOADING' },
+  }
+})
 
 describe('Advanced Settings Component', () => {
   it('Renders Advanced Settings Component', () => {
