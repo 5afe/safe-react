@@ -19,7 +19,6 @@ import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { NetworkSettings } from 'src/config/networks/network'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
-import { IS_PRODUCTION } from 'src/utils/constants'
 
 const useStyles = (networkInfo: NetworkSettings) =>
   makeStyles(
@@ -86,7 +85,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
   const classes = useStyles(networkInfo)
 
   const copyShortName = useSelector(copyShortNameSelector)
-  const [shouldCopyShortName, setShouldCopyShortName] = useState<boolean>(IS_PRODUCTION ? false : copyShortName)
+  const [shouldCopyShortName, setShouldCopyShortName] = useState<boolean>(copyShortName)
 
   // Does not update store
   const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => setShouldCopyShortName(checked)
@@ -117,12 +116,10 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
         <Block className={classes.qrContainer}>
           <QRCode size={135} value={qrCodeString} />
         </Block>
-        {!IS_PRODUCTION && (
-          <FormControlLabel
-            control={<Checkbox checked={shouldCopyShortName} onChange={handleCopyChange} name="shouldCopyShortName" />}
-            label="Copy addresses with chain prefix."
-          />
-        )}
+        <FormControlLabel
+          control={<Checkbox checked={shouldCopyShortName} onChange={handleCopyChange} name="shouldCopyShortName" />}
+          label="Copy addresses with chain prefix."
+        />
         <Block className={classes.addressContainer} justify="center">
           <PrefixedEthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
         </Block>
