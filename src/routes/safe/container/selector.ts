@@ -6,7 +6,7 @@ import { Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { isUserAnOwner, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import { currentSafe, currentSafeBalances } from 'src/logic/safe/store/selectors'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
@@ -14,7 +14,10 @@ import { SafeRecord } from 'src/logic/safe/store/models/safe'
 export const grantedSelector = createSelector(
   userAccountSelector,
   currentSafe,
-  (userAccount: string, safe: SafeRecord): boolean => isUserAnOwner(safe, userAccount),
+  shouldSwitchWalletChain,
+  (userAccount: string, safe: SafeRecord, isWrongChain: boolean): boolean => {
+    return isUserAnOwner(safe, userAccount) && !isWrongChain
+  },
 )
 
 const safeEthAsTokenSelector = createSelector(currentSafe, (safe?: SafeRecord): Token | undefined => {
