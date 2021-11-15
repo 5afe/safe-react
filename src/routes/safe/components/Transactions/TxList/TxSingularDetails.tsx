@@ -1,4 +1,4 @@
-import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { TransactionDetails as GWTransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Loader } from '@gnosis.pm/safe-react-components'
@@ -44,11 +44,7 @@ const getTxLocation = (
   return isNext ? 'queued.next' : 'queued.queued'
 }
 
-type Props = {
-  setSelectedTab: Dispatch<SetStateAction<string>>
-}
-
-const TxSingularDetails = ({ setSelectedTab }: Props): ReactElement => {
+const TxSingularDetails = (): ReactElement => {
   const { [TRANSACTION_HASH_SLUG]: safeTxHash = false } = useParams<SafeRouteSlugs>()
   const [tx, setTx] = useState<Transaction>()
   const [txLocation, setTxLocation] = useState<TxLocation>()
@@ -78,11 +74,6 @@ const TxSingularDetails = ({ setSelectedTab }: Props): ReactElement => {
 
           const txLocation = getTxLocation(txDetails, nextTxs)
           setTxLocation(txLocation)
-
-          const selectedTab = isTxQueued(tx.txStatus)
-            ? SAFE_ROUTES.TRANSACTIONS_QUEUE
-            : SAFE_ROUTES.TRANSACTIONS_HISTORY
-          setSelectedTab(selectedTab)
         }
       } catch (e) {
         logError(Errors._614, e.message)
@@ -94,7 +85,7 @@ const TxSingularDetails = ({ setSelectedTab }: Props): ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [safeTxHash, isLoaded, nextTxs, setSelectedTab])
+  }, [safeTxHash, isLoaded, nextTxs])
 
   if (txLoadError) {
     const txHistory = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_HISTORY, extractPrefixedSafeAddress())
