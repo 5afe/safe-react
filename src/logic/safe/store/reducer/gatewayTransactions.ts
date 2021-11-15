@@ -26,6 +26,7 @@ import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
+import { makeTxFromDetails } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
@@ -68,11 +69,15 @@ const findTransactionLocation = (
   return { key, index }
 }
 
+// We store the deeplinked transaction id to check if a transaction beyond the current page is loaded
+let deeplinkedTxId
+
 export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { chainId, safeAddress, values, isTail = false } = action.payload
       const history: StoreStructure['history'] = Object.assign({}, state[chainId]?.[safeAddress]?.history)
+      let hasDeeplinkedTx = false
 
       values.forEach((value) => {
         if (isDateLabel(value)) {
@@ -95,6 +100,8 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
             // pushing a newer transaction to the existing list messes the transactions order
             // this happens when most recent transactions are added to the existing txs in the store
             history[startOfDate] = history[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
+          } else {
+            hasDeeplinkedTx = history[startOfDate].some(({ id }) => sameString(id, deeplinkedTxId))
           }
           return
         }
@@ -109,7 +116,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
             // keep queued list
             ...state[chainId]?.[safeAddress],
             // extend history list
-            history: isTail ? history : sortObject(history, 'desc'),
+            history: isTail && !hasDeeplinkedTx ? history : sortObject(history, 'desc'),
           },
         },
       }
@@ -256,6 +263,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
       const { chainId, safeAddress, transactionId, txLocation, value } = action.payload
 
+      // No txDetails in payload
+      if (!value) {
+        return state
+      }
+
       const storedTransactions = Object.assign({}, state[chainId][safeAddress])
       const { queued } = storedTransactions
       let { history } = storedTransactions
@@ -268,8 +280,19 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
 
       // find the transaction location
       const { key, index } = findTransactionLocation(txGroup, transactionId)
-      // add details to tx object
-      txGroup[key][index]['txDetails'] = value
+      const inStore = index !== -1
+
+      if (inStore) {
+        // add details to tx object
+        txGroup[key][index]['txDetails'] = value
+      } else {
+        const tx = makeTxFromDetails(value)
+        // Deeplinked id is referenced for sorting
+        deeplinkedTxId = tx.id
+
+        const startOfDate = getLocalStartOfDate(tx.timestamp)
+        txGroup[startOfDate] = [tx]
+      }
 
       // replace the updated group in its corresponding location
       switch (txLocation) {
