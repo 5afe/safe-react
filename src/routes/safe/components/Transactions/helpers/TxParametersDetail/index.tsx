@@ -81,12 +81,13 @@ export const TxParametersDetail = ({
           </StyledText>
 
           <TxParameterWrapper>
-            <Text
+            <ColoredText
               size="lg"
+              isFuture={isSafeNonceFuture}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               Safe nonce
-            </Text>
+            </ColoredText>
             <ColoredText
               size="lg"
               isFuture={isSafeNonceFuture}
