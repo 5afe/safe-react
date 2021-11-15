@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
@@ -60,6 +60,12 @@ export const TxParametersDetail = ({
   const { safeNonce = '' } = txParameters
   const isSafeNonceFuture = parseInt(safeNonce, 10) > nonce
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(isSafeNonceFuture)
+
+  useEffect(() => {
+    if (parseInt(safeNonce, 10) > nonce) {
+      setIsAccordionExpanded(true)
+    }
+  }, [nonce, safeNonce, txParameters])
 
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
     return null
