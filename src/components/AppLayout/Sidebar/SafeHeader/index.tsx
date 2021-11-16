@@ -1,8 +1,8 @@
 import styled from 'styled-components'
+import { useSelector } from 'react-redux'
 import {
   Icon,
   FixedIcon,
-  EthHashInfo,
   Text,
   Identicon,
   Button,
@@ -12,9 +12,12 @@ import {
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { NetworkSettings } from 'src/config/networks/network.d'
 import { border, fontColor } from 'src/theme/variables'
+import { copyShortNameSelector } from 'src/logic/appearance/selectors'
+import { extractShortChainName } from 'src/routes/routes'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -77,13 +80,13 @@ const StyledTextLabel = styled(Text)`
   background-color: ${(props: StyledTextLabelProps) => props.networkInfo?.backgroundColor ?? border};
 `
 
-const StyldTextSafeName = styled(Text)`
+const StyledTextSafeName = styled(Text)`
   width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
 `
 
-const StyledEthHashInfo = styled(EthHashInfo)`
+const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   p {
     color: ${({ theme }) => theme.colors.placeHolder};
     font-size: 14px;
@@ -123,6 +126,9 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const copyChainPrefix = useSelector(copyShortNameSelector)
+  const shortName = extractShortChainName()
+
   if (!address) {
     return (
       <Container>
@@ -157,15 +163,15 @@ const SafeHeader = ({
         </IdenticonContainer>
 
         {/* SafeInfo */}
-        <StyldTextSafeName size="lg" center>
+        <StyledTextSafeName size="lg" center>
           {safeName}
-        </StyldTextSafeName>
-        <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
+        </StyledTextSafeName>
+        <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <ButtonHelper onClick={onReceiveClick}>
             <Icon size="sm" type="qrCode" tooltip="Show QR" />
           </ButtonHelper>
-          <CopyToClipboardBtn textToCopy={address} />
+          <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
           <ExplorerButton explorerUrl={explorerUrl} />
         </IconContainer>
 

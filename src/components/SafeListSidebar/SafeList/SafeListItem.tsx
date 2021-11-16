@@ -1,4 +1,4 @@
-import { EthHashInfo, Text, Icon } from '@gnosis.pm/safe-react-components'
+import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import { useEffect, useRef, ReactElement } from 'react'
 import { useHistory } from 'react-router'
 import ListItem from '@material-ui/core/ListItem/ListItem'
@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import Link from 'src/components/layout/Link'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
@@ -26,7 +27,7 @@ const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
 `
 
-const StyledEthHashInfo = styled(EthHashInfo)`
+const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   & > div > p:first-of-type {
     width: 210px;
     white-space: nowrap;
@@ -61,6 +62,7 @@ const SafeListItem = ({
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
   const showAddSafeLink = !isSafeAdded(loadedSafes, address)
+  const shortName = getShortChainNameById(networkId)
 
   useEffect(() => {
     if (isCurrentSafe && shouldScrollToSafe) {
@@ -86,7 +88,7 @@ const SafeListItem = ({
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
-      <StyledEthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
+      <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`

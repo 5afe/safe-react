@@ -1,4 +1,4 @@
-import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import { useState, Fragment } from 'react'
@@ -16,6 +16,7 @@ import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
@@ -73,7 +74,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                       <TableCell align={column.align} component="td" key={columnId}>
                         {columnId === MODULES_TABLE_ADDRESS_ID ? (
                           <Block justify="left">
-                            <EthHashInfo
+                            <PrefixedEthHashInfo
                               hash={moduleAddress}
                               showCopyBtn
                               showAvatar

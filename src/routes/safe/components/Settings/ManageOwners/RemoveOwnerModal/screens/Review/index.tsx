@@ -1,6 +1,5 @@
 import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -8,6 +7,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -178,7 +178,7 @@ export const ReviewRemoveOwnerModal = ({
                       <Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
-                            <EthHashInfo
+                            <PrefixedEthHashInfo
                               hash={safeOwner.address}
                               name={safeOwner.name}
                               showCopyBtn
@@ -199,7 +199,7 @@ export const ReviewRemoveOwnerModal = ({
                 <Hairline />
                 <Row className={classes.selectedOwner} data-testid="remove-owner-review">
                   <Col align="center" xs={12}>
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={owner.address}
                       name={owner.name}
                       showCopyBtn
