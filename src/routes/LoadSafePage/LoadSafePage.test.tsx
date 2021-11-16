@@ -7,6 +7,7 @@ import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import addNetworkPrefix from 'src/utils/addNetworkPrefix'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
@@ -57,7 +58,7 @@ describe('<LoadSafePage>', () => {
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
       const safeNameInputNode = screen.getByTestId('load-safe-name-field')
       expect(safeNameInputNode?.getAttribute('placeholder')).toMatch(/.+-rinkeby-safe/)
-      expect((safeAddressInputNode as HTMLInputElement).value).toBe('0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+      expect((safeAddressInputNode as HTMLInputElement).value).toBe('rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
     })
 
     it('uses a name from Address Book if available', async () => {
@@ -78,7 +79,7 @@ describe('<LoadSafePage>', () => {
       const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
       const safeNameInputNode = screen.getByTestId('load-safe-name-field')
       expect(safeNameInputNode?.getAttribute('placeholder')).toBe('Test Safe')
-      expect((safeAddressInputNode as HTMLInputElement).value).toBe('0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
+      expect((safeAddressInputNode as HTMLInputElement).value).toBe('rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A')
 
       // Change the address and check that the placeholder isn't taken from the AB anymore
       fireEvent.change(safeAddressInputNode, { target: { value: '' } })
@@ -203,6 +204,27 @@ describe('<LoadSafePage>', () => {
         fireEvent.change(safeAddressInputNode, { target: { value: '0X9913B9180C20C6B0F21B6480C84422F6EBC4B808' } })
       })
 
+      expect(safeAddressInputNode.value).toBe('rin:0x9913B9180C20C6b0F21B6480c84422F6ebc4B808')
+    })
+
+    it('hides the network prefix if its disabled in settings', async () => {
+      const customState = {
+        appearance: {
+          copyShortName: false,
+          showShortName: false,
+        },
+      }
+
+      render(<LoadSafePage />, customState)
+
+      fireEvent.click(screen.getByText('Continue'))
+
+      const safeAddressInputNode: HTMLInputElement = screen.getByTestId('load-safe-address-field')
+
+      await waitFor(() => {
+        fireEvent.change(safeAddressInputNode, { target: { value: '0X9913B9180C20C6B0F21B6480C84422F6EBC4B808' } })
+      })
+
       expect(safeAddressInputNode.value).toBe('0x9913B9180C20C6b0F21B6480c84422F6ebc4B808')
     })
 
@@ -268,13 +290,15 @@ describe('<LoadSafePage>', () => {
       fireEvent.change(safeAddressInputNode, { target: { value: validSafeENSNameDomain } })
 
       await waitFor(() => {
-        expect(safeAddressInputNode.value).toBe(validSafeAddress)
+        // the loader is not present
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+        expect(safeAddressInputNode.value).toBe(addNetworkPrefix(validSafeAddress))
         expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
         getENSAddressSpy.mockClear()
       })
     })
 
-    it('Shows an error if a given ENS name is not registered', () => {
+    it('Shows an error if a given ENS name is not registered', async () => {
       const notExistingENSNameDomain = 'notExistingENSDomain.eth'
 
       // we do not want annoying warnings in the console caused by our mock in getENSAddress
@@ -299,11 +323,16 @@ describe('<LoadSafePage>', () => {
       fireEvent.change(safeAddressInputNode, { target: { value: notExistingENSNameDomain } })
 
       expect(safeAddressInputNode.value).toBe(notExistingENSNameDomain)
-      expect(mockedEndpoints.getSafeInfo).not.toHaveBeenCalled()
-      const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
 
-      expect(errorTextNode).toBeInTheDocument()
-      getENSAddressSpy.mockClear()
+      await waitFor(() => {
+        // the loader is not present
+        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+        expect(mockedEndpoints.getSafeInfo).not.toHaveBeenCalled()
+        const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
+
+        expect(errorTextNode).toBeInTheDocument()
+        getENSAddressSpy.mockClear()
+      })
     })
 
     it('Shows an error if NO valid Safe Address is registered as an ENS name', async () => {
@@ -329,7 +358,7 @@ describe('<LoadSafePage>', () => {
       fireEvent.change(safeAddressInputNode, { target: { value: validSafeENSNameDomain } })
 
       await waitFor(() => {
-        expect(safeAddressInputNode.value).toBe(validSafeAddress)
+        expect(safeAddressInputNode.value).toBe(addNetworkPrefix(validSafeAddress))
         expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
         const errorTextNode = screen.getByText('Address given is not a valid Safe address')
 
