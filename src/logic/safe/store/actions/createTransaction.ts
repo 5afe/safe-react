@@ -190,8 +190,8 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
-      onError?.()
       logError(Errors._803, err.message)
+      onError?.()
 
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 

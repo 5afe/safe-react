@@ -4,12 +4,12 @@ import { CONTRACT_ERRORS, CONTRACT_ERROR_CODES } from 'src/logic/contracts/contr
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 
-export const decodeContractError = (contractError: string): string => {
+export const decodeMessage = (message: string): string => {
   const code = CONTRACT_ERROR_CODES.find((code) => {
-    return contractError.toUpperCase().includes(code.toUpperCase())
+    return message.toUpperCase().includes(code.toUpperCase())
   })
 
-  return code ? `${code}: ${CONTRACT_ERRORS[code]}` : contractError
+  return code ? `${code}: ${CONTRACT_ERRORS[code]}` : message
 }
 
 export const getContractErrorMessage = async ({
@@ -33,11 +33,9 @@ export const getContractErrorMessage = async ({
 
     const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
 
-    // Will throw if there was an error
-    abi.rawDecode(['string'], returnBuffer.slice(4))[0]
+    const contractOutput = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
+    return decodeMessage(contractOutput)
   } catch (e) {
-    return decodeContractError(e.message)
+    return decodeMessage(e.message)
   }
-
-  return null
 }
