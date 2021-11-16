@@ -125,7 +125,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                   Use custom data (hex encoded)
                 </Paragraph>
               </Block>
-              <Buttons onClose={onClose} />
+              <Buttons onClose={onClose} requiresMethod />
             </>
           )
         }}

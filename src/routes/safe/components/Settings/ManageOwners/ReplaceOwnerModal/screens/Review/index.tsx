@@ -8,22 +8,20 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { getSafeSDK } from 'src/logic/wallets/getWeb3'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -47,8 +45,13 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners, threshold = 1 } = useSelector(currentSafeWithNames)
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    threshold = 1,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -74,29 +77,22 @@ export const ReviewReplaceOwnerModal = ({
 
   useEffect(() => {
     let isCurrent = true
-
     const calculateReplaceOwnerData = async () => {
-      try {
-        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-        const safeTx = await sdk.getSwapOwnerTx(
-          { oldOwnerAddress: owner.address, newOwnerAddress: newOwner.address },
-          { safeTxGas: 0 },
-        )
-        const txData = safeTx.data.data
-
-        if (isCurrent) {
-          setData(txData)
-        }
-      } catch (error) {
-        logError(Errors._813, error.message)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+      const safeOwners = await gnosisSafe.methods.getOwners().call()
+      const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
+      const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
+      const txData = gnosisSafe.methods.swapOwner(prevAddress, owner.address, newOwner.address).encodeABI()
+      if (isCurrent) {
+        setData(txData)
       }
     }
-    calculateReplaceOwnerData()
 
+    calculateReplaceOwnerData()
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, connectedWalletAddress, owner.address, newOwner.address])
+  }, [owner.address, safeAddress, safeVersion, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
@@ -233,15 +229,14 @@ export const ReviewReplaceOwnerModal = ({
             isOffChainSignature={isOffChainSignature}
           />
 
-          <Block className={classes.gasCostsContainer}>
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </Block>
+          <ReviewInfoText
+            gasCostFormatted={gasCostFormatted}
+            isCreation={isCreation}
+            isExecution={isExecution}
+            isOffChainSignature={isOffChainSignature}
+            safeNonce={txParameters.safeNonce}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
           <Modal.Footer withoutBorder>
             <Modal.Footer.Buttons
               cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}

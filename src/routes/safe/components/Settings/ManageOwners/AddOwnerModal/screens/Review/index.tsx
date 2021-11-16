@@ -9,21 +9,19 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 
 import { OwnerValues } from '../..'
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { getSafeSDK } from 'src/logic/wallets/getWeb3'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -39,8 +37,12 @@ type ReviewAddOwnerProps = {
 export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -67,20 +69,16 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   useEffect(() => {
     let isCurrent = true
 
-    const calculateAddOwnerData = async () => {
+    const calculateAddOwnerData = () => {
       try {
-        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
-        const safeTx = await sdk.getAddOwnerTx(
-          { ownerAddress: values.ownerAddress, threshold: +values.threshold },
-          { safeTxGas: 0 },
-        )
-        const txData = safeTx.data.data
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+        const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
         if (isCurrent) {
           setData(txData)
         }
       } catch (error) {
-        logError(Errors._811, error.message)
+        console.error('Error calculating ERC721 transfer data:', error.message)
       }
     }
     calculateAddOwnerData()
@@ -88,7 +86,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     return () => {
       isCurrent = false
     }
-  }, [connectedWalletAddress, safeAddress, values.ownerAddress, values.threshold])
+  }, [safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
@@ -205,15 +203,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             isOffChainSignature={isOffChainSignature}
           />
 
-          <Block className={classes.gasCostsContainer}>
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </Block>
+          <ReviewInfoText
+            gasCostFormatted={gasCostFormatted}
+            isCreation={isCreation}
+            isExecution={isExecution}
+            isOffChainSignature={isOffChainSignature}
+            safeNonce={txParameters.safeNonce}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
           <Hairline />
           <Row align="center" className={classes.buttonRow}>
             <Modal.Footer.Buttons

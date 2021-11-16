@@ -19,7 +19,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -184,15 +184,14 @@ export const ChangeThresholdModal = ({
                   />
                 </Block>
                 {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
-                  <div className={classes.gasCostsContainer}>
-                    <TransactionFees
-                      gasCostFormatted={gasCostFormatted}
-                      isExecution={isExecution}
-                      isCreation={isCreation}
-                      isOffChainSignature={isOffChainSignature}
-                      txEstimationExecutionStatus={txEstimationExecutionStatus}
-                    />
-                  </div>
+                  <ReviewInfoText
+                    gasCostFormatted={gasCostFormatted}
+                    isCreation={isCreation}
+                    isExecution={isExecution}
+                    isOffChainSignature={isOffChainSignature}
+                    safeNonce={txParameters.safeNonce}
+                    txEstimationExecutionStatus={txEstimationExecutionStatus}
+                  />
                 )}
 
                 <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>

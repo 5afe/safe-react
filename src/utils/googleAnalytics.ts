@@ -18,6 +18,11 @@ export const USER_EVENTS: Record<string, EventArgs> = {
   },
 }
 
+const WALLET_EVENT = 'Wallets'
+export const WALLET_EVENTS: Record<string, EventArgs> = {
+  CONNECT_WALLET: { category: WALLET_EVENT, action: 'Connect a Wallet' },
+}
+
 const SAFE_EVENT = 'Safe Navigation'
 export const SAFE_EVENTS: Record<string, EventArgs> = {
   SIDEBAR: {

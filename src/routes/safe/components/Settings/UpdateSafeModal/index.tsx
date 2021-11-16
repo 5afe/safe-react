@@ -12,7 +12,7 @@ import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
@@ -127,15 +127,14 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
             />
           </Block>
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-            <Block className={classes.gasCostsContainer}>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Block>
+            <ReviewInfoText
+              gasCostFormatted={gasCostFormatted}
+              isCreation={isCreation}
+              isExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
           )}
           {/* Footer */}
           <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>

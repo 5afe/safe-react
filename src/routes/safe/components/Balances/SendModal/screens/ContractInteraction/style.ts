@@ -1,4 +1,4 @@
-import { lg, md, sm, border, background } from 'src/theme/variables'
+import { lg, md, sm, border } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -44,9 +44,5 @@ export const styles = createStyles({
   },
   fullWidth: {
     justifyContent: 'space-between',
-  },
-  gasCostsContainer: {
-    backgroundColor: background,
-    padding: `0 ${lg}`,
   },
 })
