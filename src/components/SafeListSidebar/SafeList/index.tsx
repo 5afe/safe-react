@@ -17,6 +17,7 @@ import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -69,8 +70,10 @@ const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => !loadedViaU
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
-  const currentSafeAddress = extractSafeAddress()
-  const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
+  const currentSafeAddress = checksumAddress(extractSafeAddress())
+  const loadedSafes = useSelector(sortedSafeListSelector)
+    .map((loadedSafe) => ({ ...loadedSafe, address: checksumAddress(loadedSafe.address) }))
+    .filter(isNotLoadedViaUrl)
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
 
@@ -78,14 +81,13 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
     <StyledList>
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
+        const ownedSafesOnNetwork = (ownedSafes[id] || []).map(checksumAddress)
         const localSafesOnNetwork = localSafes[id]
-        const ownedSafesOnNetwork = ownedSafes[id] || []
-        const shouldExpandOwnedSafes =
-          (isCurrentNetwork &&
-            ownedSafesOnNetwork.some(
-              (address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address),
-            )) ||
-          (!localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES)
+          .map((localSafe) => ({ ...localSafe, address: checksumAddress(localSafe.address) }))
+          .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
+        const shouldExpandOwnedSafes = isCurrentNetwork
+          ? ownedSafesOnNetwork.some((address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address))
+          : !localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
 
         if (!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && !isCurrentNetwork) return null
 
@@ -96,8 +98,8 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
               {label}
             </ListItem>
             <MuiList>
-              {localSafesOnNetwork.length > 0 &&
-                localSafesOnNetwork.map((safe) => (
+              {loadedSafes.length > 0 &&
+                loadedSafes.map((safe) => (
                   <SafeListItem
                     key={safe.address}
                     networkId={id}
