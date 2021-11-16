@@ -41,7 +41,6 @@ const mainnet: NetworkConfig = {
     backgroundColor: '#A566FF',
     textColor: '#ffffff',
     label: 'EWC',
-    isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',

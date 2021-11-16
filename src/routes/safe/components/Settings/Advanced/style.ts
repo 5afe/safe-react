@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 
-import { background, lg, md } from 'src/theme/variables'
+import { lg, md } from 'src/theme/variables'
 
 export const useStyles = makeStyles(
   createStyles({
@@ -34,10 +34,6 @@ export const useStyles = makeStyles(
     },
     accordionContainer: {
       margin: `0 ${md}`,
-    },
-    gasCostsContainer: {
-      backgroundColor: background,
-      padding: `0 ${lg}`,
     },
   }),
 )

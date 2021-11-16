@@ -33,6 +33,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { onboardUser } from 'src/components/ConnectButton'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -72,6 +73,9 @@ export const processTransaction =
     thresholdReached,
   }: ProcessTransactionArgs): ProcessTransactionAction =>
   async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
+    const ready = await onboardUser()
+    if (!ready) return
+
     const state = getState()
 
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)

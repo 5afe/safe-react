@@ -12,10 +12,9 @@ import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { lg, md, sm } from 'src/theme/variables'
+import { lg, md } from 'src/theme/variables'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { BasicTxInfo, DecodeTxs } from 'src/components/DecodeTxs'
@@ -26,6 +25,7 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Divider from 'src/components/Divider'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -34,10 +34,6 @@ import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 const Container = styled.div`
   max-width: 480px;
   padding: ${md} ${lg} 0;
-`
-const TransactionFeesWrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: ${sm} ${lg};
 `
 
 const DecodeTxsWrapper = styled.div`
@@ -59,6 +55,7 @@ const StyledBlock = styled(Block)`
 `
 
 type Props = ConfirmTxModalProps & {
+  onReject: () => void
   showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
   hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
@@ -77,7 +74,7 @@ export const ReviewConfirm = ({
   hidden,
   onUserConfirm,
   onClose,
-  onTxReject,
+  onReject,
   requestId,
   showDecodedTxData,
 }: Props): ReactElement => {
@@ -138,11 +135,6 @@ export const ReviewConfirm = ({
     decodeTxData()
   }, [txData])
 
-  const handleTxRejection = () => {
-    onTxReject(requestId)
-    onClose()
-  }
-
   const handleUserConfirmation = (safeTxHash: string): void => {
     onUserConfirm(safeTxHash, requestId)
     onClose()
@@ -168,7 +160,7 @@ export const ReviewConfirm = ({
           delayExecution: !executionApproved,
         },
         handleUserConfirmation,
-        handleTxRejection,
+        onReject,
       ),
     )
 
@@ -205,7 +197,7 @@ export const ReviewConfirm = ({
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
-          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+          <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={onReject} />
 
           <Hairline />
 
@@ -246,21 +238,20 @@ export const ReviewConfirm = ({
 
           {/* Gas info */}
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-            <TransactionFeesWrapper>
-              <TransactionFees
-                gasCostFormatted={isOwner ? gasCostFormatted : undefined}
-                isExecution={doExecute}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </TransactionFeesWrapper>
+            <ReviewInfoText
+              gasCostFormatted={isOwner ? gasCostFormatted : undefined}
+              isCreation={isCreation}
+              isExecution={doExecute}
+              isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
           )}
 
           {/* Buttons */}
           <Modal.Footer withoutBorder={txEstimationExecutionStatus !== EstimationStatus.LOADING}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: handleTxRejection }}
+              cancelButtonProps={{ onClick: onReject }}
               confirmButtonProps={{
                 onClick: () => confirmTransactions(txParameters),
                 disabled: !isOwner,

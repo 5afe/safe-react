@@ -47,10 +47,10 @@ export interface ContractInteractionProps {
 const ContractInteraction: React.FC<ContractInteractionProps> = ({
   contractAddress,
   initialValues,
+  isABI,
   onClose,
   onNext,
   switchMethod,
-  isABI,
 }) => {
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
@@ -125,7 +125,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                   Use custom data (hex encoded)
                 </Paragraph>
               </Block>
-              <Buttons onClose={onClose} />
+              <Buttons onClose={onClose} requiresMethod />
             </>
           )
         }}
