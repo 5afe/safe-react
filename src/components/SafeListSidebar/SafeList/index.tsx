@@ -83,17 +83,20 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         const isCurrentNetwork = id === getNetworkId()
         const ownedSafesOnNetwork = ownedSafes[id] || []
 
-        const safes = isCurrentNetwork
-          ? loadedSafes
-          : localSafes[id]
-              .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
-              .map((localSafe) => ({ ...localSafe, address: checksumAddress(localSafe.address) }))
+        const localSafesOnNetwork = localSafes[id]
+          .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
+          .map((localSafe) => ({
+            ...localSafe,
+            address: checksumAddress(localSafe.address),
+          }))
+
+        const safes = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
 
         const shouldExpandOwnedSafes = isCurrentNetwork
           ? ownedSafesOnNetwork.some((address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address))
-          : !safes.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
+          : !localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
 
-        if (!safes.length && !isCurrentNetwork) return null
+        if (!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && !isCurrentNetwork) return null
 
         return (
           <Fragment key={id}>
@@ -102,7 +105,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
               {label}
             </ListItem>
             <MuiList>
-              {safes.length > 0 ? (
+              {safes.length > 0 &&
                 safes.map((safe) => (
                   <SafeListItem
                     key={safe.address}
@@ -113,8 +116,9 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     shouldScrollToSafe
                     {...safe}
                   />
-                ))
-              ) : (
+                ))}
+
+              {!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && (
                 <PlaceholderText size="lg" color="placeHolder">
                   <Link to={WELCOME_ROUTE} onClick={onSafeClick}>
                     Create or add
