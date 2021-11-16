@@ -16,9 +16,8 @@ import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
 import { useSelector } from 'react-redux'
-import { networkSelector, shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
 import ChainIndicator from 'src/components/ChainIndicator'
-import WalletSwitchButton from 'src/components/WalletSwitch/WalletSwitchButton'
 
 const styles = createStyles({
   container: {
@@ -111,7 +110,6 @@ export const UserDetails = ({
 }: Props): React.ReactElement => {
   const explorerUrl = getExplorerInfo(userAddress)
   const connectedNetwork = useSelector(networkSelector)
-  const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const classes = useStyles()
 
   return (
@@ -159,11 +157,6 @@ export const UserDetails = ({
               {provider} Wallet
             </Paragraph>
           </Button>
-        </Row>
-      )}
-      {isWrongNetwork && (
-        <Row className={classes.buttonRow}>
-          <WalletSwitchButton text="Switch to" fullWidth />
         </Row>
       )}
       <Row className={classes.buttonRow}>

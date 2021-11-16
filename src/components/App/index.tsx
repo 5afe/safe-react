@@ -26,7 +26,6 @@ import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 import { extractSafeAddress } from 'src/routes/routes'
-import WalletSwitchAlert from 'src/components/WalletSwitch/WalletSwitchAlert'
 
 const notificationStyles = {
   success: {
@@ -75,8 +74,6 @@ const App: React.FC = ({ children }) => {
 
   return (
     <Frame>
-      <WalletSwitchAlert />
-
       <SnackbarProvider
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         classes={{
