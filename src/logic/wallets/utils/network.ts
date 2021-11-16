@@ -85,7 +85,7 @@ export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): bool
   return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
 }
 
-export const switchWalletChain = async () => {
+export const switchWalletChain = async (): Promise<void> => {
   const { wallet } = onboard().getState()
   try {
     await switchNetwork(wallet, getNetworkId())
