@@ -83,12 +83,10 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         const isCurrentNetwork = id === getNetworkId()
         const ownedSafesOnNetwork = ownedSafes[id] || []
 
-        const localSafesOnNetwork = localSafes[id]
-          .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
-          .map((localSafe) => ({
-            ...localSafe,
-            address: checksumAddress(localSafe.address),
-          }))
+        const localSafesOnNetwork = localSafes[id].map((localSafe) => ({
+          ...localSafe,
+          address: checksumAddress(localSafe.address),
+        }))
 
         const safes = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
 
@@ -138,16 +136,19 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     }
                     defaultExpanded={shouldExpandOwnedSafes}
                   >
-                    {ownedSafesOnNetwork.map((address) => (
-                      <SafeListItem
-                        key={address}
-                        address={address}
-                        networkId={id}
-                        onSafeClick={onSafeClick}
-                        loadedSafes={loadedSafes}
-                        shouldScrollToSafe={!isSafeAdded(loadedSafes, address)}
-                      />
-                    ))}
+                    {ownedSafesOnNetwork.map((address) => {
+                      const isAdded = isSafeAdded(loadedSafes, address)
+                      return (
+                        <SafeListItem
+                          key={address}
+                          address={address}
+                          networkId={id}
+                          onSafeClick={onSafeClick}
+                          showAddSafeLink={isCurrentNetwork && !isAdded}
+                          shouldScrollToSafe={!isAdded}
+                        />
+                      )
+                    })}
                   </Collapse>
                 </ListItem>
               )}
