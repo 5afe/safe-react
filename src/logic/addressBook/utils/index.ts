@@ -64,3 +64,10 @@ export const getEntryIndex = (
   state.findIndex(
     ({ address, chainId }) => chainId === addressBookEntry.chainId && sameAddress(address, addressBookEntry.address),
   )
+
+export const uniqueByKey = (
+  key: keyof AddressBookEntry,
+  addressBookEntries: AddressBookEntry[],
+): AddressBookEntry[] => [
+  ...new Map<string, AddressBookEntry>(addressBookEntries.map((entry) => [entry[key], entry])).values(),
+]

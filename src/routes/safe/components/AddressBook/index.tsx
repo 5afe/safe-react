@@ -49,6 +49,7 @@ import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { uniqueByKey } from 'src/logic/addressBook/utils'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -216,8 +217,9 @@ const AddressBookTable = (): ReactElement => {
             label="Owners"
             size={addressBook?.length || 0}
           >
-            {(sortedData) =>
-              sortedData.map((row, index) => {
+            {(sortedData) => {
+              const sortedUniqueByAddress = uniqueByKey('address', sortedData)
+              return sortedUniqueByAddress.map((row, index) => {
                 const userOwner = isUserAnOwnerOfAnySafe(safesList, row.address)
                 const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
                 return (
@@ -299,7 +301,7 @@ const AddressBookTable = (): ReactElement => {
                   </TableRow>
                 )
               })
-            }
+            }}
           </Table>
         </TableContainer>
       </Block>
