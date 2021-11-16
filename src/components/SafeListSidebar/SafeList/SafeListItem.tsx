@@ -19,6 +19,7 @@ import {
   SAFE_ROUTES,
   SafeRouteParams,
 } from 'src/routes/routes'
+import { setNetwork } from 'src/logic/config/utils'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -67,6 +68,7 @@ const SafeListItem = ({
 
   const handleLoadSafe = (): void => {
     onNetworkSwitch?.()
+    setNetwork(networkId)
     onSafeClick()
   }
 

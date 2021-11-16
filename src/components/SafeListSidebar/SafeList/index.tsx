@@ -71,7 +71,8 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
   const currentSafeAddress = extractSafeAddress()
-  const loadedSafes = useSelector(sortedSafeListSelector)
+
+  const addedSafes = useSelector(sortedSafeListSelector)
     .filter(isNotLoadedViaUrl)
     .map((loadedSafe) => ({ ...loadedSafe, address: checksumAddress(loadedSafe.address) }))
   const ownedSafes = useOwnerSafes()
@@ -81,20 +82,28 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
     <StyledList>
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
-        const ownedSafesOnNetwork = ownedSafes[id] || []
 
-        const localSafesOnNetwork = localSafes[id].map((localSafe) => ({
+        const addedSafesOnNetwork = addedSafes.filter((addedSafe) => addedSafe.chainId === id)
+        const ownedSafesOnNetwork = ownedSafes[id] || []
+        const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl).map((localSafe) => ({
           ...localSafe,
           address: checksumAddress(localSafe.address),
         }))
 
-        const safes = isCurrentNetwork ? loadedSafes : localSafesOnNetwork
+        const safes = isCurrentNetwork ? addedSafesOnNetwork : localSafesOnNetwork
 
         const shouldExpandOwnedSafes = isCurrentNetwork
-          ? ownedSafesOnNetwork.some((address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address))
-          : !localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
+          ? ownedSafesOnNetwork.some((address) => address === currentSafeAddress && !isSafeAdded(addedSafes, address))
+          : safes.length !== addedSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
 
-        if (!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && !isCurrentNetwork) return null
+        if (
+          !isCurrentNetwork &&
+          !addedSafesOnNetwork.length &&
+          !ownedSafesOnNetwork.length &&
+          !localSafesOnNetwork.length
+        ) {
+          return null
+        }
 
         return (
           <Fragment key={id}>
@@ -110,7 +119,6 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     networkId={id}
                     onNetworkSwitch={() => setNetwork(id)}
                     onSafeClick={onSafeClick}
-                    loadedSafes={loadedSafes}
                     shouldScrollToSafe
                     {...safe}
                   />
@@ -137,14 +145,14 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     defaultExpanded={shouldExpandOwnedSafes}
                   >
                     {ownedSafesOnNetwork.map((address) => {
-                      const isAdded = isSafeAdded(loadedSafes, address)
+                      const isAdded = isSafeAdded(safes, address)
                       return (
                         <SafeListItem
                           key={address}
                           address={address}
                           networkId={id}
                           onSafeClick={onSafeClick}
-                          showAddSafeLink={isCurrentNetwork && !isAdded}
+                          showAddSafeLink={!isAdded}
                           shouldScrollToSafe={!isAdded}
                         />
                       )
