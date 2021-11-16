@@ -4,7 +4,6 @@ import { generatePath, matchPath } from 'react-router-dom'
 import { getCurrentShortChainName } from 'src/config'
 import networks from 'src/config/networks'
 import { ETHEREUM_NETWORK, SHORT_NAME } from 'src/config/networks/network.d'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 
@@ -101,18 +100,9 @@ export const extractPrefixedSafeAddress = (
   const shortName = isChainSpecificAddress ? parts[0] : currentChainShortName
   const safeAddress = isChainSpecificAddress ? parts[1] : parts[0]
 
-  const validShortName = isValidShortChainName(shortName) ? shortName : currentChainShortName
-  try {
-    return {
-      shortName: validShortName,
-      safeAddress: checksumAddress(safeAddress),
-    }
-  } catch (err) {
-    logError(Errors._102, err.message)
-    return {
-      shortName: validShortName,
-      safeAddress: '',
-    }
+  return {
+    shortName: isValidShortChainName(shortName) ? shortName : currentChainShortName,
+    safeAddress: checksumAddress(safeAddress),
   }
 }
 
