@@ -5,16 +5,11 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { switchWalletChain } from 'src/logic/wallets/utils/network'
 import ChainIndicator from 'src/components/ChainIndicator'
 
-interface WalletSwitchProps {
-  text?: string
-  fullWidth?: boolean
-}
-
-const WalletSwitch = ({ text = 'Switch wallet to', fullWidth = false }: WalletSwitchProps): ReactElement => {
+const WalletSwitch = (): ReactElement => {
   return (
-    <Button variant="outlined" size="medium" color="primary" onClick={switchWalletChain} fullWidth={fullWidth}>
+    <Button variant="outlined" size="medium" color="primary" onClick={switchWalletChain}>
       <Text size="lg">
-        {text} <ChainIndicator chainId={getNetworkId()} />
+        Switch wallet to <ChainIndicator chainId={getNetworkId()} />
       </Text>
     </Button>
   )
