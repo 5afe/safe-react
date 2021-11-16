@@ -26,6 +26,15 @@ const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
 `
 
+const StyledEthHashInfo = styled(EthHashInfo)`
+  & > div > p:first-of-type {
+    width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`
+
 type Props = {
   onSafeClick: () => void
   onNetworkSwitch?: () => void
@@ -77,7 +86,7 @@ const SafeListItem = ({
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
-      <EthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
+      <StyledEthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
           `${formatAmount(ethBalance)} ${nativeCoinSymbol}`

@@ -70,11 +70,17 @@ export const fetchSafe =
     let safeInfo: Partial<SafeRecordProps> = {}
     let remoteSafeInfo: SafeInfo | null = null
 
-    // if there's no remote info, we keep what's in memory
     try {
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
+      return
+    }
+
+    // If the network has changed while the safe was being loaded,
+    // ignore the result
+    if (remoteSafeInfo?.chainId !== getNetworkId()) {
+      return
     }
 
     // remote (client-gateway)

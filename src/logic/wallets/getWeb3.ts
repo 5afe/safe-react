@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
-import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
+import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
@@ -118,9 +118,4 @@ export const getSDKWeb3Adapter = (signerAddress: string): Web3Adapter => {
     web3: getWeb3(),
     signerAddress,
   })
-}
-
-export const getSafeSDK = async (signerAddress: string, safeAddress: string): Promise<Safe> => {
-  const ethAdapter = getSDKWeb3Adapter(signerAddress)
-  return await Safe.create({ ethAdapter, safeAddress })
 }

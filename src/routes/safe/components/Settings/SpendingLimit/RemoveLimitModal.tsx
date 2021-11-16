@@ -1,4 +1,3 @@
-import cn from 'classnames'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -6,7 +5,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -168,12 +167,13 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 />
               </Modal.Body>
 
-              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
-                <TransactionFees
+              <Row className={classes.modalDescription}>
+                <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
                   isCreation={isCreation}
+                  isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               </Row>

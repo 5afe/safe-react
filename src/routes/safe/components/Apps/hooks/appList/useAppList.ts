@@ -5,7 +5,7 @@ import { useCustomSafeApps } from './useCustomSafeApps'
 import { useRemoteSafeApps } from './useRemoteSafeApps'
 import { usePinnedSafeApps } from './usePinnedSafeApps'
 import { FETCH_STATUS } from 'src/utils/requests'
-import { useAnalytics } from 'src/utils/googleAnalytics'
+import { SAFE_APP_EVENTS, useAnalytics } from 'src/utils/googleAnalytics'
 
 type UseAppListReturnType = {
   allApps: SafeApp[]
@@ -16,21 +16,6 @@ type UseAppListReturnType = {
   removeApp: (appId: string) => void
   addCustomApp: (app: SafeApp) => void
   isLoading: boolean
-}
-
-type SafeAppsGAEvent = {
-  category: 'Safe App'
-  action: 'pin' | 'unpin'
-}
-
-const unPinAppGAEvent: SafeAppsGAEvent = {
-  category: 'Safe App',
-  action: 'unpin',
-}
-
-const pinAppGAEvent: SafeAppsGAEvent = {
-  category: 'Safe App',
-  action: 'pin',
 }
 
 const useAppList = (): UseAppListReturnType => {
@@ -87,10 +72,10 @@ const useAppList = (): UseAppListReturnType => {
       const isAppPinned = pinnedSafeAppIds.includes(appId)
 
       if (isAppPinned) {
-        trackEvent({ ...unPinAppGAEvent, label: appName })
+        trackEvent({ ...SAFE_APP_EVENTS.PIN, label: appName })
         newPinnedIds.splice(newPinnedIds.indexOf(appId), 1)
       } else {
-        trackEvent({ ...pinAppGAEvent, label: appName })
+        trackEvent({ ...SAFE_APP_EVENTS.UNPIN, label: appName })
         newPinnedIds.push(appId)
       }
 

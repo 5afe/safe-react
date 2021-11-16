@@ -9,7 +9,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { nftAssetsFromNftTokensSelector, orderedNFTAssets } from 'src/logic/collectibles/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 
 const useStyles = makeStyles(
@@ -87,7 +87,7 @@ const Collectibles = (): React.ReactElement => {
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Collectibles' })
+    trackEvent(SAFE_EVENTS.COLLECTIBLES)
   }, [trackEvent])
 
   const handleItemSend = (nftToken: NFTToken) => {

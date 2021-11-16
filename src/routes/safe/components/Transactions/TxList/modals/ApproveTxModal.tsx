@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useStyles } from './style'
 
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Hairline from 'src/components/layout/Hairline'
@@ -21,7 +22,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -349,16 +349,8 @@ export const ApproveTxModal = ({
                     <Bold className={classes.nonceNumber}>{nonce}</Bold>
                   </Paragraph>
 
-                  {oneConfirmationLeft && canExecute && (
-                    <>
-                      <Paragraph color="error">
-                        Approving this transaction executes it right away.
-                        {!isCancelTx &&
-                          ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
-                      </Paragraph>
-
-                      {!isCancelTx && <ExecuteCheckbox onChange={setApproveAndExecute} />}
-                    </>
+                  {oneConfirmationLeft && canExecute && !isCancelTx && (
+                    <ExecuteCheckbox onChange={setApproveAndExecute} />
                   )}
 
                   {/* Tx Parameters */}
@@ -376,15 +368,14 @@ export const ApproveTxModal = ({
               </Block>
 
               {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-                <Block className={classes.gasCostsContainer}>
-                  <TransactionFees
-                    gasCostFormatted={gasCostFormatted}
-                    isExecution={doExecute}
-                    isCreation={isCreation}
-                    isOffChainSignature={isOffChainSignature}
-                    txEstimationExecutionStatus={txEstimationExecutionStatus}
-                  />
-                </Block>
+                <ReviewInfoText
+                  gasCostFormatted={gasCostFormatted}
+                  isCreation={isCreation}
+                  isExecution={doExecute}
+                  isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
+                  txEstimationExecutionStatus={txEstimationExecutionStatus}
+                />
               )}
 
               {/* Footer */}
