@@ -114,12 +114,15 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
+            \#\# Deployment links
             * :orange_circle: [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rinkeby)
             * :white_circle: [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet)
             * :purple_circle: [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon)
             * :yellow_circle: [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc)
             * :black_circle: [Safe Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arbitrum)
             * :green_circle: [Safe xDai](${{ env.REVIEW_FEATURE_URL }}/xdai)
+            ---
+            \#\#\#\# [env.REVIEW_FEATURE_URL](env.REVIEW_FEATURE_URL)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number
