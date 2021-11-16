@@ -122,9 +122,5 @@ export const useStyles = makeStyles(
     amountInput: {
       width: '100% !important',
     },
-    gasCostsContainer: {
-      backgroundColor: background,
-      padding: `0 ${lg}`,
-    },
   }),
 )

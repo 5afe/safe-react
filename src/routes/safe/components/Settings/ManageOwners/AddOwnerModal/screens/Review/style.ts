@@ -49,12 +49,4 @@ export const styles = createStyles({
       cursor: 'pointer',
     },
   },
-  gasCostsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    width: '100%',
-    backgroundColor: background,
-  },
 })

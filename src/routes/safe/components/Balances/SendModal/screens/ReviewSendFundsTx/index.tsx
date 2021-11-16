@@ -28,7 +28,7 @@ import { RecordOf } from 'immutable'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -271,15 +271,14 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           {/* Disclaimer */}
           {/* FIXME Estimation should be fixed to be used with spending limits */}
           {!isSpendingLimit && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
-            <div className={classes.gasCostsContainer}>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={doExecute}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </div>
+            <ReviewInfoText
+              gasCostFormatted={gasCostFormatted}
+              isCreation={isCreation}
+              isExecution={doExecute}
+              isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
           )}
 
           {/* Footer */}
