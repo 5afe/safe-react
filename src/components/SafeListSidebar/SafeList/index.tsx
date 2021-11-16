@@ -70,10 +70,10 @@ const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => !loadedViaU
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
-  const currentSafeAddress = checksumAddress(extractSafeAddress())
+  const currentSafeAddress = extractSafeAddress()
   const loadedSafes = useSelector(sortedSafeListSelector)
-    .map((loadedSafe) => ({ ...loadedSafe, address: checksumAddress(loadedSafe.address) }))
     .filter(isNotLoadedViaUrl)
+    .map((loadedSafe) => ({ ...loadedSafe, address: checksumAddress(loadedSafe.address) }))
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
 
@@ -82,14 +82,18 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
         const ownedSafesOnNetwork = ownedSafes[id] || []
-        const localSafesOnNetwork = localSafes[id]
-          .map((localSafe) => ({ ...localSafe, address: checksumAddress(localSafe.address) }))
-          .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
+
+        const safes = isCurrentNetwork
+          ? loadedSafes
+          : localSafes[id]
+              .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
+              .map((localSafe) => ({ ...localSafe, address: checksumAddress(localSafe.address) }))
+
         const shouldExpandOwnedSafes = isCurrentNetwork
           ? ownedSafesOnNetwork.some((address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address))
-          : !localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
+          : !safes.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
 
-        if (!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && !isCurrentNetwork) return null
+        if (!safes.length && !isCurrentNetwork) return null
 
         return (
           <Fragment key={id}>
@@ -98,8 +102,8 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
               {label}
             </ListItem>
             <MuiList>
-              {loadedSafes.length > 0 &&
-                loadedSafes.map((safe) => (
+              {safes.length > 0 ? (
+                safes.map((safe) => (
                   <SafeListItem
                     key={safe.address}
                     networkId={id}
@@ -109,9 +113,8 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     shouldScrollToSafe
                     {...safe}
                   />
-                ))}
-
-              {!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && (
+                ))
+              ) : (
                 <PlaceholderText size="lg" color="placeHolder">
                   <Link to={WELCOME_ROUTE} onClick={onSafeClick}>
                     Create or add
