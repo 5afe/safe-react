@@ -10,7 +10,68 @@ import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 import { IS_PRODUCTION } from './constants'
 import { capitalize } from './css'
 
-export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
+const USER_EVENT = 'User'
+export const USER_EVENTS: Record<string, EventArgs> = {
+  CREATE_SAFE: {
+    category: USER_EVENT,
+    action: 'Created a Safe',
+  },
+}
+
+const WALLET_EVENT = 'Wallets'
+export const WALLET_EVENTS: Record<string, EventArgs> = {
+  CONNECT_WALLET: { category: WALLET_EVENT, action: 'Connect a Wallet' },
+}
+
+const SAFE_EVENT = 'Safe Navigation'
+export const SAFE_EVENTS: Record<string, EventArgs> = {
+  SIDEBAR: {
+    category: SAFE_EVENT,
+    action: 'Safe List Sidebar',
+  },
+  ADDRESS_BOOK: {
+    category: SAFE_EVENT,
+    action: 'Address Book',
+  },
+  SAFE_APP: {
+    category: SAFE_EVENT,
+    action: 'Apps',
+  },
+  COINS: {
+    category: SAFE_EVENT,
+    action: 'Coins',
+  },
+  COLLECTIBLES: {
+    category: SAFE_EVENT,
+    action: 'Collectibles',
+  },
+  SETTINGS: {
+    category: SAFE_EVENT,
+    action: 'Settings',
+  },
+  TRANSACTIONS: {
+    category: SAFE_EVENT,
+    action: 'Transactions',
+  },
+}
+
+const SAFE_APP_EVENT = 'Safe App'
+export const SAFE_APP_EVENTS: Record<string, EventArgs> = {
+  PIN: {
+    category: SAFE_APP_EVENT,
+    action: 'Unpin',
+  },
+  UNPIN: {
+    category: SAFE_APP_EVENT,
+    action: 'Pin',
+  },
+}
+
+export const SETTINGS_EVENTS: Record<string, EventArgs> = {
+  ADVANCED: { ...SAFE_EVENTS.SETTINGS, label: 'Advanced' },
+  DETAILS: { ...SAFE_EVENTS.SETTINGS, label: 'Details' },
+  OWNERS: { ...SAFE_EVENTS.SETTINGS, label: 'Owners' },
+}
 
 export const COOKIES_LIST = [
   { name: '_ga', path: '/' },

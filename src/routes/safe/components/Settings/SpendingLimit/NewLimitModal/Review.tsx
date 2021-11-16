@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -23,12 +24,10 @@ import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadable
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { TransactionFees } from 'src/components/TransactionsFees'
 import Hairline from 'src/components/layout/Hairline'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
@@ -153,7 +152,6 @@ interface ReviewSpendingLimitProps {
 }
 
 export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
-  const classes = useStyles()
   const dispatch = useDispatch()
 
   const {
@@ -322,15 +320,14 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               isOffChainSignature={isOffChainSignature}
             />
           </Modal.Body>
-          <div className={classes.gasCostsContainer}>
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </div>
+          <ReviewInfoText
+            gasCostFormatted={gasCostFormatted}
+            isCreation={isCreation}
+            isExecution={isExecution}
+            isOffChainSignature={isOffChainSignature}
+            safeNonce={txParameters.safeNonce}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
 
           <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons

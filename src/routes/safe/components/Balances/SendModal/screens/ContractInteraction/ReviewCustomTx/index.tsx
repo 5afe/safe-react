@@ -1,7 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -12,6 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
@@ -21,7 +21,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -117,7 +117,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
 
             <Row align="center" margin="md">
               <Col xs={12}>
-                <EthHashInfo
+                <PrefixedEthHashInfo
                   hash={tx.contractAddress as string}
                   name={tx.contractName ?? ''}
                   showAvatar
@@ -163,15 +163,14 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
             />
           </Block>
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-            <Block className={classes.gasCostsContainer}>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={doExecute}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Block>
+            <ReviewInfoText
+              gasCostFormatted={gasCostFormatted}
+              isCreation={isCreation}
+              isExecution={doExecute}
+              isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
           )}
           <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons

@@ -1,5 +1,5 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
+import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
 
 type Props = {
   address: string
@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const CustomIconText = ({ address, iconUrl, text, iconUrlFallback }: Props): ReactElement => (
-  <EthHashInfo
+  <PrefixedEthHashInfo
     hash={address}
     showHash={false}
     avatarSize="sm"

@@ -10,7 +10,7 @@ import { ModulesTable } from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { TransactionGuard } from './TransactionGuard'
 
 const InfoText = styled(Text)`
@@ -44,7 +44,7 @@ const Advanced = (): ReactElement => {
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Advanced' })
+    trackEvent(SETTINGS_EVENTS.ADVANCED)
   }, [trackEvent])
 
   return (

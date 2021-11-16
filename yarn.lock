@@ -2140,10 +2140,10 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk-types/-/safe-core-sdk-types-0.1.1.tgz#908c394cb4660493b4e9c8e01b5a7aa36efafd30"
   integrity sha512-PghXGDaI5Foq37nZGmI90U2OKMeGtxh5KqkDqou9aFHwGVa/nf9HRQPxG9/XUzcyfe9OlKttDlJnR3XnC3dSDw==
 
-"@gnosis.pm/safe-core-sdk@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk/-/safe-core-sdk-1.0.0.tgz#48cb072cc971c1b2a9572ac1c198a05447c0c673"
-  integrity sha512-JSzb1bRE/Pezsvdyc/W7IyYl1eWPMxFpBk6tgkIVUSFCI+5817LPIMTPZcip+2FuuRTI/3NR4GC/MaRMxcufNA==
+"@gnosis.pm/safe-core-sdk@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk/-/safe-core-sdk-0.3.1.tgz#15171657490a90ac3773b6965c2af4b873af136f"
+  integrity sha512-L0na+KSAnicO4B9MtzPu90kwThZ2PHd11CHSRzhJ7l4oIOGB4a/KyPohcOzXTO9Vz3yDIELPlbcW5IEasUk6ag==
   dependencies:
     "@gnosis.pm/safe-core-sdk-types" "^0.1.1"
     ethereumjs-util "^7.0.10"
@@ -2153,10 +2153,10 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.4.0.tgz#d49d3d36cc014ef62306d09c0f4761895a17d7a6"
   integrity sha512-q4salJNQ/Gx0DnZJytAFO/U4OwGI6xTGtTJSOZK+C9Fh2NW8sep+YfSunHQvCLcu4b7WgWEBhxnCV6rpyveLHg==
 
-"@gnosis.pm/safe-react-components@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.0.tgz#1c957f53c08833f9c8f2f2908c19b6823f573578"
-  integrity sha512-IZy1Mv3y93QBi0Edph85mhKnndc4Uo6uHe5dmz8MHe3htNWa0JxwsI3Afrzqqidvx+LLNsfguNvpu/ZRHbycvw==
+"@gnosis.pm/safe-react-components@^0.8.5":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.5.tgz#bc8ed6bd74db68c49da7ba706d77f9ba5fa4b092"
+  integrity sha512-gvqbuUGhDtjCTF8u+s6jEC0PkWXNMHQQum6rHQktgfnZ/X1WgxnIifooQvXT6MEpOCgkRxEYE+bowxp+eih6FA==
   dependencies:
     react-media "^1.10.0"
 

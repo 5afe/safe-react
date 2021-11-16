@@ -38,7 +38,6 @@ const mainnet: NetworkConfig = {
     backgroundColor: '#514989',
     textColor: '#ffffff',
     label: 'Volta',
-    isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',

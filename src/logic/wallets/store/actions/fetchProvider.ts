@@ -2,12 +2,11 @@ import { Dispatch } from 'redux'
 
 import addProvider from './addProvider'
 
-import { getNetworkInfo } from 'src/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider, ProviderProps } from 'src/logic/wallets/store/model/provider'
-import { trackAnalyticsEvent } from 'src/utils/googleAnalytics'
+import { trackAnalyticsEvent, WALLET_EVENTS } from 'src/utils/googleAnalytics'
 
 export const processProviderResponse = (dispatch: Dispatch, provider: ProviderProps): void => {
   const walletRecord = makeProvider(provider)
@@ -22,19 +21,15 @@ const handleProviderNotification = (provider: ProviderProps, dispatch: Dispatch<
     return
   }
 
-  if (getNetworkInfo().isTestNet) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TESTNET_VERSION_MSG)))
-  }
-
   if (available) {
     // NOTE:
     // if you want to be able to dispatch a `closeSnackbar` action later on,
     // you SHOULD pass your own `key` in the options. `key` can be any sequence
     // of number or characters, but it has to be unique to a given snackbar.
 
+    // Cannot import from useAnalytics here, so using fn directly
     trackAnalyticsEvent({
-      category: 'Wallets',
-      action: 'Connect a wallet',
+      ...WALLET_EVENTS.CONNECT_WALLET,
       label: provider.name,
     })
   } else {

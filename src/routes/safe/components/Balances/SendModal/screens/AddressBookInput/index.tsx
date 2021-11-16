@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
 import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
 import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
@@ -20,6 +19,7 @@ import {
   useTextFieldInputStyle,
   useTextFieldLabelStyle,
 } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput/style'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -198,7 +198,7 @@ const BaseAddressBookInput = ({
         />
       )}
       getOptionLabel={({ address }) => address}
-      renderOption={({ address, name }) => <EthHashInfo hash={address} name={name} showAvatar />}
+      renderOption={({ address, name }) => <PrefixedEthHashInfo hash={address} name={name} showAvatar />}
       role="listbox"
       style={{ display: 'flex', flexGrow: 1 }}
     />

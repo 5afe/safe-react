@@ -1,5 +1,6 @@
-import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
 import styled, { css } from 'styled-components'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -428,7 +429,7 @@ export const OwnerList = styled.ul`
       margin: 5px;
     }
 
-    span {
+    span::first-of-type {
       color: #008c73;
       font-weight: bold;
     }
@@ -466,8 +467,12 @@ export const OwnerListItem = styled.li`
   }
 `
 
-export const InlineEthHashInfo = styled(EthHashInfo)`
+export const PrefixedInlineEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
+
+  span {
+    font-weight: normal;
+  }
 `
 
 export const StyledScrollableBar = styled.div`

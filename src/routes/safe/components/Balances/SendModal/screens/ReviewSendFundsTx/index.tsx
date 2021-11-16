@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -12,6 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -28,7 +28,7 @@ import { RecordOf } from 'immutable'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -225,7 +225,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             </Row>
             <Row align="center" margin="md" data-testid="recipient-review-step">
               <Col xs={12}>
-                <EthHashInfo
+                <PrefixedEthHashInfo
                   hash={tx.recipientAddress}
                   name={tx.recipientName}
                   showCopyBtn
@@ -271,15 +271,14 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           {/* Disclaimer */}
           {/* FIXME Estimation should be fixed to be used with spending limits */}
           {!isSpendingLimit && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
-            <div className={classes.gasCostsContainer}>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={doExecute}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </div>
+            <ReviewInfoText
+              gasCostFormatted={gasCostFormatted}
+              isCreation={isCreation}
+              isExecution={doExecute}
+              isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
           )}
 
           {/* Footer */}

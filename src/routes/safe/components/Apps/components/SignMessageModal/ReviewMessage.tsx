@@ -1,5 +1,5 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { EthHashInfo, Icon, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Text } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
 import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,10 +10,9 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { lg, md, sm } from 'src/theme/variables'
+import { lg, md } from 'src/theme/variables'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { BasicTxInfo } from 'src/components/DecodeTxs'
@@ -22,18 +21,16 @@ import Divider from 'src/components/Divider'
 import { SignMessageModalProps } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const { nativeCoin } = getNetworkInfo()
 
 const Container = styled.div`
   max-width: 480px;
   padding: ${md} ${lg} 0;
-`
-const TransactionFeesWrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: ${sm} ${lg};
 `
 
 const StyledBlock = styled(Block)`
@@ -185,7 +182,7 @@ export const ReviewMessage = ({
 
           <Container>
             {/* Safe */}
-            <EthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+            <PrefixedEthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             <StyledBlock>
               <Text size="md">Balance:</Text>
               <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>
@@ -231,15 +228,14 @@ export const ReviewMessage = ({
 
           {/* Gas info */}
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-            <TransactionFeesWrapper>
-              <TransactionFees
-                gasCostFormatted={isOwner ? gasCostFormatted : undefined}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </TransactionFeesWrapper>
+            <ReviewInfoText
+              gasCostFormatted={isOwner ? gasCostFormatted : undefined}
+              isCreation={isCreation}
+              isExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
+              safeNonce={txParameters.safeNonce}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
           )}
 
           {/* Buttons */}

@@ -5,12 +5,12 @@ import { ReactElement } from 'react'
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { InlineEthHashInfo } from './styled'
+import { PrefixedInlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
 
 export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData } = txDetails
-  const explorerUrl = txHash ? getExplorerInfo(txHash) : null
+  const explorerUrl = txHash ? getExplorerInfo(txHash) : undefined
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
   const safeTxHash = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.safeTxHash : undefined
@@ -22,7 +22,13 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
           Transaction hash:{' '}
         </Text>
         {txHash ? (
-          <InlineEthHashInfo textSize="xl" hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
+          <PrefixedInlineEthHashInfo
+            textSize="xl"
+            hash={txHash}
+            shortenHash={8}
+            showCopyBtn
+            explorerUrl={explorerUrl}
+          />
         ) : (
           <Text size="xl" as="span">
             {NOT_AVAILABLE}
@@ -34,7 +40,7 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
           <Text size="xl" strong as="span">
             SafeTxHash:{' '}
           </Text>
-          <InlineEthHashInfo textSize="xl" hash={safeTxHash} shortenHash={8} showCopyBtn />
+          <PrefixedInlineEthHashInfo textSize="xl" hash={safeTxHash} shortenHash={8} showCopyBtn />
         </div>
       )}
       {nonce !== undefined && (

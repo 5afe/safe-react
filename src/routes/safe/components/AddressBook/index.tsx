@@ -3,7 +3,6 @@ import {
   BreadcrumbElement,
   Button,
   ButtonLink,
-  EthHashInfo,
   FixedIcon,
   Icon,
   Menu,
@@ -26,6 +25,7 @@ import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
@@ -44,7 +44,7 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
@@ -97,7 +97,7 @@ const AddressBookTable = (): ReactElement => {
   const entryAddressToEditOrCreateNew = queryParams?.entryAddress
 
   useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
+    trackEvent(SAFE_EVENTS.ADDRESS_BOOK)
   }, [trackEvent])
 
   useEffect(() => {
@@ -232,7 +232,7 @@ const AddressBookTable = (): ReactElement => {
                         <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                           {column.id === AB_ADDRESS_ID ? (
                             <Block justify="left">
-                              <EthHashInfo
+                              <PrefixedEthHashInfo
                                 hash={row[column.id]}
                                 showCopyBtn
                                 showAvatar

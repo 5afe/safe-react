@@ -1,5 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import cn from 'classnames'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -9,6 +7,8 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { getExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -21,7 +21,6 @@ import { useStyles } from './style'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -136,7 +135,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={moduleAddress}
                       showCopyBtn
                       showAvatar
@@ -162,12 +161,13 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
-              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
-                <TransactionFees
+              <Row className={classes.modalDescription}>
+                <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
                   isCreation={isCreation}
+                  isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
+                  safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               </Row>

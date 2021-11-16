@@ -33,7 +33,6 @@ const xDai: NetworkConfig = {
     backgroundColor: '#48A8A6',
     textColor: '#ffffff',
     label: 'xDai',
-    isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
