@@ -1,8 +1,8 @@
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type OldAddressBookEntry = {
   address: string
@@ -62,12 +62,7 @@ export const getEntryIndex = (
   addressBookEntry: Overwrite<AddressBookEntry, { name?: string }>,
 ): number =>
   state.findIndex(
-    ({ address, chainId }) => chainId === addressBookEntry.chainId && sameAddress(address, addressBookEntry.address),
+    ({ address, chainId }) =>
+      chainId.toString() === addressBookEntry.chainId.toString() &&
+      checksumAddress(address) === checksumAddress(addressBookEntry.address),
   )
-
-export const uniqueByKey = (
-  key: keyof AddressBookEntry,
-  addressBookEntries: AddressBookEntry[],
-): AddressBookEntry[] => [
-  ...new Map<string, AddressBookEntry>(addressBookEntries.map((entry) => [entry[key], entry])).values(),
-]
