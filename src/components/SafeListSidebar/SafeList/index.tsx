@@ -81,7 +81,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
     <StyledList>
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
-        const ownedSafesOnNetwork = (ownedSafes[id] || []).map(checksumAddress)
+        const ownedSafesOnNetwork = ownedSafes[id] || []
         const localSafesOnNetwork = localSafes[id]
           .map((localSafe) => ({ ...localSafe, address: checksumAddress(localSafe.address) }))
           .filter(({ address }) => !ownedSafesOnNetwork.includes(address))
