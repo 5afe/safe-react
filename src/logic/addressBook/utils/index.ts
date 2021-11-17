@@ -61,8 +61,12 @@ export const getEntryIndex = (
   state: AppReduxState['addressBook'],
   addressBookEntry: Overwrite<AddressBookEntry, { name?: string }>,
 ): number =>
-  state.findIndex(
-    ({ address, chainId }) =>
-      chainId.toString() === addressBookEntry.chainId.toString() &&
-      checksumAddress(address) === checksumAddress(addressBookEntry.address),
-  )
+  state.findIndex(({ address, chainId }) => {
+    let hasSameChecksumAddress
+    try {
+      hasSameChecksumAddress = checksumAddress(address) === checksumAddress(addressBookEntry.address)
+    } catch (e) {
+      console.error(e)
+    }
+    return chainId.toString() === addressBookEntry.chainId.toString() && hasSameChecksumAddress
+  })
