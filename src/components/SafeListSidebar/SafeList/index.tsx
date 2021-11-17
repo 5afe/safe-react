@@ -17,6 +17,7 @@ import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -70,7 +71,10 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const networks = getNetworks()
   const currentSafeAddress = extractSafeAddress()
-  const loadedSafes = useSelector(sortedSafeListSelector).filter(isNotLoadedViaUrl)
+
+  const addedSafes = useSelector(sortedSafeListSelector)
+    .filter(isNotLoadedViaUrl)
+    .map((loadedSafe) => ({ ...loadedSafe, address: checksumAddress(loadedSafe.address) }))
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
 
@@ -78,16 +82,28 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
     <StyledList>
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
-        const localSafesOnNetwork = localSafes[id]
-        const ownedSafesOnNetwork = ownedSafes[id] || []
-        const shouldExpandOwnedSafes =
-          (isCurrentNetwork &&
-            ownedSafesOnNetwork.some(
-              (address) => address === currentSafeAddress && !isSafeAdded(loadedSafes, address),
-            )) ||
-          (!localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES)
 
-        if (!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && !isCurrentNetwork) return null
+        const addedSafesOnNetwork = addedSafes.filter((addedSafe) => addedSafe.chainId === id)
+        const ownedSafesOnNetwork = ownedSafes[id] || []
+        const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl).map((localSafe) => ({
+          ...localSafe,
+          address: checksumAddress(localSafe.address),
+        }))
+
+        const safes = isCurrentNetwork ? addedSafesOnNetwork : localSafesOnNetwork
+
+        const shouldExpandOwnedSafes = isCurrentNetwork
+          ? ownedSafesOnNetwork.some((address) => address === currentSafeAddress && !isSafeAdded(addedSafes, address))
+          : safes.length !== addedSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
+
+        if (
+          !isCurrentNetwork &&
+          !addedSafesOnNetwork.length &&
+          !ownedSafesOnNetwork.length &&
+          !localSafesOnNetwork.length
+        ) {
+          return null
+        }
 
         return (
           <Fragment key={id}>
@@ -96,14 +112,13 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
               {label}
             </ListItem>
             <MuiList>
-              {localSafesOnNetwork.length > 0 &&
-                localSafesOnNetwork.map((safe) => (
+              {safes.length > 0 &&
+                safes.map((safe) => (
                   <SafeListItem
                     key={safe.address}
                     networkId={id}
                     onNetworkSwitch={() => setNetwork(id)}
                     onSafeClick={onSafeClick}
-                    loadedSafes={loadedSafes}
                     shouldScrollToSafe
                     {...safe}
                   />
@@ -129,16 +144,19 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     }
                     defaultExpanded={shouldExpandOwnedSafes}
                   >
-                    {ownedSafesOnNetwork.map((address) => (
-                      <SafeListItem
-                        key={address}
-                        address={address}
-                        networkId={id}
-                        onSafeClick={onSafeClick}
-                        loadedSafes={loadedSafes}
-                        shouldScrollToSafe={!isSafeAdded(loadedSafes, address)}
-                      />
-                    ))}
+                    {ownedSafesOnNetwork.map((address) => {
+                      const isAdded = isSafeAdded(safes, address)
+                      return (
+                        <SafeListItem
+                          key={address}
+                          address={address}
+                          networkId={id}
+                          onSafeClick={onSafeClick}
+                          showAddSafeLink={!isAdded}
+                          shouldScrollToSafe={!isAdded}
+                        />
+                      )
+                    })}
                   </Collapse>
                 </ListItem>
               )}
