@@ -28,7 +28,8 @@
             .replace(`safe-team-${chain}`, 'safe-team') // staging
             .replace(`${chain}\.gnosis-safe\.io`, 'gnosis-safe.io') // prod
             .replace('#/safes/', `${SHORT_NAMES[chain]}:`) // EIP-3770 prefix
-            .replace('#/', `${chain}/`); // old-style chain in the path
+            .replace('#/', `${chain}/`) // old-style chain in the path
+            .replace(/\/app\/?$/, `/app/${chain}/`); // w/o a hash
           window.location.replace(newUrl);
         }
       }())
