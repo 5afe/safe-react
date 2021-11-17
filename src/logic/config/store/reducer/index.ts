@@ -34,17 +34,15 @@ export default handleActions<AppReduxState['networkConfig'], Payloads>(
       }
 
       if (state.chains.next) {
-        // TODO: Load and check
+        // Not necessary atm, but load the next page of chains and check if id is found, else load again
       }
 
-      // TODO: Throw or default
       return { ...state, networkId: action.payload }
     },
     [CONFIG_ACTIONS.LOAD_CHAINS]: (state, action: Action<ChainListResponse>) => {
-      const urlNetwork = action.payload.results?.find(({ chainId }) => chainId === extractShortName())?.chainId
+      const networkIdInUrl = action.payload.results?.find(({ chainId }) => chainId === extractShortName())?.chainId
 
-      // Should be fine to default if no shortName found, i.e. open/load routes
-      const networkId = urlNetwork ?? state.networkId
+      const networkId = networkIdInUrl ?? state.networkId
 
       return {
         ...state,

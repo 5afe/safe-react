@@ -18,9 +18,8 @@ import {
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { currentNetworkId, isFeatureEnabled } from 'src/logic/config/store/selectors'
-import { store } from 'src/store'
-
+import { currentEnabledFeatures, currentNetworkId } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
   label?: string
@@ -48,6 +47,9 @@ const BaseAddressBookInput = ({
   validationText,
 }: BaseAddressBookInputProps): ReactElement => {
   const networkId = useSelector(currentNetworkId)
+  const isDomainLookupEnabled = useSelector((state: AppReduxState) =>
+    currentEnabledFeatures(state, FEATURES.DOMAIN_LOOKUP),
+  )
 
   const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
     setSelectedEntry(addressEntry)
@@ -99,10 +101,7 @@ const BaseAddressBookInput = ({
         }
 
         // ENS-enabled resolve/validation
-        if (
-          isFeatureEnabled(store.getState(), FEATURES.DOMAIN_LOOKUP) &&
-          (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
-        ) {
+        if (isDomainLookupEnabled && (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))) {
           let address = ''
           try {
             address = await getAddressFromDomain(normalizedValue)

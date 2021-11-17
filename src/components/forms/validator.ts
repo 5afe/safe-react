@@ -5,7 +5,7 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
-import { isFeatureEnabled } from 'src/logic/config/store/selectors'
+import { currentEnabledFeatures } from 'src/logic/config/store/selectors'
 import { store } from 'src/store'
 
 type ValidatorReturnType = string | undefined
@@ -86,7 +86,7 @@ export const mustBeAddressHash = memoize((address: string): ValidatorReturnType 
 export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnType => {
   const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
   const result = mustBeAddressHash(address)
-  const isDomainLookupEnabled = isFeatureEnabled(store.getState(), FEATURES.DOMAIN_LOOKUP)
+  const isDomainLookupEnabled = currentEnabledFeatures(store.getState(), FEATURES.DOMAIN_LOOKUP)
   if (result !== undefined && isDomainLookupEnabled) {
     return errorMessage
   }

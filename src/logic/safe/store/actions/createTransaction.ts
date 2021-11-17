@@ -2,7 +2,6 @@ import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
@@ -34,6 +33,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentNetworkId, currentShortName } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import { NETWORK_ID } from 'src/types/network.d'
+import { onboardUser } from 'src/logic/wallets/onboard'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean

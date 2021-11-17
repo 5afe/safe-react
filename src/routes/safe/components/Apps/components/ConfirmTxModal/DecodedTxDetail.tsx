@@ -6,7 +6,7 @@ import { md, lg } from 'src/theme/variables'
 import ModalTitle from 'src/components/ModalTitle'
 import Hairline from 'src/components/layout/Hairline'
 import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode.d'
-import { BasicTxInfo, getParameterElement } from 'src/components/DecodeTxs'
+import { BasicTxInfo, ParameterElement } from 'src/components/DecodeTxs'
 import { useSelector } from 'react-redux'
 import { currentNetwork } from 'src/logic/config/store/selectors'
 
@@ -28,22 +28,31 @@ type Props = {
 
 export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
   const { nativeCurrency } = useSelector(currentNetwork)
-  let body
-  // If we are dealing with a multiSend
-  // decodedTxData is of type DataDecodedParameter
-  if (isDataDecodedParameterValue(tx)) {
-    const txValue = fromTokenUnit(tx.value, nativeCurrency.decimals)
 
-    body = (
-      <>
-        <BasicTxInfo txRecipient={tx.to} txData={tx.data} txValue={txValue} />
-        {tx.dataDecoded?.parameters.map((p, index) => getParameterElement(p, index))}
-      </>
-    )
-  } else {
-    // If we are dealing with a single tx
-    // decodedTxData is of type DecodedData
-    body = <>{tx.parameters.map((p, index) => getParameterElement(p, index))}</>
+  const getBody = () => {
+    // If we are dealing with a multiSend
+    // decodedTxData is of type DataDecodedParameter
+    if (isDataDecodedParameterValue(tx)) {
+      const txValue = fromTokenUnit(tx.value, nativeCurrency.decimals)
+      return (
+        <>
+          <BasicTxInfo txRecipient={tx.to} txData={tx.data} txValue={txValue} />
+          {tx.dataDecoded?.parameters.map((p, index) => (
+            <ParameterElement parameter={p} key={index} />
+          ))}
+        </>
+      )
+    } else {
+      // If we are dealing with a single tx
+      // decodedTxData is of type DecodedData
+      return (
+        <>
+          {tx.parameters.map((p, index) => (
+            <ParameterElement parameter={p} key={index} />
+          ))}
+        </>
+      )
+    }
   }
 
   return (
@@ -53,10 +62,8 @@ export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx 
         onClose={onClose}
         goBack={hideDecodedTxData}
       />
-
       <Hairline />
-
-      <Container>{body}</Container>
+      <Container>{getBody()}</Container>
     </>
   )
 }

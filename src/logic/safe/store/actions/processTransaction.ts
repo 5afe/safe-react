@@ -34,7 +34,7 @@ import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NETWORK_ID } from 'src/types/network.d'
-import { onboardUser } from 'src/components/ConnectButton'
+import { onboardUser } from 'src/logic/wallets/onboard'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean

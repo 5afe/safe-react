@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
+import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { getSDKWeb3Adapter, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { CodedException, Errors } from '../exceptions/CodedException'
-import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 import { store } from 'src/store'
 import { currentGasPrice, currentGasPriceOracles } from '../config/store/selectors'
 

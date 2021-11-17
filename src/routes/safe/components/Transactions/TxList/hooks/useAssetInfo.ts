@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { isCustomTxInfo, isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { currentNetwork } from 'src/logic/config/store/selectors'
-import { store } from 'src/store'
+import { useSelector } from 'react-redux'
 
 export type TokenTransferAsset = {
   type: 'Transfer'
@@ -33,6 +33,7 @@ const defaultTokenTransferAsset: TokenTransferAsset = {
 export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => {
   const [asset, setAsset] = useState<AssetInfo>()
   const amountWithSymbol = getTxAmount(txInfo)
+  const { nativeCurrency } = useSelector(currentNetwork)
 
   useEffect(() => {
     if (isTransferTxInfo(txInfo)) {
@@ -63,8 +64,6 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           break
         }
         case TokenType.NATIVE_COIN: {
-          const { nativeCurrency } = currentNetwork(store.getState())
-
           setAsset({
             type: 'Transfer',
             name: nativeCurrency.name ?? defaultTokenTransferAsset.name,
@@ -87,7 +86,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
     if (isCustomTxInfo(txInfo)) {
       setAsset(txInfo as Custom)
     }
-  }, [txInfo, amountWithSymbol])
+  }, [txInfo, amountWithSymbol, nativeCurrency.logoUri, nativeCurrency.name])
 
   return asset
 }

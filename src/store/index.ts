@@ -37,7 +37,11 @@ import currencyValues, {
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import networkConfig, { ConfigState, NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
-import appearance, { AppearanceState, APPEARANCE_REDUCER_ID } from 'src/logic/appearance/reducer/appearance'
+import appearance, {
+  AppearanceState,
+  APPEARANCE_REDUCER_ID,
+  initialAppearanceState,
+} from 'src/logic/appearance/reducer/appearance'
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -50,6 +54,7 @@ const localStorageConfig = {
   disableWarnings: true,
   preloadedState: {
     [CURRENCY_REDUCER_ID]: initialCurrencyState,
+    [ADDRESS_BOOK_REDUCER_ID]: initialAppearanceState,
   },
 }
 

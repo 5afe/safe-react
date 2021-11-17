@@ -10,6 +10,8 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import { currentSafe, currentSafeBalances } from 'src/logic/safe/store/selectors'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
+import { currentNetwork } from 'src/logic/config/store/selectors'
+import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const grantedSelector = createSelector(
   userAccountSelector,
@@ -17,13 +19,17 @@ export const grantedSelector = createSelector(
   (userAccount: string, safe: SafeRecord): boolean => isUserAnOwner(safe, userAccount),
 )
 
-const safeEthAsTokenSelector = createSelector(currentSafe, (safe?: SafeRecord): Token | undefined => {
-  if (!safe) {
-    return undefined
-  }
+const safeEthAsTokenSelector = createSelector(
+  currentNetwork,
+  currentSafe,
+  ({ nativeCurrency }: ChainInfo, safe?: SafeRecord): Token | undefined => {
+    if (!safe) {
+      return undefined
+    }
 
-  return getEthAsToken(safe.ethBalance)
-})
+    return getEthAsToken(nativeCurrency, safe.ethBalance)
+  },
+)
 
 export const extendedSafeTokensSelector = createSelector(
   currentSafeBalances,

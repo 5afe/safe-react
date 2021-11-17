@@ -2,11 +2,9 @@ import { List } from 'immutable'
 
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { currentNetwork } from 'src/logic/config/store/selectors'
-import { store } from 'src/store'
+import { NativeCurrency } from '@gnosis.pm/safe-react-gateway-sdk'
 
-export const getEthAsToken = (balance: string | number): Token => {
-  const { nativeCurrency } = currentNetwork(store.getState())
+export const getEthAsToken = (nativeCurrency: NativeCurrency, balance: string | number): Token => {
   return makeToken({
     ...nativeCurrency,
     balance: {

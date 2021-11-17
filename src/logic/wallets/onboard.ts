@@ -2,9 +2,10 @@ import Onboard from 'bnc-onboard'
 import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
 import { currentNetworkId, currentNetworkName } from '../config/store/selectors'
-import { setWeb3 } from './getWeb3'
+import { getWeb3, setWeb3 } from './getWeb3'
 import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
+import { shouldSwitchNetwork, switchNetwork } from './utils/network'
 import { getSupportedWallets } from './utils/walletList'
 
 const getOnboardConfiguration = () => {
@@ -66,6 +67,24 @@ export const onboard = (): API => {
   }
 
   return currentOnboardInstance
+}
+
+export const checkWallet = async (): Promise<boolean> => {
+  if (shouldSwitchNetwork()) {
+    const networkId = currentNetworkId(store.getState())
+    switchNetwork(onboard().getState().wallet, networkId).catch((e) => e.log())
+  }
+
+  return await onboard().walletCheck()
+}
+
+export const onboardUser = async (): Promise<boolean> => {
+  // before calling walletSelect you want to check if web3 has been instantiated
+  // which indicates that a wallet has already been selected
+  // and web3 has been instantiated with that provider
+  const web3 = getWeb3()
+  const walletSelected = web3 ? true : await onboard().walletSelect()
+  return walletSelected && checkWallet()
 }
 
 export default onboard

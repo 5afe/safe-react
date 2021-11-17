@@ -86,7 +86,7 @@ export const ReviewConfirm = ({
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
-  const { nativeCurrency } = useSelector(currentNetwork)
+  const { nativeCurrency, transactionService } = useSelector(currentNetwork)
   const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, safeAddress))
   const isOwner = useSelector(grantedSelector)
 
@@ -133,12 +133,12 @@ export const ReviewConfirm = ({
   // Decode tx data.
   useEffect(() => {
     const decodeTxData = async () => {
-      const res = await fetchTxDecoder(txData)
+      const res = await fetchTxDecoder(txData, transactionService)
       setDecodedData(res)
     }
 
     decodeTxData()
-  }, [txData])
+  }, [txData, transactionService])
 
   const handleUserConfirmation = (safeTxHash: string): void => {
     onUserConfirm(safeTxHash, requestId)

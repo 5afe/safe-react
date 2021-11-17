@@ -32,7 +32,7 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { currentNetwork, currentRpcServiceUrl } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
-import { store } from 'src/store'
+import { HttpProvider } from 'web3-core'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -79,9 +79,10 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
-const safeAppWeb3Provider = new Web3.providers.HttpProvider(currentRpcServiceUrl(store.getState()), {
-  timeout: 10_000,
-})
+const getSafeAppWeb3Provider = (rpcServiceUrl: string): HttpProvider =>
+  new Web3.providers.HttpProvider(rpcServiceUrl, {
+    timeout: 10_000,
+  })
 
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
@@ -89,6 +90,7 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { chainId, chainName, transactionService } = useSelector(currentNetwork)
+  const rpcServiceUrl = useSelector(currentRpcServiceUrl)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -135,7 +137,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         requestId,
         params,
       }),
-    [setConfirmTransactionModal, chainName],
+    [setConfirmTransactionModal],
   )
   const closeConfirmationModal = useCallback(
     () => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE),
@@ -202,7 +204,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       try {
         const response = new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
-          safeAppWeb3Provider.send(
+          getSafeAppWeb3Provider(rpcServiceUrl).send(
             {
               jsonrpc: '2.0',
               method: params.call,
@@ -235,7 +237,18 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       openSignMessageModal(message, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, chainId])
+  }, [
+    communicator,
+    openConfirmationModal,
+    safeAddress,
+    owners,
+    threshold,
+    openSignMessageModal,
+    chainId,
+    chainName,
+    rpcServiceUrl,
+    transactionService,
+  ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler

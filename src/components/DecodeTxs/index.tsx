@@ -9,7 +9,7 @@ import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } fro
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import { useSelector } from 'react-redux'
 import { currentBlockExplorerInfo, currentNetwork } from 'src/logic/config/store/selectors'
-import { AppReduxState, store } from 'src/store'
+import { AppReduxState } from 'src/store'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -110,39 +110,38 @@ export const BasicTxInfo = ({
   )
 }
 
-export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
-  let valueElement
-  const explorerUrl = currentBlockExplorerInfo(store.getState(), parameter.value)
+export const ParameterElement = ({ parameter }: { parameter: DecodedDataBasicParameter }): ReactElement => {
+  const explorerUrl = useSelector((state: AppReduxState) => currentBlockExplorerInfo(state, parameter.value))
 
-  if (parameter.type === 'address') {
-    valueElement = <EthHashInfo hash={parameter.value} showAvatar textSize="lg" showCopyBtn explorerUrl={explorerUrl} />
-  }
+  const getValueElement = (parameter: DecodedDataBasicParameter): ReactElement => {
+    if (parameter.type === 'address') {
+      return <EthHashInfo hash={parameter.value} showAvatar textSize="lg" showCopyBtn explorerUrl={explorerUrl} />
+    }
 
-  if (parameter.type.startsWith('bytes')) {
-    valueElement = (
-      <FlexWrapper margin={5}>
-        <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
-        <CopyToClipboardBtn textToCopy={parameter.value} />
-      </FlexWrapper>
-    )
-  }
+    if (parameter.type.startsWith('bytes')) {
+      return (
+        <FlexWrapper margin={5}>
+          <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
+          <CopyToClipboardBtn textToCopy={parameter.value} />
+        </FlexWrapper>
+      )
+    }
 
-  if (!valueElement) {
     let value = parameter.value
     if (parameter.type.endsWith('[]')) {
       try {
         value = JSON.stringify(parameter.value)
       } catch (e) {}
     }
-    valueElement = <Text size="lg">{value}</Text>
+    return <Text size="lg">{value}</Text>
   }
 
   return (
-    <ElementWrapper key={index}>
+    <ElementWrapper>
       <Text size="lg" strong>
         {parameter.name} ({parameter.type})
       </Text>
-      {valueElement}
+      {getValueElement(parameter)}
     </ElementWrapper>
   )
 }

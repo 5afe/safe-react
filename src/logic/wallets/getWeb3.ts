@@ -3,13 +3,13 @@ import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 
+import { store } from 'src/store'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { currentNetworkId, currentRpcServiceUrl } from '../config/store/selectors'
-import { store } from 'src/store'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {

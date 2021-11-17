@@ -8,7 +8,7 @@ import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { ReviewMessage } from './ReviewMessage'
 import { currentNetworkId } from 'src/logic/config/store/selectors'
-import { store } from 'src/store'
+import { useSelector } from 'react-redux'
 
 export type SignMessageModalProps = {
   isOpen: boolean
@@ -41,7 +41,7 @@ const convertToHumanReadableMessage = (message: string): string => {
 
 export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalProps): ReactElement => {
   const web3 = getWeb3ReadOnly()
-  const networkId = currentNetworkId(store.getState())
+  const networkId = useSelector(currentNetworkId)
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
   const txData = getSignMessageLibContractInstance(web3, networkId)
     .methods.signMessage(calculateMessageHash(message))

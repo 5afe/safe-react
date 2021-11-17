@@ -7,7 +7,7 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from '../wallets/store/selectors'
 import { currentNetwork } from '../config/store/selectors'
-import { store } from 'src/store'
+import { NativeCurrency } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type EstimateSafeCreationGasProps = {
   addresses: string[]
@@ -26,13 +26,13 @@ const estimateGas = async (
   numOwners: number,
   safeCreationSalt: number,
   addresses: string[],
+  nativeCurrency: NativeCurrency,
 ): Promise<SafeCreationEstimationResult> => {
   const [gasEstimation, gasPrice] = await Promise.all([
     estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt),
     calculateGasPrice(),
   ])
   const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-  const { nativeCurrency } = currentNetwork(store.getState())
   const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
   const gasCostFormatted = formatAmount(gasCost)
 
@@ -54,6 +54,7 @@ export const useEstimateSafeCreationGas = ({
     gasLimit: 0,
   })
   const userAccount = useSelector(userAccountSelector)
+  const { nativeCurrency } = useSelector(currentNetwork)
   // Serialize the addresses array so that it doesn't trigger the effect due to the dependencies
   const addressesSerialized = JSON.stringify(addresses)
 
@@ -63,8 +64,8 @@ export const useEstimateSafeCreationGas = ({
       return
     }
 
-    estimateGas(userAccount, numOwners, safeCreationSalt, addressesList)?.then(setGasEstimation)
-  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount])
+    estimateGas(userAccount, numOwners, safeCreationSalt, addressesList, nativeCurrency)?.then(setGasEstimation)
+  }, [numOwners, safeCreationSalt, addressesSerialized, userAccount, nativeCurrency])
 
   return gasEstimation
 }

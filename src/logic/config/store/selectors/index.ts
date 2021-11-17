@@ -2,7 +2,7 @@ import { ChainInfo, FEATURES, GasPriceOracle, GAS_PRICE_TYPE } from '@gnosis.pm/
 import { createSelector } from 'reselect'
 
 import { ETHEREUM_NETWORK, NETWORK_ID } from 'src/types/network.d'
-import { AppReduxState } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { INFURA_TOKEN } from 'src/utils/constants'
 import { ConfigState, NETWORK_CONFIG_REDUCER_ID } from '../reducer'
 
@@ -136,7 +136,7 @@ export const currentFeaturesEnabled = createSelector([currentNetwork], (networkC
   return networkConfig.features
 })
 
-export const isFeatureEnabled = createSelector(
+export const currentEnabledFeatures = createSelector(
   [currentNetwork, (_: AppReduxState, feature: FEATURES): FEATURES => feature],
   (networkConfig, feature): boolean => {
     return networkConfig.features.includes(feature)

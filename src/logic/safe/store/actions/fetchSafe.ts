@@ -9,11 +9,11 @@ import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { currentNetworkId } from 'src/logic/config/store/selectors'
+import { AppReduxState } from 'src/store'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -58,7 +58,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  */
 export const fetchSafe =
   (safeAddress: string, isSafeLoaded = false) =>
-  async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
+  async (dispatch: Dispatch<any>, getState: () => AppReduxState): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
       address = checksumAddress(safeAddress)
@@ -77,7 +77,7 @@ export const fetchSafe =
       return
     }
 
-    const state = store.getState()
+    const state = getState()
 
     // If the network has changed while the safe was being loaded,
     // ignore the result
