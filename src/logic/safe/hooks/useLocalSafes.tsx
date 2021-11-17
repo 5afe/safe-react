@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { sortedSafeListSelector } from 'src/components/SafeListSidebar/selectors'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { SafeRecordWithNames } from '../store/selectors'
@@ -13,7 +15,10 @@ const getEmptyLocalSafes = (): LocalSafes => {
 
 const useLocalSafes = (): LocalSafes => {
   const [localSafes, setLocalSafes] = useState<LocalSafes>(() => getEmptyLocalSafes())
+  const addedSafes = useSelector(sortedSafeListSelector)
+  const addedAddresses = addedSafes.map(({ address }) => address).join()
 
+  // Reload added Safes from the localStorage when addedAddresses changes
   useEffect(() => {
     const getLocalSafes = () => {
       Object.values(ETHEREUM_NETWORK).forEach(async (id) => {
@@ -26,7 +31,7 @@ const useLocalSafes = (): LocalSafes => {
     }
 
     getLocalSafes()
-  }, [])
+  }, [addedAddresses])
 
   return localSafes
 }
