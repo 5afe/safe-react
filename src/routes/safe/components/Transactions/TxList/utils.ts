@@ -8,7 +8,6 @@ import {
   MultisigExecutionInfo,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
-import { matchPath } from 'react-router'
 
 import { getNetworkInfo } from 'src/config'
 import {
@@ -16,11 +15,11 @@ import {
   isModuleExecutionInfo,
   isMultiSigExecutionDetails,
   isTransferTxInfo,
+  isTxQueued,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { history, SAFE_ROUTES, TRANSACTION_HASH_SLUG } from 'src/routes/routes'
 
 export const NOT_AVAILABLE = 'n/a'
 interface AmountData {
@@ -124,14 +123,6 @@ export const getTxTo = (tx: Transaction): AddressEx | undefined => {
   }
 }
 
-export const getTxAccordionExpandedProp = (): undefined | boolean => {
-  const match = matchPath(history.location.pathname, { path: SAFE_ROUTES.TRANSACTIONS })
-  const safeTxHash = match?.params?.[TRANSACTION_HASH_SLUG]
-
-  // Accordion takes a prop 'expanded' that shoudn't be set by default when multiple txs are displayed
-  return safeTxHash === undefined ? undefined : !!safeTxHash
-}
-
 // Our store does not match the details returned from the endpoint
 export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction => {
   const getMissingSigners = ({
@@ -164,9 +155,15 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
     ? txDetails.detailedExecutionInfo
     : getMultisigExecutionInfo(txDetails)
 
+  const timestamp = isTxQueued(txDetails.txStatus)
+    ? isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)
+      ? txDetails.detailedExecutionInfo.submittedAt
+      : 0
+    : txDetails.executedAt || 0
+
   const tx: Transaction = {
     id: txDetails.txId,
-    timestamp: txDetails.executedAt || 0, // Historial transactions always have an executedAt, queued don't use it
+    timestamp,
     txStatus: txDetails.txStatus,
     txInfo: txDetails.txInfo,
     executionInfo,

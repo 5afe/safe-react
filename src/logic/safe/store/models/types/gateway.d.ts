@@ -11,6 +11,7 @@ import {
   TransactionDetails as GWTransactionDetails,
   TransactionListItem,
   TransactionListPage,
+  TransactionStatus,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export type Transaction = TransactionSummary & {
@@ -86,28 +87,32 @@ export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
   return value.type === 'Creation'
 }
 
-export const isStatusSuccess = (value: Transaction['txStatus']): value is 'SUCCESS' => {
-  return value === 'SUCCESS'
+export const isStatusSuccess = (value: TransactionStatus): value is typeof TransactionStatus.SUCCESS => {
+  return value === TransactionStatus.SUCCESS
 }
 
-export const isStatusFailed = (value: Transaction['txStatus']): value is 'FAILED' => {
-  return value === 'FAILED'
+export const isStatusFailed = (value: TransactionStatus): value is typeof TransactionStatus.FAILED => {
+  return value === TransactionStatus.FAILED
 }
 
-export const isStatusCancelled = (value: Transaction['txStatus']): value is 'CANCELLED' => {
-  return value === 'CANCELLED'
+export const isStatusCancelled = (value: TransactionStatus): value is typeof TransactionStatus.CANCELLED => {
+  return value === TransactionStatus.CANCELLED
 }
 
-export const isStatusPending = (value: Transaction['txStatus']): value is 'PENDING' => {
-  return value === 'PENDING'
+export const isStatusPending = (value: TransactionStatus): value is typeof TransactionStatus.PENDING => {
+  return value === TransactionStatus.PENDING
 }
 
-export const isStatusAwaitingConfirmation = (value: Transaction['txStatus']): value is 'AWAITING_CONFIRMATIONS' => {
-  return value === 'AWAITING_CONFIRMATIONS'
+export const isStatusAwaitingConfirmation = (
+  value: TransactionStatus,
+): value is typeof TransactionStatus.AWAITING_CONFIRMATIONS => {
+  return value === TransactionStatus.AWAITING_CONFIRMATIONS
 }
 
-export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is 'WILL_BE_REPLACED' => {
-  return value === 'WILL_BE_REPLACED'
+export const isStatusWillBeReplaced = (
+  value: TransactionStatus,
+): value is typeof TransactionStatus.WILL_BE_REPLACED => {
+  return value === TransactionStatus.WILL_BE_REPLACED
 }
 
 export const isMultiSigExecutionDetails = (
@@ -124,4 +129,28 @@ export const isModuleExecutionInfo = (
 
 export const isMultisigExecutionInfo = (value: TransactionSummary['executionInfo']): value is MultisigExecutionInfo => {
   return value?.type === 'MULTISIG'
+}
+
+export const isTxPending = (
+  value: TransactionStatus,
+): value is TransactionStatus.PENDING | TransactionStatus.PENDING_FAILED => {
+  return isStatusPending(value) || value === TransactionStatus.PENDING_FAILED
+}
+
+export const isTxQueued = (
+  value: TransactionStatus,
+): value is
+  | TransactionStatus.PENDING
+  | TransactionStatus.PENDING_FAILED
+  | TransactionStatus.AWAITING_CONFIRMATIONS
+  | TransactionStatus.AWAITING_EXECUTION
+  | TransactionStatus.WILL_BE_REPLACED => {
+  return (
+    isStatusPending(value) ||
+    [
+      TransactionStatus.AWAITING_CONFIRMATIONS,
+      TransactionStatus.AWAITING_EXECUTION,
+      TransactionStatus.WILL_BE_REPLACED,
+    ].includes(value)
+  )
 }

@@ -8,7 +8,6 @@ import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxHoverContext } from './TxHoverProvider'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
 import { TxDetails } from './TxDetails'
-import { getTxAccordionExpandedProp } from './utils'
 
 type TxQueueRowProps = {
   isGrouped?: boolean
@@ -16,7 +15,6 @@ type TxQueueRowProps = {
 }
 
 export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps): ReactElement => {
-  const shouldExpand = getTxAccordionExpandedProp()
   const { activeHover } = useContext(TxHoverContext)
   const actions = useTransactionActions(transaction)
   const [tx, setTx] = useState<Transaction>(transaction)
@@ -37,9 +35,8 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         unmountOnExit: true,
         appear: true,
       }}
-      expanded={shouldExpand}
     >
-      <StyledAccordionSummary {...(shouldExpand && { expandIcon: null })}>
+      <StyledAccordionSummary>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} actions={actions} />
       </StyledAccordionSummary>
       <AccordionDetails>

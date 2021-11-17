@@ -80,13 +80,19 @@ type QueueTxListProps = {
   transactions: TransactionDetails['transactions']
 }
 
-export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
+export const QueueTxListTitle = (): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const nonce = useSelector(currentSafeNonce)
   const title =
     txLocation === 'queued.next'
       ? 'NEXT TRANSACTION'
       : `QUEUE - Transaction with nonce ${nonce} needs to be executed first`
+
+  return <SubTitle size="lg">{title}</SubTitle>
+}
+
+export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
+  const { txLocation } = useContext(TxLocationContext)
 
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {
@@ -100,7 +106,7 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
 
   return (
     <StyledTransactionsGroup>
-      <SubTitle size="lg">{title}</SubTitle>
+      <QueueTxListTitle />
       <StyledTransactions>
         {transactions.map(([nonce, txs]) => (
           <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />

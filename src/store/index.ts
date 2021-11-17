@@ -18,7 +18,7 @@ import currentSession, {
 } from 'src/logic/currentSession/store/reducer/currentSession'
 import { Notification } from 'src/logic/notifications'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
-import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
+import { StoreStructure } from 'src/logic/safe/store/models/types/gateway.d'
 import { gatewayTransactions, GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'

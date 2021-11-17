@@ -1,8 +1,8 @@
-import { MultisigExecutionDetails, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionDetails, MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTxPending, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
@@ -11,7 +11,6 @@ import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/T
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import { isTxPending } from 'src/logic/safe/store/actions/utils'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -84,8 +83,9 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const disabledActions = useMemo(
     () =>
       isPending ||
-      (transaction.txStatus === 'AWAITING_EXECUTION' && locationContext.current.txLocation === 'queued.queued') ||
-      (transaction.txStatus === 'AWAITING_CONFIRMATIONS' && !signaturePending(currentUser)),
+      (transaction.txStatus === TransactionStatus.AWAITING_EXECUTION &&
+        locationContext.current.txLocation === 'queued.queued') ||
+      (transaction.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),
     [currentUser, isPending, signaturePending, transaction.txStatus],
   )
 

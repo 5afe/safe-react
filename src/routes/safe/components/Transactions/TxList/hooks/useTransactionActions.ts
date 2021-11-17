@@ -7,9 +7,9 @@ import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gat
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
-import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState } from 'src/store'
+import { TxLocationContext } from '../TxLocationProvider'
 
 export const isThresholdReached = (executionInfo: MultisigExecutionInfo): boolean => {
   const { confirmationsSubmitted, confirmationsRequired } = executionInfo
@@ -79,7 +79,7 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
     missingSigners,
     safeAddress,
     transaction,
-    transactionsByNonce,
+    transactionsByNonce.length,
     txLocation,
   ])
 
