@@ -70,3 +70,6 @@ export const getEntryIndex = (
     }
     return chainId.toString() === addressBookEntry.chainId.toString() && hasSameChecksumAddress
   })
+
+export const hasSameAddressAndChainId = (arrVal: AddressBookEntry, othVal: AddressBookEntry): boolean =>
+  arrVal.address === othVal.address && arrVal.chainId === othVal.chainId

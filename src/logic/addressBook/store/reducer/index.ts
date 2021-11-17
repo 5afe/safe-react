@@ -1,8 +1,9 @@
 import { Action, handleActions } from 'redux-actions'
+import uniqwith from 'lodash.uniqwith'
 
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
-import { getEntryIndex, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { getEntryIndex, hasSameAddressAndChainId, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { AppReduxState } from 'src/store'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
@@ -27,7 +28,9 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
         newState.push(addressBookEntry)
       }
     })
-  return newState
+
+  // filter out potential duplicates in the store
+  return uniqwith(newState, hasSameAddressAndChainId)
 }
 export default handleActions<AppReduxState['addressBook'], Payloads>(
   {
