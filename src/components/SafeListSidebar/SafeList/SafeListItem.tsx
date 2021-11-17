@@ -60,27 +60,31 @@ const SafeListItem = ({
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
 
-  useEffect(() => {
-    if (isCurrentSafe && shouldScrollToSafe) {
-      safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [isCurrentSafe, shouldScrollToSafe])
-
-  const handleLoadSafe = (): void => {
-    onNetworkSwitch?.()
-    setNetwork(networkId)
-    onSafeClick()
-  }
-
   const routesSlug: SafeRouteParams = {
     shortName: getShortChainNameById(networkId),
     safeAddress: address,
   }
 
   const handleOpenSafe = (): void => {
-    handleLoadSafe()
+    onSafeClick()
+    onNetworkSwitch?.()
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug))
   }
+
+  const handleLoadSafe = (): void => {
+    onSafeClick()
+    onNetworkSwitch?.()
+    history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
+
+    // Navigating to LOAD_SPECIFIC_SAFE_ROUTE doesn't trigger a network switch
+    setNetwork(networkId)
+  }
+
+  useEffect(() => {
+    if (isCurrentSafe && shouldScrollToSafe) {
+      safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [isCurrentSafe, shouldScrollToSafe])
 
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
