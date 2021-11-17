@@ -1,8 +1,13 @@
-import { MultisigExecutionDetails, MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionDetails, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { isTxPending, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isStatusAwaitingConfirmation,
+  isStatusAwaitingExecution,
+  isTxPending,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
@@ -83,9 +88,8 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const disabledActions = useMemo(
     () =>
       isPending ||
-      (transaction.txStatus === TransactionStatus.AWAITING_EXECUTION &&
-        locationContext.current.txLocation === 'queued.queued') ||
-      (transaction.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),
+      (isStatusAwaitingExecution(transaction.txStatus) && locationContext.current.txLocation === 'queued.queued') ||
+      (isStatusAwaitingConfirmation(transaction.txStatus) && !signaturePending(currentUser)),
     [currentUser, isPending, signaturePending, transaction.txStatus],
   )
 

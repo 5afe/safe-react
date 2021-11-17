@@ -87,32 +87,32 @@ export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
   return value.type === 'Creation'
 }
 
-export const isStatusSuccess = (value: TransactionStatus): value is typeof TransactionStatus.SUCCESS => {
-  return value === TransactionStatus.SUCCESS
+export const isStatusSuccess = (value: TransactionStatus): value is 'SUCCESS' => {
+  return value === 'SUCCESS'
 }
 
-export const isStatusFailed = (value: TransactionStatus): value is typeof TransactionStatus.FAILED => {
-  return value === TransactionStatus.FAILED
+export const isStatusFailed = (value: TransactionStatus): value is 'FAILED' => {
+  return value === 'FAILED'
 }
 
-export const isStatusCancelled = (value: TransactionStatus): value is typeof TransactionStatus.CANCELLED => {
-  return value === TransactionStatus.CANCELLED
+export const isStatusCancelled = (value: TransactionStatus): value is 'CANCELLED' => {
+  return value === 'CANCELLED'
 }
 
-export const isStatusPending = (value: TransactionStatus): value is typeof TransactionStatus.PENDING => {
-  return value === TransactionStatus.PENDING
+export const isStatusPending = (value: TransactionStatus): value is 'PENDING' => {
+  return value === 'PENDING'
 }
 
-export const isStatusAwaitingConfirmation = (
-  value: TransactionStatus,
-): value is typeof TransactionStatus.AWAITING_CONFIRMATIONS => {
-  return value === TransactionStatus.AWAITING_CONFIRMATIONS
+export const isStatusAwaitingConfirmation = (value: TransactionStatus): value is 'AWAITING_CONFIRMATIONS' => {
+  return value === 'AWAITING_CONFIRMATIONS'
 }
 
-export const isStatusWillBeReplaced = (
-  value: TransactionStatus,
-): value is typeof TransactionStatus.WILL_BE_REPLACED => {
-  return value === TransactionStatus.WILL_BE_REPLACED
+export const isStatusAwaitingExecution = (value: TransactionStatus): value is 'AWAITING_EXECUTION' => {
+  return value === 'AWAITING_EXECUTION'
+}
+
+export const isStatusWillBeReplaced = (value: TransactionStatus): value is 'WILL_BE_REPLACED' => {
+  return value === 'WILL_BE_REPLACED'
 }
 
 export const isMultiSigExecutionDetails = (
@@ -131,26 +131,14 @@ export const isMultisigExecutionInfo = (value: TransactionSummary['executionInfo
   return value?.type === 'MULTISIG'
 }
 
-export const isTxPending = (
-  value: TransactionStatus,
-): value is TransactionStatus.PENDING | TransactionStatus.PENDING_FAILED => {
-  return isStatusPending(value) || value === TransactionStatus.PENDING_FAILED
+export const isTxPending = (value: TransactionStatus): value is 'PENDING' | 'PENDING_FAILED' => {
+  return ['PENDING', 'PENDING_FAILED'].includes(value)
 }
 
 export const isTxQueued = (
   value: TransactionStatus,
-): value is
-  | TransactionStatus.PENDING
-  | TransactionStatus.PENDING_FAILED
-  | TransactionStatus.AWAITING_CONFIRMATIONS
-  | TransactionStatus.AWAITING_EXECUTION
-  | TransactionStatus.WILL_BE_REPLACED => {
-  return (
-    isStatusPending(value) ||
-    [
-      TransactionStatus.AWAITING_CONFIRMATIONS,
-      TransactionStatus.AWAITING_EXECUTION,
-      TransactionStatus.WILL_BE_REPLACED,
-    ].includes(value)
+): value is 'PENDING' | 'PENDING_FAILED' | 'AWAITING_CONFIRMATIONS' | 'AWAITING_EXECUTION' | 'WILL_BE_REPLACED' => {
+  return ['PENDING', 'PENDING_FAILED', 'AWAITING_CONFIRMATIONS', 'AWAITING_EXECUTION', 'WILL_BE_REPLACED'].includes(
+    value,
   )
 }
