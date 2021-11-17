@@ -66,7 +66,7 @@ export const getEntryIndex = (
     try {
       hasSameChecksumAddress = checksumAddress(address) === checksumAddress(addressBookEntry.address)
     } catch (e) {
-      console.error(e)
+      return false
     }
     return chainId.toString() === addressBookEntry.chainId.toString() && hasSameChecksumAddress
   })
