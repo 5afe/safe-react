@@ -47,7 +47,6 @@ type Props = {
 
 const SafeListItem = ({
   onSafeClick,
-  onNetworkSwitch,
   address,
   ethBalance,
   showAddSafeLink = false,
@@ -69,17 +68,14 @@ const SafeListItem = ({
 
   const handleOpenSafe = (): void => {
     onSafeClick()
-    onNetworkSwitch?.()
+    dispatch(setNetworkId(networkId))
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug))
   }
 
   const handleLoadSafe = (): void => {
     onSafeClick()
-    onNetworkSwitch?.()
-    history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
-
-    // Navigating to LOAD_SPECIFIC_SAFE_ROUTE doesn't trigger a network switch
     dispatch(setNetworkId(networkId))
+    history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
   }
 
   useEffect(() => {
@@ -93,15 +89,15 @@ const SafeListItem = ({
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <StyledEthHashInfo hash={address} name={safeName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
-        {ethBalance ? (
-          `${formatAmount(ethBalance)} ${nativeCurrency.symbol}`
-        ) : showAddSafeLink ? (
-          <Link to={generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug)} onClick={handleLoadSafe}>
-            <Text size="sm" color="primary">
-              Add Safe
-            </Text>
-          </Link>
-        ) : null}
+        {ethBalance
+          ? `${formatAmount(ethBalance)} ${nativeCurrency.symbol}`
+          : showAddSafeLink && (
+              <Link to={generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug)} onClick={handleLoadSafe}>
+                <Text size="sm" color="primary">
+                  Add Safe
+                </Text>
+              </Link>
+            )}
       </ListItemSecondaryAction>
     </ListItem>
   )
