@@ -47,7 +47,6 @@ type Props = {
 
 const SafeListItem = ({
   onSafeClick,
-  onNetworkSwitch,
   address,
   ethBalance,
   showAddSafeLink = false,
@@ -69,17 +68,14 @@ const SafeListItem = ({
 
   const handleOpenSafe = (): void => {
     onSafeClick()
-    onNetworkSwitch?.()
+    dispatch(setNetworkId(networkId))
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug))
   }
 
   const handleLoadSafe = (): void => {
     onSafeClick()
-    onNetworkSwitch?.()
-    history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
-
-    // Navigating to LOAD_SPECIFIC_SAFE_ROUTE doesn't trigger a network switch
     dispatch(setNetworkId(networkId))
+    history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
   }
 
   useEffect(() => {
