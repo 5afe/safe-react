@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { sortedSafeListSelector } from 'src/components/SafeListSidebar/selectors'
 import { currentNetworks } from 'src/logic/config/store/selectors'
-
-import { ETHEREUM_NETWORK } from 'src/types/network.d'
+import { ETHEREUM_NETWORK } from 'src/types/network'
 import { SafeRecordProps } from '../store/models/safe'
+
 import { getLocalNetworkSafesById } from '../utils'
 
-type EmptyLocalSafes = Record<ETHEREUM_NETWORK, never[]>
-type LocalSafes = Record<ETHEREUM_NETWORK, SafeRecordProps[] | never[]>
+type LocalSafes = Record<ETHEREUM_NETWORK, SafeRecordProps[]>
 
 const useLocalSafes = (): LocalSafes => {
   const networks = useSelector(currentNetworks)
 
-  const getEmptyLocalSafes = (): EmptyLocalSafes =>
-    networks.reduce((safes, { chainId }) => ({ ...safes, [chainId]: [] }), {} as EmptyLocalSafes)
+  const getEmptyLocalSafes = () => networks.reduce((safes, { chainId }) => ({ ...safes, [chainId]: [] }), {})
 
-  const [localSafes, setLocalSafes] = useState<LocalSafes>(getEmptyLocalSafes)
+  const [localSafes, setLocalSafes] = useState<LocalSafes>(() => getEmptyLocalSafes())
+  const addedSafes = useSelector(sortedSafeListSelector)
+  const addedAddresses = addedSafes.map(({ address }) => address).join()
 
+  // Reload added Safes from the localStorage when addedAddresses changes
   useEffect(() => {
     const getLocalSafes = () => {
       networks.forEach(async ({ chainId }) => {
@@ -29,7 +31,7 @@ const useLocalSafes = (): LocalSafes => {
     }
 
     getLocalSafes()
-  }, [networks])
+  }, [networks, addedAddresses])
 
   return localSafes
 }

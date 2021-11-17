@@ -98,9 +98,10 @@ export const extractPrefixedSafeAddress = (
   const isChainSpecificAddress = parts.length === 2
   const shortName = isChainSpecificAddress ? parts[0] : currentChainShortName
   const safeAddress = isChainSpecificAddress ? parts[1] : parts[0]
+
   return {
     shortName: isValidShortName(shortName) ? shortName : currentChainShortName,
-    safeAddress: checksumAddress(safeAddress) || '',
+    safeAddress: checksumAddress(safeAddress),
   }
 }
 
