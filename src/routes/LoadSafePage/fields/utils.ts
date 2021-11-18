@@ -8,15 +8,12 @@ import {
 } from './loadFields'
 
 export function getLoadSafeName(formValues: LoadSafeFormValues, addressBook: AddressBookMap): string {
-  let safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
-  try {
-    safeAddress = checksumAddress(safeAddress)
-  } catch (e) {
-    // ignore error
-  }
+  let safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS]
+  safeAddress = safeAddress ? checksumAddress(safeAddress) : ''
+
   return (
     formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] ||
-    addressBook[safeAddress]?.name ||
+    (safeAddress ? addressBook[safeAddress]?.name : '') ||
     formValues[FIELD_LOAD_SUGGESTED_SAFE_NAME]
   )
 }

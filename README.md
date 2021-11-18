@@ -18,19 +18,12 @@ For support requests, please open up a [bug issue](https://github.com/gnosis/saf
 - [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
 - [safe-react-components](https://github.com/gnosis/safe-react-components)
 
-## Production deployments
+## Deployed environments
 
-This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
-
-Besides the Ethereum Mainnet, the following networks are supported:
-
-- [Rinkeby Testnet](https://gnosis-safe.io/app/rinkeby)
-- [xDai](https://gnosis-safe.io/app/xdai)
-- [Polygon](https://gnosis-safe.io/app/polygon)
-- [Binance Smart Chain](https://gnosis-safe.io/app/bsc)
-- [Arbitrum](https://gnosis-safe.io/app/arbitrum)
-- [Energy Web Chain](https://gnosis-safe.io/app/ewc)
-- [Volta Testnet](https://gnosis-safe.io/app/volta)
+* Production: https://gnosis-safe.io/app/
+* Staging: https://safe-team.staging.gnosisdev.com/app/
+* Dev: https://safe-team.dev.gnosisdev.com/app/
+* PRs: https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/
 
 ## Getting Started
 
