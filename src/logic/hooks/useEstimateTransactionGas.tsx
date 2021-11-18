@@ -20,18 +20,12 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { EXTRA_GAS_FACTOR } from 'src/config/chain-workarounds'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
   SUCCESS = 'SUCCESS',
-}
-
-// How much to add to gasLimit per network
-// Defaults to x1 (i.e. no extra gas)
-const EXTRA_GAS_FACTOR = {
-  [ETHEREUM_NETWORK.ARBITRUM]: 1.2, // +20%
 }
 
 export const checkIfTxIsExecution = (
