@@ -132,6 +132,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
               isCreation={isCreation}
               isExecution={isExecution}
               isOffChainSignature={isOffChainSignature}
+              lastTxNonce={txParameters.lastTxNonce}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

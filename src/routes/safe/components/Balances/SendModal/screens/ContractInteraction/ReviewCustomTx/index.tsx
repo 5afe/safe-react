@@ -168,6 +168,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               isCreation={isCreation}
               isExecution={doExecute}
               isOffChainSignature={isOffChainSignature}
+              lastTxNonce={txParameters.lastTxNonce}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

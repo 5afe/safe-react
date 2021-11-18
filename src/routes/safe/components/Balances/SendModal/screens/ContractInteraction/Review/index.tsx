@@ -242,6 +242,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             isCreation={isCreation}
             isExecution={doExecute}
             isOffChainSignature={isOffChainSignature}
+            lastTxNonce={txParameters.lastTxNonce}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

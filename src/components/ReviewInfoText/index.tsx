@@ -7,7 +7,13 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { lg, sm } from 'src/theme/variables'
 import { TransactionFees } from '../TransactionsFees'
 
-type ReviewInfoTextProps = Parameters<typeof TransactionFees>[0] & { safeNonce?: string; testId?: string }
+type CustomReviewInfoTextProps = {
+  safeNonce?: string
+  lastTxNonce?: number
+  testId?: string
+}
+
+type ReviewInfoTextProps = Parameters<typeof TransactionFees>[0] & CustomReviewInfoTextProps
 
 const ReviewInfoTextWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
@@ -19,16 +25,20 @@ export const ReviewInfoText = ({
   isCreation,
   isExecution,
   isOffChainSignature,
+  lastTxNonce,
   safeNonce = '',
-  txEstimationExecutionStatus,
   testId,
+  txEstimationExecutionStatus,
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
-  const transactionsToGo = parseInt(safeNonce, 10) - nonce
+  const safeNonceNumber = parseInt(safeNonce, 10)
+  const shouldShowWarning = lastTxNonce ? safeNonceNumber > lastTxNonce + 1 : false
+
+  const transactionsToGo = safeNonceNumber - nonce
 
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
-      {transactionsToGo > 0 ? (
+      {shouldShowWarning ? (
         <Paragraph size="lg" align="center">
           <Text size="lg" as="span" color="text" strong>
             {transactionsToGo}

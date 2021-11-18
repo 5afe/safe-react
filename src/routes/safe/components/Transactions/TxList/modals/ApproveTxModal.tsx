@@ -373,6 +373,7 @@ export const ApproveTxModal = ({
                   isCreation={isCreation}
                   isExecution={doExecute}
                   isOffChainSignature={isOffChainSignature}
+                  lastTxNonce={txParameters.lastTxNonce}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

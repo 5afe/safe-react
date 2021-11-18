@@ -159,6 +159,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                   isCreation={isCreation}
                   isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
+                  lastTxNonce={txParameters.lastTxNonce}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

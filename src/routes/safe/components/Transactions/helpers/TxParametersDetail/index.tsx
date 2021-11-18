@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
-import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
 
@@ -21,8 +21,8 @@ const StyledText = styled(Text)`
   margin: 8px 0 0 0;
 `
 
-const ColoredText = styled(Text)<{ isFuture: boolean }>`
-  color: ${(props) => (props.isFuture ? 'red' : props.color)};
+const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
+  color: ${(props) => (props.isOutOfOrder ? 'red' : props.color)};
 `
 
 const StyledButtonLink = styled(ButtonLink)`
@@ -53,19 +53,19 @@ export const TxParametersDetail = ({
   isTransactionExecution,
   isOffChainSignature,
 }: Props): ReactElement | null => {
-  const { nonce } = useSelector(currentSafe)
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
-  const { safeNonce = '' } = txParameters
-  const isSafeNonceFuture = parseInt(safeNonce, 10) > nonce
-  const [isAccordionExpanded, setIsAccordionExpanded] = useState(isSafeNonceFuture)
+  const { safeNonce = '', lastTxNonce } = txParameters
+  const safeNonceNumber = parseInt(safeNonce, 10)
+  const isNonceOutOfOrder = lastTxNonce ? safeNonceNumber > lastTxNonce + 1 : false
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(isNonceOutOfOrder)
 
   useEffect(() => {
-    if (parseInt(safeNonce, 10) > nonce) {
+    if (lastTxNonce && safeNonceNumber > lastTxNonce + 1) {
       setIsAccordionExpanded(true)
     }
-  }, [nonce, safeNonce, txParameters])
+  }, [lastTxNonce, safeNonceNumber])
 
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
     return null
@@ -89,14 +89,14 @@ export const TxParametersDetail = ({
           <TxParameterWrapper>
             <ColoredText
               size="lg"
-              isFuture={isSafeNonceFuture}
+              isOutOfOrder={isNonceOutOfOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               Safe nonce
             </ColoredText>
             <ColoredText
               size="lg"
-              isFuture={isSafeNonceFuture}
+              isOutOfOrder={isNonceOutOfOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               {txParameters.safeNonce}
