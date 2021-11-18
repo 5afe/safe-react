@@ -18,7 +18,7 @@ import {
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { currentEnabledFeatures, currentNetworkId } from 'src/logic/config/store/selectors'
+import { isFeatureEnabled, currentNetworkId } from 'src/logic/config/store/selectors'
 import { AppReduxState } from 'src/store'
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -47,9 +47,7 @@ const BaseAddressBookInput = ({
   validationText,
 }: BaseAddressBookInputProps): ReactElement => {
   const networkId = useSelector(currentNetworkId)
-  const isDomainLookupEnabled = useSelector((state: AppReduxState) =>
-    currentEnabledFeatures(state, FEATURES.DOMAIN_LOOKUP),
-  )
+  const isDomainLookupEnabled = useSelector((state: AppReduxState) => isFeatureEnabled(state, FEATURES.DOMAIN_LOOKUP))
 
   const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
     setSelectedEntry(addressEntry)

@@ -29,7 +29,7 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { currentNetwork, currentRpcServiceUrl } from 'src/logic/config/store/selectors'
+import { currentNetwork, currentSafeAppsRpcServiceUrl } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
 import { HttpProvider } from 'web3-core'
@@ -90,7 +90,7 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { chainId, chainName, transactionService } = useSelector(currentNetwork)
-  const rpcServiceUrl = useSelector(currentRpcServiceUrl)
+  const rpcServiceUrl = useSelector(currentSafeAppsRpcServiceUrl)
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)

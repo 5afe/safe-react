@@ -8,7 +8,7 @@ import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { currentEnabledFeatures } from 'src/logic/config/store/selectors'
+import { isFeatureEnabled } from 'src/logic/config/store/selectors'
 import { store } from 'src/store'
 
 type FeatureConfigByVersion = {
@@ -48,8 +48,7 @@ const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, ver
 
 export const enabledFeatures = (version?: string): FEATURES[] => {
   return FEATURES_BY_VERSION.reduce((acc, feature: Feature) => {
-    const isFeatureEnabled = currentEnabledFeatures(store.getState(), feature.name)
-    if (isFeatureEnabled && checkFeatureEnabledByVersion(feature, version)) {
+    if (isFeatureEnabled(store.getState(), feature.name) && checkFeatureEnabledByVersion(feature, version)) {
       return [...acc, feature.name]
     }
     return acc

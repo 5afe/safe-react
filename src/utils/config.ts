@@ -21,13 +21,34 @@ import { ETHERSCAN_API_KEY } from 'src/utils/constants'
 //   }
 // }
 
+const interpolateUrl = (string, values) => string.replace(/{{(.*?)}}/g, (match, offset) => values[offset])
+
+const path = 'theresalways/{what}/inthe/{fruit}-stand/{who}'
+const paths = {
+  what: 'money',
+  fruit: 'banana',
+  who: 'michael',
+}
+
+const expected = 'theresalways/money/inthe/banana-stand/michael'
+
+const url = interpolateUrl(path, paths)
+
+console.log(`Is Equal: ${expected === url}`)
+console.log(`URL: ${url}`)
+
 const fetchContractABI = memoize(
   async (url: ChainInfo['blockExplorerUriTemplate']['api'], contractAddress: string, apiKey?: string) => {
+    const params = {
+      module: 'contract',
+      action: 'getAbi',
+      apiKey,
+    }
+
     const apiUrl = url
-      .replace('{{module}}', 'contract')
-      .replace('{{action}}', 'getAbi')
-      .replace('{{address}}', contractAddress)
-      .replace(apiKey ? '{{apiKey}}' : '&apiKey={{apiKey}}', apiKey || '')
+      .replace(/{{(.*?)}}/g, (_, key) => params[key])
+      // Remove leftover template params (if no apiKey is provided)
+      .replace('&apiKey={{apiKey}}', '')
 
     const response = await fetch(apiUrl)
 
@@ -44,12 +65,7 @@ const getExplorerApiKey = (blockExplorer: string): string | undefined =>
   blockExplorer.includes('etherscan') ? ETHERSCAN_API_KEY : undefined
 
 export const getContractABI = async (contractAddress: string): Promise<any> => {
-  const blockExplorerUriTemplate = currentExporerUriTemplate(store.getState())
-
-  if (!blockExplorerUriTemplate) return undefined
-
-  const { api } = blockExplorerUriTemplate
-
+  const { api } = currentExporerUriTemplate(store.getState())
   const apiKey = getExplorerApiKey(api)
 
   try {

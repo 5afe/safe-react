@@ -19,10 +19,7 @@ export const currentNetworkId = createSelector([networkConfigState], (configStat
 
 type NetworkConfig = ConfigState['chains']['results'][number]
 
-// TODO: remove all instances of question marks in places, search for '?.
-
 const findNetworkById = (configState: ConfigState, networkId: string): NetworkConfig => {
-  // FIXME: Should we leave it as always defined?
   return configState.chains.results.find(({ chainId }) => chainId === networkId)!
 }
 
@@ -32,11 +29,6 @@ export const getNetworkById = createSelector(
   [networkConfigState, (_: AppReduxState, networkId: string): string => networkId],
   findNetworkById,
 )
-
-// If this is undefined then the networkId needs to be set
-// export const getChainId = createSelector([getNetwork], (networkConfig): NetworkConfig['chainId'] | undefined => {
-//   return networkConfig?.chainId
-// })
 
 export const currentNetworkName = createSelector([currentNetwork], (networkConfig): NetworkConfig['chainName'] => {
   return networkConfig.chainName
@@ -49,14 +41,9 @@ export const currentShortName = createSelector([currentNetwork], (networkConfig)
 export const getNetworkByShortName = createSelector(
   [networkConfigState, (_: AppReduxState['networkConfig'], shortName: ETHEREUM_NETWORK): string => shortName],
   (networkConfig, shortName): NetworkConfig => {
-    // FIXME: Should we leave it as always defined?
     return networkConfig.chains.results.find((network) => network.shortName === shortName)!
   },
 )
-
-export const currentNetworkTheme = createSelector([currentNetwork], (networkConfig): NetworkConfig['theme'] => {
-  return networkConfig.theme
-})
 
 export const currentGasPriceOracles = createSelector(
   [currentNetwork],
@@ -70,7 +57,7 @@ export const currentGasPriceOracles = createSelector(
 
 // FIXME: Not sure if this is correct. We had a fixed gasPrice value before
 export const currentGasPrice = createSelector([currentGasPriceOracles], (oracles): string => {
-  return oracles?.[0].gweiFactor || ''
+  return oracles[0].gweiFactor || ''
 })
 
 export const currentTxServiceUrl = createSelector(
@@ -84,18 +71,37 @@ export const currentTokensServiceBaseUrl = createSelector([currentTxServiceUrl],
   return `${transactionService}/tokens`
 })
 
+const getTokenizedRpcUrl = (chainId: NetworkConfig['chainId'], url: NetworkConfig['rpcUri']['value']): string => {
+  const usesInfuraRPC = [NETWORK_ID.MAINNET, NETWORK_ID.RINKEBY, NETWORK_ID.POLYGON].includes(chainId as NETWORK_ID)
+  return usesInfuraRPC ? `${url}/${INFURA_TOKEN}` : url
+}
+
 export const currentRpcServiceUrl = createSelector(
   [currentNetwork],
   (networkConfig): NetworkConfig['rpcUri']['value'] => {
-    const usesInfuraRPC = [NETWORK_ID.MAINNET, NETWORK_ID.RINKEBY, NETWORK_ID.POLYGON].includes(
-      networkConfig.chainId as NETWORK_ID,
-    )
-
-    return usesInfuraRPC ? `${networkConfig.rpcUri.value}/${INFURA_TOKEN}` : networkConfig.rpcUri.value
+    return getTokenizedRpcUrl(networkConfig.chainId, networkConfig.rpcUri.value)
   },
 )
 
-// TODO: Check if this should be used instead of the const
+export const currentSafeAppsRpcServiceUrl = createSelector(
+  [currentNetwork],
+  (networkConfig): NetworkConfig['rpcUri']['value'] => {
+    return getTokenizedRpcUrl(networkConfig.chainId, networkConfig.rpcUri.value)
+  },
+)
+
+// TODO: When migrating to v2 /chains, we can use to select the CLIENT, PUBLIC, SAFE_APPS RPC urls
+// export const currentRpcServiceUrlByType = createSelector(
+//   [currentNetwork, (_: AppReduxState, type: RPC_TYPE): RPC_TYPE => type],
+//   (networkConfig, type): NetworkConfig['rpcUri']['value'] => {
+//     const url = networkConfig.rpcs.find((rpc) => rpc.type === type)!.value
+//     const usesInfuraRPC = [NETWORK_ID.MAINNET, NETWORK_ID.RINKEBY, NETWORK_ID.POLYGON].includes(
+//       networkConfig.chainId as NETWORK_ID,
+//     )
+//     return usesInfuraRPC ? `${url}/${INFURA_TOKEN}` : url
+//   },
+// )
+
 export const currentSafeServiceBaseUrl = createSelector(
   [currentTxServiceUrl, (_: AppReduxState, safeAddress: string): string => safeAddress],
   (transactionService, safeAddress): string => {
@@ -117,9 +123,9 @@ export const currentExporerUriTemplate = createSelector(
   },
 )
 
-// TODO: Add URL to CGW?
 export const currentExplorerUrl = createSelector([currentExporerUriTemplate], (explorerUriTemplate): string => {
-  return explorerUriTemplate?.address.replace('{{address}}', '')
+  const { origin } = new URL(explorerUriTemplate.address)
+  return origin
 })
 
 export const currentBlockExplorerInfo = createSelector(
@@ -132,11 +138,7 @@ export const currentBlockExplorerInfo = createSelector(
   },
 )
 
-export const currentFeaturesEnabled = createSelector([currentNetwork], (networkConfig): FEATURES[] => {
-  return networkConfig.features
-})
-
-export const currentEnabledFeatures = createSelector(
+export const isFeatureEnabled = createSelector(
   [currentNetwork, (_: AppReduxState, feature: FEATURES): FEATURES => feature],
   (networkConfig, feature): boolean => {
     return networkConfig.features.includes(feature)
