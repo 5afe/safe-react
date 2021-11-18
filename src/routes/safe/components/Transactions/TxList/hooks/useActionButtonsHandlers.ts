@@ -1,8 +1,9 @@
-import { MultisigExecutionDetails, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
+  isMultiSigExecutionDetails,
   isStatusAwaitingConfirmation,
   isStatusAwaitingExecution,
   isTxPending,
@@ -38,8 +39,8 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation()
-      if (transaction.txDetails?.detailedExecutionInfo?.type === 'MULTISIG') {
-        const details = transaction.txDetails?.detailedExecutionInfo as MultisigExecutionDetails
+      if (transaction.txDetails && isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)) {
+        const details = transaction.txDetails.detailedExecutionInfo
         if (
           (canExecute && details.confirmationsRequired > details.confirmations.length) ||
           (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)
@@ -54,7 +55,14 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
         txLocation: locationContext.current.txLocation,
       })
     },
-    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails?.detailedExecutionInfo],
+    [
+      canConfirmThenExecute,
+      canExecute,
+      dispatch,
+      transaction.id,
+      transaction.txDetails?.detailedExecutionInfo,
+      isMultiSigExecutionDetails,
+    ],
   )
 
   const handleCancelButtonClick = useCallback(

@@ -28,7 +28,7 @@ export const SAFE_SECTION_ROUTE = `${ADDRESSED_ROUTE}/:${SAFE_SECTION_SLUG}`
 export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
 export const SAFE_SUBSECTION_ROUTE = `${SAFE_SECTION_ROUTE}/:${SAFE_SUBSECTION_SLUG}`
 
-export const TRANSACTION_HASH_SLUG = `txHash`
+export const TRANSACTION_HASH_SLUG = `safeTxHash`
 
 // URL: gnosis-safe.io/app/:[SAFE_ADDRESS_SLUG]/:[SAFE_SECTION_SLUG]/:[SAFE_SUBSECTION_SLUG]
 export type SafeRouteSlugs = {
@@ -50,7 +50,8 @@ export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By prov
 export const SAFE_ROUTES = {
   ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
   ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
-  TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_HASH_SLUG}(${txHashPathRegExp})?`, // [TRANSACTION_HASH_SLUG] === 'txHash', optional hash
+  TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
+  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_HASH_SLUG}(${txHashPathRegExp})`, // [TRANSACTION_HASH_SLUG] === 'safeTxHash', optional hash
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
@@ -138,8 +139,12 @@ export const generateSafeRoute = (
     [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(params),
   })
 
-export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof SAFE_ROUTES =>
-  Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>(
+// Singular tx route is excluded as it has a required safeTxHash slug
+// This is to give stricter routing, instead of making the slug optional
+const { TRANSACTIONS_SINGULAR: _hasRequiredSlug, ...STANDARD_SAFE_ROUTES } = SAFE_ROUTES
+export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof STANDARD_SAFE_ROUTES => {
+  return Object.entries(STANDARD_SAFE_ROUTES).reduce<typeof STANDARD_SAFE_ROUTES>(
     (routes, [key, route]) => ({ ...routes, [key]: generateSafeRoute(route, params) }),
-    {} as typeof SAFE_ROUTES,
+    {} as typeof STANDARD_SAFE_ROUTES,
   )
+}

@@ -33,6 +33,8 @@ import { TxDetailsDisplay } from './TxDetails'
 import { TxHistoryCollapsed } from './TxHistoryCollapsed'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
 import { useTransactionActions } from './hooks/useTransactionActions'
+import { TxActionProvider } from './TxActionProvider'
+import { ActionModal } from './ActionModal'
 
 const getTxLocation = (tx: Transaction, nextTxs: StoreStructure['queued']['next'] | undefined): TxLocation => {
   if (!isTxQueued(tx.txStatus)) {
@@ -101,7 +103,10 @@ const TxSingularDetails = (): ReactElement => {
   const title = isQueued ? <QueueTxListTitle /> : <HistoryTxListTitle timestamp={tx.timestamp.toString()} />
   const header = isQueued ? <TxQueueCollapsed transaction={tx} /> : <TxHistoryCollapsed transaction={tx} />
   const transactionDisplay = isQueued ? (
-    <TxQueueDetailsDisplay transaction={tx} />
+    <TxActionProvider>
+      <TxQueueDetailsDisplay transaction={tx} />
+      <ActionModal />
+    </TxActionProvider>
   ) : (
     <TxDetailsDisplay transaction={tx} />
   )

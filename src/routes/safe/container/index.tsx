@@ -68,7 +68,12 @@ const Container = (): React.ReactElement => {
         />
         <Route
           exact
-          path={[SAFE_ROUTES.TRANSACTIONS, SAFE_ROUTES.TRANSACTIONS_HISTORY, SAFE_ROUTES.TRANSACTIONS_QUEUE]}
+          path={[
+            SAFE_ROUTES.TRANSACTIONS,
+            SAFE_ROUTES.TRANSACTIONS_SINGULAR,
+            SAFE_ROUTES.TRANSACTIONS_HISTORY,
+            SAFE_ROUTES.TRANSACTIONS_QUEUE,
+          ]}
           render={() => wrapInSuspense(<TxList />, null)}
         />
         <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />, null)} />

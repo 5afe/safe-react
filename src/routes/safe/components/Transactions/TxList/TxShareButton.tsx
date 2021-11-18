@@ -10,7 +10,7 @@ type Props = {
 }
 
 const TxShareButton = ({ safeTxHash }: Props): ReactElement => {
-  const txDetailsPathname = generatePath(SAFE_ROUTES.TRANSACTIONS, {
+  const txDetailsPathname = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(),
     [TRANSACTION_HASH_SLUG]: safeTxHash,
   })
