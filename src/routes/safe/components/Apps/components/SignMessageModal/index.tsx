@@ -9,6 +9,7 @@ import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { ReviewMessage } from './ReviewMessage'
 import { currentNetworkId } from 'src/logic/config/store/selectors'
 import { useSelector } from 'react-redux'
+import { hexToUtf8, isHexStrict } from 'web3-utils'
 
 export type SignMessageModalProps = {
   isOpen: boolean
@@ -24,13 +25,12 @@ export type SignMessageModalProps = {
 }
 
 const convertToHumanReadableMessage = (message: string): string => {
-  const web3 = getWeb3ReadOnly()
-  const isHex = web3.utils.isHexStrict(message.toString())
+  const isHex = isHexStrict(message.toString())
 
   let humanReadableMessage = message
   if (isHex) {
     try {
-      humanReadableMessage = web3.utils.hexToUtf8(message)
+      humanReadableMessage = hexToUtf8(message)
     } catch (e) {
       // do nothing
     }
