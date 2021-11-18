@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Fragment, ReactElement } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
+import uniqBy from 'lodash/uniqBy'
 
 import { setNetwork } from 'src/logic/config/utils'
 import { getNetworkId, getNetworks } from 'src/config'
@@ -77,7 +78,9 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
       {networks.map(({ id, backgroundColor, textColor, label }) => {
         const isCurrentNetwork = id === getNetworkId()
         const ownedSafesOnNetwork = ownedSafes[id] || []
-        const localSafesOnNetwork = localSafes[id].filter(isNotLoadedViaUrl)
+        const localSafesOnNetwork = uniqBy(localSafes[id].filter(isNotLoadedViaUrl), ({ address }) =>
+          address.toLowerCase(),
+        )
 
         if (!isCurrentNetwork && !ownedSafesOnNetwork.length && !localSafesOnNetwork.length) {
           return null
