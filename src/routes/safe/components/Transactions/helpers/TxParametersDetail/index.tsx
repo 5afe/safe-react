@@ -22,7 +22,7 @@ const StyledText = styled(Text)`
 `
 
 const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
-  color: ${(props) => (props.isOutOfOrder ? 'red' : props.color)};
+  color: ${(props) => (props.isOutOfOrder ? props.theme.colors.error : props.color)};
 `
 
 const StyledButtonLink = styled(ButtonLink)`
