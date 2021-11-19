@@ -12,6 +12,7 @@ import {
   isStatusFailed,
   isStatusCancelled,
   isStatusPending,
+  isStatusPendingFailed,
   isStatusAwaitingConfirmation,
   isStatusAwaitingExecution,
   isStatusWillBeReplaced,
@@ -243,6 +244,16 @@ describe('isStatusPending', () => {
   it('returns false when it is not "PENDING" status', () => {
     //@ts-ignore - Sending a string
     expect(isStatusPending('TEST')).toBe(false)
+  })
+})
+describe('isStatusPendingFailed', () => {
+  it('returns true when it is a "PENDING_FAILED" status', () => {
+    //@ts-ignore - Sending a string
+    expect(isStatusPendingFailed('PENDING_FAILED')).toBe(true)
+  })
+  it('returns false when it is not "PENDING_FAILED" status', () => {
+    //@ts-ignore - Sending a string
+    expect(isStatusPendingFailed('TEST')).toBe(false)
   })
 })
 describe('isStatusAwaitingConfirmation', () => {

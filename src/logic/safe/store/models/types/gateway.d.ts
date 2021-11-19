@@ -9,6 +9,7 @@ import {
   TransactionSummary,
   Transfer,
   TransactionDetails as GWTransactionDetails,
+  Transaction as GWTransaction,
   TransactionListItem,
   TransactionListPage,
   TransactionStatus,
@@ -63,7 +64,7 @@ export const isConflictHeader = (value: QueuedGatewayResult): value is ConflictH
   return value.type === 'CONFLICT_HEADER'
 }
 
-export const isTransactionSummary = (value: HistoryGatewayResult | QueuedGatewayResult): value is Transaction => {
+export const isTransactionSummary = (value: HistoryGatewayResult | QueuedGatewayResult): value is GWTransaction => {
   return value.type === 'TRANSACTION'
 }
 
@@ -101,6 +102,10 @@ export const isStatusCancelled = (value: TransactionStatus): value is 'CANCELLED
 
 export const isStatusPending = (value: TransactionStatus): value is 'PENDING' => {
   return value === 'PENDING'
+}
+
+export const isStatusPendingFailed = (value: TransactionStatus): value is 'PENDING_FAILED' => {
+  return value === 'PENDING_FAILED'
 }
 
 export const isStatusAwaitingConfirmation = (value: TransactionStatus): value is 'AWAITING_CONFIRMATIONS' => {

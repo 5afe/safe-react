@@ -1,7 +1,13 @@
 import get from 'lodash.get'
 import { createSelector } from 'reselect'
 
-import { StoreStructure, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  StoreStructure,
+  Transaction,
+  TxHistoryLocation,
+  TxLocation,
+  TxQueuedLocation,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
@@ -80,6 +86,36 @@ export const getTransactionByAttribute = createSelector(
         }
       }
     },
+)
+
+export const getTransactionWithLocationById = createSelector(
+  gatewayTransactions,
+  currentChainId,
+  extractSafeAddress,
+  (_: AppReduxState, transactionId: string) => transactionId,
+  (gatewayTransactions, chainId, safeAddress, transactionId) => {
+    const getTx = (txLocation: TxHistoryLocation | TxQueuedLocation) => {
+      const storedTxs: StoreStructure['history'] | StoreStructure['queued']['queued' | 'next'] | undefined = get(
+        gatewayTransactions?.[chainId]?.[safeAddress],
+        txLocation,
+      )
+      if (!storedTxs) {
+        return undefined
+      }
+      for (const txs of Object.values(storedTxs)) {
+        const foundTx = txs.find((transaction) => transaction.id === transactionId)
+
+        if (foundTx) {
+          return {
+            txLocation,
+            transaction: foundTx,
+          }
+        }
+      }
+    }
+
+    return getTx('queued.next') ?? getTx('queued.queued') ?? getTx('history')
+  },
 )
 
 export const getTransactionDetails = createSelector(

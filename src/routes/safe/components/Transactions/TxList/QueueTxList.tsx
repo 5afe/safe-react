@@ -19,6 +19,8 @@ import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
+import { TxActionProvider } from './TxActionProvider'
+import { ActionModal } from './ActionModal'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
@@ -80,19 +82,9 @@ type QueueTxListProps = {
   transactions: TransactionDetails['transactions']
 }
 
-export const QueueTxListTitle = (): ReactElement => {
-  const { txLocation } = useContext(TxLocationContext)
-  const nonce = useSelector(currentSafeNonce)
-  const title =
-    txLocation === 'queued.next'
-      ? 'NEXT TRANSACTION'
-      : `QUEUE - Transaction with nonce ${nonce} needs to be executed first`
-
-  return <SubTitle size="lg">{title}</SubTitle>
-}
-
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
+  const nonce = useSelector(currentSafeNonce)
 
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {
@@ -104,14 +96,22 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
     }
   }
 
+  const title =
+    txLocation === 'queued.next'
+      ? 'NEXT TRANSACTION'
+      : `QUEUE - Transaction with nonce ${nonce} needs to be executed first`
+
   return (
-    <StyledTransactionsGroup>
-      <QueueTxListTitle />
-      <StyledTransactions>
-        {transactions.map(([nonce, txs]) => (
-          <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
-        ))}
-      </StyledTransactions>
-    </StyledTransactionsGroup>
+    <TxActionProvider>
+      <StyledTransactionsGroup>
+        <SubTitle size="lg">{title}</SubTitle>
+        <StyledTransactions>
+          {transactions.map(([nonce, txs]) => (
+            <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
+          ))}
+        </StyledTransactions>
+      </StyledTransactionsGroup>
+      <ActionModal />
+    </TxActionProvider>
   )
 }

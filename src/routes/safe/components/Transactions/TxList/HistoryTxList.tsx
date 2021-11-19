@@ -8,10 +8,6 @@ import { StyledTransactions, StyledTransactionsGroup, SubTitle } from './styled'
 import { TxHistoryRow } from './TxHistoryRow'
 import { TxLocationContext } from './TxLocationProvider'
 
-export const HistoryTxListTitle = ({ timestamp }: { timestamp: string }): ReactElement => (
-  <SubTitle size="lg">{formatWithSchema(Number(timestamp), 'MMM d, yyyy')}</SubTitle>
-)
-
 export const HistoryTxList = ({ transactions }: { transactions: TransactionDetails['transactions'] }): ReactElement => {
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
 
@@ -26,7 +22,7 @@ export const HistoryTxList = ({ transactions }: { transactions: TransactionDetai
     <TxLocationContext.Provider value={{ txLocation: 'history' }}>
       {transactions?.map(([timestamp, txs]) => (
         <StyledTransactionsGroup key={timestamp}>
-          <HistoryTxListTitle timestamp={timestamp} />
+          <SubTitle size="lg">{formatWithSchema(Number(timestamp), 'MMM d, yyyy')}</SubTitle>
           <StyledTransactions>
             {txs.map((transaction) => (
               <TxHistoryRow key={transaction.id} transaction={transaction} />

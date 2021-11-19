@@ -84,6 +84,7 @@ type TxDetailsProps = {
 
 export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
   const { data, loading } = useTransactionDetails(transaction)
+  const { txLocation } = useContext(TxLocationContext)
 
   if (loading) {
     return (
@@ -93,14 +94,7 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
     )
   }
 
-  return <TxDetailsDisplay transaction={{ ...transaction, txDetails: data }} actions={actions} />
-}
-
-export const TxDetailsDisplay = ({ transaction, actions }: TxDetailsProps) => {
-  const { txLocation } = useContext(TxLocationContext)
-  const { txDetails } = transaction
-
-  if (!txDetails) {
+  if (!data) {
     return (
       <TxDetailsContainer>
         <Text size="xl" strong>
@@ -113,16 +107,16 @@ export const TxDetailsDisplay = ({ transaction, actions }: TxDetailsProps) => {
   return (
     <TxDetailsContainer>
       <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
-        <TxSummary txDetails={txDetails} />
+        <TxSummary txDetails={data} />
       </div>
       <div
         className={cn('tx-details', {
-          'no-padding': isMultiSendTxInfo(txDetails.txInfo),
-          'not-executed': !txDetails.executedAt,
+          'no-padding': isMultiSendTxInfo(data.txInfo),
+          'not-executed': !data.executedAt,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
-        <TxDataGroup txDetails={txDetails} />
+        <TxDataGroup txDetails={data} />
       </div>
       <div
         className={cn('tx-owners', {
@@ -130,9 +124,9 @@ export const TxDetailsDisplay = ({ transaction, actions }: TxDetailsProps) => {
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
-        <TxOwners txDetails={txDetails} />
+        <TxOwners txDetails={data} />
       </div>
-      {!txDetails.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
+      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>
