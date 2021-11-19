@@ -34,8 +34,8 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName, getNetworkId } from 'src/config'
-import { EIP1559Chains } from 'src/config/chain-workarounds'
+import { getCurrentShortChainName } from 'src/config'
+import { getGasParam } from 'src/logic/safe/transactions/gas'
 
 type ModalDataType = {
   safeAddress: string
@@ -77,13 +77,12 @@ function SafeCreationProcess(): ReactElement {
         const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
         const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
         const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-        const gasParam = EIP1559Chains.includes(getNetworkId()) ? 'maxFeePerGas' : 'gasPrice'
 
         deploymentTx
           .send({
             from: userAddressAccount,
             gas: gasLimit,
-            [gasParam]: gasPrice,
+            [getGasParam()]: gasPrice,
           })
           .once('transactionHash', (txHash) => {
             saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {

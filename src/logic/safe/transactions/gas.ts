@@ -7,6 +7,8 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { fetchSafeTxGasEstimation } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { EIP1559Chains } from 'src/config/chain-workarounds'
+import { getNetworkId } from 'src/config'
 
 type SafeTxGasEstimationProps = {
   safeAddress: string
@@ -223,4 +225,8 @@ export const estimateGasForTransactionApproval = async ({
     from,
     to: safeAddress,
   })
+}
+
+export const getGasParam = (): string => {
+  return EIP1559Chains.includes(getNetworkId()) ? 'maxFeePerGas' : 'gasPrice'
 }
