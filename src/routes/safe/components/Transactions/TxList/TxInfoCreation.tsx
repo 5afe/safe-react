@@ -5,7 +5,7 @@ import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
-import { PrefixedInlineEthHashInfo, TxDetailsContainer } from './styled'
+import { InlineEthHashInfo, TxDetailsContainer } from './styled'
 import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -34,7 +34,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           <Text size="xl" strong as="span">
             Transaction hash:{' '}
           </Text>
-          <PrefixedInlineEthHashInfo
+          <InlineEthHashInfo
             textSize="xl"
             hash={txInfo.transactionHash}
             shortenHash={8}
