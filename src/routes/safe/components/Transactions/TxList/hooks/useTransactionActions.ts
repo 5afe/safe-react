@@ -79,7 +79,7 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
     missingSigners,
     safeAddress,
     transaction,
-    transactionsByNonce.length,
+    transactionsByNonce,
     txLocation,
   ])
 

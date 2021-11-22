@@ -4,8 +4,8 @@ import { ReactElement } from 'react'
 import { isCreationTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxHistoryCollapsed } from './TxHistoryCollapsed'
-import { TxInfoCreation } from './TxInfoCreation'
 import { TxDetails } from './TxDetails'
+import { TxInfoCreation } from './TxInfoCreation'
 
 export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): ReactElement => (
   <NoPaddingAccordion

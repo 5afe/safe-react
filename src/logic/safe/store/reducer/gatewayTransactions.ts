@@ -50,42 +50,37 @@ export type TransactionStatusPayload = {
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload | TransactionStatusPayload
 
 const updateTxGroup = (
-  transactions: { [nonce: number]: Transaction[] },
-  transaction: Transaction,
+  txGroup: StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
+  newTx: Transaction,
   txNonce: number,
-): {
-  [nonce: number]: Transaction[]
-} => {
-  if (!transactions?.[txNonce]) {
-    return { [txNonce]: [transaction] }
+): StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'] => {
+  const txIndex = txGroup[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
+  const hasTx = txIndex >= 0
+
+  if (!hasTx) {
+    txGroup[txNonce] = [...txGroup[txNonce], newTx]
+    return txGroup
   }
 
-  const txIndex = transactions[txNonce].findIndex(({ id }) => sameString(id, transaction.id))
-
-  if (txIndex >= 0) {
-    transactions[txNonce] = [...transactions[txNonce], transaction]
-    return transactions
-  }
-
-  const storedTx = transactions[txNonce][txIndex]
+  const storedTx = txGroup[txNonce][txIndex]
 
   const isServiceUpdate =
     isMultisigExecutionInfo(storedTx.executionInfo) &&
-    isMultisigExecutionInfo(transaction.executionInfo) &&
-    storedTx.executionInfo.confirmationsSubmitted !== transaction.executionInfo.confirmationsSubmitted
+    isMultisigExecutionInfo(newTx.executionInfo) &&
+    storedTx.executionInfo.confirmationsSubmitted !== newTx.executionInfo?.confirmationsSubmitted
 
   if (isStatusPending(storedTx.txStatus) && !isServiceUpdate) {
     // Prioritize "PENDING" transactions as awaiting resolution
-    transaction.txStatus = TransactionStatus.PENDING
+    newTx.txStatus = TransactionStatus.PENDING
   }
 
-  transactions[txNonce][txIndex] = isServiceUpdate
+  txGroup[txNonce][txIndex] = isServiceUpdate
     ? // Assignment removes `txDetails`, forcing a re-fetch
-      transaction
+      newTx
     : // Merging keeps current data
-      merge(storedTx, transaction)
+      merge(storedTx, newTx)
 
-  return transactions
+  return txGroup
 }
 
 export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
@@ -100,21 +95,21 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           continue
         }
 
-        const transaction = value.transaction
-        const startOfDate = getLocalStartOfDate(transaction.timestamp)
+        const newTx = value.transaction
+        const startOfDate = getLocalStartOfDate(newTx.timestamp)
 
         if (newHistory?.[startOfDate] === undefined) {
-          newHistory[startOfDate] = [transaction]
+          newHistory[startOfDate] = [newTx]
           continue
         }
 
-        const hasTx = newHistory[startOfDate].some(({ id }) => sameString(id, transaction.id))
+        const hasTx = newHistory[startOfDate].some(({ id }) => sameString(id, newTx.id))
         if (hasTx) {
           continue
         }
 
         // Sort old and new transactions
-        newHistory[startOfDate] = [...newHistory[startOfDate], transaction].sort((a, b) => b.timestamp - a.timestamp)
+        newHistory[startOfDate] = [...newHistory[startOfDate], newTx].sort((a, b) => b.timestamp - a.timestamp)
       }
 
       return {
@@ -129,44 +124,40 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
     },
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
-      let newNext: StoreStructure['history'] = Object.assign({}, state[chainId]?.[safeAddress]?.queued?.queued)
-      let newQueued: StoreStructure['history'] = Object.assign({}, state[chainId]?.[safeAddress]?.queued?.next)
+      let newNext: StoreStructure['history'] = Object.assign({}, state[chainId]?.[safeAddress]?.queued?.next)
+      const newQueued: StoreStructure['history'] = Object.assign({}, state[chainId]?.[safeAddress]?.queued?.queued)
 
-      let label: 'next' | 'queued' | undefined
+      let label: keyof StoreStructure['queued'] | undefined
 
       for (const value of values) {
-        if (isConflictHeader(value)) {
-          continue
-        }
-
         if (isLabel(value)) {
           label = value.label.toLowerCase() as typeof label
           continue
         }
 
-        // Only multisig transactions are added to queue lists
-        if (!isTransactionSummary(value) || !isMultisigExecutionInfo(value.transaction.executionInfo)) {
+        if (
+          // Conflict headers are not needed in the current implementation
+          isConflictHeader(value) ||
+          // Only multisig transaction summaries are added to queued
+          !isTransactionSummary(value) ||
+          !isMultisigExecutionInfo(value.transaction.executionInfo)
+        ) {
           continue
         }
 
-        const transaction = value.transaction
-        const txNonce = isMultisigExecutionInfo(transaction.executionInfo)
-          ? transaction.executionInfo?.nonce
-          : undefined
+        const newTx = value.transaction
+        const txNonce = value.transaction.executionInfo?.nonce
 
         if (txNonce === undefined) {
+          console.warn('A transaction without a nonce was provided by the CGW:', JSON.stringify(value))
           continue
         }
 
-        if (label === undefined) {
-          label = newNext[txNonce] ? 'next' : 'queued'
-        }
-
-        if (label === 'next') {
-          newNext = updateTxGroup(newNext, transaction, txNonce)
-          delete newQueued?.[txNonce]
+        if (label === 'queued') {
+          newQueued[txNonce] ? updateTxGroup(newQueued, newTx, txNonce) : [newTx]
         } else {
-          newQueued = updateTxGroup(newQueued, transaction, txNonce)
+          newNext = newNext[txNonce] ? updateTxGroup(newNext, newTx, txNonce) : { [txNonce]: [newTx] }
+          delete newQueued?.[txNonce]
         }
       }
 
@@ -193,7 +184,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         return state
       }
 
-      const storedTransactions = Object.assign({}, state[chainId][safeAddress])
+      const storedTransactions = Object.freeze(Object.assign({}, state[chainId][safeAddress]))
       const newQueued = storedTransactions.queued
       let newHistory = storedTransactions.history
 
@@ -203,11 +194,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       )
 
       for (const [timestamp, transactions] of Object.entries(txGroup)) {
-        const index = transactions.findIndex(({ id }) => sameString(id, transactionId))
-        const hasTx = index >= 0
+        const txIndex = transactions.findIndex(({ id }) => sameString(id, transactionId))
+        const hasTx = txIndex >= 0
 
         if (hasTx) {
-          txGroup[timestamp][index]['txDetails'] = value
+          txGroup[timestamp][txIndex]['txDetails'] = value
           break
         }
       }
@@ -235,15 +226,13 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       }
     },
     [UPDATE_TRANSACTION_STATUS]: (state, action: Action<TransactionStatusPayload>) => {
-      console.log('UPDATE_TRANSACTION_STATUS', action.payload)
-
       // If we provide the id, that transaction will be "PENDING"
       // otherwise all same-nonced transactions will be "PENDING"
       const { chainId, nonce, id, safeAddress, txStatus } = action.payload
       const storedTxs = Object.freeze(Object.assign({}, state[chainId][safeAddress]))
       const { queued: newQueued, history: newHistory } = storedTxs
 
-      let txLocation: 'history' | 'next' | 'queued' | undefined
+      let txLocation: keyof StoreStructure['queued'] | keyof Pick<StoreStructure, 'history'> | undefined
       let historyLocation: string | undefined
 
       if (storedTxs.queued.next[nonce]) {
@@ -255,8 +244,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           const txIndex = transactions.findIndex((transaction) => {
             return isMultisigExecutionInfo(transaction.executionInfo) && transaction.executionInfo.nonce === nonce
           })
+          const hasTx = txIndex >= 0
 
-          if (txIndex === -1) {
+          if (!hasTx) {
             continue
           }
 

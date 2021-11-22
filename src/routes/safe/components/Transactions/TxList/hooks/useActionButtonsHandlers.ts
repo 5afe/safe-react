@@ -55,14 +55,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
         txLocation: locationContext.current.txLocation,
       })
     },
-    [
-      canConfirmThenExecute,
-      canExecute,
-      dispatch,
-      transaction.id,
-      transaction.txDetails?.detailedExecutionInfo,
-      isMultiSigExecutionDetails,
-    ],
+    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails],
   )
 
   const handleCancelButtonClick = useCallback(

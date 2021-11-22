@@ -83,8 +83,8 @@ type TxDetailsProps = {
 }
 
 export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
-  const { data, loading } = useTransactionDetails(transaction)
   const { txLocation } = useContext(TxLocationContext)
+  const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
     return (

@@ -35,6 +35,7 @@ const TxSingularDetails = (): ReactElement => {
   const { [TRANSACTION_HASH_SLUG]: safeTxHash = '' } = useParams<SafeRouteSlugs>()
   const safeTxHashTx = useSafeTxHashTx(safeTxHash)
 
+  // Use id from safeTxHashTx to get transaction from store
   const storedTx = useSelector((state: AppReduxState) => getTransactionWithLocationById(state, safeTxHashTx?.id || ''))
 
   if (!isLoaded || !storedTx) {
@@ -87,6 +88,7 @@ const useSafeTxHashTx = (safeTxHash: string): Transaction | undefined => {
           ],
         }
 
+        // Add transaction to store
         dispatch(isTxQueued(tx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
 
         setLoadedTx(tx)
@@ -100,7 +102,7 @@ const useSafeTxHashTx = (safeTxHash: string): Transaction | undefined => {
     return () => {
       isCurrent = false
     }
-  }, [safeTxHash])
+  }, [safeTxHash, dispatch])
 
   return loadedTx
 }
