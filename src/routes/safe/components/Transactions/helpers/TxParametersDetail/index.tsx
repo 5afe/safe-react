@@ -61,7 +61,7 @@ export const TxParametersDetail = ({
 
   const { safeNonce = '' } = txParameters
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const { lastTxNonce } = useLastTxNonce()
+  const lastTxNonce = useLastTxNonce()
 
   const isTxNonceInOrder = lastTxNonce ? safeNonceNumber === lastTxNonce + 1 : false
 

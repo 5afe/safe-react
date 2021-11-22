@@ -32,7 +32,7 @@ export const ReviewInfoText = ({
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const { lastTxNonce } = useLastTxNonce()
+  const lastTxNonce = useLastTxNonce()
 
   const isTxNonceInOrder = lastTxNonce ? safeNonceNumber === lastTxNonce + 1 : false
 
