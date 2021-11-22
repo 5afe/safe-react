@@ -1,5 +1,6 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled, { css } from 'styled-components'
+import { isDeeplinkedTx } from './utils'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -18,7 +19,9 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
   flex-flow: column;
 `
 
-export const NoPaddingAccordion = styled(Accordion)`
+export const NoPaddingAccordion = styled(Accordion).attrs((props) =>
+  isDeeplinkedTx() ? { expanded: true, ...props } : props,
+)`
   &.MuiAccordion-root {
     background-color: transparent;
 
@@ -516,7 +519,9 @@ export const HorizontallyCentered = styled(Centered)<{ isVisible: boolean }>`
   height: 100px;
 `
 
-export const StyledAccordionSummary = styled(AccordionSummary)`
+export const StyledAccordionSummary = styled(AccordionSummary).attrs((props) =>
+  isDeeplinkedTx() ? { expanded: true, ...props } : props,
+)`
   height: 52px;
   .tx-nonce {
     margin: 0 16px 0 8px;

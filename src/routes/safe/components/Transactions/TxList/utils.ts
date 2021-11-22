@@ -8,6 +8,7 @@ import {
   MultisigExecutionInfo,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
+import { matchPath } from 'react-router-dom'
 
 import { getNetworkInfo } from 'src/config'
 import {
@@ -20,6 +21,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { SAFE_ROUTES, TRANSACTION_HASH_SLUG, history } from 'src/routes/routes'
 
 export const NOT_AVAILABLE = 'n/a'
 interface AmountData {
@@ -134,7 +136,7 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
       return !hasConfirmed
     })
 
-    return !!missingSigners.length ? missingSigners : null
+    return missingSigners.length ? missingSigners : null
   }
 
   const getMultisigExecutionInfo = ({
@@ -172,4 +174,12 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
   }
 
   return tx
+}
+
+export const isDeeplinkedTx = () => {
+  const match = matchPath(history.location.pathname, {
+    path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
+  })
+
+  return !!match?.params?.[TRANSACTION_HASH_SLUG]
 }

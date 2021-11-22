@@ -68,6 +68,15 @@ export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
+const navigateToTx = (safeAddress: string, safeTxHash: string) => {
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: getCurrentShortChainName(), safeAddress })
+  const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
+    [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
+    [TRANSACTION_HASH_SLUG]: safeTxHash,
+  })
+  history.push(txRoute)
+}
+
 export const createTransaction =
   (
     {
@@ -140,9 +149,12 @@ export const createTransaction =
 
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-          dispatch(fetchTransactions(chainId, safeAddress))
-
           await saveTxToHistory({ ...txArgs, signature, origin })
+
+          dispatch(fetchTransactions(chainId, safeAddress))
+          if (navigateToTransactionsTab) {
+            navigateToTx(safeAddress, safeTxHash)
+          }
           onUserConfirm?.(safeTxHash)
           return
         }
@@ -168,6 +180,9 @@ export const createTransaction =
 
           try {
             await saveTxToHistory({ ...txArgs, origin })
+            if (navigateToTransactionsTab) {
+              navigateToTx(safeAddress, safeTxHash)
+            }
           } catch (err) {
             logError(Errors._803, err.message)
 
@@ -184,18 +199,8 @@ export const createTransaction =
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(chainId, safeAddress))
-
           return receipt.transactionHash
         })
-
-      if (navigateToTransactionsTab) {
-        const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: getCurrentShortChainName(), safeAddress })
-        const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
-          [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-          [TRANSACTION_HASH_SLUG]: safeTxHash,
-        })
-        history.push(txRoute)
-      }
     } catch (err) {
       logError(Errors._803, err.message)
       onError?.()
