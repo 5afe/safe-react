@@ -176,7 +176,7 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
   return tx
 }
 
-export const isDeeplinkedTx = () => {
+export const isDeeplinkedTx = (): boolean => {
   const match = matchPath(history.location.pathname, {
     path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
   })
