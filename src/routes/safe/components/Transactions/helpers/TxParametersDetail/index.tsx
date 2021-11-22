@@ -63,7 +63,7 @@ export const TxParametersDetail = ({
   const safeNonceNumber = parseInt(safeNonce, 10)
   const lastTxNonce = useLastTxNonce()
 
-  const isTxNonceInOrder = lastTxNonce ? safeNonceNumber === lastTxNonce + 1 : false
+  const isTxNonceInOrder = lastTxNonce !== undefined ? safeNonceNumber === lastTxNonce + 1 : false
 
   useEffect(() => {
     if (lastTxNonce === undefined || Number.isNaN(safeNonceNumber)) return
