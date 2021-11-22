@@ -1,7 +1,7 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import AlertIcon from 'src/assets/icons/alert.svg'
@@ -26,6 +26,8 @@ import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 import { extractSafeAddress } from 'src/routes/routes'
+import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
+import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
 
 const notificationStyles = {
   success: {
@@ -61,6 +63,7 @@ const App: React.FC = ({ children }) => {
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
   const safeLoaded = useLoadSafe(addressFromUrl)
+  const dispatch = useDispatch()
   useSafeScheduledUpdates(safeLoaded, addressFromUrl)
   useAddressBookSync()
 
@@ -71,6 +74,13 @@ const App: React.FC = ({ children }) => {
 
   const onReceiveShow = () => onShow('Receive')
   const onReceiveHide = () => onHide('Receive')
+
+  // Load the Safes from LS just once,
+  // they'll be reloaded on network change
+  useEffect(() => {
+    dispatch(loadSafesFromStorage())
+    dispatch(loadCurrentSessionFromStorage())
+  }, [dispatch])
 
   return (
     <Frame>
