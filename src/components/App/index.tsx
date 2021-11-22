@@ -12,11 +12,7 @@ import AppLayout from 'src/components/AppLayout'
 import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
-import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
@@ -57,9 +53,6 @@ const useStyles = makeStyles(notificationStyles)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
-  const desiredNetwork = useSelector(currentChainId)
-  const currentNetwork = useSelector(networkSelector)
-  const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
   const addressFromUrl = extractSafeAddress()
@@ -81,7 +74,6 @@ const App: React.FC = ({ children }) => {
 
   return (
     <Frame>
-      <Backdrop isOpen={isWrongNetwork} />
       <SnackbarProvider
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         classes={{

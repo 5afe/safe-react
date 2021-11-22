@@ -1,12 +1,9 @@
-import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
+import { ImmortalStorage, LocalStorageStore } from 'immortal-db'
 
 import { getNetworkName } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
-// Don't use sessionStorage and cookieStorage
-// https://github.com/gruns/ImmortalDB/issues/22
-// https://github.com/gruns/ImmortalDB/issues/6
-const stores = [IndexedDbStore, LocalStorageStore]
+const stores = [LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
 // We need this to update on run time depending on selected network name

@@ -7,7 +7,7 @@ import {
   NetworkConfig,
   WALLETS,
 } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY, ETHERSCAN_API_KEY } from 'src/utils/constants'
+import { ETHERSCAN_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
@@ -17,11 +17,6 @@ const baseConfig: EnvironmentSettings = {
       url: `https://api-rinkeby.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${ETHERSCAN_API_KEY}`,
       gasParameter: 'FastGasPrice',
       gweiFactor: '1e9',
-    },
-    {
-      url: `https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}`,
-      gasParameter: 'fast',
-      gweiFactor: '1e8',
     },
   ],
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',

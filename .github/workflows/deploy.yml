@@ -114,12 +114,9 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rinkeby)
-            * [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet)
-            * [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon)
-            * [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc)
-            * [Safe Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arbitrum)
-            * Unified app on *dev*: https://safe-team.dev.gnosisdev.com/app/
+            ## Deployment links
+            :orange_circle: [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rinkeby) | :white_circle: [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet) | :purple_circle: [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon) | :yellow_circle: [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc) | :black_circle: [Safe Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arbitrum) | :green_circle: [Safe xDai](${{ env.REVIEW_FEATURE_URL }}/xdai)
+            -|-|-|-|-|-
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number

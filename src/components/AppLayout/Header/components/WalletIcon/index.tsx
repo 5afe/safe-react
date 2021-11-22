@@ -23,14 +23,11 @@ interface WalletIconProps {
 
 const WalletIcon = ({ provider }: WalletIconProps): React.ReactElement => {
   const classes = useStyles()
+  const walletIcon = WALLET_ICONS[provider]
+
   return (
     <Col className={classes.container} start="sm">
-      <Img
-        alt={provider}
-        className={classes.icon}
-        height={WALLET_ICONS[provider].height}
-        src={WALLET_ICONS[provider].src}
-      />
+      {walletIcon && <Img alt={provider} className={classes.icon} {...walletIcon} />}
     </Col>
   )
 }

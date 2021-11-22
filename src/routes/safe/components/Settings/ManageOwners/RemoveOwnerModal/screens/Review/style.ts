@@ -39,13 +39,5 @@ export const useStyles = makeStyles(
       alignItems: 'center',
       backgroundColor: '#ffe6ea',
     },
-    gasCostsContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-      width: '100%',
-      backgroundColor: background,
-    },
   }),
 )
