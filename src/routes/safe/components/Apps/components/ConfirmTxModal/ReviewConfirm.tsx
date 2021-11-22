@@ -30,6 +30,11 @@ import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { TextField } from '@material-ui/core'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
+import { ethers } from 'ethers'
+
+const posterInterface = new ethers.utils.Interface(['function PublicTransactionMemo(string content) public'])
 
 const Container = styled.div`
   max-width: 480px;
@@ -78,24 +83,36 @@ export const ReviewConfirm = ({
   requestId,
   showDecodedTxData,
 }: Props): ReactElement => {
-  const isMultiSend = txs.length > 1
+  const [txComment, setTxComment] = useState<string>('')
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
   const { nativeCoin } = getNetworkInfo()
   const explorerUrl = getExplorerInfo(safeAddress)
   const isOwner = useSelector(grantedSelector)
 
+  const finalTxs = useMemo(() => {
+    const finalTxs: Transaction[] = []
+    finalTxs.push(...txs)
+    if (txComment.length > 0)
+      finalTxs.push({
+        to: ethers.constants.AddressZero,
+        value: '0',
+        data: posterInterface.encodeFunctionData('PublicTransactionMemo', [txComment]),
+      })
+    return finalTxs
+  }, [txs, txComment])
+  const isMultiSend = finalTxs.length > 1
   const txRecipient: string | undefined = useMemo(
-    () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
-    [txs, isMultiSend],
+    () => (isMultiSend ? getMultisendContractAddress() : finalTxs[0]?.to),
+    [finalTxs, isMultiSend],
   )
   const txData: string | undefined = useMemo(
-    () => (isMultiSend ? encodeMultiSendCall(txs) : txs[0]?.data),
-    [txs, isMultiSend],
+    () => (isMultiSend ? encodeMultiSendCall(finalTxs) : finalTxs[0]?.data),
+    [finalTxs, isMultiSend],
   )
   const txValue: string | undefined = useMemo(
-    () => (isMultiSend ? '0' : parseTxValue(txs[0]?.value)),
-    [txs, isMultiSend],
+    () => (isMultiSend ? '0' : parseTxValue(finalTxs[0]?.value)),
+    [finalTxs, isMultiSend],
   )
   const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
@@ -219,10 +236,20 @@ export const ReviewConfirm = ({
             />
 
             <DecodeTxsWrapper>
-              <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
+              <DecodeTxs txs={finalTxs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
             </DecodeTxsWrapper>
 
             {!isMultiSend && <Divider />}
+
+            {/* Tx comment */}
+            <TextField
+              helperText="Transaction Notes"
+              value={txComment}
+              onChange={(e) => setTxComment(e.target.value)}
+              fullWidth
+            />
+
+            <Divider />
 
             {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
