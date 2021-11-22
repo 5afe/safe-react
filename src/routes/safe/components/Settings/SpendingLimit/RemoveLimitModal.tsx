@@ -173,7 +173,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                   isCreation={isCreation}
                   isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
-                  lastTxNonce={txParameters.lastTxNonce}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

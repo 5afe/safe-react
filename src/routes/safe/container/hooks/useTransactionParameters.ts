@@ -22,7 +22,6 @@ export type TxParameters = {
   ethGasPrice: string | undefined
   setEthGasPrice: (ethGasPrice: string | undefined) => void
   ethGasPriceInGWei: string | undefined
-  lastTxNonce: number | undefined
 }
 
 type Props = {
@@ -43,8 +42,6 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
-
-  const [lastTxNonce, setLastTxNonce] = useState<number | undefined>()
 
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
@@ -88,7 +85,6 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       if (safeAddress) {
         const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const lastTx = await getLastTx(safeAddress)
-        setLastTxNonce(lastTx?.nonce)
         const nonce = await getNewTxNonce(lastTx, safeInstance)
         setSafeNonce(nonce)
       }
@@ -111,6 +107,5 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
     ethGasPrice,
     setEthGasPrice,
     ethGasPriceInGWei,
-    lastTxNonce,
   }
 }

@@ -208,7 +208,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             isCreation={isCreation}
             isExecution={isExecution}
             isOffChainSignature={isOffChainSignature}
-            lastTxNonce={txParameters.lastTxNonce}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

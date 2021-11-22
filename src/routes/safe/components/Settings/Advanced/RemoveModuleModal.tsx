@@ -167,7 +167,6 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   isCreation={isCreation}
                   isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
-                  lastTxNonce={txParameters.lastTxNonce}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

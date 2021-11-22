@@ -210,7 +210,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             isCreation={isCreation}
             isExecution={doExecute}
             isOffChainSignature={isOffChainSignature}
-            lastTxNonce={txParameters.lastTxNonce}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

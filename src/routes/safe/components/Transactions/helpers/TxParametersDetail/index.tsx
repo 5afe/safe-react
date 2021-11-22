@@ -6,6 +6,7 @@ import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from 
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
+import useLastTxNonce from '../../TxList/hooks/useLastTxNonce'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -56,13 +57,17 @@ export const TxParametersDetail = ({
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
-  const { safeNonce = '', lastTxNonce } = txParameters
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
+
+  const { safeNonce = '' } = txParameters
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const isNonceOutOfOrder = lastTxNonce ? safeNonceNumber > lastTxNonce + 1 : false
-  const [isAccordionExpanded, setIsAccordionExpanded] = useState(isNonceOutOfOrder)
+  const { lastTxNonce } = useLastTxNonce()
+
+  const isTxNonceInOrder = lastTxNonce ? safeNonceNumber === lastTxNonce + 1 : false
 
   useEffect(() => {
-    if (lastTxNonce && safeNonceNumber > lastTxNonce + 1) {
+    if (lastTxNonce === undefined || Number.isNaN(safeNonceNumber)) return
+    if (safeNonceNumber !== lastTxNonce + 1) {
       setIsAccordionExpanded(true)
     }
   }, [lastTxNonce, safeNonceNumber])
@@ -89,14 +94,14 @@ export const TxParametersDetail = ({
           <TxParameterWrapper>
             <ColoredText
               size="lg"
-              isOutOfOrder={isNonceOutOfOrder}
+              isOutOfOrder={!isTxNonceInOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               Safe nonce
             </ColoredText>
             <ColoredText
               size="lg"
-              isOutOfOrder={isNonceOutOfOrder}
+              isOutOfOrder={!isTxNonceInOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               {txParameters.safeNonce}

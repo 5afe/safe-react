@@ -124,7 +124,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   isCreation={isCreation}
                   isExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
-                  lastTxNonce={txParameters.lastTxNonce}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
