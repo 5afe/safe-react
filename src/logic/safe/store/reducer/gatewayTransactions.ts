@@ -49,11 +49,11 @@ export type TransactionStatusPayload = {
 
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload | TransactionStatusPayload
 
-const updateTxGroup = (
-  txGroup: StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
+const updateQueuedTxGroup = <T extends StoreStructure['queued']['next' | 'queued']>(
+  txGroup: T,
   newTx: Transaction,
   txNonce: number,
-): StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'] => {
+): T => {
   const txIndex = txGroup[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
   const hasTx = txIndex >= 0
 
@@ -154,9 +154,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
 
         if (label === 'queued') {
-          newQueued[txNonce] ? updateTxGroup(newQueued, newTx, txNonce) : [newTx]
+          newQueued[txNonce] ? updateQueuedTxGroup(newQueued, newTx, txNonce) : [newTx]
         } else {
-          newNext = newNext[txNonce] ? updateTxGroup(newNext, newTx, txNonce) : { [txNonce]: [newTx] }
+          newNext = newNext[txNonce] ? updateQueuedTxGroup(newNext, newTx, txNonce) : { [txNonce]: [newTx] }
           delete newQueued?.[txNonce]
         }
       }
