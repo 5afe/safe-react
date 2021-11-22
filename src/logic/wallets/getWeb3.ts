@@ -103,7 +103,7 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
   if (isValidCryptoDomainName(name)) {
     return getAddressFromUnstoppableDomain(name)
   }
-  return web3.eth.ens.getAddress(name)
+  return getWeb3ReadOnly().eth.ens.getAddress(name)
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
