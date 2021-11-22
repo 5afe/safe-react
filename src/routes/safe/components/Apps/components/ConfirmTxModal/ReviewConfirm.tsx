@@ -34,6 +34,7 @@ import { TextField } from '@material-ui/core'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { ethers } from 'ethers'
 
+const SAFE_MEMO_REGISTRY_ADDRESS = '0x5aFE000000000000000000000000000000000001'
 const posterInterface = new ethers.utils.Interface(['function PublicTransactionMemo(string content) public'])
 
 const Container = styled.div`
@@ -95,7 +96,7 @@ export const ReviewConfirm = ({
     finalTxs.push(...txs)
     if (txComment.length > 0)
       finalTxs.push({
-        to: ethers.constants.AddressZero,
+        to: SAFE_MEMO_REGISTRY_ADDRESS,
         value: '0',
         data: posterInterface.encodeFunctionData('PublicTransactionMemo', [txComment]),
       })
