@@ -71,12 +71,12 @@
       "!src/**/assets/**"
     ]
   },
-  "productName": "Safe Multisig",
+  "productName": "Safe",
   "build": {
     "appId": "io.gnosis.safe",
     "afterSign": "scripts/notarize.js",
     "extends": null,
-    "productName": "Safe Multisig",
+    "productName": "Safe",
     "asar": true,
     "publish": [
       {
