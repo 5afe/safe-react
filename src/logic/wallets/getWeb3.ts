@@ -119,3 +119,10 @@ export const getSDKWeb3Adapter = (signerAddress: string): Web3Adapter => {
     signerAddress,
   })
 }
+
+export const getSDKWeb3ReadOnly = (signerAddress: string): Web3Adapter => {
+  return new Web3Adapter({
+    web3: getWeb3ReadOnly(),
+    signerAddress,
+  })
+}

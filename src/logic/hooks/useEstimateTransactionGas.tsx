@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getNetworkId, getNetworkInfo } from 'src/config'
+import { getNetworkInfo } from 'src/config'
 import {
   checkTransactionExecution,
   estimateSafeTxGas,
@@ -20,7 +20,6 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-import { EXTRA_GAS_FACTOR } from 'src/config/chain-workarounds'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -192,8 +191,7 @@ export const useEstimateTransactionGas = ({
 
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
-        const extraGasMult = EXTRA_GAS_FACTOR[getNetworkId()] || 1
-        const gasLimit = manualGasLimit || Math.round(ethGasLimitEstimation * extraGasMult).toString()
+        const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
         const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
