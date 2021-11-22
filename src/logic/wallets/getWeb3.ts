@@ -3,7 +3,7 @@ import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 import { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 
-import { sameAddress } from './ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
 import { getRpcServiceUrl, getNetworkId } from 'src/config'
@@ -120,9 +120,9 @@ export const getSDKWeb3Adapter = (signerAddress: string): Web3Adapter => {
   })
 }
 
-export const getSDKWeb3ReadOnly = (signerAddress: string): Web3Adapter => {
+export const getSDKWeb3ReadOnly = (): Web3Adapter => {
   return new Web3Adapter({
     web3: getWeb3ReadOnly(),
-    signerAddress,
+    signerAddress: ZERO_ADDRESS,
   })
 }
