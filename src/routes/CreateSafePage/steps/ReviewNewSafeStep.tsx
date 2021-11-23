@@ -15,6 +15,7 @@ import {
   FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
   FIELD_NEW_SAFE_GAS_LIMIT,
+  FIELD_NEW_SAFE_GAS_PRICE,
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
@@ -49,7 +50,7 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
 
-  const { gasCostFormatted, gasLimit } = useEstimateSafeCreationGas({
+  const { gasCostFormatted, gasLimit, gasPrice } = useEstimateSafeCreationGas({
     addresses: ownerAddresses,
     numOwners: numberOfOwners,
     safeCreationSalt,
@@ -58,7 +59,8 @@ function ReviewNewSafeStep(): ReactElement | null {
 
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
-  }, [gasLimit, createSafeForm])
+    createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
+  }, [gasLimit, gasPrice, createSafeForm])
 
   return (
     <Row data-testid={'create-safe-review-step'}>

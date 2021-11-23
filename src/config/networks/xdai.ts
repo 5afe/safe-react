@@ -13,10 +13,10 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
   gasPriceOracles: [],
-  rpcServiceUrl: 'https://dai.poa.network/',
-  safeAppsRpcServiceUrl: 'https://dai.poa.network/',
+  rpcServiceUrl: 'https://rpc.xdaichain.com/oe-only/',
+  safeAppsRpcServiceUrl: 'https://rpc.xdaichain.com/oe-only/',
   networkExplorerName: 'Blockscout',
-  networkExplorerUrl: 'https://blockscout.com/poa/xdai',
+  networkExplorerUrl: 'https://blockscout.com/xdai/mainnet',
   networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
 }
 
