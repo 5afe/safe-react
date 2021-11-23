@@ -58,16 +58,10 @@ Install dependencies for the project:
 yarn install
 ```
 
-To use the Rinkeby services:
+To launch the app with all configured chains:
 
 ```
 yarn start
-```
-
-If you prefer using the Mainnet ones:
-
-```
-yarn start-mainnet
 ```
 
 If you prefer to use Docker:
@@ -78,16 +72,10 @@ docker-compose build && docker-compose up
 
 ### Building
 
-For Rinkeby:
+Te get a complete bundle using the current configuration use:
 
 ```
 yarn build
-```
-
-For Mainnet:
-
-```
-yarn build-mainnet
 ```
 
 ## Running the tests
@@ -113,7 +101,7 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team.staging.gnosisdev.com/).
 
 ### Production
 
