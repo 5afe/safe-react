@@ -19,6 +19,7 @@ const FEATURES_BY_VERSION: FeatureConfigByVersion[] = [
   { name: FEATURES.ERC1155, validVersion: '>=1.1.1' },
   { name: FEATURES.SAFE_APPS },
   { name: FEATURES.CONTRACT_INTERACTION },
+  { name: FEATURES.SAFE_TX_GAS_OPTIONAL, validVersion: '>=1.3.0' },
 ]
 
 type Feature = typeof FEATURES_BY_VERSION[number]
@@ -51,6 +52,10 @@ export const enabledFeatures = (version?: string): FEATURES[] => {
     }
     return acc
   }, [] as FEATURES[])
+}
+
+export const hasFeature = (version: string, name: FEATURES): boolean => {
+  return enabledFeatures(version).includes(name)
 }
 
 interface SafeVersionInfo {
