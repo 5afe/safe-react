@@ -1,6 +1,5 @@
-import { Text, Accordion, AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled, { css } from 'styled-components'
-import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -467,7 +466,7 @@ export const OwnerListItem = styled.li`
   }
 `
 
-export const PrefixedInlineEthHashInfo = styled(PrefixedEthHashInfo)`
+export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
 
   span {
