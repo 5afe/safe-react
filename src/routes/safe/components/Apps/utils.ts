@@ -1,5 +1,5 @@
 import axios from 'axios'
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
