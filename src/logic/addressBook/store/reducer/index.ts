@@ -1,5 +1,5 @@
 import { Action, handleActions } from 'redux-actions'
-import uniqwith from 'lodash.uniqwith'
+import uniqwith from 'lodash/uniqwith'
 
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'

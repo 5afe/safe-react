@@ -1,4 +1,5 @@
-import debounce from 'lodash.debounce'
+import debounce from 'lodash/debounce'
+import { DebouncedFunc } from 'lodash'
 import { useCallback, useEffect, useState, useRef } from 'react'
 
 /*
@@ -17,7 +18,7 @@ export const useDebouncedCallback = <T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay = 0,
   options?: DebounceOptions,
-): T & { cancel: () => void } => useCallback(debounce(callback, delay, options), [callback, delay, options])
+): DebouncedFunc<T> => useCallback(debounce(callback, delay, options), [callback, delay, options])
 
 export const useDebounce = <T extends unknown>(value: T, delay = 0, options?: DebounceOptions): T => {
   const previousValue = useRef(value)

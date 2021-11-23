@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { Text, EthHashInfo, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
-import get from 'lodash.get'
+import get from 'lodash/get'
 import { hexToBytes } from 'web3-utils'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
