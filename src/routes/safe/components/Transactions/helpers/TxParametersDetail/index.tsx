@@ -7,6 +7,7 @@ import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selector
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
 import useLastQueuedTxNonce from '../../TxList/hooks/useLastQueuedTxNonce'
+import useSafeTxGas from '../useSafeTxGas'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -64,6 +65,7 @@ export const TxParametersDetail = ({
   const { safeNonce = '' } = txParameters
   const safeNonceNumber = parseInt(safeNonce, 10)
   const lastQueuedTxNonce = useLastQueuedTxNonce()
+  const showSafeTxGas = useSafeTxGas()
 
   useEffect(() => {
     if (Number.isNaN(safeNonceNumber)) return
@@ -114,20 +116,22 @@ export const TxParametersDetail = ({
             </ColoredText>
           </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <Text
-              size="lg"
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              SafeTxGas
-            </Text>
-            <Text
-              size="lg"
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              {txParameters.safeTxGas}
-            </Text>
-          </TxParameterWrapper>
+          {showSafeTxGas && (
+            <TxParameterWrapper>
+              <Text
+                size="lg"
+                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
+              >
+                SafeTxGas
+              </Text>
+              <Text
+                size="lg"
+                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
+              >
+                {txParameters.safeTxGas}
+              </Text>
+            </TxParameterWrapper>
+          )}
 
           {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
             <>

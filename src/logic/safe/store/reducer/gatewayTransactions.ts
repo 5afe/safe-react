@@ -1,6 +1,6 @@
 import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
-import get from 'lodash.get'
-import merge from 'lodash.merge'
+import get from 'lodash/get'
+import merge from 'lodash/merge'
 import { Action, handleActions } from 'redux-actions'
 
 import {

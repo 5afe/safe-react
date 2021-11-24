@@ -246,7 +246,7 @@ export const inMemoryPartialSafeInformation = {
   nonce: 492,
   currentVersion: '1.3.0',
   needsUpdate: false,
-  featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+  featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION', 'SAFE_TX_GAS_OPTIONAL'],
   collectiblesTag: '1634550387',
   txQueuedTag: '1634550387',
   txHistoryTag: '1633430459',

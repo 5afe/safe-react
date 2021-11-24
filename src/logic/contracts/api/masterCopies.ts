@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getTxServiceUrl } from 'src/config'
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 export enum MasterCopyDeployer {
   GNOSIS = 'Gnosis',

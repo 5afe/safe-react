@@ -2,7 +2,7 @@ import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
-import { getSDKWeb3Adapter, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getSDKWeb3ReadOnly, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracles } from 'src/config'
 import { GasPriceOracle } from 'src/config/networks/network'
 import { CodedException, Errors } from '../exceptions/CodedException'
@@ -49,7 +49,7 @@ export const calculateGasPrice = async (): Promise<string> => {
 
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const ethAdapter = getSDKWeb3Adapter(txConfig.from)
+    const ethAdapter = getSDKWeb3ReadOnly()
 
     return await ethAdapter.estimateGas(txConfig)
   } catch (err) {

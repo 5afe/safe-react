@@ -26,7 +26,7 @@ import {
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
-import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { providerNameSelector, shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
   ownersAndConfirmationsNewSafeStepValidations,
@@ -41,7 +41,9 @@ import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const provider = useSelector(providerNameSelector)
+  const providerName = useSelector(providerNameSelector)
+  const isWrongNetwork = useSelector(shouldSwitchWalletChain)
+  const provider = !!providerName && !isWrongNetwork
 
   useEffect(() => {
     async function checkIfSafeIsPendingToBeCreated() {

@@ -44,8 +44,15 @@ export const InfiniteScroll = ({ children, hasMore, next, config }: InfiniteScro
   })
 
   useEffect(() => {
-    if (inView && hasMore) {
+    // Avoid memory leak - queue/history have separate InfiniteScroll wrappers
+    let isMounted = true
+
+    if (isMounted && inView && hasMore) {
       next()
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [inView, hasMore, next])
 

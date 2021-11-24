@@ -17,8 +17,6 @@ import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
 import { useSelector } from 'react-redux'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
-import { currentChainId } from 'src/logic/config/store/selectors'
 import ChainIndicator from 'src/components/ChainIndicator'
 
 const styles = createStyles({
@@ -96,7 +94,6 @@ const StyledCard = styled(Card)`
 type Props = {
   connected: boolean
   onDisconnect: () => void
-  onNetworkChange?: () => unknown
   openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
@@ -107,14 +104,12 @@ const useStyles = makeStyles(styles)
 export const UserDetails = ({
   connected,
   onDisconnect,
-  onNetworkChange,
   openDashboard,
   provider,
   userAddress,
 }: Props): React.ReactElement => {
   const explorerUrl = getExplorerInfo(userAddress)
   const connectedNetwork = useSelector(networkSelector)
-  const desiredNetwork = useSelector(currentChainId)
   const classes = useStyles()
 
   return (
@@ -160,15 +155,6 @@ export const UserDetails = ({
           <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
             <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
               {provider} Wallet
-            </Paragraph>
-          </Button>
-        </Row>
-      )}
-      {shouldSwitchNetwork() && onNetworkChange && (
-        <Row className={classes.buttonRow}>
-          <Button fullWidth onClick={onNetworkChange} size="medium" variant="outlined" color="primary">
-            <Paragraph noMargin size="lg">
-              Switch to <ChainIndicator chainId={desiredNetwork} />
             </Paragraph>
           </Button>
         </Row>

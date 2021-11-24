@@ -1,7 +1,7 @@
 import ERC20Contract from '@openzeppelin/contracts/build/contracts/ERC20.json'
 import ERC721Contract from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AbiItem } from 'web3-utils'
