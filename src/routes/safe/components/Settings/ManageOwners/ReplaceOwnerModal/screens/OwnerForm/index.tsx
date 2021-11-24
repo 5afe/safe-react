@@ -85,7 +85,6 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
         }}
       >
         {(...args) => {
-          const formState = args[2]
           const mutators = args[3]
 
           const handleScan = (value, closeQrModal) => {
@@ -156,7 +155,6 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                       placeholder="Owner address*"
                       testId={REPLACE_OWNER_ADDRESS_INPUT_TEST_ID}
                       text="Owner address*"
-                      value={formState.values.ownerAddress}
                       validators={[ownerDoesntExist, ownerAddressIsNotSafeAddress]}
                     />
                   </Col>
