@@ -11,7 +11,7 @@ import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { isValidAddress } from 'src/utils/isValidAddress'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -63,6 +63,8 @@ const AddressInput = ({
       }
     : inputAdornment
 
+  const getValidationError = composeValidators(required, mustBeEthereumAddress, ...validators)
+
   return (
     <>
       <Field
@@ -77,7 +79,7 @@ const AddressInput = ({
         text={text}
         type="text"
         spellCheck={false}
-        validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
+        validate={getValidationError}
       />
       <OnChange name={name}>
         {async (value: string) => {
@@ -97,16 +99,13 @@ const AddressInput = ({
             }
           } else {
             // A regular address hash
-            let checkedAddress = address
-            // Automatically checksum valid (either already checksummed, or lowercase addresses)
-            if (isValidAddress(address)) {
-              try {
-                checkedAddress = checksumAddress(address)
-              } catch (err) {
-                // ignore
-              }
+            if (!getValidationError(address)) {
+              const parsed = parsePrefixedAddress(address)
+              const checkedAddress = checksumAddress(parsed.address) || parsed.address
+
+              // FIXME: this'll remove the prefix
+              fieldMutator(checkedAddress)
             }
-            fieldMutator(checkedAddress)
           }
         }}
       </OnChange>

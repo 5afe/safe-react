@@ -20,6 +20,7 @@ import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -54,8 +55,8 @@ const BaseAddressBookInput = ({
     fieldMutator(addressEntry.address)
   }
 
-  const validateAddress = (address: string): AddressBookEntry | string | undefined => {
-    const addressErrorMessage = mustBeEthereumAddress(address)
+  const validateAddress = (fullAddress: string): AddressBookEntry | string | undefined => {
+    const addressErrorMessage = mustBeEthereumAddress(fullAddress)
     setIsValidAddress(!addressErrorMessage)
 
     if (addressErrorMessage) {
@@ -64,13 +65,8 @@ const BaseAddressBookInput = ({
     }
 
     // Automatically checksum valid addresses
-    let checkedAddr: string
-    try {
-      checkedAddr = checksumAddress(address)
-    } catch (err) {
-      checkedAddr = address
-    }
-
+    const { address } = parsePrefixedAddress(fullAddress)
+    const checkedAddr = checksumAddress(address) || address
     const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: checkedAddr })
     return filteredEntries.length === 1 ? filteredEntries[0] : checkedAddr
   }
