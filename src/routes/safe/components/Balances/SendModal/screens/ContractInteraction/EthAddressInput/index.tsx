@@ -16,7 +16,6 @@ import {
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 const useStyles = makeStyles(styles)
 
@@ -52,7 +51,11 @@ export const EthAddressInput = ({
   })
 
   const handleScan = (value, closeQrModal) => {
-    const scannedAddress = getAddressWithoutNetworkPrefix(value)
+    let scannedAddress = value
+
+    if (scannedAddress.startsWith('ethereum:')) {
+      scannedAddress = scannedAddress.replace('ethereum:', '')
+    }
 
     setSelectedEntry({ address: scannedAddress })
     onScannedValue(scannedAddress)

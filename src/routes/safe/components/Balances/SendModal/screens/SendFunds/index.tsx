@@ -46,7 +46,6 @@ import { getNetworkInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
-import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -200,8 +199,11 @@ const SendFunds = ({
           })
 
           const handleScan = (value, closeQrModal) => {
-            const scannedAddress = getAddressWithoutNetworkPrefix(value)
+            let scannedAddress = value
 
+            if (scannedAddress.startsWith('ethereum:')) {
+              scannedAddress = scannedAddress.replace('ethereum:', '')
+            }
             const scannedName = addressBook.find(({ address }) => {
               return sameAddress(scannedAddress, address)
             })?.name

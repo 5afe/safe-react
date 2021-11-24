@@ -16,7 +16,6 @@ import Row from 'src/components/layout/Row'
 import { currentNetworkAddressBookAddresses } from 'src/logic/addressBook/store/selectors'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Entry } from 'src/routes/safe/components/AddressBook'
-import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -74,7 +73,11 @@ export const CreateEditEntryModal = ({
             const formState = args[2]
             const mutators = args[3]
             const handleScan = (value, closeQrModal) => {
-              const scannedAddress = getAddressWithoutNetworkPrefix(value)
+              let scannedAddress = value
+
+              if (scannedAddress.startsWith('ethereum:')) {
+                scannedAddress = scannedAddress.replace('ethereum:', '')
+              }
 
               mutators.setOwnerAddress(scannedAddress)
               closeQrModal()
