@@ -6,7 +6,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { lg, sm } from 'src/theme/variables'
 import { TransactionFees } from '../TransactionsFees'
-import useLastTxNonce from 'src/routes/safe/components/Transactions/TxList/hooks/useLastTxNonce'
+import useLastQueuedTxNonce from 'src/routes/safe/components/Transactions/TxList/hooks/useLastQueuedTxNonce'
 
 type CustomReviewInfoTextProps = {
   safeNonce?: string
@@ -32,15 +32,20 @@ export const ReviewInfoText = ({
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const lastTxNonce = useLastTxNonce()
+  const lastTxNonce = useLastQueuedTxNonce()
 
-  const isTxNonceInOrder = lastTxNonce ? safeNonceNumber === lastTxNonce + 1 : false
+  const isTxNonceOutOfOrder = () => {
+    if (safeNonceNumber === nonce) return false
+    if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
+    return true
+  }
+  const shouldShowWarning = isTxNonceOutOfOrder()
 
   const transactionsToGo = safeNonceNumber - nonce
 
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
-      {!isTxNonceInOrder ? (
+      {shouldShowWarning ? (
         <Paragraph size="lg" align="center">
           <Text size="lg" as="span" color="text" strong>
             {transactionsToGo}

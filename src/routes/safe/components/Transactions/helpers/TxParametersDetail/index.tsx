@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
-import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
-import useLastTxNonce from '../../TxList/hooks/useLastTxNonce'
+import useLastQueuedTxNonce from '../../TxList/hooks/useLastQueuedTxNonce'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -54,23 +54,29 @@ export const TxParametersDetail = ({
   isTransactionExecution,
   isOffChainSignature,
 }: Props): ReactElement | null => {
+  const { nonce } = useSelector(currentSafe)
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
+  const [isTxNonceOutOfOrder, setIsTxNonceOutOfOrder] = useState(false)
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
 
   const { safeNonce = '' } = txParameters
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const lastTxNonce = useLastTxNonce()
-
-  const isTxNonceInOrder = lastTxNonce !== undefined ? safeNonceNumber === lastTxNonce + 1 : false
+  const lastQueuedTxNonce = useLastQueuedTxNonce()
 
   useEffect(() => {
-    if (lastTxNonce === undefined || Number.isNaN(safeNonceNumber)) return
-    if (safeNonceNumber !== lastTxNonce + 1) {
+    if (Number.isNaN(safeNonceNumber)) return
+    if (safeNonceNumber === nonce) return
+    if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
       setIsAccordionExpanded(true)
+      setIsTxNonceOutOfOrder(true)
     }
-  }, [lastTxNonce, safeNonceNumber])
+    if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
+      setIsAccordionExpanded(true)
+      setIsTxNonceOutOfOrder(true)
+    }
+  }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
     return null
@@ -94,14 +100,14 @@ export const TxParametersDetail = ({
           <TxParameterWrapper>
             <ColoredText
               size="lg"
-              isOutOfOrder={!isTxNonceInOrder}
+              isOutOfOrder={isTxNonceOutOfOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               Safe nonce
             </ColoredText>
             <ColoredText
               size="lg"
-              isOutOfOrder={!isTxNonceInOrder}
+              isOutOfOrder={isTxNonceOutOfOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
               {txParameters.safeNonce}
