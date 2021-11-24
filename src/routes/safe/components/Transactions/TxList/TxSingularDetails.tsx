@@ -35,10 +35,17 @@ const TxSingularDetails = (): ReactElement => {
   const queueTxs = useSelector(queuedTransactions)
   const isLoaded = [historyTxs, nextTxs, queueTxs].every(Boolean)
 
+  // We must use the tx from the store as the queue actions alter the tx
+  const liveTx = useSelector(
+    (state: AppReduxState) =>
+      getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }),
+    shallowEqual, // Check for txLocation change
+  )
+
   useEffect(() => {
     let isCurrent = true
 
-    if (!txId) {
+    if (!txId || liveTx) {
       return
     }
 
@@ -72,14 +79,7 @@ const TxSingularDetails = (): ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [txId])
-
-  // We must use the tx from the store as the queue actions alter the tx
-  const liveTx = useSelector(
-    (state: AppReduxState) =>
-      getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }),
-    shallowEqual, // Check for txLocation change
-  )
+  }, [txId, liveTx])
 
   if (!isLoaded || !liveTx) {
     return (
