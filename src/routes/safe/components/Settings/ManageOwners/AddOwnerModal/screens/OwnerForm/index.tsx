@@ -30,6 +30,7 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 import { OwnerValues } from '../..'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
@@ -82,11 +83,8 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
           const mutators = args[3]
 
           const handleScan = (value, closeQrModal) => {
-            let scannedAddress = value
+            const scannedAddress = getAddressWithoutNetworkPrefix(value)
 
-            if (scannedAddress.startsWith('ethereum:')) {
-              scannedAddress = scannedAddress.replace('ethereum:', '')
-            }
             mutators.setOwnerAddress(scannedAddress)
             closeQrModal()
           }

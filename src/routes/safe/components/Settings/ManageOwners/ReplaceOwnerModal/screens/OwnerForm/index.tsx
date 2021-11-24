@@ -36,6 +36,7 @@ export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 import { OwnerValues } from '../..'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 const formMutators: Record<
   string,
@@ -89,11 +90,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
           const mutators = args[3]
 
           const handleScan = (value, closeQrModal) => {
-            let scannedAddress = value
-
-            if (scannedAddress.startsWith('ethereum:')) {
-              scannedAddress = scannedAddress.replace('ethereum:', '')
-            }
+            const scannedAddress = getAddressWithoutNetworkPrefix(value)
 
             mutators.setOwnerAddress(scannedAddress)
             closeQrModal()

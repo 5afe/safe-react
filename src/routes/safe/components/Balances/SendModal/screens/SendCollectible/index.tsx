@@ -27,6 +27,7 @@ import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
+import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -123,11 +124,8 @@ const SendCollectible = ({
           const selectedNFTTokens = nftTokens.filter((nftToken) => nftToken.assetAddress === assetAddress)
 
           const handleScan = (value, closeQrModal) => {
-            let scannedAddress = value
+            const scannedAddress = getAddressWithoutNetworkPrefix(value)
 
-            if (scannedAddress.startsWith('ethereum:')) {
-              scannedAddress = scannedAddress.replace('ethereum:', '')
-            }
             const scannedName =
               addressBook.find(({ address }) => {
                 return sameAddress(scannedAddress, address)
