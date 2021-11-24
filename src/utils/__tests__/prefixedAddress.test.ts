@@ -22,6 +22,13 @@ describe('Prefixed address utils', () => {
         prefix: 'rin',
       })
     })
+
+    it('parses an empty address', () => {
+      expect(parsePrefixedAddress('')).toStrictEqual({
+        address: '',
+        prefix: 'rin',
+      })
+    })
   })
 
   describe('isValidPrefix', () => {

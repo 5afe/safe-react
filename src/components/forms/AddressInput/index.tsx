@@ -13,9 +13,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
-// an idea for second field was taken from here
-// https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
-
 export interface AddressInputProps {
   fieldMutator: (address: string) => void
   name?: string
@@ -42,7 +39,7 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): React.ReactElement => {
-  const [currentInput, setCurrentInput] = useState<string>('')
+  const [currentInput, setCurrentInput] = useState<string>(defaultValue || '')
   const [resolutions, setResolutions] = useState<Record<string, string | undefined>>({})
   const resolvedAddress = resolutions[currentInput]
   const isResolving = resolvedAddress === ''
@@ -63,7 +60,42 @@ const AddressInput = ({
       }
     : inputAdornment
 
-  const getValidationError = composeValidators(required, mustBeEthereumAddress, ...validators)
+  const rawValidators = composeValidators(required, mustBeEthereumAddress)
+  const sanitizedValidators = (val: string) => {
+    const parsed = parsePrefixedAddress(val)
+    return composeValidators(...validators)(parsed.address)
+  }
+  const allValidators = composeValidators(rawValidators, sanitizedValidators)
+
+  const onValueChange = (rawVal: string) => {
+    const address = trimSpaces(rawVal)
+
+    setCurrentInput(rawVal)
+
+    // A crypto domain name
+    if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+      setResolutions((prev) => ({ ...prev, [rawVal]: '' }))
+
+      getAddressFromDomain(address)
+        .then((resolverAddr) => {
+          const formattedAddress = checksumAddress(resolverAddr)
+          setResolutions((prev) => ({ ...prev, [rawVal]: formattedAddress }))
+        })
+        .catch((err) => {
+          setResolutions((prev) => ({ ...prev, [rawVal]: undefined }))
+          logError(Errors._101, err.message)
+        })
+    } else {
+      // A regular address hash
+      if (!allValidators(address)) {
+        const parsed = parsePrefixedAddress(address)
+        const checkedAddress = checksumAddress(parsed.address) || parsed.address
+
+        // Field mutator (parent component) always gets an unprefixed address
+        fieldMutator(checkedAddress)
+      }
+    }
+  }
 
   return (
     <>
@@ -73,39 +105,31 @@ const AddressInput = ({
         defaultValue={defaultValue}
         disabled={disabled}
         inputAdornment={adornment}
-        name={name}
+        name={`raw_${name}`}
         placeholder={placeholder}
-        testId={testId}
         text={text}
-        type="text"
         spellCheck={false}
-        validate={getValidationError}
+        validate={allValidators}
+        inputProps={{
+          'data-testid': testId,
+          value: currentInput,
+          onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChange(e.target.value)
+          },
+        }}
       />
+
       <OnChange name={name}>
         {async (value: string) => {
-          const address = trimSpaces(value)
-          setCurrentInput(address)
+          const trimmedCurrent = trimSpaces(currentInput)
+          if (value === trimmedCurrent) return
 
-          // A crypto domain name
-          if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-            setResolutions((prev) => ({ ...prev, [address]: '' }))
-            try {
-              const resolverAddr = await getAddressFromDomain(address)
-              const formattedAddress = checksumAddress(resolverAddr)
-              setResolutions((prev) => ({ ...prev, [address]: formattedAddress }))
-            } catch (err) {
-              setResolutions((prev) => ({ ...prev, [address]: undefined }))
-              logError(Errors._101, err.message)
-            }
-          } else {
-            // A regular address hash
-            if (!getValidationError(address)) {
-              const parsed = parsePrefixedAddress(address)
-              const checkedAddress = checksumAddress(parsed.address) || parsed.address
-
-              // FIXME: this'll remove the prefix
-              fieldMutator(checkedAddress)
-            }
+          const { address } = parsePrefixedAddress(trimmedCurrent)
+          // This means the input has been changed by the parent component
+          // E.g. when a QR code is scanned
+          if (address.toLowerCase() !== value.toLowerCase()) {
+            setCurrentInput(value)
+            onValueChange(value)
           }
         }}
       </OnChange>
