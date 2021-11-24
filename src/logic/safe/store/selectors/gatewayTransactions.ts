@@ -1,7 +1,12 @@
 import get from 'lodash.get'
 import { createSelector } from 'reselect'
 
-import { StoreStructure, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isMultisigExecutionInfo,
+  StoreStructure,
+  Transaction,
+  TxLocation,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
@@ -44,50 +49,16 @@ export const queuedTransactions = createSelector(
   },
 )
 
-type TxByLocationAttr = { attributeName: string; attributeValue: string | number; txLocation: TxLocation }
-
-type TxByLocation = {
-  attributeName: string
-  attributeValue: string | number
-  transactions: StoreStructure['history'] | StoreStructure['queued']['queued' | 'next']
-}
-
-const getTransactionsByLocation = createHashBasedSelector(
+export const getTransactionWithLocationByAttribute = createSelector(
   gatewayTransactions,
   currentChainId,
   extractSafeAddress,
-  (gatewayTransactions, chainId, safeAddress) =>
-    (rest: TxByLocationAttr): TxByLocation => ({
-      attributeName: rest.attributeName,
-      attributeValue: rest.attributeValue,
-      transactions: chainId && safeAddress ? get(gatewayTransactions[chainId][safeAddress], rest.txLocation) : [],
-    }),
-)
-
-export const getTransactionByAttribute = createSelector(
-  getTransactionsByLocation,
-  (fn: (r: TxByLocationAttr) => TxByLocation) =>
-    (rest: TxByLocationAttr): Transaction | undefined => {
-      const { attributeName, attributeValue, transactions } = fn(rest)
-
-      if (transactions && attributeValue) {
-        for (const [, txs] of Object.entries(transactions)) {
-          const foundTx = txs.find((transaction) => transaction[attributeName] === attributeValue)
-
-          if (foundTx) {
-            return foundTx
-          }
-        }
-      }
-    },
-)
-
-export const getTransactionWithLocationById = createSelector(
-  gatewayTransactions,
-  currentChainId,
-  extractSafeAddress,
-  (_: AppReduxState, transactionId: string) => transactionId,
-  (gatewayTransactions, chainId, safeAddress, transactionId) => {
+  (
+    _: AppReduxState,
+    attrDetails: { attributeName: keyof Transaction; attributeValue: Transaction[keyof Transaction] },
+  ) => attrDetails,
+  (gatewayTransactions, chainId, safeAddress, attrDetails) => {
+    const { attributeName, attributeValue } = attrDetails
     const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
 
     for (const txLocation of txLocations) {
@@ -101,40 +72,50 @@ export const getTransactionWithLocationById = createSelector(
       }
 
       for (const txs of Object.values(storedTxs)) {
-        const foundTx = txs.find((transaction) => transaction.id === transactionId)
+        // If we want a deep comparison, we should use a lodash get/isEqual to deep compare keys/values
+        const foundTx = txs.find((transaction) => transaction[attributeName] === attributeValue)
 
-        if (!foundTx) {
-          continue
-        }
-
-        return {
-          txLocation,
-          transaction: foundTx,
+        if (foundTx) {
+          return { transaction: foundTx, txLocation }
         }
       }
     }
   },
 )
 
-export const getTransactionDetails = createSelector(
-  getTransactionByAttribute,
-  (fn: (rest: TxByLocationAttr) => Transaction | undefined) =>
-    (rest: TxByLocationAttr): Transaction['txDetails'] | undefined => {
-      const transaction = fn(rest)
-      return transaction?.txDetails
-    },
+export const getTransactionByAttribute = createSelector(
+  gatewayTransactions,
+  currentChainId,
+  extractSafeAddress,
+  getTransactionWithLocationByAttribute,
+  (_gatewayTransactions, _chainId, _safeAddress, txWithLocation) => {
+    return txWithLocation?.transaction
+  },
 )
 
-export const getQueuedTransactionsByNonce = createSelector(
-  getTransactionsByLocation,
-  (fn: (r: TxByLocationAttr) => TxByLocation) =>
-    (rest: TxByLocationAttr): Transaction[] => {
-      const { attributeValue, attributeName, transactions } = fn(rest)
+export const getTransactionsByNonce = createSelector(
+  gatewayTransactions,
+  currentChainId,
+  extractSafeAddress,
+  (_: AppReduxState, nonce: number) => nonce,
+  (gatewayTransactions, chainId, safeAddress, nonce): Transaction[] => {
+    const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
 
-      if (attributeName === 'nonce') {
-        return transactions?.[attributeValue] ?? []
+    return txLocations.reduce((acc: Transaction[], txLocation) => {
+      const storedTxs: StoreStructure['history'] | StoreStructure['queued']['queued' | 'next'] | undefined = get(
+        gatewayTransactions?.[chainId]?.[safeAddress],
+        txLocation,
+      )
+
+      if (!storedTxs) {
+        return acc
       }
 
-      return []
-    },
+      const [, txsByNonce = []] = Object.values(storedTxs).filter((txs) =>
+        txs.some((tx) => isMultisigExecutionInfo(tx.executionInfo) && tx.executionInfo?.nonce === nonce),
+      )
+
+      return [...acc, ...txsByNonce]
+    }, [])
+  },
 )

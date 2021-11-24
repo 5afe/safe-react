@@ -14,7 +14,6 @@ export const history = createBrowserHistory({
 // Safe specific routes
 const hashRegExp = '0x[0-9A-Fa-f]'
 
-const txHashPathRegExp = `${hashRegExp}{64}`
 const chainSpecificSafeAddressPathRegExp = `[a-z0-9-]{2,}:${hashRegExp}{40}`
 
 export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
@@ -28,14 +27,14 @@ export const SAFE_SECTION_ROUTE = `${ADDRESSED_ROUTE}/:${SAFE_SECTION_SLUG}`
 export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
 export const SAFE_SUBSECTION_ROUTE = `${SAFE_SECTION_ROUTE}/:${SAFE_SUBSECTION_SLUG}`
 
-export const TRANSACTION_HASH_SLUG = `safeTxHash`
+export const TRANSACTION_ID_SLUG = `txId`
 
 // URL: gnosis-safe.io/app/:[SAFE_ADDRESS_SLUG]/:[SAFE_SECTION_SLUG]/:[SAFE_SUBSECTION_SLUG]
 export type SafeRouteSlugs = {
   [SAFE_ADDRESS_SLUG]?: string
   [SAFE_SECTION_SLUG]?: string
   [SAFE_SUBSECTION_SLUG]?: string
-  [TRANSACTION_HASH_SLUG]?: string
+  [TRANSACTION_ID_SLUG]?: string
 }
 
 export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
@@ -51,9 +50,10 @@ export const SAFE_ROUTES = {
   ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
   ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
   TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
-  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_HASH_SLUG}(${txHashPathRegExp})`, // [TRANSACTION_HASH_SLUG] === 'safeTxHash', optional hash
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
+  // RegExp route rejection, i.e. !history|queue does not work so it is important to have singular after the above two in Switches
+  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}`, // [TRANSACTION_HASH_SLUG] === 'txId'
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,

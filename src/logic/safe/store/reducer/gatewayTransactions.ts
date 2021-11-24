@@ -35,7 +35,6 @@ export type QueuedPayload = BasePayload & { values: QueuedGatewayResponse['resul
 export type TransactionDetailsPayload = {
   chainId: string
   safeAddress: string
-  txLocation: TxLocation
   transactionId: string
   value: Transaction['txDetails']
 }
@@ -48,25 +47,6 @@ export type TransactionStatusPayload = {
 }
 
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload | TransactionStatusPayload
-
-const findTransactionLocation = (
-  transactionsGroup: { [p: number]: Transaction[] },
-  transactionId: string,
-): { key: string; index: number } => {
-  let key
-  let index
-  let transactions
-
-  for ([key, transactions] of Object.entries(transactionsGroup)) {
-    index = transactions.findIndex(({ id }) => sameString(id, transactionId))
-
-    if (index !== -1) {
-      break
-    }
-  }
-
-  return { key, index }
-}
 
 export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
   {
@@ -254,33 +234,31 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       }
     },
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
-      const { chainId, safeAddress, transactionId, txLocation, value } = action.payload
+      const { chainId, safeAddress, transactionId, value } = action.payload
+      // FIXME: need to make a deep copy as modifying as we write to original object
       const storedTransactions = Object.assign({}, state[chainId][safeAddress])
       const { queued } = storedTransactions
-      let { history } = storedTransactions
+      const { history } = storedTransactions
 
       // get the tx group (it will be `queued.next`, `queued.queued` or `history`)
-      const txGroup: StoreStructure['queued']['next' | 'queued'] | StoreStructure['history'] = get(
-        storedTransactions,
-        txLocation,
-      )
+      for (const txLocation of ['queued.next', 'queued.queued', 'history']) {
+        const txGroup: StoreStructure['queued']['next' | 'queued'] | StoreStructure['history'] = get(
+          storedTransactions,
+          txLocation,
+        )
 
-      // find the transaction location
-      const { key, index } = findTransactionLocation(txGroup, transactionId)
-      // add details to tx object
-      txGroup[key][index]['txDetails'] = value
+        if (!txGroup) {
+          continue
+        }
 
-      // replace the updated group in its corresponding location
-      switch (txLocation) {
-        case 'history':
-          history = txGroup
-          break
-        case 'queued.next':
-          queued['next'] = txGroup
-          break
-        case 'queued.queued':
-          queued['queued'] = txGroup
-          break
+        for (const [timestamp, transactions] of Object.entries(txGroup)) {
+          const txIndex = transactions.findIndex(({ id }) => sameString(id, transactionId))
+
+          if (txIndex !== -1) {
+            txGroup[timestamp][txIndex]['txDetails'] = value
+            break
+          }
+        }
       }
 
       // update state

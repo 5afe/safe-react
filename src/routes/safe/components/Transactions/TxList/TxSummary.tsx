@@ -17,15 +17,12 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
   const safeTxHash = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.safeTxHash : undefined
-  const hasSafeTxHash = safeTxHash !== undefined
 
   return (
     <>
-      {hasSafeTxHash && (
-        <div className="tx-share">
-          <TxShareButton safeTxHash={safeTxHash} />
-        </div>
-      )}
+      <div className="tx-share">
+        <TxShareButton id={txDetails.txId} />
+      </div>
       <div className="tx-hash">
         <Text size="xl" strong as="span">
           Transaction hash:{' '}
@@ -38,7 +35,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
           </Text>
         )}
       </div>
-      {hasSafeTxHash && (
+      {safeTxHash !== undefined && (
         <div className="tx-hash">
           <Text size="xl" strong as="span">
             SafeTxHash:{' '}

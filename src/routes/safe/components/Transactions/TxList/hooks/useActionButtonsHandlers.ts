@@ -52,7 +52,6 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
       actionContext.current.selectAction({
         actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
         transactionId: transaction.id,
-        txLocation: locationContext.current.txLocation,
       })
     },
     [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails],
@@ -64,7 +63,6 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
       actionContext.current.selectAction({
         actionSelected: 'cancel',
         transactionId: transaction.id,
-        txLocation: locationContext.current.txLocation,
       })
     },
     [transaction.id],

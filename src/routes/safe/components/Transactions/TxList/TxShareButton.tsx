@@ -2,17 +2,17 @@ import { CopyToClipboardBtn } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 import { generatePath } from 'react-router-dom'
 
-import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_HASH_SLUG } from 'src/routes/routes'
+import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { PUBLIC_URL } from 'src/utils/constants'
 
 type Props = {
-  safeTxHash: string
+  id: string
 }
 
-const TxShareButton = ({ safeTxHash }: Props): ReactElement => {
+const TxShareButton = ({ id }: Props): ReactElement => {
   const txDetailsPathname = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(),
-    [TRANSACTION_HASH_SLUG]: safeTxHash,
+    [TRANSACTION_ID_SLUG]: id,
   })
   const txDetailsLink = `${window.location.origin}${PUBLIC_URL}${txDetailsPathname}`
 

@@ -21,7 +21,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES, TRANSACTION_HASH_SLUG, history } from 'src/routes/routes'
+import { SAFE_ROUTES, TRANSACTION_ID_SLUG, history } from 'src/routes/routes'
 
 export const NOT_AVAILABLE = 'n/a'
 interface AmountData {
@@ -177,9 +177,13 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
 }
 
 export const isDeeplinkedTx = (): boolean => {
-  const match = matchPath(history.location.pathname, {
+  const txMatch = matchPath(history.location.pathname, {
+    path: [SAFE_ROUTES.TRANSACTIONS_HISTORY, SAFE_ROUTES.TRANSACTIONS_QUEUE],
+  })
+
+  const deeplinkMatch = matchPath(history.location.pathname, {
     path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
   })
 
-  return !!match?.params?.[TRANSACTION_HASH_SLUG]
+  return !txMatch && !!deeplinkMatch?.params?.[TRANSACTION_ID_SLUG]
 }

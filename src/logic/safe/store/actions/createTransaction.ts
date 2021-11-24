@@ -36,7 +36,7 @@ import {
   history,
   SAFE_ADDRESS_SLUG,
   SAFE_ROUTES,
-  TRANSACTION_HASH_SLUG,
+  TRANSACTION_ID_SLUG,
 } from 'src/routes/routes'
 import { getCurrentShortChainName, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
@@ -68,11 +68,11 @@ export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
-const navigateToTx = (safeAddress: string, safeTxHash: string) => {
+const navigateToTx = (safeAddress: string, txId: string) => {
   const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: getCurrentShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_HASH_SLUG]: safeTxHash,
+    [TRANSACTION_ID_SLUG]: txId,
   })
   history.push(txRoute)
 }
@@ -149,11 +149,11 @@ export const createTransaction =
 
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-          await saveTxToHistory({ ...txArgs, signature, origin })
+          const txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
 
           dispatch(fetchTransactions(chainId, safeAddress))
           if (navigateToTransactionsTab) {
-            navigateToTx(safeAddress, safeTxHash)
+            navigateToTx(safeAddress, txDetails.txId)
           }
           onUserConfirm?.(safeTxHash)
           return
@@ -179,9 +179,9 @@ export const createTransaction =
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
           try {
-            await saveTxToHistory({ ...txArgs, origin })
+            const txDetails = await saveTxToHistory({ ...txArgs, origin })
             if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, safeTxHash)
+              navigateToTx(safeAddress, txDetails.txId)
             }
           } catch (err) {
             logError(Errors._803, err.message)
