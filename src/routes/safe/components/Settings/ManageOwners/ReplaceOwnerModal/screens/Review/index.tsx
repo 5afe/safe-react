@@ -8,7 +8,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -22,6 +22,8 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 
 import { useStyles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -45,13 +47,8 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const {
-    address: safeAddress,
-    name: safeName,
-    owners,
-    threshold = 1,
-    currentVersion: safeVersion,
-  } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, name: safeName, owners, threshold = 1 } = useSelector(currentSafeWithNames)
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -77,22 +74,29 @@ export const ReviewReplaceOwnerModal = ({
 
   useEffect(() => {
     let isCurrent = true
+
     const calculateReplaceOwnerData = async () => {
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-      const safeOwners = await gnosisSafe.methods.getOwners().call()
-      const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
-      const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.methods.swapOwner(prevAddress, owner.address, newOwner.address).encodeABI()
-      if (isCurrent) {
-        setData(txData)
+      try {
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+        const safeTx = await sdk.getSwapOwnerTx(
+          { oldOwnerAddress: owner.address, newOwnerAddress: newOwner.address },
+          { safeTxGas: 0 },
+        )
+        const txData = safeTx.data.data
+
+        if (isCurrent) {
+          setData(txData)
+        }
+      } catch (error) {
+        logError(Errors._813, error.message)
       }
     }
-
     calculateReplaceOwnerData()
+
     return () => {
       isCurrent = false
     }
-  }, [owner.address, safeAddress, safeVersion, newOwner.address])
+  }, [safeAddress, connectedWalletAddress, owner.address, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
