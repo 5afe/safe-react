@@ -1,13 +1,19 @@
 import { useSelector } from 'react-redux'
-import { queuedTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { nextTransactions, queuedTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
 const useLastQueuedTxNonce = (): number | undefined => {
   const queuedTxs = useSelector(queuedTransactions)
-  const nonces = queuedTxs && Object.keys(queuedTxs)
+  const nextTxs = useSelector(nextTransactions)
+  const queuedNonces = queuedTxs && Object.keys(queuedTxs)
+  const nextNonces = nextTxs && Object.keys(nextTxs)
 
-  const lastTxNonce = nonces?.length ? Number(nonces[nonces.length - 1]) : undefined
-
-  return lastTxNonce
+  if (queuedNonces?.length) {
+    return Number(queuedNonces[queuedNonces.length - 1])
+  }
+  if (nextNonces?.length) {
+    return Number(nextNonces[nextNonces.length - 1])
+  }
+  return undefined
 }
 
 export default useLastQueuedTxNonce
