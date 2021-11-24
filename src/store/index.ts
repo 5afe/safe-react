@@ -29,7 +29,6 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {
   CURRENCY_REDUCER_ID,
   CurrencyValuesState,
@@ -97,9 +96,6 @@ export type AppReduxState = CombinedState<{
   [NETWORK_CONFIG_REDUCER_ID]: NetworkState
   [APPEARANCE_REDUCER_ID]: AppearanceState
 }>
-
-// Address Book v2 migration
-migrateAddressBook(localStorageConfig)
 
 export const store: any = createStore(reducers, load(localStorageConfig), finalCreateStore)
 

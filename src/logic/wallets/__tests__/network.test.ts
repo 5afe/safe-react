@@ -1,6 +1,6 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { switchNetwork, shouldSwitchNetwork, canSwitchNetwork } from 'src/logic/wallets/utils/network'
+import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 class CodedError extends Error {
   public code: number
@@ -99,26 +99,6 @@ describe('src/logic/wallets/utils/network', () => {
       }
 
       expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
-    })
-  })
-
-  describe('canSwitchNetwork', () => {
-    it('should return true when swithcing is supported', () => {
-      const wallet = {
-        provider: {
-          isMetaMask: true,
-        },
-      }
-
-      expect(canSwitchNetwork(wallet as Wallet)).toBe(true)
-    })
-
-    it('should return false when swithcing is not supported', () => {
-      const wallet = {
-        provider: undefined,
-      }
-
-      expect(canSwitchNetwork(wallet as Wallet)).toBe(false)
     })
   })
 })

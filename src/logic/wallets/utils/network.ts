@@ -85,6 +85,13 @@ export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): bool
   return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
 }
 
-export const canSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
-  return wallet?.provider?.isMetaMask || false
+export const switchWalletChain = async (): Promise<void> => {
+  const { wallet } = onboard().getState()
+  try {
+    await switchNetwork(wallet, getNetworkId())
+  } catch (e) {
+    e.log()
+    // Fallback to the onboard popup if switching isn't supported
+    await onboard().walletCheck()
+  }
 }

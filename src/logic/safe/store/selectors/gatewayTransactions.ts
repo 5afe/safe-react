@@ -1,4 +1,4 @@
-import get from 'lodash.get'
+import get from 'lodash/get'
 import { createSelector } from 'reselect'
 
 import { StoreStructure, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'

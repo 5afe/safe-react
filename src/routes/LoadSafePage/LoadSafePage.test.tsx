@@ -325,8 +325,6 @@ describe('<LoadSafePage>', () => {
       expect(safeAddressInputNode.value).toBe(notExistingENSNameDomain)
 
       await waitFor(() => {
-        // the loader is not present
-        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
         expect(mockedEndpoints.getSafeInfo).not.toHaveBeenCalled()
         const errorTextNode = screen.getByText('Must be a valid address, ENS or Unstoppable domain')
 

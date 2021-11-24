@@ -1,5 +1,5 @@
 import axios from 'axios'
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
@@ -38,10 +38,10 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `description` exists
   !!appInfo.description
 
-export const getEmptySafeApp = (): SafeApp => {
+export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
     id: Math.random().toString(),
-    url: '',
+    url,
     name: 'unknown',
     iconUrl: appsIconSvg,
     description: '',

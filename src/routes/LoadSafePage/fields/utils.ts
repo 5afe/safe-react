@@ -9,11 +9,8 @@ import {
 
 export function getLoadSafeName(formValues: LoadSafeFormValues, addressBook: AddressBookMap): string {
   let safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
-  try {
-    safeAddress = checksumAddress(safeAddress)
-  } catch (e) {
-    // ignore error
-  }
+  safeAddress = safeAddress && checksumAddress(safeAddress)
+
   return (
     formValues[FIELD_LOAD_CUSTOM_SAFE_NAME] ||
     addressBook[safeAddress]?.name ||

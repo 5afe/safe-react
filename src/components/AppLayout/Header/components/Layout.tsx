@@ -15,6 +15,10 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { WELCOME_ROUTE } from 'src/routes/routes'
+import WalletSwitch from 'src/components/WalletSwitch'
+import Divider from 'src/components/layout/Divider'
+import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
 
 const styles = () => ({
   root: {
@@ -46,6 +50,9 @@ const styles = () => ({
       paddingLeft: md,
       paddingRight: md,
     },
+  },
+  wallet: {
+    paddingRight: md,
   },
   popper: {
     zIndex: 1301,
@@ -84,36 +91,46 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
   )
 }
 
-const Layout = ({ classes, providerDetails, providerInfo, shouldSwitchChain }) => {
+const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
+  const isWrongChain = useSelector(shouldSwitchWalletChain)
   const { isDesktop } = window
-  const isOpen = open || shouldSwitchChain
 
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link to={WELCOME_ROUTE}>
-          <Img alt="Gnosis Team Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
+          <Img alt="Gnosis Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
         </Link>
       </Col>
+
       <Spacer />
+
+      {isWrongChain && (
+        <div className={classes.wallet}>
+          <WalletSwitch />
+          <Divider />
+        </div>
+      )}
+
       <Provider
         info={providerInfo}
-        open={isOpen}
+        open={open}
         toggle={toggle}
         render={(providerRef) =>
           providerRef.current && (
             <WalletPopup
               anchorEl={providerRef.current}
               providerDetails={providerDetails}
-              open={isOpen}
+              open={open}
               classes={classes}
               onClose={clickAway}
             />
           )
         }
       />
+
       {!isDesktop && <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />}
     </Row>
   )

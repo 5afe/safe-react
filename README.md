@@ -18,19 +18,12 @@ For support requests, please open up a [bug issue](https://github.com/gnosis/saf
 - [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
 - [safe-react-components](https://github.com/gnosis/safe-react-components)
 
-## Production deployments
+## Deployed environments
 
-This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
-
-Besides the Ethereum Mainnet, the following networks are supported:
-
-- [Rinkeby Testnet](https://gnosis-safe.io/app/rinkeby)
-- [xDai](https://gnosis-safe.io/app/xdai)
-- [Polygon](https://gnosis-safe.io/app/polygon)
-- [Binance Smart Chain](https://gnosis-safe.io/app/bsc)
-- [Arbitrum](https://gnosis-safe.io/app/arbitrum)
-- [Energy Web Chain](https://gnosis-safe.io/app/ewc)
-- [Volta Testnet](https://gnosis-safe.io/app/volta)
+* Production: https://gnosis-safe.io/app/
+* Staging: https://safe-team.staging.gnosisdev.com/app/
+* Dev: https://safe-team.dev.gnosisdev.com/app/
+* PRs: https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/
 
 ## Getting Started
 
@@ -65,16 +58,10 @@ Install dependencies for the project:
 yarn install
 ```
 
-To use the Rinkeby services:
+To launch the app with all configured chains:
 
 ```
 yarn start
-```
-
-If you prefer using the Mainnet ones:
-
-```
-yarn start-mainnet
 ```
 
 If you prefer to use Docker:
@@ -85,16 +72,10 @@ docker-compose build && docker-compose up
 
 ### Building
 
-For Rinkeby:
+Te get a complete bundle using the current configuration use:
 
 ```
 yarn build
-```
-
-For Mainnet:
-
-```
-yarn build-mainnet
 ```
 
 ## Running the tests
@@ -120,7 +101,7 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team.staging.gnosisdev.com/).
 
 ### Production
 

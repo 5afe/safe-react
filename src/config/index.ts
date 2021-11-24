@@ -1,4 +1,4 @@
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 import networks from 'src/config/networks'
 import {

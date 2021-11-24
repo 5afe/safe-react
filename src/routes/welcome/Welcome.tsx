@@ -26,7 +26,7 @@ function Welcome(): ReactElement {
                 Create Safe
               </Title>
               <CardDescriptionContainer>
-                <Text size="xl">Create a new Safe Multisig that is controlled by one or multiple owners.</Text>
+                <Text size="xl">Create a new Safe that is controlled by one or multiple owners.</Text>
                 <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
               </CardDescriptionContainer>
               <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
@@ -43,8 +43,8 @@ function Welcome(): ReactElement {
               </Title>
               <CardDescriptionContainer>
                 <Text size="xl">
-                  Already have a Safe or want to access it from a different device? Easily load your Safe MultiSig using
-                  your Safe address.
+                  Already have a Safe or want to access it from a different device? Easily load your Safe using your
+                  Safe address.
                 </Text>
               </CardDescriptionContainer>
               <Button

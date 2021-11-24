@@ -6,6 +6,7 @@ import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
+import { Notification } from 'src/logic/notifications/notificationTypes'
 
 let nonce: number | undefined
 
@@ -17,7 +18,7 @@ export const getNotification = (
   { safeAddress, values }: HistoryPayload,
   userAddress: string,
   safes: SafesMap,
-): undefined => {
+): undefined | Notification => {
   const currentSafe = safes.get(safeAddress)
 
   // no notification if not in the current safe or if its not an owner

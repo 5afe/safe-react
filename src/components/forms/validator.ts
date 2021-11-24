@@ -1,4 +1,4 @@
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'

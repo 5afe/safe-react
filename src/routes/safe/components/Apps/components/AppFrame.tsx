@@ -23,7 +23,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { getAppInfoFromUrl } from '../utils'
+import { getAppInfoFromUrl, getEmptySafeApp } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -95,7 +95,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
-  const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
+  const [safeApp, setSafeApp] = useState<SafeApp>(() => getEmptySafeApp(appUrl))
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
   const timer = useRef<number>()
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
@@ -282,19 +282,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       trackEvent({ ...SAFE_EVENTS.SAFE_APP, label: safeApp.name })
     }
   }, [safeApp, trackEvent])
-
-  if (!safeApp) {
-    return (
-      <LoadingContainer style={{ flexDirection: 'column' }}>
-        {isLoadingSlow && (
-          <Title size="xs">
-            The Safe App is taking too long to load. There might be a problem with the App provider.
-          </Title>
-        )}
-        <Loader size="md" />
-      </LoadingContainer>
-    )
-  }
 
   return (
     <AppWrapper>

@@ -57,7 +57,7 @@ const bsc: NetworkConfig = {
     WALLETS.LATTICE,
     WALLETS.KEYSTONE,
   ],
-  disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP],
 }
 
 export default bsc

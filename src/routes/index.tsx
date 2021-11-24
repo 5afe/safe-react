@@ -47,7 +47,9 @@ const Routes = (): React.ReactElement => {
       ? location.pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
       : location.pathname
     trackPage(pathname + location.search)
-  }, [location, trackPage])
+
+    // Track when pathname changes
+  }, [location.pathname, location.search, trackPage])
 
   return (
     <Switch>

@@ -11,10 +11,8 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { getNetworkConfigById, getShortChainNameById } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { isSafeAdded } from 'src/logic/safe/utils/safeInformation'
 import {
   generateSafeRoute,
   extractSafeAddress,
@@ -22,6 +20,7 @@ import {
   SAFE_ROUTES,
   SafeRouteParams,
 } from 'src/routes/routes'
+import { setNetwork } from 'src/logic/config/utils'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -41,7 +40,7 @@ type Props = {
   onNetworkSwitch?: () => void
   address: string
   ethBalance?: string
-  loadedSafes: SafeRecordWithNames[]
+  showAddSafeLink?: boolean
   networkId: ETHEREUM_NETWORK
   shouldScrollToSafe?: boolean
 }
@@ -51,7 +50,7 @@ const SafeListItem = ({
   onNetworkSwitch,
   address,
   ethBalance,
-  loadedSafes,
+  showAddSafeLink = false,
   networkId,
   shouldScrollToSafe = false,
 }: Props): ReactElement => {
@@ -61,7 +60,6 @@ const SafeListItem = ({
   const isCurrentSafe = sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
-  const showAddSafeLink = !isSafeAdded(loadedSafes, address)
   const shortName = getShortChainNameById(networkId)
 
   useEffect(() => {
@@ -70,20 +68,31 @@ const SafeListItem = ({
     }
   }, [isCurrentSafe, shouldScrollToSafe])
 
-  const handleLoadSafe = (): void => {
-    onNetworkSwitch?.()
-    onSafeClick()
-  }
-
   const routesSlug: SafeRouteParams = {
     shortName: getShortChainNameById(networkId),
     safeAddress: address,
   }
 
   const handleOpenSafe = (): void => {
-    handleLoadSafe()
+    onSafeClick()
+    onNetworkSwitch?.()
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug))
   }
+
+  const handleLoadSafe = (): void => {
+    onSafeClick()
+    onNetworkSwitch?.()
+    history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
+
+    // Navigating to LOAD_SPECIFIC_SAFE_ROUTE doesn't trigger a network switch
+    setNetwork(networkId)
+  }
+
+  useEffect(() => {
+    if (isCurrentSafe && shouldScrollToSafe) {
+      safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [isCurrentSafe, shouldScrollToSafe])
 
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
