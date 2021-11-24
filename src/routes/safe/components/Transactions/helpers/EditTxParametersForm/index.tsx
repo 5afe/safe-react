@@ -16,6 +16,7 @@ import { minValue } from 'src/components/forms/validator'
 import { Modal } from 'src/components/Modal'
 
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
+import useSafeTxGas from '../useSafeTxGas'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -94,6 +95,7 @@ export const EditTxParametersForm = ({
 }: Props): ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
+  const showSafeTxGas = useSafeTxGas()
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -146,16 +148,18 @@ export const EditTxParametersForm = ({
                   component={TextField}
                   disabled={!areSafeParamsEnabled(parametersStatus)}
                 />
-                <Field
-                  name="safeTxGas"
-                  defaultValue={safeTxGas}
-                  placeholder="SafeTxGas"
-                  text="SafeTxGas"
-                  type="number"
-                  min="0"
-                  component={TextField}
-                  disabled={!areSafeParamsEnabled(parametersStatus)}
-                />
+                {showSafeTxGas && (
+                  <Field
+                    name="safeTxGas"
+                    defaultValue={safeTxGas}
+                    placeholder="SafeTxGas"
+                    text="SafeTxGas"
+                    type="number"
+                    min="0"
+                    component={TextField}
+                    disabled={!areSafeParamsEnabled(parametersStatus)}
+                  />
+                )}
               </SafeOptions>
 
               {areEthereumParamsVisible(parametersStatus) && (
