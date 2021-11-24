@@ -8,6 +8,8 @@ COPY package.json ./
 
 COPY yarn.lock ./
 
+COPY  src/logic/contracts/artifacts ./src/logic/contracts/artifacts
+
 RUN yarn install
 
 COPY . .

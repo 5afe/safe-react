@@ -6,7 +6,7 @@ export default {
   title: 'Layout',
   component: Layout,
   parameters: {
-    componentSubtitle: 'It provides a custom layout used in Safe Multisig',
+    componentSubtitle: 'It provides a custom layout used in Safe',
   },
 }
 

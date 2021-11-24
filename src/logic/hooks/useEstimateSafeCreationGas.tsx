@@ -18,6 +18,7 @@ type SafeCreationEstimationResult = {
   gasEstimation: number // Amount of gas needed for execute or approve the transaction
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasLimit: number // Minimum gas requited to execute the Tx
+  gasPrice: string
 }
 
 const estimateGas = async (
@@ -36,6 +37,7 @@ const estimateGas = async (
   const gasCostFormatted = formatAmount(gasCost)
 
   return {
+    gasPrice,
     gasEstimation,
     gasCostFormatted,
     gasLimit: gasEstimation,
@@ -51,6 +53,7 @@ export const useEstimateSafeCreationGas = ({
     gasEstimation: 0,
     gasCostFormatted: '< 0.001',
     gasLimit: 0,
+    gasPrice: '0',
   })
   const userAccount = useSelector(userAccountSelector)
   // Serialize the addresses array so that it doesn't trigger the effect due to the dependencies
