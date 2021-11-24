@@ -1,7 +1,7 @@
 import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { cloneDeep } from 'lodash' // Tree shaking doesn't work with this function: https://github.com/lodash/lodash/issues/2599
+import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
 
 import {
@@ -101,8 +101,8 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       // Thus, given the client-gateway page size of 20, we have plenty of "room" to be provided with
       // `next` and `queued` transactions in the first page.
       const { chainId, safeAddress, values } = action.payload
-      let newNext = cloneDeep(state[chainId]?.[safeAddress]?.queued.next || {})
-      const newQueued = cloneDeep(state[chainId]?.[safeAddress]?.queued.queued || {})
+      let newNext = cloneDeep(state[chainId]?.[safeAddress]?.queued?.next || {})
+      const newQueued = cloneDeep(state[chainId]?.[safeAddress]?.queued?.queued || {})
 
       let label: 'next' | 'queued' | undefined
       values.forEach((value) => {
@@ -236,7 +236,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
     },
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
       const { chainId, safeAddress, transactionId, value } = action.payload
-      const clonedStoredTxs = cloneDeep(state[chainId][safeAddress])
+      const clonedStoredTxs = cloneDeep(state[chainId]?.[safeAddress])
       const { queued: newQueued, history: newHistory } = clonedStoredTxs
 
       // get the tx group (it will be `queued.next`, `queued.queued` or `history`)
@@ -277,7 +277,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       // if we provide the tx ID that sole tx will have the _pending_ status.
       // if not, all the txs that share the same nonce will have the _pending_ status.
       const { chainId, nonce, id, safeAddress, txStatus } = action.payload
-      const clonedStoredTxs = cloneDeep(state[chainId][safeAddress])
+      const clonedStoredTxs = cloneDeep(state[chainId]?.[safeAddress])
       const { queued: newQueued, history: newHistory } = clonedStoredTxs
 
       let txLocation: TxLocation | undefined

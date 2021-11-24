@@ -49,6 +49,8 @@ export const queuedTransactions = createSelector(
   },
 )
 
+const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
+
 export const getTransactionWithLocationByAttribute = createSelector(
   gatewayTransactions,
   currentChainId,
@@ -59,8 +61,6 @@ export const getTransactionWithLocationByAttribute = createSelector(
   ) => attrDetails,
   (gatewayTransactions, chainId, safeAddress, attrDetails) => {
     const { attributeName, attributeValue } = attrDetails
-    const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
-
     for (const txLocation of txLocations) {
       const storedTxs: StoreStructure['history'] | StoreStructure['queued']['queued' | 'next'] | undefined = get(
         gatewayTransactions?.[chainId]?.[safeAddress],
@@ -99,23 +99,31 @@ export const getTransactionsByNonce = createSelector(
   extractSafeAddress,
   (_: AppReduxState, nonce: number) => nonce,
   (gatewayTransactions, chainId, safeAddress, nonce): Transaction[] => {
-    const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
+    let txsByNonce: Transaction[] = []
 
-    return txLocations.reduce((acc: Transaction[], txLocation) => {
+    for (const txLocation of txLocations) {
       const storedTxs: StoreStructure['history'] | StoreStructure['queued']['queued' | 'next'] | undefined = get(
         gatewayTransactions?.[chainId]?.[safeAddress],
         txLocation,
       )
 
       if (!storedTxs) {
-        return acc
+        continue
       }
 
-      const [, txsByNonce = []] = Object.values(storedTxs).filter((txs) =>
-        txs.some((tx) => isMultisigExecutionInfo(tx.executionInfo) && tx.executionInfo?.nonce === nonce),
-      )
+      for (const txs of Object.values(storedTxs)) {
+        const txFoundByNonce = txs.filter(
+          (tx) => isMultisigExecutionInfo(tx?.executionInfo) && tx.executionInfo?.nonce === nonce,
+        )
 
-      return [...acc, ...txsByNonce]
-    }, [])
+        if (!txFoundByNonce.length) {
+          continue
+        }
+
+        txsByNonce = [...txsByNonce, ...txFoundByNonce]
+      }
+    }
+
+    return txsByNonce
   },
 )

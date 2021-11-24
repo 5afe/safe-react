@@ -520,7 +520,7 @@ export const HorizontallyCentered = styled(Centered)<{ isVisible: boolean }>`
 `
 
 export const StyledAccordionSummary = styled(AccordionSummary).attrs((props) =>
-  isDeeplinkedTx() ? { expanded: true, ...props } : props,
+  isDeeplinkedTx() ? { expandIcon: null, ...props } : props,
 )`
   height: 52px;
   .tx-nonce {

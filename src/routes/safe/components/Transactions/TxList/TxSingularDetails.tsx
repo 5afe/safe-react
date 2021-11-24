@@ -1,7 +1,7 @@
 import { ReactElement, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Loader } from '@gnosis.pm/safe-react-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 
 import { isTxQueued } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress, SafeRouteSlugs, TRANSACTION_ID_SLUG } from 'src/routes/routes'
@@ -75,8 +75,10 @@ const TxSingularDetails = (): ReactElement => {
   }, [txId])
 
   // We must use the tx from the store as the queue actions alter the tx
-  const liveTx = useSelector((state: AppReduxState) =>
-    getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }),
+  const liveTx = useSelector(
+    (state: AppReduxState) =>
+      getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }),
+    shallowEqual, // Check for txLocation change
   )
 
   if (!isLoaded || !liveTx) {
@@ -86,6 +88,7 @@ const TxSingularDetails = (): ReactElement => {
       </Centered>
     )
   }
+
   const { transaction, txLocation } = liveTx
   const TxList = isTxQueued(transaction.txStatus) ? QueueTxList : HistoryTxList
 

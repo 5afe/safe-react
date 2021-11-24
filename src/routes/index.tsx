@@ -2,7 +2,7 @@ import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { matchPath, Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
@@ -19,10 +19,12 @@ import {
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
   NETWORK_ROOT_ROUTES,
+  TRANSACTION_ID_SLUG,
 } from './routes'
 import { getCurrentShortChainName } from 'src/config'
 import { switchNetworkWithUrl } from 'src/utils/history'
 import { setNetwork } from 'src/logic/config/utils'
+import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -41,11 +43,22 @@ const Routes = (): React.ReactElement => {
   }, [history])
 
   useEffect(() => {
-    // Anonymize safe address when tracking page views
-    // ADDRESSED_ROUTES have [SAFE_ADDRESS_SLUG]
-    const pathname = hasPrefixedSafeAddressInUrl()
-      ? location.pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
-      : location.pathname
+    let pathname = location.pathname
+
+    // Anonymize safe address
+    if (hasPrefixedSafeAddressInUrl()) {
+      pathname = pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
+    }
+
+    // Anonymize deeplinked transaction
+    if (isDeeplinkedTx()) {
+      const match = matchPath(location.pathname, {
+        path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
+      })
+
+      pathname = pathname.replace(match?.params[TRANSACTION_ID_SLUG], 'TRANSACTION_ID')
+    }
+
     trackPage(pathname + location.search)
 
     // Track when pathname changes
