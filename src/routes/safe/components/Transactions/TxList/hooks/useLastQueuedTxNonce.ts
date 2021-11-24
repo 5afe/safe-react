@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { queuedTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
-const useLastTxNonce = (): number | undefined => {
+const useLastQueuedTxNonce = (): number | undefined => {
   const queuedTxs = useSelector(queuedTransactions)
   const nonces = queuedTxs && Object.keys(queuedTxs)
 
@@ -10,4 +10,4 @@ const useLastTxNonce = (): number | undefined => {
   return lastTxNonce
 }
 
-export default useLastTxNonce
+export default useLastQueuedTxNonce
