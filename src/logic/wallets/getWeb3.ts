@@ -11,6 +11,7 @@ import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { currentNetworkId, currentRpcServiceUrl } from '../config/store/selectors'
 
+// TODO: Look into retrieving this from chains?
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
   METAMASK = 'METAMASK',

@@ -5,7 +5,7 @@ import { addDecorator } from '@storybook/react'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { theme } from '@gnosis.pm/safe-react-components'
 
-import { aNewStore } from 'src/store'
+import { createPreloadedStore } from 'src/store'
 import averta from 'src/assets/fonts/Averta-normal.woff2'
 import avertaBold from 'src/assets/fonts/Averta-ExtraBold.woff2'
 
@@ -22,9 +22,7 @@ addDecorator((storyFn) => (
   <ThemeProvider theme={theme}>
     <MemoryRouter>
       <GlobalStyles />
-      <Provider store={aNewStore()}>
-        {storyFn()}
-      </Provider>
+      <Provider store={createPreloadedStore()}>{storyFn()}</Provider>
     </MemoryRouter>
   </ThemeProvider>
 ))

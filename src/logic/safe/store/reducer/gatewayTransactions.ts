@@ -22,7 +22,6 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
-import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
@@ -68,7 +67,7 @@ const findTransactionLocation = (
   return { key, index }
 }
 
-export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
+export const gatewayTransactions = handleActions<Record<string, Record<string, StoreStructure>>, Payload>(
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { chainId, safeAddress, values, isTail = false } = action.payload

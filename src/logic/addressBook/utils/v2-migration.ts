@@ -6,12 +6,10 @@ import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 import { getEntryIndex, isValidAddressBookName } from '.'
 import { currentNetworkName } from 'src/logic/config/store/selectors'
 import { store } from 'src/store'
+import { RLSOptions, LoadOptions } from 'redux-localstorage-simple'
+import { ADDRESS_BOOK_REDUCER_ID } from '../store/reducer'
 
-interface StorageConfig {
-  states: string[]
-  namespace: string
-  namespaceSeparator: string
-}
+type StorageConfig = Pick<RLSOptions | LoadOptions, 'namespace' | 'namespaceSeparator'>
 
 /**
  * Migrates the safes names from the Safe Object to the Address Book
@@ -20,7 +18,7 @@ interface StorageConfig {
  *
  * @note If the Safe name is an invalid AB name, it's renamed to "Migrated from: {safe.name}"
  */
-const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
+const migrateSafeNames = ({ namespace, namespaceSeparator }: StorageConfig): void => {
   const networkName = currentNetworkName(store.getState())
   const SAFES_KEY = `_immortal|v2_${networkName}__SAFES`
 
@@ -51,8 +49,7 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
   })
   const migratedSafes = parsedStoredSafes as StoredSafes
 
-  const [state] = states
-  const addressBookKey = `${namespace}${namespaceSeparator}${state}`
+  const addressBookKey = `${namespace}${namespaceSeparator}${ADDRESS_BOOK_REDUCER_ID}`
   const storedAddressBook = localStorage.getItem(addressBookKey)
   const addressBookToStore: AddressBookState = storedAddressBook ? JSON.parse(storedAddressBook) : []
 
@@ -84,11 +81,10 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
  *
  * @note Also, adds `chainId` to every entry in the AddressBook list.
  */
-const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
-  const [state] = states
+const migrateAddressBook = ({ namespace, namespaceSeparator }: StorageConfig): void => {
   const networkName = currentNetworkName(store.getState())
   const prefix = `v2_${networkName}`
-  const newKey = `${namespace}${namespaceSeparator}${state}`
+  const newKey = `${namespace}${namespaceSeparator}${ADDRESS_BOOK_REDUCER_ID}`
   const oldKey = 'ADDRESS_BOOK_STORAGE_KEY'
   const storageKey = `_immortal|${prefix}__${oldKey}`
 

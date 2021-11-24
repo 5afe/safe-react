@@ -28,7 +28,8 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
     })
   return newState
 }
-export default handleActions<AddressBookState, Payloads>(
+
+const addressBookReducer = handleActions<AddressBookState, Payloads>(
   {
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       const newState = [...state]
@@ -64,3 +65,5 @@ export default handleActions<AddressBookState, Payloads>(
   },
   [],
 )
+
+export default addressBookReducer

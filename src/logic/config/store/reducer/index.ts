@@ -1,6 +1,5 @@
 import { Action, handleActions } from 'redux-actions'
 
-import { AppReduxState } from 'src/store'
 import { CONFIG_ACTIONS } from 'src/logic/config/store/actions'
 import { ETHEREUM_NETWORK } from 'src/types/network.d'
 import { ChainListResponse } from '@gnosis.pm/safe-react-gateway-sdk'
@@ -21,7 +20,7 @@ const initialState: ConfigState = {
 
 type Payloads = ChainListResponse | ETHEREUM_NETWORK
 
-export default handleActions<AppReduxState['networkConfig'], Payloads>(
+const configReducer = handleActions<ConfigState, Payloads>(
   {
     [CONFIG_ACTIONS.SET_NETWORK_ID]: (state, action: Action<ETHEREUM_NETWORK>) => {
       const hasNetworkConfig = state.chains.results?.some(({ chainId }) => chainId === action.payload)
@@ -53,3 +52,5 @@ export default handleActions<AppReduxState['networkConfig'], Payloads>(
   },
   initialState,
 )
+
+export default configReducer
