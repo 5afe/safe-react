@@ -10,6 +10,7 @@ import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;
@@ -43,12 +44,13 @@ const Beneficiary = (): ReactElement => {
   const addressBook = useSelector(currentNetworkAddressBook)
 
   const handleScan = (value, closeQrModal) => {
-    const scannedAddress = value.startsWith('ethereum:') ? value.replace('ethereum:', '') : value
+    const scannedAddress = getAddressWithoutNetworkPrefix(value)
+
     const scannedName = addressBook.find(({ address }) => {
       return sameAddress(scannedAddress, address)
     })?.name
 
-    mutators?.setBeneficiary?.(scannedAddress)
+    mutators.setBeneficiary?.(scannedAddress)
 
     setSelectedEntry({
       name: scannedName,
