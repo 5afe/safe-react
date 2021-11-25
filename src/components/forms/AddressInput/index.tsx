@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -39,10 +39,8 @@ const AddressInput = ({
   defaultValue,
   disabled,
 }: AddressInputProps): React.ReactElement => {
-  const inputRef = useRef<HTMLInputElement>()
   const [currentInput, setCurrentInput] = useState<string>('')
   const [resolutions, setResolutions] = useState<Record<string, string | undefined>>({})
-  const [initialValue, setInitialValue] = useState<string>('')
   const resolvedAddress = resolutions[currentInput]
   const isResolving = resolvedAddress === ''
 
@@ -96,34 +94,11 @@ const AddressInput = ({
     [setCurrentInput, setResolutions, allValidators, fieldMutator],
   )
 
-  const onExternalValueChange = useCallback(
-    (value: string) => {
-      const trimmedCurrent = trimSpaces(currentInput)
-      if (value === currentInput || value === trimmedCurrent) return
-      const { address } = parsePrefixedAddress(trimmedCurrent)
-      // This means the input has been changed by the parent component
-      // E.g. when a QR code is scanned
-      if (address.toLowerCase() !== value.toLowerCase()) {
-        onValueChange(value)
-      }
-    },
-    [onValueChange, currentInput],
-  )
-
   useEffect(() => {
     if (resolvedAddress) {
       onValueChange(resolvedAddress)
     }
   }, [resolvedAddress, onValueChange])
-
-  // Initial externally set value
-  useEffect(() => {
-    if (!currentInput && !initialValue && inputRef.current) {
-      const { value } = inputRef.current
-      setInitialValue(value)
-      onExternalValueChange(value)
-    }
-  }, [inputRef, currentInput, initialValue, setInitialValue, onExternalValueChange])
 
   const adornment = isResolving
     ? {
@@ -143,31 +118,17 @@ const AddressInput = ({
         defaultValue={defaultValue}
         disabled={disabled}
         inputAdornment={adornment}
-        name={`raw_${name}`}
+        name={name}
         placeholder={placeholder}
         text={text}
         spellCheck={false}
         validate={allValidators}
         inputProps={{
           'data-testid': testId,
-          value: currentInput,
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            onValueChange(e.target.value)
-          },
         }}
       />
 
-      <Field
-        style={{ display: 'none' }}
-        component={TextField as any}
-        name={name}
-        inputProps={{
-          type: 'hidden',
-          ref: inputRef,
-        }}
-      />
-
-      <OnChange name={name}>{onExternalValueChange}</OnChange>
+      <OnChange name={name}>{onValueChange}</OnChange>
     </>
   )
 }
