@@ -10,7 +10,6 @@ import useLastQueuedTxNonce from 'src/routes/safe/components/Transactions/TxList
 
 type CustomReviewInfoTextProps = {
   safeNonce?: string
-  lastTxNonce?: number
   testId?: string
 }
 

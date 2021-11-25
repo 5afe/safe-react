@@ -37,10 +37,7 @@ describe('<ReviewInfoText>', () => {
     const lastTxNonce = 10
     const safeNonce = `${lastTxNonce + 1}`
 
-    render(
-      <ReviewInfoText {...initialData} lastTxNonce={lastTxNonce} safeNonce={safeNonce} testId={testId} />,
-      customState,
-    )
+    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
 
     expect(screen.getByTestId(testId)).toBeInTheDocument()
     expect(screen.queryByText(warningCommonCopy)).not.toBeInTheDocument()
@@ -51,10 +48,7 @@ describe('<ReviewInfoText>', () => {
     const safeNonce = `${lastTxNonce + 4}`
     const expectedCopy = 'transactions ' + warningCommonCopy
 
-    render(
-      <ReviewInfoText {...initialData} lastTxNonce={lastTxNonce} safeNonce={safeNonce} testId={testId} />,
-      customState,
-    )
+    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
 
     expect(screen.getByTestId(testId)).toBeInTheDocument()
     expect(screen.getByText('6')).toBeInTheDocument()
