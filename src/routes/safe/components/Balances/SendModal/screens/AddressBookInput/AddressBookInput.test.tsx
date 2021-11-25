@@ -19,7 +19,7 @@ const customState = {
     },
   ],
 }
-const invalidNetworkErrorMessage = "The current network doesn't match the given address"
+const invalidNetworkErrorMessage = 'The chain prefix must match the current network'
 
 describe('<AddressBookInput>', () => {
   it('Renders AddressInput Component', () => {
@@ -91,11 +91,10 @@ describe('<AddressBookInput>', () => {
   })
 
   describe('Validations', () => {
-    describe('Network prefix Validations', () => {
-      it('Validates the same Address with different prefix', () => {
+    describe('Network prefix validation', () => {
+      it('Validates an address with a mismatching prefix', () => {
         const address = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
-        const validPrefix = `rin:${address}`
-        const inValidPrefix = `vt:${address}`
+        const invalidPrefix = `vt:${address}`
 
         render(
           <AddressBookInput fieldMutator={jest.fn()} setIsValidAddress={jest.fn()} setSelectedEntry={jest.fn()} />,
@@ -103,10 +102,20 @@ describe('<AddressBookInput>', () => {
         )
 
         // populates the input with an invalid address network
-        fireEvent.change(screen.getByTestId('address-book-input'), { target: { value: inValidPrefix } })
+        fireEvent.change(screen.getByTestId('address-book-input'), { target: { value: invalidPrefix } })
 
         // shows network prefix error
         expect(screen.queryByText(invalidNetworkErrorMessage)).toBeInTheDocument()
+      })
+
+      it('Validates an address with a correct prefix', () => {
+        const address = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
+        const validPrefix = `rin:${address}`
+
+        render(
+          <AddressBookInput fieldMutator={jest.fn()} setIsValidAddress={jest.fn()} setSelectedEntry={jest.fn()} />,
+          customState,
+        )
 
         // now with the correct value
         fireEvent.change(screen.getByTestId('address-book-input'), { target: { value: validPrefix } })
@@ -115,7 +124,7 @@ describe('<AddressBookInput>', () => {
         expect(screen.queryByText(invalidNetworkErrorMessage)).not.toBeInTheDocument()
       })
 
-      it('Prefix network is not mandatory', () => {
+      it('Prefix is not mandatory', () => {
         const addressWithOutPrefix = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
 
         render(
@@ -151,39 +160,6 @@ describe('<AddressBookInput>', () => {
         expect(screen.queryByText(invalidNetworkErrorMessage)).toBeInTheDocument()
 
         expect((screen.getByTestId('address-book-input') as HTMLInputElement).value).toBe(inValidPrefixedAddress)
-      })
-
-      it('Restores prefix if its a valid ENS', async () => {
-        const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
-        const addressWithOutPrefix = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
-        const ENSName = 'test.eth'
-        // mock getAddress fn to return the Safe Address Domain
-        getENSAddressSpy.mockImplementation(() => new Promise((resolve) => resolve(addressWithOutPrefix)))
-
-        const fieldMutator = jest.fn()
-
-        render(
-          <AddressBookInput fieldMutator={fieldMutator} setIsValidAddress={jest.fn()} setSelectedEntry={jest.fn()} />,
-          customState,
-        )
-
-        //  invalid address network
-        fireEvent.change(screen.getByTestId('address-book-input'), { target: { value: inValidPrefixedAddress } })
-
-        // show error
-        expect(screen.queryByText(invalidNetworkErrorMessage)).toBeInTheDocument()
-
-        // now we use a ENS name
-        fireEvent.change(screen.getByTestId('address-book-input'), { target: { value: ENSName } })
-
-        await waitFor(() => {
-          // ENS resolved with the valid address and prefix
-          expect(fieldMutator).toHaveBeenCalledWith(addressWithOutPrefix)
-
-          // no error is present
-          expect(screen.queryByText(invalidNetworkErrorMessage)).not.toBeInTheDocument()
-          getENSAddressSpy.mockClear()
-        })
       })
     })
   })

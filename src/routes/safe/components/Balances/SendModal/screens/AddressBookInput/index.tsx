@@ -3,11 +3,7 @@ import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
 import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import {
-  checkNetworkPrefix,
-  mustBeEthereumAddress,
-  mustBeEthereumContractAddress,
-} from 'src/components/forms/validator'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -24,7 +20,7 @@ import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import getAddressWithoutNetworkPrefix from 'src/utils/getAddressWithoutNetworkPrefix'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -59,9 +55,8 @@ const BaseAddressBookInput = ({
     fieldMutator(addressEntry.address)
   }
 
-  const validateAddress = (value: string): AddressBookEntry | string | undefined => {
-    const address = getAddressWithoutNetworkPrefix(value)
-    const addressErrorMessage = mustBeEthereumAddress(address)
+  const validateAddress = (fullAddress: string): AddressBookEntry | string | undefined => {
+    const addressErrorMessage = mustBeEthereumAddress(fullAddress)
     setIsValidAddress(!addressErrorMessage)
 
     if (addressErrorMessage) {
@@ -69,24 +64,9 @@ const BaseAddressBookInput = ({
       return
     }
 
-    const prefixErrorMessage = checkNetworkPrefix(value)
-    setIsValidAddress(!prefixErrorMessage)
-
-    if (prefixErrorMessage) {
-      setValidationText(prefixErrorMessage)
-      return
-    }
-
     // Automatically checksum valid addresses
-    let checkedAddr: string
-    try {
-      checkedAddr = checksumAddress(address)
-    } catch (err) {
-      checkedAddr = address
-    }
-
-    setValidationText('')
-
+    const { address } = parsePrefixedAddress(fullAddress)
+    const checkedAddr = checksumAddress(address) || address
     const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: checkedAddr })
     return filteredEntries.length === 1 ? filteredEntries[0] : checkedAddr
   }
@@ -108,10 +88,9 @@ const BaseAddressBookInput = ({
   ) => {
     switch (reason) {
       case 'input': {
-        const normalizedValue = getAddressWithoutNetworkPrefix(trimSpaces(value))
+        const normalizedValue = trimSpaces(value)
 
         if (!normalizedValue) {
-          setValidationText('')
           break
         }
 
@@ -148,7 +127,7 @@ const BaseAddressBookInput = ({
         }
 
         // ETH address validation
-        const validatedAddress = validateAddress(trimSpaces(value))
+        const validatedAddress = validateAddress(normalizedValue)
 
         if (!validatedAddress) {
           fieldMutator('')

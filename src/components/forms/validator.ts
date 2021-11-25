@@ -2,12 +2,11 @@ import memoize from 'lodash/memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { isFeatureEnabled } from 'src/config'
+import { getCurrentShortChainName, isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
-import { extractShortChainName, isValidShortChainName } from 'src/routes/routes'
-import getNetworkPrefix from 'src/utils/getNetworkPrefix'
+import { isValidPrefix, parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -84,8 +83,23 @@ export const mustBeAddressHash = memoize((address: string): ValidatorReturnType 
   return isValidAddress(address) ? undefined : errorMessage
 })
 
-export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnType => {
+const mustHaveValidPrefix = (prefix: string): ValidatorReturnType => {
+  if (!isValidPrefix(prefix)) {
+    return 'Wrong chain prefix'
+  }
+
+  if (prefix !== getCurrentShortChainName()) {
+    return 'The chain prefix must match the current network'
+  }
+}
+
+export const mustBeEthereumAddress = memoize((fullAddress: string): ValidatorReturnType => {
   const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
+  const { address, prefix } = parsePrefixedAddress(fullAddress)
+
+  const prefixError = mustHaveValidPrefix(prefix)
+  if (prefixError) return prefixError
+
   const result = mustBeAddressHash(address)
   if (result !== undefined && isFeatureEnabled(FEATURES.DOMAIN_LOOKUP)) {
     return errorMessage
@@ -93,23 +107,9 @@ export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnT
   return result
 })
 
-export const checkNetworkPrefix = (value: string): ValidatorReturnType => {
-  if (!value) {
-    return undefined
-  }
+export const mustBeEthereumContractAddress = memoize(async (fullAddress: string): Promise<ValidatorReturnType> => {
+  const { address } = parsePrefixedAddress(fullAddress)
 
-  const prefix = getNetworkPrefix(value)
-
-  const errorMessage = isValidShortChainName(prefix)
-    ? "The current network doesn't match the given address"
-    : 'Unsupported network prefix'
-
-  const isInvalidPrefix = prefix && prefix !== extractShortChainName()
-
-  return isInvalidPrefix ? errorMessage : undefined
-}
-
-export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {
   const contractCode = await getWeb3().eth.getCode(address)
 
   const errorMessage = `Must resolve to a valid smart contract address.`
