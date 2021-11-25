@@ -242,7 +242,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       openSignMessageModal(message, msg.data.id)
     })
 
-    communicator?.on(Methods.getChainInfo, () => {
+    communicator?.on(Methods.getChainInfo, async () => {
       const { nativeCoin } = getNetworkInfo()
       const chainId = parseInt(networkId, 10)
       const network = getNetworkName()
