@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -53,11 +53,9 @@ const AddressInput = ({
     [validators],
   )
 
-  const allValidators = useCallback(
-    (val: string) => {
-      // Internal validators + externally passed validators
-      return composeValidators(required, mustBeEthereumAddress, sanitizedValidators)(val)
-    },
+  // Internal validators + externally passed validators
+  const allValidators = useMemo(
+    () => composeValidators(required, mustBeEthereumAddress, sanitizedValidators),
     [sanitizedValidators],
   )
 
