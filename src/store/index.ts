@@ -3,7 +3,10 @@ import { save, load, LoadOptions, RLSOptions } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
 import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
-import addressBookReducer, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
+import addressBookReducer, {
+  ADDRESS_BOOK_REDUCER_ID,
+  initialAddressBookState,
+} from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
@@ -28,10 +31,7 @@ import currencyValues, {
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import configReducer, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
-import appearanceReducer, {
-  APPEARANCE_REDUCER_ID,
-  initialAppearanceState,
-} from 'src/logic/appearance/reducer/appearance'
+import appearanceReducer, { APPEARANCE_REDUCER_ID } from 'src/logic/appearance/reducer/appearance'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 const LOCAL_STORAGE_CONFIG: RLSOptions | LoadOptions = {
@@ -41,7 +41,7 @@ const LOCAL_STORAGE_CONFIG: RLSOptions | LoadOptions = {
   disableWarnings: true,
   preloadedState: {
     [CURRENCY_REDUCER_ID]: initialCurrencyState,
-    [ADDRESS_BOOK_REDUCER_ID]: initialAppearanceState,
+    [ADDRESS_BOOK_REDUCER_ID]: initialAddressBookState,
   },
 }
 
@@ -76,8 +76,8 @@ const reducers = {
 
 const rootReducer = combineReducers(reducers)
 
-export const createPreloadedStore = (localState?: PreloadedState<unknown>) =>
-  createStore(rootReducer, localState, enhancer)
-
 export const store = createStore(rootReducer, load(LOCAL_STORAGE_CONFIG), enhancer)
 export type AppReduxState = ReturnType<typeof store.getState>
+
+export const createPreloadedStore = (localState?: PreloadedState<unknown>): typeof store =>
+  createStore(rootReducer, localState, enhancer)

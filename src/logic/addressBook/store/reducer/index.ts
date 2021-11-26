@@ -7,6 +7,8 @@ import { getEntryIndex, hasSameAddressAndChainId, isValidAddressBookName } from 
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
+export const initialAddressBookState: AddressBookState = []
+
 type Payloads = AddressBookEntry | AddressBookState
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
@@ -66,7 +68,7 @@ const addressBookReducer = handleActions<AddressBookState, Payloads>(
     [ADDRESS_BOOK_ACTIONS.MIGRATE]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.SYNC]: (_, action: Action<AddressBookState>): AddressBookState => action.payload,
   },
-  [],
+  initialAddressBookState,
 )
 
 export default addressBookReducer
