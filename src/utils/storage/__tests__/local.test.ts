@@ -1,6 +1,8 @@
-import { getItem, setItem } from '../local'
+import local from '../local'
 
 describe('local storage', () => {
+  const { getItem, setItem } = local
+
   beforeAll(() => {
     window.localStorage.clear()
   })

@@ -1,20 +1,5 @@
-const PREFIX = 'SAFE__'
+import Storage from './Storage'
 
-const prefixKey = (key: string): string => `${PREFIX}${key}`
+const local = new Storage(window.localStorage)
 
-export const getItem = <T>(key: string): T | undefined => {
-  const saved = localStorage.getItem(prefixKey(key))
-  let data = undefined
-  if (saved) {
-    try {
-      data = JSON.parse(saved)
-    } catch (e) {
-      data = undefined
-    }
-  }
-  return data as unknown as T | undefined
-}
-
-export const setItem = <T>(key: string, item: T): void => {
-  localStorage.setItem(prefixKey(key), JSON.stringify(item))
-}
+export default local

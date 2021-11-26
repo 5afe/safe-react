@@ -43,7 +43,7 @@ const isNetworkId = (id: unknown): id is ETHEREUM_NETWORK => {
   return Object.values(ETHEREUM_NETWORK).some((network) => network === id)
 }
 
-export const NETWORK_ID_KEY = 'SAFE__networkId'
+export const NETWORK_ID_KEY = 'networkId'
 export const getInitialNetworkId = (): ETHEREUM_NETWORK => {
   const { pathname } = window.location
 
