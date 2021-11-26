@@ -93,7 +93,7 @@ const mustHaveValidPrefix = (prefix: string): ValidatorReturnType => {
   }
 }
 
-export const mustBeEthereumAddress = memoize((fullAddress: string): ValidatorReturnType => {
+export const mustBeEthereumAddress = (fullAddress: string): ValidatorReturnType => {
   const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
   const { address, prefix } = parsePrefixedAddress(fullAddress)
 
@@ -105,7 +105,7 @@ export const mustBeEthereumAddress = memoize((fullAddress: string): ValidatorRet
     return errorMessage
   }
   return result
-})
+}
 
 export const mustBeEthereumContractAddress = memoize(async (fullAddress: string): Promise<ValidatorReturnType> => {
   const { address } = parsePrefixedAddress(fullAddress)
