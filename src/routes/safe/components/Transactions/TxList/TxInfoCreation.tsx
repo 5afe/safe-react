@@ -10,7 +10,7 @@ import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
-export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
+export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement => {
   const txInfo = transaction.txInfo as Creation
   const timestamp = transaction.timestamp
 
