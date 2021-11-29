@@ -29,19 +29,24 @@ import currencyValues, {
   CURRENCY_REDUCER_ID,
   initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import configReducer, { CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
+import configReducer, { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
-import appearanceReducer, { APPEARANCE_REDUCER_ID } from 'src/logic/appearance/reducer/appearance'
+import appearanceReducer, {
+  APPEARANCE_REDUCER_ID,
+  initialAppearanceState,
+} from 'src/logic/appearance/reducer/appearance'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 const LOCAL_STORAGE_CONFIG: RLSOptions | LoadOptions = {
-  states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID],
+  states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID, CONFIG_REDUCER_ID],
   namespace: 'SAFE',
   namespaceSeparator: '__',
   disableWarnings: true,
   preloadedState: {
     [CURRENCY_REDUCER_ID]: initialCurrencyState,
     [ADDRESS_BOOK_REDUCER_ID]: initialAddressBookState,
+    [APPEARANCE_REDUCER_ID]: initialAppearanceState,
+    [CONFIG_REDUCER_ID]: initialConfigState,
   },
 }
 

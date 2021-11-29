@@ -2,7 +2,6 @@ import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/
 
 import { emptyChainInfo, _chains } from 'src/logic/config/store/reducer'
 import { DEFAULT_CHAIN_ID, ETHERSCAN_API_KEY, INFURA_TOKEN, SAFE_APPS_RPC_TOKEN } from 'src/utils/constants'
-import { loadFromSessionStorage } from 'src/utils/storage/session'
 
 export type ChainId = ChainInfo['chainId']
 type ChainName = ChainInfo['chainName']
@@ -51,24 +50,19 @@ export enum SAFE_FEATURES {
 
 // =========================================================================
 
-export const getChains = (): ChainInfo[] => _chains.results
+export const getChains = (): ChainInfo[] => _chains
 
 export const isValidChainId = (chainId: unknown): chainId is ChainId =>
-  _chains.results.some((chain) => chain.chainId === chainId)
+  getChains().some((chain) => chain.chainId === chainId)
 
-export const CHAIN_ID_KEY = 'SAFE__networkId'
-export const getInitialChainId = (): ChainId => {
-  const network = getChains().find(({ shortName }) => {
-    return window.location.pathname.split('/').some((el) => el.startsWith(`${shortName}:`))
-  })
+export const getInitialChainId = () => {
+  const localConfig = localStorage.getItem('SAFE__config')
 
-  if (network?.chainId) {
-    return network.chainId
+  try {
+    return localConfig ? JSON.parse(localConfig)?.chainId : DEFAULT_CHAIN_ID
+  } catch {
+    return DEFAULT_CHAIN_ID
   }
-
-  const chainId = loadFromSessionStorage(CHAIN_ID_KEY) // Used outside of [ADDRESSED_ROUTE] routes
-
-  return isValidChainId(chainId) ? chainId : DEFAULT_CHAIN_ID
 }
 
 let chainId = getInitialChainId()

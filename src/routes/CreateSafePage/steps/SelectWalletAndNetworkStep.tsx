@@ -31,8 +31,6 @@ function SelectWalletAndNetworkStep(): ReactElement {
     setIsNetworkSelectorPopupOpen(true)
   }
 
-  const networks = getChains()
-
   const onNetworkSwitch = useCallback((chainId: ChainId) => {
     setChainId(chainId)
     setIsNetworkSelectorPopupOpen(false)
@@ -86,7 +84,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
         </StyledDialogTitle>
         <StyledDialogContent dividers>
           <List component="div">
-            {networks.map((network) => (
+            {getChains().map((network) => (
               <NetworkLabelItem key={network.chainId} role="button" onClick={() => onNetworkSwitch(network.chainId)}>
                 <NetworkLabel networkInfo={network} flexGrow />
               </NetworkLabelItem>

@@ -7,14 +7,16 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
 import uniqBy from 'lodash/uniqBy'
 
-import { _getChainId, getChains } from 'src/config'
+import { getChains } from 'src/config'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
-import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { setChainId } from 'src/logic/config/utils'
+import { useSelector } from 'react-redux'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -72,11 +74,12 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const currentSafeAddress = extractSafeAddress()
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
+  const curChainId = useSelector(currentChainId)
 
   return (
     <StyledList>
       {networks.map(({ chainId, theme, chainName }) => {
-        const isCurrentNetwork = chainId === _getChainId()
+        const isCurrentNetwork = chainId === curChainId
         const ownedSafesOnNetwork = ownedSafes[chainId] || []
         const localSafesOnNetwork = uniqBy(localSafes[chainId].filter(isNotLoadedViaUrl), ({ address }) =>
           address.toLowerCase(),

@@ -26,8 +26,6 @@ function SelectNetworkStep(): ReactElement {
     setIsNetworkSelectorPopupOpen(true)
   }
 
-  const networks = getChains()
-
   const onNetworkSwitch = (chainId: ChainId) => {
     setChainId(chainId)
     setIsNetworkSelectorPopupOpen(false)
@@ -57,7 +55,7 @@ function SelectNetworkStep(): ReactElement {
         </StyledDialogTitle>
         <StyledDialogContent dividers>
           <List component="div">
-            {networks.map((network) => (
+            {getChains().map((network) => (
               <NetworkLabelItem key={network.chainId} role="button" onClick={() => onNetworkSwitch(network.chainId)}>
                 <NetworkLabel networkInfo={network} flexGrow />
               </NetworkLabelItem>

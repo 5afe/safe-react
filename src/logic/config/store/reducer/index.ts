@@ -1,4 +1,4 @@
-import { ChainInfo, ChainListResponse, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ChainInfo, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk'
 import { handleActions } from 'redux-actions'
 
 import { ChainId } from 'src/config'
@@ -36,9 +36,11 @@ export const emptyChainInfo: ChainInfo = {
   features: [],
 }
 
-export const _chains: Pick<ChainListResponse, 'next' | 'results'> = {
-  next: '',
-  results: [],
+export let _chains: ChainInfo[] = []
+
+export const addChains = (chains: ChainInfo[]) => {
+  const newChains = chains.filter(({ chainId }) => _chains.some((chain) => chain.chainId !== chainId))
+  _chains = [..._chains, ...newChains]
 }
 // =============================================================================
 
@@ -48,7 +50,7 @@ export type ConfigState = {
   chainId: ChainId
 }
 
-const initialConfigState: ConfigState = {
+export const initialConfigState: ConfigState = {
   chainId: DEFAULT_CHAIN_ID,
 }
 
