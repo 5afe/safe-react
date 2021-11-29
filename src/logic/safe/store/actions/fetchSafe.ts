@@ -74,7 +74,6 @@ export const fetchSafe =
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
-      return
     }
 
     // If the network has changed while the safe was being loaded,

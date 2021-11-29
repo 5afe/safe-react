@@ -16,7 +16,13 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import {
+  getNetworkName,
+  getSafeAppsRpcServiceUrl,
+  getTxServiceUrl,
+  getShortChainNameById,
+  getNetworkInfo,
+} from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -234,6 +240,19 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       const { message } = msg.data.params as SignMessageParams
 
       openSignMessageModal(message, msg.data.id)
+    })
+
+    communicator?.on(Methods.getChainInfo, async () => {
+      const { nativeCoin } = getNetworkInfo()
+      const chainId = parseInt(networkId, 10)
+      const network = getNetworkName()
+
+      return {
+        chainName: network,
+        chainId,
+        shortName: getShortChainNameById(networkId),
+        nativeCurrency: nativeCoin,
+      }
     })
   }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, networkId])
 

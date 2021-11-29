@@ -20,7 +20,7 @@ export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | n
 
     return response.data.results[0] || null
   } catch (e) {
-    logError(Errors._614, e.message)
+    logError(Errors._615, e.message)
     return null
   }
 }

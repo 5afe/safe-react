@@ -12,7 +12,9 @@ export const history = createBrowserHistory({
 })
 
 // Safe specific routes
-const chainSpecificSafeAddressPathRegExp = '[a-z0-9-]{2,}:0x[0-9A-Fa-f]{40}'
+const hashRegExp = '0x[0-9A-Fa-f]'
+
+const chainSpecificSafeAddressPathRegExp = `[a-z0-9-]{2,}:${hashRegExp}{40}`
 
 export const SAFE_ADDRESS_SLUG = 'prefixedSafeAddress'
 export const ADDRESSED_ROUTE = `/:${SAFE_ADDRESS_SLUG}(${chainSpecificSafeAddressPathRegExp})`
@@ -25,11 +27,14 @@ export const SAFE_SECTION_ROUTE = `${ADDRESSED_ROUTE}/:${SAFE_SECTION_SLUG}`
 export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
 export const SAFE_SUBSECTION_ROUTE = `${SAFE_SECTION_ROUTE}/:${SAFE_SUBSECTION_SLUG}`
 
+export const TRANSACTION_ID_SLUG = `txId`
+
 // URL: gnosis-safe.io/app/:[SAFE_ADDRESS_SLUG]/:[SAFE_SECTION_SLUG]/:[SAFE_SUBSECTION_SLUG]
 export type SafeRouteSlugs = {
   [SAFE_ADDRESS_SLUG]?: string
   [SAFE_SECTION_SLUG]?: string
   [SAFE_SUBSECTION_SLUG]?: string
+  [TRANSACTION_ID_SLUG]?: string
 }
 
 export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
@@ -47,6 +52,8 @@ export const SAFE_ROUTES = {
   TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
+  // RegExp route rejection, i.e. !history|queue does not work so it is important to have singular after the above two in Switches
+  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}`, // [TRANSACTION_HASH_SLUG] === 'txId'
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
@@ -133,8 +140,12 @@ export const generateSafeRoute = (
     [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(params),
   })
 
-export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof SAFE_ROUTES =>
-  Object.entries(SAFE_ROUTES).reduce<typeof SAFE_ROUTES>(
+// Singular tx route is excluded as it has a required safeTxHash slug
+// This is to give stricter routing, instead of making the slug optional
+const { TRANSACTIONS_SINGULAR: _hasRequiredSlug, ...STANDARD_SAFE_ROUTES } = SAFE_ROUTES
+export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof STANDARD_SAFE_ROUTES => {
+  return Object.entries(STANDARD_SAFE_ROUTES).reduce<typeof STANDARD_SAFE_ROUTES>(
     (routes, [key, route]) => ({ ...routes, [key]: generateSafeRoute(route, params) }),
-    {} as typeof SAFE_ROUTES,
+    {} as typeof STANDARD_SAFE_ROUTES,
   )
+}

@@ -1,10 +1,9 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
-import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
-import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { getTransactionByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
 
 export type LoadTransactionDetails = {
@@ -13,24 +12,23 @@ export type LoadTransactionDetails = {
 }
 
 export const useTransactionDetails = (transactionId: string): LoadTransactionDetails => {
-  const { txLocation } = useContext(TxLocationContext)
   const dispatch = useRef(useDispatch())
   const [txDetails, setTxDetails] = useState<LoadTransactionDetails>({
     loading: true,
     data: undefined,
   })
   const data = useSelector((state: AppReduxState) =>
-    getTransactionDetails(state)({ attributeValue: transactionId, attributeName: 'id', txLocation }),
+    getTransactionByAttribute(state, { attributeValue: transactionId, attributeName: 'id' }),
   )
 
   useEffect(() => {
-    if (data) {
-      setTxDetails({ loading: false, data })
+    if (data?.txDetails) {
+      setTxDetails({ loading: false, data: data?.txDetails })
     } else {
       // lookup tx details
-      dispatch.current(fetchTransactionDetails({ transactionId, txLocation }))
+      dispatch.current(fetchTransactionDetails({ transactionId }))
     }
-  }, [data, transactionId, txLocation])
+  }, [data?.txDetails, transactionId])
 
   return txDetails
 }
