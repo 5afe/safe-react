@@ -6,6 +6,7 @@ import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
+import useSafeTxGas from '../useSafeTxGas'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -60,6 +61,7 @@ export const TxParametersDetail = ({
   const { safeNonce = '' } = txParameters
   const isSafeNonceFuture = parseInt(safeNonce, 10) > nonce
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(isSafeNonceFuture)
+  const showSafeTxGas = useSafeTxGas()
 
   useEffect(() => {
     if (parseInt(safeNonce, 10) > nonce) {
@@ -103,20 +105,22 @@ export const TxParametersDetail = ({
             </ColoredText>
           </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <Text
-              size="lg"
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              SafeTxGas
-            </Text>
-            <Text
-              size="lg"
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              {txParameters.safeTxGas}
-            </Text>
-          </TxParameterWrapper>
+          {showSafeTxGas && (
+            <TxParameterWrapper>
+              <Text
+                size="lg"
+                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
+              >
+                SafeTxGas
+              </Text>
+              <Text
+                size="lg"
+                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
+              >
+                {txParameters.safeTxGas}
+              </Text>
+            </TxParameterWrapper>
+          )}
 
           {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
             <>

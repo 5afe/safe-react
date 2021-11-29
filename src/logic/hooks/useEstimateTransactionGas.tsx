@@ -164,14 +164,18 @@ export const useEstimateTransactionGas = ({
         let txEstimationExecutionStatus = EstimationStatus.LOADING
 
         if (isCreation) {
-          safeTxGasEstimation = await estimateSafeTxGas({
-            safeAddress,
-            txData,
-            txRecipient,
-            txAmount: txAmount || '0',
-            operation: operation || Operation.CALL,
-          })
+          safeTxGasEstimation = await estimateSafeTxGas(
+            {
+              safeAddress,
+              txData,
+              txRecipient,
+              txAmount: txAmount || '0',
+              operation: operation || Operation.CALL,
+            },
+            safeVersion,
+          )
         }
+
         if (isExecution || approvalAndExecution) {
           ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
