@@ -1,20 +1,35 @@
-import { Action, handleActions } from 'redux-actions'
+import { ChainListResponse } from '@gnosis.pm/safe-react-gateway-sdk'
+import { handleActions } from 'redux-actions'
 
-import { CONFIG_ACTIONS } from 'src/logic/config/store/actions'
-import { makeNetworkConfig, NetworkState } from 'src/logic/config/model/networkConfig'
-import { getConfig } from 'src/config'
+import { ChainId } from 'src/config'
+import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
+import { CONFIG_ACTIONS } from '../actions'
 
-export const NETWORK_CONFIG_REDUCER_ID = 'networkConfig'
+export const CONFIG_REDUCER_ID = 'config'
 
-type Payload = NetworkState | string
+export type ConfigState = {
+  chainId: ChainId
+}
 
-const networkConfigReducer = handleActions<NetworkState, Payload>(
+const initialConfigState: ConfigState = {
+  chainId: DEFAULT_CHAIN_ID,
+}
+
+export type ConfigPayload = ChainId
+
+export const _chains: Pick<ChainListResponse, 'next' | 'results'> = {
+  next: '',
+  results: [],
+}
+
+const configReducer = handleActions<ConfigState, ConfigPayload>(
   {
-    [CONFIG_ACTIONS.CONFIG_STORE]: (state, action: Action<NetworkState>) => {
-      return { ...state, ...action.payload }
+    [CONFIG_ACTIONS.SET_CHAIN_ID]: (state, action) => {
+      const networkId = action.payload
+      return { ...state, chainId: networkId }
     },
   },
-  makeNetworkConfig(getConfig()),
+  initialConfigState,
 )
 
-export default networkConfigReducer
+export default configReducer

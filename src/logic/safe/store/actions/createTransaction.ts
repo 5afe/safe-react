@@ -32,7 +32,7 @@ import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 
 export interface CreateTransactionArgs {
@@ -85,7 +85,7 @@ export const createTransaction =
     if (navigateToTransactionsTab) {
       history.push(
         generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
-          shortName: getCurrentShortChainName(),
+          shortName: getShortName(),
           safeAddress,
         }),
       )

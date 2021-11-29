@@ -29,7 +29,7 @@ import currencyValues, {
   CURRENCY_REDUCER_ID,
   initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import configReducer, { NETWORK_CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
+import configReducer, { CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
 import appearanceReducer, { APPEARANCE_REDUCER_ID } from 'src/logic/appearance/reducer/appearance'
 
@@ -70,7 +70,7 @@ const reducers = {
   [COOKIES_REDUCER_ID]: cookiesReducer,
   [ADDRESS_BOOK_REDUCER_ID]: addressBookReducer,
   [CURRENT_SESSION_REDUCER_ID]: currentSessionReducer,
-  [NETWORK_CONFIG_REDUCER_ID]: configReducer,
+  [CONFIG_REDUCER_ID]: configReducer,
   [APPEARANCE_REDUCER_ID]: appearanceReducer,
 }
 

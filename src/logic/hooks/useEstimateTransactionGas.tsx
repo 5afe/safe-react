@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getNetworkInfo } from 'src/config'
+import { getChainInfo } from 'src/config'
 import {
   checkTransactionExecution,
   estimateSafeTxGas,
@@ -131,7 +131,7 @@ export const useEstimateTransactionGas = ({
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
   )
-  const { nativeCoin } = getNetworkInfo()
+  const { nativeCurrency } = getChainInfo()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
   useEffect(() => {
@@ -197,7 +197,7 @@ export const useEstimateTransactionGas = ({
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
         const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
-        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
         if (isExecution) {
@@ -248,7 +248,7 @@ export const useEstimateTransactionGas = ({
     txConfirmations,
     txAmount,
     preApprovingOwner,
-    nativeCoin.decimals,
+    nativeCurrency.decimals,
     threshold,
     from,
     operation,

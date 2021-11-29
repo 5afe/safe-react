@@ -34,7 +34,7 @@ import {
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { getLoadSafeName } from './fields/utils'
 
@@ -97,7 +97,7 @@ function Load(): ReactElement {
     // Go to the newly added Safe
     history.push(
       generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-        shortName: getCurrentShortChainName(),
+        shortName: getShortName(),
         safeAddress: checksummedAddress,
       }),
     )

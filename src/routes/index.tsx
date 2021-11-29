@@ -20,9 +20,8 @@ import {
   LOAD_SAFE_ROUTE,
   NETWORK_ROOT_ROUTES,
 } from './routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName, setChainId } from 'src/config'
 import { switchNetworkWithUrl } from 'src/utils/history'
-import { setNetwork } from 'src/logic/config/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -60,12 +59,12 @@ const Routes = (): React.ReactElement => {
       />
       {
         // Redirection to open network specific welcome pages
-        NETWORK_ROOT_ROUTES.map(({ id, route }) => (
+        NETWORK_ROOT_ROUTES.map(({ chainId, route }) => (
           <Route
-            key={id}
+            key={chainId}
             path={route}
             render={() => {
-              setNetwork(id)
+              setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
             }}
           />
@@ -87,7 +86,7 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  shortName: getCurrentShortChainName(),
+                  shortName: getShortName(),
                   safeAddress: defaultSafe,
                 })}
               />

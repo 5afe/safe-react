@@ -1,6 +1,7 @@
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import axios from 'axios'
+import { ChainId, SAFE_FEATURES } from 'src/config'
 
-import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,
@@ -180,7 +181,7 @@ describe('extractRemoteSafeInfo', () => {
 
   it('should build a Partial SafeRecord without modules information', async () => {
     const extractedRemoteSafeInfo: Partial<SafeRecordProps> = {
-      chainId: '4' as ETHEREUM_NETWORK,
+      chainId: '4' as ChainId,
       collectiblesTag: '1634550387',
       modules: undefined,
       spendingLimits: undefined,
@@ -196,7 +197,7 @@ describe('extractRemoteSafeInfo', () => {
         FEATURES.ERC1155,
         FEATURES.SAFE_APPS,
         FEATURES.CONTRACT_INTERACTION,
-        FEATURES.SAFE_TX_GAS_OPTIONAL,
+        SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL,
       ],
     }
 
@@ -210,7 +211,7 @@ describe('extractRemoteSafeInfo', () => {
     spendingLimits.getSpendingLimits.mockImplementationOnce(async () => inMemoryPartialSafeInformation.spendingLimits)
 
     const extractedRemoteSafeInfo: Partial<SafeRecordProps> = {
-      chainId: '4' as ETHEREUM_NETWORK,
+      chainId: '4' as ChainId,
       collectiblesTag: '1634550387',
       modules: inMemoryPartialSafeInformation.modules as SafeRecordProps['modules'],
       spendingLimits: inMemoryPartialSafeInformation.spendingLimits,
@@ -226,7 +227,7 @@ describe('extractRemoteSafeInfo', () => {
         FEATURES.ERC1155,
         FEATURES.SAFE_APPS,
         FEATURES.CONTRACT_INTERACTION,
-        FEATURES.SAFE_TX_GAS_OPTIONAL,
+        SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL,
       ],
     }
 

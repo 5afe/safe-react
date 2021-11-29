@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { sortedSafeListSelector } from 'src/components/SafeListSidebar/selectors'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { SafeRecordWithNames } from '../store/selectors'
+import { sortedSafeListSelector } from 'src/components/SafeListSidebar/selectors'
+import { ChainId, CHAIN_ID } from 'src/config'
+import { SafeRecordProps } from '../store/models/safe'
 import { getLocalNetworkSafesById } from '../utils'
 
-type LocalSafes = Record<ETHEREUM_NETWORK, SafeRecordWithNames[]>
+type LocalSafes = Record<ChainId, SafeRecordProps[]>
 
 const getEmptyLocalSafes = (): LocalSafes => {
-  const networkIds = Object.values(ETHEREUM_NETWORK)
-  return networkIds.reduce((safes, networkId) => ({ ...safes, [networkId]: [] }), {} as LocalSafes)
+  const networkIds = Object.values(CHAIN_ID)
+  return networkIds.reduce((safes, chainId) => ({ ...safes, [chainId]: [] }), {} as LocalSafes)
 }
 
 const useLocalSafes = (): LocalSafes => {
@@ -21,7 +21,7 @@ const useLocalSafes = (): LocalSafes => {
   // Reload added Safes from the localStorage when addedAddresses changes
   useEffect(() => {
     const getLocalSafes = () => {
-      Object.values(ETHEREUM_NETWORK).forEach(async (id) => {
+      Object.values(CHAIN_ID).forEach(async (id) => {
         const localSafe = await getLocalNetworkSafesById(id)
         setLocalSafes((prevSafes) => ({
           ...prevSafes,

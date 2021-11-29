@@ -34,7 +34,7 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
 import { getGasParam } from 'src/logic/safe/transactions/gas'
 
 type ModalDataType = {
@@ -202,7 +202,7 @@ function SafeCreationProcess(): ReactElement {
     const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-        shortName: getCurrentShortChainName(),
+        shortName: getShortName(),
         safeAddress,
       }),
       state: {

@@ -1,7 +1,7 @@
 import Onboard from 'bnc-onboard'
 import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
-import { getNetworkId, getNetworkName } from 'src/config'
+import { _getChainId, getChainName } from 'src/config'
 import { setWeb3 } from './getWeb3'
 import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
@@ -12,10 +12,13 @@ const getOnboardConfiguration = () => {
   let providerName: string | null = null
   let lastNetworkId = ''
 
+  const networkId = _getChainId()
+  const networkName = getChainName().toLowerCase()
+
   return {
-    networkId: parseInt(getNetworkId(), 10),
+    networkId: parseInt(networkId, 10),
     // Is it mandatory for Ledger to work to send network name in lowercase
-    networkName: getNetworkName().toLowerCase(),
+    networkName,
     subscriptions: {
       wallet: (wallet: Wallet) => {
         if (wallet.provider) {
@@ -28,7 +31,7 @@ const getOnboardConfiguration = () => {
       address: (address: string) => {
         if (!lastUsedAddress && address && providerName) {
           lastUsedAddress = address
-          lastNetworkId = getNetworkId()
+          lastNetworkId = networkId
           store.dispatch(fetchProvider(providerName))
         }
 
@@ -36,7 +39,7 @@ const getOnboardConfiguration = () => {
         if (!address && lastUsedAddress) {
           lastUsedAddress = ''
           providerName = null
-          store.dispatch(removeProvider({ keepStorageKey: lastNetworkId !== getNetworkId() }))
+          store.dispatch(removeProvider({ keepStorageKey: lastNetworkId !== networkId }))
         }
       },
     },
@@ -56,7 +59,7 @@ const getOnboardConfiguration = () => {
 
 let currentOnboardInstance: API
 export const onboard = (): API => {
-  const chainId = getNetworkId()
+  const chainId = _getChainId()
   if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
     currentOnboardInstance = Onboard(getOnboardConfiguration())
   }

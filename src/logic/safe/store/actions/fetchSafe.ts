@@ -13,7 +13,7 @@ import { store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import { getNetworkId } from 'src/config'
+import { _getChainId } from 'src/config'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -78,7 +78,7 @@ export const fetchSafe =
 
     // If the network has changed while the safe was being loaded,
     // ignore the result
-    if (remoteSafeInfo?.chainId !== getNetworkId()) {
+    if (remoteSafeInfo?.chainId !== _getChainId()) {
       return
     }
 
@@ -100,7 +100,7 @@ export const fetchSafe =
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || !isSafeLoaded) {
-        dispatch(fetchTransactions(getNetworkId(), safeAddress))
+        dispatch(fetchTransactions(_getChainId(), safeAddress))
       }
     }
 

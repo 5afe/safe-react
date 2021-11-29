@@ -7,14 +7,13 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
 import uniqBy from 'lodash/uniqBy'
 
-import { setNetwork } from 'src/logic/config/utils'
-import { getNetworkId, getNetworks } from 'src/config'
-import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
+import { _getChainId, getChains, setChainId } from 'src/config'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -62,23 +61,23 @@ type Props = {
   onSafeClick: () => void
 }
 
-const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordWithNames) => loadedViaUrl === false
+const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordProps) => loadedViaUrl === false
 
 const isSameAddress = (addrA: string, addrB: string): boolean => addrA.toLowerCase() === addrB.toLowerCase()
 
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
-  const networks = getNetworks()
+  const networks = getChains()
   const currentSafeAddress = extractSafeAddress()
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
 
   return (
     <StyledList>
-      {networks.map(({ id, backgroundColor, textColor, label }) => {
-        const isCurrentNetwork = id === getNetworkId()
-        const ownedSafesOnNetwork = ownedSafes[id] || []
-        const localSafesOnNetwork = uniqBy(localSafes[id].filter(isNotLoadedViaUrl), ({ address }) =>
+      {networks.map(({ chainId, theme, chainName }) => {
+        const isCurrentNetwork = chainId === _getChainId()
+        const ownedSafesOnNetwork = ownedSafes[chainId] || []
+        const localSafesOnNetwork = uniqBy(localSafes[chainId].filter(isNotLoadedViaUrl), ({ address }) =>
           address.toLowerCase(),
         )
 
@@ -98,17 +97,17 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         }
 
         return (
-          <Fragment key={id}>
+          <Fragment key={chainId}>
             <ListItem selected>
-              <StyledDot backgroundColor={backgroundColor} textColor={textColor} />
-              {label}
+              <StyledDot {...theme} />
+              {chainName}
             </ListItem>
             <MuiList>
               {localSafesOnNetwork.map((safe) => (
                 <SafeListItem
                   key={safe.address}
-                  networkId={id}
-                  onNetworkSwitch={() => setNetwork(id)}
+                  networkId={chainId}
+                  onNetworkSwitch={() => setChainId(chainId)}
                   onSafeClick={onSafeClick}
                   shouldScrollToSafe
                   {...safe}
@@ -131,7 +130,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                       <Text
                         size="lg"
                         color="placeHolder"
-                      >{`Safes owned on ${label} (${ownedSafesOnNetwork.length})`}</Text>
+                      >{`Safes owned on ${chainName} (${ownedSafesOnNetwork.length})`}</Text>
                     }
                     key={String(shouldExpandOwnedSafes)}
                     defaultExpanded={shouldExpandOwnedSafes}
@@ -143,7 +142,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                         <SafeListItem
                           key={ownedAddress}
                           address={ownedAddress}
-                          networkId={id}
+                          networkId={chainId}
                           onSafeClick={onSafeClick}
                           showAddSafeLink={!isAdded}
                           shouldScrollToSafe={!isAdded}

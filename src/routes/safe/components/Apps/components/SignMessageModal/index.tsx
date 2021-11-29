@@ -5,7 +5,7 @@ import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getSignMessageLibContractInstance, getSignMessageLibAddress } from 'src/logic/contracts/safeContracts'
 import Modal from 'src/components/Modal'
-import { getNetworkId } from 'src/config'
+import { _getChainId } from 'src/config'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { ReviewMessage } from './ReviewMessage'
 
@@ -21,8 +21,6 @@ export type SignMessageModalProps = {
   onTxReject: (requestId: RequestId) => void
   onClose: () => void
 }
-
-const networkId = getNetworkId()
 
 const convertToHumanReadableMessage = (message: string): string => {
   const web3 = getWeb3ReadOnly()
@@ -42,8 +40,9 @@ const convertToHumanReadableMessage = (message: string): string => {
 
 export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalProps): ReactElement => {
   const web3 = getWeb3ReadOnly()
-  const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
-  const txData = getSignMessageLibContractInstance(web3, networkId)
+  const chainId = _getChainId()
+  const txRecipient = getSignMessageLibAddress(chainId) || ZERO_ADDRESS
+  const txData = getSignMessageLibContractInstance(web3, chainId)
     .methods.signMessage(calculateMessageHash(message))
     .encodeABI()
 

@@ -14,12 +14,12 @@ import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 import NetworkLabel from './NetworkLabel'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
-import { getNetworkConfigById } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+
 import { NETWORK_ROOT_ROUTES } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { ChainId, getChainById } from 'src/config'
 
 const styles = {
   root: {
@@ -85,11 +85,11 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
   const chainId = useSelector(currentChainId)
 
   const onNetworkSwitch = useCallback(
-    (e: React.SyntheticEvent, networkId: ETHEREUM_NETWORK) => {
+    (e: React.SyntheticEvent, chainId: ChainId) => {
       e.preventDefault()
       clickAway()
 
-      const newRoute = NETWORK_ROOT_ROUTES.find(({ id }) => id === networkId)
+      const newRoute = NETWORK_ROOT_ROUTES.find((network) => network.chainId === chainId)
       if (newRoute) {
         history.push(newRoute.route)
       }
@@ -120,12 +120,12 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
             <>
               <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                 <List className={classes.network} component="div">
-                  {NETWORK_ROOT_ROUTES.map(({ id, route }) => (
-                    <Fragment key={id}>
-                      <StyledLink onClick={(e) => onNetworkSwitch(e, id)} href={route}>
-                        <NetworkLabel networkInfo={getNetworkConfigById(id)?.network} />
+                  {NETWORK_ROOT_ROUTES.map((network) => (
+                    <Fragment key={network.chainId}>
+                      <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
+                        <NetworkLabel networkInfo={getChainById(network.chainId)} />
 
-                        {chainId === id && <Icon type="check" size="md" color="primary" />}
+                        {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
                       </StyledLink>
                       <StyledDivider />
                     </Fragment>

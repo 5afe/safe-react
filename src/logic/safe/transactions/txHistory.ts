@@ -1,8 +1,9 @@
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { getClientGatewayUrl, getNetworkId, getSafeServiceBaseUrl } from 'src/config'
+import { _getChainId, getSafeServiceBaseUrl } from 'src/config'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { proposeTransaction, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 const calculateBodyFrom = async (
   safeInstance: GnosisSafe,
@@ -85,6 +86,6 @@ export const saveTxToHistory = async ({
     origin || null,
     signature,
   )
-  const txDetails = await proposeTransaction(getClientGatewayUrl(), getNetworkId().toString(), address, body)
+  const txDetails = await proposeTransaction(CONFIG_SERVICE_URL, _getChainId().toString(), address, body)
   return txDetails
 }

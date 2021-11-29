@@ -36,8 +36,7 @@ const LoaderText = styled.span`
 
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
   const explorerInfo = getExplorerInfo(safeCreationTxHash)
-  const { url, alt } = explorerInfo()
-  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url)
+  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(explorerInfo)
   const explorerDomain = match !== null ? match[2] : 'Network Explorer'
 
   return (
@@ -46,8 +45,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
       <StyledText size="xl">
         Follow the progress on{' '}
         <Link
-          href={url}
-          aria-label={alt}
+          href={explorerInfo}
           target="_blank"
           rel="noopener noreferrer"
           data-testid="safe-create-explorer-link"

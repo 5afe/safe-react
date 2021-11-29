@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getChainInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -24,8 +24,6 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
-
-const { nativeCoin } = getNetworkInfo()
 
 const Container = styled.div`
   max-width: 480px;
@@ -82,6 +80,7 @@ export const ReviewMessage = ({
 }: Props): ReactElement => {
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
+  const { nativeCurrency } = getChainInfo()
   const isOwner = useSelector(grantedSelector)
 
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
@@ -184,7 +183,7 @@ export const ReviewMessage = ({
             <EthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             <StyledBlock>
               <Text size="md">Balance:</Text>
-              <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>
+              <Text size="md" strong>{`${ethBalance} ${nativeCurrency.symbol}`}</Text>
             </StyledBlock>
 
             <Divider withArrow />

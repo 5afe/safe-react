@@ -42,7 +42,7 @@ import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { getNetworkInfo } from 'src/config'
+import { getChainInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
@@ -97,7 +97,7 @@ const SendFunds = ({
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
-  const { nativeCoin } = getNetworkInfo()
+  const { nativeCurrency } = getChainInfo()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -151,7 +151,7 @@ const SendFunds = ({
     const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
     const tokenDecimals =
       (tokenAddress && Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals)) ||
-      nativeCoin.decimals
+      nativeCurrency.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,

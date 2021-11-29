@@ -22,7 +22,9 @@ export const SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES = '>=1.0.0'
 const getSupportedSigners = (isHW: boolean, safeVersion: string) => {
   const safeSupportsEthSigner = semverSatisfies(safeVersion, '>=1.1.0')
 
-  const signers = isHW ? [] : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712]
+  const signers: typeof SIGNERS[keyof typeof SIGNERS][] = isHW
+    ? []
+    : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712]
 
   if (safeSupportsEthSigner) {
     signers.push(SIGNERS.ETH_SIGN)

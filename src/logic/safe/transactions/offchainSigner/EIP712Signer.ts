@@ -1,10 +1,11 @@
 import { AbstractProvider } from 'web3-core'
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
+import { getWeb3, getChainIdFrom } from 'src/logic/wallets/getWeb3'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { adjustV } from './utils'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const EIP712_NOT_SUPPORTED_ERROR_MSG = "EIP712 is not supported by user's wallet"
 
@@ -26,9 +27,20 @@ const EIP712_DOMAIN = [
   },
 ]
 
+type Eip712MessageTypes = {
+  EIP712Domain: {
+    type: string
+    name: string
+  }[]
+  SafeTx: {
+    type: string
+    name: string
+  }[]
+}
+
 // This function returns the types structure for signing offchain messages
 // following EIP712
-export const getEip712MessageTypes = (safeVersion: string) => {
+export const getEip712MessageTypes = (safeVersion: string): Eip712MessageTypes => {
   const eip712WithChainId = semverSatisfies(safeVersion, '>=1.3.0')
 
   return {
@@ -53,6 +65,27 @@ interface SigningTxArgs extends TxArgs {
   safeVersion: string
 }
 
+type GenerateTypedData = {
+  types: Eip712MessageTypes
+  domain: {
+    chainId: number | undefined
+    verifyingContract: string
+  }
+  primaryType: string
+  message: {
+    to: string
+    value: string
+    data: string
+    operation: Operation
+    safeTxGas: string
+    baseGas: string
+    gasPrice: string
+    gasToken: string
+    refundReceiver: string
+    nonce: number
+  }
+}
+
 export const generateTypedDataFrom = async ({
   safeAddress,
   safeVersion,
@@ -66,9 +99,9 @@ export const generateTypedDataFrom = async ({
   safeTxGas,
   to,
   valueInWei,
-}: SigningTxArgs) => {
+}: SigningTxArgs): Promise<GenerateTypedData> => {
   const web3 = getWeb3()
-  const networkId = await getNetworkIdFrom(web3)
+  const networkId = await getChainIdFrom(web3)
   const eip712WithChainId = semverSatisfies(safeVersion, '>=1.3.0')
 
   const typedData = {
@@ -97,7 +130,7 @@ export const generateTypedDataFrom = async ({
 
 export const getEIP712Signer =
   (version?: string) =>
-  async (txArgs): Promise<string> => {
+  async (txArgs: SigningTxArgs): Promise<string> => {
     const web3 = getWeb3()
     const typedData = await generateTypedDataFrom(txArgs)
 
