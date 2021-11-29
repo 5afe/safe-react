@@ -27,6 +27,7 @@ import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
+import { mustBeEthereumAddress } from 'src/components/forms/validator'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -69,6 +70,7 @@ const SendCollectible = ({
   const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
+  const [addressErrorMsg, setAddressErrorMsg] = useState('')
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -128,15 +130,18 @@ const SendCollectible = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName =
-              addressBook.find(({ address }) => {
-                return sameAddress(scannedAddress, address)
-              })?.name ?? ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName ?? '',
-              address: scannedAddress,
-            })
+            const scannedName = addressBook.find(({ address }) => {
+              return sameAddress(scannedAddress, address)
+            })?.name
+            const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
+            if (!addressErrorMessage) {
+              mutators.setRecipient(scannedAddress)
+              setSelectedEntry({
+                name: scannedName || '',
+                address: scannedAddress,
+              })
+            } else setAddressErrorMsg(addressErrorMessage)
+
             closeQrModal()
           }
 
@@ -190,6 +195,7 @@ const SendCollectible = ({
                         <AddressBookInput
                           fieldMutator={mutators.setRecipient}
                           pristine={pristine}
+                          errorMsg={addressErrorMsg}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
                         />
