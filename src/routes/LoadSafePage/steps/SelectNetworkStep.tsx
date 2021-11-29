@@ -10,7 +10,8 @@ import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 
 import Block from 'src/components/layout/Block'
-import { ChainId, getChains, setChainId } from 'src/config'
+import { ChainId, getChains } from 'src/config'
+import { setChainId } from 'src/logic/config/utils'
 
 import { lg } from 'src/theme/variables'
 import Paragraph from 'src/components/layout/Paragraph'

@@ -7,13 +7,14 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
 import uniqBy from 'lodash/uniqBy'
 
-import { _getChainId, getChains, setChainId } from 'src/config'
+import { _getChainId, getChains } from 'src/config'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { setChainId } from 'src/logic/config/utils'
 
 const MAX_EXPANDED_SAFES = 3
 

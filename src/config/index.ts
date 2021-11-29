@@ -1,10 +1,8 @@
 import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { setChainId as setChainIdAction } from 'src/logic/config/store/actions'
-import { _chains } from 'src/logic/config/store/reducer'
-import { store } from 'src/store'
+import { emptyChainInfo, _chains } from 'src/logic/config/store/reducer'
 import { DEFAULT_CHAIN_ID, ETHERSCAN_API_KEY, INFURA_TOKEN, SAFE_APPS_RPC_TOKEN } from 'src/utils/constants'
-import { loadFromSessionStorage, saveToSessionStorage } from 'src/utils/storage/session'
+import { loadFromSessionStorage } from 'src/utils/storage/session'
 
 export type ChainId = ChainInfo['chainId']
 type ChainName = ChainInfo['chainName']
@@ -75,29 +73,20 @@ export const getInitialChainId = (): ChainId => {
 
 let chainId = getInitialChainId()
 
-const _setChainId = (newChainId: ChainId) => {
+export const _setChainId = (newChainId: ChainId) => {
   chainId = newChainId
 }
 
-export const setChainId = (newChainId: ChainId) => {
-  _setChainId(newChainId)
-  saveToSessionStorage(CHAIN_ID_KEY, newChainId) // Used outside of [ADDRESSED_ROUTE] routes
-  store.dispatch(setChainIdAction(newChainId))
-}
-
 export const _getChainId = (): ChainId => {
-  // TODO: Reference that it matches the store?
   return chainId
 }
 
-// FIXME: Not always found
 export const getChainById = (chainId: ChainId): ChainInfo => {
-  return getChains().find((chain) => chain.chainId === chainId)!
+  return getChains().find((chain) => chain.chainId === chainId) || emptyChainInfo
 }
 
-// FIXME: Not always found
 export const getChainInfo = (): ChainInfo => {
-  return getChains().find((chain) => chain.chainId === _getChainId())!
+  return getChains().find((chain) => chain.chainId === _getChainId()) || emptyChainInfo
 }
 
 export const getChainName = (): ChainName => {

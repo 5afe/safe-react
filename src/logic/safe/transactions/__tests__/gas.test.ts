@@ -1,4 +1,6 @@
-import { CHAIN_ID, setChainId, _getChainId } from 'src/config'
+import { CHAIN_ID, _getChainId } from 'src/config'
+
+import { setChainId } from 'src/logic/config/utils'
 import { getGasParam } from '../gas'
 
 describe('Get gas param', () => {

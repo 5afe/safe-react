@@ -10,7 +10,8 @@ import Link from 'src/components/layout/Link'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { ChainId, getChainById, setChainId } from 'src/config'
+import { ChainId, getChainById } from 'src/config'
+import { setChainId } from 'src/logic/config/utils'
 import {
   generateSafeRoute,
   extractSafeAddress,

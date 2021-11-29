@@ -1,9 +1,46 @@
-import { ChainListResponse } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ChainInfo, ChainListResponse, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk'
 import { handleActions } from 'redux-actions'
 
 import { ChainId } from 'src/config'
 import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
 import { CONFIG_ACTIONS } from '../actions'
+
+// =============================================================================
+// Temp store is required as loading Redux store directly is an anit-pattern
+
+// An empty template is required because `getChain()` uses `find()` on load
+export const emptyChainInfo: ChainInfo = {
+  transactionService: '',
+  chainId: '',
+  chainName: '',
+  shortName: '',
+  l2: false,
+  description: '',
+  rpcUri: { authentication: '' as RPC_AUTHENTICATION, value: '' },
+  safeAppsRpcUri: { authentication: '' as RPC_AUTHENTICATION, value: '' },
+  blockExplorerUriTemplate: {
+    address: '',
+    txHash: '',
+    api: '',
+  },
+  nativeCurrency: {
+    name: '',
+    symbol: '',
+    decimals: 0,
+    logoUri: '',
+  },
+  theme: { textColor: '', backgroundColor: '' },
+  ensRegistryAddress: '',
+  gasPrice: [],
+  disabledWallets: [],
+  features: [],
+}
+
+export const _chains: Pick<ChainListResponse, 'next' | 'results'> = {
+  next: '',
+  results: [],
+}
+// =============================================================================
 
 export const CONFIG_REDUCER_ID = 'config'
 
@@ -16,11 +53,6 @@ const initialConfigState: ConfigState = {
 }
 
 export type ConfigPayload = ChainId
-
-export const _chains: Pick<ChainListResponse, 'next' | 'results'> = {
-  next: '',
-  results: [],
-}
 
 const configReducer = handleActions<ConfigState, ConfigPayload>(
   {

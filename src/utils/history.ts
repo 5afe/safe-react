@@ -1,5 +1,6 @@
 import { LocationDescriptorObject } from 'history'
-import { getShortName, setChainId, getChains } from 'src/config'
+import { getShortName, getChains } from 'src/config'
+import { setChainId } from 'src/logic/config/utils'
 import { hasPrefixedSafeAddressInUrl, extractPrefixedSafeAddress } from 'src/routes/routes'
 
 export const switchNetworkWithUrl = ({ pathname }: LocationDescriptorObject): void => {

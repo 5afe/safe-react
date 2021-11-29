@@ -20,7 +20,8 @@ import {
   LOAD_SAFE_ROUTE,
   NETWORK_ROOT_ROUTES,
 } from './routes'
-import { getShortName, setChainId } from 'src/config'
+import { getShortName } from 'src/config'
+import { setChainId } from 'src/logic/config/utils'
 import { switchNetworkWithUrl } from 'src/utils/history'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))

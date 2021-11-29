@@ -1,6 +1,6 @@
-import { ChainListResponse, getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Action } from 'redux'
-import { ChainId } from 'src/config'
+import { ChainId, _getChainId } from 'src/config'
 import { clearCurrentSession } from 'src/logic/currentSession/store/actions/clearCurrentSession'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
 import { clearSafeList } from 'src/logic/safe/store/actions/clearSafeList'
@@ -8,51 +8,56 @@ import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStor
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 import { CONFIG_ACTIONS } from '../actions'
-import { ConfigPayload, CONFIG_REDUCER_ID, _chains } from '../reducer'
+import { ConfigPayload, _chains } from '../reducer'
+
+const hasChain = (chainId: ChainId): boolean => _chains.results.some((chain) => chain?.chainId === chainId)
 
 // Recursively load pages of chains until network is found
-const getChains = async (networkId: ChainId): Promise<void> => {
-  const hasChain = _chains.results.some((network) => network?.chainId === networkId)
-  if (hasChain) {
+const getChains = async (chainId: ChainId): Promise<void> => {
+  if (hasChain(chainId)) {
     return
   }
 
-  const { results, next } = _chains
-  const baseUrl = results.length > 0 && next ? next : CONFIG_SERVICE_URL
+  const baseUrl = _chains.results.length > 0 && _chains.next ? _chains.next : CONFIG_SERVICE_URL
+  const { next, results = [] } = await getChainsConfig(baseUrl)
 
-  const res = await getChainsConfig(baseUrl)
+  _chains.next = next
+  _chains.results = [..._chains.results, ...results]
 
-  _chains.next = res.next
-  _chains.results = [...results, ...res.results]
+  if (hasChain(chainId)) {
+    return
+  }
 
-  getChains(networkId)
+  getChains(chainId)
 }
 
-export const configMiddleware = (store) => (next: Dispatch) => async (action: Action<ConfigPayload>) => {
-  const isWatched = Object.keys(CONFIG_ACTIONS).includes(action.type)
+export const configMiddleware =
+  ({ dispatch }) =>
+  (next: Dispatch) =>
+  async (action: Action<ConfigPayload>) => {
+    const isWatched = Object.keys(CONFIG_ACTIONS).includes(action.type)
 
-  if (!isWatched) {
-    return
-  }
-
-  switch (action.type) {
-    case CONFIG_ACTIONS.SET_CHAIN_ID: {
-      const state = store.getState()
-      const { networkId } = state[CONFIG_REDUCER_ID]
-      try {
-        await getChains(networkId)
-      } catch (err) {
-        //TODO: log
-      } finally {
-        ;[clearSafeList, clearCurrentSession, loadSafesFromStorage, loadCurrentSessionFromStorage].forEach(
-          store.dispatch,
-        )
-      }
-      break
+    if (!isWatched) {
+      return
     }
-    default:
-      break
-  }
 
-  return next(action)
-}
+    switch (action.type) {
+      case CONFIG_ACTIONS.SET_CHAIN_ID: {
+        try {
+          await getChains(_getChainId())
+
+          dispatch(clearSafeList())
+          dispatch(clearCurrentSession())
+          dispatch(loadSafesFromStorage())
+          dispatch(loadCurrentSessionFromStorage())
+        } catch (err) {
+          //TODO: log
+        }
+        break
+      }
+      default:
+        break
+    }
+
+    return next(action)
+  }
