@@ -2154,17 +2154,17 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.4.0.tgz#d49d3d36cc014ef62306d09c0f4761895a17d7a6"
   integrity sha512-q4salJNQ/Gx0DnZJytAFO/U4OwGI6xTGtTJSOZK+C9Fh2NW8sep+YfSunHQvCLcu4b7WgWEBhxnCV6rpyveLHg==
 
-"@gnosis.pm/safe-react-components@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.0.tgz#1c957f53c08833f9c8f2f2908c19b6823f573578"
-  integrity sha512-IZy1Mv3y93QBi0Edph85mhKnndc4Uo6uHe5dmz8MHe3htNWa0JxwsI3Afrzqqidvx+LLNsfguNvpu/ZRHbycvw==
+"@gnosis.pm/safe-react-components@^0.8.6":
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.6.tgz#a8275b02d41a7b0d69abef867900843a1a49bb11"
+  integrity sha512-lWHSjOQFmeck6D4cpzs6un09Zx7jptmdR3+QtUkB0obsmguU0o6fXtkK91SYE2Fm86GpmjhA03rKrOqzEeklBA==
   dependencies:
     react-media "^1.10.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.4.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.0.tgz#11a27af6c9b173ed895d80c21527ad463b0b6604"
-  integrity sha512-RwUTcya802N/J2AnZHQ6R7ffyOkHKvo6O31abVjJpps7/mh4taelwnMlsgqG8ebaux1R6fLLDu9oykWNAPvb3Q==
+"@gnosis.pm/safe-react-gateway-sdk@^2.5.5":
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.5.tgz#aa0356baefef6d8be3dc60d5fcdc974ec73c4c1b"
+  integrity sha512-42LB2b0boQwTBMnY7gjIZ+bAxNFDmAEr12BfcxfzC+azQIjH5M0VUBsuA44or7MAQ1ZiVicY36+6ySlZPrqEpQ==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 

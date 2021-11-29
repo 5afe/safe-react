@@ -17,6 +17,11 @@ describe('GatewayTransactions', () => {
   })
 
   it('Transactions page should land on History tab', () => {
+    const shortName = 'rin'
+    const safeAddress = ZERO_ADDRESS
+
+    history.push(`/${shortName}:${safeAddress}/transactions/history`)
+
     render(<GatewayTransactions />)
 
     const queueTab = screen.getByText('Queue').closest('button')
