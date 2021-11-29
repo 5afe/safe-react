@@ -26,17 +26,13 @@ class Storage {
       logError(Errors._700, `key ${key} – ${err.message}`)
     }
 
-    let data = undefined
-    if (saved) {
-      try {
-        data = JSON.parse(saved)
-      } catch (err) {
-        logError(Errors._700, `key ${key} – ${err.message}`)
-        data = undefined
-      }
-    }
+    if (!saved) return
 
-    return data as unknown as T | undefined
+    try {
+      return JSON.parse(saved) as T
+    } catch (err) {
+      logError(Errors._700, `key ${key} – ${err.message}`)
+    }
   }
 
   public setItem = <T>(key: string, item: T): void => {
