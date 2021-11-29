@@ -28,7 +28,12 @@ const EIP712_DOMAIN = [
 
 // This function returns the types structure for signing offchain messages
 // following EIP712
-export const getEip712MessageTypes = (safeVersion: string) => {
+export const getEip712MessageTypes = (
+  safeVersion: string,
+): {
+  EIP712Domain: typeof EIP712_DOMAIN | typeof EIP712_DOMAIN_BEFORE_V130
+  SafeTx: Array<{ type: string; name: string }>
+} => {
   const eip712WithChainId = semverSatisfies(safeVersion, '>=1.3.0')
 
   return {

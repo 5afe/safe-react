@@ -11,6 +11,7 @@ import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersi
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {
@@ -19,7 +20,7 @@ export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | n
 
     return response.data.results[0] || null
   } catch (e) {
-    console.error('failed to retrieve last Tx from server', e)
+    logError(Errors._615, e.message)
     return null
   }
 }
