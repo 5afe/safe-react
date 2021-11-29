@@ -1,8 +1,14 @@
-import { MultisigExecutionDetails, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isMultiSigExecutionDetails,
+  isStatusAwaitingConfirmation,
+  isStatusAwaitingExecution,
+  isTxPending,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
@@ -33,8 +39,8 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation()
-      if (transaction.txDetails?.detailedExecutionInfo?.type === 'MULTISIG') {
-        const details = transaction.txDetails?.detailedExecutionInfo as MultisigExecutionDetails
+      if (transaction.txDetails && isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)) {
+        const details = transaction.txDetails.detailedExecutionInfo
         if (
           (canExecute && details.confirmationsRequired > details.confirmations.length) ||
           (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)
@@ -46,10 +52,9 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
       actionContext.current.selectAction({
         actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
         transactionId: transaction.id,
-        txLocation: locationContext.current.txLocation,
       })
     },
-    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails?.detailedExecutionInfo],
+    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails],
   )
 
   const handleCancelButtonClick = useCallback(
@@ -58,7 +63,6 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
       actionContext.current.selectAction({
         actionSelected: 'cancel',
         transactionId: transaction.id,
-        txLocation: locationContext.current.txLocation,
       })
     },
     [transaction.id],
@@ -74,7 +78,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     hoverContext.current.setActiveHover()
   }, [])
 
-  const isPending = useMemo(() => !!transaction.txStatus.match(/^PENDING.*/), [transaction.txStatus])
+  const isPending = useMemo(() => isTxPending(transaction.txStatus), [transaction.txStatus])
 
   const signaturePending = addressInList(
     (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
@@ -83,8 +87,8 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const disabledActions = useMemo(
     () =>
       isPending ||
-      (transaction.txStatus === 'AWAITING_EXECUTION' && locationContext.current.txLocation === 'queued.queued') ||
-      (transaction.txStatus === 'AWAITING_CONFIRMATIONS' && !signaturePending(currentUser)),
+      (isStatusAwaitingExecution(transaction.txStatus) && locationContext.current.txLocation === 'queued.queued') ||
+      (isStatusAwaitingConfirmation(transaction.txStatus) && !signaturePending(currentUser)),
     [currentUser, isPending, signaturePending, transaction.txStatus],
   )
 

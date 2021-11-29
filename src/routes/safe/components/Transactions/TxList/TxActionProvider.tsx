@@ -2,30 +2,23 @@ import { createContext, ReactElement, ReactNode, useCallback, useRef, useState }
 import { useDispatch } from 'react-redux'
 
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
-import { TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 
 export type ActionType = 'cancel' | 'confirm' | 'execute' | 'none'
 
 export type SelectedAction = {
-  // FixMe: give proper names to the keys
-  //  for instance:
-  //  `action->{ type; forTransactionId; txLocation; }`
-  //  `setAction` as callback
   selectedAction: {
     actionSelected: ActionType
     transactionId: string
-    txLocation: TxLocation
   }
-  selectAction: (args: SelectedAction['selectedAction']) => Promise<void>
+  selectAction: (args: SelectedAction['selectedAction']) => void
 }
 
 export const TransactionActionStateContext = createContext<SelectedAction>({
   selectedAction: {
     actionSelected: 'none',
     transactionId: '',
-    txLocation: 'history',
   },
-  selectAction: () => Promise.resolve(),
+  selectAction: () => {},
 })
 
 export const TxActionProvider = ({ children }: { children: ReactNode }): ReactElement => {
@@ -33,19 +26,15 @@ export const TxActionProvider = ({ children }: { children: ReactNode }): ReactEl
   const [selectedAction, setSelectedAction] = useState<SelectedAction['selectedAction']>({
     actionSelected: 'none',
     transactionId: '',
-    txLocation: 'history',
   })
 
-  const selectAction = useCallback(
-    async ({ actionSelected, transactionId, txLocation }: SelectedAction['selectedAction']) => {
-      if (transactionId) {
-        await dispatch.current(fetchTransactionDetails({ transactionId, txLocation }))
-      }
+  const selectAction = useCallback(({ actionSelected, transactionId }: SelectedAction['selectedAction']) => {
+    if (transactionId) {
+      dispatch.current(fetchTransactionDetails({ transactionId }))
+    }
 
-      setSelectedAction({ actionSelected, transactionId, txLocation })
-    },
-    [],
-  )
+    setSelectedAction({ actionSelected, transactionId })
+  }, [])
 
   return (
     <TransactionActionStateContext.Provider value={{ selectedAction, selectAction }}>
