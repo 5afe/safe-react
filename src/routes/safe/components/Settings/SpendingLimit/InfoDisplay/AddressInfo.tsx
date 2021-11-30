@@ -14,7 +14,6 @@ interface AddressInfoProps {
 
 const AddressInfo = ({ address, title }: AddressInfoProps): ReactElement => {
   const name = useSelector((state) => addressBookEntryName(state, { address }))
-  const explorerUrl = getExplorerInfo(address)
 
   return (
     <>
@@ -29,7 +28,7 @@ const AddressInfo = ({ address, title }: AddressInfoProps): ReactElement => {
         showCopyBtn
         showAvatar
         textSize="lg"
-        explorerUrl={explorerUrl}
+        explorerUrl={getExplorerInfo(address)}
       />
     </>
   )

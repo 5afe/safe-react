@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ChainId, _getChainId, _setChainId } from 'src/config'
 import { store } from 'src/store'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
-import { setChainId as setChainIdAction } from 'src/logic/config/store/actions'
+import { setChainIdAction } from 'src/logic/config/store/actions'
 
 export type RemoteAppData = {
   id: number

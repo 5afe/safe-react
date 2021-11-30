@@ -16,7 +16,7 @@ import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 
-import { NETWORK_ROOT_ROUTES } from 'src/routes/routes'
+import { getNetworkRootRoutes } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId, getChainById } from 'src/config'
@@ -89,7 +89,7 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       e.preventDefault()
       clickAway()
 
-      const newRoute = NETWORK_ROOT_ROUTES.find((network) => network.chainId === chainId)
+      const newRoute = getNetworkRootRoutes().find((network) => network.chainId === chainId)
       if (newRoute) {
         history.push(newRoute.route)
       }
@@ -120,7 +120,7 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
             <>
               <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                 <List className={classes.network} component="div">
-                  {NETWORK_ROOT_ROUTES.map((network) => (
+                  {getNetworkRootRoutes().map((network) => (
                     <Fragment key={network.chainId}>
                       <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
                         <NetworkLabel networkInfo={getChainById(network.chainId)} />

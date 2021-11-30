@@ -108,7 +108,6 @@ export const UserDetails = ({
   provider,
   userAddress,
 }: Props): React.ReactElement => {
-  const explorerUrl = getExplorerInfo(userAddress)
   const connectedNetwork = useSelector(networkSelector)
   const classes = useStyles()
 
@@ -124,7 +123,7 @@ export const UserDetails = ({
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
+            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={getExplorerInfo(userAddress)} shortenHash={4} />
           ) : (
             'Address not available'
           )}

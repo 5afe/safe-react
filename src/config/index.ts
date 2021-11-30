@@ -1,3 +1,4 @@
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { emptyChainInfo, _chains } from 'src/logic/config/store/reducer'
@@ -15,6 +16,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   ROPSTEN: '3',
   RINKEBY: '4',
   GOERLI: '5',
+  OPTIMISM: '10',
   KOVAN: '42',
   BSC: '56',
   XDAI: '100',
@@ -22,6 +24,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   ENERGY_WEB_CHAIN: '246',
   LOCAL: '4447',
   ARBITRUM: '42161',
+  AVALANCHE: '43114',
   VOLTA: '73799',
 }
 
@@ -65,14 +68,14 @@ export const getInitialChainId = () => {
   }
 }
 
-let chainId = getInitialChainId()
+let _chainId = getInitialChainId()
 
 export const _setChainId = (newChainId: ChainId) => {
-  chainId = newChainId
+  _chainId = newChainId
 }
 
 export const _getChainId = (): ChainId => {
-  return chainId
+  return _chainId
 }
 
 export const getChainById = (chainId: ChainId): ChainInfo => {
@@ -144,11 +147,20 @@ export const getExplorerUrl = (): string => {
   return new URL(address).origin
 }
 
-export const getExplorerInfo = (hash: string): string => {
+export const getHashedExplorerUrl = (hash: string): string => {
   const { address, txHash } = getExplorerUriTemplate()
   const isTx = hash.length > 42
 
   return isTx ? txHash.replace('{{hash}}', hash) : address.replace('{{address}}', hash)
+}
+
+// ExplorerInfo return type is not exported by SRC
+export const getExplorerInfo = (hash: string): Parameters<typeof ExplorerButton>[0]['explorerUrl'] => {
+  const url = getHashedExplorerUrl(hash)
+
+  const { hostname } = new URL(url)
+  const alt = `View on ${hostname}` // Not returned by CGW
+  return () => ({ url, alt })
 }
 
 export const isFeatureEnabled = (feature: FEATURES | SAFE_FEATURES) => {

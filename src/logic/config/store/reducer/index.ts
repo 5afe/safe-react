@@ -38,9 +38,8 @@ export const emptyChainInfo: ChainInfo = {
 
 export let _chains: ChainInfo[] = []
 
-export const addChains = (chains: ChainInfo[]) => {
-  const newChains = chains.filter(({ chainId }) => _chains.some((chain) => chain.chainId !== chainId))
-  _chains = [..._chains, ...newChains]
+export const addChains = async (chains: ChainInfo[]) => {
+  _chains = chains
 }
 // =============================================================================
 

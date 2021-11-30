@@ -6,8 +6,6 @@ import Root from 'src/components/Root'
 import { SENTRY_DSN } from './utils/constants'
 import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
 import { switchNetworkWithUrl } from './utils/history'
-import { initChains } from './logic/config/store/actions'
-import { store } from './store'
 
 // Set the initial network id from the URL
 if (typeof window !== 'undefined') {
@@ -15,8 +13,6 @@ if (typeof window !== 'undefined') {
 }
 
 disableMMAutoRefreshWarning()
-
-store.dispatch(initChains())
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 

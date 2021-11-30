@@ -63,12 +63,11 @@ export const SAFE_ROUTES = {
   SETTINGS_ADVANCED: `${ADDRESSED_ROUTE}/settings/advanced`,
 }
 
-export const NETWORK_ROOT_ROUTES: Array<{ chainId: ChainId; route: string }> = getChains().map(
-  ({ chainId, chainName }) => ({
+export const getNetworkRootRoutes = (): Array<{ chainId: ChainId; route: string }> =>
+  getChains().map(({ chainId, chainName }) => ({
     chainId,
     route: `/${chainName.toLowerCase()}`,
-  }),
-)
+  }))
 
 export type SafeRouteParams = { shortName: ShortName; safeAddress: string }
 

@@ -18,7 +18,7 @@ import {
   hasPrefixedSafeAddressInUrl,
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
-  NETWORK_ROOT_ROUTES,
+  getNetworkRootRoutes,
   TRANSACTION_ID_SLUG,
 } from './routes'
 import { getShortName } from 'src/config'
@@ -73,7 +73,7 @@ const Routes = (): React.ReactElement => {
       />
       {
         // Redirection to open network specific welcome pages
-        NETWORK_ROOT_ROUTES.map(({ chainId, route }) => (
+        getNetworkRootRoutes().map(({ chainId, route }) => (
           <Route
             key={chainId}
             path={route}

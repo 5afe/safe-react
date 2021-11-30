@@ -16,9 +16,12 @@ const StyledCol = styled(Col)`
     padding-right: ${md};
   }
 `
-const StyledParagraph = styled(Paragraph)<{ theme: ChainInfo['theme'] }>`
-  background-color: ${(props) => props?.theme?.backgroundColor ?? border};
-  color: ${(props) => props?.theme?.textColor ?? fontColor};
+const StyledParagraph = styled(Paragraph)<{
+  backgroundColor: ChainInfo['theme']['backgroundColor']
+  textColor: ChainInfo['theme']['textColor']
+}>`
+  background-color: ${(props) => props?.backgroundColor ?? border};
+  color: ${(props) => props?.textColor ?? fontColor};
   border-radius: 3px;
   line-height: normal;
   text-transform: capitalize;

@@ -136,7 +136,6 @@ const SafeHeader = ({
       </Container>
     )
   }
-  const explorerUrl = getExplorerInfo(address)
   const chainInfo = getChainInfo()
 
   return (
@@ -166,7 +165,7 @@ const SafeHeader = ({
             <Icon size="sm" type="qrCode" tooltip="Show QR" />
           </ButtonHelper>
           <CopyToClipboardBtn textToCopy={address} />
-          <ExplorerButton explorerUrl={explorerUrl} />
+          <ExplorerButton explorerUrl={getExplorerInfo(address)} />
         </IconContainer>
 
         {!granted && (
