@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import axios from 'axios'
 
 import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
@@ -10,7 +11,7 @@ import {
 } from 'src/logic/safe/store/actions/utils'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions'
-import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
+import { getMockedSafeInstance, getMockedStoredTServiceModel } from 'src/test/utils/safeHelper'
 import {
   inMemoryPartialSafeInformation,
   localSafesInfo,
@@ -18,16 +19,17 @@ import {
   remoteSafeInfoWithoutModules,
 } from '../mocks/safeInformation'
 
+const lastTxFromStore = getMockedStoredTServiceModel()
+
 describe('shouldExecuteTransaction', () => {
   it('It should return false if given a safe with a threshold > 1', async () => {
     // given
     const nonce = '0'
     const threshold = '2'
     const safeInstance = getMockedSafeInstance({ threshold })
-    const lastTx = getMockedTxServiceModel({})
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStore)
 
     // then
     expect(result).toBe(false)
@@ -37,10 +39,10 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '1'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold, nonce })
-    const lastTx = getMockedTxServiceModel({})
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.SUCCESS }
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(true)
@@ -50,10 +52,10 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '10'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold, nonce })
-    const lastTx = getMockedTxServiceModel({ isExecuted: true })
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.SUCCESS }
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(true)
@@ -63,10 +65,10 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '10'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold })
-    const lastTx = getMockedTxServiceModel({ isExecuted: false })
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.FAILED }
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(false)
@@ -77,11 +79,14 @@ describe('getNewTxNonce', () => {
   it('It should return 2 if given the last transaction with nonce 1', async () => {
     // given
     const safeInstance = getMockedSafeInstance({})
-    const lastTx = getMockedTxServiceModel({ nonce: 1 })
+    const lastTxFromStoreExecuted = {
+      ...lastTxFromStore,
+      executionInfo: { type: 'MULTISIG', nonce: 1, confirmationsRequired: 1, confirmationsSubmitted: 1 },
+    }
     const expectedResult = '2'
 
     // when
-    const result = await getNewTxNonce(lastTx, safeInstance)
+    const result = await getNewTxNonce(lastTxFromStoreExecuted.executionInfo.nonce, safeInstance)
 
     // then
     expect(result).toBe(expectedResult)
@@ -97,7 +102,7 @@ describe('getNewTxNonce', () => {
     safeInstance.methods.nonce = mockFnNonce
 
     // when
-    const result = await getNewTxNonce(null, safeInstance)
+    const result = await getNewTxNonce(undefined, safeInstance)
 
     // then
     expect(result).toBe(expectedResult)
@@ -110,10 +115,13 @@ describe('getNewTxNonce', () => {
     // given
     const safeInstance = getMockedSafeInstance({})
     const expectedResult = '11'
-    const lastTx = getMockedTxServiceModel({ nonce: 10 })
+    const lastTxFromStoreExecuted = {
+      ...lastTxFromStore,
+      executionInfo: { type: 'MULTISIG', nonce: 10, confirmationsRequired: 1, confirmationsSubmitted: 1 },
+    }
 
     // when
-    const result = await getNewTxNonce(lastTx, safeInstance)
+    const result = await getNewTxNonce(lastTxFromStoreExecuted.executionInfo.nonce, safeInstance)
 
     // then
     expect(result).toBe(expectedResult)
@@ -130,7 +138,10 @@ describe('getLastTx', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
   it('It should return the last transaction for a given a safe address', async () => {
     // given
-    const lastTx = getMockedTxServiceModel({ nonce: 1 })
+    const lastTxFromStoreExecuted = {
+      ...lastTxFromStore,
+      executionInfo: { type: 'MULTISIG', nonce: 1, confirmationsRequired: 1, confirmationsSubmitted: 1 },
+    }
     const url = buildTxServiceUrl(safeAddress)
 
     // when
@@ -138,7 +149,7 @@ describe('getLastTx', () => {
     axios.get.mockImplementationOnce(() => {
       return {
         data: {
-          results: [lastTx],
+          results: [lastTxFromStoreExecuted],
         },
       }
     })
@@ -146,7 +157,7 @@ describe('getLastTx', () => {
     const result = await getLastTx(safeAddress)
 
     // then
-    expect(result).toStrictEqual(lastTx)
+    expect(result).toStrictEqual(lastTxFromStoreExecuted)
     expect(axios.get).toHaveBeenCalled()
     expect(axios.get).toBeCalledWith(url, { params: { limit: 1 } })
   })

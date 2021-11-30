@@ -1,3 +1,4 @@
+import { isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
@@ -20,7 +21,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { PayableTx } from 'src/types/contracts/types.d'
@@ -41,6 +42,7 @@ import {
 import { getCurrentShortChainName } from 'src/config'
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -105,8 +107,11 @@ export const createTransaction =
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
     const chainId = currentChainId(state)
-    const lastTx = await getLastTx(safeAddress)
-    const nextNonce = await getNewTxNonce(lastTx, safeInstance)
+
+    const lastTx = getLastTransaction(state)
+    const lastTxNonce = isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
+
+    const nextNonce = await getNewTxNonce(lastTxNonce, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = !delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
