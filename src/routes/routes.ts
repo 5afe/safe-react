@@ -67,7 +67,7 @@ export const SAFE_ROUTES = {
 export const getNetworkRootRoutes = (): Array<{ chainId: ChainId; route: string }> =>
   getChains().map(({ chainId, chainName }) => ({
     chainId,
-    route: `/${chainName.toLowerCase()}`,
+    route: `/${chainName.replaceAll(' ', '-').toLowerCase()}`,
   }))
 
 export type SafeRouteParams = { shortName: ShortName; safeAddress: string }
