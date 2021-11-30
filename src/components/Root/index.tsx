@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react'
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
 import { getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
@@ -22,7 +21,7 @@ import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { GATEWAY_URL } from 'src/utils/constants'
 import { addChains } from 'src/config/_store'
 
-const Root = (): React.ReactElement => {
+const Root = (): React.ReactElement | null => {
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -40,15 +39,21 @@ const Root = (): React.ReactElement => {
     loadChains()
   }, [])
 
+  const removePreloader = () => {
+    document.getElementById('safe-preloader-animation')?.remove()
+  }
+
   // Chains failed to load
   if (isError) {
+    removePreloader()
     throw new Error(Errors._904)
   }
 
   if (!hasChains) {
-    // Relevant to /public
-    return <PreloaderAnimation src="./resources/safe.png" />
+    return null
   }
+
+  removePreloader()
 
   return (
     <App>
@@ -75,28 +80,5 @@ const RootProviders = (): React.ReactElement => (
     </Providers>
   </>
 )
-
-const PreloaderAnimation = styled.img`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120px;
-  height: 120px;
-  margin: -60px 0 0 -60px;
-  animation: sk-bounce 2s infinite ease-in-out;
-  animation-delay: -1s;
-
-  @keyframes sk-bounce {
-    0%,
-    100% {
-      transform: scale(0.8);
-      -webkit-transform: scale(0.8);
-    }
-    50% {
-      transform: scale(1);
-      -webkit-transform: scale(1);
-    }
-  }
-`
 
 export default RootProviders
