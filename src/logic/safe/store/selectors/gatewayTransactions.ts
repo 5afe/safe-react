@@ -127,3 +127,19 @@ export const getTransactionsByNonce = createSelector(
     return txsByNonce
   },
 )
+
+export const getLastTransaction = createSelector(nextTransactions, queuedTransactions, (nextTxs, queuedTxs) => {
+  if (queuedTxs && Object.keys(queuedTxs).length > 0) {
+    const queuedNonces = Object.keys(queuedTxs)
+    const highestQueuedNonce = Number(queuedNonces.sort()[queuedNonces.length - 1])
+    const lastQueuedTx = Object.values(queuedTxs[highestQueuedNonce])[0]
+    return lastQueuedTx
+  }
+
+  if (nextTxs && Object.keys(nextTxs).length > 0) {
+    const nextTx = [...Object.values(nextTxs)[0]][0]
+    return nextTx
+  }
+
+  return null
+})
