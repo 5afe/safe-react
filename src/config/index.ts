@@ -77,7 +77,10 @@ export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], Gas
 }
 
 export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
-  return getChainInfo().transactionService
+  // To avoid breaking changes, we define the version the web uses manually
+  const TX_SERVICE_VERSION = '1'
+  const { transactionService } = getChainInfo()
+  return `${transactionService}/api/v${TX_SERVICE_VERSION}`
 }
 
 export const getTokensServiceUrl = (): string => {
