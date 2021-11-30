@@ -33,8 +33,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGasParam } from '../../transactions/gas'
-import { getLastTransaction } from '../selectors/gatewayTransactions'
-import { isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -85,7 +84,7 @@ export const processTransaction =
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
     const lastTx = getLastTransaction(state)
-    const lastTxNonce = isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
+    const lastTxNonce = getLastTxNonce(state)
 
     const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
     const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))

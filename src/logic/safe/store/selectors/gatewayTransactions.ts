@@ -143,3 +143,7 @@ export const getLastTransaction = createSelector(nextTransactions, queuedTransac
 
   return null
 })
+
+export const getLastTxNonce = createSelector(getLastTransaction, (lastTx) => {
+  return isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
+})

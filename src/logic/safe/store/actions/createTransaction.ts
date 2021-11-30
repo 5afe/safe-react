@@ -1,4 +1,3 @@
-import { isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
@@ -42,7 +41,7 @@ import {
 import { getCurrentShortChainName } from 'src/config'
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
-import { getLastTransaction } from '../selectors/gatewayTransactions'
+import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -109,7 +108,7 @@ export const createTransaction =
     const chainId = currentChainId(state)
 
     const lastTx = getLastTransaction(state)
-    const lastTxNonce = isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
+    const lastTxNonce = getLastTxNonce(state)
 
     const nextNonce = await getNewTxNonce(lastTxNonce, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce

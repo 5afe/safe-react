@@ -9,8 +9,7 @@ import { ParametersStatus } from 'src/routes/safe/components/Transactions/helper
 import { sameString } from 'src/utils/strings'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { extractSafeAddress } from 'src/routes/routes'
-import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { isMultisigExecutionInfo } from './../../../../logic/safe/store/models/types/gateway.d'
+import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
 
 export type TxParameters = {
@@ -88,11 +87,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
     const getSafeNonce = async () => {
       if (safeAddress) {
         const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-
-        const lastTxFromStore = getLastTransaction(state)
-        const lastTxNonce = isMultisigExecutionInfo(lastTxFromStore?.executionInfo)
-          ? lastTxFromStore?.executionInfo.nonce
-          : undefined
+        const lastTxNonce = getLastTxNonce(state)
         const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
         setSafeNonce(nonce)
       }
