@@ -17,6 +17,7 @@ const enum Endpoints {
   SAFE_APPS = '/safe-apps/',
 }
 
+// TODO: Migrate to GATEWAY_URL when CGW exposes it
 export const fetchSafeAppsList = async (): Promise<RemoteAppData[]> => {
   const { data } = await axios.get(`${CONFIG_SERVICE_URL}${Endpoints.SAFE_APPS}?chainId=${_getChainId()}`)
   return data

@@ -2,7 +2,7 @@ import { postSafeGasEstimation, SafeTransactionEstimationRequest } from '@gnosis
 
 import { _getChainId } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { CONFIG_SERVICE_URL } from 'src/utils/constants'
+import { GATEWAY_URL } from 'src/utils/constants'
 
 type FetchSafeTxGasEstimationProps = {
   safeAddress: string
@@ -12,7 +12,7 @@ export const fetchSafeTxGasEstimation = async ({
   safeAddress,
   ...body
 }: FetchSafeTxGasEstimationProps): Promise<string> => {
-  return postSafeGasEstimation(CONFIG_SERVICE_URL, _getChainId(), checksumAddress(safeAddress), body).then(
+  return postSafeGasEstimation(GATEWAY_URL, _getChainId(), checksumAddress(safeAddress), body).then(
     ({ safeTxGas }) => safeTxGas,
   )
 }

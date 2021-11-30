@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
 import { getSDKWeb3ReadOnly, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { getGasPrice, getGasPriceOracles } from 'src/config'
+import { getGasPriceOracles } from 'src/config'
 import { CodedException, Errors } from '../exceptions/CodedException'
 import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -22,20 +22,14 @@ const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> =>
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
-  const gasPrice = getGasPrice()
   const gasPriceOracles = getGasPriceOracles()
 
-  if (gasPrice) {
-    // Fixed gas price in configuration. xDai uses this approach
-    return new BigNumber(gasPrice).toString()
-  } else if (gasPriceOracles) {
-    for (const gasPriceOracle of gasPriceOracles) {
-      try {
-        const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
-        return fetchedGasPrice
-      } catch (err) {
-        // Keep iterating price oracles
-      }
+  for (const gasPriceOracle of gasPriceOracles) {
+    try {
+      const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
+      return fetchedGasPrice
+    } catch (err) {
+      // Keep iterating price oracles
     }
   }
 

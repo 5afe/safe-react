@@ -17,8 +17,8 @@ import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { useEffect, useState } from 'react'
 import { getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
-import { addChains, _chains } from 'src/logic/config/store/reducer'
-import { CONFIG_SERVICE_URL } from 'src/utils/constants'
+import { addChains } from 'src/logic/config/store/reducer'
+import { GATEWAY_URL } from 'src/utils/constants'
 
 const Root = (): React.ReactElement => {
   const [hasChains, setHasChains] = useState<boolean>(false)
@@ -26,7 +26,7 @@ const Root = (): React.ReactElement => {
   useEffect(() => {
     const loadChains = async () => {
       try {
-        const { results = [] } = await getChainsConfig(CONFIG_SERVICE_URL)
+        const { results = [] } = await getChainsConfig(GATEWAY_URL)
         addChains(results)
       } catch (err) {
         console.error('Error while getting network configuration:', err)
@@ -41,8 +41,6 @@ const Root = (): React.ReactElement => {
   if (!hasChains) {
     return <>Loading...</>
   }
-
-  console.log('Chains loaded:', _chains)
 
   return (
     <>

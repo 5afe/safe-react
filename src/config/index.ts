@@ -116,12 +116,6 @@ export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], Gas
   return getChainInfo().gasPrice.filter(isOracleType)
 }
 
-// TODO: Unsure if correct
-export const getGasPrice = (): string => {
-  const gasPriceOracles = getGasPriceOracles()
-  return gasPriceOracles[0].gweiFactor
-}
-
 export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   return getChainInfo().transactionService
 }
