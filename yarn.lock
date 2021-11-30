@@ -2127,13 +2127,14 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0.tgz#0f90185c3693f2683322d275e796e61ff99ce87d"
   integrity sha512-dLCSlniYnxEqCglx4XdhByvi7KKuSYRWJKm1lVXAc4oJqwwVkoCwp0bFIejLZ/dnf7cQSBUUVsTGWhvSda511w==
 
-"@gnosis.pm/safe-apps-sdk@4.3.0-next.2":
-  version "4.3.0-next.2"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-4.3.0-next.2.tgz#90cd433c3183cee0f6cb4de5e5337e24f884caf6"
-  integrity sha512-1bNVRh2K5NP0sRj1URU4z6mF4chyeCGdr871yXqLLOv99zBrFQgDv8gBnSzva3hzth46YBb+zSAFGQHkmcpH0Q==
+"@gnosis.pm/safe-apps-sdk@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-6.1.0.tgz#b1b07504ed43d034e0b94c7fe274e908d62988a8"
+  integrity sha512-2NEd1CKoHTSkiQfdw8GJXtc/GfWogNHpRGeRmM2X1kvzlqIAheEhefM4BtyP/Nwo95/vvfwePi3ANuc6S6aUKQ==
   dependencies:
     "@changesets/cli" "^2.16.0"
-    ethers "^5.4.5"
+    "@gnosis.pm/safe-react-gateway-sdk" "^2.5.6"
+    ethers "^5.4.7"
 
 "@gnosis.pm/safe-core-sdk-types@^0.1.1":
   version "0.1.1"
@@ -2153,10 +2154,10 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.4.0.tgz#d49d3d36cc014ef62306d09c0f4761895a17d7a6"
   integrity sha512-q4salJNQ/Gx0DnZJytAFO/U4OwGI6xTGtTJSOZK+C9Fh2NW8sep+YfSunHQvCLcu4b7WgWEBhxnCV6rpyveLHg==
 
-"@gnosis.pm/safe-react-components@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.0.tgz#1c957f53c08833f9c8f2f2908c19b6823f573578"
-  integrity sha512-IZy1Mv3y93QBi0Edph85mhKnndc4Uo6uHe5dmz8MHe3htNWa0JxwsI3Afrzqqidvx+LLNsfguNvpu/ZRHbycvw==
+"@gnosis.pm/safe-react-components@^0.8.6":
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.6.tgz#a8275b02d41a7b0d69abef867900843a1a49bb11"
+  integrity sha512-lWHSjOQFmeck6D4cpzs6un09Zx7jptmdR3+QtUkB0obsmguU0o6fXtkK91SYE2Fm86GpmjhA03rKrOqzEeklBA==
   dependencies:
     react-media "^1.10.0"
 
@@ -10210,7 +10211,7 @@ ethers@4.0.47:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@^5.0.13, ethers@^5.0.31, ethers@^5.4.5, ethers@^5.4.7:
+ethers@^5.0.13, ethers@^5.0.31, ethers@^5.4.7:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.5.1.tgz#d3259a95a42557844aa543906c537106c0406fbf"
   integrity sha512-RodEvUFZI+EmFcE6bwkuJqpCYHazdzeR1nMzg+YWQSmQEsNtfl1KHGfp/FWZYl48bI/g7cgBeP2IlPthjiVngw==

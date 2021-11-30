@@ -33,34 +33,25 @@ describe('<ReviewInfoText>', () => {
   const warningCommonCopy =
     'will need to be created and executed before this transaction, are you sure you want to do this?'
 
-  it('Renders ReviewInfoText with safeNonce being one transaction in the future', () => {
-    const safeNonce = '9'
-    const expectedCopy = 'transaction ' + warningCommonCopy
-
-    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
-
-    expect(screen.getByTestId(testId)).toBeInTheDocument()
-    expect(screen.getByText('1')).toBeInTheDocument()
-    expect(screen.queryByText(expectedCopy)).toBeInTheDocument()
-  })
-
-  it('Renders ReviewInfoText with nonce more than one transaction in the future', () => {
-    const safeNonce = '10'
-    const expectedCopy = 'transactions ' + warningCommonCopy
-
-    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
-
-    expect(screen.getByTestId(testId)).toBeInTheDocument()
-    expect(screen.getByText('2')).toBeInTheDocument()
-    expect(screen.queryByText(expectedCopy)).toBeInTheDocument()
-  })
-
-  it('Renders ReviewInfoText not showing the nonce warning copy', () => {
-    const safeNonce = '10'
+  it('Renders ReviewInfoText with safeNonce being one lastTxNonce + 1', () => {
+    const lastTxNonce = 10
+    const safeNonce = `${lastTxNonce + 1}`
 
     render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
 
     expect(screen.getByTestId(testId)).toBeInTheDocument()
     expect(screen.queryByText(warningCommonCopy)).not.toBeInTheDocument()
+  })
+
+  it('Renders ReviewInfoText with safeNonce more than one transaction ahead of lastTxNonce', () => {
+    const lastTxNonce = 10
+    const safeNonce = `${lastTxNonce + 4}`
+    const expectedCopy = 'transactions ' + warningCommonCopy
+
+    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
+
+    expect(screen.getByTestId(testId)).toBeInTheDocument()
+    expect(screen.getByText('6')).toBeInTheDocument()
+    expect(screen.queryByText(expectedCopy)).toBeInTheDocument()
   })
 })

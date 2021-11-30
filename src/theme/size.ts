@@ -1,6 +1,6 @@
 import { lg, md, sm, xl, xs } from 'src/theme/variables'
 
-export const getSize = (size) => {
+export const getSize = (size: string): string => {
   switch (size) {
     case 'xs':
       return xs

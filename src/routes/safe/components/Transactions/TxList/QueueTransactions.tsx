@@ -2,12 +2,10 @@ import { Loader, Title } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
 import Img from 'src/components/layout/Img'
-import { ActionModal } from './ActionModal'
 import NoTransactionsImage from './assets/no-transactions.svg'
 import { usePagedQueuedTransactions } from './hooks/usePagedQueuedTransactions'
 import { QueueTxList } from './QueueTxList'
 import { Centered, NoTransactions } from './styled'
-import { TxActionProvider } from './TxActionProvider'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 
@@ -34,19 +32,16 @@ export const QueueTransactions = (): ReactElement => {
   }
 
   return (
-    <TxActionProvider>
-      <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
-        {/* Next list */}
-        <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-          {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
-        </TxLocationContext.Provider>
+    <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+      {/* Next list */}
+      <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
+        {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
+      </TxLocationContext.Provider>
 
-        {/* Queue list */}
-        <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-          {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
-        </TxLocationContext.Provider>
-      </TxsInfiniteScroll>
-      <ActionModal />
-    </TxActionProvider>
+      {/* Queue list */}
+      <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+        {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
+      </TxLocationContext.Provider>
+    </TxsInfiniteScroll>
   )
 }

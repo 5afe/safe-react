@@ -6,7 +6,7 @@ const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION'
 export const getCurrentSessionFromStorage = async (): Promise<CurrentSessionState | undefined> =>
   loadFromStorage(CURRENT_SESSION_STORAGE_KEY)
 
-export const saveCurrentSessionToStorage = async (currentSession) => {
+export const saveCurrentSessionToStorage = async (currentSession: CurrentSessionState): Promise<void> => {
   try {
     await saveToStorage(CURRENT_SESSION_STORAGE_KEY, currentSession)
   } catch (err) {
