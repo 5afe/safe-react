@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import { ChainId, getChainById } from 'src/config'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 type Props = {
   networkId: ChainId

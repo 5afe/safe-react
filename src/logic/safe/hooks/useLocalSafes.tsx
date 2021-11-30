@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { sortedSafeListSelector } from 'src/components/SafeListSidebar/selectors'
-import { ChainId, getChains } from 'src/config'
+import { getChains } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { SafeRecordProps } from '../store/models/safe'
 import { getLocalNetworkSafesById } from '../utils'
 

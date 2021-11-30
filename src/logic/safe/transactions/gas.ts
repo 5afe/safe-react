@@ -8,8 +8,9 @@ import { fetchSafeTxGasEstimation } from 'src/logic/safe/api/fetchSafeTxGasEstim
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { EIP1559Chains } from 'src/config/chain-workarounds'
-import { SAFE_FEATURES, _getChainId } from 'src/config'
+import { _getChainId } from 'src/config'
 import { hasFeature } from '../utils/safeVersion'
+import { SAFE_FEATURES } from 'src/config/chain.d'
 
 type SafeTxGasEstimationProps = {
   safeAddress: string

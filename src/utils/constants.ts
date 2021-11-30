@@ -1,8 +1,12 @@
+import { CHAIN_ID } from 'src/config/chain.d'
+
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const IS_PRODUCTION = APP_ENV === 'production'
-export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? '1' : '4'
+export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? CHAIN_ID.MAINNET : CHAIN_ID.RINKEBY
 export const PUBLIC_URL = process.env.PUBLIC_URL
+export const LS_NAMESPACE = 'SAFE'
+export const LS_SEPARATOR = '__'
 export const INTERCOM_ID = IS_PRODUCTION ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
 export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || ''

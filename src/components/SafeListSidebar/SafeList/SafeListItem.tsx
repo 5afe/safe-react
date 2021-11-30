@@ -10,7 +10,7 @@ import Link from 'src/components/layout/Link'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { ChainId, getChainById } from 'src/config'
+import { getChainById } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import {
   generateSafeRoute,
@@ -19,6 +19,7 @@ import {
   SAFE_ROUTES,
   SafeRouteParams,
 } from 'src/routes/routes'
+import { ChainId } from 'src/config/chain.d'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}

@@ -1,5 +1,5 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
-import { SAFE_FEATURES } from 'src/config'
+import { SAFE_FEATURES } from 'src/config/chain.d'
 import { checkIfSafeNeedsUpdate, hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 describe('Check safe version', () => {

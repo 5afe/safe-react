@@ -9,7 +9,7 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
-import { getChainInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 
 import {
   isCustomTxInfo,
@@ -60,7 +60,7 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${txInfo.transferInfo.tokenSymbol}`
     case TokenType.NATIVE_COIN: {
-      const { nativeCurrency } = getChainInfo()
+      const nativeCurrency = getNativeCurrency()
       return getAmountWithSymbol(
         {
           decimals: nativeCurrency.decimals,
@@ -82,7 +82,7 @@ type txTokenData = {
 }
 
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   switch (txInfo.transferInfo.type) {
     case TokenType.ERC20:
       return {
@@ -93,7 +93,6 @@ export const getTxTokenData = (txInfo: Transfer): txTokenData => {
     case TokenType.ERC721:
       return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
-      // `nativeCurrency.address` config was `ZERO_ADDRESS` before migration to chains endpoint
       return { address: ZERO_ADDRESS, value: txInfo.transferInfo.value, decimals: nativeCurrency.decimals }
   }
 }

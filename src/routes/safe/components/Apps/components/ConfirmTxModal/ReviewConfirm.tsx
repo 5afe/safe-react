@@ -9,7 +9,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { getChainInfo, getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -81,7 +81,7 @@ export const ReviewConfirm = ({
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   const explorerUrl = getExplorerInfo(safeAddress)
   const isOwner = useSelector(grantedSelector)
 

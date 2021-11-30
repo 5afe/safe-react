@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
-import { ChainId, getChainById } from 'src/config'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 interface Props {
   chainId: ChainId

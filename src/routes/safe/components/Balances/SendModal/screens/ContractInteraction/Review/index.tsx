@@ -3,7 +3,7 @@ import { useEffect, useState, Fragment } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getChainInfo, getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -56,7 +56,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()

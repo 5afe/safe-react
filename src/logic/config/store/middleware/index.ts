@@ -6,7 +6,7 @@ import { clearSafeList } from 'src/logic/safe/store/actions/clearSafeList'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { CONFIG_ACTIONS } from '../actions'
-import { ConfigPayload, _chains } from '../reducer'
+import { ConfigPayload } from '../reducer'
 
 export const configMiddleware =
   ({ dispatch }) =>

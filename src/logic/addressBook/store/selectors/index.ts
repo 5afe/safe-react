@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
-import { ChainId } from 'src/config'
 
+import { ChainId } from 'src/config/chain.d'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { AppReduxState } from 'src/store'

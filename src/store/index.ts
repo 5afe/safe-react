@@ -28,7 +28,7 @@ import currencyValuesReducer, {
   CURRENCY_REDUCER_ID,
   initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import configReducer, { ConfigState, CONFIG_REDUCER_ID } from 'src/logic/config/store/reducer'
+import configReducer, { ConfigState, CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
 import appearanceReducer, {
   AppearanceState,
@@ -39,16 +39,18 @@ import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
+import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
-const LOCAL_STORAGE_CONFIG: RLSOptions | LoadOptions = {
-  states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID],
-  namespace: 'SAFE',
-  namespaceSeparator: '__',
+export const LS_CONFIG: RLSOptions | LoadOptions = {
+  states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID, CONFIG_REDUCER_ID],
+  namespace: LS_NAMESPACE,
+  namespaceSeparator: LS_SEPARATOR,
   disableWarnings: true,
   preloadedState: {
     [CURRENCY_REDUCER_ID]: initialCurrencyState,
     [APPEARANCE_REDUCER_ID]: initialAppearanceState,
+    [CONFIG_REDUCER_ID]: initialConfigState,
   },
 }
 
@@ -56,7 +58,7 @@ const composeEnhancers = ((window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ a
 const enhancer = composeEnhancers(
   applyMiddleware(
     thunk,
-    save(LOCAL_STORAGE_CONFIG),
+    save(LS_CONFIG),
     notificationsMiddleware,
     safeStorageMiddleware,
     providerWatcher,
@@ -85,6 +87,7 @@ const rootReducer = combineReducers(reducers)
 
 // There is a circular dep that prevents using:
 // ReturnType<typeof store.getState>
+// or https://dev.to/svehla/typescript-100-type-safe-react-redux-under-20-lines-4h8n
 export type AppReduxState = CombinedState<{
   [PROVIDER_REDUCER_ID]: ProviderState
   [SAFE_REDUCER_ID]: SafeReducerMap
@@ -101,7 +104,7 @@ export type AppReduxState = CombinedState<{
   [APPEARANCE_REDUCER_ID]: AppearanceState
 }>
 
-export const createPreloadedStore = (localState?: PreloadedState<unknown>) =>
-  createStore(rootReducer, localState, enhancer)
+export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
 
-export const store: any = createStore(rootReducer, load(LOCAL_STORAGE_CONFIG), enhancer)
+export const createPreloadedStore = (localState = {} as PreloadedState<unknown>): typeof store =>
+  createStore(rootReducer, localState, enhancer)

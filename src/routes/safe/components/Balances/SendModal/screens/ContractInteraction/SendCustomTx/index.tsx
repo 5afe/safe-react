@@ -22,7 +22,7 @@ import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 
 import { styles } from './style'
-import { getChainInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { EthAddressInput } from '../EthAddressInput'
 import { ensResolver, formMutators } from '../utils'
 import Buttons from '../Buttons'
@@ -49,7 +49,7 @@ const useStyles = makeStyles(styles)
 
 const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: Props): ReactElement => {
   const classes = useStyles()
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   const ethBalance = useSelector(currentSafeEthBalance)
 
   const saveForm = async (values) => {

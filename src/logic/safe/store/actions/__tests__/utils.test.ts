@@ -1,7 +1,7 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import axios from 'axios'
-import { ChainId, SAFE_FEATURES } from 'src/config'
 
+import { ChainId, SAFE_FEATURES } from 'src/config/chain.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,

@@ -1,5 +1,6 @@
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { CHAIN_ID } from 'src/config'
+
+import { CHAIN_ID } from 'src/config/chain.d'
 
 export const remoteSafeInfoWithModules = {
   address: {

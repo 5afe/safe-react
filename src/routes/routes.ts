@@ -1,7 +1,8 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
-import { ChainId, getChains, getShortName, ShortName } from 'src/config'
+import { getChains, getShortName } from 'src/config'
+import { ChainId, ShortName } from 'src/config/chain.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 

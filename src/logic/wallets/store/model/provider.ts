@@ -1,5 +1,6 @@
 import { Record, RecordOf } from 'immutable'
-import { ChainId, CHAIN_ID } from 'src/config'
+
+import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 
 export type ProviderProps = {
   name: string

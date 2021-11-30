@@ -20,7 +20,7 @@ import {
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
 } from '../fields/createSafeFields'
-import { getChainInfo, getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { useStepper } from 'src/components/Stepper/stepperContext'
@@ -55,7 +55,7 @@ function ReviewNewSafeStep(): ReactElement | null {
     numOwners: numberOfOwners,
     safeCreationSalt,
   })
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
 
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)

@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-import { SAFE_FEATURES } from 'src/config'
+import { SAFE_FEATURES } from 'src/config/chain.d'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 

@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { ChainId, _getChainId, _setChainId } from 'src/config'
+import { _getChainId, _setChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { store } from 'src/store'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 import { setChainIdAction } from 'src/logic/config/store/actions'

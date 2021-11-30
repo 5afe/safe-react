@@ -1,4 +1,4 @@
-import { CHAIN_ID } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { batchLoadEntries } from '../reducer'
 
 describe('Test AddressBook BatchLoadEntries Reducer', () => {

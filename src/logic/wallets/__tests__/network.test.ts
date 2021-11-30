@@ -1,6 +1,6 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
-import { ChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 class CodedError extends Error {

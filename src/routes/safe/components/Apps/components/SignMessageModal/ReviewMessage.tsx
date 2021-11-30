@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getExplorerInfo, getChainInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -80,7 +80,7 @@ export const ReviewMessage = ({
 }: Props): ReactElement => {
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   const isOwner = useSelector(grantedSelector)
 
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')

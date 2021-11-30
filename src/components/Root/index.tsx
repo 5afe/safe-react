@@ -18,9 +18,9 @@ import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
-import { addChains } from 'src/logic/config/store/reducer'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { GATEWAY_URL } from 'src/utils/constants'
+import { addChains } from 'src/config/_store'
 
 const Root = (): React.ReactElement => {
   const [hasChains, setHasChains] = useState<boolean>(false)

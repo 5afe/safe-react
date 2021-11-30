@@ -1,6 +1,6 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Record, RecordOf } from 'immutable'
-import { ChainId, SAFE_FEATURES } from 'src/config'
+import { ChainId, SAFE_FEATURES } from 'src/config/chain.d'
 
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 

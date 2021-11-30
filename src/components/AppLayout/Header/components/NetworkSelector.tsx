@@ -19,7 +19,8 @@ import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { getNetworkRootRoutes } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { ChainId, getChainById } from 'src/config'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 const styles = {
   root: {

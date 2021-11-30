@@ -1,4 +1,4 @@
-import { CHAIN_ID } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 

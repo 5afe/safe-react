@@ -10,7 +10,7 @@ import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {

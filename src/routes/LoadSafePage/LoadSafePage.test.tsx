@@ -1,6 +1,6 @@
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-
-import { CHAIN_ID, getShortName } from 'src/config'
+import { getShortName } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'

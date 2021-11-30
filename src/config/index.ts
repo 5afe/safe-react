@@ -1,68 +1,19 @@
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
-import { emptyChainInfo, _chains } from 'src/logic/config/store/reducer'
-import { DEFAULT_CHAIN_ID, ETHERSCAN_API_KEY, INFURA_TOKEN, SAFE_APPS_RPC_TOKEN } from 'src/utils/constants'
-
-export type ChainId = ChainInfo['chainId']
-type ChainName = ChainInfo['chainName']
-export type ShortName = ChainInfo['shortName']
-
-// Local reference in order to reference network ids often
-export const CHAIN_ID: Record<ChainName, ChainId> = {
-  UNKNOWN: '0',
-  MAINNET: '1',
-  MORDEN: '2',
-  ROPSTEN: '3',
-  RINKEBY: '4',
-  GOERLI: '5',
-  OPTIMISM: '10',
-  KOVAN: '42',
-  BSC: '56',
-  XDAI: '100',
-  POLYGON: '137',
-  ENERGY_WEB_CHAIN: '246',
-  LOCAL: '4447',
-  ARBITRUM: '42161',
-  AVALANCHE: '43114',
-  VOLTA: '73799',
-}
-
-// The values match that required of onboard
-export enum WALLETS {
-  METAMASK = 'metamask',
-  WALLET_CONNECT = 'walletConnect',
-  TREZOR = 'trezor',
-  LEDGER = 'ledger',
-  TRUST = 'trust',
-  FORTMATIC = 'fortmatic',
-  PORTIS = 'portis',
-  AUTHEREUM = 'authereum',
-  TORUS = 'torus',
-  COINBASE = 'coinbase',
-  WALLET_LINK = 'walletLink',
-  OPERA = 'opera',
-  OPERA_TOUCH = 'operaTouch',
-  LATTICE = 'lattice',
-  KEYSTONE = 'keystone',
-}
-
-export enum SAFE_FEATURES {
-  SAFE_TX_GAS_OPTIONAL = 'SAFE_TX_GAS_OPTIONAL',
-}
-
-// =========================================================================
-
-export const getChains = (): ChainInfo[] => _chains
-
-export const isValidChainId = (chainId: unknown): chainId is ChainId =>
-  getChains().some((chain) => chain.chainId === chainId)
+import { ETHERSCAN_API_KEY, INFURA_TOKEN, LS_NAMESPACE, LS_SEPARATOR, SAFE_APPS_RPC_TOKEN } from 'src/utils/constants'
+import { ChainId, ChainName, CHAIN_ID, SAFE_FEATURES, ShortName } from './chain.d'
+import { emptyChainInfo, _store } from './_store'
 
 export const getInitialChainId = () => {
-  const localConfig = localStorage.getItem('SAFE__config')
+  const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
+  const DEFAULT_CHAIN_ID = initialConfigState.chainId
+
+  const localChainId = localStorage.getItem(LOCAL_CONFIG_KEY)
 
   try {
-    return localConfig ? JSON.parse(localConfig)?.chainId : DEFAULT_CHAIN_ID
+    return localChainId ? JSON.parse(localChainId)?.chainId : DEFAULT_CHAIN_ID
   } catch {
     return DEFAULT_CHAIN_ID
   }
@@ -77,13 +28,17 @@ export const _setChainId = (newChainId: ChainId) => {
 export const _getChainId = (): ChainId => {
   return _chainId
 }
+export const getChains = (): ChainInfo[] => _store.chains
+
+export const isValidChainId = (chainId: unknown): chainId is ChainId =>
+  getChains().some((chain) => chain.chainId === chainId)
 
 export const getChainById = (chainId: ChainId): ChainInfo => {
   return getChains().find((chain) => chain.chainId === chainId) || emptyChainInfo
 }
 
 export const getChainInfo = (): ChainInfo => {
-  return getChains().find((chain) => chain.chainId === _getChainId()) || emptyChainInfo
+  return getChainById(_getChainId())
 }
 
 export const getChainName = (): ChainName => {
@@ -92,6 +47,11 @@ export const getChainName = (): ChainName => {
 
 export const getShortName = (): ShortName => {
   return getChainInfo().shortName
+}
+
+// CGW does not return `nativeCurrency.address` as it is `ZERO_ADDRESS`
+export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
+  return getChainInfo().nativeCurrency
 }
 
 const usesInfuraRPC = (): boolean => [CHAIN_ID.MAINNET, CHAIN_ID.RINKEBY, CHAIN_ID.POLYGON].includes(_getChainId())

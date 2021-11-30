@@ -5,7 +5,7 @@ import { Text, EthHashInfo, CopyToClipboardBtn, IconText, FixedIcon } from '@gno
 import get from 'lodash/get'
 import { hexToBytes } from 'web3-utils'
 
-import { getChainInfo, getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 
@@ -75,7 +75,7 @@ export const BasicTxInfo = ({
   txValue: string
   recipientName?: string
 }): ReactElement => {
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
 
   return (
     <BasicTxInfoWrapper>

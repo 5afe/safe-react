@@ -1,4 +1,5 @@
-import { CHAIN_ID, _getChainId } from 'src/config'
+import { _getChainId } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
 
 import { setChainId } from 'src/logic/config/utils'
 import { getGasParam } from '../gas'

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo, getChainInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
@@ -48,7 +48,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
 
   const {

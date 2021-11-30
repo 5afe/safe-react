@@ -9,7 +9,7 @@ import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
-import { ChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 const ImportContainer = styled.div`
   flex-direction: column;

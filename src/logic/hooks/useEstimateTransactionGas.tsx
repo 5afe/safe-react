@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getChainInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import {
   checkTransactionExecution,
   estimateSafeTxGas,
@@ -131,7 +131,7 @@ export const useEstimateTransactionGas = ({
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
   )
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
   useEffect(() => {

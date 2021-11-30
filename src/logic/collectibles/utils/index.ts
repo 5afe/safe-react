@@ -1,4 +1,5 @@
-import { CHAIN_ID, _getChainId } from 'src/config'
+import { _getChainId } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { getERC721TokenContract, getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'

@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getChainInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { md, lg } from 'src/theme/variables'
 import ModalTitle from 'src/components/ModalTitle'
@@ -26,7 +26,7 @@ type Props = {
 }
 
 export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
-  const { nativeCurrency } = getChainInfo()
+  const nativeCurrency = getNativeCurrency()
   let body
   // If we are dealing with a multiSend
   // decodedTxData is of type DataDecodedParameter

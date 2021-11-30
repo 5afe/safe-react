@@ -1,6 +1,7 @@
 import { getStoragePrefix, loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { ChainId, getChainById } from 'src/config'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 export const SAFES_KEY = 'SAFES'
 

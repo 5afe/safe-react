@@ -2,7 +2,8 @@ import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import onboard from 'src/logic/wallets/onboard'
 import { numberToHex } from 'web3-utils'
 
-import { ChainId, getChainInfo, getExplorerUrl, getRpcServiceUrl, _getChainId } from 'src/config'
+import { getChainInfo, getExplorerUrl, getRpcServiceUrl, _getChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 
 const WALLET_ERRORS = {
