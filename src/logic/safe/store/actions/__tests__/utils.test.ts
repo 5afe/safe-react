@@ -5,12 +5,10 @@ import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,
-  getLastTx,
   getNewTxNonce,
   shouldExecuteTransaction,
 } from 'src/logic/safe/store/actions/utils'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { buildTxServiceUrl } from 'src/logic/safe/transactions'
 import { getMockedSafeInstance, getMockedStoredTServiceModel } from 'src/test/utils/safeHelper'
 import {
   inMemoryPartialSafeInformation,
@@ -130,58 +128,6 @@ describe('getNewTxNonce', () => {
 
 jest.mock('axios')
 jest.mock('console')
-describe('getLastTx', () => {
-  afterAll(() => {
-    jest.unmock('axios')
-    jest.unmock('console')
-  })
-  const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  it('It should return the last transaction for a given a safe address', async () => {
-    // given
-    const lastTxFromStoreExecuted = {
-      ...lastTxFromStore,
-      executionInfo: { type: 'MULTISIG', nonce: 1, confirmationsRequired: 1, confirmationsSubmitted: 1 },
-    }
-    const url = buildTxServiceUrl(safeAddress)
-
-    // when
-    // @ts-ignore
-    axios.get.mockImplementationOnce(() => {
-      return {
-        data: {
-          results: [lastTxFromStoreExecuted],
-        },
-      }
-    })
-
-    const result = await getLastTx(safeAddress)
-
-    // then
-    expect(result).toStrictEqual(lastTxFromStoreExecuted)
-    expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(url, { params: { limit: 1 } })
-  })
-  it('If should return null If catches an error getting last transaction', async () => {
-    // given
-    const lastTx = null
-    const url = buildTxServiceUrl(safeAddress)
-
-    // when
-    // @ts-ignore
-    axios.get.mockImplementationOnce(() => {
-      throw new Error()
-    })
-    console.error = jest.fn()
-    const result = await getLastTx(safeAddress)
-    const spyConsole = jest.spyOn(console, 'error').mockImplementation()
-
-    // then
-    expect(result).toStrictEqual(lastTx)
-    expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(url, { params: { limit: 1 } })
-    expect(spyConsole).toHaveBeenCalled()
-  })
-})
 
 jest.mock('src/logic/safe/utils/spendingLimits')
 describe('extractRemoteSafeInfo', () => {

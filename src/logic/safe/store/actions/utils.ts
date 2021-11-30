@@ -1,9 +1,6 @@
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
-import axios from 'axios'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
@@ -11,20 +8,7 @@ import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersi
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { Transaction, isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
-
-export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
-  try {
-    const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url, { params: { limit: 1 } })
-
-    return response.data.results[0] || null
-  } catch (e) {
-    logError(Errors._615, e.message)
-    return null
-  }
-}
 
 export const getNewTxNonce = async (lastTxNonce: number | undefined, safeInstance: GnosisSafe): Promise<string> => {
   // use current's safe nonce as fallback
