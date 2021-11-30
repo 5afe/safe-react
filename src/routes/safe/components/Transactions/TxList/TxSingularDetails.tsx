@@ -80,7 +80,7 @@ const TxSingularDetails = (): ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [txId, liveTx, dispatch])
+  }, [txId, liveTx, dispatch, chainId])
 
   if (!isLoaded || !liveTx) {
     return (

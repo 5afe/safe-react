@@ -1,8 +1,8 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { isKeystoneError, METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
-import { getEIP712Signer } from './EIP712Signer'
-import { ethSigner } from './ethSigner'
+import { getEIP712Signer, SigningTxArgs } from './EIP712Signer'
+import { ethSigner, EthSignerArgs } from './ethSigner'
 
 // 1. we try to sign via EIP-712 if user's wallet supports it
 // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
@@ -35,7 +35,7 @@ const getSupportedSigners = (isHW: boolean, safeVersion: string) => {
 
 export const tryOffChainSigning = async (
   safeTxHash: string,
-  txArgs,
+  txArgs: Omit<SigningTxArgs & EthSignerArgs, 'safeVersion' | 'safeTxHash'>,
   isHW: boolean,
   safeVersion: string,
 ): Promise<string | undefined> => {

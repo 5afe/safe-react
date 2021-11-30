@@ -65,7 +65,7 @@ export const getEip712MessageTypes = (
   }
 }
 
-interface SigningTxArgs extends TxArgs {
+export interface SigningTxArgs extends TxArgs {
   safeAddress: string
   safeVersion: string
 }
