@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useDispatch } from 'react-redux'
 
 import { getExplorerInfo } from 'src/config'
@@ -10,6 +9,7 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import Modal, { Modal as GenericModal } from 'src/components/Modal'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
@@ -71,7 +71,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
                 </Row>
                 <Row>
                   <Block justify="center">
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={owner.address}
                       showCopyBtn
                       showAvatar

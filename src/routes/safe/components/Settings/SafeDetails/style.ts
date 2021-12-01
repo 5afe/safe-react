@@ -7,7 +7,7 @@ export const styles = createStyles({
   },
   root: {
     display: 'flex',
-    maxWidth: '460px',
+    maxWidth: '480px',
   },
   saveBtn: {
     fontWeight: boldFont,

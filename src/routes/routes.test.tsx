@@ -8,7 +8,6 @@ import {
   extractPrefixedSafeAddress,
   ADDRESSED_ROUTE,
   history,
-  isValidShortChainName,
   LOAD_SPECIFIC_SAFE_ROUTE,
 } from './routes'
 import { Route, Switch } from 'react-router'
@@ -43,16 +42,6 @@ describe('chainSpecificSafeAddressPathRegExp', () => {
 
     expect(queryByTestId(addressedTestId)).toBeNull()
     expect(getByTestId(welcomeTestId)).toBeInTheDocument()
-  })
-})
-
-describe('isValidShortChainName', () => {
-  it('returns true for a valid short chain name', () => {
-    expect(isValidShortChainName('rin')).toBe(true)
-  })
-
-  it('returns false for a invalid short chain name', () => {
-    expect(isValidShortChainName('fake')).toBe(false)
   })
 })
 

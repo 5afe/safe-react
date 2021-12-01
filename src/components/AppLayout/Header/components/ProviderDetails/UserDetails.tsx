@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
-import { EthHashInfo, Identicon, Card } from '@gnosis.pm/safe-react-components'
+import { Identicon, Card } from '@gnosis.pm/safe-react-components'
 import { createStyles } from '@material-ui/core'
 
 import Spacer from 'src/components/Spacer'
@@ -11,6 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
@@ -124,7 +125,7 @@ export const UserDetails = ({
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
+            <PrefixedEthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
           ) : (
             'Address not available'
           )}

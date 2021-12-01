@@ -6,7 +6,6 @@ import QRCode from 'qrcode.react'
 import { ChangeEvent, ReactElement, useState } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -14,12 +13,12 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
 import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/variables'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getCurrentShortChainName, getExplorerInfo, getNetworkInfo } from 'src/config'
 import { NetworkSettings } from 'src/config/networks/network'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
-import { IS_PRODUCTION } from 'src/utils/constants'
 
 const useStyles = (networkInfo: NetworkSettings) =>
   makeStyles(
@@ -86,12 +85,13 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
   const classes = useStyles(networkInfo)
 
   const copyShortName = useSelector(copyShortNameSelector)
-  const [shouldCopyShortName, setShouldCopyShortName] = useState<boolean>(IS_PRODUCTION ? false : copyShortName)
+  const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
+  const shortName = getCurrentShortChainName()
 
   // Does not update store
-  const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => setShouldCopyShortName(checked)
+  const handlePrefixCheckbox = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => setShouldEncodePrefix(checked)
 
-  const qrCodeString = shouldCopyShortName ? getPrefixedSafeAddressSlug() : safeAddress
+  const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
   return (
     <>
       <Row align="center" className={classes.heading} grow>
@@ -117,14 +117,16 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
         <Block className={classes.qrContainer}>
           <QRCode size={135} value={qrCodeString} />
         </Block>
-        {!IS_PRODUCTION && (
-          <FormControlLabel
-            control={<Checkbox checked={shouldCopyShortName} onChange={handleCopyChange} name="shouldCopyShortName" />}
-            label="Copy addresses with chain prefix."
-          />
-        )}
+        <FormControlLabel
+          control={<Checkbox checked={shouldEncodePrefix} onChange={handlePrefixCheckbox} name="shouldEncodePrefix" />}
+          label={
+            <>
+              Include <b>{shortName}:</b> in the QR code address
+            </>
+          }
+        />
         <Block className={classes.addressContainer} justify="center">
-          <EthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
+          <PrefixedEthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
         </Block>
       </Col>
       <Hairline />

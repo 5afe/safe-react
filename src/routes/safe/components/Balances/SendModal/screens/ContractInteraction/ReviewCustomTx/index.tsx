@@ -1,7 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -12,6 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
@@ -117,7 +117,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
 
             <Row align="center" margin="md">
               <Col xs={12}>
-                <EthHashInfo
+                <PrefixedEthHashInfo
                   hash={tx.contractAddress as string}
                   name={tx.contractName ?? ''}
                   showAvatar

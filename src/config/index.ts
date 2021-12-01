@@ -13,7 +13,6 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
-import { isValidShortChainName } from 'src/routes/routes'
 import {
   APP_ENV,
   ETHERSCAN_API_KEY,
@@ -23,6 +22,7 @@ import {
   NODE_ENV,
   SAFE_APPS_RPC_TOKEN,
 } from 'src/utils/constants'
+import { isValidPrefix } from 'src/utils/prefixedAddress'
 import { loadFromSessionStorage } from 'src/utils/storage/session'
 
 export const getNetworks = (): NetworkInfo[] => {
@@ -93,7 +93,7 @@ export const getShortChainNameById = (networkId = getNetworkId()): string =>
   getNetworkConfigById(networkId)?.network?.shortName || getCurrentShortChainName()
 
 export const getNetworkIdByShortChainName = (shortName: string): ETHEREUM_NETWORK => {
-  if (!isValidShortChainName(shortName)) return DEFAULT_NETWORK
+  if (!isValidPrefix(shortName)) return DEFAULT_NETWORK
   return getNetworks().find((network) => network.shortName === shortName)?.id || DEFAULT_NETWORK
 }
 

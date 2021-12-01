@@ -98,8 +98,6 @@ export const fetchSafe =
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      console.log({ txHistoryTag }, safeInfo.txHistoryTag)
-
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
         dispatch(fetchTransactions(getNetworkId(), safeAddress))
       }

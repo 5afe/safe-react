@@ -1,20 +1,12 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 import { getExplorerInfo } from 'src/config'
 import { useKnownAddress } from './hooks/useKnownAddress'
 
 type EthHashInfoRestProps = Omit<
-  Parameters<typeof EthHashInfo>[0],
-  | 'hash'
-  | 'name'
-  | 'showAvatar'
-  | 'customAvatar'
-  | 'showCopyBtn'
-  | 'explorerUrl'
-  | 'shouldShowShortName' // The ommission of all shortName props here is to avoid type error that will be solved by merging PR #2896
-  | 'shouldCopyShortName'
-  | 'shortName'
+  Parameters<typeof PrefixedEthHashInfo>[0],
+  'hash' | 'name' | 'showAvatar' | 'customAvatar' | 'showCopyBtn' | 'explorerUrl'
 >
 
 type Props = EthHashInfoRestProps & {
@@ -31,7 +23,7 @@ export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): React
   }
 
   return (
-    <EthHashInfo
+    <PrefixedEthHashInfo
       hash={address}
       name={toInfo.name}
       showAvatar
