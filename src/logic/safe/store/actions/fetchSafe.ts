@@ -13,7 +13,6 @@ import { store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import { _getChainId } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
 
 /**
@@ -57,7 +56,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  * @param {string} safeAddress
  */
 export const fetchSafe =
-  (safeAddress: string) =>
+  (safeAddress: string, isInitialLoad = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
@@ -77,10 +76,11 @@ export const fetchSafe =
     }
 
     const state = store.getState()
+    const chainId = currentChainId(state)
 
     // If the network has changed while the safe was being loaded,
     // ignore the result
-    if (remoteSafeInfo?.chainId !== currentChainId(state)) {
+    if (remoteSafeInfo?.chainId !== chainId) {
       return
     }
 
@@ -95,12 +95,12 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      if (shouldUpdateCollectibles) {
+      if (shouldUpdateCollectibles || isInitialLoad) {
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxQueued) {
-        dispatch(fetchTransactions(_getChainId(), safeAddress))
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
+        dispatch(fetchTransactions(chainId, safeAddress))
       }
     }
 

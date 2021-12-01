@@ -435,7 +435,7 @@ export const OwnerList = styled.ul`
       margin: 5px;
     }
 
-    span {
+    span::first-of-type {
       color: #008c73;
       font-weight: bold;
     }
@@ -475,6 +475,10 @@ export const OwnerListItem = styled.li`
 
 export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
+
+  span {
+    font-weight: normal;
+  }
 `
 
 export const StyledScrollableBar = styled.div`

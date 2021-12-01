@@ -19,10 +19,10 @@ import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 
 import { styles } from './style'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -171,7 +171,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             </Row>
             <Row align="center" margin="md">
               <Col xs={12}>
-                <EthHashInfo
+                <PrefixedEthHashInfo
                   hash={tx.recipientAddress}
                   name={tx.recipientName}
                   showAvatar

@@ -15,7 +15,7 @@ import {
   SAFE_APPS_RPC_TOKEN,
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
-import { ChainId, ChainName, CHAIN_ID, SAFE_FEATURES, ShortName } from './chain.d'
+import { ChainId, ChainName, SAFE_FEATURES, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 
 export const getInitialChainId = () => {

@@ -37,6 +37,8 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
 const addressBookReducer = handleActions<AddressBookState, Payloads>(
   {
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
+      if (!action.payload.address) return state
+
       const newState = [...state]
       const addressBookEntry = { ...action.payload, name: action.payload.name.trim() }
       const entryIndex = getEntryIndex(newState, addressBookEntry)
