@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -8,6 +7,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { getExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
@@ -135,7 +135,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={moduleAddress}
                       showCopyBtn
                       showAvatar

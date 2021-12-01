@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -11,10 +11,7 @@ import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { isValidAddress } from 'src/utils/isValidAddress'
-
-// an idea for second field was taken from here
-// https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export interface AddressInputProps {
   fieldMutator: (address: string) => void
@@ -47,11 +44,59 @@ const AddressInput = ({
   const resolvedAddress = resolutions[currentInput]
   const isResolving = resolvedAddress === ''
 
+  // External validators must receive an unprefixed address
+  const sanitizedValidators = useCallback(
+    (val: string) => {
+      const parsed = parsePrefixedAddress(val)
+      return composeValidators(...validators)(parsed.address)
+    },
+    [validators],
+  )
+
+  // Internal validators + externally passed validators
+  const allValidators = useMemo(
+    () => composeValidators(required, mustBeEthereumAddress, sanitizedValidators),
+    [sanitizedValidators],
+  )
+
+  const onValueChange = useCallback(
+    (rawVal: string) => {
+      const address = trimSpaces(rawVal)
+
+      setCurrentInput(rawVal)
+
+      // A crypto domain name
+      if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+        setResolutions((prev) => ({ ...prev, [rawVal]: '' }))
+
+        getAddressFromDomain(address)
+          .then((resolverAddr) => {
+            const formattedAddress = checksumAddress(resolverAddr)
+            setResolutions((prev) => ({ ...prev, [rawVal]: formattedAddress }))
+          })
+          .catch((err) => {
+            setResolutions((prev) => ({ ...prev, [rawVal]: undefined }))
+            logError(Errors._101, err.message)
+          })
+      } else {
+        // A regular address hash
+        if (!allValidators(address)) {
+          const parsed = parsePrefixedAddress(address)
+          const checkedAddress = checksumAddress(parsed.address) || parsed.address
+
+          // Field mutator (parent component) always gets an unprefixed address
+          fieldMutator(checkedAddress)
+        }
+      }
+    },
+    [setCurrentInput, setResolutions, allValidators, fieldMutator],
+  )
+
   useEffect(() => {
     if (resolvedAddress) {
-      fieldMutator(resolvedAddress)
+      onValueChange(resolvedAddress)
     }
-  }, [resolvedAddress, fieldMutator])
+  }, [resolvedAddress, onValueChange])
 
   const adornment = isResolving
     ? {
@@ -73,43 +118,15 @@ const AddressInput = ({
         inputAdornment={adornment}
         name={name}
         placeholder={placeholder}
-        testId={testId}
         text={text}
-        type="text"
         spellCheck={false}
-        validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
-      />
-      <OnChange name={name}>
-        {async (value: string) => {
-          const address = trimSpaces(value)
-          setCurrentInput(address)
-
-          // A crypto domain name
-          if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
-            setResolutions((prev) => ({ ...prev, [address]: '' }))
-            try {
-              const resolverAddr = await getAddressFromDomain(address)
-              const formattedAddress = checksumAddress(resolverAddr)
-              setResolutions((prev) => ({ ...prev, [address]: formattedAddress }))
-            } catch (err) {
-              setResolutions((prev) => ({ ...prev, [address]: undefined }))
-              logError(Errors._101, err.message)
-            }
-          } else {
-            // A regular address hash
-            let checkedAddress = address
-            // Automatically checksum valid (either already checksummed, or lowercase addresses)
-            if (isValidAddress(address)) {
-              try {
-                checkedAddress = checksumAddress(address)
-              } catch (err) {
-                // ignore
-              }
-            }
-            fieldMutator(checkedAddress)
-          }
+        validate={allValidators}
+        inputProps={{
+          'data-testid': testId,
         }}
-      </OnChange>
+      />
+
+      <OnChange name={name}>{onValueChange}</OnChange>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
@@ -8,6 +8,7 @@ import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
 import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement => {
   const txInfo = transaction.txInfo as Creation
@@ -55,7 +56,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           <Text size="xl" strong>
             Creator:{' '}
           </Text>
-          <EthHashInfo
+          <PrefixedEthHashInfo
             textSize="xl"
             hash={txInfo.creator.value}
             showCopyBtn
@@ -70,7 +71,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             Factory:{' '}
           </Text>
           {txInfo.factory ? (
-            <EthHashInfo
+            <PrefixedEthHashInfo
               textSize="xl"
               hash={txInfo.factory.value}
               showCopyBtn
@@ -90,7 +91,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             Mastercopy:{' '}
           </Text>
           {txInfo.implementation ? (
-            <EthHashInfo
+            <PrefixedEthHashInfo
               textSize="xl"
               hash={txInfo.implementation.value}
               showCopyBtn

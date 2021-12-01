@@ -19,6 +19,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -28,7 +29,6 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { useStyles } from './style'
 import { getExplorerInfo } from 'src/config'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -112,7 +112,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                 </Row>
                 <Row className={classes.owner}>
                   <Col align="center" xs={12}>
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={owner.address}
                       name={owner.name}
                       showCopyBtn

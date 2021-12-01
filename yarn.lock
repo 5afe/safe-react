@@ -2154,12 +2154,13 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.4.0.tgz#d49d3d36cc014ef62306d09c0f4761895a17d7a6"
   integrity sha512-q4salJNQ/Gx0DnZJytAFO/U4OwGI6xTGtTJSOZK+C9Fh2NW8sep+YfSunHQvCLcu4b7WgWEBhxnCV6rpyveLHg==
 
-"@gnosis.pm/safe-react-components@^0.8.6":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.6.tgz#a8275b02d41a7b0d69abef867900843a1a49bb11"
-  integrity sha512-lWHSjOQFmeck6D4cpzs6un09Zx7jptmdR3+QtUkB0obsmguU0o6fXtkK91SYE2Fm86GpmjhA03rKrOqzEeklBA==
+"@gnosis.pm/safe-react-components@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.9.0.tgz#c5169cab41cde96c9a375005f380cd37bd909fe0"
+  integrity sha512-+SAJEuK4Zf1eBCtMpe1uQlJBN73zttIQwevEch7PDUBhJysc/oyEHuhmhpZpMYryoFgVVGYz7FZtwv2NxmUsJQ==
   dependencies:
     react-media "^1.10.0"
+    web3-utils "^1.6.0"
 
 "@gnosis.pm/safe-react-gateway-sdk@^2.5.5":
   version "2.5.5"

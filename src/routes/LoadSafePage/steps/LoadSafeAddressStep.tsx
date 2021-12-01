@@ -228,7 +228,7 @@ const Container = styled(Block)`
 
 const FieldContainer = styled(Block)`
   display: flex;
-  max-width: 460px;
+  max-width: 480px;
   margin-top: 12px;
 `
 

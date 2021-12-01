@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import TableContainer from '@material-ui/core/TableContainer'
 
@@ -23,6 +22,7 @@ import {
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
@@ -116,7 +116,7 @@ function ReviewNewSafeStep(): ReactElement | null {
               <React.Fragment key={`owner-${addressFieldName}`}>
                 <OwnersAddressesContainer>
                   <Col align="center" xs={12} data-testid={`create-safe-owner-details-${ownerAddress}`}>
-                    <EthHashInfo
+                    <PrefixedEthHashInfo
                       hash={ownerAddress}
                       name={ownerName}
                       showAvatar
@@ -165,7 +165,7 @@ const OwnersAddressesContainer = styled(Row)`
   padding-left: ${lg};
 `
 const DescriptionContainer = styled(Row)`
-  background-colo: ${background};
+  background-color: ${background};
   padding: ${lg};
   text-align: center;
 `
