@@ -1,33 +1,26 @@
-import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import { TIMEOUT } from 'src/utils/constants'
+import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 
-export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string): void => {
+export const useSafeScheduledUpdates = (safeAddress?: string): void => {
   const dispatch = useDispatch()
-  const timer = useRef<number>()
+  const [pollCount, setPollCount] = useState<number>(0)
+  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
-    // using this variable to prevent setting a timeout when the component is already unmounted or the effect
-    // has to run again
-    let mounted = true
-    const fetchSafeData = (address: string): void => {
-      dispatch(fetchSafe(address, safeLoaded))
-      dispatch(fetchSafeTokens(address))
-
-      if (mounted) {
-        timer.current = window.setTimeout(() => fetchSafeData(address), TIMEOUT * 3)
+    const timer = setTimeout(() => {
+      if (safeAddress) {
+        dispatch(fetchSafe(safeAddress))
+        dispatch(fetchSafeTokens(safeAddress))
       }
-    }
-
-    if (safeAddress && safeLoaded) {
-      fetchSafeData(safeAddress)
-    }
+      setPollCount((prev) => prev + 1)
+    }, SAFE_POLLING_INTERVAL)
 
     return () => {
-      mounted = false
-      clearTimeout(timer.current)
+      clearTimeout(timer)
     }
-  }, [dispatch, safeAddress, safeLoaded])
+  }, [dispatch, safeAddress, chainId, pollCount, setPollCount])
 }

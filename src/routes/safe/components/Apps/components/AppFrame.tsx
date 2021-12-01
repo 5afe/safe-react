@@ -26,7 +26,7 @@ import {
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
-import { TIMEOUT } from 'src/utils/constants'
+import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { getAppInfoFromUrl, getEmptySafeApp } from '../utils'
@@ -117,7 +117,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     if (appIsLoading) {
       timer.current = window.setTimeout(() => {
         setIsLoadingSlow(true)
-      }, TIMEOUT)
+      }, SAFE_POLLING_INTERVAL)
       errorTimer.current = window.setTimeout(() => {
         setAppLoadError(() => {
           throw Error(APP_LOAD_ERROR)
