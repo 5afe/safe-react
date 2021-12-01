@@ -3,9 +3,7 @@ import { getChains } from 'src/config/cache/chains'
 import { ShortName } from 'src/config/chain.d'
 
 export const isValidPrefix = (prefix: ShortName): boolean => {
-  return getChains()
-    .map(({ shortName }) => shortName)
-    .includes(prefix)
+  return getChains().some(({ shortName }) => shortName === prefix)
 }
 
 export const parsePrefixedAddress = (fullAddress = ''): { address: string; prefix: ShortName } => {
