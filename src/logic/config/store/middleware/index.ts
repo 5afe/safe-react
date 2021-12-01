@@ -14,20 +14,16 @@ export const configMiddleware =
   async (action: Action<ConfigPayload>) => {
     const handledAction = next(action)
 
-    const isWatched = Object.keys(CONFIG_ACTIONS).includes(action.type)
-
-    if (isWatched) {
-      switch (action.type) {
-        case CONFIG_ACTIONS.SET_CHAIN_ID: {
-          dispatch(clearSafeList())
-          dispatch(clearCurrentSession())
-          dispatch(loadSafesFromStorage())
-          dispatch(loadCurrentSessionFromStorage())
-          break
-        }
-        default:
-          break
+    switch (action.type) {
+      case CONFIG_ACTIONS.SET_CHAIN_ID: {
+        dispatch(clearSafeList())
+        dispatch(clearCurrentSession())
+        dispatch(loadSafesFromStorage())
+        dispatch(loadCurrentSessionFromStorage())
+        break
       }
+      default:
+        break
     }
 
     return handledAction
