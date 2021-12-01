@@ -1,13 +1,13 @@
 import { List } from 'immutable'
-import { getNativeCurrency } from 'src/config'
+import { getNativeCurrency, getNativeCurrencyAddress } from 'src/config'
 
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const getEthAsToken = (balance: string | number): Token =>
   makeToken({
     ...getNativeCurrency(),
-    address: ZERO_ADDRESS,
+    address: getNativeCurrencyAddress(),
     balance: {
       tokenBalance: balance.toString(),
     },

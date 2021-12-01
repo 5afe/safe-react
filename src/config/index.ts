@@ -1,6 +1,7 @@
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
 import { ETHERSCAN_API_KEY, INFURA_TOKEN, LS_NAMESPACE, LS_SEPARATOR, SAFE_APPS_RPC_TOKEN } from 'src/utils/constants'
 import { ChainId, ChainName, CHAIN_ID, SAFE_FEATURES, ShortName } from './chain.d'
@@ -49,9 +50,13 @@ export const getShortName = (): ShortName => {
   return getChainInfo().shortName
 }
 
-// CGW does not return `nativeCurrency.address` as it is `ZERO_ADDRESS`
 export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
   return getChainInfo().nativeCurrency
+}
+
+// CGW does not return `nativeCurrency.address` as it is `ZERO_ADDRESS`
+export const getNativeCurrencyAddress = (): string => {
+  return ZERO_ADDRESS
 }
 
 const usesInfuraRPC = (): boolean => [CHAIN_ID.MAINNET, CHAIN_ID.RINKEBY, CHAIN_ID.POLYGON].includes(_getChainId())

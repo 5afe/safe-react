@@ -9,7 +9,7 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
-import { getNativeCurrency } from 'src/config'
+import { getNativeCurrency, getNativeCurrencyAddress } from 'src/config'
 
 import {
   isCustomTxInfo,
@@ -20,7 +20,7 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SAFE_ROUTES, TRANSACTION_ID_SLUG, history } from 'src/routes/routes'
 
 export const NOT_AVAILABLE = 'n/a'
@@ -93,7 +93,11 @@ export const getTxTokenData = (txInfo: Transfer): txTokenData => {
     case TokenType.ERC721:
       return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
-      return { address: ZERO_ADDRESS, value: txInfo.transferInfo.value, decimals: nativeCurrency.decimals }
+      return {
+        address: getNativeCurrencyAddress(),
+        value: txInfo.transferInfo.value,
+        decimals: nativeCurrency.decimals,
+      }
   }
 }
 
