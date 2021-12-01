@@ -17,7 +17,7 @@ export const useLoadSafe = (safeAddress?: string): void => {
     if (!safeAddress) return
 
     dispatch(fetchLatestMasterContractVersion())
-    dispatch(fetchSafe(safeAddress))
+    dispatch(fetchSafe(safeAddress, true))
     dispatch(fetchSafeTokens(safeAddress))
     dispatch(updateAvailableCurrencies())
     dispatch(addViewedSafe(safeAddress))
