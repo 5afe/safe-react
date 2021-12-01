@@ -1,4 +1,3 @@
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
@@ -11,7 +10,7 @@ import {
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
 import { ChainId, ChainName, CHAIN_ID, SAFE_FEATURES, ShortName } from './chain.d'
-import { emptyChainInfo, getChains } from './cache'
+import { emptyChainInfo, getChains } from './cache/chains'
 
 export const getInitialChainId = () => {
   const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
@@ -116,8 +115,8 @@ export const getHashedExplorerUrl = (hash: string): string => {
   return isTx ? txHash.replace('{{hash}}', hash) : address.replace('{{address}}', hash)
 }
 
-// ExplorerInfo return type is not exported by SRC
-export const getExplorerInfo = (hash: string): Parameters<typeof ExplorerButton>[0]['explorerUrl'] => {
+// Matches return type of ExplorerInfo from SRC
+export const getExplorerInfo = (hash: string): (() => { url: string; alt: string }) => {
   const url = getHashedExplorerUrl(hash)
 
   const { hostname } = new URL(url)

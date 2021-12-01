@@ -4,7 +4,7 @@ import { getChainInfo } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { History } from 'history'
-import { getChains } from 'src/config/cache'
+import { getChains } from 'src/config/cache/chains'
 
 type Props = {
   history: History

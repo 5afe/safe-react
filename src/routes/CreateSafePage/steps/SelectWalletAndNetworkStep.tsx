@@ -19,7 +19,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { providerNameSelector, shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
 import WalletSwitch from 'src/components/WalletSwitch'
-import { getChains } from 'src/config/cache'
+import { getChains } from 'src/config/cache/chains'
 
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 

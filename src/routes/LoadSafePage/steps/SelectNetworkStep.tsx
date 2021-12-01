@@ -16,7 +16,7 @@ import { setChainId } from 'src/logic/config/utils'
 import { lg } from 'src/theme/variables'
 import Paragraph from 'src/components/layout/Paragraph'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { getChains } from 'src/config/cache'
+import { getChains } from 'src/config/cache/chains'
 
 export const selectNetworkStepLabel = 'Select network'
 

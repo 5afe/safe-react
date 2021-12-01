@@ -17,7 +17,13 @@ import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { loadChains } from 'src/config/cache'
+import { loadChains } from 'src/config/cache/chains'
+
+// Preloader is rendered outside of '#root' and acts as a loading spinner
+// for the app and then chains loading
+const removePreloader = () => {
+  document.getElementById('safe-preloader-animation')?.remove()
+}
 
 const RootConsumer = (): React.ReactElement | null => {
   const [hasChains, setHasChains] = useState<boolean>(false)
@@ -35,10 +41,6 @@ const RootConsumer = (): React.ReactElement | null => {
     }
     initChains()
   }, [])
-
-  const removePreloader = () => {
-    document.getElementById('safe-preloader-animation')?.remove()
-  }
 
   // Chains failed to load
   if (isError) {

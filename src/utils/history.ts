@@ -1,6 +1,6 @@
 import { LocationDescriptorObject } from 'history'
 import { getShortName } from 'src/config'
-import { getChains } from 'src/config/cache'
+import { getChains } from 'src/config/cache/chains'
 import { setChainId } from 'src/logic/config/utils'
 import { hasPrefixedSafeAddressInUrl, extractPrefixedSafeAddress } from 'src/routes/routes'
 
