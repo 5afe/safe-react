@@ -1,3 +1,4 @@
+import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import { createSelector } from 'reselect'
 
@@ -128,21 +129,32 @@ export const getTransactionsByNonce = createSelector(
   },
 )
 
-export const getLastTransaction = createSelector(nextTransactions, queuedTransactions, (nextTxs, queuedTxs) => {
-  if (queuedTxs && Object.keys(queuedTxs).length > 0) {
-    const queuedNonces = Object.keys(queuedTxs)
-    const highestQueuedNonce = Number(queuedNonces.sort()[queuedNonces.length - 1])
-    const lastQueuedTx = Object.values(queuedTxs[highestQueuedNonce])[0]
-    return lastQueuedTx
-  }
+export const getLastTransaction = createSelector(
+  nextTransactions,
+  queuedTransactions,
+  historyTransactions,
+  (nextTxs, queuedTxs, historyTxs) => {
+    if (queuedTxs && Object.keys(queuedTxs).length > 0) {
+      const queuedNonces = Object.keys(queuedTxs)
+      const highestQueuedNonce = Number(queuedNonces.sort()[queuedNonces.length - 1])
+      const lastQueuedTx = Object.values(queuedTxs[highestQueuedNonce])[0]
+      return lastQueuedTx
+    }
 
-  if (nextTxs && Object.keys(nextTxs).length > 0) {
-    const nextTx = Object.values(nextTxs)[0][0]
-    return nextTx
-  }
+    if (nextTxs && Object.keys(nextTxs).length > 0) {
+      const nextTx = Object.values(nextTxs)[0][0]
+      return nextTx
+    }
 
-  return null
-})
+    if (historyTxs) {
+      // History Txs are ordered by timestamp so no need to sort them.
+      const lastHistoryTx = flatten(Object.values(historyTxs)).find((tx) => tx.executionInfo != undefined) || null
+      return lastHistoryTx
+    }
+
+    return null
+  },
+)
 
 export const getLastTxNonce = createSelector(getLastTransaction, (lastTx) => {
   return isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
