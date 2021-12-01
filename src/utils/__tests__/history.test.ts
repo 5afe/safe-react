@@ -29,7 +29,7 @@ describe('switchNetworkWithUrl', () => {
 
     history.push(`/eth:${ZERO_ADDRESS}`)
 
-    switchNetworkWithUrl({ pathname: `/xdai:${ZERO_ADDRESS}` })
+    switchNetworkWithUrl({ pathname: `/eth:${ZERO_ADDRESS}` })
 
     expect(setChainIdMock).toHaveBeenCalled()
   })

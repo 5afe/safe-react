@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo, getNativeCurrency, getNativeCurrencyAddress } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -38,6 +38,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { getNativeCurrencyAddress } from 'src/config/utils'
 
 const useStyles = makeStyles(styles)
 

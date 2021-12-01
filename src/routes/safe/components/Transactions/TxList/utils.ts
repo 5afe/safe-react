@@ -9,7 +9,8 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
-import { getNativeCurrency, getNativeCurrencyAddress } from 'src/config'
+import { getNativeCurrency } from 'src/config'
+import { getNativeCurrencyAddress } from 'src/config/utils'
 
 import {
   isCustomTxInfo,

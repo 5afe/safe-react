@@ -1,5 +1,6 @@
 import { List } from 'immutable'
-import { getNativeCurrency, getNativeCurrencyAddress } from 'src/config'
+import { getNativeCurrency } from 'src/config'
+import { getNativeCurrencyAddress } from 'src/config/utils'
 
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'

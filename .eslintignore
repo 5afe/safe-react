@@ -7,7 +7,6 @@ flow-typed/npm
 migrations
 node_modules
 src/assets
-src/config
 test
 *.spec*
 *.test*
