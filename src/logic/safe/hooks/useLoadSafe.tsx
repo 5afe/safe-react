@@ -9,7 +9,7 @@ import { updateAvailableCurrencies } from 'src/logic/currencyValues/store/action
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
-export const useLoadSafe = (safeAddress?: string) => {
+export const useLoadSafe = (safeAddress?: string): void => {
   const dispatch = useDispatch<Dispatch>()
   const chainId = useSelector(currentChainId)
 
