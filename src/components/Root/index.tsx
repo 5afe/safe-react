@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react'
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
-import { getChainsConfig } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
@@ -18,25 +17,23 @@ import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { GATEWAY_URL } from 'src/utils/constants'
-import { addChains } from 'src/config/_store'
+import { loadChains } from 'src/config/_store'
 
 const Root = (): React.ReactElement | null => {
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
 
   useEffect(() => {
-    const loadChains = async () => {
+    const initChains = async () => {
       try {
-        const { results = [] } = await getChainsConfig(GATEWAY_URL)
-        addChains(results)
+        await loadChains()
         setHasChains(true)
       } catch (err) {
         logError(Errors._904, err.message)
         setIsError(true)
       }
     }
-    loadChains()
+    initChains()
   }, [])
 
   const removePreloader = () => {

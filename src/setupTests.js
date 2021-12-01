@@ -3,6 +3,15 @@ import '@testing-library/jest-dom/extend-expect'
 import * as sdkGatewayEndpoints from '@gnosis.pm/safe-react-gateway-sdk'
 import { mockGetSafeInfoResponse } from './logic/safe/utils/mocks/getSafeMock'
 import { mockTokenCurrenciesBalancesResponse } from 'src/logic/safe/utils/mocks/mockTokenCurrenciesBalancesResponse'
+import { loadChains } from 'src/config/_store'
+
+beforeAll(async () => {
+  try {
+    await loadChains(results)
+  } catch (err) {
+    throw new Error('Unable to load chains:', err)
+  }
+})
 
 function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
