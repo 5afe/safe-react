@@ -27,6 +27,7 @@ enum ErrorCodes {
   _612 = '612: Error estimating gas',
   _613 = '613: Error fetching safe info',
   _614 = '614: Error fetching transaction by id',
+  _615 = '615: Failed to retrieve last transaction from server',
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
