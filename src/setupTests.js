@@ -5,14 +5,6 @@ import { mockGetSafeInfoResponse } from './logic/safe/utils/mocks/getSafeMock'
 import { mockTokenCurrenciesBalancesResponse } from 'src/logic/safe/utils/mocks/mockTokenCurrenciesBalancesResponse'
 import { loadChains } from 'src/config/_store'
 
-beforeAll(async () => {
-  try {
-    await loadChains(results)
-  } catch (err) {
-    throw new Error('Unable to load chains:', err)
-  }
-})
-
 function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
     throw new TypeError('expected Uint8Array')
@@ -42,21 +34,26 @@ jest.mock('bnc-onboard', () => () => ({
   walletSelect: jest.fn(), // returns true or false
 }))
 
-jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
-  __esModule: true,
-  Operation: jest.fn(),
-  TokenType: jest.fn(),
-  TransactionStatus: jest.fn(),
-  TransferDirection: jest.fn(),
-  getBalances: jest.fn(),
-  getCollectibles: jest.fn(),
-  getFiatCurrencies: jest.fn(),
-  getSafeInfo: jest.fn(),
-  getTransactionDetails: jest.fn(),
-  getTransactionHistory: jest.fn(),
-  getTransactionQueue: jest.fn(),
-  postTransaction: jest.fn(),
-}))
+jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
+  const originalModule = jest.requireActual('@gnosis.pm/safe-react-gateway-sdk')
+  return {
+    __esModule: true,
+    // We now load the chain config from the CGW
+    getChainsConfig: originalModule.getChainsConfig,
+    Operation: jest.fn(),
+    TokenType: jest.fn(),
+    TransactionStatus: jest.fn(),
+    TransferDirection: jest.fn(),
+    getBalances: jest.fn(),
+    getCollectibles: jest.fn(),
+    getFiatCurrencies: jest.fn(),
+    getSafeInfo: jest.fn(),
+    getTransactionDetails: jest.fn(),
+    getTransactionHistory: jest.fn(),
+    getTransactionQueue: jest.fn(),
+    postTransaction: jest.fn(),
+  }
+})
 
 export let mockedEndpoints = {}
 
@@ -87,6 +84,10 @@ function clearAllMockRequest() {
     mockedEndpoints[endpoint].mockClear()
   })
 }
+
+beforeAll(async () => {
+  await loadChains()
+})
 
 afterEach(() => {
   process.env = { ...DEFAULT_ENV } // Restore default environment variables

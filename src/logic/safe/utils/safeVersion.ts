@@ -1,13 +1,13 @@
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { isFeatureEnabled } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { SAFE_FEATURES } from 'src/config/chain.d'
 
 type FeatureConfigByVersion = {
