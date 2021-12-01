@@ -86,7 +86,6 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
 
   const copyShortName = useSelector(copyShortNameSelector)
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
-  const { shortName } = getChainInfo()
 
   // Does not update store
   const handlePrefixCheckbox = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => setShouldEncodePrefix(checked)
@@ -121,7 +120,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           control={<Checkbox checked={shouldEncodePrefix} onChange={handlePrefixCheckbox} name="shouldEncodePrefix" />}
           label={
             <>
-              Include <b>{shortName}:</b> in the QR code address
+              Include <b>{chainInfo.shortName}:</b> in the QR code address
             </>
           }
         />
