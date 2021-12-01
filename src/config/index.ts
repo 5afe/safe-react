@@ -4,6 +4,7 @@ import {
   GAS_PRICE_TYPE,
   FEATURES,
   RPC_AUTHENTICATION,
+  RpcUri,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
@@ -65,22 +66,19 @@ export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
   return getChainInfo().nativeCurrency
 }
 
-const usesInfuraRPC = (): boolean => {
-  const { rpcUri } = getChainInfo()
-  return rpcUri.authentication === RPC_AUTHENTICATION.API_KEY_PATH
+const formatRpcServiceUrl = ({ authentication, value }: RpcUri): string => {
+  const usesInfuraRPC = authentication === RPC_AUTHENTICATION.API_KEY_PATH
+  return usesInfuraRPC && INFURA_TOKEN ? `${value}${INFURA_TOKEN}` : value
 }
 
 export const getRpcServiceUrl = (): string => {
   const { rpcUri } = getChainInfo()
-  const usesInfuraRPC = rpcUri.authentication === RPC_AUTHENTICATION.API_KEY_PATH
-  return usesInfuraRPC && INFURA_TOKEN ? `${rpcUri.value}${INFURA_TOKEN}` : rpcUri.value
+  return formatRpcServiceUrl(rpcUri)
 }
 
 export const getSafeAppsRpcServiceUrl = (): string => {
   const { safeAppsRpcUri } = getChainInfo()
-  return usesInfuraRPC() && SAFE_APPS_RPC_TOKEN
-    ? `${safeAppsRpcUri.value}/${SAFE_APPS_RPC_TOKEN}`
-    : safeAppsRpcUri.value
+  return formatRpcServiceUrl(safeAppsRpcUri)
 }
 
 export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], GasPriceOracle>[] => {
