@@ -45,7 +45,12 @@ export const ReviewRemoveOwnerModal = ({
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    currentVersion: safeVersion
+  } = useSelector(currentSafeWithNames)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const numOptions = owners ? owners.length - 1 : 0
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
@@ -81,7 +86,7 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
-        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
         const safeTx = await sdk.getRemoveOwnerTx(
           { ownerAddress: owner.address, threshold: +threshold },
           { safeTxGas: 0 },

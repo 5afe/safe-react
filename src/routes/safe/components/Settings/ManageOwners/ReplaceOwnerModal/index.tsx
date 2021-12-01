@@ -18,6 +18,7 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 import { extractSafeAddress } from 'src/routes/routes'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 
 export type OwnerValues = {
   address: string
@@ -27,12 +28,13 @@ export type OwnerValues = {
 export const sendReplaceOwner = async (
   newOwner: OwnerValues,
   safeAddress: string,
+  safeVersion: string,
   ownerAddressToRemove: string,
   dispatch: Dispatch,
   txParameters: TxParameters,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
   const safeTx = await sdk.getSwapOwnerTx(
     { oldOwnerAddress: ownerAddressToRemove, newOwnerAddress: newOwner.address },
     { safeTxGas: 0 },
@@ -68,6 +70,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
   const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
+  const safeVersion = useSelector(currentSafeCurrentVersion)
   const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
@@ -94,7 +97,15 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
     onClose()
 
     try {
-      await sendReplaceOwner(newOwner, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
+      await sendReplaceOwner(
+        newOwner,
+        safeAddress,
+        safeVersion,
+        owner.address,
+        dispatch,
+        txParameters,
+        connectedWalletAddress
+      )
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
     } catch (error) {
       logError(Errors._810, error.message)

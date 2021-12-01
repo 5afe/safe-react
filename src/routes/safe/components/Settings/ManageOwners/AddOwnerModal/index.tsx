@@ -17,6 +17,7 @@ import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -27,11 +28,12 @@ export type OwnerValues = {
 export const sendAddOwner = async (
   values: OwnerValues,
   safeAddress: string,
+  safeVersion: string,
   txParameters: TxParameters,
   dispatch: Dispatch,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
   const safeTx = await sdk.getAddOwnerTx(
     { ownerAddress: values.ownerAddress, threshold: +values.threshold },
     { safeTxGas: 0 },
@@ -66,6 +68,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
+  const safeVersion = useSelector(currentSafeCurrentVersion)
   const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
@@ -105,7 +108,14 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, txParameters, dispatch, connectedWalletAddress)
+      await sendAddOwner(
+        values,
+        safeAddress,
+        safeVersion,
+        txParameters,
+        dispatch,
+        connectedWalletAddress
+      )
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
       logError(Errors._808, error.message)

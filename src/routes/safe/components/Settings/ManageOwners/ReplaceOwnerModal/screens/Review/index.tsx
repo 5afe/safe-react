@@ -47,7 +47,13 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners, threshold = 1 } = useSelector(currentSafeWithNames)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    threshold = 1,
+    currentVersion: safeVersion
+  } = useSelector(currentSafeWithNames)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -77,7 +83,7 @@ export const ReviewReplaceOwnerModal = ({
 
     const calculateReplaceOwnerData = async () => {
       try {
-        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
         const safeTx = await sdk.getSwapOwnerTx(
           { oldOwnerAddress: owner.address, newOwnerAddress: newOwner.address },
           { safeTxGas: 0 },

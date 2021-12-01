@@ -15,6 +15,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { extractSafeAddress } from 'src/routes/routes'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 
 type OwnerValues = OwnerData & {
   threshold: string
@@ -23,12 +24,13 @@ type OwnerValues = OwnerData & {
 export const sendRemoveOwner = async (
   values: OwnerValues,
   safeAddress: string,
+  safeVersion: string,
   ownerAddressToRemove: string,
   dispatch: Dispatch,
   txParameters: TxParameters,
   connectedWalletAddress: string,
 ): Promise<void> => {
-  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
   const safeTx = await sdk.getRemoveOwnerTx(
     { ownerAddress: ownerAddressToRemove, threshold: +values.threshold },
     { safeTxGas: 0 },
@@ -60,6 +62,7 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
   const [values, setValues] = useState<OwnerValues>({ ...owner, threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
+  const safeVersion = useSelector(currentSafeCurrentVersion)
   const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(
@@ -91,7 +94,14 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
     onClose()
 
     try {
-      await sendRemoveOwner(values, safeAddress, owner.address, dispatch, txParameters, connectedWalletAddress)
+      await sendRemoveOwner(
+        values,
+        safeAddress,
+        safeVersion,
+        owner.address,
+        dispatch,
+        txParameters,
+        connectedWalletAddress)
     } catch (error) {
       logError(Errors._809, error.message)
     }

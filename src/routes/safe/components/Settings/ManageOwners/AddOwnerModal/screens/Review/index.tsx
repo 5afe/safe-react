@@ -39,7 +39,12 @@ type ReviewAddOwnerProps = {
 export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    currentVersion: safeVersion
+  } = useSelector(currentSafeWithNames)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -69,7 +74,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
     const calculateAddOwnerData = async () => {
       try {
-        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress)
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
         const safeTx = await sdk.getAddOwnerTx(
           { ownerAddress: values.ownerAddress, threshold: +values.threshold },
           { safeTxGas: 0 },

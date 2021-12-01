@@ -1,3 +1,4 @@
+import semverSatisfies from 'semver/functions/satisfies'
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
@@ -9,7 +10,7 @@ import { ProviderProps } from './store/model/provider'
 import { getRpcServiceUrl, getNetworkId } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -127,7 +128,24 @@ export const getSDKWeb3ReadOnly = (): Web3Adapter => {
   })
 }
 
-export const getSafeSDK = async (signerAddress: string, safeAddress: string): Promise<Safe> => {
+export const getSafeSDK = async (
+  signerAddress: string,
+  safeAddress: string,
+  safeVersion: string
+  ): Promise<Safe> => {
+  const networkId = (await getNetworkIdFrom(web3)).toString() as ETHEREUM_NETWORK
   const ethAdapter = getSDKWeb3Adapter(signerAddress)
-  return await Safe.create({ ethAdapter, safeAddress })
+
+  let isL1SafeMasterCopy: boolean
+  if (semverSatisfies(safeVersion, '<1.3.0')) {
+    isL1SafeMasterCopy = true
+  } else {
+    isL1SafeMasterCopy = networkId === ETHEREUM_NETWORK.MAINNET
+  }
+
+  return await Safe.create({
+    ethAdapter,
+    safeAddress,
+    isL1SafeMasterCopy
+  })
 }
