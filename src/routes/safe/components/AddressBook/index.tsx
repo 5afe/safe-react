@@ -19,7 +19,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
-import { getExplorerInfo, _getChainId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -134,9 +134,7 @@ const AddressBookTable = (): ReactElement => {
     setEditCreateEntryModalOpen(false)
     // update the store
     dispatch(
-      addressBookAddOrUpdate(
-        makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address), chainId: _getChainId() }),
-      ),
+      addressBookAddOrUpdate(makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address), chainId })),
     )
   }
 
@@ -147,9 +145,7 @@ const AddressBookTable = (): ReactElement => {
     setEditCreateEntryModalOpen(false)
     // update the store
     dispatch(
-      addressBookAddOrUpdate(
-        makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address), chainId: _getChainId() }),
-      ),
+      addressBookAddOrUpdate(makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address), chainId })),
     )
   }
 
