@@ -1,4 +1,10 @@
-import { ChainInfo, GasPriceOracle, GAS_PRICE_TYPE, FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  ChainInfo,
+  GasPriceOracle,
+  GAS_PRICE_TYPE,
+  FEATURES,
+  RPC_AUTHENTICATION,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
 import {
@@ -59,11 +65,15 @@ export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
   return getChainInfo().nativeCurrency
 }
 
-const usesInfuraRPC = (): boolean => [CHAIN_ID.MAINNET, CHAIN_ID.RINKEBY, CHAIN_ID.POLYGON].includes(_getChainId())
+const usesInfuraRPC = (): boolean => {
+  const { rpcUri } = getChainInfo()
+  return rpcUri.authentication === RPC_AUTHENTICATION.API_KEY_PATH
+}
 
 export const getRpcServiceUrl = (): string => {
   const { rpcUri } = getChainInfo()
-  return usesInfuraRPC() && INFURA_TOKEN ? `${rpcUri.value}/${INFURA_TOKEN}` : rpcUri.value
+  const usesInfuraRPC = rpcUri.authentication === RPC_AUTHENTICATION.API_KEY_PATH
+  return usesInfuraRPC && INFURA_TOKEN ? `${rpcUri.value}${INFURA_TOKEN}` : rpcUri.value
 }
 
 export const getSafeAppsRpcServiceUrl = (): string => {

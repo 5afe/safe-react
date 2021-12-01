@@ -50,10 +50,13 @@ export const getWeb3ReadOnly = (): Web3 => {
   return web3ReadOnly[chainId]
 }
 
-let web3 = getWeb3ReadOnly()
+let web3: Web3
 export const getWeb3 = (): Web3 => web3
 export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
+}
+export const setWeb3ReadOnly = (): void => {
+  web3 = getWeb3ReadOnly()
 }
 export const resetWeb3 = (): void => {
   web3 = web3ReadOnly[_getChainId()]
