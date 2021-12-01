@@ -56,7 +56,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  * @param {string} safeAddress
  */
 export const fetchSafe =
-  (safeAddress: string) =>
+  (safeAddress: string, isInitialLoad = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
@@ -94,11 +94,11 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      if (shouldUpdateCollectibles) {
+      if (shouldUpdateCollectibles || isInitialLoad) {
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxQueued) {
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
         dispatch(fetchTransactions(getNetworkId(), safeAddress))
       }
     }
