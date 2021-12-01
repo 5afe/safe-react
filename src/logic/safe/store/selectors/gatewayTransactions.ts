@@ -137,7 +137,7 @@ export const getLastTransaction = createSelector(nextTransactions, queuedTransac
   }
 
   if (nextTxs && Object.keys(nextTxs).length > 0) {
-    const nextTx = [...Object.values(nextTxs)[0]][0]
+    const nextTx = Object.values(nextTxs)[0][0]
     return nextTx
   }
 
