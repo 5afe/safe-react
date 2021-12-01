@@ -67,7 +67,9 @@ export const getAccountFrom = async (web3Provider: Web3): Promise<string | null>
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-export const getChainIdFrom = (web3Provider: Web3): Promise<number> => web3Provider.eth.net.getId()
+export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
+  return web3Provider.eth.getChainId()
+}
 
 const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
