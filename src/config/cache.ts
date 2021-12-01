@@ -1,15 +1,17 @@
 import { ChainInfo, getChainsConfig, RPC_AUTHENTICATION } from '@gnosis.pm/safe-react-gateway-sdk'
 import { GATEWAY_URL } from 'src/utils/constants'
 
-// Temp store is required as loading Redux store directly is an anit-pattern
-type _ConfigStore = {
+// Cache is required as loading Redux store directly is an anit-pattern
+type ConfigCache = {
   chains: ChainInfo[]
 }
-export let _store: _ConfigStore = { chains: [] }
+let cache: ConfigCache = { chains: [] }
+
+export const getChains = (): ChainInfo[] => cache.chains
 
 export const loadChains = async () => {
   const { results = [] } = await getChainsConfig(GATEWAY_URL)
-  _store.chains = results
+  cache.chains = results
 }
 
 // An empty template is required because `getChain()` uses `find()` on load

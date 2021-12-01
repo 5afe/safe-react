@@ -16,10 +16,10 @@ import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { loadChains } from 'src/config/_store'
+import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
+import { loadChains } from 'src/config/cache'
 
-const Root = (): React.ReactElement | null => {
+const RootConsumer = (): React.ReactElement | null => {
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -43,7 +43,7 @@ const Root = (): React.ReactElement | null => {
   // Chains failed to load
   if (isError) {
     removePreloader()
-    throw new Error(Errors._904)
+    throw new CodedException(Errors._904)
   }
 
   if (!hasChains) {
@@ -67,15 +67,15 @@ const Root = (): React.ReactElement | null => {
 
 // Chains loader requires error boundary, which requires Providers
 // and Legacy redirection should be outside of Providers
-const RootProviders = (): React.ReactElement => (
+const Root = (): React.ReactElement => (
   <>
     <LegacyRouteRedirection history={history} />
     <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
       <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
-        <Root />
+        <RootConsumer />
       </Sentry.ErrorBoundary>
     </Providers>
   </>
 )
 
-export default RootProviders
+export default Root

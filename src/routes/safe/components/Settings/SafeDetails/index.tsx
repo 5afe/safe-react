@@ -81,7 +81,11 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    dispatch(
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({ address: safeAddress, name: values.safeName, chainId: curChainId }),
+      ),
+    )
     // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
     dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 

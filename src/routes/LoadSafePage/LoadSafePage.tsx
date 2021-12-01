@@ -37,6 +37,7 @@ import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE
 import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { getLoadSafeName } from './fields/utils'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -45,6 +46,7 @@ function Load(): ReactElement {
   const safeRandomName = useMnemonicSafeName()
   const [initialFormValues, setInitialFormValues] = useState<LoadSafeFormValues>()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
+  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
     const initialValues: LoadSafeFormValues = {
@@ -73,6 +75,7 @@ function Load(): ReactElement {
     const safeEntry = makeAddressBookEntry({
       address: checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS] || ''),
       name: getLoadSafeName(values, addressBook),
+      chainId,
     })
 
     dispatch(addressBookSafeLoad([...ownerEntries, safeEntry]))

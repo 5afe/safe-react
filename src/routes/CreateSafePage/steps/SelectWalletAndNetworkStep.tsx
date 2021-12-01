@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography'
 import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
-import { getChains } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { setChainId } from 'src/logic/config/utils'
 import { lg } from 'src/theme/variables'
@@ -20,6 +19,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { providerNameSelector, shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
 import WalletSwitch from 'src/components/WalletSwitch'
+import { getChains } from 'src/config/cache'
 
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 

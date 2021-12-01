@@ -1,9 +1,10 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
-import { getChains, getChainInfo } from 'src/config'
+import { getChainInfo } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { History } from 'history'
+import { getChains } from 'src/config/cache'
 
 type Props = {
   history: History

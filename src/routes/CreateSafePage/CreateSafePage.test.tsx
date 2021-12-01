@@ -12,7 +12,7 @@ import CreateSafePage from './CreateSafePage'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import * as ethTransactions from 'src/logic/wallets/ethTransactions'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
-import { getChains } from 'src/config'
+import { getChains } from 'src/config/cache'
 
 const mockedDateValue = 1487076708000
 const DateSpy = jest.spyOn(global.Date, 'now')

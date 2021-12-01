@@ -11,7 +11,7 @@ import {
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
 import { ChainId, ChainName, CHAIN_ID, SAFE_FEATURES, ShortName } from './chain.d'
-import { emptyChainInfo, _store } from './_store'
+import { emptyChainInfo, getChains } from './cache'
 
 export const getInitialChainId = () => {
   const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
@@ -35,7 +35,6 @@ export const _setChainId = (newChainId: ChainId) => {
 export const _getChainId = (): ChainId => {
   return _chainId
 }
-export const getChains = (): ChainInfo[] => _store.chains
 
 export const isValidChainId = (chainId: unknown): chainId is ChainId =>
   getChains().some((chain) => chain.chainId === chainId)

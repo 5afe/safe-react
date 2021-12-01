@@ -1,4 +1,3 @@
-import { _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 
 export const ADDRESS_BOOK_DEFAULT_NAME = 'UNKNOWN'
@@ -12,11 +11,11 @@ export type AddressBookEntry = {
 export const makeAddressBookEntry = ({
   address,
   name,
-  chainId = _getChainId(),
+  chainId,
 }: {
   address: string
   name: string
-  chainId?: ChainId
+  chainId: ChainId
 }): AddressBookEntry => ({
   address,
   name,

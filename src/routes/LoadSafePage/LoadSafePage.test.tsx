@@ -1,5 +1,5 @@
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { getChains, getShortName } from 'src/config'
+import { getShortName } from 'src/config'
 import { CHAIN_ID } from 'src/config/chain.d'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
@@ -7,6 +7,7 @@ import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 import { GATEWAY_URL } from 'src/utils/constants'
+import { getChains } from 'src/config/cache'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 

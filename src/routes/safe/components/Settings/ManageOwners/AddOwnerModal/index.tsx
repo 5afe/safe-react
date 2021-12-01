@@ -15,6 +15,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { _getChainId } from 'src/config'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -46,7 +48,11 @@ export const sendAddOwner = async (
   )
 
   if (txHash) {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
+    dispatch(
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName, chainId: _getChainId() }),
+      ),
+    )
   }
 }
 
@@ -60,6 +66,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const chainId = useSelector(currentChainId)
 
   useEffect(
     () => () => {
@@ -99,7 +106,9 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
 
     try {
       await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch)
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
+      dispatch(
+        addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress, chainId })),
+      )
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
