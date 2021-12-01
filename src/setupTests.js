@@ -38,8 +38,8 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
   const originalModule = jest.requireActual('@gnosis.pm/safe-react-gateway-sdk')
   return {
     __esModule: true,
-    // We now load the chain config from the CGW
-    getChainsConfig: originalModule.getChainsConfig,
+    // We load chain config and require types from the original module
+    ...originalModule,
     Operation: jest.fn(),
     TokenType: jest.fn(),
     TransactionStatus: jest.fn(),

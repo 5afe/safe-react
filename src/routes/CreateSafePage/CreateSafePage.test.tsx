@@ -12,6 +12,7 @@ import CreateSafePage from './CreateSafePage'
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import * as ethTransactions from 'src/logic/wallets/ethTransactions'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
+import { getChains } from 'src/config'
 
 const mockedDateValue = 1487076708000
 const DateSpy = jest.spyOn(global.Date, 'now')
@@ -98,13 +99,10 @@ describe('<CreateSafePage>', () => {
 
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
+      // Reference loaded chains
+      getChains().forEach(({ chainName }) => {
+        expect(getByText(selectNetworkPopupNode, chainName)).toBeInTheDocument()
+      })
     })
 
     it('Shows the Switch Network popup if clicks on the current selected Network label', async () => {
@@ -127,13 +125,10 @@ describe('<CreateSafePage>', () => {
       fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
+      // Reference loaded chains
+      getChains().forEach(({ chainName }) => {
+        expect(getByText(selectNetworkPopupNode, chainName)).toBeInTheDocument()
+      })
     })
 
     it('Shows Switch Network Popup and can switch the network', async () => {
