@@ -214,6 +214,7 @@ const SendFunds = ({
                 name: scannedName || '',
                 address: scannedAddress,
               })
+              setAddressErrorMsg('')
             } else setAddressErrorMsg(addressErrorMessage)
 
             closeQrModal()
