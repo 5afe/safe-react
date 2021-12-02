@@ -132,6 +132,8 @@ export const getConfig = (): NetworkSpecificConfiguration => {
     network: configFile.network,
     disabledFeatures: configFile.disabledFeatures,
     disabledWallets: configFile.disabledWallets,
+    // override to production GatewayUrl
+    clientGatewayUrl: 'https://safe-client.gnosis.io/v1'
   }
 }
 
