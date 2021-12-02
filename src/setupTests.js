@@ -7,7 +7,7 @@ import { loadChains } from 'src/config/cache/chains'
 
 function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
-    throw new TypeError('expected Uint8Array')
+    buf = new Uint8Array(buf)
   }
   if (buf.length > 65536) {
     const e = new Error()

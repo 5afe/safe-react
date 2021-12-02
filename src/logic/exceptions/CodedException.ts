@@ -47,6 +47,8 @@ export class CodedException extends Error {
   }
 
   public track(): void {
+    this.log()
+
     if (IS_PRODUCTION) {
       Sentry.captureException(this, this.context)
     }
@@ -63,7 +65,6 @@ export const logError: ErrorHandler = function logError(...args) {
 
 export const trackError: ErrorHandler = function trackError(...args) {
   const error = new CodedException(...args)
-  error.log()
   error.track()
   return error
 }
