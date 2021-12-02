@@ -1,11 +1,10 @@
-import { Button } from '@gnosis.pm/safe-react-components'
+import { Button, Switch } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
-import { ChangeEvent, ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import { useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -88,10 +87,8 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
   const shortName = getCurrentShortChainName()
 
-  // Does not update store
-  const handlePrefixCheckbox = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => setShouldEncodePrefix(checked)
-
   const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
+
   return (
     <>
       <Row align="center" className={classes.heading} grow>
@@ -117,11 +114,12 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
         <Block className={classes.qrContainer}>
           <QRCode size={135} value={qrCodeString} />
         </Block>
+        {/* TODO: change to toggle */}
         <FormControlLabel
-          control={<Checkbox checked={shouldEncodePrefix} onChange={handlePrefixCheckbox} name="shouldEncodePrefix" />}
+          control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
           label={
             <>
-              Include <b>{shortName}:</b> in the QR code address
+              QR code with chain prefix (<b>{shortName}:</b>)
             </>
           }
         />
