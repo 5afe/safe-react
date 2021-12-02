@@ -66,7 +66,7 @@ export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
   return getChainInfo().nativeCurrency
 }
 
-const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN): string => {
+const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN: string): string => {
   const usesInfuraRPC = authentication === RPC_AUTHENTICATION.API_KEY_PATH
   return usesInfuraRPC && TOKEN ? `${value}${TOKEN}` : value
 }
