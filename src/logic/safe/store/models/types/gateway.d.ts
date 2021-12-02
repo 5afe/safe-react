@@ -4,6 +4,7 @@ import {
   DateLabel,
   Label,
   ModuleExecutionDetails,
+  MultiSend,
   MultisigExecutionDetails,
   MultisigExecutionInfo,
   TransactionSummary,
