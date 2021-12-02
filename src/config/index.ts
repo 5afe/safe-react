@@ -66,19 +66,19 @@ export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
   return getChainInfo().nativeCurrency
 }
 
-const formatRpcServiceUrl = ({ authentication, value }: RpcUri): string => {
+const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN): string => {
   const usesInfuraRPC = authentication === RPC_AUTHENTICATION.API_KEY_PATH
-  return usesInfuraRPC && INFURA_TOKEN ? `${value}${INFURA_TOKEN}` : value
+  return usesInfuraRPC && TOKEN ? `${value}${TOKEN}` : value
 }
 
 export const getRpcServiceUrl = (): string => {
   const { rpcUri } = getChainInfo()
-  return formatRpcServiceUrl(rpcUri)
+  return formatRpcServiceUrl(rpcUri, INFURA_TOKEN)
 }
 
 export const getSafeAppsRpcServiceUrl = (): string => {
   const { safeAppsRpcUri } = getChainInfo()
-  return formatRpcServiceUrl(safeAppsRpcUri)
+  return formatRpcServiceUrl(safeAppsRpcUri, SAFE_APPS_RPC_TOKEN)
 }
 
 export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], GasPriceOracle>[] => {
