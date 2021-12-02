@@ -199,7 +199,6 @@
     "framer-motion": "^4.1.17",
     "fuse.js": "^6.4.6",
     "history": "4.10.1",
-    "immortal-db": "^1.1.0",
     "immutable": "4.0.0-rc.12",
     "js-cookie": "^3.0.0",
     "lodash": "^4.17.21",
