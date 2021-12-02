@@ -43,7 +43,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     address: safeAddress,
     name: safeName,
     owners,
-    currentVersion: safeVersion
+    currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')

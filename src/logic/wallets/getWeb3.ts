@@ -128,11 +128,7 @@ export const getSDKWeb3ReadOnly = (): Web3Adapter => {
   })
 }
 
-export const getSafeSDK = async (
-  signerAddress: string,
-  safeAddress: string,
-  safeVersion: string
-  ): Promise<Safe> => {
+export const getSafeSDK = async (signerAddress: string, safeAddress: string, safeVersion: string): Promise<Safe> => {
   const networkId = (await getNetworkIdFrom(web3)).toString() as ETHEREUM_NETWORK
   const ethAdapter = getSDKWeb3Adapter(signerAddress)
 
@@ -146,6 +142,6 @@ export const getSafeSDK = async (
   return await Safe.create({
     ethAdapter,
     safeAddress,
-    isL1SafeMasterCopy
+    isL1SafeMasterCopy,
   })
 }

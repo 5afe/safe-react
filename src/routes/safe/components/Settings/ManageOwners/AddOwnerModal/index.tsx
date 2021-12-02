@@ -108,14 +108,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
     onClose()
 
     try {
-      await sendAddOwner(
-        values,
-        safeAddress,
-        safeVersion,
-        txParameters,
-        dispatch,
-        connectedWalletAddress
-      )
+      await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch, connectedWalletAddress)
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
       logError(Errors._808, error.message)

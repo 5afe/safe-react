@@ -101,7 +101,8 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
         owner.address,
         dispatch,
         txParameters,
-        connectedWalletAddress)
+        connectedWalletAddress,
+      )
     } catch (error) {
       logError(Errors._809, error.message)
     }

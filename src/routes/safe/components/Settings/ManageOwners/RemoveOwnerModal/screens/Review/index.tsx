@@ -49,7 +49,7 @@ export const ReviewRemoveOwnerModal = ({
     address: safeAddress,
     name: safeName,
     owners,
-    currentVersion: safeVersion
+    currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const numOptions = owners ? owners.length - 1 : 0

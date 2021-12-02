@@ -104,7 +104,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
         owner.address,
         dispatch,
         txParameters,
-        connectedWalletAddress
+        connectedWalletAddress,
       )
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
     } catch (error) {

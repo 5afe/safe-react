@@ -52,7 +52,7 @@ export const ReviewReplaceOwnerModal = ({
     name: safeName,
     owners,
     threshold = 1,
-    currentVersion: safeVersion
+    currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
