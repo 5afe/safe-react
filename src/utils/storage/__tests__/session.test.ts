@@ -1,47 +1,35 @@
 import { loadFromSessionStorage, removeFromSessionStorage, saveToSessionStorage } from '../session'
 
-describe('loadFromSessionStorage', () => {
-  beforeEach(() => {
-    window.sessionStorage.clear()
-  })
-  it('returns a parsed value', () => {
-    const stringifiedValue = JSON.stringify({ test: 'value' })
-    window.sessionStorage.setItem('test', stringifiedValue)
-
-    expect(loadFromSessionStorage('test')).toStrictEqual({ test: 'value' })
-  })
-  it("returns undefined the key doesn't exist", () => {
-    expect(loadFromSessionStorage('notAKey')).toBe(undefined)
-  })
-})
-
-describe('saveToSessionStorage', () => {
+describe('session storage', () => {
   beforeEach(() => {
     window.sessionStorage.clear()
   })
 
-  it('saves a stringified value', () => {
-    saveToSessionStorage('test', true)
+  describe('loadFromSessionStorage', () => {
+    it('returns a parsed value', () => {
+      const stringifiedValue = JSON.stringify({ test: 'value' })
+      window.sessionStorage.setItem('SAFE__test', stringifiedValue)
 
-    expect(window.sessionStorage?.test).toBe('true')
-  })
-})
-
-describe('removeFromSessionStorage', () => {
-  beforeEach(() => {
-    window.sessionStorage.clear()
-  })
-
-  it('removes the key', () => {
-    Object.defineProperty(window, 'sessionStorage', {
-      writable: true,
-      value: {
-        removeItem: jest.fn(),
-      },
+      expect(loadFromSessionStorage('test')).toStrictEqual({ test: 'value' })
     })
+    it("returns undefined the key doesn't exist", () => {
+      expect(loadFromSessionStorage('notAKey')).toBe(undefined)
+    })
+  })
 
-    removeFromSessionStorage('test')
+  describe('saveToSessionStorage', () => {
+    it('saves a stringified value', () => {
+      saveToSessionStorage('test', true)
 
-    expect(window.sessionStorage.removeItem).toHaveBeenCalledWith('test')
+      expect(window.sessionStorage?.SAFE__test).toBe('true')
+    })
+  })
+
+  describe('removeFromSessionStorage', () => {
+    it('removes the key', () => {
+      window.sessionStorage.setItem('SAFE__test', '1')
+      removeFromSessionStorage('test')
+      expect(window.sessionStorage.getItem('SAFE__test')).toBe(null)
+    })
   })
 })

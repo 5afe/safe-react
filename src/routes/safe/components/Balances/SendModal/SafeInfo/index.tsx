@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -8,6 +7,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Bold from 'src/components/layout/Bold'
 import { border, xs } from 'src/theme/variables'
 import Block from 'src/components/layout/Block'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const StyledBlock = styled(Block)`
   font-size: 12px;
@@ -27,7 +27,7 @@ const SafeInfo = (): React.ReactElement => {
 
   return (
     <>
-      <EthHashInfo
+      <PrefixedEthHashInfo
         hash={safeAddress}
         name={safeName}
         explorerUrl={getExplorerInfo(safeAddress)}

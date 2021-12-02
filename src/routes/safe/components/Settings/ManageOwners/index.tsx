@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactElement } from 'react'
-import { EthHashInfo, Icon } from '@gnosis.pm/safe-react-components'
+import { Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -23,6 +23,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
@@ -107,7 +108,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                     <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                       {column.id === OWNERS_TABLE_ADDRESS_ID ? (
                         <Block justify="left">
-                          <EthHashInfo
+                          <PrefixedEthHashInfo
                             hash={row[column.id]}
                             showCopyBtn
                             showAvatar

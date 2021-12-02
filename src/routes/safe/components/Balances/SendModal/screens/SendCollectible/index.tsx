@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -13,6 +12,7 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -27,6 +27,7 @@ import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
+import { mustBeEthereumAddress } from 'src/components/forms/validator'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -69,6 +70,7 @@ const SendCollectible = ({
   const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
+  const [addressErrorMsg, setAddressErrorMsg] = useState('')
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -128,15 +130,19 @@ const SendCollectible = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName =
-              addressBook.find(({ address }) => {
-                return sameAddress(scannedAddress, address)
-              })?.name ?? ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName ?? '',
-              address: scannedAddress,
-            })
+            const scannedName = addressBook.find(({ address }) => {
+              return sameAddress(scannedAddress, address)
+            })?.name
+            const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
+            if (!addressErrorMessage) {
+              mutators.setRecipient(scannedAddress)
+              setSelectedEntry({
+                name: scannedName || '',
+                address: scannedAddress,
+              })
+              setAddressErrorMsg('')
+            } else setAddressErrorMsg(addressErrorMessage)
+
             closeQrModal()
           }
 
@@ -173,7 +179,7 @@ const SendCollectible = ({
                     </Row>
                     <Row align="center" margin="md">
                       <Col xs={12}>
-                        <EthHashInfo
+                        <PrefixedEthHashInfo
                           hash={selectedEntry.address}
                           name={selectedEntry.name}
                           showAvatar
@@ -190,6 +196,7 @@ const SendCollectible = ({
                         <AddressBookInput
                           fieldMutator={mutators.setRecipient}
                           pristine={pristine}
+                          errorMsg={addressErrorMsg}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
                         />

@@ -1,5 +1,5 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { EthHashInfo, Icon, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Text } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
 import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,6 +24,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -181,7 +182,7 @@ export const ReviewMessage = ({
 
           <Container>
             {/* Safe */}
-            <EthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+            <PrefixedEthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             <StyledBlock>
               <Text size="md">Balance:</Text>
               <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>

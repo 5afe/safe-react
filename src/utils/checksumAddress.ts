@@ -1,7 +1,12 @@
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checkAddressChecksum, toChecksumAddress } from 'web3-utils'
+import { isValidAddress } from './isValidAddress'
 
 export const checksumAddress = (address: string): string => {
+  if (!isValidAddress(address)) {
+    return ''
+  }
+
   try {
     return toChecksumAddress(address)
   } catch (err) {
