@@ -1,4 +1,3 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
@@ -8,6 +7,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
@@ -34,7 +34,7 @@ export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): React
         </Row>
         <Row>
           <Col align="center" xs={12}>
-            <EthHashInfo
+            <PrefixedEthHashInfo
               hash={owner.address}
               name={owner.name}
               showCopyBtn

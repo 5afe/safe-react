@@ -46,7 +46,7 @@ const LinkContent = styled.div`
 
 //  When loading app during release, chunk load failure may occur
 export const handleChunkError = (error: Error): boolean => {
-  const LAST_CHUNK_FAILURE_RELOAD_KEY = 'SAFE__lastChunkFailureReload'
+  const LAST_CHUNK_FAILURE_RELOAD_KEY = 'lastChunkFailureReload'
   const MIN_RELOAD_TIME = 10_000
 
   const chunkFailedMessage = /Loading chunk [\d]+ failed/

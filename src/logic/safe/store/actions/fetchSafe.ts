@@ -54,10 +54,9 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  * @note It's being used by the app when it loads for the first time and for the Safe's data polling
  *
  * @param {string} safeAddress
- * @param {boolean} isSafeLoaded
  */
 export const fetchSafe =
-  (safeAddress: string, isSafeLoaded = false) =>
+  (safeAddress: string, isInitialLoad = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     let address = ''
     try {
@@ -74,7 +73,6 @@ export const fetchSafe =
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
-      return
     }
 
     // If the network has changed while the safe was being loaded,
@@ -96,11 +94,11 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      if (shouldUpdateCollectibles || !isSafeLoaded) {
+      if (shouldUpdateCollectibles || isInitialLoad) {
         dispatch(fetchCollectibles(safeAddress))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxQueued || !isSafeLoaded) {
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
         dispatch(fetchTransactions(getNetworkId(), safeAddress))
       }
     }

@@ -52,7 +52,7 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
     }
 
     if (values) {
-      dispatch.current(addHistoryTransactions({ chainId, safeAddress: safeAddress.current, values, isTail: true }))
+      dispatch.current(addHistoryTransactions({ chainId, safeAddress: safeAddress.current, values }))
     } else {
       setHasMore(false)
     }

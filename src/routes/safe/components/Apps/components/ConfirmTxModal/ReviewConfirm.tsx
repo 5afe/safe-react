@@ -1,5 +1,5 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -25,6 +25,7 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Divider from 'src/components/Divider'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
@@ -203,7 +204,7 @@ export const ReviewConfirm = ({
 
           <Container>
             {/* Safe */}
-            <EthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+            <PrefixedEthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             <StyledBlock>
               <Text size="md">Balance:</Text>
               <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>

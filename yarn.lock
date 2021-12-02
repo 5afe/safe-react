@@ -2127,13 +2127,14 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0.tgz#0f90185c3693f2683322d275e796e61ff99ce87d"
   integrity sha512-dLCSlniYnxEqCglx4XdhByvi7KKuSYRWJKm1lVXAc4oJqwwVkoCwp0bFIejLZ/dnf7cQSBUUVsTGWhvSda511w==
 
-"@gnosis.pm/safe-apps-sdk@4.3.0-next.2":
-  version "4.3.0-next.2"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-4.3.0-next.2.tgz#90cd433c3183cee0f6cb4de5e5337e24f884caf6"
-  integrity sha512-1bNVRh2K5NP0sRj1URU4z6mF4chyeCGdr871yXqLLOv99zBrFQgDv8gBnSzva3hzth46YBb+zSAFGQHkmcpH0Q==
+"@gnosis.pm/safe-apps-sdk@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-6.1.0.tgz#b1b07504ed43d034e0b94c7fe274e908d62988a8"
+  integrity sha512-2NEd1CKoHTSkiQfdw8GJXtc/GfWogNHpRGeRmM2X1kvzlqIAheEhefM4BtyP/Nwo95/vvfwePi3ANuc6S6aUKQ==
   dependencies:
     "@changesets/cli" "^2.16.0"
-    ethers "^5.4.5"
+    "@gnosis.pm/safe-react-gateway-sdk" "^2.5.6"
+    ethers "^5.4.7"
 
 "@gnosis.pm/safe-core-sdk-types@^0.1.1":
   version "0.1.1"
@@ -2154,17 +2155,25 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.4.0.tgz#d49d3d36cc014ef62306d09c0f4761895a17d7a6"
   integrity sha512-q4salJNQ/Gx0DnZJytAFO/U4OwGI6xTGtTJSOZK+C9Fh2NW8sep+YfSunHQvCLcu4b7WgWEBhxnCV6rpyveLHg==
 
-"@gnosis.pm/safe-react-components@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.8.0.tgz#1c957f53c08833f9c8f2f2908c19b6823f573578"
-  integrity sha512-IZy1Mv3y93QBi0Edph85mhKnndc4Uo6uHe5dmz8MHe3htNWa0JxwsI3Afrzqqidvx+LLNsfguNvpu/ZRHbycvw==
+"@gnosis.pm/safe-react-components@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.9.0.tgz#c5169cab41cde96c9a375005f380cd37bd909fe0"
+  integrity sha512-+SAJEuK4Zf1eBCtMpe1uQlJBN73zttIQwevEch7PDUBhJysc/oyEHuhmhpZpMYryoFgVVGYz7FZtwv2NxmUsJQ==
   dependencies:
     react-media "^1.10.0"
+    web3-utils "^1.6.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.4.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.0.tgz#11a27af6c9b173ed895d80c21527ad463b0b6604"
-  integrity sha512-RwUTcya802N/J2AnZHQ6R7ffyOkHKvo6O31abVjJpps7/mh4taelwnMlsgqG8ebaux1R6fLLDu9oykWNAPvb3Q==
+"@gnosis.pm/safe-react-gateway-sdk@^2.5.5":
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.5.tgz#aa0356baefef6d8be3dc60d5fcdc974ec73c4c1b"
+  integrity sha512-42LB2b0boQwTBMnY7gjIZ+bAxNFDmAEr12BfcxfzC+azQIjH5M0VUBsuA44or7MAQ1ZiVicY36+6ySlZPrqEpQ==
+  dependencies:
+    isomorphic-unfetch "^3.1.0"
+
+"@gnosis.pm/safe-react-gateway-sdk@^2.5.6":
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.6.tgz#7b8713bb16a542c4af27d6e1f2d8925a21aaeb51"
+  integrity sha512-flM/i80oFwSRlW0U8HE7QurwwPpNTUjBv7gZNAjgOpGhub51r7Uf1LtSm89Mnxnh2mtj4Whl8ZC4RMoXdV3yvw==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
@@ -10211,7 +10220,7 @@ ethers@4.0.47:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@^5.0.13, ethers@^5.0.31, ethers@^5.4.5, ethers@^5.4.7:
+ethers@^5.0.13, ethers@^5.0.31, ethers@^5.4.7:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.5.1.tgz#d3259a95a42557844aa543906c537106c0406fbf"
   integrity sha512-RodEvUFZI+EmFcE6bwkuJqpCYHazdzeR1nMzg+YWQSmQEsNtfl1KHGfp/FWZYl48bI/g7cgBeP2IlPthjiVngw==
@@ -12068,11 +12077,6 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
-idb-keyval@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/idb-keyval/-/idb-keyval-3.2.0.tgz#cbbf354deb5684b6cdc84376294fc05932845bd6"
-  integrity sha512-slx8Q6oywCCSfKgPgL0sEsXtPVnSbTLWpyiDcu6msHOyKOLari1TD1qocXVCft80umnkk3/Qqh3lwoFt8T/BPQ==
-
 identity-obj-proxy@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/identity-obj-proxy/-/identity-obj-proxy-3.0.0.tgz#94d2bda96084453ef36fbc5aaec37e0f79f1fc14"
@@ -12126,14 +12130,6 @@ immer@8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
   integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
-
-immortal-db@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/immortal-db/-/immortal-db-1.1.0.tgz#b0bbff61262bcbc964952954aeb169462e4b6c5c"
-  integrity sha512-RwtZT+FEdXrLQeHHKvQQx6SKlQelrcH7x1SLh5lQVcOZFtUNYPjc/ZaU52SsFI/T5rey+VdM87pxVOGKhuZLVw==
-  dependencies:
-    idb-keyval "^3.2.0"
-    js-cookie "^2.2.1"
 
 immutable@4.0.0-rc.12:
   version "4.0.0-rc.12"
@@ -13514,11 +13510,6 @@ joi@^17.4.0:
     "@sideway/address" "^4.1.0"
     "@sideway/formula" "^3.0.0"
     "@sideway/pinpoint" "^2.0.0"
-
-js-cookie@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
-  integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
 js-cookie@^3.0.0:
   version "3.0.1"

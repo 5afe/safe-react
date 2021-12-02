@@ -1,4 +1,4 @@
-import { RequestId, calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
+import { RequestId } from '@gnosis.pm/safe-apps-sdk'
 import { ReactElement } from 'react'
 
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -44,7 +44,7 @@ export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalP
   const web3 = getWeb3ReadOnly()
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
   const txData = getSignMessageLibContractInstance(web3, networkId)
-    .methods.signMessage(calculateMessageHash(message))
+    .methods.signMessage(web3.eth.accounts.hashMessage(message))
     .encodeABI()
 
   const readableData = convertToHumanReadableMessage(message)

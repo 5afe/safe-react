@@ -60,7 +60,7 @@ function parsePayload<T>(entry: string): T | null {
   try {
     return JSON.parse(entry) as T
   } catch (e) {
-    trackError(Errors._703, e.message)
+    trackError(Errors._703, `${e.message} – ${entry}`)
     return null
   }
 }

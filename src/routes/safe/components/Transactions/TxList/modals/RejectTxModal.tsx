@@ -62,7 +62,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
-        navigateToTransactionsTab: false,
       }),
     )
     onClose()
