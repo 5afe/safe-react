@@ -1,0 +1,103 @@
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #9ea0a5;
+  opacity: 1; /* Firefox */
+}
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 12px !important;
+  padding-left: 12px !important;
+}
+
+input:hover {
+  border-color: #1665d8 !important;
+}
+
+input:active {
+  border-color: #1665d8 !important;
+}
+
+.days {
+  margin-left: -50px;
+}
+
+.hours {
+  margin-left: -38px;
+}
+
+#durationInputsCol {
+  margin-left: -43px;
+}
+
+#durationLabel {
+  margin-top: 6px;
+}
+
+@media only screen and (max-width: 500px) {
+  #img {
+    margin: 0;
+  }
+
+  .col-6 {
+    padding-right: 6px !important;
+    padding-left: 6px !important;
+    flex: 0 0 100% !important;
+    width: 100%;
+    max-width: 100% !important;
+  }
+
+  .col-9 {
+    padding-right: 0;
+    padding-left: 0;
+    margin-top: 0;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  #icon {
+    margin: auto !important;
+    padding-left: 4px;
+  }
+
+  .col-1 {
+    margin: auto;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  .days {
+    margin-left: -50px;
+  }
+
+  .hours {
+    margin-left: -28px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+
+  #durationCol {
+    padding-top: 14px;
+    padding-bottom: 10px;
+    width: 355px;
+  }
+
+  #durationInputsRow {
+    margin-left: 0px!important;
+    margin-right: 0px!important;
+  }
+
+  #durationInputsCol {
+    margin: inherit!important;
+  }
+
+  #durationLabel {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

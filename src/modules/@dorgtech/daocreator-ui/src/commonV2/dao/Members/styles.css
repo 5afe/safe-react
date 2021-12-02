@@ -1,0 +1,61 @@
+@media only screen and (max-width: 500px) {
+  #addMemberButton {
+    width: 100px !important;
+    height: 40px !important;
+    padding: 4px;
+    margin-right: 9px !important;
+    margin-top: 7px !important;
+    font-size: 13px !important;
+  }
+
+  #addMember {
+    flex: 0 0 50%;
+    max-width: 100%;
+    margin: auto;
+  }
+
+  #tokenName {
+    padding: 0px 0px 0px 100px !important;
+  }
+
+  #reputationTitle {
+    max-width: 0px !important;
+  }
+
+  #reputationValue {
+    max-width: 33% !important;
+    margin-left: 60px;
+  }
+
+  #addressAvatar {
+    display: none;
+  }
+
+  #addressHex {
+    margin-left: 0px !important;
+  }
+
+  #tokenValueCol {
+    max-width: 15%;
+  }
+
+  #tokenValue {
+    margin-left: 15px;
+  }
+
+  #editCol {
+    padding: 0px 0px 20px !important;
+  }
+}
+
+#tokenName {
+  font-size: 13px;
+  color: gray;
+  padding: 10px 0;
+}
+
+#reputationTitle {
+  font-size: 13px;
+  color: gray;
+  padding: 10px 0;
+}

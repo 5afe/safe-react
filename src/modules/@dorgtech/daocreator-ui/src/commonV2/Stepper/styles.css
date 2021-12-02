@@ -1,0 +1,96 @@
+.daocreator-root .stepper-vertical li:not(:last-child):after {
+  position: absolute;
+  top: 3.9rem;
+  left: 46px;
+  width: 1px;
+  height: calc(100% - 0px);
+  content: "";
+  background-color: #ededef;
+}
+
+.daocreator-root ul.stepper li a .circle {
+  display: inline-block;
+  width: 32px;
+  margin-right: 0.5rem;
+  line-height: 1.7rem;
+  color: #fff;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.38);
+  border-radius: 50%;
+  padding-top: 2px;
+}
+
+.daocreator-root ul.stepper li.completed a .circle {
+  border: #1665d8;
+  background-color: #1665d8 !important;
+}
+
+.daocreator-root ul.stepper li.active a .label,
+ul.stepper li.completed a .label {
+  font-weight: 600;
+  color: #1665d8;
+}
+
+.editStep {
+  margin-top: 10.5px;
+}
+
+@media only screen and (max-width: 500px) {
+  #step {
+    padding: 12px !important;
+  }
+
+  .stepper-vertical li:not(:last-child):after {
+    top: 2.8rem !important;
+    left: 27px !important;
+  }
+  #label {
+    margin: 3px !important;
+  }
+
+  #row {
+    padding: 14px 14px !important;
+    margin: 0px 2% 0px 14.5% !important;
+  }
+
+  #pencil {
+    margin-right: 4px !important;
+    padding: inherit !important;
+  }
+
+  #modal {
+    width: 100px !important;
+    height: 40px !important;
+    padding: 4px;
+    margin-right: 9px !important;
+    margin-top: 7px !important;
+    font-size: 13px !important;
+  }
+
+  #importCSV {
+    width: 100px !important;
+    height: 40px !important;
+    padding: 4px;
+    margin-right: 9px !important;
+    margin-top: 7px !important;
+    font-size: 13px !important;
+  }
+
+  #importButton {
+    margin-right: 0px;
+  }
+
+  #preview {
+    margin-left: 60px;
+    max-width: 50%;
+    margin-top: 0px !important;
+  }
+
+  #membersCount {
+    width: 100px;
+  }
+
+  #importButton {
+    padding-top: 0% !important;
+  }
+}

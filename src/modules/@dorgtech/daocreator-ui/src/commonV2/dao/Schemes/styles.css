@@ -1,0 +1,30 @@
+@media only screen and (max-width: 500px) {
+  #col {
+    flex: 100%;
+  }
+
+  .col-11 {
+    flex: 0 0 86.666667%;
+  }
+
+  #toggle {
+    margin: auto;
+  }
+  
+  #toggleScheme {
+    padding-left: 1.25rem !important;
+  }
+  
+  #resetButton {
+    margin-left: 70px;
+  }
+  
+  #saveConfigurationButton {
+    width: 184px !important;
+    margin-right: 30px;
+  }
+
+  #tabButton {
+    overflow: hidden;
+  }
+}
