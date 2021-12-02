@@ -34,7 +34,7 @@ const styles = {
     borderRadius: "0.37rem",
     height: "45px",
     fontWeight: 300,
-    backgroundColor: "#1976d2",
+    backgroundColor: "#001428",
     color: "white",
     width: "145px",
     padding: "7px",

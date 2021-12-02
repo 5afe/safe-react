@@ -5,7 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 :root {
-  --blue: #007bff;
+  --blue: #4caf50;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -18,7 +18,7 @@
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
-  --primary: #007bff;
+  --primary: #4caf50;
   --secondary: #6c757d;
   --success: #28a745;
   --info: #17a2b8;
@@ -157,7 +157,7 @@ sup {
   top: -0.5em;
 }
 .daocreator-root a {
-  color: #007bff;
+  color: #4caf50;
   text-decoration: none;
   background-color: transparent;
 }
@@ -637,8 +637,8 @@ fieldset:disabled a.btn {
 }
 .daocreator-root .btn-primary {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 .daocreator-root .btn-primary:hover {
   color: #fff;
@@ -652,8 +652,8 @@ fieldset:disabled a.btn {
 .daocreator-root .btn-primary.disabled,
 .btn-primary:disabled {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 .daocreator-root .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active,
@@ -892,13 +892,13 @@ fieldset:disabled a.btn {
   box-shadow: 0 0 0 0.2rem rgba(82, 88, 93, 0.5);
 }
 .daocreator-root .btn-outline-primary {
-  color: #007bff;
-  border-color: #007bff;
+  color: #4caf50;
+  border-color: #4caf50;
 }
 .daocreator-root .btn-outline-primary:hover {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 .daocreator-root .btn-outline-primary.focus,
 .btn-outline-primary:focus {
@@ -906,15 +906,15 @@ fieldset:disabled a.btn {
 }
 .daocreator-root .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: #007bff;
+  color: #4caf50;
   background-color: transparent;
 }
 .daocreator-root .btn-outline-primary:not(:disabled):not(.disabled).active,
 .btn-outline-primary:not(:disabled):not(.disabled):active,
 .show > .btn-outline-primary.dropdown-toggle {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 .daocreator-root
   .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
@@ -1137,7 +1137,7 @@ fieldset:disabled a.btn {
 }
 .daocreator-root .btn-link {
   font-weight: 400;
-  color: #007bff;
+  color: #4caf50;
   text-decoration: none;
 }
 .daocreator-root .btn-link:hover {
@@ -1402,7 +1402,7 @@ input[type="submit"].btn-block {
 .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #007bff;
+  background-color: #4caf50;
 }
 .daocreator-root .dropdown-item.disabled,
 .dropdown-item:disabled {
@@ -1730,8 +1730,8 @@ input[type="submit"].btn-block {
 }
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #007bff;
-  background-color: #007bff;
+  border-color: #4caf50 !important;
+  background-color: #4caf50;
 }
 .custom-control-input:focus ~ .custom-control-label::before {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -1786,8 +1786,8 @@ input[type="submit"].btn-block {
 .custom-checkbox
   .custom-control-input:indeterminate
   ~ .custom-control-label::before {
-  border-color: #007bff;
-  background-color: #007bff;
+  border-color: #4caf50;
+  background-color: #4caf50;
 }
 .custom-checkbox
   .custom-control-input:indeterminate
@@ -1996,7 +1996,7 @@ input[type="submit"].btn-block {
   width: 1rem;
   height: 1rem;
   margin-top: -0.25rem;
-  background-color: #007bff;
+  background-color: #4caf50;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
@@ -2024,7 +2024,7 @@ input[type="submit"].btn-block {
 .custom-range::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
-  background-color: #007bff;
+  background-color: #4caf50;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
@@ -2055,7 +2055,7 @@ input[type="submit"].btn-block {
   margin-top: 0;
   margin-right: 0.2rem;
   margin-left: 0.2rem;
-  background-color: #007bff;
+  background-color: #4caf50;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
@@ -2175,7 +2175,7 @@ input[type="submit"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #007bff;
+  background-color: #4caf50;
 }
 .nav-fill .nav-item {
   -ms-flex: 1 1 auto;
@@ -2374,7 +2374,7 @@ input[type="submit"].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #007bff;
+  color: #4caf50;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
@@ -2402,8 +2402,8 @@ input[type="submit"].btn-block {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 .page-item.disabled .page-link {
   color: #6c757d;
@@ -2474,7 +2474,7 @@ a.badge:hover {
 }
 .badge-primary {
   color: #fff;
-  background-color: #007bff;
+  background-color: #4caf50;
 }
 a.badge-primary:focus,
 a.badge-primary:hover {
@@ -2746,7 +2746,7 @@ a.badge-dark:focus {
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #007bff;
+  background-color: #4caf50;
   transition: width 0.6s ease;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2837,8 +2837,8 @@ a.badge-dark:focus {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4caf50;
+  border-color: #4caf50;
 }
 .list-group-horizontal {
   -ms-flex-direction: row;
@@ -3854,7 +3854,7 @@ a.close.disabled {
   vertical-align: text-top !important;
 }
 .bg-primary {
-  background-color: #007bff !important;
+  background-color: #4caf50 !important;
 }
 a.bg-primary:focus,
 a.bg-primary:hover,
@@ -3962,7 +3962,7 @@ button.bg-dark:hover {
   border-left: 0 !important;
 }
 .border-primary {
-  border-color: #007bff !important;
+  border-color: #4caf50 !important;
 }
 .border-secondary {
   border-color: #6c757d !important;

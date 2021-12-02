@@ -35,7 +35,7 @@ export const SchemesPreview: FC<{ form: SchemesForm }> = ({ form }) => {
           <p>
             <MDBIcon
               icon={checked ? "check" : "times"}
-              className={checked ? "blue-text" : "red-text"}
+              className={checked ? "green-text" : "red-text"}
               style={
                 checked
                   ? { marginRight: "10px" }

@@ -34,7 +34,7 @@ const SecondStep: FC<DAOForm> = form => (
           <p>
             <MDBIcon
               icon={checked ? "check" : "times"}
-              className={checked ? "blue-text" : "red-text"}
+              className={checked ? "green-text" : "red-text"}
               style={checked ? styles.second.checked : styles.second.unchecked}
             />
             {text}

@@ -74,11 +74,10 @@ const initialVotingMachines = () => {
     const preset = schemePresetMap.get(i);
     if (preset === undefined) throw Error("Preset not found");
 
-    vms.push(
-      new GenesisProtocolForm({
-        preset
-      })
-    );
+    const GPF: GenesisProtocolForm = new GenesisProtocolForm(({
+            preset
+          } as any))
+    vms.push((GPF as never));
   }
   return vms;
 };
@@ -506,7 +505,7 @@ const styles = {
     width: "28%",
     height: "38px",
     fontSize: "14px",
-    backgroundColor: "#1976d2",
+    backgroundColor: "#001428",
     margin: "auto"
   },
   buttonColorInactive: {
@@ -542,7 +541,7 @@ const styles = {
     height: "45px",
     marginLeft: "6px",
     fontWeight: 300,
-    backgroundColor: "#1976d2",
+    backgroundColor: "#001428",
     color: "white",
     width: "145px",
     padding: "7px",

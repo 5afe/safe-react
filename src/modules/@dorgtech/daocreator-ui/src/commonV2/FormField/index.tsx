@@ -7,7 +7,7 @@ import {
 } from "@material-ui/pickers";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import grey from "@material-ui/core/colors/grey";
-import blue from "@material-ui/core/colors/blue";
+import green from "@material-ui/core/colors/green";
 import DateFnsUtils from "@date-io/date-fns";
 import EthAddressAvatar from "../EthAddressAvatar";
 import {
@@ -304,7 +304,7 @@ const DurationFieldView = observer(
 const datePickerTheme = createMuiTheme({
   palette: {
     primary: grey,
-    secondary: blue
+    secondary: green
   }
 });
 

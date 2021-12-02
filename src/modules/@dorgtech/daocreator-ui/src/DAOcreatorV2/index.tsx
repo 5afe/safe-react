@@ -10,7 +10,8 @@ import {
   MDBRow,
   MDBCol,
   MDBPopover,
-  MDBPopoverBody
+  MDBPopoverBody,
+  MDBIcon,
 } from "mdbreact";
 
 import {
@@ -269,6 +270,7 @@ const DAOcreator: React.FC<Props> = (props: Props) => {
           onClick={loadLocalStorage}
           color={"primary"}
           variant={"contained"}
+          style={{backgroundColor: "#4caf50 !important"}}
         >
           Resume
         </MDBBtn>
@@ -276,6 +278,7 @@ const DAOcreator: React.FC<Props> = (props: Props) => {
           onClick={resetLocalStorage}
           color={"primary"}
           variant={"contained"}
+          style={{backgroundColor: "#4caf50 !important"}}
         >
           Start Over
         </MDBBtn>
@@ -355,7 +358,7 @@ const DAOcreator: React.FC<Props> = (props: Props) => {
                     className="btn"
                     style={styles.icon}
                   >
-                    <img src={moreLogo} alt="menu icon" />
+                    <MDBIcon icon="cog"></MDBIcon>
                   </MDBBtn>
                   <div style={styles.divided}>
                     <div // There might be a better MDBReact component for this
@@ -468,10 +471,10 @@ const styles = {
     height: "50px"
   },
   networkLabel: {
-    color: "blue"
+    color: "#001428"
   },
   networkName: {
-    color: "blue",
+    color: "#001428",
     fontWeight: "bold" as const
   },
   networkMessage: {
@@ -506,7 +509,7 @@ const styles = {
   icon: {
     background: "white",
     boxShadow: "none",
-    color: "blue !important",
+    color: "#001428 !important",
     padding: 5,
     height: "35px",
     width: "35px",

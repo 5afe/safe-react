@@ -21,14 +21,14 @@
 }
 
 .daocreator-root ul.stepper li.completed a .circle {
-  border: #1665d8;
-  background-color: #1665d8 !important;
+  border: #001428;
+  background-color: #001428 !important;
 }
 
 .daocreator-root ul.stepper li.active a .label,
 ul.stepper li.completed a .label {
   font-weight: 600;
-  color: #1665d8;
+  color: #001428;
 }
 
 .editStep {

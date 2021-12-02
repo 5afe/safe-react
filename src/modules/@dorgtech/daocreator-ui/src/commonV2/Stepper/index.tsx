@@ -3,7 +3,7 @@ import {
   AnyLogLine
 } from "../dao/Migrator/LogLineTypes";
 import { DAOConfigForm, MembersForm, SchemesForm, DAOForm, DAOMigrationResult } from "@dorgtech/daocreator-lib";
-import { MDBBtn, MDBRow, MDBCollapse } from "mdbreact";
+import { MDBBtn, MDBRow, MDBCollapse, MDBIcon } from "mdbreact";
 import { UtilityButton } from "./UtilityButton";
 import { MembersPreview, SchemesPreview, ConfigPreview } from "./Preview";
 
@@ -172,7 +172,7 @@ const Stepper: FC<Props> = ({ index, form, title, Component, callbacks, step, la
             style={styles.icon}
             id="pencil"
           >
-            <img src={pencilLogo} alt="menu icon" />
+            <MDBIcon icon="pencil-alt" className="green-text"></MDBIcon>
           </MDBBtn>
         </div>
       </MDBRow>
@@ -260,7 +260,7 @@ const styles = {
   },
   active: {
     fontWeight: 400,
-    color: '#1665D8', 
+    color: '#001428', 
     marginLeft: '20px'
   },
   noActiveLabel: {
@@ -272,7 +272,7 @@ const styles = {
     fontWeight: 400,
     // color: "#4285f4", // TODO background is being overridden
     backgroundColor: "white !important", // TODO Is being overridden
-    border: "0.9px solid #1665D8 !important"
+    border: "0.9px solid #001428 !important"
   },
   currentStepIcon: {
     fontWeight: 400,
@@ -293,7 +293,7 @@ const styles = {
   icon: {
     background: "white",
     boxShadow: "none",
-    color: "blue !important",
+    color: "#001428 !important",
     padding: 5,
     height: 35,
     width: 35, //The Width must be the same as the height

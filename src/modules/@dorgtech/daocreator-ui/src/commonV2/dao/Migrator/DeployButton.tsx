@@ -385,7 +385,7 @@ export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
 
     // Make sure we have a web3 provider available. If not,
     // tell the user they need to have one. TODO
-    let web3 = undefined;
+    let web3: any = undefined;
 
     try {
       web3 = await getWeb3();
@@ -453,13 +453,12 @@ export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
     window.onbeforeunload = () => {};
   };
 
-  const openAlchemy = async () => {
+  const openEtherScan = async () => {
     if (!result) {
       console.log("Failed to open: Result wasn't set");
       return;
     }
-
-    window.open(alchemyURL.toLowerCase());
+    window.open(`https://rinkeby.etherscan.io/address/${alchemyURL.slice(-42)}#internaltx`);
   };
 
   const copyDAOLogs = (logs: string[]) => {
@@ -468,13 +467,13 @@ export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
   };
 
   return installStep !== STEP.Completed ? (
-    <MDBBtn id="installButton" disabled={installStep !== STEP.Waiting && failed === null} onClick={startInstallation}>
-      {failed === null ? "Install Organization" : "Restart Installation"}
+    <MDBBtn style={{ backgroundColor: "#4caf50" } } id="installButton" disabled={installStep !== STEP.Waiting && failed === null} onClick={startInstallation}>
+      {failed === null ? "Deploy DAO" : "Restart Deployment"}
     </MDBBtn>
   ) : (
     <Fragment>
-      <MDBBtn style={styles.postDeployBtn} onClick={openAlchemy}>
-        Open Alchemy
+      <MDBBtn style={styles.postDeployBtn} onClick={openEtherScan}>
+        Open Etherscan
       </MDBBtn>
       <MDBBtn style={styles.postDeployBtn} onClick={startInstallation}>
         Redeploy
@@ -489,7 +488,7 @@ export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
           <MDBTooltip placement="top" domElement>
             <div>
               <MDBIcon
-                className="blue-text"
+                className="green-text"
                 size="lg"
                 icon="copy"
                 style={{ cursor: "pointer" }}

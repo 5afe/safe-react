@@ -245,7 +245,7 @@ const styles = {
     marginRight: "243px"
   },
   importButton: {
-    backgroundColor: "#1976d2",
+    backgroundColor: "#001428",
     color: "white",
     fontSize: "smaller",
     fontWeight: 300,

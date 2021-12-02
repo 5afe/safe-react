@@ -13,7 +13,7 @@ import EthAddressAvatar from "../../EthAddressAvatar";
 import FormField from "../../FormField";
 import { truncateString } from "../../../utils";
 
-const pencilIcon = require("../../../assets/icons/pencil.svg");
+import pencilIcon from "../../../assets/icons/pencil.svg";
 
 interface Props {
   membersForm: any;
@@ -62,7 +62,7 @@ export const MembersTable: FC<Props> = ({
                 }}
                 style={
                   (styles.noPadding,
-                  { cursor: "pointer", display: "inline-block", color: "blue" })
+                  { cursor: "pointer", display: "inline-block", color: "#001428" })
                 }
               >
                 {truncateString(memberForm.values.address, 6, 4)}
@@ -133,9 +133,9 @@ export const MembersTable: FC<Props> = ({
             id="editCol"
           >
             {lineEdit ? (
-              <MDBIcon icon="check" className="blue-text"></MDBIcon>
+              <MDBIcon icon="check" className="green-text"></MDBIcon>
             ) : (
-              <img src={pencilIcon} alt="menu icon" />
+              <MDBIcon icon="pencil-alt" className="green-text"></MDBIcon>
             )}
           </div>
         </MDBCol>

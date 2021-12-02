@@ -69,7 +69,7 @@ export const OrganizationLine: FC<Props> = ({
   };
 
   const Output: FC = () => {
-    let text = undefined;
+    let text: any = undefined;
 
     switch (step) {
       case STEP.Waiting:
@@ -100,7 +100,7 @@ export const OrganizationLine: FC<Props> = ({
       <MDBCol size="1" id="iconCol">
         {/* TODO 2x is a little big and default is small */}
         <MDBIcon
-          className="blue-text"
+          className="green-text"
           size="lg"
           icon={type === 0 ? "city" : "sliders-h"}
         />
@@ -119,7 +119,7 @@ export const OrganizationLine: FC<Props> = ({
           />
         )}
         {step === STEP.Confirmed && (
-          <MDBIcon className="blue-text fas" size="lg" icon="check-circle" />
+          <MDBIcon className="green-text fas" size="lg" icon="check-circle" />
         )}
         {step === STEP.Failed && (
           <MDBIcon className="red-text fas" size="lg" icon="times-circle" />

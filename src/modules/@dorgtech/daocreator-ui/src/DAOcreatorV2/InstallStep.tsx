@@ -34,7 +34,7 @@ const InstallStep: FC<Props> = ({ migrationStates }: Props) => {
                   style={{
                     cursor: "pointer",
                     display: "inline-block",
-                    color: "blue"
+                    color: "#001428"
                   }}
                 >
                   &nbsp;Alchemy URL&nbsp;
