@@ -40,7 +40,7 @@ const SpendingLimit = (): ReactElement => {
           Spending limit
         </Title>
         <InfoText size="lg">
-          You can set rules for specific beneficiaries to access funds from this Safe without having to collect all
+          You can set rules for specific beneficiaries to access funds from this Vault without having to collect all
           signatures.
         </InfoText>
         {spendingLimitData?.length ? <LimitsTable data={spendingLimitData} /> : <NewLimitSteps />}

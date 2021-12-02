@@ -114,16 +114,16 @@ const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement =>
           <Modal.Body>
             <AppDocsInfo>
               <Text size="xl" as="span" color="secondary">
-                Safe Apps are third-party extensions.
+                Vault Apps are third-party extensions.
               </Text>
               <StyledLink
                 href={CUSTOM_SAFE_APPS_LINK}
                 target="_blank"
                 rel="noreferrer"
-                title="Learn more about building Safe Apps"
+                title="Learn more about building Vault Apps"
               >
                 <Text size="xl" as="span" color="primary">
-                  Learn more about building Safe Apps.
+                  Learn more about building Vault Apps.
                 </Text>
                 <Icon size="sm" type="externalLink" color="primary" />
               </StyledLink>

@@ -36,7 +36,7 @@ function SelectNetworkStep(): ReactElement {
   return (
     <Container data-testid={'select-network-step'}>
       <Paragraph color="primary" noMargin size="lg">
-        Select network on which the Safe was created: <NetworkLabel onClick={openNetworkSelectorPopup} />
+        Select network on which the Vault was created: <NetworkLabel onClick={openNetworkSelectorPopup} />
       </Paragraph>
       <SwitchNetworkContainer>
         <ButtonLink type="button" onClick={openNetworkSelectorPopup} color="primary">

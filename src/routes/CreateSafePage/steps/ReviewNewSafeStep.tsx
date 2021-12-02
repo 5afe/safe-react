@@ -105,7 +105,7 @@ function ReviewNewSafeStep(): ReactElement | null {
         <TableContainer>
           <TitleContainer>
             <Paragraph color="primary" noMargin size="lg">
-              {`${numberOfOwners} Safe owners`}
+              {`${numberOfOwners} Vault owners`}
             </Paragraph>
           </TitleContainer>
           <Hairline />
@@ -133,7 +133,7 @@ function ReviewNewSafeStep(): ReactElement | null {
       </Col>
       <DescriptionContainer align="center">
         <Paragraph color="primary" noMargin size="lg">
-          You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
+          You&apos;re about to create a new Vault on <NetworkLabel /> and will have to confirm a transaction with your
           currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The
           exact amount will be determined by your wallet.
         </Paragraph>

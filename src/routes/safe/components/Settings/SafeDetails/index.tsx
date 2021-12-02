@@ -169,9 +169,9 @@ const SafeDetails = (): ReactElement => {
 
           {safeName != null && (
             <Block className={classes.formContainer}>
-              <Heading tag="h2">Modify Safe Name</Heading>
+              <Heading tag="h2">Modify Vault Name</Heading>
               <Paragraph>
-                You can change the name of this Safe. This name is only stored locally and never shared with Cryptoleague or
+                You can change the name of this Vault. This name is only stored locally and never shared with Cryptoleague or
                 any third parties.
               </Paragraph>
               <Block className={classes.root}>
@@ -179,9 +179,9 @@ const SafeDetails = (): ReactElement => {
                   component={TextField}
                   defaultValue={safeName}
                   name="safeName"
-                  placeholder="Safe name*"
+                  placeholder="Vault name*"
                   testId={SAFE_NAME_INPUT_TEST_ID}
-                  text="Safe name*"
+                  text="Vault name*"
                   type="text"
                   validate={composeValidators(required, validAddressBookName)}
                 />

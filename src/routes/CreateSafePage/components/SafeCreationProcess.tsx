@@ -225,14 +225,14 @@ function SafeCreationProcess(): ReactElement {
       {showModal && (
         <GenericModal
           onClose={onClickModalButton}
-          title="Safe Created!"
+          title="Vault Created!"
           body={
             <div data-testid="safe-created-popup">
               <Paragraph>
-                You just created a new Safe on <NetworkLabel />
+                You just created a new Vault on <NetworkLabel />
               </Paragraph>
               <Paragraph>
-                You will only be able to use this Safe on <NetworkLabel />
+                You will only be able to use this Vault on <NetworkLabel />
               </Paragraph>
               <Paragraph>
                 If you send assets on other networks to this address,{' '}

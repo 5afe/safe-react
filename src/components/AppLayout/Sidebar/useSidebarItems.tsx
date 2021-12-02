@@ -69,7 +69,7 @@ const useSidebarItems = (): ListItemType[] => {
 
     const settingsSubItems = [
       makeEntryItem({
-        label: 'Safe Details',
+        label: 'Vault Details',
         badge: needsUpdate && granted,
         iconType: 'info',
         href: currentSafeRoutes.SETTINGS_DETAILS,

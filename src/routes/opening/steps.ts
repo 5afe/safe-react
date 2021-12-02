@@ -7,7 +7,7 @@ export const steps = [
     id: '1',
     label: 'Waiting for transaction confirmation',
     description: undefined,
-    instruction: 'Please confirm the Safe creation in your wallet',
+    instruction: 'Please confirm the Vault creation in your wallet',
     footerComponent: null,
   },
   {
@@ -41,7 +41,7 @@ export const steps = [
   {
     id: '6',
     label: 'Success',
-    description: 'Your Safe was created successfully',
+    description: 'Your Vault was created successfully',
     instruction: undefined,
     footerComponent: ContinueFooter,
   },

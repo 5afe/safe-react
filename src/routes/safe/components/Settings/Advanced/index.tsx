@@ -52,10 +52,10 @@ const Advanced = (): ReactElement => {
       {/* Nonce */}
       <Block className={classes.container}>
         <Title size="xs" withoutMargin>
-          Safe Nonce
+          Vault Nonce
         </Title>
         <InfoText size="lg">
-          For security reasons, transactions made with Cryptoleague Safe need to be executed in order. The nonce shows you
+          For security reasons, transactions made with Cryptoleague Vault need to be executed in order. The nonce shows you
           which transaction will be executed next. You can find the nonce for a transaction in the transaction details.
         </InfoText>
         <InfoText color="secondaryLight" size="xl">
@@ -66,10 +66,10 @@ const Advanced = (): ReactElement => {
       {/* Modules */}
       <Block className={classes.container}>
         <Title size="xs" withoutMargin>
-          Safe Modules
+          Vault Modules
         </Title>
         <InfoText size="lg">
-          Modules allow you to customize the access-control logic of your Safe. Modules are potentially risky, so make
+          Modules allow you to customize the access-control logic of your Vault. Modules are potentially risky, so make
           sure to only use modules from trusted sources. Learn more about modules{' '}
           <a href={DOCS_LINK} rel="noopener noreferrer" target="_blank">
             here
@@ -87,7 +87,7 @@ const Advanced = (): ReactElement => {
             Transaction Guard
           </Title>
           <InfoText size="lg">
-            Transaction guards impose additional constraints that are checked prior to executing a Safe transaction.
+            Transaction guards impose additional constraints that are checked prior to executing a Vault transaction.
             Transaction guards are potentially risky, so make sure to only use modules from trusted sources. Learn more
             about transaction guards{' '}
             <a

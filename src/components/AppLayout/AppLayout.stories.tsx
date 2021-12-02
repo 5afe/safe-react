@@ -6,7 +6,7 @@ export default {
   title: 'Layout',
   component: Layout,
   parameters: {
-    componentSubtitle: 'It provides a custom layout used in Safe',
+    componentSubtitle: 'It provides a custom layout used in Vault',
   },
 }
 
@@ -22,7 +22,7 @@ const items: ListItemType[] = [
     href: '#',
     subItems: [
       {
-        label: 'Safe Details',
+        label: 'Vault Details',
         href: '#',
       },
       {

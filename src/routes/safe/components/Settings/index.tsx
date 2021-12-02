@@ -48,7 +48,7 @@ const Settings = (): React.ReactElement => {
   let settingsSection
   switch (matchSafeWithSettingSection?.url) {
     case currentSafeRoutes.SETTINGS_DETAILS:
-      settingsSection = 'Safe Details'
+      settingsSection = 'Vault Details'
       break
     case currentSafeRoutes.SETTINGS_APPEARANCE:
       settingsSection = 'Appearance'

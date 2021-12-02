@@ -62,8 +62,8 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
         </Row>
         <Row className={classes.description}>
           <Paragraph noMargin size="lg">
-            Removing a Safe only removes it from your interface. <b>It does not delete the Safe</b>. You can always add
-            it back using the Safe&apos;s address.
+            Removing a Vault only removes it from your interface. <b>It does not delete the Safe</b>. You can always add
+            it back using the Vault&apos;s address.
           </Paragraph>
         </Row>
       </Block>

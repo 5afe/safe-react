@@ -59,14 +59,14 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
 
   if (invalidTransactions) {
     return (
-      <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
+      <Modal description="Vault App transaction" title="Vault App transaction" open={props.isOpen}>
         <SafeAppLoadError {...props} />
       </Modal>
     )
   }
 
   return (
-    <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
+    <Modal description="Vault App transaction" title="Vault App transaction" open={props.isOpen}>
       {decodedTxDetails && (
         <DecodedTxDetail
           onClose={closeDecodedTxDetail}

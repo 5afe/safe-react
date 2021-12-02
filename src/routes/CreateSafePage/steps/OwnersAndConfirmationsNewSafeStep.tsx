@@ -82,25 +82,25 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
     <>
       <BlockWithPadding data-testid={'create-safe-owners-confirmation-step'}>
         <ParagraphWithMargin color="primary" noMargin size="lg">
-          Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
+          Your Vault will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
         </ParagraphWithMargin>
         <Paragraph color="primary" size="lg">
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
-          transaction before it gets executed. In general, the more confirmations required, the more secure your Safe
+          transaction before it gets executed. In general, the more confirmations required, the more secure your Vault
           is.
           <StyledLink
             href="https://help.gnosis-safe.io/en/articles/4772567-what-gnosis-safe- setup-should-i-use"
             target="_blank"
             rel="noreferrer"
-            title="Learn about which Safe setup to use"
+            title="Learn about which Vault setup to use"
           >
             <Text size="xl" as="span" color="primary">
-              Learn about which Safe setup to use
+              Learn about which Vault setup to use
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
           </StyledLink>
-          . The new Safe will ONLY be available on <NetworkLabel />
+          . The new Vault will ONLY be available on <NetworkLabel />
         </Paragraph>
       </BlockWithPadding>
       <Hairline />

@@ -27,7 +27,7 @@ type Props = {
 const NoAppsFound = ({ query, onWalletConnectSearch }: Props): React.ReactElement => (
   <NoAppsFoundTextContainer>
     <Text size="xl">
-      No apps found matching <b>{query}</b>. Connect to dApps that haven&apos;t yet been integrated with the Safe using
+      No apps found matching <b>{query}</b>. Connect to dApps that haven&apos;t yet been integrated with the Vault using
       the WalletConnect App.
     </Text>
     <SButton onClick={onWalletConnectSearch} size="md">

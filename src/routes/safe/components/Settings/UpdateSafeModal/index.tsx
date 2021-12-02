@@ -89,7 +89,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <ModalHeader onClose={onClose} title="Update safe version" />
+          <ModalHeader onClose={onClose} title="Update vault version" />
           <Block className={classes.modalContent}>
             <Row>
               <Paragraph noMargin>
@@ -101,7 +101,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
                   target="_blank"
                   to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}
                 >
-                  latest Gnosis Safe contracts changelog
+                  latest Crypto Vault contracts changelog
                 </Link>
               </Paragraph>
               <Paragraph noMargin>

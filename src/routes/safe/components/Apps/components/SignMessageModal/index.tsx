@@ -50,7 +50,7 @@ export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalP
   const readableData = convertToHumanReadableMessage(message)
 
   return (
-    <Modal description="Safe App transaction" title="Safe App transaction" open={isOpen}>
+    <Modal description="Vault App transaction" title="Vault App transaction" open={isOpen}>
       <ReviewMessage {...rest} txRecipient={txRecipient} txData={txData} utf8Message={readableData} />
     </Modal>
   )

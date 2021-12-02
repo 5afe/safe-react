@@ -35,11 +35,11 @@ const StyledLink = styled(Link)`
 const AddSafeButton = ({ onAdd }: Props): ReactElement => {
   return (
     <StyledLink onClick={onAdd} to={WELCOME_ROUTE}>
-      <Fab color="secondary" size="small" aria-label="Add Safe">
+      <Fab color="secondary" size="small" aria-label="Add Vault">
         <AddIcon />
 
         <Text color="primary" size="xl" strong>
-          Add Safe
+          Add Vault
         </Text>
       </Fab>
     </StyledLink>

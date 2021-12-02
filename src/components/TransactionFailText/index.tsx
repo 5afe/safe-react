@@ -55,7 +55,7 @@ export const TransactionFailText = ({
         {isOwner ? (
           <>This transaction will most likely fail. {errorMessage}</>
         ) : (
-          <>You are currently not an owner of this Safe and won&apos;t be able to submit this tx.</>
+          <>You are currently not an owner of this Vault and won&apos;t be able to submit this tx.</>
         )}
       </Paragraph>
     </Row>

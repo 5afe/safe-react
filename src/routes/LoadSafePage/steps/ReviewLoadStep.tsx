@@ -74,7 +74,7 @@ function ReviewLoadStep(): ReactElement {
           </Block>
           <Block margin="lg">
             <Paragraph color="disabled" noMargin size="sm">
-              Safe address
+              Vault address
             </Paragraph>
             <SafeAddressContainer>
               <PrefixedEthHashInfo
@@ -108,7 +108,7 @@ function ReviewLoadStep(): ReactElement {
         <TableContainer>
           <OwnersContainer>
             <Paragraph color="primary" noMargin size="lg">
-              {`${ownerList.length} Safe owners`}
+              {`${ownerList.length} Vault owners`}
             </Paragraph>
           </OwnersContainer>
           <Hairline />

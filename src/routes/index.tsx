@@ -20,6 +20,7 @@ import {
   LOAD_SAFE_ROUTE,
   NETWORK_ROOT_ROUTES,
   TRANSACTION_ID_SLUG,
+  DAOCREATOR_ROUTE,
 } from './routes'
 import { getCurrentShortChainName } from 'src/config'
 import { switchNetworkWithUrl } from 'src/utils/history'
@@ -30,6 +31,7 @@ const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
 const Safe = React.lazy(() => import('./safe/container'))
+const DAOcreator = React.lazy(()=>import('./DAOcreator/DAOcreator'))
 
 const Routes = (): React.ReactElement => {
   const location = useLocation()
@@ -110,6 +112,7 @@ const Routes = (): React.ReactElement => {
           return <Redirect to={WELCOME_ROUTE} />
         }}
       />
+      <Route component={DAOcreator} exact path={DAOCREATOR_ROUTE} />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
       <Route component={CreateSafePage} exact path={OPEN_SAFE_ROUTE} />
       <Route component={Safe} path={ADDRESSED_ROUTE} />

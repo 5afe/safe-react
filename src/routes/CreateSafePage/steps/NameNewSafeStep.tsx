@@ -35,9 +35,9 @@ function NameNewSafeStep(): ReactElement {
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to create a new Cryptoleague Safe wallet with one or more owners. First, let&apos;s give your new
+          You are about to create a new Cryptoleague Vault wallet with one or more owners. First, let&apos;s give your new
           wallet a name. This name is only stored locally and will never be shared with Cryptoleague or any third parties. The
-          new Safe will ONLY be available on <NetworkLabel />
+          new Vault will ONLY be available on <NetworkLabel />
         </Paragraph>
       </Block>
       <label htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
@@ -47,7 +47,7 @@ function NameNewSafeStep(): ReactElement {
             component={TextField}
             name={FIELD_CREATE_CUSTOM_SAFE_NAME}
             placeholder={formValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]}
-            text="Safe name"
+            text="Vault name"
             type="text"
             testId="create-safe-name-field"
           />

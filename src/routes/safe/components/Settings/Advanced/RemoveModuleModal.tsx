@@ -146,7 +146,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 <Row className={classes.modalDescription}>
                   <Paragraph noMargin size="lg">
                     After removing this module, any feature or app that uses this module might no longer work. If this
-                    Safe requires more then one signature, the module removal will have to be confirmed by other owners
+                    Vault requires more then one signature, the module removal will have to be confirmed by other owners
                     as well.
                   </Paragraph>
                 </Row>

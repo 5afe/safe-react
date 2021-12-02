@@ -19,7 +19,7 @@ const items: ListItemType[] = [
     href: '#',
     subItems: [
       {
-        label: 'Safe Details',
+        label: 'Vault Details',
         href: '#',
       },
       {

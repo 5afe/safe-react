@@ -134,15 +134,15 @@ export const EditTxParametersForm = ({
           {() => (
             <>
               <StyledText size="xl" strong>
-                Safe transaction
+                Vault transaction
               </StyledText>
 
               <SafeOptions>
                 <Field
                   name="safeNonce"
                   defaultValue={safeNonce}
-                  placeholder="Safe nonce"
-                  text="Safe nonce"
+                  placeholder="Vault nonce"
+                  text="Vault nonce"
                   type="number"
                   min="0"
                   component={TextField}

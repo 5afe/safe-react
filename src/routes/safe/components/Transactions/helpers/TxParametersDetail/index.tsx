@@ -96,7 +96,7 @@ export const TxParametersDetail = ({
       <AccordionDetails>
         <AccordionDetailsWrapper>
           <StyledText size="md" color="placeHolder">
-            Safe transaction
+            Vault transaction
           </StyledText>
 
           <TxParameterWrapper>
@@ -105,7 +105,7 @@ export const TxParametersDetail = ({
               isOutOfOrder={isTxNonceOutOfOrder}
               color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
             >
-              Safe nonce
+              Vault nonce
             </ColoredText>
             <ColoredText
               size="lg"

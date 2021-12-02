@@ -251,7 +251,7 @@ export const SafeDeployment = ({
   return (
     <Wrapper>
       <Title tag="h2" testId="safe-creation-process-title">
-        Safe creation process
+        Vault creation process
       </Title>
       <Nav>
         <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
@@ -274,7 +274,7 @@ export const SafeDeployment = ({
               size="md"
               $stepIndex={stepIndex}
             >
-              {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
+              {error ? 'You can Cancel or Retry the Vault creation process.' : steps[stepIndex].instruction}
             </FullParagraph>
           </BodyInstruction>
         )}

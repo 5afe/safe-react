@@ -33,8 +33,8 @@ export const SafeAppLoadError = ({ onTxReject, onClose, requestId }: ConfirmTxMo
         <Title size="xs">Transaction error</Title>
       </IconText>
       <Text size="lg">
-        This Safe App initiated a transaction which cannot be processed. Please get in touch with the developer of this
-        Safe App for more information.
+        This Vault App initiated a transaction which cannot be processed. Please get in touch with the developer of this
+        Vault App for more information.
       </Text>
 
       <FooterWrapper>

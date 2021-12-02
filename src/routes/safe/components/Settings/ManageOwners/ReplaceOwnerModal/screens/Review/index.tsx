@@ -137,7 +137,7 @@ export const ReviewReplaceOwnerModal = ({
                   </Block>
                   <Block margin="lg">
                     <Paragraph color="disabled" noMargin size="sm">
-                      Safe name
+                      Vault name
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                       {safeName}
@@ -156,7 +156,7 @@ export const ReviewReplaceOwnerModal = ({
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${owners?.length || 0} Safe owner(s)`}
+                    {`${owners?.length || 0} Vault owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />

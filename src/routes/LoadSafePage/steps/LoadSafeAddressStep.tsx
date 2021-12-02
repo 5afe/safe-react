@@ -107,7 +107,7 @@ function LoadSafeAddressStep(): ReactElement {
     <Container data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to add an existing Cryptoleague Safe on <NetworkLabel />. First, choose a name and enter the Safe
+          You are about to add an existing Cryptoleague Vault on <NetworkLabel />. First, choose a name and enter the Safe
           address. The name is only stored locally and will never be shared with Cryptoleague or any third parties.
         </Paragraph>
         <Paragraph color="primary" size="lg">
@@ -116,7 +116,7 @@ function LoadSafeAddressStep(): ReactElement {
         </Paragraph>
 
         <Paragraph color="primary" size="lg">
-          Don&apos;t have the address of the Safe you created?{' '}
+          Don&apos;t have the address of the Vault you created?{' '}
           <StyledLink
             href="https://help.gnosis-safe.io/en/articles/4971293-i-don-t-remember-my-safe-address-where-can-i-find-it"
             rel="noopener noreferrer"
@@ -132,7 +132,7 @@ function LoadSafeAddressStep(): ReactElement {
             component={TextField}
             name={FIELD_LOAD_CUSTOM_SAFE_NAME}
             placeholder={safeName}
-            text="Safe name"
+            text="Vault name"
             type="text"
             testId="load-safe-name-field"
           />
@@ -155,8 +155,8 @@ function LoadSafeAddressStep(): ReactElement {
               }
             }
             name={FIELD_LOAD_SAFE_ADDRESS}
-            placeholder="Safe Address*"
-            text="Safe Address"
+            placeholder="Vault Address*"
+            text="Vault Address"
             testId="load-safe-address-field"
           />
         </Col>
@@ -209,13 +209,13 @@ export const loadSafeAddressStepValidations = (values: {
     }
   }
 
-  // check that the address is actually a Safe (must have owners)
+  // check that the address is actually a Vault (must have owners)
   const ownerList = values[FIELD_SAFE_OWNER_LIST]
   const isValidSafeAddress = ownerList.length > 0 && isValidAddress(safeAddress)
   if (!isValidSafeAddress) {
     errors = {
       ...errors,
-      [FIELD_LOAD_SAFE_ADDRESS]: 'Address given is not a valid Safe address',
+      [FIELD_LOAD_SAFE_ADDRESS]: 'Address given is not a valid Vault address',
     }
   }
 

@@ -131,7 +131,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                   </Block>
                   <Block margin="lg">
                     <Paragraph color="disabled" noMargin size="sm">
-                      Safe name
+                      Vault name
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
                       {safeName}
@@ -150,7 +150,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${(owners?.length || 0) + 1} Safe owner(s)`}
+                    {`${(owners?.length || 0) + 1} Vault owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />

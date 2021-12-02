@@ -120,7 +120,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                   <Link to={WELCOME_ROUTE} onClick={onSafeClick}>
                     Create or add
                   </Link>{' '}
-                  an existing Safe on this network
+                  an existing Vault on this network
                 </PlaceholderText>
               )}
 

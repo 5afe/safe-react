@@ -7,6 +7,8 @@ import { SENTRY_DSN } from './utils/constants'
 import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
 import { switchNetworkWithUrl } from './utils/history'
 
+import './App.css';
+
 // Set the initial network id from the URL
 if (typeof window !== 'undefined') {
   switchNetworkWithUrl({ pathname: window.location.pathname })
