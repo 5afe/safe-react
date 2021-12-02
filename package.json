@@ -164,6 +164,7 @@
     ]
   },
   "dependencies": {
+    "@dorgtech/daocreator-ui": "^1.0.22",
     "@gnosis.pm/safe-apps-sdk": "6.1.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^0.3.1",
