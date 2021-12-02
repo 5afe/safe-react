@@ -12,7 +12,7 @@ const TxInfoMultiSend = ({ txInfo }: { txInfo: MultiSend }): ReactElement => {
   const name = txInfo.to?.name || undefined
   const customAvatar = txInfo.to?.logoUri || undefined
   return (
-    <InfoDetails title="Multisend contract:">
+    <InfoDetails title="MultiSend contract:">
       <PrefixedEthHashInfo
         hash={hash}
         name={name}
