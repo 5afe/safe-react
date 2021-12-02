@@ -1,4 +1,6 @@
 import React, { FC, Fragment } from "react";
+import { useHistory } from "react-router-dom";
+
 import {
   LogUserApproval,
   LogInfo,
@@ -29,6 +31,7 @@ interface IProps {
 }
 
 export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
+  const history = useHistory()
   const {
     installStep,
     setInstallStep,
@@ -460,7 +463,11 @@ export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
     }
     window.open(`https://rinkeby.etherscan.io/address/${alchemyURL.slice(-42)}#internaltx`);
   };
-
+  
+  const openCreateSafe = async () => {
+    history.push('/open');
+  }
+ 
   const copyDAOLogs = (logs: string[]) => {
     console.log(JSON.stringify(JSON.stringify(logs, null, 2)));
     navigator.clipboard.writeText(JSON.stringify(logs, null, 2));
@@ -478,9 +485,13 @@ export const DeployButton: FC<IProps> = ({ migrationStates, redirectURL }) => {
       <MDBBtn style={styles.postDeployBtn} onClick={startInstallation}>
         Redeploy
       </MDBBtn>
+      <MDBBtn style={styles.postDeployBtn} onClick={openCreateSafe}>
+        Create Safe
+      </MDBBtn>
       {daoLogs.length > 0 && (
         <div
           style={{
+            display: "none",
             marginLeft: "170px",
             marginTop: "12px"
           }}

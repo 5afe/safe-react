@@ -201,8 +201,9 @@ const Stepper: FC<Props> = ({ index, form, title, Component, callbacks, step, la
           id="importButton"
           center
           style={{
-            paddingTop: "3%",
-            paddingLeft: "38.5%"
+            // paddingTop: "3%",
+            // paddingLeft: "38.5%"
+            margin: "auto"
           }}
         >
           <DeployButton redirectURL={redirectURL} migrationStates={{...migrationStates, step, form }} />
