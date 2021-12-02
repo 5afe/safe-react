@@ -6,6 +6,7 @@ import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import {
   ExpandedTxDetails,
+  isCustomTxInfo,
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
@@ -81,7 +82,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       </div>
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          {isMultiSendTxInfo(txInfo) && !!txInfo?.to?.name ? (
+          {isCustomTxInfo(txInfo) && !!txInfo?.to?.name ? (
             <Text size="xl" strong as="span">
               Delegate Call
             </Text>
