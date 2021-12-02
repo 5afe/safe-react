@@ -81,9 +81,15 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       </div>
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          <Text size="xl" strong as="span">
-            Delegate Call
-          </Text>
+          {isMultiSendTxInfo(txInfo) && !!txInfo?.to?.name ? (
+            <Text size="xl" strong as="span">
+              Delegate Call
+            </Text>
+          ) : (
+            <Text size="xl" strong as="span" color="error">
+              ⚠️ Unexpected Delegate Call
+            </Text>
+          )}
         </div>
       )}
       {isMultiSendTxInfo(txInfo) && (

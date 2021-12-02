@@ -1,18 +1,24 @@
 import { ReactElement } from 'react'
 import { MultiSend } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { AddressInfo } from './AddressInfo'
-import { InfoDetails } from './InfoDetails'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { getExplorerInfo } from 'src/config'
 
+// Does not use AddressInfo as to not allow address book data display
+// as we use backend data to verify the deligate call
 const TxInfoMultiSend = ({ txInfo }: { txInfo: MultiSend }): ReactElement => {
+  const hash = txInfo?.to.value
+  const name = txInfo.to?.name || undefined
+  const customAvatar = txInfo.to?.logoUri || undefined
   return (
-    <InfoDetails title="MultiSend contract:">
-      <AddressInfo
-        address={txInfo?.to.value}
-        name={txInfo.to?.name || '⚠️ Unknown address'}
-        avatarUrl={txInfo.to?.logoUri || undefined}
-      />
-    </InfoDetails>
+    <PrefixedEthHashInfo
+      hash={hash}
+      name={name}
+      customAvatar={customAvatar}
+      showAvatar
+      showCopyBtn
+      explorerUrl={getExplorerInfo(hash)}
+    />
   )
 }
 
