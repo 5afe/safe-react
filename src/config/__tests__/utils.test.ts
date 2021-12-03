@@ -1,10 +1,10 @@
-import { replaceTemplateParams } from '../utils'
+import { evalTemplate } from '../utils'
 
 describe('replaceTemplateParams', () => {
   it('replace a template param', () => {
     const str = 'https://rinkeby.etherscan.io/address/{{address}}'
 
-    expect(replaceTemplateParams(str, '0x123')).toBe('https://rinkeby.etherscan.io/address/0x123')
+    expect(evalTemplate(str, { address: '0x123' })).toBe('https://rinkeby.etherscan.io/address/0x123')
   })
   it('replaces multiple template params', () => {
     const str =
@@ -17,7 +17,7 @@ describe('replaceTemplateParams', () => {
       apiKey: 'test',
     }
 
-    expect(replaceTemplateParams(str, params)).toBe(
+    expect(evalTemplate(str, params)).toBe(
       'https://api-rinkeby.etherscan.io/api?module=contract&action=getAbi&address=0x123&apiKey=test',
     )
   })

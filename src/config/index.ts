@@ -18,7 +18,7 @@ import {
 } from 'src/utils/constants'
 import { ChainId, ChainName, SAFE_FEATURES, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
-import { replaceTemplateParams } from './utils'
+import { evalTemplate } from './utils'
 
 export const getInitialChainId = () => {
   const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
@@ -118,12 +118,13 @@ export const getExplorerUrl = (): string => {
 }
 
 export const getHashedExplorerUrl = (hash: string): string => {
-  const { address, txHash } = getExplorerUriTemplate()
   const isTx = hash.length > 42
 
-  const uri = isTx ? txHash : address
+  const param = isTx ? 'txHash' : 'address'
+  const uri = getExplorerUriTemplate()[param]
+  const params = { [param]: hash }
 
-  return replaceTemplateParams(uri, hash)
+  return evalTemplate(uri, { [param]: hash })
 }
 
 // Matches return type of ExplorerInfo from SRC
@@ -151,14 +152,14 @@ const fetchContractAbi = async (contractAddress: string) => {
   const apiUri = getExplorerUriTemplate().api
   const apiKey = getExplorerApiKey(apiUri)
 
-  const params: Record<string, string> = {
+  const params = {
     module: 'contract',
     action: 'getAbi',
     address: contractAddress,
     ...(apiKey && { apiKey }),
   }
 
-  const finalUrl = replaceTemplateParams(apiUri, params)
+  const finalUrl = evalTemplate(apiUri, params)
 
   const response = await fetch(finalUrl)
 

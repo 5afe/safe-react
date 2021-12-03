@@ -7,12 +7,7 @@ export const getNativeCurrencyAddress = (): string => {
 }
 
 // Template syntax returned from CGW is {{this}}
-export const replaceTemplateParams = (uri: string, data: string | Record<string, string>): string => {
+export const evalTemplate = (uri: string, data: string | Record<string, string>): string => {
   const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g
-
-  if (typeof data === 'string') {
-    return uri.replace(TEMPLATE_REGEX, data)
-  }
-
   return uri.replace(TEMPLATE_REGEX, (_: string, key: string) => data[key])
 }
