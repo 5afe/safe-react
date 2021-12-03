@@ -148,7 +148,6 @@ const getExplorerApiKey = (apiUrl: string): string | undefined => {
 }
 
 const fetchContractAbi = async (contractAddress: string) => {
-  // Remove search params
   const apiUri = getExplorerUriTemplate().api
   const apiKey = getExplorerApiKey(apiUri)
 
