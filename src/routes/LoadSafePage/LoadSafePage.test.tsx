@@ -107,7 +107,7 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Switch Network'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
@@ -122,7 +122,7 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
@@ -137,8 +137,8 @@ describe('<LoadSafePage>', () => {
       // from Rinkeby to Mainnet
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
       fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Mainnet'))
-      await waitFor(() => expect(screen.getByText('Mainnet')).toBeInTheDocument())
+      fireEvent.click(screen.getByText('Ethereum'))
+      await waitFor(() => expect(screen.getByText('Ethereum')).toBeInTheDocument())
 
       // from Mainnet to Polygon
       fireEvent.click(screen.getByText('Switch Network'))
