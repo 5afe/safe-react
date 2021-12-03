@@ -14,7 +14,7 @@ describe('Get gas param', () => {
   })
 
   it('should return maxFeePerGas for Mainnet', () => {
-    setChainId(CHAIN_ID.MAINNET)
+    setChainId(CHAIN_ID.ETHEREUM)
     expect(getGasParam()).toBe('maxFeePerGas')
   })
 

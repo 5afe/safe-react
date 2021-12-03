@@ -151,8 +151,8 @@ describe('<CreateSafePage>', () => {
       // from Rinkeby to Mainnet
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
       fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Mainnet'))
-      await waitFor(() => expect(screen.getByText('Mainnet')).toBeInTheDocument())
+      fireEvent.click(screen.getByText('Ethereum'))
+      await waitFor(() => expect(screen.getByText('Ethereum')).toBeInTheDocument())
 
       // from Mainnet to Polygon
       fireEvent.click(screen.getByText('Switch Network'))

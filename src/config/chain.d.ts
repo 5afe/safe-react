@@ -9,7 +9,7 @@ export type ChainId = ChainInfo['chainId']
 // Only use the following for edge cases
 export const CHAIN_ID: Record<ChainName, ChainId> = {
   UNKNOWN: '0',
-  MAINNET: '1',
+  ETHEREUM: '1',
   MORDEN: '2',
   ROPSTEN: '3',
   RINKEBY: '4',

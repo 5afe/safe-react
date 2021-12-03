@@ -3,7 +3,7 @@ import { CHAIN_ID } from 'src/config/chain.d'
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const IS_PRODUCTION = APP_ENV === 'production'
-export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? CHAIN_ID.MAINNET : CHAIN_ID.RINKEBY
+export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? CHAIN_ID.ETHEREUM : CHAIN_ID.RINKEBY
 export const PUBLIC_URL = process.env.PUBLIC_URL
 export const TX_SERVICE_VERSION = '1'
 export const LS_NAMESPACE = 'SAFE'
@@ -17,7 +17,7 @@ export const FORTMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY ?? 'pk_test_CAD
  * Not being used
 export const SQUARELINK_ID = {
   [CHAIN_ID.RINKEBY]: '46ce08fe50913cfa1b78',
-  [CHAIN_ID.MAINNET]: process.env.REACT_APP_SQUARELINK_ID,
+  [CHAIN_ID.ETHEREUM]: process.env.REACT_APP_SQUARELINK_ID,
   [CHAIN_ID.XDAI]: process.env.REACT_APP_SQUARELINK_ID,
 }
  */

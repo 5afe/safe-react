@@ -9,7 +9,7 @@ import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/scr
 //  so we can allow the user to transfer the assets by using `transferFrom` instead of
 //  the standard `safeTransferFrom` method.
 export const CK_ADDRESS = {
-  [CHAIN_ID.MAINNET]: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+  [CHAIN_ID.ETHEREUM]: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
   [CHAIN_ID.RINKEBY]: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
 }
 
