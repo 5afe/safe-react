@@ -31,11 +31,13 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
+import { extractShortChainName, generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { getShortName } from 'src/config'
+import { IS_PRODUCTION } from 'src/utils/constants'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -68,7 +70,20 @@ const navigateToTx = (safeAddress: string, txId: string) => {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
     [TRANSACTION_ID_SLUG]: txId,
   })
-  history.push(txRoute)
+
+  // TODO: uncomment once we fix deep linking bugs
+  // history.push(txRoute)
+
+  if (!IS_PRODUCTION) {
+    console.info('Created transaction', txRoute)
+  }
+
+  history.push(
+    generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
+      shortName: getShortName(),
+      safeAddress,
+    }),
+  )
 }
 
 export const createTransaction =
