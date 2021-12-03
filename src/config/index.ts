@@ -116,11 +116,16 @@ export const getExplorerUrl = (): string => {
   return new URL(address).origin
 }
 
+// Template syntax is {{this}}
+const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g
+
 export const getHashedExplorerUrl = (hash: string): string => {
   const { address, txHash } = getExplorerUriTemplate()
   const isTx = hash.length > 42
 
-  return isTx ? txHash.replace('{{hash}}', hash) : address.replace('{{address}}', hash)
+  const uri = isTx ? txHash : address
+
+  return uri.replace(TEMPLATE_REGEX, hash)
 }
 
 // Matches return type of ExplorerInfo from SRC
@@ -145,8 +150,8 @@ const getExplorerApiKey = (apiUrl: string): string | undefined => {
 
 const fetchContractAbi = async (contractAddress: string) => {
   // Remove search params
-  const [apiUrl] = getExplorerUriTemplate().api.split('?')
-  const apiKey = getExplorerApiKey(apiUrl)
+  const apiUri = getExplorerUriTemplate().api
+  const apiKey = getExplorerApiKey(apiUri)
 
   const params: Record<string, string> = {
     module: 'contract',
@@ -155,7 +160,9 @@ const fetchContractAbi = async (contractAddress: string) => {
     ...(apiKey && { apiKey }),
   }
 
-  const response = await fetch(`${apiUrl}?${new URLSearchParams(params)}`)
+  const finalUrl = apiUri.replace(TEMPLATE_REGEX, (_: string, key: string) => params[key])
+
+  const response = await fetch(finalUrl)
 
   if (!response.ok) {
     return { status: 0, result: [] }
