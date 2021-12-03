@@ -18,6 +18,7 @@ import {
 } from 'src/utils/constants'
 import { ChainId, ChainName, SAFE_FEATURES, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
+import { replaceTemplateParams } from './utils'
 
 export const getInitialChainId = () => {
   const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
@@ -116,16 +117,13 @@ export const getExplorerUrl = (): string => {
   return new URL(address).origin
 }
 
-// Template syntax is {{this}}
-const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g
-
 export const getHashedExplorerUrl = (hash: string): string => {
   const { address, txHash } = getExplorerUriTemplate()
   const isTx = hash.length > 42
 
   const uri = isTx ? txHash : address
 
-  return uri.replace(TEMPLATE_REGEX, hash)
+  return replaceTemplateParams(uri, hash)
 }
 
 // Matches return type of ExplorerInfo from SRC
@@ -160,7 +158,7 @@ const fetchContractAbi = async (contractAddress: string) => {
     ...(apiKey && { apiKey }),
   }
 
-  const finalUrl = apiUri.replace(TEMPLATE_REGEX, (_: string, key: string) => params[key])
+  const finalUrl = replaceTemplateParams(apiUri, params)
 
   const response = await fetch(finalUrl)
 
