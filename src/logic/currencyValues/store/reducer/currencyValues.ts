@@ -1,6 +1,5 @@
 import { Action, handleActions } from 'redux-actions'
 import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { AppReduxState } from 'src/store'
 import { SET_AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/actions/setAvailableCurrencies'
 
 export const CURRENCY_REDUCER_ID = 'currencyValues'
@@ -20,7 +19,7 @@ export const initialCurrencyState = {
 export type SelectedCurrencyPayload = { selectedCurrency: string }
 export type AvailableCurrenciesPayload = { availableCurrencies: string[] }
 
-export default handleActions<AppReduxState['currencyValues'], CurrencyValuesState>(
+const currencyValuesReducer = handleActions<CurrencyValuesState, CurrencyValuesState>(
   {
     [SET_CURRENT_CURRENCY]: (state, action: Action<SelectedCurrencyPayload>) => {
       const { selectedCurrency } = action.payload
@@ -35,3 +34,5 @@ export default handleActions<AppReduxState['currencyValues'], CurrencyValuesStat
   },
   initialCurrencyState,
 )
+
+export default currencyValuesReducer

@@ -36,7 +36,7 @@ import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
-import { getNetworkId } from 'src/config'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -60,11 +60,12 @@ const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
+  const curChainId = useSelector(currentChainId)
   const {
     address: safeAddress,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
-    chainId = getNetworkId(),
+    chainId = curChainId,
   } = useSelector(currentSafe)
   const safeNamesMap = useSelector(safesWithNamesAsMap)
   const safeName = safeNamesMap[safeAddress]?.name
@@ -80,7 +81,11 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    dispatch(
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({ address: safeAddress, name: values.safeName, chainId: curChainId }),
+      ),
+    )
     // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
     dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 

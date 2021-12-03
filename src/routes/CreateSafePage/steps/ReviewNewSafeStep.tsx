@@ -19,7 +19,7 @@ import {
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
 } from '../fields/createSafeFields'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -55,7 +55,7 @@ function ReviewNewSafeStep(): ReactElement | null {
     numOwners: numberOfOwners,
     safeCreationSalt,
   })
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
 
   useEffect(() => {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
@@ -134,7 +134,7 @@ function ReviewNewSafeStep(): ReactElement | null {
       <DescriptionContainer align="center">
         <Paragraph color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
-          currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The
+          currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCurrency.name}. The
           exact amount will be determined by your wallet.
         </Paragraph>
       </DescriptionContainer>

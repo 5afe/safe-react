@@ -6,8 +6,8 @@ import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { ChainId } from 'src/config/chain.d'
 import { SafeInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { Transaction, isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 
 export const getNewTxNonce = async (lastTxNonce: number | undefined, safeInstance: GnosisSafe): Promise<string> => {
@@ -81,7 +81,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.collectiblesTag = remoteSafeInfo.collectiblesTag
   safeInfo.txQueuedTag = remoteSafeInfo.txQueuedTag
   safeInfo.txHistoryTag = remoteSafeInfo.txHistoryTag
-  safeInfo.chainId = remoteSafeInfo.chainId as ETHEREUM_NETWORK
+  safeInfo.chainId = remoteSafeInfo.chainId as ChainId
 
   return safeInfo
 }

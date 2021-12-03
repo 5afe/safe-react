@@ -13,7 +13,7 @@ jest.mock('src/logic/wallets/getWeb3', () => {
   return {
     __esModule: true, // Use it when dealing with esModules
     ...originalModule,
-    getNetworkIdFrom: jest.fn(),
+    getChainIdFrom: jest.fn(),
   }
 })
 
@@ -59,7 +59,7 @@ describe('generateSafeTxHash', () => {
     const userAddress3 = 'address3'
     const safeInstance = getMockedSafeInstance({ version: '1.3.0' })
     const safeVersion = await getCurrentSafeVersion(safeInstance)
-    getWeb3.getNetworkIdFrom.mockReturnValue(4)
+    getWeb3.getChainIdFrom.mockReturnValue(4)
     const txArgs = {
       baseGas: '100',
       data: '',

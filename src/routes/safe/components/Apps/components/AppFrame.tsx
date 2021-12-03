@@ -16,13 +16,7 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import {
-  getNetworkName,
-  getSafeAppsRpcServiceUrl,
-  getTxServiceUrl,
-  getShortChainNameById,
-  getNetworkInfo,
-} from 'src/config'
+import { getChainInfo, getChainName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -36,7 +30,6 @@ import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurre
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { currentChainId } from 'src/logic/config/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
 
@@ -94,7 +87,7 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
-  const networkId = useSelector(currentChainId)
+  const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -166,7 +159,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: getNetworkName().toLowerCase() as LowercaseNetworks,
+        network: getChainName().toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
@@ -189,8 +182,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: getNetworkName(),
-      chainId: parseInt(networkId, 10),
+      network: chainName,
+      chainId: parseInt(chainId, 10),
       owners,
       threshold,
     }))
@@ -243,18 +236,25 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     })
 
     communicator?.on(Methods.getChainInfo, async () => {
-      const { nativeCoin } = getNetworkInfo()
-      const chainId = parseInt(networkId, 10)
-      const network = getNetworkName()
-
       return {
-        chainName: network,
+        chainName,
         chainId,
-        shortName: getShortChainNameById(networkId),
-        nativeCurrency: nativeCoin,
+        shortName,
+        nativeCurrency,
       }
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, networkId])
+  }, [
+    communicator,
+    openConfirmationModal,
+    safeAddress,
+    owners,
+    threshold,
+    openSignMessageModal,
+    nativeCurrency,
+    chainId,
+    chainName,
+    shortName,
+  ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler

@@ -1,7 +1,6 @@
 import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import axios, { AxiosResponse } from 'axios'
-
-import { getTokensServiceBaseUrl } from 'src/config'
+import { getTokensServiceUrl } from 'src/config'
 
 export type TokenResult = {
   address: string
@@ -13,9 +12,7 @@ export type TokenResult = {
 }
 
 export const fetchErc20AndErc721AssetsList = (): Promise<AxiosResponse<{ results: TokenResult[] }>> => {
-  const url = getTokensServiceBaseUrl()
-
-  return axios.get<{ results: TokenResult[] }, AxiosResponse<{ results: TokenResult[] }>>(`${url}/`, {
+  return axios.get<{ results: TokenResult[] }, AxiosResponse<{ results: TokenResult[] }>>(getTokensServiceUrl(), {
     params: {
       limit: 3000,
     },

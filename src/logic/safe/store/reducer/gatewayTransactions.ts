@@ -23,12 +23,13 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
-import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
+
+type GatewayTransactionsState = Record<string, Record<string, StoreStructure>>
 
 type BasePayload = { chainId: string; safeAddress: string; isTail?: boolean }
 export type HistoryPayload = BasePayload & { values: HistoryGatewayResponse['results'] }
@@ -49,7 +50,7 @@ export type TransactionStatusPayload = {
 
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload | TransactionStatusPayload
 
-export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
+export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState, Payload>(
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { chainId, safeAddress, values, isTail = false } = action.payload
@@ -367,3 +368,5 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
   },
   {},
 )
+
+export default gatewayTransactionsReducer

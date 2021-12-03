@@ -12,10 +12,10 @@ import {
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
-import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { NetworkSettings } from 'src/config/networks/network.d'
+import { getChainInfo, getExplorerInfo } from 'src/config'
 import { border, fontColor } from 'src/theme/variables'
+import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { extractShortChainName } from 'src/routes/routes'
 
@@ -68,7 +68,7 @@ const StyledButton = styled(Button)`
 `
 
 type StyledTextLabelProps = {
-  networkInfo: NetworkSettings
+  chainInfo: ChainInfo
 }
 
 const StyledTextLabel = styled(Text)`
@@ -76,8 +76,8 @@ const StyledTextLabel = styled(Text)`
   padding: 4px 8px;
   width: 100%;
   text-align: center;
-  color: ${(props: StyledTextLabelProps) => props.networkInfo?.textColor ?? fontColor};
-  background-color: ${(props: StyledTextLabelProps) => props.networkInfo?.backgroundColor ?? border};
+  color: ${(props: StyledTextLabelProps) => props.chainInfo?.theme?.textColor ?? fontColor};
+  background-color: ${(props: StyledTextLabelProps) => props.chainInfo?.theme?.backgroundColor ?? border};
 `
 
 const StyledTextSafeName = styled(Text)`
@@ -142,14 +142,13 @@ const SafeHeader = ({
       </Container>
     )
   }
-  const explorerUrl = getExplorerInfo(address)
-  const networkInfo = getNetworkInfo()
+  const chainInfo = getChainInfo()
 
   return (
     <>
       {/* Network */}
-      <StyledTextLabel size="sm" networkInfo={networkInfo}>
-        {networkInfo.label}
+      <StyledTextLabel size="sm" chainInfo={chainInfo}>
+        {chainInfo.chainName}
       </StyledTextLabel>
 
       <Container>
@@ -172,10 +171,10 @@ const SafeHeader = ({
             <Icon size="sm" type="qrCode" tooltip="Show QR" />
           </ButtonHelper>
           <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
-          <ExplorerButton explorerUrl={explorerUrl} />
+          <ExplorerButton explorerUrl={getExplorerInfo(address)} />
         </IconContainer>
 
-        {granted ? null : (
+        {!granted && (
           <StyledLabel>
             <Text size="sm" color="white">
               READ ONLY

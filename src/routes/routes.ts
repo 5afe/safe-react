@@ -1,9 +1,9 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
-import { getCurrentShortChainName } from 'src/config'
 
-import networks from 'src/config/networks'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getShortName } from 'src/config'
+import { getChains } from 'src/config/cache/chains'
+import { ChainId, ShortName } from 'src/config/chain.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { isValidPrefix, parsePrefixedAddress } from 'src/utils/prefixedAddress'
@@ -66,17 +66,17 @@ export const SAFE_ROUTES = {
   SETTINGS_ADVANCED: `${ADDRESSED_ROUTE}/settings/advanced`,
 }
 
-// [{ id: '4', route: '/rinkeby'}]
-// Mapping networks directly instead of getNetworks() due to hoisting issues
-const { local: _, ...usefulNetworks } = networks
-export const NETWORK_ROOT_ROUTES: Array<{ id: ETHEREUM_NETWORK; route: string }> = Object.values(usefulNetworks).map(
-  ({ network: { id, label } }) => ({
-    id,
-    route: `/${label.toLowerCase()}`,
-  }),
-)
+export const getNetworkRootRoutes = (): Array<{ chainId: ChainId; route: string }> =>
+  getChains().map(({ chainId, chainName }) => ({
+    chainId,
+    route: `/${chainName.replaceAll(' ', '-').toLowerCase()}`,
+  }))
 
-export type SafeRouteParams = { shortName: string; safeAddress: string }
+export type SafeRouteParams = { shortName: ShortName; safeAddress: string }
+
+export const isValidShortChainName = (shortName: ShortName): boolean => {
+  return getChains().some((chain) => chain.shortName === shortName)
+}
 
 // Due to hoisting issues, these functions should remain here
 export const extractPrefixedSafeAddress = (
@@ -91,7 +91,7 @@ export const extractPrefixedSafeAddress = (
   const { prefix, address } = parsePrefixedAddress(prefixedSafeAddress || '')
 
   return {
-    shortName: isValidPrefix(prefix) ? prefix : getCurrentShortChainName(),
+    shortName: isValidPrefix(prefix) ? prefix : getShortName(),
     safeAddress: checksumAddress(address),
   }
 }
@@ -104,7 +104,7 @@ export const hasPrefixedSafeAddressInUrl = (): boolean => {
   return !!match?.params?.[SAFE_ADDRESS_SLUG]
 }
 
-export const extractShortChainName = (): string => extractPrefixedSafeAddress().shortName
+export const extractShortChainName = (): ShortName => extractPrefixedSafeAddress().shortName
 export const extractSafeAddress = (): string => extractPrefixedSafeAddress().safeAddress
 
 export const getPrefixedSafeAddressSlug = (

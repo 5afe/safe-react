@@ -2,6 +2,7 @@ import { List } from 'immutable'
 import { createSelector } from 'reselect'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
@@ -61,15 +62,15 @@ const baseSafeWithName = (address = '') => ({ ...baseSafe(address).toJS(), name:
 export type SafeRecordWithNames = Overwrite<SafeRecordProps, { owners: AddressBookEntry[] }> & { name: string }
 
 export const safesWithNamesAsList = createSelector(
-  [safesAsList, currentNetworkAddressBookAsMap],
-  (safesList, addressBookMap): SafeRecordWithNames[] => {
+  [safesAsList, currentNetworkAddressBookAsMap, currentChainId],
+  (safesList, addressBookMap, chainId): SafeRecordWithNames[] => {
     return safesList
       .map((safeRecord) => {
         const safe = safeRecord.toObject()
         const name = addressBookMap?.[safe.address]?.name ?? ''
 
         const owners = safe.owners.map((ownerAddress) => {
-          return addressBookMap?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '' })
+          return addressBookMap?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '', chainId })
         })
 
         return { ...safe, name, owners }

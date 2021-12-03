@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { toWei } from 'web3-utils'
+
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getNewTxNonce } from 'src/logic/safe/store/actions/utils'
@@ -7,7 +9,6 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { extractSafeAddress } from 'src/routes/routes'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
@@ -39,7 +40,6 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const web3 = getWeb3ReadOnly()
   const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
@@ -79,8 +79,8 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       setEthGasPrice('0')
       return
     }
-    setEthGasPriceInGWei(web3.utils.toWei(ethGasPrice, 'Gwei'))
-  }, [ethGasPrice, isCancelTransaction, web3])
+    setEthGasPriceInGWei(toWei(ethGasPrice, 'Gwei'))
+  }, [ethGasPrice, isCancelTransaction])
 
   // Calc safe nonce
   useEffect(() => {

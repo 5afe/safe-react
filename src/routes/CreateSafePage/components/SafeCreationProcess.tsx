@@ -33,8 +33,9 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
 import { getGasParam } from 'src/logic/safe/transactions/gas'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 type ModalDataType = {
   safeAddress: string
@@ -55,6 +56,7 @@ function SafeCreationProcess(): ReactElement {
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
+  const chainId = useSelector(currentChainId)
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
@@ -150,9 +152,10 @@ function SafeCreationProcess(): ReactElement {
       makeAddressBookEntry({
         address: createSafeFormValues[addressFieldName],
         name: createSafeFormValues[nameFieldName],
+        chainId,
       }),
     )
-    const safeAddressBookEntry = makeAddressBookEntry({ address: newSafeAddress, name: safeName })
+    const safeAddressBookEntry = makeAddressBookEntry({ address: newSafeAddress, name: safeName, chainId })
     await dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
 
     trackEvent(USER_EVENTS.CREATE_SAFE)
@@ -203,7 +206,7 @@ function SafeCreationProcess(): ReactElement {
     const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-        shortName: getCurrentShortChainName(),
+        shortName: getShortName(),
         safeAddress,
       }),
       state: {

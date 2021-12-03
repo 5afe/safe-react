@@ -15,7 +15,7 @@ import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
 import { generateSafeRoute, extractSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
 import { PinnedAppsTutorial } from './PinnedAppsTutorial'
 
 export const PINNED_APPS_LIST_TEST_ID = 'safe_apps__pinned-apps-container'
@@ -68,7 +68,7 @@ const CenterIconText = styled(IconText)`
 const AppsList = (): React.ReactElement => {
   const safeAddress = extractSafeAddress()
   const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-    shortName: getCurrentShortChainName(),
+    shortName: getShortName(),
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')

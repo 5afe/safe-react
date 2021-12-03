@@ -4,9 +4,10 @@ import uniqWith from 'lodash/uniqWith'
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
 import { getEntryIndex, hasSameAddressAndChainId, isValidAddressBookName } from 'src/logic/addressBook/utils'
-import { AppReduxState } from 'src/store'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
+
+export const initialAddressBookState: AddressBookState = []
 
 type Payloads = AddressBookEntry | AddressBookState
 
@@ -32,7 +33,8 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
   // filter out potential duplicates in the store
   return uniqWith(newState, hasSameAddressAndChainId)
 }
-export default handleActions<AppReduxState['addressBook'], Payloads>(
+
+const addressBookReducer = handleActions<AddressBookState, Payloads>(
   {
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       if (!action.payload.address) return state
@@ -68,5 +70,7 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
     [ADDRESS_BOOK_ACTIONS.MIGRATE]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.SYNC]: (_, action: Action<AddressBookState>): AddressBookState => action.payload,
   },
-  [],
+  initialAddressBookState,
 )
+
+export default addressBookReducer

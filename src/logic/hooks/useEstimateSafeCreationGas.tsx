@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getNetworkInfo } from 'src/config'
 
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from '../wallets/store/selectors'
+import { getNativeCurrency } from 'src/config'
 
 type EstimateSafeCreationGasProps = {
   addresses: string[]
@@ -32,8 +32,8 @@ const estimateGas = async (
     calculateGasPrice(),
   ])
   const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-  const { nativeCoin } = getNetworkInfo()
-  const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+  const nativeCurrency = getNativeCurrency()
+  const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
   const gasCostFormatted = formatAmount(gasCost)
 
   return {
