@@ -102,7 +102,7 @@ export const ReviewReplaceOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, connectedWalletAddress, owner.address, newOwner.address])
+  }, [safeAddress, safeVersion, connectedWalletAddress, owner.address, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted

@@ -93,7 +93,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     return () => {
       isCurrent = false
     }
-  }, [connectedWalletAddress, safeAddress, values.ownerAddress, values.threshold])
+  }, [connectedWalletAddress, safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted

@@ -105,7 +105,7 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, connectedWalletAddress, owner.address, threshold])
+  }, [safeAddress, safeVersion, connectedWalletAddress, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
