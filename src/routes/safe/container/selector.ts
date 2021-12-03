@@ -68,9 +68,9 @@ export const extendedSafeTokensSelector = createSelector(
 export const safeKnownCoins = createSelector(
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens, nativeCoinAsToken): List<Token> => {
-    if (nativeCoinAsToken) {
-      return safeTokens.set(nativeCoinAsToken.address, nativeCoinAsToken).toList()
+  (safeTokens, nativeCurrencyAsToken): List<Token> => {
+    if (nativeCurrencyAsToken) {
+      return safeTokens.set(nativeCurrencyAsToken.address, nativeCurrencyAsToken).toList()
     }
 
     return safeTokens.toList()

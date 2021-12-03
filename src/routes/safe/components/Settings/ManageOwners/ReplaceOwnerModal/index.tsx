@@ -18,6 +18,7 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
+import { _getChainId } from 'src/config'
 
 export type OwnerValues = {
   address: string
@@ -53,7 +54,7 @@ export const sendReplaceOwner = async (
 
   if (txHash) {
     // update the AB
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
   }
 }
 
@@ -94,7 +95,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
     onClose()
     try {
       await sendReplaceOwner(newOwner, safeAddress, safeVersion, owner.address, dispatch, txParameters)
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
     } catch (error) {
       console.error('Error while removing an owner', error)
     }

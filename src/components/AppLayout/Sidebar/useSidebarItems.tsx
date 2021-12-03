@@ -1,11 +1,11 @@
 import { useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getCurrentShortChainName, isFeatureEnabled } from 'src/config'
+import { getShortName, isFeatureEnabled } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
-import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
@@ -49,7 +49,7 @@ const useSidebarItems = (): ListItemType[] => {
     }
 
     const currentSafeRoutes = generatePrefixedAddressRoutes({
-      shortName: getCurrentShortChainName(),
+      shortName: getShortName(),
       safeAddress,
     })
 

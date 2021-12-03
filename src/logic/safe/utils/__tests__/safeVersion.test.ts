@@ -1,4 +1,5 @@
-import { FEATURES } from 'src/config/networks/network.d'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SAFE_FEATURES } from 'src/config/chain.d'
 import { checkIfSafeNeedsUpdate, hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 describe('Check safe version', () => {
@@ -23,11 +24,11 @@ describe('Check safe version', () => {
 
   describe('hasFeature', () => {
     it('returns false for old Safes and SAFE_TX_GAS_OPTIONAL', () => {
-      expect(hasFeature('1.1.1', FEATURES.SAFE_TX_GAS_OPTIONAL)).toBe(false)
+      expect(hasFeature('1.1.1', SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL)).toBe(false)
     })
 
     it('returns true for new Safes and SAFE_TX_GAS_OPTIONAL', () => {
-      expect(hasFeature('1.3.0', FEATURES.SAFE_TX_GAS_OPTIONAL)).toBe(true)
+      expect(hasFeature('1.3.0', SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL)).toBe(true)
     })
 
     it('returns true for any Safes and SAFE_APPS', () => {

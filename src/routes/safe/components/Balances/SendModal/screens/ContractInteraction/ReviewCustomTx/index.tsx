@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
@@ -48,7 +48,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
 
   const {
@@ -63,7 +63,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   } = useEstimateTransactionGas({
     txRecipient: tx.contractAddress as string,
     txData: tx.data ? tx.data.trim() : '',
-    txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
+    txAmount: tx.value ? toTokenUnit(tx.value, nativeCurrency.decimals) : '0',
   })
 
   const doExecute = isExecution && executionApproved
@@ -72,7 +72,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const submitTx = (txParameters: TxParameters) => {
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
-    const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
+    const txValue = tx.value ? toTokenUnit(tx.value, nativeCurrency.decimals) : '0'
 
     if (safeAddress) {
       dispatch(
@@ -135,7 +135,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
               <Paragraph className={classes.value} noMargin size="md">
                 {tx.value || 0}
-                {' ' + nativeCoin.name}
+                {' ' + nativeCurrency.name}
               </Paragraph>
             </Row>
             <Row margin="xs">

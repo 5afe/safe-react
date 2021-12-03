@@ -113,7 +113,7 @@ describe('<AddressInput>', () => {
       const onSubmit = jest.fn()
 
       const address = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
-      const invalidPrefixAddress = `vt:${address}`
+      const invalidPrefixAddress = `eth:${address}`
 
       renderAddressInputWithinForm(onSubmit, customState)
 
@@ -148,7 +148,7 @@ describe('<AddressInput>', () => {
 
     it('Validates different Addresses with different prefix', () => {
       const validPrefixedAddress = 'rin:0x680cde08860141F9D223cE4E620B10Cd6741037E'
-      const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+      const inValidPrefixedAddress = 'eth:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
 
       renderAddressInputWithinForm()
 
@@ -229,7 +229,7 @@ describe('<AddressInput>', () => {
           showShortName: false,
         },
       }
-      const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+      const inValidPrefixedAddress = 'eth:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
       const onSubmit = jest.fn()
 
       renderAddressInputWithinForm(onSubmit, customState)
@@ -245,7 +245,7 @@ describe('<AddressInput>', () => {
     })
 
     xit('Resolve ENS names even if a network prefix error is present', async () => {
-      const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+      const inValidPrefixedAddress = 'eth:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
       const addressFromENS = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
       const ENSNameAddress = 'test.eth'
       // mock getAddress fn to return the Address
@@ -314,7 +314,7 @@ describe('<AddressInput>', () => {
       })
 
       it('Checksum address only when a valid network prefix is present', () => {
-        const rawAddressWithInvalidPrefix = 'vt:0X9913B9180C20C6B0F21B6480C84422F6EBC4B808'
+        const rawAddressWithInvalidPrefix = 'eth:0X9913B9180C20C6B0F21B6480C84422F6EBC4B808'
         const rawAddressWithValidPrefix = 'rin:0X9913B9180C20C6B0F21B6480C84422F6EBC4B808'
         const checksumAddressWithPrefix = 'rin:0x9913B9180C20C6b0F21B6480c84422F6ebc4B808'
 

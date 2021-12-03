@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Bold from 'src/components/layout/Bold'
@@ -23,7 +23,7 @@ const StyledBlock = styled(Block)`
 
 const SafeInfo = (): React.ReactElement => {
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
 
   return (
     <>
@@ -37,7 +37,7 @@ const SafeInfo = (): React.ReactElement => {
       {ethBalance && (
         <StyledBlock>
           <Paragraph noMargin>
-            Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ${nativeCoin.symbol}`}</Bold>
+            Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ${nativeCurrency.symbol}`}</Bold>
           </Paragraph>
         </StyledBlock>
       )}

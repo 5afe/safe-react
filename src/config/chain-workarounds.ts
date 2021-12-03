@@ -1,4 +1,4 @@
-import { ETHEREUM_NETWORK } from './networks/network.d'
+import { CHAIN_ID } from './chain.d'
 
 // Networks where we use maxFeePerGas
-export const EIP1559Chains = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.XDAI]
+export const EIP1559Chains = [CHAIN_ID.ETHEREUM, CHAIN_ID.RINKEBY, CHAIN_ID.XDAI]

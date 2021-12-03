@@ -1,10 +1,10 @@
 import ChainIndicator from '.'
 import { render } from 'src/utils/test-utils'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ChainId } from 'src/config/chain.d'
 
 describe('<ChainIndicator>', () => {
   it('renders Rinkeby indicator', () => {
-    const { container } = render(<ChainIndicator chainId={'4' as ETHEREUM_NETWORK} />)
+    const { container } = render(<ChainIndicator chainId={'4' as ChainId} />)
     const icon = container.querySelector('svg')
     const label = (container.textContent || '').trim()
 
@@ -13,7 +13,7 @@ describe('<ChainIndicator>', () => {
   })
 
   it('renders Polygon indicator', () => {
-    const { container } = render(<ChainIndicator chainId={'137' as ETHEREUM_NETWORK} />)
+    const { container } = render(<ChainIndicator chainId={'137' as ChainId} />)
     const icon = container.querySelector('svg')
     const label = (container.textContent || '').trim()
 

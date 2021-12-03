@@ -28,6 +28,7 @@ import {
 } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -36,6 +37,7 @@ function LoadSafeAddressStep(): ReactElement {
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
+  const chainId = useSelector(currentChainId)
 
   const loadSafeForm = useForm()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
@@ -63,7 +65,7 @@ function LoadSafeAddressStep(): ReactElement {
         const { owners, threshold } = await getSafeInfo(safeAddress)
         setIsSafeInfoLoading(false)
         const ownersWithName = owners.map(({ value: address }) =>
-          makeAddressBookEntry(addressBook[address] || { address, name: '' }),
+          makeAddressBookEntry(addressBook[address] || { address, name: '', chainId }),
         )
         setOwnersWithName(ownersWithName)
         setThreshold(threshold)
@@ -77,7 +79,7 @@ function LoadSafeAddressStep(): ReactElement {
     }
 
     checkSafeAddress()
-  }, [safeAddress, addressBook])
+  }, [safeAddress, addressBook, chainId])
 
   useEffect(() => {
     if (threshold) {

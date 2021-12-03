@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react'
-
 import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
+
 import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
 import { ParseResult } from 'papaparse'
@@ -9,7 +9,7 @@ import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ChainId } from 'src/config/chain.d'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -72,7 +72,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
       return {
         address: checksumAddress(data[0].trim()),
         name: data[1].trim(),
-        chainId: data[2].trim() as ETHEREUM_NETWORK,
+        chainId: data[2].trim() as ChainId,
       }
     })
     setEntryList(formattedList)

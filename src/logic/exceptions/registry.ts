@@ -44,6 +44,7 @@ enum ErrorCodes {
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',
   _903 = '903: Error loading Safe App manifest',
+  _904 = '904: Error loading chains',
 }
 
 export default ErrorCodes

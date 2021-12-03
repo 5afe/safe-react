@@ -8,11 +8,13 @@ export const PROVIDER_REDUCER_ID = 'providers'
 
 export type ProviderState = ProviderRecord
 
-export default handleActions(
+const providerReducer = handleActions(
   {
-    [ADD_PROVIDER]: (state: ProviderState, { payload }: { payload: ProviderProps }): ProviderState =>
+    [ADD_PROVIDER]: (_state: ProviderState, { payload }: { payload: ProviderProps }): ProviderState =>
       makeProvider(payload),
     [REMOVE_PROVIDER]: (): ProviderState => makeProvider(),
   },
   makeProvider(),
 )
+
+export default providerReducer

@@ -94,7 +94,7 @@ describe('<AddressBookInput>', () => {
     describe('Network prefix validation', () => {
       it('Validates an address with a mismatching prefix', () => {
         const address = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
-        const invalidPrefix = `vt:${address}`
+        const invalidPrefix = `eth:${address}`
 
         render(
           <AddressBookInput fieldMutator={jest.fn()} setIsValidAddress={jest.fn()} setSelectedEntry={jest.fn()} />,
@@ -146,7 +146,7 @@ describe('<AddressBookInput>', () => {
             showShortName: false,
           },
         }
-        const inValidPrefixedAddress = 'vt:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
+        const inValidPrefixedAddress = 'eth:0x2D42232C03C12f1dC1448f89dcE33d2d5A47Aa33'
 
         render(
           <AddressBookInput fieldMutator={jest.fn()} setIsValidAddress={jest.fn()} setSelectedEntry={jest.fn()} />,

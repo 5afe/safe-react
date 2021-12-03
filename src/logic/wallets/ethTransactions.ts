@@ -3,9 +3,9 @@ import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
 import { getSDKWeb3ReadOnly, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { getGasPrice, getGasPriceOracles } from 'src/config'
-import { GasPriceOracle } from 'src/config/networks/network'
+import { getGasPriceOracles } from 'src/config'
 import { CodedException, Errors } from '../exceptions/CodedException'
+import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const EMPTY_DATA = '0x'
 /**
@@ -15,28 +15,21 @@ export const EMPTY_DATA = '0x'
 const FIXED_GAS_FEE = '2.5'
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
-  const { url, gasParameter, gweiFactor } = gasPriceOracle
-  const { data: response } = await axios.get(url)
+  const { uri, gasParameter, gweiFactor } = gasPriceOracle
+  const { data: response } = await axios.get(uri)
   const data = response.data || response.result || response // Sometimes the data comes with a data parameter
   return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
-  const gasPrice = getGasPrice()
   const gasPriceOracles = getGasPriceOracles()
 
-  if (gasPrice) {
-    // Fixed gas price in configuration. xDai uses this approach
-    return new BigNumber(gasPrice).toString()
-  } else if (gasPriceOracles) {
-    for (let index = 0; index < gasPriceOracles.length; index++) {
-      const gasPriceOracle = gasPriceOracles[index]
-      try {
-        const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
-        return fetchedGasPrice
-      } catch (err) {
-        // Keep iterating price oracles
-      }
+  for (const gasPriceOracle of gasPriceOracles) {
+    try {
+      const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
+      return fetchedGasPrice
+    } catch (err) {
+      // Keep iterating price oracles
     }
   }
 

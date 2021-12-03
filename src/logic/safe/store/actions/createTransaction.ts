@@ -31,14 +31,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import {
-  getPrefixedSafeAddressSlug,
-  history,
-  SAFE_ADDRESS_SLUG,
-  SAFE_ROUTES,
-  TRANSACTION_ID_SLUG,
-} from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
+import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
@@ -69,7 +63,7 @@ export const isKeystoneError = (err: Error): boolean => {
 }
 
 const navigateToTx = (safeAddress: string, txId: string) => {
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: getCurrentShortChainName(), safeAddress })
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
     [TRANSACTION_ID_SLUG]: txId,
@@ -131,7 +125,7 @@ export const createTransaction =
     const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
     let txHash
-    const txArgs: TxArgs = {
+    const txArgs: TxArgs & { sender: string } = {
       safeInstance,
       to,
       valueInWei,
