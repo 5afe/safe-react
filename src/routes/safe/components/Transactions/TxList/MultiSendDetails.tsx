@@ -16,6 +16,8 @@ type MultiSendTxGroupProps = {
   txDetails: {
     title: string
     address: string
+    name?: string | undefined
+    avatarUrl?: string | undefined
     dataDecoded: DataDecoded | null
   }
 }
@@ -28,7 +30,12 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
         {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
-          <TxInfoDetails title={txDetails.title} address={txDetails.address} />
+          <TxInfoDetails
+            title={txDetails.title}
+            address={txDetails.address}
+            name={txDetails.name}
+            avatarUrl={txDetails.avatarUrl}
+          />
         )}
         {children}
       </ColumnDisplayAccordionDetails>
@@ -66,11 +73,15 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
           details = data && <HexEncodedData title="Data (hex encoded)" hexData={data} />
         }
 
+        const addressInfo = txData.addressInfoIndex?.[to]
+        const name = addressInfo?.name || undefined
+        const avatarUrl = addressInfo?.logoUri || undefined
+
         return (
           <MultiSendTxGroup
             key={`${data ?? to}-${index}`}
             actionTitle={actionTitle}
-            txDetails={{ title, address: to, dataDecoded }}
+            txDetails={{ title, address: to, dataDecoded, name, avatarUrl }}
           >
             {details}
           </MultiSendTxGroup>

@@ -387,6 +387,10 @@ export const TxDetailsContainer = styled.div`
     }
   }
 
+  .tx-ms-contract {
+    padding-top: 40px;
+  }
+
   .tx-details-actions {
     align-items: center;
     display: flex;

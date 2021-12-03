@@ -1,5 +1,5 @@
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { _getChainId, getSafeServiceBaseUrl } from 'src/config'
+import { _getChainId } from 'src/config'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { proposeTransaction, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
@@ -41,11 +41,6 @@ const calculateBodyFrom = async (
     origin,
     signature,
   }
-}
-
-export const buildTxServiceUrl = (safeAddress: string): string => {
-  const address = checksumAddress(safeAddress)
-  return `${getSafeServiceBaseUrl(address)}/multisig-transactions/?has_confirmations=True`
 }
 
 interface SaveTxToHistoryArgs {

@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
-import useLastQueuedTxNonce from '../../TxList/hooks/useLastQueuedTxNonce'
 import useSafeTxGas from '../useSafeTxGas'
 
 const TxParameterWrapper = styled.div`
@@ -64,7 +64,7 @@ export const TxParametersDetail = ({
 
   const { safeNonce = '' } = txParameters
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const lastQueuedTxNonce = useLastQueuedTxNonce()
+  const lastQueuedTxNonce = useSelector(getLastTxNonce)
   const showSafeTxGas = useSafeTxGas()
 
   useEffect(() => {

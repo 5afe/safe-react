@@ -4,16 +4,22 @@ import { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
-import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  ExpandedTxDetails,
+  isCustomTxInfo,
+  isMultiSendTxInfo,
+  isMultiSigExecutionDetails,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
 import { IS_PRODUCTION } from 'src/utils/constants'
+import TxInfoMultiSend from './TxInfoMultiSend'
 
 type Props = { txDetails: ExpandedTxDetails }
 
 export const TxSummary = ({ txDetails }: Props): ReactElement => {
-  const { txHash, detailedExecutionInfo, executedAt, txData } = txDetails
+  const { txHash, detailedExecutionInfo, executedAt, txData, txInfo } = txDetails
   const explorerUrl = txHash ? getExplorerInfo(txHash) : undefined
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
@@ -76,9 +82,20 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       </div>
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          <Text size="xl" strong as="span">
-            Delegate Call
-          </Text>
+          {isCustomTxInfo(txInfo) && !!txInfo?.to?.name ? (
+            <Text size="xl" strong as="span">
+              Delegate Call
+            </Text>
+          ) : (
+            <Text size="xl" strong as="span" color="error">
+              ⚠️ Unexpected Delegate Call
+            </Text>
+          )}
+        </div>
+      )}
+      {isMultiSendTxInfo(txInfo) && (
+        <div className="tx-ms-contract">
+          <TxInfoMultiSend txInfo={txInfo} />
         </div>
       )}
     </>
