@@ -31,15 +31,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import {
-  getPrefixedSafeAddressSlug,
-  history,
-  SAFE_ADDRESS_SLUG,
-  SAFE_ROUTES,
-  TRANSACTION_ID_SLUG,
-} from 'src/routes/routes'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getCurrentShortChainName } from 'src/config'
-import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
 
@@ -68,13 +61,13 @@ export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
-const navigateToTx = (safeAddress: string, txId: string) => {
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: getCurrentShortChainName(), safeAddress })
-  const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
-    [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txId,
-  })
-  history.push(txRoute)
+const navigateToTx = (safeAddress: string) => {
+  history.push(
+    generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
+      shortName: getCurrentShortChainName(),
+      safeAddress,
+    }),
+  )
 }
 
 export const createTransaction =
@@ -155,11 +148,11 @@ export const createTransaction =
 
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-          const txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+          await saveTxToHistory({ ...txArgs, signature, origin })
 
           dispatch(fetchTransactions(chainId, safeAddress))
           if (navigateToTransactionsTab) {
-            navigateToTx(safeAddress, txDetails.txId)
+            navigateToTx(safeAddress)
           }
           onUserConfirm?.(safeTxHash)
           return
@@ -184,9 +177,9 @@ export const createTransaction =
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
           try {
-            const txDetails = await saveTxToHistory({ ...txArgs, origin })
+            await saveTxToHistory({ ...txArgs, origin })
             if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, txDetails.txId)
+              navigateToTx(safeAddress)
             }
           } catch (err) {
             logError(Errors._803, err.message)

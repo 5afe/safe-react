@@ -12,8 +12,6 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
-import TxShareButton from './TxShareButton'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import TxInfoMultiSend from './TxInfoMultiSend'
 
 type Props = { txDetails: ExpandedTxDetails }
@@ -27,11 +25,6 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {!IS_PRODUCTION && (
-        <div className="tx-share">
-          <TxShareButton id={txDetails.txId} />
-        </div>
-      )}
       <div className="tx-hash">
         <Text size="xl" strong as="span">
           Transaction hash:{' '}
