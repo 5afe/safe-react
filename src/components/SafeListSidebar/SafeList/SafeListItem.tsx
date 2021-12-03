@@ -21,6 +21,7 @@ import {
   SafeRouteParams,
 } from 'src/routes/routes'
 import { setNetwork } from 'src/logic/config/utils'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -57,7 +58,8 @@ const SafeListItem = ({
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
   const currentSafeAddress = extractSafeAddress()
-  const isCurrentSafe = sameAddress(currentSafeAddress, address)
+  const currChainId = useSelector(currentChainId)
+  const isCurrentSafe = currChainId === networkId && sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
   const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
   const shortName = getShortChainNameById(networkId)

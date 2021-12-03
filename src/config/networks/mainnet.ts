@@ -47,7 +47,7 @@ const mainnet: NetworkConfig = {
     shortName: SHORT_NAME.MAINNET,
     backgroundColor: '#E8E7E6',
     textColor: '#001428',
-    label: 'Mainnet',
+    label: 'Ethereum',
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
