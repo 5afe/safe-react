@@ -1,39 +1,24 @@
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
-import axios from 'axios'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { Transaction, isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 
-export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
-  try {
-    const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url, { params: { limit: 1 } })
-
-    return response.data.results[0] || null
-  } catch (e) {
-    logError(Errors._615, e.message)
-    return null
-  }
-}
-
-export const getNewTxNonce = async (lastTx: TxServiceModel | null, safeInstance: GnosisSafe): Promise<string> => {
+export const getNewTxNonce = async (lastTxNonce: number | undefined, safeInstance: GnosisSafe): Promise<string> => {
   // use current's safe nonce as fallback
-  return lastTx ? `${lastTx.nonce + 1}` : (await safeInstance.methods.nonce().call()).toString()
+  return lastTxNonce ? `${lastTxNonce + 1}` : (await safeInstance.methods.nonce().call()).toString()
 }
 
 export const shouldExecuteTransaction = async (
   safeInstance: GnosisSafe,
   nonce: string,
-  lastTx: TxServiceModel | null,
+  lastTx: Transaction | null,
 ): Promise<boolean> => {
   const safeNonce = (await safeInstance.methods.nonce().call()).toString()
   const thresholdAsString = await safeInstance.methods.getThreshold().call()
@@ -58,8 +43,8 @@ export const shouldExecuteTransaction = async (
   // it's delayed using the approval mechanisms.
   // Once the previous tx is executed, the current tx will be available to be executed
   // by the user using the exec button.
-  if (lastTx) {
-    return lastTx.isExecuted && lastTx.nonce + 1 === Number(nonce)
+  if (lastTx && isMultisigExecutionInfo(lastTx.executionInfo)) {
+    return lastTx.txStatus === TransactionStatus.SUCCESS && lastTx.executionInfo.nonce + 1 === Number(nonce)
   }
 
   return false
