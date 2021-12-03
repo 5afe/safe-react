@@ -114,7 +114,6 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
         <Block className={classes.qrContainer}>
           <QRCode size={135} value={qrCodeString} />
         </Block>
-        {/* TODO: change to toggle */}
         <FormControlLabel
           control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
           label={
