@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import { MultiSend } from '@gnosis.pm/safe-react-gateway-sdk'
-
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
 import { InfoDetails } from './InfoDetails'
