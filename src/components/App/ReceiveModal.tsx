@@ -14,12 +14,12 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
 import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/variables'
-import { getCurrentShortChainName, getExplorerInfo, getNetworkInfo } from 'src/config'
-import { NetworkSettings } from 'src/config/networks/network'
+import { getChainInfo, getExplorerInfo } from 'src/config'
+import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
 
-const useStyles = (networkInfo: NetworkSettings) =>
+const useStyles = (chainInfo: ChainInfo) =>
   makeStyles(
     createStyles({
       heading: {
@@ -40,8 +40,8 @@ const useStyles = (networkInfo: NetworkSettings) =>
         border: `1px solid ${secondaryText}`,
       },
       networkInfo: {
-        backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
-        color: `${networkInfo?.textColor ?? fontColor}`,
+        backgroundColor: `${chainInfo?.theme?.backgroundColor ?? border}`,
+        color: `${chainInfo?.theme?.textColor ?? fontColor}`,
         padding: md,
         marginBottom: 0,
       },
@@ -80,12 +80,11 @@ type Props = {
 }
 
 const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement => {
-  const networkInfo = getNetworkInfo()
-  const classes = useStyles(networkInfo)
+  const chainInfo = getChainInfo()
+  const classes = useStyles(chainInfo)
 
   const copyShortName = useSelector(copyShortNameSelector)
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
-  const shortName = getCurrentShortChainName()
 
   const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
 
@@ -101,11 +100,11 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
       </Row>
       <Hairline />
       <Paragraph className={classes.networkInfo} noMargin size="lg" weight="bolder">
-        {networkInfo.label} Network–only send {networkInfo.label} assets to this Safe.
+        {chainInfo.chainName} Network–only send {chainInfo.chainName} assets to this Safe.
       </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
         This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send{' '}
-        {networkInfo.nativeCoin.name} and assets to this address (e.g. ETH, ERC20, ERC721)!
+        {chainInfo.nativeCurrency.name} and assets to this address (e.g. ETH, ERC20, ERC721)!
       </Paragraph>
       <Col layout="column" middle="xs">
         <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
@@ -118,7 +117,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
           label={
             <>
-              QR code with chain prefix (<b>{shortName}:</b>)
+              QR code with chain prefix (<b>{chainInfo.shortName}:</b>)
             </>
           }
         />

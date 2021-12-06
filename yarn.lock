@@ -2162,13 +2162,6 @@
     react-media "^1.10.0"
     web3-utils "^1.6.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.5.5":
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.5.tgz#aa0356baefef6d8be3dc60d5fcdc974ec73c4c1b"
-  integrity sha512-42LB2b0boQwTBMnY7gjIZ+bAxNFDmAEr12BfcxfzC+azQIjH5M0VUBsuA44or7MAQ1ZiVicY36+6ySlZPrqEpQ==
-  dependencies:
-    isomorphic-unfetch "^3.1.0"
-
 "@gnosis.pm/safe-react-gateway-sdk@^2.5.6":
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.6.tgz#7b8713bb16a542c4af27d6e1f2d8925a21aaeb51"

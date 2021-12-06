@@ -1,14 +1,11 @@
 import { createSelector } from 'reselect'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 import { AppReduxState } from 'src/store'
+import { CONFIG_REDUCER_ID } from '../reducer'
+import { ChainId } from 'src/config/chain.d'
 
-export const networkConfigState = (state: AppReduxState): AppReduxState['networkConfig'] => state['networkConfig']
+export const configState = (state: AppReduxState): AppReduxState[typeof CONFIG_REDUCER_ID] => state[CONFIG_REDUCER_ID]
 
-export const currentChainId = createSelector([networkConfigState], (networkConfig): ETHEREUM_NETWORK => {
-  return networkConfig.chainId
-})
-
-export const theme = createSelector([networkConfigState], (networkConfig): AppReduxState['networkConfig']['theme'] => {
-  return networkConfig.theme
+export const currentChainId = createSelector([configState], (config): ChainId => {
+  return config.chainId
 })

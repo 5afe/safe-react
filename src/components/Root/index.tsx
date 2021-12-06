@@ -1,5 +1,6 @@
-import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
 import * as Sentry from '@sentry/react'
+import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
+import { useEffect, useState } from 'react'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import App from 'src/components/App'
@@ -15,26 +16,68 @@ import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
+import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
+import { loadChains } from 'src/config/cache/chains'
 
-const Root = (): React.ReactElement => {
+// Preloader is rendered outside of '#root' and acts as a loading spinner
+// for the app and then chains loading
+const removePreloader = () => {
+  document.getElementById('safe-preloader-animation')?.remove()
+}
+
+const RootConsumer = (): React.ReactElement | null => {
+  const [hasChains, setHasChains] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
+
+  useEffect(() => {
+    const initChains = async () => {
+      try {
+        await loadChains()
+        setHasChains(true)
+      } catch (err) {
+        logError(Errors._904, err.message)
+        setIsError(true)
+      }
+    }
+    initChains()
+  }, [])
+
+  // Chains failed to load
+  if (isError) {
+    removePreloader()
+    throw new CodedException(Errors._904)
+  }
+
+  if (!hasChains) {
+    return null
+  }
+
+  removePreloader()
+
   return (
-    <>
-      <LegacyRouteRedirection history={history} />
-      <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
-        <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
-          <App>
-            {wrapInSuspense(
-              <AppRoutes />,
-              <LoadingContainer>
-                <Loader size="md" />
-              </LoadingContainer>,
-            )}
-            <StoreMigrator />
-          </App>
-        </Sentry.ErrorBoundary>
-      </Providers>
-    </>
+    <App>
+      {wrapInSuspense(
+        <AppRoutes />,
+        <LoadingContainer>
+          <Loader size="md" />
+        </LoadingContainer>,
+      )}
+      <StoreMigrator />
+    </App>
   )
 }
+
+// Chains loader requires error boundary, which requires Providers
+// and Legacy redirection should be outside of Providers
+const Root = (): React.ReactElement => (
+  <>
+    <LegacyRouteRedirection history={history} />
+    <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
+      <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
+        <RootConsumer />
+      </Sentry.ErrorBoundary>
+    </Providers>
+  </>
+)
 
 export default Root

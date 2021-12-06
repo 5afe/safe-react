@@ -1,10 +1,10 @@
-import { getNetworkName } from 'src/config'
+import { getChainName } from 'src/config'
 import Storage from './Storage'
 
 export const storage = new Storage(window.localStorage, '')
 
-// We need this to update the key in runtime depending on selected network name
-export const getStoragePrefix = (networkName = getNetworkName()): string => `_immortal|v2_${networkName}__`
+// We need this to update on run time depending on selected network name
+export const getStoragePrefix = (chainName = getChainName()): string => `_immortal|v2_${chainName}__`
 
 export const loadFromStorage = async <T = unknown>(
   key: string,

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getNetworkLabel } from 'src/config'
+
+import { getChainName } from 'src/config'
 import { animalsDict, adjectivesDict } from './useMnemonicName.dict'
 
 const animals: string[] = animalsDict.trim().split(/\s+/)
@@ -25,6 +26,6 @@ export const useMnemonicName = (noun?: string): string => {
 }
 
 export const useMnemonicSafeName = (): string => {
-  const networkName = getNetworkLabel().toLowerCase()
+  const networkName = getChainName().toLowerCase()
   return useMnemonicName(`${networkName}-safe`)
 }

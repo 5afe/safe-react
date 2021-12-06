@@ -9,8 +9,9 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
+import { getNativeCurrency } from 'src/config'
+import { getNativeCurrencyAddress } from 'src/config/utils'
 
-import { getNetworkInfo } from 'src/config'
 import {
   isCustomTxInfo,
   isModuleExecutionInfo,
@@ -60,11 +61,11 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${txInfo.transferInfo.tokenSymbol}`
     case TokenType.NATIVE_COIN: {
-      const { nativeCoin } = getNetworkInfo()
+      const nativeCurrency = getNativeCurrency()
       return getAmountWithSymbol(
         {
-          decimals: nativeCoin.decimals,
-          symbol: nativeCoin.symbol,
+          decimals: nativeCurrency.decimals,
+          symbol: nativeCurrency.symbol,
           value: txInfo.transferInfo.value,
         },
         formatted,
@@ -82,7 +83,7 @@ type txTokenData = {
 }
 
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   switch (txInfo.transferInfo.type) {
     case TokenType.ERC20:
       return {
@@ -93,7 +94,11 @@ export const getTxTokenData = (txInfo: Transfer): txTokenData => {
     case TokenType.ERC721:
       return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
-      return { address: nativeCoin.address, value: txInfo.transferInfo.value, decimals: nativeCoin.decimals }
+      return {
+        address: getNativeCurrencyAddress(),
+        value: txInfo.transferInfo.value,
+        decimals: nativeCurrency.decimals,
+      }
   }
 }
 

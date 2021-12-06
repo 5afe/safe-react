@@ -3,12 +3,8 @@ import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
 import { PromiEvent } from 'web3-core'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ContractOptions, ContractSendMethod, DeployOptions, EventData, PastEventOptions } from 'web3-eth-contract'
-import {
-  ConfirmationServiceModel,
-  TxServiceModel,
-} from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
-import { List, Map } from 'immutable'
-import { DataDecoded, PendingActionValues } from 'src/logic/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { TransactionStatus, TransferDirection, TokenType, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const mockNonPayableTransactionObject = (callResult?: string): NonPayableTransactionObject<string | void | boolean | string[]> => {
   return {
@@ -89,74 +85,24 @@ export const getMockedSafeInstance = (safeProps: SafeMethodsProps): GnosisSafe =
   }
 }
 
-type TransactionProps = {
-  baseGas?: number
-  blockNumber?: number | null
-  confirmations?: ConfirmationServiceModel[]
-  confirmationsRequired?: number
-  creationTx?: boolean | null
-  data?: string | null
-  dataDecoded?: DataDecoded
-  ethGasPrice?: string
-  executionDate?: string | null
-  executor?: string
-  fee?: string
-  gasPrice?: string
-  gasToken?: string
-  gasUsed?: number
-  isExecuted?: boolean
-  isSuccessful?: boolean
-  modified?: string
-  nonce?: number | null
-  operation?: number
-  origin?: string | null
-  ownersWithPendingActions?: Map<PendingActionValues, List<any>>,
-  recipient?: string,
-  refundParams?: string,
-  refundReceiver?: string
-  safe?: string
-  safeTxGas?: number
-  safeTxHash?: string
-  signatures?: string
-  submissionDate?: string | null
-  to?: string
-  transactionHash?: string | null
-  value?: string
-}
-
-
-export const getMockedTxServiceModel = (txProps: TransactionProps): TxServiceModel => {
-  return {
-    baseGas: 0,
-    confirmations: [],
-    confirmationsRequired: 0,
-    creationTx: false,
-    data: null,
-    ethGasPrice: '',
-    executionDate: '',
-    executor: '',
-    fee: '',
-    gasPrice: '',
-    gasToken: '',
-    gasUsed: 0,
-    isExecuted: false,
-    isSuccessful: false,
-    modified: '',
-    nonce: 0,
-    operation: 0,
-    origin: '',
-    ownersWithPendingActions: Map(),
-    recipient: '',
-    refundParams: '',
-    refundReceiver: '',
-    safe: '',
-    safeTxGas: 0,
-    safeTxHash: '',
-    signatures: '',
-    submissionDate: '',
-    to: '',
-    transactionHash: '',
-    value: '',
+export const getMockedStoredTServiceModel = (txProps?: Transaction): Transaction => ({
+    id: "multisig_123",
+    timestamp: 123456,
+    txStatus: TransactionStatus.PENDING,
+    txInfo: {
+      type: 'Transfer',
+      sender: { value: "0x123", name: null, logoUri: null },
+      recipient: { value: "0x456", name: null, logoUri: null },
+      direction: TransferDirection.OUTGOING,
+      transferInfo: {
+        type: TokenType.ERC20,
+        tokenAddress: "0xabc",
+        tokenName: null,
+        tokenSymbol: null,
+        logoUri: null,
+        decimals: 18,
+        value: "1000000000000000000",
+      }
+    },
     ...txProps
-  }
-}
+} as Transaction)

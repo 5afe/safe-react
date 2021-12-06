@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { toWei } from 'web3-utils'
+
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
+import { getNewTxNonce } from 'src/logic/safe/store/actions/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { extractSafeAddress } from 'src/routes/routes'
+import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { AppReduxState } from 'src/store'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -37,11 +40,11 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const web3 = getWeb3ReadOnly()
   const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
+  const state = useSelector((state: AppReduxState) => state)
 
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
@@ -76,16 +79,16 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       setEthGasPrice('0')
       return
     }
-    setEthGasPriceInGWei(web3.utils.toWei(ethGasPrice, 'Gwei'))
-  }, [ethGasPrice, isCancelTransaction, web3])
+    setEthGasPriceInGWei(toWei(ethGasPrice, 'Gwei'))
+  }, [ethGasPrice, isCancelTransaction])
 
   // Calc safe nonce
   useEffect(() => {
     const getSafeNonce = async () => {
       if (safeAddress) {
         const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const lastTx = await getLastTx(safeAddress)
-        const nonce = await getNewTxNonce(lastTx, safeInstance)
+        const lastTxNonce = getLastTxNonce(state)
+        const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
         setSafeNonce(nonce)
       }
     }
@@ -93,7 +96,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
     if (safeNonce === undefined) {
       getSafeNonce()
     }
-  }, [safeAddress, safeVersion, safeNonce])
+  }, [safeAddress, safeVersion, safeNonce, state])
 
   return {
     safeNonce,

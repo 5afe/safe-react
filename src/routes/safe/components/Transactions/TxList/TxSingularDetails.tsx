@@ -19,17 +19,18 @@ import { AppReduxState } from 'src/store'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { makeTxFromDetails } from './utils'
-import { getNetworkId } from 'src/config'
 import {
   addQueuedTransactions,
   addHistoryTransactions,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { HistoryPayload, QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const TxSingularDetails = (): ReactElement => {
   const { [TRANSACTION_ID_SLUG]: txId = '' } = useParams<SafeRouteSlugs>()
 
   const dispatch = useDispatch()
+  const chainId = useSelector(currentChainId)
   const historyTxs = useSelector(historyTransactions)
   const nextTxs = useSelector(nextTransactions)
   const queueTxs = useSelector(queuedTransactions)
@@ -56,7 +57,7 @@ const TxSingularDetails = (): ReactElement => {
           const tx = makeTxFromDetails(txDetails)
 
           const payload: HistoryPayload | QueuedPayload = {
-            chainId: getNetworkId(),
+            chainId,
             safeAddress: extractSafeAddress(),
             values: [
               {
@@ -79,7 +80,7 @@ const TxSingularDetails = (): ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [txId, liveTx, dispatch])
+  }, [txId, liveTx, dispatch, chainId])
 
   if (!isLoaded || !liveTx) {
     return (

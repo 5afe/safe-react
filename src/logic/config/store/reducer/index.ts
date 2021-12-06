@@ -1,19 +1,30 @@
-import { Action, handleActions } from 'redux-actions'
+import { handleActions } from 'redux-actions'
+import { ChainId } from 'src/config/chain.d'
 
-import { AppReduxState } from 'src/store'
-import { CONFIG_ACTIONS } from 'src/logic/config/store/actions'
-import { makeNetworkConfig, NetworkState } from 'src/logic/config/model/networkConfig'
-import { getConfig } from 'src/config'
+import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
+import { CONFIG_ACTIONS } from '../actions'
 
-export const NETWORK_CONFIG_REDUCER_ID = 'networkConfig'
+export const CONFIG_REDUCER_ID = 'config'
 
-type Payload = NetworkState | string
+export type ConfigState = {
+  chainId: ChainId
+}
 
-export default handleActions<AppReduxState['networkConfig'], Payload>(
+export const initialConfigState: ConfigState = {
+  chainId: DEFAULT_CHAIN_ID,
+}
+
+export type ConfigPayload = ChainId
+
+// Stored locally as to preserve chainId for non-EIP-3770 routes
+const configReducer = handleActions<ConfigState, ConfigPayload>(
   {
-    [CONFIG_ACTIONS.CONFIG_STORE]: (state, action: Action<NetworkState>) => {
-      return { ...state, ...action.payload }
+    [CONFIG_ACTIONS.SET_CHAIN_ID]: (state, action) => {
+      const networkId = action.payload
+      return { ...state, chainId: networkId }
     },
   },
-  makeNetworkConfig(getConfig()),
+  initialConfigState,
 )
+
+export default configReducer

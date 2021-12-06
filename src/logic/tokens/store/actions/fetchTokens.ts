@@ -1,7 +1,6 @@
 import ERC20Contract from '@openzeppelin/contracts/build/contracts/ERC20.json'
 import ERC721Contract from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
-import memoize from 'lodash/memoize'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AbiItem } from 'web3-utils'
@@ -27,9 +26,9 @@ const createERC721TokenContract = (tokenAddress: string): ERC721 => {
   return new web3.eth.Contract(ERC721Contract.abi as AbiItem[], tokenAddress) as unknown as ERC721
 }
 
-export const getERC20TokenContract = memoize(createERC20TokenContract)
+export const getERC20TokenContract = createERC20TokenContract
 
-export const getERC721TokenContract = memoize(createERC721TokenContract)
+export const getERC721TokenContract = createERC721TokenContract
 
 export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
   const web3 = getWeb3()

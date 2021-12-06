@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 
-import { getNetworkName, getTxServiceUrl } from 'src/config/'
+import { getChainName, getTxServiceUrl } from 'src/config/'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
@@ -82,7 +82,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: getNetworkName().toLowerCase() as LowercaseNetworks,
+              network: getChainName().toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }

@@ -18,12 +18,12 @@ import {
   hasPrefixedSafeAddressInUrl,
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
-  NETWORK_ROOT_ROUTES,
+  getNetworkRootRoutes,
   TRANSACTION_ID_SLUG,
 } from './routes'
-import { getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
+import { setChainId } from 'src/logic/config/utils'
 import { switchNetworkWithUrl } from 'src/utils/history'
-import { setNetwork } from 'src/logic/config/utils'
 import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
@@ -73,12 +73,12 @@ const Routes = (): React.ReactElement => {
       />
       {
         // Redirection to open network specific welcome pages
-        NETWORK_ROOT_ROUTES.map(({ id, route }) => (
+        getNetworkRootRoutes().map(({ chainId, route }) => (
           <Route
-            key={id}
+            key={chainId}
             path={route}
             render={() => {
-              setNetwork(id)
+              setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
             }}
           />
@@ -100,7 +100,7 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  shortName: getCurrentShortChainName(),
+                  shortName: getShortName(),
                   safeAddress: defaultSafe,
                 })}
               />
