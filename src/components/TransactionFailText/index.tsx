@@ -57,7 +57,7 @@ export const TransactionFailText = ({
         {isGranted ? (
           <>This transaction will most likely fail. {errorMessage}</>
         ) : isWrongChain ? (
-          <>Your wallet is connected to a wrong chain.</>
+          <>Your wallet is connected to the wrong chain.</>
         ) : (
           <>You are currently not an owner of this Safe and won&apos;t be able to submit this tx.</>
         )}
