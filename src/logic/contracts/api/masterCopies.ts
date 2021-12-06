@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getTxServiceUrl } from 'src/config'
+import { getMasterCopiesUrl } from 'src/config'
 import memoize from 'lodash/memoize'
 
 export enum MasterCopyDeployer {
@@ -35,9 +35,8 @@ const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
 }
 
 export const fetchMasterCopies = memoize(async (): Promise<MasterCopy[] | undefined> => {
-  const url = `${getTxServiceUrl()}/about/master-copies/`
   try {
-    const res = await axios.get<{ address: string; version: string }[]>(url)
+    const res = await axios.get<{ address: string; version: string }[]>(getMasterCopiesUrl())
     return res.data.map(extractMasterCopyInfo)
   } catch (error) {
     console.error('Fetching data from master-copies errored', error)

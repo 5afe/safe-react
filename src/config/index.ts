@@ -100,8 +100,12 @@ export const getTokensServiceUrl = (): string => {
   return `${getTxServiceUrl()}/tokens`
 }
 
-export const getSafeServiceBaseUrl = (safeAddress: string): string => {
-  return `${getTxServiceUrl()}/safes/${safeAddress}`
+export const getMasterCopiesUrl = (): string => {
+  return `${getTxServiceUrl()}/about/master-copies/`
+}
+
+export const getDataDecoderUrl = (): string => {
+  return `${getTxServiceUrl()}/data-decoder/`
 }
 
 export const getDisabledWallets = (): ChainInfo['disabledWallets'] => {
