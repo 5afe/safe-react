@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { getMasterCopiesUrl } from 'src/config'
-import memoize from 'lodash/memoize'
 
 export enum MasterCopyDeployer {
   GNOSIS = 'Gnosis',
@@ -34,11 +33,11 @@ const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
   return masterCopy
 }
 
-export const fetchMasterCopies = memoize(async (): Promise<MasterCopy[] | undefined> => {
+export const fetchMasterCopies = async (): Promise<MasterCopy[] | undefined> => {
   try {
     const res = await axios.get<{ address: string; version: string }[]>(getMasterCopiesUrl())
     return res.data.map(extractMasterCopyInfo)
   } catch (error) {
     console.error('Fetching data from master-copies errored', error)
   }
-})
+}
