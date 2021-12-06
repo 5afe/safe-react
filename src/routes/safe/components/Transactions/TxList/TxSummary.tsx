@@ -86,11 +86,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
           <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
         </div>
       )}
-      {isMultiSendTxInfo(txInfo) && (
-        <div className="tx-ms-contract">
-          <TxInfoMultiSend txInfo={txInfo} />
-        </div>
-      )}
+      {isMultiSendTxInfo(txInfo) && <TxInfoMultiSend txInfo={txInfo} />}
     </>
   )
 }
