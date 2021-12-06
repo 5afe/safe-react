@@ -24,7 +24,6 @@ describe('Check safe version', () => {
   describe('hasFeature', () => {
     it('returns false for old Safes and SAFE_TX_GAS_OPTIONAL', () => {
       expect(hasFeature(FEATURES.SAFE_TX_GAS_OPTIONAL, '1.1.1')).toBe(false)
-      expect(hasFeature(FEATURES.SAFE_TX_GAS_OPTIONAL)).toBe(false)
     })
 
     it('returns true for new Safes and SAFE_TX_GAS_OPTIONAL', () => {

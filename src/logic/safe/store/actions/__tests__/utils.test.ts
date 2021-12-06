@@ -155,8 +155,8 @@ describe('extractRemoteSafeInfo', () => {
         'ERC1155',
         'ERC721',
         'SAFE_APPS',
+        'SAFE_TX_GAS_OPTIONAL',
         'SPENDING_LIMIT',
-        'ERC1155',
       ] as FEATURES[],
     }
 
@@ -188,8 +188,8 @@ describe('extractRemoteSafeInfo', () => {
         'ERC1155',
         'ERC721',
         'SAFE_APPS',
+        'SAFE_TX_GAS_OPTIONAL',
         'SPENDING_LIMIT',
-        'ERC1155',
       ] as FEATURES[],
     }
 
