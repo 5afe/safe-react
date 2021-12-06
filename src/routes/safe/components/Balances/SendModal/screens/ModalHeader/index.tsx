@@ -6,7 +6,7 @@ import { ReactElement } from 'react'
 import ChainIndicator from 'src/components/ChainIndicator'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getNetworkInfo } from 'src/config'
+import { getChainInfo } from 'src/config'
 import { styles } from './style'
 
 const useStyles = makeStyles(styles)
@@ -20,7 +20,7 @@ interface HeaderProps {
 
 export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps): ReactElement => {
   const classes = useStyles()
-  const connectedNetwork = getNetworkInfo()
+  const connectedNetwork = getChainInfo()
 
   return (
     <Row align="center" className={classes.heading} grow>
@@ -30,7 +30,7 @@ export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps):
       </Paragraph>
       <Paragraph className={classes.annotation}>{subTitle ? subTitle : ''}</Paragraph>
       <Row className={classes.chainIndicator}>
-        {connectedNetwork.id && <ChainIndicator chainId={connectedNetwork.id} />}
+        {connectedNetwork.chainId && <ChainIndicator chainId={connectedNetwork.chainId} />}
       </Row>
       <IconButton disableRipple onClick={onClose}>
         <Close className={classes.closeIcon} />

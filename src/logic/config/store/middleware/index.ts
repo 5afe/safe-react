@@ -1,19 +1,21 @@
-import { CONFIG_ACTIONS } from 'src/logic/config/store/actions'
-import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
-import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
-import { clearSafeList } from 'src/logic/safe/store/actions/clearSafeList'
+import { Action } from 'redux'
+
 import { clearCurrentSession } from 'src/logic/currentSession/store/actions/clearCurrentSession'
+import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
+import { clearSafeList } from 'src/logic/safe/store/actions/clearSafeList'
+import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
+import { CONFIG_ACTIONS } from '../actions'
+import { ConfigPayload } from '../reducer'
 
-const watchedActions = Object.values(CONFIG_ACTIONS)
+export const configMiddleware =
+  ({ dispatch }) =>
+  (next: Dispatch) =>
+  async (action: Action<ConfigPayload>) => {
+    const handledAction = next(action)
 
-export const configMiddleware = (store) => (next) => async (action) => {
-  const handledAction = next(action)
-  if (watchedActions.includes(action.type)) {
-    const { dispatch } = store
     switch (action.type) {
-      case CONFIG_ACTIONS.CONFIG_STORE: {
-        // Enforce clearing safe information and current session
-        // so app waits until local storage is loaded into state
+      case CONFIG_ACTIONS.SET_CHAIN_ID: {
         dispatch(clearSafeList())
         dispatch(clearCurrentSession())
         dispatch(loadSafesFromStorage())
@@ -23,7 +25,6 @@ export const configMiddleware = (store) => (next) => async (action) => {
       default:
         break
     }
-  }
 
-  return handledAction
-}
+    return handledAction
+  }

@@ -1,6 +1,6 @@
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { TransactionFailText } from 'src/components/TransactionFailText'
 import { Text } from '@gnosis.pm/safe-react-components'
 
@@ -19,7 +19,7 @@ export const TransactionFees = ({
   isOffChainSignature,
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   let transactionAction
   if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
     return null
@@ -44,7 +44,7 @@ export const TransactionFees = ({
               <Text size="lg" as="span" color="text" strong>
                 {gasCostFormatted}
               </Text>{' '}
-              (fee price) {nativeCoin.name} in this wallet to fund this confirmation.
+              (fee price) {nativeCurrency.name} in this wallet to fund this confirmation.
             </>
           )}
         </Paragraph>

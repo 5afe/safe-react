@@ -2,10 +2,10 @@ import memoize from 'lodash/memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getCurrentShortChainName, isFeatureEnabled } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
+import { getShortName, isFeatureEnabled } from 'src/config'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isValidPrefix, parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 type ValidatorReturnType = string | undefined
@@ -88,7 +88,7 @@ const mustHaveValidPrefix = (prefix: string): ValidatorReturnType => {
     return 'Wrong chain prefix'
   }
 
-  if (prefix !== getCurrentShortChainName()) {
+  if (prefix !== getShortName()) {
     return 'The chain prefix must match the current network'
   }
 }

@@ -2,7 +2,7 @@ import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
 import { DataDecoded, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
@@ -44,7 +44,7 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
 }
 
 export const MultiSendDetails = ({ txData }: { txData: TransactionData }): ReactElement | null => {
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   // no parameters for the `multiSend`
   if (!txData.dataDecoded?.parameters) {
     // we render the hex encoded data
@@ -62,8 +62,8 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
         let details
         const { data, value, to } = valuesDecoded[index]
         const actionTitle = `Action ${index + 1} ${dataDecoded ? `(${dataDecoded.method})` : ''}`
-        const amount = value ? fromTokenUnit(value, nativeCoin.decimals) : 0
-        const title = `Send ${amount} ${nativeCoin.name} to:`
+        const amount = value ? fromTokenUnit(value, nativeCurrency.decimals) : 0
+        const title = `Send ${amount} ${nativeCurrency.name} to:`
 
         if (dataDecoded) {
           // Backend decoded data

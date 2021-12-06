@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { isFeatureEnabled } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
@@ -20,6 +19,7 @@ import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export interface AddressBookProps {

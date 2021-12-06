@@ -2,17 +2,18 @@ import { Map } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
 import { Notification } from 'src/logic/notifications/notificationTypes'
-import { AppReduxState } from 'src/store'
 import { CLOSE_SNACKBAR } from '../actions/closeSnackbar'
 import { ENQUEUE_SNACKBAR } from '../actions/enqueueSnackbar'
 import { REMOVE_SNACKBAR } from '../actions/removeSnackbar'
 
 export const NOTIFICATIONS_REDUCER_ID = 'notifications'
 
+type NotificationsState = Map<string, Notification>
+
 type CloseSnackBarPayload = { key: string; dismissAll: boolean }
 type Payloads = Notification | CloseSnackBarPayload | string
 
-export default handleActions<AppReduxState['notifications'], Payloads>(
+const notificationsReducer = handleActions<NotificationsState, Payloads>(
   {
     [ENQUEUE_SNACKBAR]: (state, action: Action<Notification>) => {
       const notification = action.payload
@@ -57,3 +58,5 @@ export default handleActions<AppReduxState['notifications'], Payloads>(
   },
   Map<string, Notification>(),
 )
+
+export default notificationsReducer

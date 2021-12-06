@@ -1,13 +1,30 @@
-import { setNetworkId, getConfig, NETWORK_ID_KEY } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { makeNetworkConfig } from 'src/logic/config/model/networkConfig'
-import { configStore } from 'src/logic/config/store/actions'
+import axios from 'axios'
+import { _getChainId, _setChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { store } from 'src/store'
-import { saveToSessionStorage } from 'src/utils/storage/session'
+import { CONFIG_SERVICE_URL } from 'src/utils/constants'
+import { setChainIdAction } from 'src/logic/config/store/actions'
 
-export const setNetwork = (id: ETHEREUM_NETWORK) => {
-  setNetworkId(id)
-  saveToSessionStorage(NETWORK_ID_KEY, id) // Used outside of [ADDRESSED_ROUTE] routes
-  const safeConfig = makeNetworkConfig(getConfig())
-  store.dispatch(configStore(safeConfig))
+export type RemoteAppData = {
+  id: number
+  url: string
+  name: string
+  iconUrl: string
+  description: string
+  chainIds: number[]
+}
+
+const enum Endpoints {
+  SAFE_APPS = '/safe-apps/',
+}
+
+// TODO: Migrate to GATEWAY_URL when CGW exposes it
+export const fetchSafeAppsList = async (): Promise<RemoteAppData[]> => {
+  const { data } = await axios.get(`${CONFIG_SERVICE_URL}${Endpoints.SAFE_APPS}?chainId=${_getChainId()}`)
+  return data
+}
+
+export const setChainId = (newChainId: ChainId) => {
+  _setChainId(newChainId)
+  store.dispatch(setChainIdAction(newChainId))
 }

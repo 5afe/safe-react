@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import { currentSafe } from 'src/logic/safe/store/selectors'
+import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { lg, sm } from 'src/theme/variables'
 import { TransactionFees } from '../TransactionsFees'
-import useLastQueuedTxNonce from 'src/routes/safe/components/Transactions/TxList/hooks/useLastQueuedTxNonce'
 
 type CustomReviewInfoTextProps = {
   safeNonce?: string
@@ -31,7 +31,7 @@ export const ReviewInfoText = ({
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
   const safeNonceNumber = parseInt(safeNonce, 10)
-  const lastTxNonce = useLastQueuedTxNonce()
+  const lastTxNonce = useSelector(getLastTxNonce)
 
   const isTxNonceOutOfOrder = () => {
     if (safeNonceNumber === nonce) return false

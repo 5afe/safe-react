@@ -1,16 +1,17 @@
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { isFeatureEnabled } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { SAFE_FEATURES } from 'src/config/chain.d'
 
 type FeatureConfigByVersion = {
-  name: FEATURES
+  name: FEATURES | SAFE_FEATURES
   validVersion?: string
 }
 
@@ -19,7 +20,7 @@ const FEATURES_BY_VERSION: FeatureConfigByVersion[] = [
   { name: FEATURES.ERC1155, validVersion: '>=1.1.1' },
   { name: FEATURES.SAFE_APPS },
   { name: FEATURES.CONTRACT_INTERACTION },
-  { name: FEATURES.SAFE_TX_GAS_OPTIONAL, validVersion: '>=1.3.0' },
+  { name: SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL, validVersion: '>=1.3.0' },
 ]
 
 type Feature = typeof FEATURES_BY_VERSION[number]
@@ -45,16 +46,16 @@ const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, ver
   return featureConfig.validVersion ? semverSatisfies(version, featureConfig.validVersion) : true
 }
 
-export const enabledFeatures = (version?: string): FEATURES[] => {
+export const enabledFeatures = (version?: string): (FEATURES | SAFE_FEATURES)[] => {
   return FEATURES_BY_VERSION.reduce((acc, feature: Feature) => {
     if (isFeatureEnabled(feature.name) && checkFeatureEnabledByVersion(feature, version)) {
       acc.push(feature.name)
     }
     return acc
-  }, [] as FEATURES[])
+  }, [] as (FEATURES | SAFE_FEATURES)[])
 }
 
-export const hasFeature = (version: string, name: FEATURES): boolean => {
+export const hasFeature = (version: string, name: FEATURES | SAFE_FEATURES): boolean => {
   return enabledFeatures(version).includes(name)
 }
 

@@ -1,28 +1,30 @@
-import { getNetworkId, setNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { _getChainId } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
+
+import { setChainId } from 'src/logic/config/utils'
 import { getGasParam } from '../gas'
 
 describe('Get gas param', () => {
-  let initialNetworkId = ETHEREUM_NETWORK.RINKEBY
+  let initialNetworkId = CHAIN_ID.RINKEBY
   beforeAll(() => {
-    initialNetworkId = getNetworkId()
+    initialNetworkId = _getChainId()
   })
   afterAll(() => {
-    setNetworkId(initialNetworkId)
+    setChainId(initialNetworkId)
   })
 
   it('should return maxFeePerGas for Mainnet', () => {
-    setNetworkId(ETHEREUM_NETWORK.MAINNET)
+    setChainId(CHAIN_ID.ETHEREUM)
     expect(getGasParam()).toBe('maxFeePerGas')
   })
 
   it('should return gasPrice for Arbitrum', () => {
-    setNetworkId(ETHEREUM_NETWORK.ARBITRUM)
+    setChainId(CHAIN_ID.ARBITRUM)
     expect(getGasParam()).toBe('gasPrice')
   })
 
   it('should return maxFeePerGas for Rinkeby', () => {
-    setNetworkId(ETHEREUM_NETWORK.RINKEBY)
+    setChainId(CHAIN_ID.RINKEBY)
     expect(getGasParam()).toBe('maxFeePerGas')
   })
 })

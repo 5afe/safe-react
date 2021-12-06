@@ -18,9 +18,9 @@ import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxL
 
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
-import { FEATURES } from 'src/config/networks/network.d'
 
 import { getExplorerInfo } from 'src/config'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 

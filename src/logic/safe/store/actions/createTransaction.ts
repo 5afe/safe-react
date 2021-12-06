@@ -20,7 +20,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { PayableTx } from 'src/types/contracts/types.d'
@@ -31,16 +31,13 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import {
-  getPrefixedSafeAddressSlug,
-  history,
-  SAFE_ADDRESS_SLUG,
-  SAFE_ROUTES,
-  TRANSACTION_ID_SLUG,
-} from 'src/routes/routes'
-import { getCurrentShortChainName } from 'src/config'
+import { extractShortChainName, generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
+import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { getShortName } from 'src/config'
+import { IS_PRODUCTION } from 'src/utils/constants'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -68,12 +65,25 @@ export const isKeystoneError = (err: Error): boolean => {
 }
 
 const navigateToTx = (safeAddress: string, txId: string) => {
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: getCurrentShortChainName(), safeAddress })
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
     [TRANSACTION_ID_SLUG]: txId,
   })
-  history.push(txRoute)
+
+  // TODO: uncomment once we fix deep linking bugs
+  // history.push(txRoute)
+
+  if (!IS_PRODUCTION) {
+    console.info('Created transaction', txRoute)
+  }
+
+  history.push(
+    generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
+      shortName: getShortName(),
+      safeAddress,
+    }),
+  )
 }
 
 export const createTransaction =
@@ -105,8 +115,11 @@ export const createTransaction =
     const safeVersion = currentSafeCurrentVersion(state) as string
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
     const chainId = currentChainId(state)
-    const lastTx = await getLastTx(safeAddress)
-    const nextNonce = await getNewTxNonce(lastTx, safeInstance)
+
+    const lastTx = getLastTransaction(state)
+    const lastTxNonce = getLastTxNonce(state)
+
+    const nextNonce = await getNewTxNonce(lastTxNonce, safeInstance)
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = !delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
@@ -127,7 +140,7 @@ export const createTransaction =
     const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
     let txHash
-    const txArgs: TxArgs = {
+    const txArgs: TxArgs & { sender: string } = {
       safeInstance,
       to,
       valueInWei,

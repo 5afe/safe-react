@@ -100,11 +100,6 @@ describe('<CreateSafePage>', () => {
       expect(selectNetworkPopupNode).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Shows the Switch Network popup if clicks on the current selected Network label', async () => {
@@ -129,11 +124,6 @@ describe('<CreateSafePage>', () => {
       expect(selectNetworkPopupNode).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Shows Switch Network Popup and can switch the network', async () => {

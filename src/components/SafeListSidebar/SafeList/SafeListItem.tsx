@@ -11,8 +11,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { getNetworkConfigById, getShortChainNameById } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { setChainId } from 'src/logic/config/utils'
 import {
   generateSafeRoute,
   extractSafeAddress,
@@ -20,8 +19,9 @@ import {
   SAFE_ROUTES,
   SafeRouteParams,
 } from 'src/routes/routes'
-import { setNetwork } from 'src/logic/config/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { ChainId } from 'src/config/chain.d'
+import { getChainById } from 'src/config'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -42,7 +42,7 @@ type Props = {
   address: string
   ethBalance?: string
   showAddSafeLink?: boolean
-  networkId: ETHEREUM_NETWORK
+  networkId: ChainId
   shouldScrollToSafe?: boolean
 }
 
@@ -61,8 +61,9 @@ const SafeListItem = ({
   const currChainId = useSelector(currentChainId)
   const isCurrentSafe = currChainId === networkId && sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
-  const nativeCoinSymbol = getNetworkConfigById(networkId)?.network?.nativeCoin?.symbol ?? 'ETH'
-  const shortName = getShortChainNameById(networkId)
+
+  const { nativeCurrency, shortName } = getChainById(networkId)
+  const nativeCurrencySymbol = nativeCurrency?.symbol ?? 'ETH'
 
   useEffect(() => {
     if (isCurrentSafe && shouldScrollToSafe) {
@@ -71,7 +72,7 @@ const SafeListItem = ({
   }, [isCurrentSafe, shouldScrollToSafe])
 
   const routesSlug: SafeRouteParams = {
-    shortName: getShortChainNameById(networkId),
+    shortName,
     safeAddress: address,
   }
 
@@ -87,7 +88,7 @@ const SafeListItem = ({
     history.push(generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug))
 
     // Navigating to LOAD_SPECIFIC_SAFE_ROUTE doesn't trigger a network switch
-    setNetwork(networkId)
+    setChainId(networkId)
   }
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const SafeListItem = ({
       <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
       <ListItemSecondaryAction>
         {ethBalance ? (
-          `${formatAmount(ethBalance)} ${nativeCoinSymbol}`
+          `${formatAmount(ethBalance)} ${nativeCurrencySymbol}`
         ) : showAddSafeLink ? (
           <Link to={generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug)} onClick={handleLoadSafe}>
             <Text size="sm" color="primary">
