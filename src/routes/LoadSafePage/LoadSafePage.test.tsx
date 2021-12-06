@@ -7,7 +7,6 @@ import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 import { GATEWAY_URL } from 'src/utils/constants'
-import { getChains } from 'src/config/cache/chains'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
@@ -108,10 +107,8 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Switch Network'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      // Reference loaded chains
-      getChains().forEach(({ chainName }) => {
-        expect(getByText(selectNetworkPopupNode, chainName)).toBeInTheDocument()
-      })
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
     })
 
     it('Opens the Switch Network popup if clicks on the current selected Network label', () => {
@@ -120,10 +117,8 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      // Reference loaded chains
-      getChains().forEach(({ chainName }) => {
-        expect(getByText(selectNetworkPopupNode, chainName)).toBeInTheDocument()
-      })
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
     })
 
     it('Switches Network if clicks on Switch Network button', async () => {

@@ -11,7 +11,6 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { getChainById } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import {
   generateSafeRoute,
@@ -20,7 +19,9 @@ import {
   SAFE_ROUTES,
   SafeRouteParams,
 } from 'src/routes/routes'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain.d'
+import { getChainById } from 'src/config'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -57,7 +58,8 @@ const SafeListItem = ({
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
   const currentSafeAddress = extractSafeAddress()
-  const isCurrentSafe = sameAddress(currentSafeAddress, address)
+  const currChainId = useSelector(currentChainId)
+  const isCurrentSafe = currChainId === networkId && sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)
 
   const { nativeCurrency, shortName } = getChainById(networkId)
