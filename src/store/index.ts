@@ -30,12 +30,12 @@ import currencyValuesReducer, {
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import configReducer, { ConfigState, CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
+import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import appearanceReducer, {
-  AppearanceState,
   APPEARANCE_REDUCER_ID,
   initialAppearanceState,
+  AppearanceState,
 } from 'src/logic/appearance/reducer/appearance'
-import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'

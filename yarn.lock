@@ -2169,6 +2169,13 @@
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
+"@gnosis.pm/safe-react-gateway-sdk@^2.5.7":
+  version "2.5.8"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.8.tgz#e43b1346829a127f5e87c3e45bfc0afb3d28773c"
+  integrity sha512-ZMVblmKe4YEGoznNzZxKr2coXS3ZIRpLX80ErlcAauv1YbJgdIGpRyloiGkOtwshwI3y5pRm0FI1QU8mrcUlwg==
+  dependencies:
+    isomorphic-unfetch "^3.1.0"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
