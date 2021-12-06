@@ -1,9 +1,10 @@
-import { AccordionSummary, IconText, Text } from '@gnosis.pm/safe-react-components'
+import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
 import { DataDecoded, Operation, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
 import { getNativeCurrency } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import DelegateCallWarning from './DelegateCallWarning'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { isSpendingLimitMethod } from './SpendingLimitDetails'
@@ -25,25 +26,13 @@ type MultiSendTxGroupProps = {
 
 const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroupProps): ReactElement => {
   const isDelegateCall = txDetails.operation === Operation.DELEGATE
-  const isKnownAddress = !!txDetails.name
-
-  const delegateCallDetails = isKnownAddress ? (
-    <Text size="xl" strong as="span">
-      Delegate Call
-    </Text>
-  ) : (
-    <Text size="xl" strong as="span" color="error">
-      ⚠️ Unexpected Delegate Call
-    </Text>
-  )
-
   return (
     <ActionAccordion>
       <AccordionSummary>
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="xl" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
-        {isDelegateCall && delegateCallDetails}
+        {isDelegateCall && <DelegateCallWarning isKnown={!!txDetails.name} />}
         {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
           <TxInfoDetails
             title={txDetails.title}
