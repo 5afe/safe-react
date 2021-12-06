@@ -13,12 +13,14 @@ const connector = new WalletConnect({
   bridge: 'https://bridge.walletconnect.org',
 })
 
+const getWalletConnectState = (): WalletConnectState => ({
+  uri: connector.uri,
+  chainId: connector.chainId.toString(),
+  address: connector.accounts[0],
+})
+
 const useWalletConnect = (): WalletConnectState => {
-  const [state, setState] = useState<WalletConnectState>({
-    uri: '',
-    chainId: '',
-    address: '',
-  })
+  const [state, setState] = useState<WalletConnectState>(() => getWalletConnectState())
 
   useEffect(() => {
     const connect = async () => {
@@ -26,16 +28,18 @@ const useWalletConnect = (): WalletConnectState => {
         await connector.createSession()
 
         const uri = connector.uri
-        console.log('uri', uri)
         setState((prevState) => ({ ...prevState, uri }))
+        console.log('URI', uri)
       }
+
+      console.log(connector)
 
       connector.on('connect', (error, payload) => {
         if (error) {
           throw error
         }
 
-        console.log('payload', payload)
+        console.log('Successful connection', payload)
         const { chainId, accounts } = payload.params[0]
 
         setState((prevState) => ({
