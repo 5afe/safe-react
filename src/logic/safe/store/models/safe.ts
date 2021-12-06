@@ -1,6 +1,6 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Record, RecordOf } from 'immutable'
-import { ChainId, SAFE_FEATURES } from 'src/config/chain.d'
+import { ChainId } from 'src/config/chain.d'
 
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
@@ -37,7 +37,7 @@ export type SafeRecordProps = {
   recurringUser?: boolean
   currentVersion: string
   needsUpdate: boolean
-  featuresEnabled: Array<FEATURES | SAFE_FEATURES>
+  featuresEnabled: FEATURES[]
   loadedViaUrl: boolean
   guard: string
   collectiblesTag: string

@@ -2,11 +2,12 @@ import memoize from 'lodash/memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getShortName, isFeatureEnabled } from 'src/config'
+import { getShortName } from 'src/config'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isValidPrefix, parsePrefixedAddress } from 'src/utils/prefixedAddress'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -101,7 +102,7 @@ export const mustBeEthereumAddress = (fullAddress: string): ValidatorReturnType 
   if (prefixError) return prefixError
 
   const result = mustBeAddressHash(address)
-  if (result !== undefined && isFeatureEnabled(FEATURES.DOMAIN_LOOKUP)) {
+  if (result !== undefined && hasFeature(FEATURES.DOMAIN_LOOKUP)) {
     return errorMessage
   }
   return result

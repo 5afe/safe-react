@@ -4,7 +4,6 @@ import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'rea
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { isFeatureEnabled } from 'src/config'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
@@ -21,6 +20,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -96,7 +96,7 @@ const BaseAddressBookInput = ({
 
         // ENS-enabled resolve/validation
         if (
-          isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) &&
+          hasFeature(FEATURES.DOMAIN_LOOKUP) &&
           (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
         ) {
           let address = ''

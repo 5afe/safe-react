@@ -6,24 +6,18 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { isFeatureEnabled } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { SAFE_FEATURES } from 'src/config/chain.d'
+import { getChainInfo } from 'src/config'
 
 type FeatureConfigByVersion = {
-  name: FEATURES | SAFE_FEATURES
+  name: FEATURES
   validVersion?: string
 }
 
 const FEATURES_BY_VERSION: FeatureConfigByVersion[] = [
-  { name: FEATURES.ERC721 },
   { name: FEATURES.ERC1155, validVersion: '>=1.1.1' },
-  { name: FEATURES.SAFE_APPS },
-  { name: FEATURES.CONTRACT_INTERACTION },
-  { name: SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL, validVersion: '>=1.3.0' },
+  { name: FEATURES.SAFE_TX_GAS_OPTIONAL, validVersion: '>=1.3.0' },
 ]
-
-type Feature = typeof FEATURES_BY_VERSION[number]
 
 export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string): boolean => {
   if (!currentVersion || !latestVersion) {
@@ -40,22 +34,24 @@ export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<s
   gnosisSafeInstance.methods.VERSION().call()
 
 const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, version?: string) => {
-  if (!version) {
-    return false
-  }
+  if (!version) return false
   return featureConfig.validVersion ? semverSatisfies(version, featureConfig.validVersion) : true
 }
 
-export const enabledFeatures = (version?: string): (FEATURES | SAFE_FEATURES)[] => {
-  return FEATURES_BY_VERSION.reduce((acc, feature: Feature) => {
-    if (isFeatureEnabled(feature.name) && checkFeatureEnabledByVersion(feature, version)) {
-      acc.push(feature.name)
-    }
-    return acc
-  }, [] as (FEATURES | SAFE_FEATURES)[])
+/**
+ * Get a combined list of features enabled per chain and per version
+ */
+export const enabledFeatures = (version?: string): FEATURES[] => {
+  const chainFeatures = getChainInfo().features
+
+  const versionedFeatures = FEATURES_BY_VERSION.filter((feat) => checkFeatureEnabledByVersion(feat, version)).map(
+    ({ name }) => name,
+  )
+
+  return chainFeatures.concat(versionedFeatures)
 }
 
-export const hasFeature = (version: string, name: FEATURES | SAFE_FEATURES): boolean => {
+export const hasFeature = (name: FEATURES, version?: string): boolean => {
   return enabledFeatures(version).includes(name)
 }
 
@@ -80,7 +76,7 @@ export const checkIfSafeNeedsUpdate = async (
 }
 
 export const getCurrentMasterContractLastVersion = async (): Promise<string> => {
-  let safeMasterVersion
+  let safeMasterVersion: string
   try {
     const safeMaster = await getSafeMasterContract()
     safeMasterVersion = await safeMaster.methods.VERSION().call()

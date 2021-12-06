@@ -1,7 +1,7 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { ChainId, SAFE_FEATURES } from 'src/config/chain.d'
+import { ChainId } from 'src/config/chain.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,
@@ -153,7 +153,7 @@ describe('extractRemoteSafeInfo', () => {
         FEATURES.ERC1155,
         FEATURES.SAFE_APPS,
         FEATURES.CONTRACT_INTERACTION,
-        SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL,
+        FEATURES.SAFE_TX_GAS_OPTIONAL,
       ],
     }
 
@@ -183,7 +183,7 @@ describe('extractRemoteSafeInfo', () => {
         FEATURES.ERC1155,
         FEATURES.SAFE_APPS,
         FEATURES.CONTRACT_INTERACTION,
-        SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL,
+        FEATURES.SAFE_TX_GAS_OPTIONAL,
       ],
     }
 
