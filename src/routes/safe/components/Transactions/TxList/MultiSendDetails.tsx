@@ -1,5 +1,5 @@
-import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
-import { DataDecoded, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
+import { AccordionSummary, IconText, Text } from '@gnosis.pm/safe-react-components'
+import { DataDecoded, Operation, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
 import { getNativeCurrency } from 'src/config'
@@ -19,16 +19,31 @@ type MultiSendTxGroupProps = {
     name?: string | undefined
     avatarUrl?: string | undefined
     dataDecoded: DataDecoded | null
+    operation: Operation
   }
 }
 
 const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroupProps): ReactElement => {
+  const isDelegateCall = txDetails.operation === Operation.DELEGATE
+  const isKnownAddress = !!txDetails.name
+
+  const delegateCallDetails = isKnownAddress ? (
+    <Text size="xl" strong as="span">
+      Delegate Call
+    </Text>
+  ) : (
+    <Text size="xl" strong as="span" color="error">
+      ⚠️ Unexpected Delegate Call
+    </Text>
+  )
+
   return (
     <ActionAccordion>
       <AccordionSummary>
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="xl" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
+        {isDelegateCall && delegateCallDetails}
         {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
           <TxInfoDetails
             title={txDetails.title}
@@ -60,7 +75,8 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
     <>
       {txData.dataDecoded.parameters[0].valueDecoded?.map(({ dataDecoded }, index, valuesDecoded) => {
         let details
-        const { data, value, to } = valuesDecoded[index]
+        const { data, value, to, operation } = valuesDecoded[index]
+
         const actionTitle = `Action ${index + 1} ${dataDecoded ? `(${dataDecoded.method})` : ''}`
         const amount = value ? fromTokenUnit(value, nativeCurrency.decimals) : 0
         const title = `Send ${amount} ${nativeCurrency.name} to:`
@@ -81,7 +97,7 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
           <MultiSendTxGroup
             key={`${data ?? to}-${index}`}
             actionTitle={actionTitle}
-            txDetails={{ title, address: to, dataDecoded, name, avatarUrl }}
+            txDetails={{ title, address: to, dataDecoded, name, avatarUrl, operation }}
           >
             {details}
           </MultiSendTxGroup>
