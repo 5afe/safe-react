@@ -9,6 +9,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import useWalletConnect from '../../hooks/useWalletConnect'
 import { getChainById } from 'src/config'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -35,7 +36,6 @@ const ConnectDetails = (): ReactElement => {
   const { uri, chainId, address } = useWalletConnect()
 
   const { shortName } = getChainById(chainId)
-  const prefixedSafeAddress = `${shortName}:${address}`
 
   return (
     <StyledCard>
@@ -49,7 +49,7 @@ const ConnectDetails = (): ReactElement => {
       <Divider orientation="vertical" flexItem />
       <CardContainer>
         <StyledParagraph noMargin size="xl" weight="bolder">
-          Connect to Mobile
+          {uri ? 'Connected to Mobile' : 'Connect to Mobile'}
         </StyledParagraph>
         {!chainId ? (
           <>
@@ -63,7 +63,7 @@ const ConnectDetails = (): ReactElement => {
             </a>
           </>
         ) : (
-          <>{prefixedSafeAddress}</>
+          <PrefixedEthHashInfo hash={address} shortName={shortName} showAvatar showCopyBtn shortenHash={4} />
         )}
       </CardContainer>
     </StyledCard>
