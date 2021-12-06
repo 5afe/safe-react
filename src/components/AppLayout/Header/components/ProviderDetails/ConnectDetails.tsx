@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Card } from '@gnosis.pm/safe-react-components'
+import { Card, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import Divider from '@material-ui/core/Divider'
 import QRCode from 'qrcode.react'
@@ -9,7 +9,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import useWalletConnect from '../../hooks/useWalletConnect'
 import { getChainById } from 'src/config'
-import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -63,7 +62,7 @@ const ConnectDetails = (): ReactElement => {
             </a>
           </>
         ) : (
-          <PrefixedEthHashInfo hash={address} shortName={shortName} showAvatar showCopyBtn shortenHash={4} />
+          <EthHashInfo hash={address} shortName={shortName} showAvatar showCopyBtn shortenHash={4} />
         )}
       </CardContainer>
     </StyledCard>

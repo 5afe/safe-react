@@ -13,11 +13,21 @@ const connector = new WalletConnect({
   bridge: 'https://bridge.walletconnect.org',
 })
 
-const getWalletConnectState = (): WalletConnectState => ({
-  uri: connector.uri,
-  chainId: connector.chainId.toString(),
-  address: connector.accounts[0],
-})
+const getWalletConnectState = (): WalletConnectState => {
+  if (!connector.connected) {
+    return {
+      uri: '',
+      chainId: '',
+      address: '',
+    }
+  }
+
+  return {
+    uri: connector.uri,
+    chainId: connector.chainId.toString(),
+    address: connector.accounts[0],
+  }
+}
 
 const useWalletConnect = (): WalletConnectState => {
   const [state, setState] = useState<WalletConnectState>(() => getWalletConnectState())
@@ -29,10 +39,10 @@ const useWalletConnect = (): WalletConnectState => {
 
         const uri = connector.uri
         setState((prevState) => ({ ...prevState, uri }))
-        console.log('URI', uri)
+        console.log(uri)
       }
 
-      console.log(connector)
+      console.log('WalletConnect', connector)
 
       connector.on('connect', (error, payload) => {
         if (error) {
