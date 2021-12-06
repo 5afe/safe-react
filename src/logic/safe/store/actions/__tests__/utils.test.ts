@@ -149,12 +149,15 @@ describe('extractRemoteSafeInfo', () => {
       needsUpdate: false,
       guard: undefined,
       featuresEnabled: [
-        FEATURES.ERC721,
-        FEATURES.ERC1155,
-        FEATURES.SAFE_APPS,
-        FEATURES.CONTRACT_INTERACTION,
-        FEATURES.SAFE_TX_GAS_OPTIONAL,
-      ],
+        'CONTRACT_INTERACTION',
+        'DOMAIN_LOOKUP',
+        'EIP1559',
+        'ERC1155',
+        'ERC721',
+        'SAFE_APPS',
+        'SPENDING_LIMIT',
+        'ERC1155',
+      ] as FEATURES[],
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules as any)
@@ -179,12 +182,15 @@ describe('extractRemoteSafeInfo', () => {
       needsUpdate: false,
       guard: '0x4f8a82d73729A33E0165aDeF3450A7F85f007528',
       featuresEnabled: [
-        FEATURES.ERC721,
-        FEATURES.ERC1155,
-        FEATURES.SAFE_APPS,
-        FEATURES.CONTRACT_INTERACTION,
-        FEATURES.SAFE_TX_GAS_OPTIONAL,
-      ],
+        'CONTRACT_INTERACTION',
+        'DOMAIN_LOOKUP',
+        'EIP1559',
+        'ERC1155',
+        'ERC721',
+        'SAFE_APPS',
+        'SPENDING_LIMIT',
+        'ERC1155',
+      ] as FEATURES[],
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules as any)

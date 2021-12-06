@@ -9,15 +9,10 @@ import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getChainInfo } from 'src/config'
 
-type FeatureConfigByVersion = {
-  name: FEATURES
-  validVersion?: string
+const FEATURES_BY_VERSION: Record<string, string> = {
+  [FEATURES.ERC1155]: '>=1.1.1',
+  [FEATURES.SAFE_TX_GAS_OPTIONAL]: '>=1.3.0',
 }
-
-const FEATURES_BY_VERSION: FeatureConfigByVersion[] = [
-  { name: FEATURES.ERC1155, validVersion: '>=1.1.1' },
-  { name: FEATURES.SAFE_TX_GAS_OPTIONAL, validVersion: '>=1.3.0' },
-]
 
 export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string): boolean => {
   if (!currentVersion || !latestVersion) {
@@ -33,9 +28,9 @@ export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string)
 export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<string> =>
   gnosisSafeInstance.methods.VERSION().call()
 
-const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, version?: string) => {
-  if (!version) return false
-  return featureConfig.validVersion ? semverSatisfies(version, featureConfig.validVersion) : true
+const isEnabledByVersion = (feature: FEATURES, version: string): boolean => {
+  if (!(feature in FEATURES_BY_VERSION)) return true
+  return semverSatisfies(version, FEATURES_BY_VERSION[feature])
 }
 
 /**
@@ -43,12 +38,8 @@ const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, ver
  */
 export const enabledFeatures = (version?: string): FEATURES[] => {
   const chainFeatures = getChainInfo().features
-
-  const versionedFeatures = FEATURES_BY_VERSION.filter((feat) => checkFeatureEnabledByVersion(feat, version)).map(
-    ({ name }) => name,
-  )
-
-  return chainFeatures.concat(versionedFeatures)
+  if (!version) return chainFeatures
+  return chainFeatures.filter((feat) => isEnabledByVersion(feat, version))
 }
 
 export const hasFeature = (name: FEATURES, version?: string): boolean => {
