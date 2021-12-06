@@ -1,21 +1,27 @@
 import { ReactElement } from 'react'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { getExplorerInfo } from 'src/config'
+import { BalanceData } from '../dataFetcher'
 
-const AssetTableCell = (props): ReactElement => {
-  const { asset } = props
+const StyledParagraph = styled(Paragraph)`
+  margin-left: 10px;
+  margin-right: 10px;
+`
 
-  return (
-    <Block justify="left">
-      <Img alt={asset.name} height={26} onError={setImageToPlaceholder} src={asset.logoUri} />
-      <Paragraph noMargin size="lg" style={{ marginLeft: 10 }}>
-        {asset.name}
-      </Paragraph>
-    </Block>
-  )
-}
+const AssetTableCell = ({ asset }: { asset: BalanceData['asset'] }): ReactElement => (
+  <Block justify="left">
+    <Img alt={asset.name} height={26} onError={setImageToPlaceholder} src={asset.logoUri} />
+    <StyledParagraph noMargin size="lg">
+      {asset.name}
+    </StyledParagraph>
+    <ExplorerButton explorerUrl={getExplorerInfo(asset.address)} />
+  </Block>
+)
 
 export default AssetTableCell
