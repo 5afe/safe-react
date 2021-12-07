@@ -31,11 +31,11 @@ import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
-import { onboardUser } from 'src/components/ConnectButton'
 import { getGasParam } from '../../transactions/gas'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import { LocalTransactionStatus } from '../models/types/gateway.d'
+import { onboardUser } from 'src/logic/wallets/onboard'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean

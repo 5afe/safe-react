@@ -2,7 +2,6 @@ import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
@@ -39,6 +38,7 @@ import { getLastTransaction } from '../selectors/gatewayTransactions'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
 import { updateTransactionStatus } from './updateTransactionStatus'
+import { onboardUser } from 'src/logic/wallets/onboard'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean

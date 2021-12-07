@@ -9,8 +9,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import onboard from 'src/logic/wallets/onboard'
 import { useSelector } from 'react-redux'
-import { currentPairingUri } from 'src/logic/mobilePairing/selectors'
-import { MOBILE_PAIRING_WALLET } from 'src/logic/wallets/utils/mobilePairingWallet'
+import { PAIRING_MODULE } from 'src/logic/pairing/onboardModule'
+import { currentPairingUri } from 'src/logic/pairing/selectors'
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -36,7 +36,7 @@ const StyledParagraph = styled(Paragraph)`
 const ConnectDetails = (): ReactElement => {
   const uri = useSelector(currentPairingUri)
   useEffect(() => {
-    onboard().walletSelect(MOBILE_PAIRING_WALLET)
+    onboard().walletSelect(PAIRING_MODULE)
   }, [])
 
   return (
@@ -53,7 +53,8 @@ const ConnectDetails = (): ReactElement => {
         <StyledParagraph noMargin size="xl" weight="bolder">
           Connect with Mobile Safe
         </StyledParagraph>
-        <QRCode size={100} value={uri} />
+        {/* TODO: Loading spinner */}
+        {uri ? <QRCode size={100} value={uri} /> : 'Loading...'}
         <a href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">
           <img
             src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"

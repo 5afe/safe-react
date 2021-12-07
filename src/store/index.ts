@@ -44,11 +44,11 @@ import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
 import { localTransactionsMiddleware } from 'src/logic/safe/store/middleware/localTransactionsMiddleware'
-import mobilePairingReducer, { MobilePairingState, MOBILE_PAIRING_REDUCER_ID } from 'src/logic/mobilePairing/reducer'
 import localTransactionsReducer, {
   LocalStatusesState,
   LOCAL_TRANSACTIONS_ID,
 } from 'src/logic/safe/store/reducer/localTransactions'
+import pairingReducer, { PAIRING_REDUCER_ID, PairingState } from 'src/logic/pairing/reducer'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
@@ -93,7 +93,7 @@ const reducers = {
   [CURRENT_SESSION_REDUCER_ID]: currentSessionReducer,
   [CONFIG_REDUCER_ID]: configReducer,
   [APPEARANCE_REDUCER_ID]: appearanceReducer,
-  [MOBILE_PAIRING_REDUCER_ID]: mobilePairingReducer,
+  [PAIRING_REDUCER_ID]: pairingReducer,
 }
 
 const rootReducer = combineReducers(reducers)
@@ -116,7 +116,7 @@ export type AppReduxState = CombinedState<{
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
   [CONFIG_REDUCER_ID]: ConfigState
   [APPEARANCE_REDUCER_ID]: AppearanceState
-  [MOBILE_PAIRING_REDUCER_ID]: MobilePairingState
+  [PAIRING_REDUCER_ID]: PairingState
 }>
 
 export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
