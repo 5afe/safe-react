@@ -113,19 +113,19 @@ export const addressInList =
   (address: string): boolean =>
     list.some((ownerAddress) => sameAddress(ownerAddress.value, address))
 
-export const getTxTo = (tx: Transaction): AddressEx | undefined => {
-  switch (tx.txInfo.type) {
+export const getTxTo = ({ txInfo }: Pick<Transaction, 'txInfo'>): AddressEx | undefined => {
+  switch (txInfo.type) {
     case 'Transfer': {
-      return tx.txInfo.recipient
+      return txInfo.recipient
     }
     case 'SettingsChange': {
       return undefined
     }
     case 'Custom': {
-      return tx.txInfo.to
+      return txInfo.to
     }
     case 'Creation': {
-      return tx.txInfo.factory || undefined
+      return txInfo.factory || undefined
     }
   }
 }
