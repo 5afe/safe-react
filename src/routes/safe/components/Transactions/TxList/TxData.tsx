@@ -86,7 +86,6 @@ export const TxData = ({ txData, txInfo }: TxDataProps): ReactElement | null => 
 
   // FixMe: this way won't scale well
   if (isDeleteAllowance(txData.dataDecoded.method)) {
-    console.log(txInfo)
     return <DeleteSpendingLimitDetails txData={txData} txInfo={txInfo} />
   }
 
