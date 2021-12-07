@@ -1,6 +1,6 @@
 import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
 
-import { getRpcServiceUrl, getDisabledWallets, _getChainId } from 'src/config'
+import { getRpcServiceUrl, getDisabledWallets } from 'src/config'
 import { WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
@@ -11,19 +11,9 @@ type Wallet = WalletInitOptions & {
 
 const wallets = (): Wallet[] => {
   const rpcUrl = getRpcServiceUrl()
-  const chainId = _getChainId()
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    {
-      walletName: WALLETS.WALLET_CONNECT,
-      preferred: true,
-      // as stated in the documentation, `infuraKey` is not mandatory if rpc is provided
-      rpc: { [chainId]: rpcUrl },
-      networkId: parseInt(chainId, 10),
-      desktop: true,
-      bridge: 'https://safe-walletconnect.gnosis.io/',
-    },
     {
       walletName: WALLETS.TREZOR,
       appUrl: 'gnosis-safe.io',
