@@ -10,7 +10,6 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getChainInfo } from 'src/config'
 
 const FEATURES_BY_VERSION: Record<string, string> = {
-  [FEATURES.ERC1155]: '>=1.1.1',
   [FEATURES.SAFE_TX_GAS_OPTIONAL]: '>=1.3.0',
 }
 
