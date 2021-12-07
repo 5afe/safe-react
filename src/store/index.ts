@@ -40,7 +40,7 @@ import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectible
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
-import mobilePairingReducer, { MobilePairingState, MOBILE_PAIRING_REDUCER_ID } from 'src/logic/mobilePairing/reducer'
+import pairingReducer, { PAIRING_REDUCER_ID, PairingState } from 'src/logic/pairing/reducer'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 export const LS_CONFIG: RLSOptions | LoadOptions = {
@@ -82,7 +82,7 @@ const reducers = {
   [CURRENT_SESSION_REDUCER_ID]: currentSessionReducer,
   [CONFIG_REDUCER_ID]: configReducer,
   [APPEARANCE_REDUCER_ID]: appearanceReducer,
-  [MOBILE_PAIRING_REDUCER_ID]: mobilePairingReducer,
+  [PAIRING_REDUCER_ID]: pairingReducer,
 }
 
 const rootReducer = combineReducers(reducers)
@@ -104,7 +104,7 @@ export type AppReduxState = CombinedState<{
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
   [CONFIG_REDUCER_ID]: ConfigState
   [APPEARANCE_REDUCER_ID]: AppearanceState
-  [MOBILE_PAIRING_REDUCER_ID]: MobilePairingState
+  [PAIRING_REDUCER_ID]: PairingState
 }>
 
 export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)

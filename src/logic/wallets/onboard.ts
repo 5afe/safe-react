@@ -2,11 +2,12 @@ import Onboard from 'bnc-onboard'
 import { API, Initialization, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
 import { _getChainId, getChainName } from 'src/config'
-import { setWeb3 } from './getWeb3'
+import { getWeb3, setWeb3 } from './getWeb3'
 import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
-import mobilePairingWallet from './utils/mobilePairingWallet'
+import getPairingModule from '../pairing/onboardModule'
+import { shouldSwitchNetwork, switchNetwork } from './utils/network'
 
 const getOnboardConfiguration = (): Initialization => {
   let lastUsedAddress = ''
@@ -45,11 +46,11 @@ const getOnboardConfiguration = (): Initialization => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: [mobilePairingWallet(), ...getSupportedWallets()],
+      wallets: [getPairingModule(), ...getSupportedWallets()],
     },
     walletCheck: [
       { checkName: 'derivationPath' },
-      // { checkName: 'connect' },
+      { checkName: 'connect' },
       { checkName: 'accounts' },
       { checkName: 'network' },
       transactionDataCheck(),
@@ -68,6 +69,23 @@ export const onboard = (): typeof currentOnboardInstance => {
   }
 
   return currentOnboardInstance
+}
+
+export const checkWallet = async (): Promise<boolean> => {
+  if (shouldSwitchNetwork()) {
+    switchNetwork(onboard().getState().wallet, _getChainId()).catch((e) => e.log())
+  }
+
+  return await onboard().walletCheck()
+}
+
+export const onboardUser = async (): Promise<boolean> => {
+  // before calling walletSelect you want to check if web3 has been instantiated
+  // which indicates that a wallet has already been selected
+  // and web3 has been instantiated with that provider
+  const web3 = getWeb3()
+  const walletSelected = web3 ? true : await onboard().walletSelect()
+  return walletSelected && checkWallet()
 }
 
 export default onboard

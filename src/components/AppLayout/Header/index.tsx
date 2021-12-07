@@ -16,8 +16,7 @@ import {
 import { removeProvider } from 'src/logic/wallets/store/actions'
 import onboard from 'src/logic/wallets/onboard'
 import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
-import { currentPaired } from 'src/logic/mobilePairing/selectors'
-import { MOBILE_PAIRING_WALLET } from 'src/logic/wallets/utils/mobilePairingWallet'
+import { pairingStatus } from 'src/logic/pairing/selectors'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -25,13 +24,13 @@ const HeaderComponent = (): React.ReactElement => {
   const userAddress = useSelector(userAccountSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
-  const isPaired = useSelector(currentPaired)
+  const isPaired = useSelector(pairingStatus)
   const dispatch = useDispatch()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
       const lastUsedProvider = await loadLastUsedProvider()
-      if (lastUsedProvider && lastUsedProvider !== MOBILE_PAIRING_WALLET) {
+      if (lastUsedProvider) {
         await onboard().walletSelect(lastUsedProvider)
       }
     }
