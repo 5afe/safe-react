@@ -1,5 +1,5 @@
 import Onboard from 'bnc-onboard'
-import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
+import { API, Initialization, Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
 import { _getChainId, getChainName } from 'src/config'
 import { setWeb3 } from './getWeb3'
@@ -7,12 +7,13 @@ import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
+import mobilePairingWallet from './utils/mobilePairingWallet'
 
 const NETWORK_NAMES: Record<ChainId, string> = {
   [CHAIN_ID.ETHEREUM]: 'mainnet',
 }
 
-const getOnboardConfiguration = () => {
+const getOnboardConfiguration = (): Initialization => {
   let lastUsedAddress = ''
   let providerName: string | null = null
   let lastNetworkId = ''
@@ -50,11 +51,11 @@ const getOnboardConfiguration = () => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: getSupportedWallets(),
+      wallets: [mobilePairingWallet(), ...getSupportedWallets()],
     },
     walletCheck: [
       { checkName: 'derivationPath' },
-      { checkName: 'connect' },
+      // { checkName: 'connect' },
       { checkName: 'accounts' },
       { checkName: 'network' },
       transactionDataCheck(),
@@ -63,9 +64,12 @@ const getOnboardConfiguration = () => {
 }
 
 let currentOnboardInstance: API
-export const onboard = (): API => {
+
+export const onboard = (): typeof currentOnboardInstance => {
   const chainId = _getChainId()
-  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
+
+  const isCurrentChain = currentOnboardInstance && currentOnboardInstance.getState().appNetworkId.toString() === chainId
+  if (!isCurrentChain) {
     currentOnboardInstance = Onboard(getOnboardConfiguration())
   }
 

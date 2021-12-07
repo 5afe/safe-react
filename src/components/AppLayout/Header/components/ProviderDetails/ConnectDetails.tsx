@@ -1,5 +1,5 @@
-import { ReactElement } from 'react'
-import { Card, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { ReactElement, useEffect } from 'react'
+import { Card } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import Divider from '@material-ui/core/Divider'
 import QRCode from 'qrcode.react'
@@ -7,8 +7,10 @@ import QRCode from 'qrcode.react'
 import ConnectButton from 'src/components/ConnectButton'
 import Paragraph from 'src/components/layout/Paragraph'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import useWalletConnect from '../../hooks/useWalletConnect'
-import { getChainById } from 'src/config'
+import onboard from 'src/logic/wallets/onboard'
+import { useSelector } from 'react-redux'
+import { currentPairingUri } from 'src/logic/mobilePairing/selectors'
+import { MOBILE_PAIRING_WALLET } from 'src/logic/wallets/utils/mobilePairingWallet'
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -32,9 +34,10 @@ const StyledParagraph = styled(Paragraph)`
 `
 
 const ConnectDetails = (): ReactElement => {
-  const { uri, chainId, address } = useWalletConnect()
-
-  const { shortName } = getChainById(chainId)
+  const uri = useSelector(currentPairingUri)
+  useEffect(() => {
+    onboard().walletSelect(MOBILE_PAIRING_WALLET)
+  }, [])
 
   return (
     <StyledCard>
@@ -48,22 +51,16 @@ const ConnectDetails = (): ReactElement => {
       <Divider orientation="vertical" flexItem />
       <CardContainer>
         <StyledParagraph noMargin size="xl" weight="bolder">
-          {uri ? 'Connected to Mobile' : 'Connect to Mobile'}
+          Connect with Mobile Safe
         </StyledParagraph>
-        {!chainId ? (
-          <>
-            <QRCode size={100} value={uri} />
-            <a href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">
-              <img
-                src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
-                alt="Download on the App Store"
-                style={{ height: 35 }}
-              />
-            </a>
-          </>
-        ) : (
-          <EthHashInfo hash={address} shortName={shortName} showAvatar showCopyBtn shortenHash={4} />
-        )}
+        <QRCode size={100} value={uri} />
+        <a href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">
+          <img
+            src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
+            alt="Download on the App Store"
+            style={{ height: 35 }}
+          />
+        </a>
       </CardContainer>
     </StyledCard>
   )
