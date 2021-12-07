@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js'
 import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
 
 import { getSDKWeb3ReadOnly, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { getGasPriceOracles } from 'src/config'
+import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors } from '../exceptions/CodedException'
 import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -31,6 +31,12 @@ export const calculateGasPrice = async (): Promise<string> => {
     } catch (err) {
       // Keep iterating price oracles
     }
+  }
+
+  // A fallback to fixed gas price from the chain config
+  const fixedGasPrice = getFixedGasPrice()
+  if (fixedGasPrice) {
+    return fixedGasPrice.weiValue
   }
 
   // A fallback based on the latest mined blocks when none of the oracles are working
