@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getShortName, isFeatureEnabled } from 'src/config'
+import { getShortName } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -15,12 +15,13 @@ import {
   generatePrefixedAddressRoutes,
 } from 'src/routes/routes'
 import { IS_PRODUCTION } from 'src/utils/constants'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
-  const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
-  const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
+  const safeAppsEnabled = hasFeature(FEATURES.SAFE_APPS)
+  const isCollectiblesEnabled = hasFeature(FEATURES.ERC721)
+  const isSpendingLimitEnabled = hasFeature(FEATURES.SPENDING_LIMIT)
   const { needsUpdate } = useSelector(currentSafeWithNames)
   const safeAddress = extractSafeAddress()
   const granted = useSelector(grantedSelector)

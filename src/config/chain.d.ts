@@ -44,8 +44,3 @@ export enum WALLETS {
   LATTICE = 'lattice',
   KEYSTONE = 'keystone',
 }
-
-// This is unrelated to the chains and will be removed when retrieved from core SDK
-export enum SAFE_FEATURES {
-  SAFE_TX_GAS_OPTIONAL = 'SAFE_TX_GAS_OPTIONAL',
-}

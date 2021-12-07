@@ -23,8 +23,8 @@ export const emptyChainInfo: ChainInfo = {
   l2: false,
   description: '',
   rpcUri: { authentication: '' as RPC_AUTHENTICATION, value: '' },
-  safeAppsRpcUri: { authentication: '' as RPC_AUTHENTICATION, value: '' },
   publicRpcUri: { authentication: '' as RPC_AUTHENTICATION, value: '' },
+  safeAppsRpcUri: { authentication: '' as RPC_AUTHENTICATION, value: '' },
   blockExplorerUriTemplate: {
     address: '',
     txHash: '',

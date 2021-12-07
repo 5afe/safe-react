@@ -127,7 +127,16 @@ describe('fetchSafe', () => {
           nonce: 492,
           currentVersion: '1.3.0',
           needsUpdate: false,
-          featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION', 'SAFE_TX_GAS_OPTIONAL'],
+          featuresEnabled: [
+            'CONTRACT_INTERACTION',
+            'DOMAIN_LOOKUP',
+            'EIP1559',
+            'ERC1155',
+            'ERC721',
+            'SAFE_APPS',
+            'SAFE_TX_GAS_OPTIONAL',
+            'SPENDING_LIMIT',
+          ],
         },
       },
     ]

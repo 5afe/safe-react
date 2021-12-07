@@ -2,7 +2,6 @@ import {
   ChainInfo,
   GasPriceOracle,
   GAS_PRICE_TYPE,
-  FEATURES,
   RPC_AUTHENTICATION,
   RpcUri,
 } from '@gnosis.pm/safe-react-gateway-sdk'
@@ -16,7 +15,7 @@ import {
   SAFE_APPS_RPC_TOKEN,
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
-import { ChainId, ChainName, SAFE_FEATURES, ShortName } from './chain.d'
+import { ChainId, ChainName, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 import { evalTemplate } from './utils'
 
@@ -123,11 +122,8 @@ export const getExplorerUrl = (): string => {
 
 export const getHashedExplorerUrl = (hash: string): string => {
   const isTx = hash.length > 42
-
   const param = isTx ? 'txHash' : 'address'
   const uri = getExplorerUriTemplate()[param]
-  const params = { [param]: hash }
-
   return evalTemplate(uri, { [param]: hash })
 }
 
@@ -138,13 +134,6 @@ export const getExplorerInfo = (hash: string): (() => { url: string; alt: string
   const { hostname } = new URL(url)
   const alt = `View on ${hostname}` // Not returned by CGW
   return () => ({ url, alt })
-}
-
-export const isFeatureEnabled = (feature: FEATURES | SAFE_FEATURES) => {
-  return (
-    getChainInfo().features.includes(feature as FEATURES) ||
-    Object.values(SAFE_FEATURES).includes(feature as SAFE_FEATURES)
-  )
 }
 
 const getExplorerApiKey = (apiUrl: string): string | undefined => {

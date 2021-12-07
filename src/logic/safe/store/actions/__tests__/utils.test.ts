@@ -1,7 +1,7 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { ChainId, SAFE_FEATURES } from 'src/config/chain.d'
+import { ChainId } from 'src/config/chain.d'
 import {
   buildSafeOwners,
   extractRemoteSafeInfo,
@@ -149,12 +149,15 @@ describe('extractRemoteSafeInfo', () => {
       needsUpdate: false,
       guard: undefined,
       featuresEnabled: [
-        FEATURES.ERC721,
-        FEATURES.ERC1155,
-        FEATURES.SAFE_APPS,
-        FEATURES.CONTRACT_INTERACTION,
-        SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL,
-      ],
+        'CONTRACT_INTERACTION',
+        'DOMAIN_LOOKUP',
+        'EIP1559',
+        'ERC1155',
+        'ERC721',
+        'SAFE_APPS',
+        'SAFE_TX_GAS_OPTIONAL',
+        'SPENDING_LIMIT',
+      ] as FEATURES[],
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules as any)
@@ -179,12 +182,15 @@ describe('extractRemoteSafeInfo', () => {
       needsUpdate: false,
       guard: '0x4f8a82d73729A33E0165aDeF3450A7F85f007528',
       featuresEnabled: [
-        FEATURES.ERC721,
-        FEATURES.ERC1155,
-        FEATURES.SAFE_APPS,
-        FEATURES.CONTRACT_INTERACTION,
-        SAFE_FEATURES.SAFE_TX_GAS_OPTIONAL,
-      ],
+        'CONTRACT_INTERACTION',
+        'DOMAIN_LOOKUP',
+        'EIP1559',
+        'ERC1155',
+        'ERC721',
+        'SAFE_APPS',
+        'SAFE_TX_GAS_OPTIONAL',
+        'SPENDING_LIMIT',
+      ] as FEATURES[],
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules as any)
