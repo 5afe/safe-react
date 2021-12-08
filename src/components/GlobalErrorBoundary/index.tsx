@@ -86,7 +86,7 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
       <Content>
         <Title size="md">Something went wrong, please try again.</Title>
         <FixedIcon type="networkError" />
-        {IS_PRODUCTION ? (
+        {IS_PRODUCTION && (
           <div>
             <Text size="xl" as="span">
               In case the problem persists, please reach out to us via{' '}
@@ -109,7 +109,8 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
               <Icon type="externalLink" color="primary" size="sm" />
             </LinkWrapper>
           </div>
-        ) : (
+        )}
+        {!IS_PRODUCTION && (
           <>
             <Text size="xl" color="error">
               {error.toString()}
