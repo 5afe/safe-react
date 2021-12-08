@@ -1,0 +1,23 @@
+{
+  "short_name": "Gnosis Safe App",
+  "name": "Gnosis Safe App",
+  "icons": [
+    {
+      "src": "resources/safe192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "resources/safe512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "io.gnosis.safe"
+    }
+  ]
+}
