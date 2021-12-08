@@ -49,7 +49,7 @@ const useMobileInstallHandler = (): AndroidInstallHandler => {
     }
   }, [])
 
-  return { onClickInstall: deferredPrompt.current?.prompt || undefined }
+  return { onClickInstall: deferredPrompt.current?.prompt }
 }
 
 export default useMobileInstallHandler
