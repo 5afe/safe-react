@@ -9,7 +9,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import onboard from 'src/logic/wallets/onboard'
 import { useSelector } from 'react-redux'
-import { PAIRING_MODULE } from 'src/logic/pairing/onboardModule'
+import { PAIRING_MODULE_NAME } from 'src/logic/pairing/onboardModule'
 import { currentPairingUri } from 'src/logic/pairing/selectors'
 
 const StyledCard = styled(Card)`
@@ -36,7 +36,7 @@ const StyledParagraph = styled(Paragraph)`
 const ConnectDetails = (): ReactElement => {
   const uri = useSelector(currentPairingUri)
   useEffect(() => {
-    onboard().walletSelect(PAIRING_MODULE)
+    onboard().walletSelect(PAIRING_MODULE_NAME)
   }, [])
 
   return (

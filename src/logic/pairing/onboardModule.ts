@@ -6,6 +6,7 @@ import { setPairingUri, setPairingState } from 'src/logic/pairing/actions'
 import { initialPairingState } from 'src/logic/pairing/reducer'
 import { store } from 'src/store'
 
+// TODO: Mobile logo
 const walletConnectIcon = `
 <svg
 height="25"
@@ -20,18 +21,19 @@ fill="#3b99fc"/>
 
 // Modified version of the built in WC module in onboard
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
-export const PAIRING_MODULE = 'WalletConnect'
+export const PAIRING_MODULE_NAME = 'MobileSafe'
 const getPairingModule = (): WalletModule => {
   return {
-    name: PAIRING_MODULE,
+    name: PAIRING_MODULE_NAME,
     svg: walletConnectIcon,
     wallet: async (helpers) => {
-      const chainId = parseInt(_getChainId(), 10)
+      const chainId = _getChainId()
 
       const provider = new WalletConnectProvider({
         rpc: { [chainId]: getRpcServiceUrl() },
-        chainId,
+        chainId: parseInt(_getChainId(), 10),
         bridge: 'https://safe-walletconnect.gnosis.io/',
+        storageId: 'SAFE__pairingProvider',
         qrcode: false, // Don't show QR modal
       })
 
@@ -49,7 +51,7 @@ const getPairingModule = (): WalletModule => {
 
       provider.wc.on('disconnect', () => {
         store.dispatch(setPairingState(initialPairingState))
-        helpers.resetWalletState({ disconnected: true, walletName: PAIRING_MODULE })
+        helpers.resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
       })
 
       provider.enable()
@@ -59,9 +61,10 @@ const getPairingModule = (): WalletModule => {
       }
 
       return {
+        ...(!provider.connected && { heading: 'Heading', description: 'Description' }),
         provider,
         interface: {
-          name: PAIRING_MODULE,
+          name: PAIRING_MODULE_NAME,
           // Trigger onboard 'connect' checkName
           connect: () => Promise.resolve(undefined),
           address: {
@@ -99,7 +102,6 @@ const getPairingModule = (): WalletModule => {
     },
     type: 'sdk',
     desktop: true,
-    mobile: true,
     preferred: true,
   }
 }
