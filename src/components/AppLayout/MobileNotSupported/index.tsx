@@ -104,9 +104,10 @@ const StyledLink = styled.a`
 
 type Props = {
   onClose: () => void
+  onClickInstall?: () => void
 }
 
-export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
+export const MobileNotSupported = ({ onClose, onClickInstall }: Props): ReactElement => {
   return (
     <MobileView>
       <Overlay>
@@ -114,12 +115,18 @@ export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
           <StyledCard>
             <Text size="lg">The Gnosis Safe web app is not optimized for mobile.</Text>
             <Text size="lg">Get the mobile app for a better experience.</Text>
-            <Button size="md" color="primary" variant="contained">
-              <StyledLink target="_blank" href="https://gnosis-safe.io/#mobile" rel="noopener noreferrer">
+            <Button size="md" color="primary" variant="contained" onClick={onClickInstall}>
+              {!onClickInstall ? (
+                <StyledLink target="_blank" href="https://gnosis-safe.io/#mobile" rel="noopener noreferrer">
+                  <Text color="white" size="xl">
+                    Get the App
+                  </Text>
+                </StyledLink>
+              ) : (
                 <Text color="white" size="xl">
                   Get the App
                 </Text>
-              </StyledLink>
+              )}
             </Button>
           </StyledCard>
 
