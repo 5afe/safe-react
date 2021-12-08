@@ -13,7 +13,7 @@ import {
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
-import { IS_PRODUCTION } from 'src/utils/constants'
+import { IS_DEV } from 'src/utils/constants'
 import TxInfoMultiSend from './TxInfoMultiSend'
 
 type Props = { txDetails: ExpandedTxDetails }
@@ -27,7 +27,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {!IS_PRODUCTION && (
+      {IS_DEV && (
         <div className="tx-share">
           <TxShareButton id={txDetails.txId} />
         </div>

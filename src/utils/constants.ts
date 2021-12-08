@@ -2,9 +2,10 @@ import { CHAIN_ID } from 'src/config/chain.d'
 
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
+export const IS_DEV = APP_ENV === 'dev'
 export const IS_STAGING = APP_ENV === 'staging'
 export const IS_PRODUCTION = APP_ENV === 'production'
-export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? CHAIN_ID.ETHEREUM : CHAIN_ID.RINKEBY
+export const DEFAULT_CHAIN_ID = IS_DEV ? CHAIN_ID.RINKEBY : CHAIN_ID.ETHEREUM
 export const PUBLIC_URL = process.env.PUBLIC_URL
 export const TX_SERVICE_VERSION = '1'
 export const LS_NAMESPACE = 'SAFE'
@@ -30,10 +31,9 @@ export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 
 export const SAFE_POLLING_INTERVAL = process.env.NODE_ENV === 'test' ? 4500 : 15000
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY || ''
 export const ETHGASSTATION_API_KEY = process.env.REACT_APP_ETHGASSTATION_API_KEY
-export const CONFIG_SERVICE_URL =
-  process.env.CONFIG_SERVICE_URL || IS_PRODUCTION
-    ? 'https://safe-config.gnosis.io/api/v1'
-    : 'https://safe-config.staging.gnosisdev.com/api/v1'
+export const CONFIG_SERVICE_URL = IS_PRODUCTION
+  ? 'https://safe-config.gnosis.io/api/v1'
+  : 'https://safe-config.staging.gnosisdev.com/api/v1'
 export const GATEWAY_URL =
   IS_PRODUCTION || window.location.hash === '#prod'
     ? 'https://safe-client.gnosis.io/v1'
