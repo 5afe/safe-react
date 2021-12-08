@@ -162,11 +162,13 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
     ? txDetails.detailedExecutionInfo
     : getMultisigExecutionInfo(txDetails)
 
+  // Will only be used as a fallback whilst waiting on backend tx creation cache
+  const now = new Date().getTime()
   const timestamp = isTxQueued(txDetails.txStatus)
     ? isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)
       ? txDetails.detailedExecutionInfo.submittedAt
-      : 0
-    : txDetails.executedAt || 0
+      : now
+    : txDetails.executedAt || now
 
   const tx: Transaction = {
     id: txDetails.txId,
