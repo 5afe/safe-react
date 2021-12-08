@@ -134,8 +134,8 @@ function ReviewNewSafeStep(): ReactElement | null {
       <DescriptionContainer align="center">
         <Paragraph color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
-          currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCurrency.name}. The
-          exact amount will be determined by your wallet.
+          currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCurrency.symbol}.
+          The exact amount will be determined by your wallet.
         </Paragraph>
       </DescriptionContainer>
     </Row>

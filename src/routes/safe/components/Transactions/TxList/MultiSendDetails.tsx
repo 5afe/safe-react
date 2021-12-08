@@ -69,7 +69,7 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
 
         const actionTitle = `Action ${index + 1} ${dataDecoded ? `(${dataDecoded.method})` : ''}`
         const amount = value ? fromTokenUnit(value, nativeCurrency.decimals) : 0
-        const title = `Send ${amount} ${nativeCurrency.name} to:`
+        const title = `Send ${amount} ${nativeCurrency.symbol} to:`
 
         if (dataDecoded) {
           // Backend decoded data
