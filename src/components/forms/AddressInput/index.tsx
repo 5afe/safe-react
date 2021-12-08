@@ -53,10 +53,13 @@ const AddressInput = ({
     [validators],
   )
 
+  // Default validators
+  const internalValidators = useMemo(() => composeValidators(required, mustBeEthereumAddress), [])
+
   // Internal validators + externally passed validators
   const allValidators = useMemo(
-    () => composeValidators(required, mustBeEthereumAddress, sanitizedValidators),
-    [sanitizedValidators],
+    () => composeValidators(internalValidators, sanitizedValidators),
+    [internalValidators, sanitizedValidators],
   )
 
   const onValueChange = useCallback(
@@ -80,7 +83,7 @@ const AddressInput = ({
           })
       } else {
         // A regular address hash
-        if (!allValidators(address)) {
+        if (!internalValidators(address)) {
           const parsed = parsePrefixedAddress(address)
           const checkedAddress = checksumAddress(parsed.address) || parsed.address
 
@@ -89,7 +92,7 @@ const AddressInput = ({
         }
       }
     },
-    [setCurrentInput, setResolutions, allValidators, fieldMutator],
+    [setCurrentInput, setResolutions, internalValidators, fieldMutator],
   )
 
   useEffect(() => {
