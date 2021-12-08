@@ -5,6 +5,7 @@ import { ReactElement } from 'react'
 import { MobileView } from 'react-device-detect'
 
 import Phone from 'src/components/AppLayout/MobileStart/assets/phone@2x.png'
+import useMobileInstallHandler from '../hooks/useMobileInstallHandler'
 
 const Overlay = styled.div`
   display: block;
@@ -104,10 +105,11 @@ const StyledLink = styled.a`
 
 type Props = {
   onClose: () => void
-  onClickInstall?: () => void
 }
 
-export const MobileNotSupported = ({ onClose, onClickInstall }: Props): ReactElement => {
+export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
+  const { onClickInstall } = useMobileInstallHandler()
+
   return (
     <MobileView>
       <Overlay>

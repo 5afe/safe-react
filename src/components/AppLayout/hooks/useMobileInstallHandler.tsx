@@ -31,12 +31,11 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 type AndroidInstallHandler = {
-  onClickInstall: () => void | undefined
+  onClickInstall: (() => Promise<void>) | undefined
 }
 
 const useMobileInstallHandler = (): AndroidInstallHandler => {
   const deferredPrompt = useRef<BeforeInstallPromptEvent>()
-  let onClickInstall
 
   const showMobileNotSupportedBanner = (e: BeforeInstallPromptEvent) => {
     deferredPrompt.current = e
@@ -50,13 +49,7 @@ const useMobileInstallHandler = (): AndroidInstallHandler => {
     }
   }, [])
 
-  useEffect(() => {
-    if (deferredPrompt.current) {
-      onClickInstall = deferredPrompt.current.prompt()
-    }
-  }, [deferredPrompt])
-
-  return { onClickInstall }
+  return { onClickInstall: deferredPrompt.current?.prompt || undefined }
 }
 
 export default useMobileInstallHandler
