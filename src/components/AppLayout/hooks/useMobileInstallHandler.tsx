@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react'
  *
  * @deprecated Only supported on Chrome and Android Webview.
  */
-interface BeforeInstallPromptEvent extends Event {
+export interface BeforeInstallPromptEvent extends Event {
   /**
    * Returns an array of DOMString items containing the platforms on which the event was dispatched.
    * This is provided for user agents that want to present a choice of versions to the user such as,
@@ -31,7 +31,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 type AndroidInstallHandler = {
-  onClickInstall: (() => Promise<void>) | undefined
+  onClickInstall: BeforeInstallPromptEvent | undefined
 }
 
 const useMobileInstallHandler = (): AndroidInstallHandler => {
@@ -49,7 +49,7 @@ const useMobileInstallHandler = (): AndroidInstallHandler => {
     }
   }, [])
 
-  return { onClickInstall: deferredPrompt.current?.prompt }
+  return { onClickInstall: deferredPrompt.current }
 }
 
 export default useMobileInstallHandler
