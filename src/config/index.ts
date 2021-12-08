@@ -4,6 +4,7 @@ import {
   GAS_PRICE_TYPE,
   RPC_AUTHENTICATION,
   RpcUri,
+  GasPriceFixed,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
@@ -87,6 +88,13 @@ export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], Gas
   }
 
   return getChainInfo().gasPrice.filter(isOracleType)
+}
+
+export const getFixedGasPrice = (): Extract<ChainInfo['gasPrice'][number], GasPriceFixed> => {
+  const isFixed = (gasPrice: ChainInfo['gasPrice'][number]): gasPrice is GasPriceFixed => {
+    return gasPrice.type === GAS_PRICE_TYPE.FIXED
+  }
+  return getChainInfo().gasPrice.filter(isFixed)[0]
 }
 
 export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
