@@ -56,8 +56,7 @@ const getModalTitleAndDescription = (
 
   if (thresholdReached) {
     modalInfo.title = 'Execute transaction'
-    modalInfo.description =
-      'This action will execute this transaction. A separate Transaction will be performed to submit the execution.'
+    modalInfo.description = 'This action will execute this transaction.'
   } else {
     modalInfo.title = 'Approve Transaction'
     modalInfo.description =

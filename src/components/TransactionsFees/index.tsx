@@ -43,8 +43,8 @@ export const TransactionFees = ({
               Make sure you have{' '}
               <Text size="lg" as="span" color="text" strong>
                 {gasCostFormatted}
-              </Text>{' '}
-              (fee price) {nativeCurrency.name} in this wallet to fund this confirmation.
+              </Text>
+              {` ${nativeCurrency.symbol}`} in this wallet to fund the associated transaction fee.
             </>
           )}
         </Paragraph>
