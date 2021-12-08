@@ -8,11 +8,6 @@ import { CodedException, Errors } from '../exceptions/CodedException'
 import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const EMPTY_DATA = '0x'
-/**
- * The magic number is from web3.js
- * @see https://github.com/ChainSafe/web3.js/blob/c70722b919ac81e45760b9648c4b92fd8d0eeee1/packages/web3-core-method/src/index.js#L869
- */
-const FIXED_GAS_FEE = '2.5'
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { uri, gasParameter, gweiFactor } = gasPriceOracle
@@ -39,11 +34,9 @@ export const calculateGasPrice = async (): Promise<string> => {
     return fixedGasPrice.weiValue
   }
 
-  // A fallback based on the latest mined blocks when none of the oracles are working
+  // A fallback based on the median of a few last blocks
   const web3ReadOnly = getWeb3ReadOnly()
-  const fixedFee = web3ReadOnly.utils.toWei(FIXED_GAS_FEE, 'gwei')
-  const lastFee = await web3ReadOnly.eth.getGasPrice()
-  return BigNumber.sum(fixedFee, lastFee).toString()
+  return await web3ReadOnly.eth.getGasPrice()
 }
 
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
