@@ -15,6 +15,7 @@ import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import TxInfoMultiSend from './TxInfoMultiSend'
+import DelegateCallWarning from './DelegateCallWarning'
 
 type Props = { txDetails: ExpandedTxDetails }
 
@@ -82,22 +83,10 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       </div>
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          {isCustomTxInfo(txInfo) && !!txInfo?.to?.name ? (
-            <Text size="xl" strong as="span">
-              Delegate Call
-            </Text>
-          ) : (
-            <Text size="xl" strong as="span" color="error">
-              ⚠️ Unexpected Delegate Call
-            </Text>
-          )}
+          <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
         </div>
       )}
-      {isMultiSendTxInfo(txInfo) && (
-        <div className="tx-ms-contract">
-          <TxInfoMultiSend txInfo={txInfo} />
-        </div>
-      )}
+      {isMultiSendTxInfo(txInfo) && <TxInfoMultiSend txInfo={txInfo} />}
     </>
   )
 }
