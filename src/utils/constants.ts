@@ -3,7 +3,6 @@ import { CHAIN_ID } from 'src/config/chain.d'
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const IS_DEV = APP_ENV === 'dev'
-export const IS_STAGING = APP_ENV === 'staging'
 export const IS_PRODUCTION = APP_ENV === 'production'
 export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? CHAIN_ID.ETHEREUM : CHAIN_ID.RINKEBY
 export const PUBLIC_URL = process.env.PUBLIC_URL
