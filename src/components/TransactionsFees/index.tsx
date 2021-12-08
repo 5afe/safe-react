@@ -40,11 +40,12 @@ export const TransactionFees = ({
           connected wallet.{' '}
           {!isOffChainSignature && (
             <>
-              Make sure you have{' '}
+              Make sure you have
               <Text size="lg" as="span" color="text" strong>
-                {gasCostFormatted}
+                {' '}
+                {gasCostFormatted} {nativeCurrency.symbol}{' '}
               </Text>
-              {` ${nativeCurrency.symbol}`} in this wallet to fund the associated transaction fee.
+              in this wallet to fund the associated transaction fee.
             </>
           )}
         </Paragraph>
