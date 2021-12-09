@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { isCustomTxInfo, isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState } from 'src/store'
@@ -29,12 +29,15 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   const currentUser = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const isUserAnOwner = useSelector(grantedSelector)
+  const isWrongChain = useSelector(shouldSwitchWalletChain)
   const { txLocation } = useContext(TxLocationContext)
   const transactionsByNonce = useSelector((state: AppReduxState) =>
     getTransactionsByNonce(state, (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? -1),
   )
   const canCancel =
-    !transactionsByNonce.some(({ txInfo }) => isCustomTxInfo(txInfo) && txInfo.isCancellation) && isUserAnOwner
+    !transactionsByNonce.some(({ txInfo }) => isCustomTxInfo(txInfo) && txInfo.isCancellation) &&
+    isUserAnOwner &&
+    !isWrongChain
 
   const [state, setState] = useState<TransactionActions>({
     canConfirm: false,
@@ -51,13 +54,16 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
 
       const currentUserSigned = !missingSigners?.some((missingSigner) => sameAddress(missingSigner.value, currentUser))
       const oneToGo = confirmationsSubmitted === confirmationsRequired - 1 && isUserAnOwner
-      const canConfirm = ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned && isUserAnOwner
+      const canConfirm =
+        ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned && isUserAnOwner && !isWrongChain
+      const canConfirmThenExecute = txLocation === 'queued.next' && canConfirm && oneToGo
       const thresholdReached = confirmationsSubmitted >= confirmationsRequired
+      const canExecute = txLocation === 'queued.next' && thresholdReached && !isWrongChain
 
       setState({
         canConfirm,
-        canConfirmThenExecute: txLocation === 'queued.next' && canConfirm && oneToGo && isUserAnOwner,
-        canExecute: txLocation === 'queued.next' && thresholdReached,
+        canConfirmThenExecute,
+        canExecute,
         canCancel,
         isUserAnOwner,
         oneToGo,
@@ -65,7 +71,7 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
     } else {
       setState((prev) => ({ ...prev, isUserAnOwner }))
     }
-  }, [currentUser, isUserAnOwner, safeAddress, transaction, txLocation, canCancel])
+  }, [currentUser, isUserAnOwner, safeAddress, transaction, txLocation, canCancel, isWrongChain])
 
   return state
 }

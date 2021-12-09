@@ -20,6 +20,7 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
+import { useTransactionActions } from './hooks/useTransactionActions'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -83,6 +84,7 @@ type TxDetailsProps = {
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
+  const { canExecute, canCancel } = useTransactionActions(transaction)
 
   if (loading) {
     return (
@@ -123,7 +125,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       >
         <TxOwners txDetails={data} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && (
+      {!data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>
