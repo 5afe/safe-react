@@ -14,7 +14,6 @@ import {
   SAFE_SUBSECTION_ROUTE,
   generatePrefixedAddressRoutes,
 } from 'src/routes/routes'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 const useSidebarItems = (): ListItemType[] => {
@@ -75,13 +74,11 @@ const useSidebarItems = (): ListItemType[] => {
         iconType: 'info',
         href: currentSafeRoutes.SETTINGS_DETAILS,
       }),
-      IS_PRODUCTION
-        ? null
-        : makeEntryItem({
-            label: 'Appearance',
-            iconType: 'eye',
-            href: currentSafeRoutes.SETTINGS_APPEARANCE,
-          }),
+      makeEntryItem({
+        label: 'Appearance',
+        iconType: 'eye',
+        href: currentSafeRoutes.SETTINGS_APPEARANCE,
+      }),
       makeEntryItem({
         label: 'Owners',
         iconType: 'owners',

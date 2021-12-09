@@ -104,7 +104,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
       </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
         This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send{' '}
-        {chainInfo.nativeCurrency.name} and assets to this address (e.g. ETH, ERC20, ERC721)!
+        {chainInfo.nativeCurrency.symbol} and assets to this address (e.g. ETH, ERC20, ERC721)!
       </Paragraph>
       <Col layout="column" middle="xs">
         <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">

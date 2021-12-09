@@ -110,7 +110,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">{nativeCurrency.name}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{nativeCurrency.symbol}</InputAdornment>,
                       }}
                       name="value"
                       placeholder="Value*"

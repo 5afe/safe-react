@@ -56,7 +56,7 @@ export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.React
             component={TextField}
             disabled={disabled}
             inputAdornment={{
-              endAdornment: <InputAdornment position="end">{nativeCurrency.name}</InputAdornment>,
+              endAdornment: <InputAdornment position="end">{nativeCurrency.symbol}</InputAdornment>,
               disabled,
             }}
             name="value"
