@@ -1,11 +1,10 @@
-import { Button } from '@gnosis.pm/safe-react-components'
+import { Button, Switch } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
-import { ChangeEvent, ReactElement, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import { useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -87,10 +86,8 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
   const copyShortName = useSelector(copyShortNameSelector)
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
 
-  // Does not update store
-  const handlePrefixCheckbox = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => setShouldEncodePrefix(checked)
-
   const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
+
   return (
     <>
       <Row align="center" className={classes.heading} grow>
@@ -107,7 +104,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
       </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
         This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send{' '}
-        {chainInfo.nativeCurrency.name} and assets to this address (e.g. ETH, ERC20, ERC721)!
+        {chainInfo.nativeCurrency.symbol} and assets to this address (e.g. ETH, ERC20, ERC721)!
       </Paragraph>
       <Col layout="column" middle="xs">
         <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
@@ -117,10 +114,10 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           <QRCode size={135} value={qrCodeString} />
         </Block>
         <FormControlLabel
-          control={<Checkbox checked={shouldEncodePrefix} onChange={handlePrefixCheckbox} name="shouldEncodePrefix" />}
+          control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
           label={
             <>
-              Include <b>{chainInfo.shortName}:</b> in the QR code address
+              QR code with chain prefix (<b>{chainInfo.shortName}:</b>)
             </>
           }
         />

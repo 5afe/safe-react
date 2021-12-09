@@ -89,7 +89,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         }
 
         let shouldExpandOwnedSafes = false
-        if (ownedSafesOnNetwork.includes(currentSafeAddress)) {
+        if (isCurrentNetwork && ownedSafesOnNetwork.includes(currentSafeAddress)) {
           // Expand the Owned Safes if the current Safe is owned, but not added
           shouldExpandOwnedSafes = !localSafesOnNetwork.some(({ address }) =>
             isSameAddress(address, currentSafeAddress),
@@ -148,7 +148,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                           networkId={chainId}
                           onSafeClick={onSafeClick}
                           showAddSafeLink={!isAdded}
-                          shouldScrollToSafe={!isAdded}
+                          shouldScrollToSafe={shouldExpandOwnedSafes && !isAdded}
                         />
                       )
                     })}

@@ -2,9 +2,9 @@ import {
   ChainInfo,
   GasPriceOracle,
   GAS_PRICE_TYPE,
-  FEATURES,
   RPC_AUTHENTICATION,
   RpcUri,
+  GasPriceFixed,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
@@ -16,7 +16,7 @@ import {
   SAFE_APPS_RPC_TOKEN,
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
-import { ChainId, ChainName, SAFE_FEATURES, ShortName } from './chain.d'
+import { ChainId, ChainName, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 import { evalTemplate } from './utils'
 
@@ -90,6 +90,13 @@ export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], Gas
   return getChainInfo().gasPrice.filter(isOracleType)
 }
 
+export const getFixedGasPrice = (): Extract<ChainInfo['gasPrice'][number], GasPriceFixed> => {
+  const isFixed = (gasPrice: ChainInfo['gasPrice'][number]): gasPrice is GasPriceFixed => {
+    return gasPrice.type === GAS_PRICE_TYPE.FIXED
+  }
+  return getChainInfo().gasPrice.filter(isFixed)[0]
+}
+
 export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   const { transactionService } = getChainInfo()
   // To avoid breaking changes, we define the version the web uses manually
@@ -100,8 +107,12 @@ export const getTokensServiceUrl = (): string => {
   return `${getTxServiceUrl()}/tokens`
 }
 
-export const getSafeServiceBaseUrl = (safeAddress: string): string => {
-  return `${getTxServiceUrl()}/safes/${safeAddress}`
+export const getMasterCopiesUrl = (): string => {
+  return `${getTxServiceUrl()}/about/master-copies/`
+}
+
+export const getDataDecoderUrl = (): string => {
+  return `${getTxServiceUrl()}/data-decoder/`
 }
 
 export const getDisabledWallets = (): ChainInfo['disabledWallets'] => {
@@ -119,11 +130,8 @@ export const getExplorerUrl = (): string => {
 
 export const getHashedExplorerUrl = (hash: string): string => {
   const isTx = hash.length > 42
-
   const param = isTx ? 'txHash' : 'address'
   const uri = getExplorerUriTemplate()[param]
-  const params = { [param]: hash }
-
   return evalTemplate(uri, { [param]: hash })
 }
 
@@ -134,13 +142,6 @@ export const getExplorerInfo = (hash: string): (() => { url: string; alt: string
   const { hostname } = new URL(url)
   const alt = `View on ${hostname}` // Not returned by CGW
   return () => ({ url, alt })
-}
-
-export const isFeatureEnabled = (feature: FEATURES | SAFE_FEATURES) => {
-  return (
-    getChainInfo().features.includes(feature as FEATURES) ||
-    Object.values(SAFE_FEATURES).includes(feature as SAFE_FEATURES)
-  )
 }
 
 const getExplorerApiKey = (apiUrl: string): string | undefined => {

@@ -135,7 +135,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
               <Paragraph className={classes.value} noMargin size="md">
                 {tx.value || 0}
-                {' ' + nativeCurrency.name}
+                {' ' + nativeCurrency.symbol}
               </Paragraph>
             </Row>
             <Row margin="xs">
