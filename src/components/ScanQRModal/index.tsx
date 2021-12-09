@@ -14,6 +14,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { useEffect, useState } from 'react'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -54,7 +55,8 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
     }
 
     if (successData) {
-      onScan(successData)
+      const { address } = parsePrefixedAddress(successData)
+      onScan(address)
     } else if (cameraBlocked) {
       setError('The QR could not be read')
     }
