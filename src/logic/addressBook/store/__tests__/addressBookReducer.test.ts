@@ -1,4 +1,4 @@
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { batchLoadEntries } from '../reducer'
 
 describe('Test AddressBook BatchLoadEntries Reducer', () => {
@@ -7,12 +7,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'Entry 1',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'Entry 2',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
     ]
     const currentState = []
@@ -29,24 +29,24 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'Entry 1',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'Entry 2',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
     ]
     const initialState = [
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'Entry 1',
-        chainId: ETHEREUM_NETWORK.BSC,
+        chainId: CHAIN_ID.BSC,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'Entry 2',
-        chainId: ETHEREUM_NETWORK.BSC,
+        chainId: CHAIN_ID.BSC,
       },
     ]
     const action = {
@@ -62,12 +62,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'OWNER # 1',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'OWNER # 2',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
     ]
     const initialState = []
@@ -84,24 +84,24 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'NewEntry 1',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'New Entry 2',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
     ]
     const initialState = [
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'Entry 1',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'Entry 2',
-        chainId: ETHEREUM_NETWORK.RINKEBY,
+        chainId: CHAIN_ID.RINKEBY,
       },
     ]
     const action = {

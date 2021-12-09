@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import { render, RenderResult } from '@testing-library/react'
 import { theme as styledTheme } from '@gnosis.pm/safe-react-components'
 import Providers from 'src/components/Providers'
-import { createCustomStore, store } from 'src/store'
+import { createPreloadedStore, store } from 'src/store'
 import { history } from 'src/routes/routes'
 import theme from 'src/theme/mui'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
@@ -20,7 +20,7 @@ function renderWithProviders(Components: ReactElement, customState?: any): Rende
       latestMasterContractVersion: customState?.safes?.latestMasterContractVersion || '1.3.0',
     }) as SafeReducerMap,
   }
-  const testStore = customState ? createCustomStore(customStore) : store
+  const testStore = customState ? createPreloadedStore(customStore) : store
   return render(
     <Providers store={testStore} history={history} styledTheme={styledTheme} muiTheme={theme}>
       {Components}

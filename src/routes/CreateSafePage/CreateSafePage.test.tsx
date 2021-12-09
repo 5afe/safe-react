@@ -98,13 +98,8 @@ describe('<CreateSafePage>', () => {
 
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Shows the Switch Network popup if clicks on the current selected Network label', async () => {
@@ -127,13 +122,8 @@ describe('<CreateSafePage>', () => {
       fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Shows Switch Network Popup and can switch the network', async () => {
@@ -156,8 +146,8 @@ describe('<CreateSafePage>', () => {
       // from Rinkeby to Mainnet
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
       fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Mainnet'))
-      await waitFor(() => expect(screen.getByText('Mainnet')).toBeInTheDocument())
+      fireEvent.click(screen.getByText('Ethereum'))
+      await waitFor(() => expect(screen.getByText('Ethereum')).toBeInTheDocument())
 
       // from Mainnet to Polygon
       fireEvent.click(screen.getByText('Switch Network'))
@@ -685,7 +675,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
 
@@ -742,7 +732,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
 
@@ -804,7 +794,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
 
@@ -866,7 +856,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
   })

@@ -1,4 +1,4 @@
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 
@@ -25,7 +25,7 @@ const getMockedOldSafe = ({
 
   return {
     address: address || '0xAE173F30ec9A293d37c44BA68d3fCD35F989Ce9F',
-    chainId: ETHEREUM_NETWORK.RINKEBY,
+    chainId: CHAIN_ID.RINKEBY,
     threshold: threshold || 2,
     ethBalance: ethBalance || '10',
     owners: owners || [owner1, owner2],

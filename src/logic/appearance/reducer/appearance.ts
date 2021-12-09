@@ -1,6 +1,5 @@
 import { Action, handleActions } from 'redux-actions'
 
-import { AppReduxState } from 'src/store'
 import { SET_COPY_SHORT_NAME } from '../actions/setCopyShortName'
 import { SET_SHOW_SHORT_NAME } from '../actions/setShowShortName'
 
@@ -16,7 +15,7 @@ export type AppearanceState = typeof initialAppearanceState
 export type SetCopyShortNamePayload = Pick<AppearanceState, 'copyShortName'>
 export type SetShowShortNamePayload = Pick<AppearanceState, 'showShortName'>
 
-export default handleActions<AppReduxState['appearance'], AppearanceState>(
+const appearanceReducer = handleActions<AppearanceState, AppearanceState>(
   {
     [SET_COPY_SHORT_NAME]: (state, { payload }: Action<SetCopyShortNamePayload>): AppearanceState => ({
       ...state,
@@ -29,3 +28,5 @@ export default handleActions<AppReduxState['appearance'], AppearanceState>(
   },
   initialAppearanceState,
 )
+
+export default appearanceReducer

@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
@@ -18,6 +18,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -31,11 +32,12 @@ type OwnProps = {
 export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const chainId = useSelector(currentChainId)
 
   const handleSubmit = ({ ownerName }: { ownerName: string }): void => {
     // Update the value only if the ownerName really changed
     if (ownerName !== owner.name) {
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: owner.address, name: ownerName })))
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: owner.address, name: ownerName, chainId })))
       dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
     }
     onClose()

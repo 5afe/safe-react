@@ -11,11 +11,11 @@ import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { getNetworkConfigById, getNetworkId } from 'src/config'
-import { ETHEREUM_LAYER, ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getChainById, _getChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
+import { getWeb3, getChainIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ProxyFactory } from 'src/types/contracts/proxy_factory.d'
 import { CompatibilityFallbackHandler } from 'src/types/contracts/compatibility_fallback_handler.d'
@@ -34,12 +34,12 @@ const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => 
   // We check if version is prior to v1.0.0 as they are not supported but still we want to keep a minimum compatibility
   const useOldestContractVersion = semverSatisfies(safeVersion, '<1.0.0')
   // We have to check if network is L2
-  const networkId = getNetworkId()
-  const networkConfig = getNetworkConfigById(networkId)
+  const networkId = _getChainId()
+  const chainConfig = getChainById(networkId)
   // We had L1 contracts in three L2 networks, xDai, EWC and Volta so even if network is L2 we have to check that safe version is after v1.3.0
-  const useL2ContractVersion =
-    networkConfig?.network.ethereumLayer === ETHEREUM_LAYER.L2 && semverSatisfies(safeVersion, '>=1.3.0')
+  const useL2ContractVersion = chainConfig.l2 && semverSatisfies(safeVersion, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
+
   return (
     getDeployment({
       version: safeVersion,
@@ -60,52 +60,62 @@ const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => 
 /**
  * Creates a Contract instance of the GnosisSafe contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {ChainId} chainId
  */
-const getGnosisSafeContractInstance = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafe => {
+const getGnosisSafeContractInstance = (web3: Web3, chainId: ChainId): GnosisSafe => {
   const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: LATEST_SAFE_VERSION })
+  const contractAddress = safeSingletonDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    safeSingletonDeployment?.networkAddresses[networkId] ?? safeSingletonDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`GnosisSafe contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[], contractAddress) as unknown as GnosisSafe
 }
 
 /**
  * Creates a Contract instance of the GnosisSafeProxyFactory contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {ChainId} chainId
  */
-const getProxyFactoryContractInstance = (web3: Web3, networkId: ETHEREUM_NETWORK): ProxyFactory => {
+const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFactory => {
   const proxyFactoryDeployment =
     getProxyFactoryDeployment({
       version: LATEST_SAFE_VERSION,
-      network: networkId.toString(),
+      network: chainId.toString(),
     }) ||
     getProxyFactoryDeployment({
       version: LATEST_SAFE_VERSION,
     })
+  const contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
 
-  const contractAddress = proxyFactoryDeployment?.networkAddresses[networkId] ?? proxyFactoryDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`GnosisSafeProxyFactory contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(proxyFactoryDeployment?.abi as AbiItem[], contractAddress) as unknown as ProxyFactory
 }
 
 /**
  * Creates a Contract instance of the FallbackHandler contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {ChainId} chainId
  */
-const getFallbackHandlerContractInstance = (web3: Web3, networkId: ETHEREUM_NETWORK): CompatibilityFallbackHandler => {
+const getFallbackHandlerContractInstance = (web3: Web3, chainId: ChainId): CompatibilityFallbackHandler => {
   const fallbackHandlerDeployment =
     getFallbackHandlerDeployment({
       version: LATEST_SAFE_VERSION,
-      network: networkId.toString(),
+      network: chainId.toString(),
     }) ||
     getFallbackHandlerDeployment({
       version: LATEST_SAFE_VERSION,
     })
+  const contractAddress = fallbackHandlerDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    fallbackHandlerDeployment?.networkAddresses[networkId] ?? fallbackHandlerDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`FallbackHandler contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(
     fallbackHandlerDeployment?.abi as AbiItem[],
     contractAddress,
@@ -115,31 +125,37 @@ const getFallbackHandlerContractInstance = (web3: Web3, networkId: ETHEREUM_NETW
 /**
  * Creates a Contract instance of the MultiSend contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} networkId
+ * @param {ChainId} chainId
  */
-const getMultiSendContractInstance = (web3: Web3, networkId: ETHEREUM_NETWORK): MultiSend => {
+const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend => {
   const multiSendDeployment =
     getMultiSendCallOnlyDeployment({
-      network: networkId.toString(),
+      network: chainId.toString(),
     }) || getMultiSendCallOnlyDeployment()
+  const contractAddress = multiSendDeployment?.networkAddresses[chainId]
 
-  const contractAddress = multiSendDeployment?.networkAddresses[networkId] ?? multiSendDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`MultiSend contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown as MultiSend
 }
 
 /**
  * Returns an address of SignMessageLib for passed chainId
- * @param {ETHEREUM_NETWORK} chainId
+ * @param {ChainId} chainId
  * @returns {string}
  */
-export const getSignMessageLibAddress = (chainId: ETHEREUM_NETWORK): string | undefined => {
+export const getSignMessageLibAddress = (chainId: ChainId): string | undefined => {
   const signMessageLibDeployment =
     getSignMessageLibDeployment({
       network: chainId.toString(),
     }) || getSignMessageLibDeployment()
+  const contractAddress = signMessageLibDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    signMessageLibDeployment?.networkAddresses[chainId] ?? signMessageLibDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`SignMessageLib contract not found for chainId: ${chainId}`)
+  }
 
   return contractAddress
 }
@@ -147,17 +163,20 @@ export const getSignMessageLibAddress = (chainId: ETHEREUM_NETWORK): string | un
 /**
  * Returns a Web3 Contract instance of the SignMessageLib contract
  * @param {Web3} web3
- * @param {ETHEREUM_NETWORK} chainId
+ * @param {ChainId} chainId
  * @returns {SignMessageLib}
  */
-export const getSignMessageLibContractInstance = (web3: Web3, chainId: ETHEREUM_NETWORK): SignMessageLib => {
+export const getSignMessageLibContractInstance = (web3: Web3, chainId: ChainId): SignMessageLib => {
   const signMessageLibDeployment =
     getSignMessageLibDeployment({
       network: chainId.toString(),
     }) || getSignMessageLibDeployment()
+  const contractAddress = signMessageLibDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    signMessageLibDeployment?.networkAddresses[chainId] ?? signMessageLibDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`SignMessageLib contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(signMessageLibDeployment?.abi as AbiItem[], contractAddress) as unknown as SignMessageLib
 }
 
@@ -177,19 +196,19 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
 
 export const instantiateSafeContracts = async () => {
   const web3 = getWeb3()
-  const networkId = (await getNetworkIdFrom(web3)).toString() as ETHEREUM_NETWORK
+  const chainId = (await getChainIdFrom(web3)).toString() as ChainId
 
   // Create ProxyFactory Master Copy
-  proxyFactoryMaster = getProxyFactoryContractInstance(web3, networkId)
+  proxyFactoryMaster = getProxyFactoryContractInstance(web3, chainId)
 
   // Create Safe Master copy
-  safeMaster = getGnosisSafeContractInstance(web3, networkId)
+  safeMaster = getGnosisSafeContractInstance(web3, chainId)
 
   // Create Fallback Handler
-  fallbackHandler = getFallbackHandlerContractInstance(web3, networkId)
+  fallbackHandler = getFallbackHandlerContractInstance(web3, chainId)
 
   // Create MultiSend contract
-  multiSend = getMultiSendContractInstance(web3, networkId)
+  multiSend = getMultiSendContractInstance(web3, chainId)
 }
 
 export const getSafeMasterContract = async () => {

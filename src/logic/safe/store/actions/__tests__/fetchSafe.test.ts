@@ -72,7 +72,7 @@ describe('buildSafe', () => {
       nonce: 492,
       currentVersion: '1.1.1',
       needsUpdate: false,
-      featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+      featuresEnabled: ['ERC721', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
     })
   })
   it.skip('should return a Partial SafeRecord with only `address` and `name` keys if it fails to recover info', async () => {
@@ -127,7 +127,15 @@ describe('fetchSafe', () => {
           nonce: 492,
           currentVersion: '1.3.0',
           needsUpdate: false,
-          featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION', 'SAFE_TX_GAS_OPTIONAL'],
+          featuresEnabled: [
+            'CONTRACT_INTERACTION',
+            'DOMAIN_LOOKUP',
+            'EIP1559',
+            'ERC721',
+            'SAFE_APPS',
+            'SAFE_TX_GAS_OPTIONAL',
+            'SPENDING_LIMIT',
+          ],
         },
       },
     ]

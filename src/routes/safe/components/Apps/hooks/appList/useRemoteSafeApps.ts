@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { fetchSafeAppsList } from 'src/logic/configService'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeApp } from '../../types'
+import { fetchSafeAppsList } from 'src/logic/config/utils'
 
 type ReturnType = {
   remoteSafeApps: SafeApp[]

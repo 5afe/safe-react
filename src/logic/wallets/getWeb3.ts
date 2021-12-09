@@ -7,10 +7,10 @@ import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
-import { getRpcServiceUrl, getNetworkId } from 'src/config'
+import { getRpcServiceUrl, _getChainId } from 'src/config'
+import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -39,24 +39,28 @@ const httpProviderOptions = {
 
 const web3ReadOnly: Web3[] = []
 export const getWeb3ReadOnly = (): Web3 => {
-  if (!web3ReadOnly[getNetworkId()]) {
-    web3ReadOnly[getNetworkId()] = new Web3(
+  const chainId = _getChainId()
+  if (!web3ReadOnly[chainId]) {
+    web3ReadOnly[chainId] = new Web3(
       process.env.NODE_ENV !== 'test'
         ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
         : 'ws://localhost:8545',
     )
   }
 
-  return web3ReadOnly[getNetworkId()]
+  return web3ReadOnly[chainId]
 }
 
-let web3 = getWeb3ReadOnly()
+let web3: Web3
 export const getWeb3 = (): Web3 => web3
 export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
 }
+export const setWeb3ReadOnly = (): void => {
+  web3 = getWeb3ReadOnly()
+}
 export const resetWeb3 = (): void => {
-  web3 = web3ReadOnly[getNetworkId()]
+  web3 = web3ReadOnly[_getChainId()]
 }
 
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
@@ -64,7 +68,9 @@ export const getAccountFrom = async (web3Provider: Web3): Promise<string | null>
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-export const getNetworkIdFrom = (web3Provider: Web3): Promise<number> => web3Provider.eth.net.getId()
+export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
+  return web3Provider.eth.getChainId()
+}
 
 const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
@@ -84,7 +90,7 @@ export const isSmartContractWallet = async (web3Provider: Web3, account: string)
 
 export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
   const account = (await getAccountFrom(web3Instance)) || ''
-  const network = await getNetworkIdFrom(web3Instance)
+  const network = await getChainIdFrom(web3Instance)
   const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)
   const available = Boolean(account)
@@ -94,7 +100,7 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
     available,
     loaded: true,
     account,
-    network: network.toString() as ETHEREUM_NETWORK,
+    network: network.toString() as ChainId,
     smartContractWallet,
     hardwareWallet,
   }
@@ -129,14 +135,14 @@ export const getSDKWeb3ReadOnly = (): Web3Adapter => {
 }
 
 export const getSafeSDK = async (signerAddress: string, safeAddress: string, safeVersion: string): Promise<Safe> => {
-  const networkId = (await getNetworkIdFrom(web3)).toString() as ETHEREUM_NETWORK
+  const networkId = (await getChainIdFrom(web3)).toString() as ChainId
   const ethAdapter = getSDKWeb3Adapter(signerAddress)
 
   let isL1SafeMasterCopy: boolean
   if (semverSatisfies(safeVersion, '<1.3.0')) {
     isL1SafeMasterCopy = true
   } else {
-    isL1SafeMasterCopy = networkId === ETHEREUM_NETWORK.MAINNET
+    isL1SafeMasterCopy = networkId === CHAIN_ID.ETHEREUM
   }
 
   return await Safe.create({

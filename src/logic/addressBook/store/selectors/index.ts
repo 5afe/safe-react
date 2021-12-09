@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+
+import { ChainId } from 'src/config/chain.d'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { AppReduxState } from 'src/store'
@@ -36,7 +37,7 @@ export const addressBookAsMap = createSelector([addressBookState], (addressBook)
   return addressBookMap
 })
 
-const getNameByAddress = (addressBook, address: string, chainId: ETHEREUM_NETWORK): string => {
+const getNameByAddress = (addressBook, address: string, chainId: ChainId): string => {
   if (!isValidAddress(address)) {
     return ''
   }
@@ -49,7 +50,7 @@ export const addressBookEntryName = createSelector(
   [
     addressBookAsMap,
     currentChainId,
-    (_, { address, chainId }: GetNameParams): { address: string; chainId?: ETHEREUM_NETWORK } => ({
+    (_, { address, chainId }: GetNameParams): { address: string; chainId?: ChainId } => ({
       address,
       chainId,
     }),
@@ -63,7 +64,7 @@ export const addressBookName = createSelector(
   [
     addressBookAsMap,
     currentChainId,
-    (_, { address, chainId }: GetNameParams): { address: string; chainId?: ETHEREUM_NETWORK } => ({
+    (_, { address, chainId }: GetNameParams): { address: string; chainId?: ChainId } => ({
       address,
       chainId,
     }),

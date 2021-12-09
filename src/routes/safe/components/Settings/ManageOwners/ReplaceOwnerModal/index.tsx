@@ -19,6 +19,7 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
+import { _getChainId } from 'src/config'
 
 export type OwnerValues = {
   address: string
@@ -55,7 +56,8 @@ export const sendReplaceOwner = async (
   )
 
   if (txHash) {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
+    // update the AB
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
   }
 }
 
@@ -97,16 +99,8 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
     onClose()
 
     try {
-      await sendReplaceOwner(
-        newOwner,
-        safeAddress,
-        safeVersion,
-        owner.address,
-        dispatch,
-        txParameters,
-        connectedWalletAddress,
-      )
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
+      await sendReplaceOwner(newOwner, safeAddress, safeVersion, owner.address, dispatch, txParameters, connectedWalletAddress)
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
     } catch (error) {
       logError(Errors._810, error.message)
     }

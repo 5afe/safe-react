@@ -1,12 +1,12 @@
 import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
-
-import { getClientGatewayUrl, getCurrentShortChainName } from 'src/config'
+import { getShortName } from 'src/config'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { mockedEndpoints } from 'src/setupTests'
 import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-utils'
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { GATEWAY_URL } from 'src/utils/constants'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 
@@ -66,7 +66,7 @@ describe('<LoadSafePage>', () => {
           {
             address: '0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A',
             name: 'Test Safe',
-            chainId: ETHEREUM_NETWORK.RINKEBY,
+            chainId: CHAIN_ID.RINKEBY,
           },
         ],
       })
@@ -107,13 +107,8 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Switch Network'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Opens the Switch Network popup if clicks on the current selected Network label', () => {
@@ -122,13 +117,8 @@ describe('<LoadSafePage>', () => {
       fireEvent.click(screen.getByText('Rinkeby'))
       const selectNetworkPopupNode = screen.getByTestId('select-network-popup')
       expect(selectNetworkPopupNode).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Mainnet')).toBeInTheDocument()
+      expect(getByText(selectNetworkPopupNode, 'Ethereum')).toBeInTheDocument()
       expect(getByText(selectNetworkPopupNode, 'Rinkeby')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'xDai')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'EWC')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Volta')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'Polygon')).toBeInTheDocument()
-      expect(getByText(selectNetworkPopupNode, 'BSC')).toBeInTheDocument()
     })
 
     it('Switches Network if clicks on Switch Network button', async () => {
@@ -137,8 +127,8 @@ describe('<LoadSafePage>', () => {
       // from Rinkeby to Mainnet
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
       fireEvent.click(screen.getByText('Switch Network'))
-      fireEvent.click(screen.getByText('Mainnet'))
-      await waitFor(() => expect(screen.getByText('Mainnet')).toBeInTheDocument())
+      fireEvent.click(screen.getByText('Ethereum'))
+      await waitFor(() => expect(screen.getByText('Ethereum')).toBeInTheDocument())
 
       // from Mainnet to Polygon
       fireEvent.click(screen.getByText('Switch Network'))
@@ -187,7 +177,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         fireEvent.change(safeAddressInputNode, { target: { value: validSafeAddress } })
 
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
         expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(1)
       })
     })
@@ -242,7 +232,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         const errorTextNode = screen.getByText('Address given is not a valid Safe address')
 
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
         expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(1)
 
         expect(errorTextNode).toBeInTheDocument()
@@ -269,7 +259,7 @@ describe('<LoadSafePage>', () => {
 
       await waitFor(() => {
         expect(safeAddressInputNode.value).toBe(validSafeAddress)
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
         getENSAddressSpy.mockClear()
       })
     })
@@ -330,7 +320,7 @@ describe('<LoadSafePage>', () => {
 
       await waitFor(() => {
         expect(safeAddressInputNode.value).toBe(validSafeAddress)
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
         const errorTextNode = screen.getByText('Address given is not a valid Safe address')
 
         expect(errorTextNode).toBeInTheDocument()
@@ -578,7 +568,7 @@ describe('<LoadSafePage>', () => {
           {
             address: customSafeAddress,
             name: abName,
-            chainId: ETHEREUM_NETWORK.RINKEBY,
+            chainId: CHAIN_ID.RINKEBY,
           },
         ],
       })
@@ -626,7 +616,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         expect(historyPushSpy).toHaveBeenCalledWith(
           generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-            shortName: getCurrentShortChainName(),
+            shortName: getShortName(),
             safeAddress: validSafeAddress,
           }),
         )

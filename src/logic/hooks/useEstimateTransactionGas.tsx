@@ -2,8 +2,9 @@ import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { List } from 'immutable'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { fromWei, toWei } from 'web3-utils'
 
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import {
   checkTransactionExecution,
   estimateSafeTxGas,
@@ -13,9 +14,7 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -131,11 +130,10 @@ export const useEstimateTransactionGas = ({
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
   )
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
   useEffect(() => {
-    const web3 = getWeb3ReadOnly()
     const estimateGas = async () => {
       if (!txData.length) {
         return
@@ -193,11 +191,11 @@ export const useEstimateTransactionGas = ({
           })
         }
 
-        const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
-        const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
+        const gasPrice = manualGasPrice ? toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
+        const gasPriceFormatted = fromWei(gasPrice, 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
         const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
-        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
         if (isExecution) {
@@ -248,7 +246,7 @@ export const useEstimateTransactionGas = ({
     txConfirmations,
     txAmount,
     preApprovingOwner,
-    nativeCoin.decimals,
+    nativeCurrency.decimals,
     threshold,
     from,
     operation,

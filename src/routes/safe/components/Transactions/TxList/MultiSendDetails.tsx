@@ -1,9 +1,10 @@
 import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
-import { DataDecoded, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
+import { DataDecoded, Operation, TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import DelegateCallWarning from './DelegateCallWarning'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { isSpendingLimitMethod } from './SpendingLimitDetails'
@@ -19,16 +20,20 @@ type MultiSendTxGroupProps = {
     name?: string | undefined
     avatarUrl?: string | undefined
     dataDecoded: DataDecoded | null
+    operation: Operation
   }
 }
 
 const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroupProps): ReactElement => {
+  const isDelegateCall = txDetails.operation === Operation.DELEGATE
+  const isKnown = !!txDetails.name
   return (
-    <ActionAccordion>
+    <ActionAccordion defaultExpanded={(isDelegateCall && !isKnown) || undefined}>
       <AccordionSummary>
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="xl" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
+        {isDelegateCall && <DelegateCallWarning isKnown={isKnown} />}
         {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
           <TxInfoDetails
             title={txDetails.title}
@@ -44,7 +49,7 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
 }
 
 export const MultiSendDetails = ({ txData }: { txData: TransactionData }): ReactElement | null => {
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
   // no parameters for the `multiSend`
   if (!txData.dataDecoded?.parameters) {
     // we render the hex encoded data
@@ -60,10 +65,11 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
     <>
       {txData.dataDecoded.parameters[0].valueDecoded?.map(({ dataDecoded }, index, valuesDecoded) => {
         let details
-        const { data, value, to } = valuesDecoded[index]
+        const { data, value, to, operation } = valuesDecoded[index]
+
         const actionTitle = `Action ${index + 1} ${dataDecoded ? `(${dataDecoded.method})` : ''}`
-        const amount = value ? fromTokenUnit(value, nativeCoin.decimals) : 0
-        const title = `Send ${amount} ${nativeCoin.name} to:`
+        const amount = value ? fromTokenUnit(value, nativeCurrency.decimals) : 0
+        const title = `Send ${amount} ${nativeCurrency.symbol} to:`
 
         if (dataDecoded) {
           // Backend decoded data
@@ -81,7 +87,7 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
           <MultiSendTxGroup
             key={`${data ?? to}-${index}`}
             actionTitle={actionTitle}
-            txDetails={{ title, address: to, dataDecoded, name, avatarUrl }}
+            txDetails={{ title, address: to, dataDecoded, name, avatarUrl, operation }}
           >
             {details}
           </MultiSendTxGroup>

@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import { Text, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
 import { hexToBytes } from 'web3-utils'
 
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
@@ -76,14 +76,14 @@ export const BasicTxInfo = ({
   txValue: string
   recipientName?: string
 }): ReactElement => {
-  const { nativeCoin } = getNetworkInfo()
+  const nativeCurrency = getNativeCurrency()
 
   return (
     <BasicTxInfoWrapper>
       {/* TO */}
       <>
         <Text size="lg" strong>
-          {`Send ${txValue} ${nativeCoin.symbol} to:`}
+          {`Send ${txValue} ${nativeCurrency.symbol} to:`}
         </Text>
         <PrefixedEthHashInfo
           hash={txRecipient}

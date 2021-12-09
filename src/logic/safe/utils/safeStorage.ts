@@ -1,7 +1,7 @@
 import { getStoragePrefix, loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { getNetworkName } from 'src/config'
+import { getChainById } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
 
 export const SAFES_KEY = 'SAFES'
 
@@ -11,9 +11,9 @@ export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
   return loadFromStorage<StoredSafes>(SAFES_KEY)
 }
 
-export const loadStoredNetworkSafeById = (id: ETHEREUM_NETWORK): Promise<StoredSafes | undefined> => {
-  const networkName = getNetworkName(id)
-  return loadFromStorage<StoredSafes>(SAFES_KEY, getStoragePrefix(networkName))
+export const loadStoredNetworkSafeById = (id: ChainId): Promise<StoredSafes | undefined> => {
+  const chain = getChainById(id)
+  return loadFromStorage<StoredSafes>(SAFES_KEY, getStoragePrefix(chain.chainName))
 }
 
 export const saveSafes = async (safes: StoredSafes): Promise<void> => {
@@ -29,7 +29,7 @@ export const getLocalSafes = async (): Promise<SafeRecordProps[] | undefined> =>
   return storedSafes ? Object.values(storedSafes) : undefined
 }
 
-export const getLocalNetworkSafesById = async (id: ETHEREUM_NETWORK): Promise<SafeRecordProps[] | undefined> => {
+export const getLocalNetworkSafesById = async (id: ChainId): Promise<SafeRecordProps[] | undefined> => {
   const storedSafes = await loadStoredNetworkSafeById(id)
   return storedSafes ? Object.values(storedSafes) : undefined
 }

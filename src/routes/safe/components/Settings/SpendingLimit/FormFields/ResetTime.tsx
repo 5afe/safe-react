@@ -4,7 +4,7 @@ import { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 import styled from 'styled-components'
 
-import { getNetworkName } from 'src/config'
+import { getChainName } from 'src/config'
 import { Field } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/Amount'
 
 // TODO: propose refactor in safe-react-components based on this requirements
@@ -95,7 +95,7 @@ const RINKEBY_RESET_TIME_OPTIONS = [
 ]
 
 export const getResetTimeOptions = (): RadioButtonOption[] => {
-  const currentNetwork = getNetworkName().toLowerCase()
+  const currentNetwork = getChainName().toLowerCase()
   return currentNetwork !== 'rinkeby' ? RESET_TIME_OPTIONS : RINKEBY_RESET_TIME_OPTIONS
 }
 

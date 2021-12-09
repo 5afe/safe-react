@@ -5,7 +5,6 @@ import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { CLEAR_SAFE_LIST } from 'src/logic/safe/store/actions/clearSafeList'
@@ -62,7 +61,7 @@ const updateSafeProps = (prevSafe, safe) => {
 
 type Payloads = SafeRecord | string
 
-export default handleActions<AppReduxState['safes'], Payloads>(
+const safeReducer = handleActions<SafeReducerMap, Payloads>(
   {
     [UPDATE_SAFE]: (state, action: Action<SafeRecord>) => {
       const safe = action.payload
@@ -111,5 +110,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
   Map({
     safes: Map(),
     latestMasterContractVersion: '',
-  }) as AppReduxState['safes'],
+  }) as SafeReducerMap,
 )
+
+export default safeReducer
