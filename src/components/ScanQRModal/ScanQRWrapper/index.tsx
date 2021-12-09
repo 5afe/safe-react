@@ -4,6 +4,7 @@ import { ReactElement, useState } from 'react'
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'
 import Img from 'src/components/layout/Img'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 const useStyles = makeStyles({
   qrCodeBtn: {
@@ -29,7 +30,9 @@ export const ScanQRWrapper = ({ handleScan, testId }: Props): ReactElement => {
   }
 
   const onScanFinished = (value: string) => {
-    handleScan(value, closeQrModal)
+    // Remove shortName from value
+    const { address } = parsePrefixedAddress(value)
+    handleScan(address, closeQrModal)
   }
 
   return (
