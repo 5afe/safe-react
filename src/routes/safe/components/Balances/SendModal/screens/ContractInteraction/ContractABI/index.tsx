@@ -7,6 +7,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { getContractABI } from 'src/config'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export const NO_DATA = 'no data'
 
@@ -35,7 +36,8 @@ const ContractABI = (): React.ReactElement => {
       const isEthereumContractAddress = (await mustBeEthereumContractAddress(contractAddress)) === undefined
 
       if (isEthereumAddress && isEthereumContractAddress) {
-        const abi = await getContractABI(contractAddress)
+        const { address } = parsePrefixedAddress(contractAddress)
+        const abi = await getContractABI(address)
         const isValidABI = hasUsefulMethods(abi) === undefined
 
         // this check may help in scenarios where the user first pastes the ABI,
