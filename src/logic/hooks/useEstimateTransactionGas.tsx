@@ -19,6 +19,8 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
+import { store } from 'src/store'
+import { nextTransactions } from '../safe/store/selectors/gatewayTransactions'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -93,6 +95,12 @@ export type TransactionGasEstimationResult = {
   isOffChainSignature: boolean // Returns true if offChainSignature is available
 }
 
+const hasNextTx = (): boolean => {
+  const state = store.getState()
+  const nextTxs = nextTransactions(state)
+  return nextTxs ? Object.keys(nextTxs).length > 0 : false
+}
+
 const getDefaultGasEstimation = (
   txEstimationExecutionStatus: EstimationStatus,
   gasPrice: string,
@@ -109,7 +117,7 @@ const getDefaultGasEstimation = (
     gasPrice,
     gasPriceFormatted,
     gasLimit: '0',
-    isExecution,
+    isExecution: isExecution && !hasNextTx(),
     isCreation,
     isOffChainSignature,
   }
@@ -227,7 +235,7 @@ export const useEstimateTransactionGas = ({
           gasPrice,
           gasPriceFormatted,
           gasLimit,
-          isExecution,
+          isExecution: isExecution && !hasNextTx(),
           isCreation,
           isOffChainSignature,
         })
