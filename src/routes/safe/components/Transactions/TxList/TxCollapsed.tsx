@@ -15,7 +15,6 @@ import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
@@ -99,7 +98,6 @@ type TxCollapsedProps = {
   info?: AssetInfo
   time: number
   votes?: CalculatedVotes
-  actions?: TransactionActions
   status: TransactionStatusProps
 }
 
@@ -111,7 +109,6 @@ export const TxCollapsed = ({
   info,
   time,
   votes,
-  actions,
   status,
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
@@ -169,7 +166,7 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {actions?.isUserAnOwner && transaction && <TxCollapsedActions transaction={transaction} />}
+      {transaction && <TxCollapsedActions transaction={transaction} />}
     </div>
   )
 

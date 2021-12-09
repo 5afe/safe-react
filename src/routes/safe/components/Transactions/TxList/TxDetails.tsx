@@ -11,7 +11,6 @@ import {
   isTransferTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
@@ -79,10 +78,9 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
-  actions?: TransactionActions
 }
 
-export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
+export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
 
@@ -120,13 +118,12 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': txLocation !== 'history' && !actions?.isUserAnOwner,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
         <TxOwners txDetails={data} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
+      {!data.executedAt && txLocation !== 'history' && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>

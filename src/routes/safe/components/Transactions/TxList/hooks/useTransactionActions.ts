@@ -33,7 +33,8 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   const transactionsByNonce = useSelector((state: AppReduxState) =>
     getTransactionsByNonce(state, (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? -1),
   )
-  const canCancel = !transactionsByNonce.some(({ txInfo }) => isCustomTxInfo(txInfo) && txInfo.isCancellation)
+  const canCancel =
+    !transactionsByNonce.some(({ txInfo }) => isCustomTxInfo(txInfo) && txInfo.isCancellation) && isUserAnOwner
 
   const [state, setState] = useState<TransactionActions>({
     canConfirm: false,
@@ -45,22 +46,17 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   })
 
   useEffect(() => {
-    if (
-      isUserAnOwner &&
-      txLocation !== 'history' &&
-      isMultisigExecutionInfo(transaction.executionInfo) &&
-      transaction.executionInfo
-    ) {
+    if (txLocation !== 'history' && isMultisigExecutionInfo(transaction.executionInfo) && transaction.executionInfo) {
       const { missingSigners, confirmationsSubmitted = 0, confirmationsRequired = 0 } = transaction.executionInfo || {}
 
       const currentUserSigned = !missingSigners?.some((missingSigner) => sameAddress(missingSigner.value, currentUser))
-      const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
-      const canConfirm = ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned
+      const oneToGo = confirmationsSubmitted === confirmationsRequired - 1 && isUserAnOwner
+      const canConfirm = ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned && isUserAnOwner
       const thresholdReached = confirmationsSubmitted >= confirmationsRequired
 
       setState({
         canConfirm,
-        canConfirmThenExecute: txLocation === 'queued.next' && canConfirm && oneToGo,
+        canConfirmThenExecute: txLocation === 'queued.next' && canConfirm && oneToGo && isUserAnOwner,
         canExecute: txLocation === 'queued.next' && thresholdReached,
         canCancel,
         isUserAnOwner,

@@ -220,7 +220,7 @@ export const processTransaction =
         }),
       )
 
-      const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
+      const executeData = safeInstance.methods.approveHash(txHash || '').encodeABI()
       const contractErrorMessage = await getContractErrorMessage({
         safeInstance,
         from,

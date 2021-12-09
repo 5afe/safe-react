@@ -4,7 +4,6 @@ import { getNotificationsFromTxType } from 'src/logic/notifications'
 import { isStatusFailed, isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { Notification } from 'src/logic/notifications/notificationTypes'
 
@@ -22,7 +21,7 @@ export const getNotification = (
   const currentSafe = safes.get(safeAddress)
 
   // no notification if not in the current safe or if its not an owner
-  if (!currentSafe || !isUserAnOwner(currentSafe, userAddress)) {
+  if (!currentSafe) {
     return
   }
 
