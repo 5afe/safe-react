@@ -99,7 +99,15 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
     onClose()
 
     try {
-      await sendReplaceOwner(newOwner, safeAddress, safeVersion, owner.address, dispatch, txParameters, connectedWalletAddress)
+      await sendReplaceOwner(
+        newOwner,
+        safeAddress,
+        safeVersion,
+        owner.address,
+        dispatch,
+        txParameters,
+        connectedWalletAddress,
+      )
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
     } catch (error) {
       logError(Errors._810, error.message)
