@@ -39,11 +39,11 @@ import appearanceReducer, {
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
-import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
+import { DEFAULT_CHAIN_ID, LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
-export const SAVE_LS_CONFIG: RLSOptions | LoadOptions = {
+export const LS_CONFIG: RLSOptions | LoadOptions = {
   states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID, CONFIG_REDUCER_ID],
   namespace: LS_NAMESPACE,
   namespaceSeparator: LS_SEPARATOR,
@@ -51,17 +51,7 @@ export const SAVE_LS_CONFIG: RLSOptions | LoadOptions = {
   preloadedState: {
     [CURRENCY_REDUCER_ID]: initialCurrencyState,
     [APPEARANCE_REDUCER_ID]: initialAppearanceState,
-  },
-}
-
-export const LOAD_LS_CONFIG: LoadOptions = {
-  states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID],
-  namespace: LS_NAMESPACE,
-  namespaceSeparator: LS_SEPARATOR,
-  disableWarnings: true,
-  preloadedState: {
-    [CURRENCY_REDUCER_ID]: initialCurrencyState,
-    [APPEARANCE_REDUCER_ID]: initialAppearanceState,
+    [CONFIG_REDUCER_ID]: DEFAULT_CHAIN_ID,
   },
 }
 
@@ -69,7 +59,7 @@ const composeEnhancers = ((window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ a
 const enhancer = composeEnhancers(
   applyMiddleware(
     thunk,
-    save(SAVE_LS_CONFIG),
+    save(LS_CONFIG),
     notificationsMiddleware,
     safeStorageMiddleware,
     providerWatcher,
@@ -115,7 +105,7 @@ export type AppReduxState = CombinedState<{
   [APPEARANCE_REDUCER_ID]: AppearanceState
 }>
 
-export const store: any = createStore(rootReducer, load(LOAD_LS_CONFIG), enhancer)
+export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
 
 export const createPreloadedStore = (localState = {} as PreloadedState<unknown>): typeof store =>
   createStore(rootReducer, localState, enhancer)
