@@ -1,6 +1,5 @@
 import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash/get'
-import merge from 'lodash/merge'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
 
@@ -15,6 +14,7 @@ import {
   isDateLabel,
   isLabel,
   isMultisigExecutionInfo,
+  isStatusPending,
   isTransactionSummary,
   QueuedGatewayResponse,
   StoreStructure,
@@ -112,15 +112,12 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
       }
     },
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
-      // we're assuming that `next` and `queued` labels will be provided in the first page
-      // as for usage experience there were no more than 5 transactions competing for the same nonce.
-      // Thus, given the client-gateway page size of 20, we have plenty of "room" to be provided with
-      // `next` and `queued` transactions in the first page.
       const { chainId, safeAddress, values } = action.payload
-      let newNext = cloneDeep(state[chainId]?.[safeAddress]?.queued?.next || {})
-      const newQueued = cloneDeep(state[chainId]?.[safeAddress]?.queued?.queued || {})
+      let newNext = {}
+      let newQueued = {}
 
       let label: 'next' | 'queued' | undefined
+
       values.forEach((value) => {
         if (isLabel(value)) {
           // we're assuming that the first page will always provide `next` and `queued` labels
@@ -128,110 +125,45 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
           return
         }
 
-        if (isConflictHeader(value)) {
-          // conflict header is discarded as it's not needed for the current implementation
+        if (
+          // Conflict headers are not needed in the current implementation
+          isConflictHeader(value) ||
+          !isMultisigExecutionInfo(value.transaction.executionInfo)
+        ) {
           return
         }
 
-        if (isTransactionSummary(value) && isMultisigExecutionInfo(value.transaction.executionInfo)) {
-          const txNonce = value.transaction.executionInfo?.nonce
+        const txNonce = value.transaction.executionInfo?.nonce
 
-          if (typeof txNonce === 'undefined') {
-            console.warn('A transaction without nonce was provided by client-gateway:', JSON.stringify(value))
-            return
-          }
-
-          if (typeof label === 'undefined') {
-            label = newNext[txNonce] ? 'next' : 'queued'
-          }
-
-          switch (label) {
-            case 'next': {
-              if (newNext[txNonce]) {
-                const txIndex = newNext[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
-
-                if (txIndex !== -1) {
-                  const storedTransaction = newNext[txNonce][txIndex]
-                  const updateFromService =
-                    (storedTransaction.executionInfo as MultisigExecutionInfo).confirmationsSubmitted !==
-                    value.transaction.executionInfo?.confirmationsSubmitted
-
-                  if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
-                    // we're waiting for a tx resolution. Thus, we'll prioritize TransactionStatus.PENDING status
-                    value.transaction.txStatus = TransactionStatus.PENDING
-                  }
-
-                  newNext[txNonce][txIndex] = updateFromService
-                    ? // by replacing the current transaction with the one returned by the service
-                      // we remove the `txDetails`, so this will force a re-request of the data
-                      value.transaction
-                    : // we merge, to keep the current unchanged information
-                      merge(storedTransaction, value.transaction)
-                  break
-                }
-
-                // we add the transaction returned by the service to the list of transactions
-                newNext[txNonce] = [...newNext[txNonce], value.transaction]
-                break
-              }
-
-              // a new tx has arrived to the `next` queue
-              // we re-create the `next` object with the new transaction
-              newNext = { [txNonce]: [value.transaction] }
-
-              // we remove the new `next` transaction from the `queue` list, if it exist
-              newQueued[txNonce] && delete newQueued[txNonce]
-
-              break
-            }
-            case 'queued': {
-              if (newQueued[txNonce]) {
-                const txIndex = newQueued[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
-
-                if (txIndex !== -1) {
-                  const storedTransaction = newQueued[txNonce][txIndex]
-                  const updateFromService =
-                    (storedTransaction.executionInfo as MultisigExecutionInfo).confirmationsSubmitted !==
-                    value.transaction.executionInfo?.confirmationsSubmitted
-
-                  if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
-                    // we're waiting for a tx resolution. Thus, we'll prioritize TransactionStatus.PENDING status
-                    value.transaction.txStatus = TransactionStatus.PENDING
-                  }
-
-                  newQueued[txNonce][txIndex] = updateFromService
-                    ? // by replacing the current transaction with the one returned by the service
-                      // we remove the `txDetails`, so this will force a re-request of the data
-                      value.transaction
-                    : // we merge, to keep the current unchanged information
-                      merge(storedTransaction, value.transaction)
-                  break
-                }
-
-                // we add the transaction returned by the service to the list of transactions
-                newQueued[txNonce] = [...newQueued[txNonce], value.transaction]
-                break
-              }
-
-              newQueued[txNonce] = [value.transaction]
-              break
-            }
-          }
+        if (txNonce === undefined) {
+          console.warn('A transaction without nonce was provided by client-gateway:', JSON.stringify(value))
           return
+        }
+
+        const newTx = value.transaction
+        if (label === 'queued') {
+          const oldQueued = state[chainId]?.[safeAddress]?.queued?.queued || {}
+          const prevTx = oldQueued?.[txNonce]?.find(({ id }) => sameString(id, newTx.id))
+          if (prevTx && isStatusPending(prevTx.txStatus)) {
+            // Prioritize "PENDING" transactions as awaiting resolution
+            newTx.txStatus = TransactionStatus.PENDING
+          }
+
+          if (newQueued?.[txNonce]) {
+            newQueued[txNonce] = [...newQueued[txNonce], newTx]
+          } else {
+            newQueued = { ...newQueued, [txNonce]: [newTx] }
+          }
+        } else {
+          const oldNext = state[chainId]?.[safeAddress]?.queued?.next || {}
+          const prevTx = oldNext?.[txNonce]?.find(({ id }) => sameString(id, newTx.id))
+          if (prevTx && isStatusPending(prevTx.txStatus)) {
+            // Prioritize "PENDING" transactions as awaiting resolution
+            newTx.txStatus = TransactionStatus.PENDING
+          }
+          newNext = { [txNonce]: [newTx] }
         }
       })
-
-      // no new transactions
-      if (!values.length) {
-        // queued list already empty
-        if (newQueued && !Object.keys(newQueued).length) {
-          // there was an existing next transaction
-          if (Object.keys(newNext).length === 1) {
-            // we cleanup the next queue
-            newNext = {}
-          }
-        }
-      }
 
       return {
         // all the safes with their respective states
