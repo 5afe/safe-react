@@ -26,7 +26,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   VOLTA: '73799',
 }
 
-export const CHAIN_PREFIXES: Record<string, ChainId> = {
+export const CHAIN_PREFIXES: Record<ShortName, ChainId> = {
   eth: CHAIN_ID.ETHEREUM,
   rin: CHAIN_ID.RINKEBY,
   bnb: CHAIN_ID.BSC,
