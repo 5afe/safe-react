@@ -44,6 +44,7 @@
     "test": "REACT_APP_ENV=test rescripts test --env=jsdom",
     "test:coverage": "REACT_APP_ENV=test yarn test --coverage --watchAll=false",
     "test:ci": "REACT_APP_ENV=test yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand --outputFile=jest.results.json",
+    "update-mocks": "./scripts/update-mocks.sh",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/",
