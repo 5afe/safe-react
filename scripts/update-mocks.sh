@@ -2,4 +2,8 @@
 
 echo 'Updating Jest mocks...'
 
-curl 'https://safe-client.staging.gnosisdev.com/v1/chains/' > src/logic/safe/utils/mocks/remoteConfig.json
+# Fetch config
+config=$(curl -s 'https://safe-client.staging.gnosisdev.com/v1/chains/')
+
+# Pretty-print the JSON
+node -p "JSON.stringify($config, null, 2)" > src/logic/safe/utils/mocks/remoteConfig.json
