@@ -87,7 +87,7 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
-  const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
+  const chainInfo = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -180,6 +180,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return tx
     })
 
+    const { chainName, chainId } = chainInfo
+
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
       network: chainName,
@@ -235,26 +237,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       openSignMessageModal(message, msg.data.id)
     })
 
+    // filtering rpcUri
+    const { rpcUri, ...chainInfoWithoutRpcUri } = chainInfo
+
     communicator?.on(Methods.getChainInfo, async () => {
-      return {
-        chainName,
-        chainId,
-        shortName,
-        nativeCurrency,
-      }
+      return chainInfoWithoutRpcUri
     })
-  }, [
-    communicator,
-    openConfirmationModal,
-    safeAddress,
-    owners,
-    threshold,
-    openSignMessageModal,
-    nativeCurrency,
-    chainId,
-    chainName,
-    shortName,
-  ])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal, chainInfo])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
