@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import '@testing-library/jest-dom/extend-expect'
 import * as sdkGatewayEndpoints from '@gnosis.pm/safe-react-gateway-sdk'
 import { mockGetSafeInfoResponse } from './logic/safe/utils/mocks/getSafeMock'
+import { mockGetChainsConfigResponse } from './logic/safe/utils/mocks/getChainsConfigMock'
 import { mockTokenCurrenciesBalancesResponse } from 'src/logic/safe/utils/mocks/mockTokenCurrenciesBalancesResponse'
 import { loadChains } from 'src/config/cache/chains'
 
@@ -38,7 +39,7 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
   const originalModule = jest.requireActual('@gnosis.pm/safe-react-gateway-sdk')
   return {
     __esModule: true,
-    // We load chain config and require types from the original module
+    // We require some of the enums/types from the original module
     ...originalModule,
     Operation: jest.fn(),
     TokenType: jest.fn(),
@@ -52,18 +53,21 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
     getTransactionHistory: jest.fn(),
     getTransactionQueue: jest.fn(),
     postTransaction: jest.fn(),
+    getChainsConfig: jest.fn(),
   }
 })
+
+sdkGatewayEndpoints.getChainsConfig.mockImplementation(() => Promise.resolve(mockGetChainsConfigResponse))
 
 export let mockedEndpoints = {}
 
 function mockAllEndpointsByDefault() {
-  mockedEndpoints.getSafeInfo = sdkGatewayEndpoints.getSafeInfo.mockImplementation(
-    () => new Promise((resolve) => resolve(mockGetSafeInfoResponse)),
+  mockedEndpoints.getSafeInfo = sdkGatewayEndpoints.getSafeInfo.mockImplementation(() =>
+    Promise.resolve(mockGetSafeInfoResponse),
   )
 
-  mockedEndpoints.getBalances = sdkGatewayEndpoints.getBalances.mockImplementation(
-    () => new Promise((resolve) => resolve(mockTokenCurrenciesBalancesResponse)),
+  mockedEndpoints.getBalances = sdkGatewayEndpoints.getBalances.mockImplementation(() =>
+    Promise.resolve(mockTokenCurrenciesBalancesResponse),
   )
 }
 
@@ -85,10 +89,6 @@ function clearAllMockRequest() {
   })
 }
 
-beforeAll(async () => {
-  await loadChains()
-})
-
 afterEach(() => {
   process.env = { ...DEFAULT_ENV } // Restore default environment variables
   clearAllMockRequest()
@@ -99,4 +99,8 @@ const originalLocationHref = window.location.href
 beforeEach(() => {
   mockAllEndpointsByDefault()
   window.history.pushState(null, '', originalLocationHref) // Restore the url to http://localhost/
+})
+
+beforeAll(async () => {
+  await loadChains()
 })
