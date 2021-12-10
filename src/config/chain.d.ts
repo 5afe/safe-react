@@ -26,19 +26,6 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   VOLTA: '73799',
 }
 
-export const CHAIN_PREFIXES: Record<ShortName, ChainId> = {
-  eth: CHAIN_ID.ETHEREUM,
-  rin: CHAIN_ID.RINKEBY,
-  bnb: CHAIN_ID.BSC,
-  xdai: CHAIN_ID.XDAI,
-  matic: CHAIN_ID.POLYGON,
-  ewt: CHAIN_ID.ENERGY_WEB_CHAIN,
-  arb1: CHAIN_ID.ARBITRUM,
-  vt: CHAIN_ID.VOLTA,
-  oeth: CHAIN_ID.OPTIMISM,
-  Avalanche: CHAIN_ID.AVALANCHE,
-}
-
 // Values match that required of onboard and returned by CGW
 export enum WALLETS {
   METAMASK = 'metamask',

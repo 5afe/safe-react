@@ -5,12 +5,6 @@ import { Integrations } from '@sentry/tracing'
 import Root from 'src/components/Root'
 import { SENTRY_DSN } from './utils/constants'
 import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
-import { switchNetworkWithUrl } from './utils/history'
-
-// Set the initial network id from the URL
-if (typeof window !== 'undefined') {
-  switchNetworkWithUrl({ pathname: window.location.pathname })
-}
 
 disableMMAutoRefreshWarning()
 

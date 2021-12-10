@@ -18,6 +18,8 @@ import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
+import { switchNetworkWithUrl } from 'src/utils/history'
+import { useHistory } from 'react-router-dom'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -28,11 +30,18 @@ const removePreloader = () => {
 const RootConsumer = (): React.ReactElement | null => {
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
+  const history = useHistory()
 
   useEffect(() => {
     const initChains = async () => {
       try {
         await loadChains()
+
+        // Set the initial network id from the URL.
+        // It depends on the chains
+        const { pathname } = history.location
+        switchNetworkWithUrl({ pathname })
+
         setHasChains(true)
       } catch (err) {
         logError(Errors._904, err.message)
@@ -40,7 +49,7 @@ const RootConsumer = (): React.ReactElement | null => {
       }
     }
     initChains()
-  }, [])
+  }, [history])
 
   // Chains failed to load
   if (isError) {

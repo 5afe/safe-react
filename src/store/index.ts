@@ -43,11 +43,15 @@ import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
-export const SAVE_LS_CONFIG: RLSOptions = {
+export const SAVE_LS_CONFIG: RLSOptions | LoadOptions = {
   states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID, CONFIG_REDUCER_ID],
   namespace: LS_NAMESPACE,
   namespaceSeparator: LS_SEPARATOR,
   disableWarnings: true,
+  preloadedState: {
+    [CURRENCY_REDUCER_ID]: initialCurrencyState,
+    [APPEARANCE_REDUCER_ID]: initialAppearanceState,
+  },
 }
 
 export const LOAD_LS_CONFIG: LoadOptions = {
