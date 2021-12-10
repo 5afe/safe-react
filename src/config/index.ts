@@ -18,6 +18,7 @@ import { ChainId, ChainName, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 import { evalTemplate } from './utils'
 import local from 'src/utils/storage/local'
+import { ConfigState } from 'src/logic/config/store/reducer/reducer.d'
 
 export const LOCAL_CONFIG_KEY = 'config'
 
@@ -25,7 +26,7 @@ export const LOCAL_CONFIG_KEY = 'config'
  * Determine the initial chain id
  */
 const getInitialChainId = (): ChainId => {
-  const localItem = local.getItem<{ chainId: ChainId }>(LOCAL_CONFIG_KEY)
+  const localItem = local.getItem<ConfigState>(LOCAL_CONFIG_KEY)
   return localItem?.chainId || DEFAULT_CHAIN_ID
 }
 

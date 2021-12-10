@@ -2,7 +2,8 @@ import { createSelector } from 'reselect'
 
 import { AppReduxState } from 'src/store'
 import { ChainId } from 'src/config/chain.d'
-import { ConfigState, CONFIG_REDUCER_ID } from '../reducer'
+import { CONFIG_REDUCER_ID } from '../reducer'
+import { ConfigState } from '../reducer/reducer.d'
 
 export const configState = (state: AppReduxState): ConfigState => state[CONFIG_REDUCER_ID]
 
