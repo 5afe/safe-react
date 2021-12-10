@@ -57,19 +57,17 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
   }
 })
 
-sdkGatewayEndpoints.getChainsConfig.mockImplementation(
-  () => new Promise((resolve) => resolve(mockGetChainsConfigResponse)),
-)
+sdkGatewayEndpoints.getChainsConfig.mockImplementation(() => Promise.resolve(mockGetChainsConfigResponse))
 
 export let mockedEndpoints = {}
 
 function mockAllEndpointsByDefault() {
-  mockedEndpoints.getSafeInfo = sdkGatewayEndpoints.getSafeInfo.mockImplementation(
-    () => new Promise((resolve) => resolve(mockGetSafeInfoResponse)),
+  mockedEndpoints.getSafeInfo = sdkGatewayEndpoints.getSafeInfo.mockImplementation(() =>
+    Promise.resolve(mockGetSafeInfoResponse),
   )
 
-  mockedEndpoints.getBalances = sdkGatewayEndpoints.getBalances.mockImplementation(
-    () => new Promise((resolve) => resolve(mockTokenCurrenciesBalancesResponse)),
+  mockedEndpoints.getBalances = sdkGatewayEndpoints.getBalances.mockImplementation(() =>
+    Promise.resolve(mockTokenCurrenciesBalancesResponse),
   )
 }
 
