@@ -91,12 +91,6 @@ const SafeListItem = ({
     setChainId(networkId)
   }
 
-  useEffect(() => {
-    if (isCurrentSafe && shouldScrollToSafe) {
-      safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [isCurrentSafe, shouldScrollToSafe])
-
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
