@@ -82,10 +82,17 @@ const ResetTimeOptions = styled.div`
   grid-area: resetTimeOption;
 `
 
+const resetDays = (days: number): string => {
+  const minutes = days * 24 * 60
+  return minutes.toString()
+}
+
 const RESET_TIME_OPTIONS = [
-  { label: '1 day', value: '1440' }, // 1 day x 24h x 60min
-  { label: '1 week', value: '10080' }, // 7 days x 24h x 60min
-  { label: '1 month', value: '43200' }, // 30 days x 24h x 60min
+  { label: '1 day', value: resetDays(1) },
+  { label: '1 week', value: resetDays(7) },
+  { label: '1 month', value: resetDays(30) },
+  { label: '1 quarter', value: resetDays(90) },
+  { label: '1 year', value: resetDays(365) },
 ]
 
 const RINKEBY_RESET_TIME_OPTIONS = [
