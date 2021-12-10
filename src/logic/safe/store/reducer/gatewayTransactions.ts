@@ -55,6 +55,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { chainId, safeAddress, values, isTail = false } = action.payload
       const newHistory: StoreStructure['history'] = cloneDeep(state[chainId]?.[safeAddress]?.history || {})
+      const newQueued: StoreStructure['queued'] = cloneDeep(state[chainId]?.[safeAddress]?.queued || {})
 
       values.forEach((value) => {
         if (isDateLabel(value)) {
@@ -77,6 +78,16 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
             // pushing a newer transaction to the existing list messes the transactions order
             // this happens when most recent transactions are added to the existing txs in the store
             newHistory[startOfDate] = newHistory[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
+
+            // remove tx from queued if it exists there
+            if (isMultisigExecutionInfo(transaction.executionInfo)) {
+              console.log(transaction.executionInfo.nonce)
+              const txNonce = transaction.executionInfo.nonce
+
+              if (newQueued?.queued && newQueued?.queued[txNonce]) {
+                delete newQueued.queued[txNonce]
+              }
+            }
           }
           return
         }
@@ -92,6 +103,10 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
             ...state[chainId]?.[safeAddress],
             // extend history list
             history: isTail ? newHistory : sortObject(newHistory, 'desc'),
+            queued: {
+              ...state[chainId]?.[safeAddress].queued,
+              queued: newQueued.queued,
+            },
           },
         },
       }
