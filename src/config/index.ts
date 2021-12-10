@@ -6,31 +6,40 @@ import {
   RpcUri,
   GasPriceFixed,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
 import {
+  DEFAULT_CHAIN_ID,
   ETHERSCAN_API_KEY,
   INFURA_TOKEN,
-  LS_NAMESPACE,
-  LS_SEPARATOR,
   SAFE_APPS_RPC_TOKEN,
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
-import { ChainId, ChainName, ShortName } from './chain.d'
+import { ChainId, ChainName, CHAIN_PREFIXES, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 import { evalTemplate } from './utils'
+import local from 'src/utils/storage/local'
 
-export const getInitialChainId = () => {
-  const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
-  const DEFAULT_CHAIN_ID = initialConfigState.chainId
+export const LOCAL_CONFIG_KEY = 'config'
 
-  const localChainId = localStorage.getItem(LOCAL_CONFIG_KEY)
-
-  try {
-    return localChainId ? JSON.parse(localChainId)?.chainId : DEFAULT_CHAIN_ID
-  } catch {
-    return DEFAULT_CHAIN_ID
+/**
+ * Determine the initial chain id
+ * 1) From the URL, if a shortName prefix is present
+ * 2) From localStorage (the last used network)
+ * 3) Fallback to the default chain id (1 or 4 on dev)
+ *
+ * NB: This function can't have access to either the store nor the router.
+ */
+const getInitialChainId = (): ChainId => {
+  // Match EIP-3770 prefix
+  const urlMatch = location.pathname.match(/\/([a-z0-9-]{2,}):0x/i)
+  if (urlMatch) {
+    const urlPrefix = urlMatch[1]
+    return CHAIN_PREFIXES[urlPrefix] || DEFAULT_CHAIN_ID
   }
+
+  // Look up stored state
+  const localItem = local.getItem<{ chainId: ChainId }>(LOCAL_CONFIG_KEY)
+  return localItem?.chainId || DEFAULT_CHAIN_ID
 }
 
 let _chainId = getInitialChainId()
