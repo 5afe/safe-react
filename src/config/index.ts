@@ -76,7 +76,7 @@ export const getRpcServiceUrl = (): string => {
 
 export const getPublicRpcUrl = (): string => {
   const { publicRpcUri } = getChainInfo()
-  return formatRpcServiceUrl(publicRpcUri, INFURA_TOKEN)
+  return publicRpcUri.value
 }
 
 export const getSafeAppsRpcServiceUrl = (): string => {

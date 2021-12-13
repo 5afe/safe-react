@@ -135,8 +135,8 @@
         "value": "https://polygon-mainnet.infura.io/v3/"
       },
       "publicRpcUri": {
-        "authentication": "API_KEY_PATH",
-        "value": "https://polygon-mainnet.infura.io/v3/"
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://polygon-rpc.com/"
       },
       "blockExplorerUriTemplate": {
         "address": "https://polygonscan.com/address/{{address}}",
