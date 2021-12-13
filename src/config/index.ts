@@ -74,6 +74,11 @@ export const getRpcServiceUrl = (): string => {
   return formatRpcServiceUrl(rpcUri, INFURA_TOKEN)
 }
 
+export const getPublicRpcUrl = (): string => {
+  const { publicRpcUri } = getChainInfo()
+  return formatRpcServiceUrl(publicRpcUri, INFURA_TOKEN)
+}
+
 export const getSafeAppsRpcServiceUrl = (): string => {
   const { safeAppsRpcUri } = getChainInfo()
   return formatRpcServiceUrl(safeAppsRpcUri, SAFE_APPS_RPC_TOKEN)
