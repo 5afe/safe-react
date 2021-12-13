@@ -65,8 +65,8 @@ export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
 }
 
 const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN: string): string => {
-  const usesInfuraRPC = authentication === RPC_AUTHENTICATION.API_KEY_PATH
-  return usesInfuraRPC && TOKEN ? `${value}${TOKEN}` : value
+  const needsToken = authentication === RPC_AUTHENTICATION.API_KEY_PATH
+  return needsToken ? `${value}${TOKEN}` : value
 }
 
 export const getRpcServiceUrl = (): string => {
@@ -76,7 +76,8 @@ export const getRpcServiceUrl = (): string => {
 
 export const getPublicRpcUrl = (): string => {
   const { publicRpcUri } = getChainInfo()
-  return publicRpcUri.value
+  // Don't pass any auth token because this RPC is for user's wallet
+  return formatRpcServiceUrl(publicRpcUri, '')
 }
 
 export const getSafeAppsRpcServiceUrl = (): string => {
