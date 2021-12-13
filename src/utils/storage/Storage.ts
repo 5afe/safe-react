@@ -26,7 +26,7 @@ class Storage {
       logError(Errors._700, `key ${key} – ${err.message}`)
     }
 
-    if (!saved) return
+    if (!saved || saved === 'undefined') return
 
     try {
       return JSON.parse(saved) as T
