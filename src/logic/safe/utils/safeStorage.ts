@@ -1,6 +1,5 @@
 import { getStoragePrefix, loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { getChainById } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 
 export const SAFES_KEY = 'SAFES'
@@ -12,8 +11,7 @@ export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
 }
 
 export const loadStoredNetworkSafeById = (id: ChainId): Promise<StoredSafes | undefined> => {
-  const chain = getChainById(id)
-  return loadFromStorage<StoredSafes>(SAFES_KEY, getStoragePrefix(chain.chainName))
+  return loadFromStorage<StoredSafes>(SAFES_KEY, getStoragePrefix(id))
 }
 
 export const saveSafes = async (safes: StoredSafes): Promise<void> => {
