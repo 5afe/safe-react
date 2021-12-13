@@ -30,4 +30,12 @@ describe('local storage', () => {
       expect(window.localStorage.getItem('SAFE__test')).toBe('true')
     })
   })
+
+  describe('handling undefined', () => {
+    it('saves ands reads undefined', () => {
+      setItem('test_undefined', undefined)
+      expect(getItem('test_undefined')).toBe(undefined)
+      expect(window.localStorage.getItem('SAFE__test_undefined')).toBe('undefined')
+    })
+  })
 })
