@@ -126,7 +126,7 @@ export const createTransaction =
     const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
     let txHash
-    const txArgs: TxArgs & { sender: string } = {
+    const txArgs: TxArgs = {
       safeInstance,
       to,
       valueInWei,

@@ -17,7 +17,7 @@ export type TxArgs = {
   refundReceiver: string
   safeInstance: GnosisSafe
   safeTxGas: string
-  sender?: string
+  sender: string
   sigs: string
   to: string
   valueInWei: string
