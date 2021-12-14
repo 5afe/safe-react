@@ -19,7 +19,6 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { NOTIFICATIONS } from 'src/logic/notifications'
 
 type ActionButtonsHandlers = {
-  canExecute: boolean
   canCancel: boolean
   handleConfirmButtonClick: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void
   handleCancelButtonClick: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -87,6 +86,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
 
   const disabledActions = useMemo(
     () =>
+      !currentUser ||
       isPending ||
       (isStatusAwaitingExecution(transaction.txStatus) && locationContext.current.txLocation === 'queued.queued') ||
       (isStatusAwaitingConfirmation(transaction.txStatus) && !signaturePending(currentUser)),
@@ -94,7 +94,6 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   )
 
   return {
-    canExecute,
     canCancel,
     handleConfirmButtonClick,
     handleCancelButtonClick,

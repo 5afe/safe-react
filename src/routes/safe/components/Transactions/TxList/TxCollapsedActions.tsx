@@ -23,7 +23,6 @@ type TxCollapsedActionsProps = {
 
 export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): ReactElement => {
   const {
-    canExecute,
     canCancel,
     handleConfirmButtonClick,
     handleCancelButtonClick,
@@ -45,26 +44,20 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
 
   return (
     <>
-      {canExecute && (
-        <Tooltip title={getTitle()} placement="top">
-          <span>
-            <IconButton
-              size="small"
-              type="button"
-              onClick={handleConfirmButtonClick}
-              disabled={disabledActions}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            >
-              <Icon
-                type={transaction.txStatus === 'AWAITING_EXECUTION' ? 'rocket' : 'check'}
-                color="primary"
-                size="sm"
-              />
-            </IconButton>
-          </span>
-        </Tooltip>
-      )}
+      <Tooltip title={getTitle()} placement="top">
+        <span>
+          <IconButton
+            size="small"
+            type="button"
+            onClick={handleConfirmButtonClick}
+            disabled={disabledActions}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          >
+            <Icon type={transaction.txStatus === 'AWAITING_EXECUTION' ? 'rocket' : 'check'} color="primary" size="sm" />
+          </IconButton>
+        </span>
+      </Tooltip>
       {canCancel && (
         <Tooltip title="Reject" placement="top">
           <span>

@@ -20,8 +20,8 @@ export const getNotification = (
 ): undefined | Notification => {
   const currentSafe = safes.get(safeAddress)
 
-  // no notification if not in the current safe or if its not an owner
-  if (!currentSafe) {
+  // no notification if not in the current safe or not connected
+  if (!currentSafe || !userAddress) {
     return
   }
 

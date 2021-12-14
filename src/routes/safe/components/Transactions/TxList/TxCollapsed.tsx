@@ -24,6 +24,8 @@ import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
 import { SettingsChange, DisableModule, MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -114,6 +116,7 @@ export const TxCollapsed = ({
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
   const toAddress = getTxTo(transaction)
+  const userAddress = useSelector(userAccountSelector)
 
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
   const onChainRejection =
@@ -166,7 +169,7 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {transaction && <TxCollapsedActions transaction={transaction} />}
+      {!!userAddress && transaction && <TxCollapsedActions transaction={transaction} />}
     </div>
   )
 

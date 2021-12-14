@@ -22,7 +22,6 @@ export type TransactionActions = {
   canExecute: boolean
   canCancel: boolean
   isUserAnOwner: boolean
-  oneToGo: boolean
 }
 
 export const useTransactionActions = (transaction: Transaction): TransactionActions => {
@@ -45,28 +44,29 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
     canExecute: false,
     canCancel: false,
     isUserAnOwner,
-    oneToGo: false,
   })
 
   useEffect(() => {
-    if (txLocation !== 'history' && isMultisigExecutionInfo(transaction.executionInfo) && transaction.executionInfo) {
+    if (
+      !!currentUser &&
+      txLocation !== 'history' &&
+      isMultisigExecutionInfo(transaction.executionInfo) &&
+      transaction.executionInfo
+    ) {
       const { missingSigners, confirmationsSubmitted = 0, confirmationsRequired = 0 } = transaction.executionInfo || {}
 
       const currentUserSigned = !missingSigners?.some((missingSigner) => sameAddress(missingSigner.value, currentUser))
-      const oneToGo = confirmationsSubmitted === confirmationsRequired - 1 && isUserAnOwner
+      const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
       const canConfirm =
         ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned && isUserAnOwner && !isWrongChain
-      const canConfirmThenExecute = txLocation === 'queued.next' && canConfirm && oneToGo
       const thresholdReached = confirmationsSubmitted >= confirmationsRequired
-      const canExecute = txLocation === 'queued.next' && thresholdReached && !isWrongChain
 
       setState({
         canConfirm,
-        canConfirmThenExecute,
-        canExecute,
+        canConfirmThenExecute: txLocation === 'queued.next' && canConfirm && oneToGo,
+        canExecute: txLocation === 'queued.next' && thresholdReached && !!currentUser && !isWrongChain,
         canCancel,
         isUserAnOwner,
-        oneToGo,
       })
     } else {
       setState((prev) => ({ ...prev, isUserAnOwner }))

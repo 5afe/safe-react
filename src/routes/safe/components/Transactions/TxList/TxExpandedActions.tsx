@@ -13,7 +13,6 @@ type TxExpandedActionsProps = {
 
 export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): ReactElement | null => {
   const {
-    canExecute,
     canCancel,
     handleConfirmButtonClick,
     handleCancelButtonClick,
@@ -42,23 +41,21 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   // https://github.com/facebook/react/issues/4492
   return (
     <>
-      {canExecute && (
-        <Tooltip title={getConfirmTooltipTitle()} placement="top">
-          <span>
-            <Button
-              size="md"
-              color="primary"
-              disabled={disabledActions}
-              onClick={onExecuteOrConfirm}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-              className="primary"
-            >
-              {transaction.txStatus === 'AWAITING_EXECUTION' ? 'Execute' : 'Confirm'}
-            </Button>
-          </span>
-        </Tooltip>
-      )}
+      <Tooltip title={getConfirmTooltipTitle()} placement="top">
+        <span>
+          <Button
+            size="md"
+            color="primary"
+            disabled={disabledActions}
+            onClick={onExecuteOrConfirm}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+            className="primary"
+          >
+            {transaction.txStatus === 'AWAITING_EXECUTION' ? 'Execute' : 'Confirm'}
+          </Button>
+        </span>
+      </Tooltip>
       {canCancel && (
         <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
           Reject
