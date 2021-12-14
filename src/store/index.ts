@@ -28,7 +28,7 @@ import currencyValuesReducer, {
   CURRENCY_REDUCER_ID,
   initialCurrencyState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import configReducer, { ConfigState, CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
+import configReducer, { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 import { configMiddleware } from 'src/logic/config/store/middleware'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import appearanceReducer, {
@@ -40,8 +40,10 @@ import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectible
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
+import { ConfigState } from 'src/logic/config/store/reducer/reducer'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
+
 export const LS_CONFIG: RLSOptions | LoadOptions = {
   states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID, CONFIG_REDUCER_ID],
   namespace: LS_NAMESPACE,

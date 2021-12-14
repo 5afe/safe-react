@@ -1,6 +1,7 @@
 import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
+import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
 import styled from 'styled-components'
 
 import { CustomIconText } from 'src/components/CustomIconText'
@@ -12,7 +13,6 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from './TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
-import { KNOWN_MODULES } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
@@ -23,19 +23,19 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
-import { SettingsChange, DisableModule, MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
-import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useKnownAddress } from './hooks/useKnownAddress'
+import { useSelector } from 'react-redux'
 
-const TxInfo = ({ info }: { info: AssetInfo }) => {
+const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
     return <TokenTransferAmount assetInfo={info} />
   }
 
-  if (isSettingsChangeTxInfo(info)) {
+  if (isSettingsChangeTxInfo(info) && !isCustomTxInfo(info)) {
     const UNKNOWN_MODULE = 'Unknown module'
 
-    switch ((info as SettingsChange).settingsInfo?.type) {
+    switch (info.settingsInfo?.type) {
       case 'SET_FALLBACK_HANDLER':
       case 'ADD_OWNER':
       case 'REMOVE_OWNER':
@@ -45,10 +45,9 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
         break
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
-        const disableInfo = (info as SettingsChange).settingsInfo as DisableModule
         return (
           <Text size="xl" as="span">
-            {KNOWN_MODULES[disableInfo.module.value] ?? UNKNOWN_MODULE}
+            {name || UNKNOWN_MODULE}
           </Text>
         )
     }
@@ -115,8 +114,9 @@ export const TxCollapsed = ({
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
-  const toAddress = getTxTo(transaction)
   const userAddress = useSelector(userAccountSelector)
+  const toAddress = getTxTo(transaction)
+  const toInfo = useKnownAddress(toAddress)
 
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
   const onChainRejection =
@@ -132,14 +132,16 @@ export const TxCollapsed = ({
     <div className={'tx-type' + willBeReplaced + onChainRejection}>
       <CustomIconText
         address={toAddress?.value || '0x'}
-        iconUrl={type.icon}
+        iconUrl={type.icon || toInfo?.logoUri || undefined}
         iconUrlFallback={type.fallbackIcon}
-        text={type.text}
+        text={type.text || toInfo?.name || undefined}
       />
     </div>
   )
 
-  const txCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
+  const txCollapsedInfo = (
+    <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} name={toInfo?.name || undefined} />}</div>
+  )
 
   const timestamp = useRef<HTMLDivElement | null>(null)
 
