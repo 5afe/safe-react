@@ -75,7 +75,7 @@ jobs:
 
       # Set production flag on staging
       - name: Set production flag for staging
-        run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
+        run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main'
 
       # Set production flag on prod
