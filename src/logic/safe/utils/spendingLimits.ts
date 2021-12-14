@@ -124,17 +124,16 @@ const requestAllowancesByDelegatesAndTokens = async (
 export const getSpendingLimits = async (modules: string[], safeAddress: string): Promise<SpendingLimit[] | null> => {
   const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
 
+  if (!isSpendingLimitEnabled) return null
+
   try {
-    if (isSpendingLimitEnabled) {
-      const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
-      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
-      return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
-    }
+    const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
+    const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
+    const limits = await requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+    return limits
   } catch (error) {
     throw new CodedException(Errors._609, error.message)
   }
-
-  return null
 }
 
 type DeleteAllowanceParams = {
