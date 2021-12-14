@@ -56,20 +56,25 @@ type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
+export type ExecutingTxHistoryState = {
+  isExecution?: boolean
+}
+
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
-const navigateToTx = (safeAddress: string, txId: string) => {
+const navigateToTx = (safeAddress: string, txId: string, isExecution = false) => {
   const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
     [TRANSACTION_ID_SLUG]: txId,
   })
 
-  history.push(txRoute)
+  const state: ExecutingTxHistoryState = { isExecution }
+  history.push(txRoute, state)
 }
 
 export const createTransaction =
@@ -180,8 +185,9 @@ export const createTransaction =
 
           try {
             const txDetails = await saveTxToHistory({ ...txArgs, origin })
+
             if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, txDetails.txId)
+              navigateToTx(safeAddress, txDetails.txId, isExecution)
             }
           } catch (err) {
             logError(Errors._803, err.message)
