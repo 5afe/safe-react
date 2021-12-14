@@ -106,9 +106,6 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
 
   return (
     <TxDetailsContainer>
-      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
-        <TxSummary txDetails={data} />
-      </div>
       <div
         className={cn('tx-details', {
           'no-padding': isMultiSendTxInfo(data.txInfo),
@@ -117,6 +114,9 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
         })}
       >
         <TxDataGroup txDetails={data} />
+      </div>
+      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
+        <TxSummary txDetails={data} />
       </div>
       <div
         className={cn('tx-owners', {
