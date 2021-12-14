@@ -114,6 +114,7 @@
       "features": [
         "CONTRACT_INTERACTION",
         "DOMAIN_LOOKUP",
+        "EIP1559",
         "ERC721",
         "SAFE_APPS",
         "SAFE_TX_GAS_OPTIONAL"
