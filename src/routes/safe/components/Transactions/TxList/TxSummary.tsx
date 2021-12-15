@@ -40,6 +40,7 @@ const FlexWrapper = styled.div<{ margin: number }>`
 `
 
 export const TxSummary = ({ txDetails }: Props): ReactElement => {
+  console.log('TxSummary', txDetails)
   const { txHash, detailedExecutionInfo, executedAt, txData, txInfo } = txDetails
   const explorerUrl = txHash ? getExplorerInfo(txHash) : undefined
 
@@ -121,13 +122,13 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       </div>
       <br></br>
       {/* TODO: Refactor repeated code to a component*/}
-      {txData?.operation && (
+      {txData?.operation !== undefined && (
         <StyledGridRow>
           <Text size="xl" as="span">
             Operation:
           </Text>
           <Text size="xl" as="span">
-            {txData?.operation}
+            {`${txData?.operation} (${Operation[txData?.operation].toLowerCase()})`}
           </Text>
         </StyledGridRow>
       )}
