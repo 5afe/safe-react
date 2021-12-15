@@ -18,10 +18,10 @@ const spyTrackEventGA = jest.fn()
 
 beforeEach(async () => {
   // Includes an id that doesn't exist in the remote apps to check that there's no error
-  await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, ['14', '24', '228'])
+  saveToStorage(appUtils.PINNED_SAFE_APP_IDS, ['14', '24', '228'])
 
   // populate custom app
-  await saveToStorage(appUtils.APPS_STORAGE_KEY, [
+  saveToStorage(appUtils.APPS_STORAGE_KEY, [
     {
       url: 'https://apps.gnosis-safe.io/drain-safe',
     },
@@ -206,7 +206,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
 
 describe('Safe Apps -> AppsList -> Pinning apps', () => {
   it('Shows a tutorial message when there are no pinned apps', async () => {
-    await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [])
+    saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [])
 
     render(<AppsList />)
 

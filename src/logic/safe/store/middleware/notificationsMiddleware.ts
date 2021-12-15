@@ -28,13 +28,13 @@ const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY
 
 const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
 
-const sendAwaitingTransactionNotification = async (
+const sendAwaitingTransactionNotification = (
   dispatch,
   safeAddress,
   awaitingTxsSubmissionDateList,
   notificationKey,
   notificationClickedCb,
-) => {
+): void => {
   if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList || !notificationKey) {
     return
   }
@@ -42,7 +42,7 @@ const sendAwaitingTransactionNotification = async (
     return
   }
 
-  let lastTimeUserLoggedInForSafes = (await loadFromStorage<Record<string, string>>(LAST_TIME_USED_LOGGED_IN_ID)) || {}
+  let lastTimeUserLoggedInForSafes = loadFromStorage<Record<string, string>>(LAST_TIME_USED_LOGGED_IN_ID) || {}
   const lastTimeUserLoggedIn = lastTimeUserLoggedInForSafes[safeAddress]
     ? lastTimeUserLoggedInForSafes[safeAddress]
     : null
@@ -63,7 +63,7 @@ const sendAwaitingTransactionNotification = async (
     ...lastTimeUserLoggedInForSafes,
     [safeAddress]: new Date(),
   }
-  await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
+  saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
 }
 
 // any/AnyAction used as our Redux state is not typed
@@ -121,7 +121,7 @@ const notificationsMiddleware =
             )
           }
 
-          await sendAwaitingTransactionNotification(
+          sendAwaitingTransactionNotification(
             dispatch,
             safeAddress,
             awaitingTxsSubmissionDateList,
