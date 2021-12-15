@@ -65,62 +65,6 @@
       ]
     },
     {
-      "transactionService": "https://safe-transaction.avalanche.gnosis.io",
-      "chainId": "43114",
-      "chainName": "Avalanche",
-      "shortName": "Avalanche",
-      "l2": true,
-      "description": "",
-      "rpcUri": {
-        "authentication": "NO_AUTHENTICATION",
-        "value": "https://api.avax.network/ext/bc/C/rpc"
-      },
-      "safeAppsRpcUri": {
-        "authentication": "NO_AUTHENTICATION",
-        "value": "https://api.avax.network/ext/bc/C/rpc"
-      },
-      "publicRpcUri": {
-        "authentication": "NO_AUTHENTICATION",
-        "value": "https://api.avax.network/ext/bc/C/rpc"
-      },
-      "blockExplorerUriTemplate": {
-        "address": "https://snowtrace.io/address/{{address}}",
-        "txHash": "https://snowtrace.io/tx/{{txHash}}",
-        "api": "https://api.snowtrace.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
-      },
-      "nativeCurrency": {
-        "name": "Avalanche",
-        "symbol": "AVAX",
-        "decimals": 18,
-        "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/chains/43114/currency_logo.png"
-      },
-      "theme": {
-        "textColor": "#ffffff",
-        "backgroundColor": "#e84142"
-      },
-      "gasPrice": [],
-      "disabledWallets": [
-        "authereum",
-        "fortmatic",
-        "keystone",
-        "lattice",
-        "opera",
-        "operaTouch",
-        "portis",
-        "torus",
-        "trezor",
-        "trust"
-      ],
-      "features": [
-        "CONTRACT_INTERACTION",
-        "DOMAIN_LOOKUP",
-        "EIP1559",
-        "ERC721",
-        "SAFE_APPS",
-        "SAFE_TX_GAS_OPTIONAL"
-      ]
-    },
-    {
       "transactionService": "https://safe-transaction-polygon.staging.gnosisdev.com",
       "chainId": "137",
       "chainName": "Polygon",
@@ -168,7 +112,6 @@
         "fortmatic",
         "keystone",
         "lattice",
-        "ledger",
         "opera",
         "operaTouch",
         "portis",
