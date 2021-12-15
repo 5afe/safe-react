@@ -19,6 +19,8 @@ export const storage = new Storage(window.localStorage, '')
 
 export const getStoragePrefix = (id = _getChainId()): string => {
   const name = STORAGE_KEYS[id] || id
+  // Legacy ImmortalDB prefix
+  // @TODO: migrate it
   return `_immortal|v2_${name}__`
 }
 
