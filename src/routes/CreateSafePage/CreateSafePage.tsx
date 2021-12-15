@@ -48,9 +48,13 @@ function CreateSafePage(): ReactElement {
   useEffect(() => {
     const checkIfSafeIsPendingToBeCreated = async (): Promise<void> => {
       setIsLoading(true)
+
+      // Removing the await completely is breaking the tests for a mysterious reason
+      // @TODO: remove the promise
       const safePendingToBeCreated = await Promise.resolve(
         loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY),
       )
+
       if (provider) {
         await instantiateSafeContracts()
         setSafePendingToBeCreated(safePendingToBeCreated)
