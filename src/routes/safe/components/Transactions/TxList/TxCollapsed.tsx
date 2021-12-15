@@ -171,7 +171,7 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {!!userAddress && transaction && <TxCollapsedActions transaction={transaction} />}
+      {!!userAddress && txLocation !== 'history' && transaction && <TxCollapsedActions transaction={transaction} />}
     </div>
   )
 
