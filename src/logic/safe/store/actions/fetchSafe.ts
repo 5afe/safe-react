@@ -29,13 +29,11 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
   // setting `loadedViaUrl` to false, as `buildSafe` is called on safe Load or Open flows
   const safeInfo: Partial<SafeRecordProps> = { address, loadedViaUrl: false }
 
-  const [remote, local] = await Promise.all([
-    getSafeInfo(safeAddress).catch((err) => {
-      err.log()
-      return null
-    }),
-    getLocalSafe(safeAddress),
-  ])
+  const local = getLocalSafe(safeAddress)
+  const remote = await getSafeInfo(safeAddress).catch((err) => {
+    err.log()
+    return null
+  })
 
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}

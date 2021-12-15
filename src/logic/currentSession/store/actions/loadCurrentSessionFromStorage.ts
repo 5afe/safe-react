@@ -5,8 +5,8 @@ import { getCurrentSessionFromStorage } from 'src/logic/currentSession/utils'
 
 const loadCurrentSessionFromStorage =
   () =>
-  async (dispatch: Dispatch): Promise<void> => {
-    const currentSession = await getCurrentSessionFromStorage()
+  (dispatch: Dispatch): void => {
+    const currentSession = getCurrentSessionFromStorage()
 
     dispatch(loadCurrentSession(currentSession))
   }
