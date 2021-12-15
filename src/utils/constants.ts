@@ -34,7 +34,7 @@ export const CONFIG_SERVICE_URL =
     ? 'https://safe-config.gnosis.io/api/v1'
     : 'https://safe-config.staging.gnosisdev.com/api/v1'
 export const GATEWAY_URL =
-  IS_PRODUCTION || window.location.hash === '#prod'
+  IS_PRODUCTION || localStorage.getItem('SAFE__useProdGateway') === 'true'
     ? 'https://safe-client.gnosis.io/v1'
     : 'https://safe-client.staging.gnosisdev.com/v1'
 export const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
