@@ -1,4 +1,4 @@
-import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -36,6 +36,7 @@ import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } fr
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -66,11 +67,15 @@ export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
-const navigateToTx = (safeAddress: string, txId: string, isExecution = false) => {
+const navigateToTx = (safeAddress: string, txDetails: TransactionDetails, isExecution = false) => {
+  if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
+    return
+  }
   const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txId,
+    //@TODO: Rename
+    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
   })
 
   const state: ExecutingTxHistoryState = { isExecution }
@@ -159,7 +164,7 @@ export const createTransaction =
 
           dispatch(fetchTransactions(chainId, safeAddress))
           if (navigateToTransactionsTab) {
-            navigateToTx(safeAddress, txDetails.txId)
+            navigateToTx(safeAddress, txDetails)
           }
           onUserConfirm?.(safeTxHash)
           return
@@ -187,7 +192,7 @@ export const createTransaction =
             const txDetails = await saveTxToHistory({ ...txArgs, origin })
 
             if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, txDetails.txId, isExecution)
+              navigateToTx(safeAddress, txDetails, isExecution)
             }
           } catch (err) {
             logError(Errors._803, err.message)

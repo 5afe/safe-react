@@ -1,8 +1,8 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionDetails, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
   isMultiSigExecutionDetails,
@@ -11,12 +11,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress, SafeRouteSlugs, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { Centered } from './styled'
-import {
-  getTransactionWithLocationByAttribute,
-  historyTransactions,
-  nextTransactions,
-  queuedTransactions,
-} from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { getTransactionWithLocationByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxLocationContext } from './TxLocationProvider'
 import { QueueTxList } from './QueueTxList'
 import { HistoryTxList } from './HistoryTxList'
@@ -33,78 +28,80 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { ExecutingTxHistoryState } from 'src/logic/safe/store/actions/createTransaction'
 
 const TxSingularDetails = (): ReactElement => {
-  const { [TRANSACTION_ID_SLUG]: txId = '' } = useParams<SafeRouteSlugs>()
+  const { [TRANSACTION_ID_SLUG]: safeTxHash = '' } = useParams<SafeRouteSlugs>()
 
+  const [fetchedTxId, setFetchedTxId] = useState<string>('')
   const location = useLocation<ExecutingTxHistoryState>()
   const dispatch = useDispatch()
   const chainId = useSelector(currentChainId)
-  const historyTxs = useSelector(historyTransactions)
-  const nextTxs = useSelector(nextTransactions)
-  const queueTxs = useSelector(queuedTransactions)
-  const isLoaded = [historyTxs, nextTxs, queueTxs].every(Boolean)
 
   // We must use the tx from the store as the queue actions alter the tx
   const liveTx = useSelector(
     (state: AppReduxState) =>
-      getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }),
-    shallowEqual, // Check for txLocation change
+      getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: fetchedTxId }),
+    shallowEqual,
   )
 
   useEffect(() => {
     let isCurrent = true
 
-    if (!txId || liveTx) {
+    if (!safeTxHash) {
       return
     }
 
     const getTransaction = async (): Promise<void> => {
+      setFetchedTxId('')
+      let txDetails: TransactionDetails
       try {
-        const txDetails = await fetchSafeTransaction(txId)
-
-        if (!isCurrent) {
-          return
-        }
-
-        // Transaction was proposed with a threshold of 1 and chose to execute
-        const isExecutingCreatedTx = location.state.isExecution && isStatusAwaitingConfirmation(txDetails.txStatus)
-        if (isExecutingCreatedTx) {
-          txDetails.txStatus = TransactionStatus.PENDING
-
-          if (isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
-            txDetails.detailedExecutionInfo.confirmations = [
-              { signature: '', submittedAt: Date.now(), signer: txDetails.detailedExecutionInfo.signers[0] },
-            ]
-          }
-        }
-
-        const tx = makeTxFromDetails(txDetails)
-
-        const payload: HistoryPayload | QueuedPayload = {
-          chainId,
-          safeAddress: extractSafeAddress(),
-          values: [
-            {
-              transaction: tx,
-              type: 'TRANSACTION', // Other types are discarded in reducer
-              conflictType: 'None', // Not used in reducer
-            },
-          ],
-        }
-
-        // Add transaction to store
-        dispatch(isTxQueued(tx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
+        txDetails = await fetchSafeTransaction(safeTxHash)
       } catch (e) {
         logError(Errors._614, e.message)
+        return
       }
+
+      if (!isCurrent || !txDetails.txId) {
+        return
+      }
+
+      setFetchedTxId(txDetails.txId)
+
+      // Transaction was proposed with a threshold of 1 and chose to execute
+      const isExecutingCreatedTx = location.state?.isExecution && isStatusAwaitingConfirmation(txDetails.txStatus)
+      if (isExecutingCreatedTx) {
+        txDetails.txStatus = TransactionStatus.PENDING
+
+        if (isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
+          txDetails.detailedExecutionInfo.confirmations = [
+            { signature: '', submittedAt: Date.now(), signer: txDetails.detailedExecutionInfo.signers[0] },
+          ]
+        }
+      }
+
+      const tx = makeTxFromDetails(txDetails)
+
+      const payload: HistoryPayload | QueuedPayload = {
+        chainId,
+        safeAddress: extractSafeAddress(),
+        values: [
+          {
+            transaction: tx,
+            type: 'TRANSACTION', // Other types are discarded in reducer
+            conflictType: 'None', // Not used in reducer
+          },
+        ],
+      }
+
+      // Add transaction to store
+      dispatch(isTxQueued(tx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
     }
     getTransaction()
 
     return () => {
       isCurrent = false
     }
-  }, [txId, liveTx, dispatch, chainId, location.state.isExecution])
+  }, [safeTxHash, dispatch, chainId, location.state?.isExecution])
 
-  if (!isLoaded || !liveTx) {
+  if (!liveTx) {
     return (
       <Centered padding={10}>
         <Loader size="sm" />

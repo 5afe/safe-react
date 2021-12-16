@@ -150,6 +150,11 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         }
       })
 
+      // No new txs, empty queue list, cleanup
+      if (!values.length && !Object.keys(newQueued).length && Object.keys(newNext).length === 1) {
+        newNext = {}
+      }
+
       return {
         // all the safes with their respective states
         ...state,
