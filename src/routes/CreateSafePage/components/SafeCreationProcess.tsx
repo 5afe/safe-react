@@ -61,8 +61,8 @@ function SafeCreationProcess(): ReactElement {
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
 
-  const createNewSafe = useCallback(async () => {
-    const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+  const createNewSafe = useCallback(() => {
+    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     if (!safeCreationFormValues) {
       goToWelcomePage()
@@ -115,27 +115,22 @@ function SafeCreationProcess(): ReactElement {
   }, [userAddressAccount])
 
   useEffect(() => {
-    const load = async () => {
-      const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
-
-      if (!safeCreationFormValues) {
-        goToWelcomePage()
-        return
-      }
-
-      const safeCreationTxHash = safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
-      if (safeCreationTxHash) {
-        setSafeCreationTxHash(safeCreationTxHash)
-      } else {
-        createNewSafe()
-      }
+    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    if (!safeCreationFormValues) {
+      goToWelcomePage()
+      return
     }
 
-    load()
+    const safeCreationTxHash = safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
+    if (safeCreationTxHash) {
+      setSafeCreationTxHash(safeCreationTxHash)
+    } else {
+      createNewSafe()
+    }
   }, [createNewSafe])
 
   const onSafeCreated = async (newSafeAddress: string): Promise<void> => {
-    const createSafeFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+    const createSafeFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     if (!createSafeFormValues) {
       goToWelcomePage()
@@ -182,8 +177,8 @@ function SafeCreationProcess(): ReactElement {
     })
   }
 
-  const onRetry = async () => {
-    const safeCreationFormValues = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeFormValues
+  const onRetry = (): void => {
+    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     if (!safeCreationFormValues) {
       goToWelcomePage()
@@ -192,7 +187,7 @@ function SafeCreationProcess(): ReactElement {
 
     setSafeCreationTxHash(undefined)
     delete safeCreationFormValues.safeCreationTxHash
-    await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, safeCreationFormValues)
+    saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, safeCreationFormValues)
     createNewSafe()
   }
 
@@ -201,8 +196,9 @@ function SafeCreationProcess(): ReactElement {
     goToWelcomePage()
   }
 
-  async function onClickModalButton() {
-    await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+  function onClickModalButton() {
+    removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+
     const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {

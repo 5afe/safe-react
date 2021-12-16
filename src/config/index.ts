@@ -6,31 +6,28 @@ import {
   RpcUri,
   GasPriceFixed,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-import { CONFIG_REDUCER_ID, initialConfigState } from 'src/logic/config/store/reducer'
 
 import {
+  DEFAULT_CHAIN_ID,
   ETHERSCAN_API_KEY,
   INFURA_TOKEN,
-  LS_NAMESPACE,
-  LS_SEPARATOR,
   SAFE_APPS_RPC_TOKEN,
   TX_SERVICE_VERSION,
 } from 'src/utils/constants'
 import { ChainId, ChainName, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 import { evalTemplate } from './utils'
+import local from 'src/utils/storage/local'
+import { ConfigState } from 'src/logic/config/store/reducer/reducer.d'
 
-export const getInitialChainId = () => {
-  const LOCAL_CONFIG_KEY = `${LS_NAMESPACE}${LS_SEPARATOR}${CONFIG_REDUCER_ID}`
-  const DEFAULT_CHAIN_ID = initialConfigState.chainId
+export const LOCAL_CONFIG_KEY = 'config'
 
-  const localChainId = localStorage.getItem(LOCAL_CONFIG_KEY)
-
-  try {
-    return localChainId ? JSON.parse(localChainId)?.chainId : DEFAULT_CHAIN_ID
-  } catch {
-    return DEFAULT_CHAIN_ID
-  }
+/**
+ * Determine the initial chain id
+ */
+const getInitialChainId = (): ChainId => {
+  const localItem = local.getItem<ConfigState>(LOCAL_CONFIG_KEY)
+  return localItem?.chainId || DEFAULT_CHAIN_ID
 }
 
 let _chainId = getInitialChainId()
@@ -68,13 +65,19 @@ export const getNativeCurrency = (): ChainInfo['nativeCurrency'] => {
 }
 
 const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN: string): string => {
-  const usesInfuraRPC = authentication === RPC_AUTHENTICATION.API_KEY_PATH
-  return usesInfuraRPC && TOKEN ? `${value}${TOKEN}` : value
+  const needsToken = authentication === RPC_AUTHENTICATION.API_KEY_PATH
+  return needsToken ? `${value}${TOKEN}` : value
 }
 
 export const getRpcServiceUrl = (): string => {
   const { rpcUri } = getChainInfo()
   return formatRpcServiceUrl(rpcUri, INFURA_TOKEN)
+}
+
+export const getPublicRpcUrl = (): string => {
+  const { publicRpcUri } = getChainInfo()
+  // Don't pass any auth token because this RPC is for user's wallet
+  return formatRpcServiceUrl(publicRpcUri, '')
 }
 
 export const getSafeAppsRpcServiceUrl = (): string => {

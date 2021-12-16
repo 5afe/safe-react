@@ -1,6 +1,6 @@
-import ChainIndicator from '.'
-import { render } from 'src/utils/test-utils'
 import { ChainId } from 'src/config/chain.d'
+import { render } from 'src/utils/test-utils'
+import ChainIndicator from '.'
 
 describe('<ChainIndicator>', () => {
   it('renders Rinkeby indicator', () => {
@@ -17,7 +17,7 @@ describe('<ChainIndicator>', () => {
     const icon = container.querySelector('svg')
     const label = (container.textContent || '').trim()
 
-    expect(icon?.getAttribute('color')).toBe('#8B50ED')
+    expect(icon?.getAttribute('color')).toBe('#8248E5')
     expect(label).toBe('Polygon')
   })
 })
