@@ -107,12 +107,10 @@ export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   return `${transactionService}/api/v${TX_SERVICE_VERSION}`
 }
 
-// @TODO: Migrate to SDK
 const getChainsUrl = (): string => {
   return `${GATEWAY_URL}/chains`
 }
 
-// @TODO: Migrate to SDK
 const getChainUrl = (): string => {
   return `${getChainsUrl()}/${_getChainId()}`
 }
