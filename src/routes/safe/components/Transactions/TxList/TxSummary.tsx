@@ -40,7 +40,6 @@ const FlexWrapper = styled.div<{ margin: number }>`
 `
 
 export const TxSummary = ({ txDetails }: Props): ReactElement => {
-  console.log('TxSummary', txDetails)
   const { txHash, detailedExecutionInfo, executedAt, txData, txInfo } = txDetails
   const explorerUrl = txHash ? getExplorerInfo(txHash) : undefined
 
@@ -185,7 +184,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       {confirmations?.map(({ signature }, index) => (
         <StyledGridRow key={index}>
           <Text size="xl" as="span">
-            {`Signature ${index} :`}
+            {`Signature ${index + 1} :`}
           </Text>
           <Text size="xl" as="span">
             <InlineEthHashInfo textSize="xl" hash={signature} shortenHash={8} showCopyBtn />
