@@ -1,9 +1,8 @@
 import { List, Map } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
-import { ADD_TOKEN } from 'src/logic/tokens/store/actions/addToken'
 import { ADD_TOKENS } from 'src/logic/tokens/store/actions/addTokens'
-import { makeToken, Token } from 'src/logic/tokens/store/model/token'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const TOKEN_REDUCER_ID = 'tokens'
 
@@ -23,12 +22,6 @@ const tokensReducer = handleActions<TokenState, Payloads>(
           map.set(token.address, token)
         })
       })
-    },
-    [ADD_TOKEN]: (state, action: Action<TokenPayload>) => {
-      const { token } = action.payload
-      const { address: tokenAddress } = token
-
-      return state.set(tokenAddress, makeToken(token))
     },
   },
   Map(),

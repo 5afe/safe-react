@@ -106,10 +106,6 @@ export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   return `${transactionService}/api/v${TX_SERVICE_VERSION}`
 }
 
-export const getTokensServiceUrl = (): string => {
-  return `${getTxServiceUrl()}/tokens`
-}
-
 export const getMasterCopiesUrl = (): string => {
   return `${getTxServiceUrl()}/about/master-copies/`
 }
