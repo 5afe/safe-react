@@ -353,7 +353,6 @@ export const TxDetailsContainer = styled.div`
     display: grid;
     grid-auto-rows: minmax(min-content, max-content);
     grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
-    background-color: ${({ theme }) => theme.colors.separator};
     line-break: anywhere;
     overflow: hidden;
     word-break: break-all;
@@ -366,6 +365,7 @@ export const TxDetailsContainer = styled.div`
   }
 
   .tx-summary {
+    background-color: ${({ theme }) => theme.colors.white};
   }
 
   .tx-share {
@@ -548,4 +548,10 @@ export const NoTransactions = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 60px;
+`
+export const StyledGridRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  justify-content: flex-start;
+  max-width: 500px;
 `

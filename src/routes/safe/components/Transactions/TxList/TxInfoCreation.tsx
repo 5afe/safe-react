@@ -5,10 +5,15 @@ import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
-import { InlineEthHashInfo, TxDetailsContainer } from './styled'
+import { InlineEthHashInfo, TxDetailsContainer, StyledGridRow } from './styled'
 import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import styled from 'styled-components'
+
+const StyledPadding = styled.div`
+  background-color: ${({ theme }) => theme.colors.white};
+`
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement => {
   const txInfo = transaction.txInfo as Creation
@@ -21,7 +26,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
   return (
     <TxDetailsContainer>
       <div className="tx-summary">
-        <div className="tx-hash">
+        <StyledGridRow>
           <Text size="xl" strong as="span">
             Transaction hash:{' '}
           </Text>
@@ -32,18 +37,16 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             showCopyBtn
             explorerUrl={getExplorerInfo(txInfo.transactionHash)}
           />
-        </div>
-        <div className="tx-created">
+        </StyledGridRow>
+        <StyledGridRow>
           <Text size="xl" strong as="span">
             Created:{' '}
           </Text>
           <Text size="xl" as="span">
             {formatDateTime(timestamp)}
           </Text>
-        </div>
-      </div>
-      <div className="tx-details">
-        <div className="tx-creator">
+        </StyledGridRow>
+        <StyledGridRow>
           <Text size="xl" strong>
             Creator:{' '}
           </Text>
@@ -56,8 +59,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             customAvatar={creator.logoUri || undefined}
             showAvatar
           />
-        </div>
-        <div className="tx-factory">
+        </StyledGridRow>
+        <StyledGridRow>
           <Text size="xl" strong>
             Factory:{' '}
           </Text>
@@ -76,8 +79,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               {NOT_AVAILABLE}
             </Text>
           )}
-        </div>
-        <div className="tx-mastercopy">
+        </StyledGridRow>
+        <StyledGridRow>
           <Text size="xl" strong>
             Mastercopy:{' '}
           </Text>
@@ -96,9 +99,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               {NOT_AVAILABLE}
             </Text>
           )}
-        </div>
+        </StyledGridRow>
       </div>
-      <div className="tx-owners" />
+      <StyledPadding></StyledPadding>
+      {/* <div className="tx-owners" /> */}
     </TxDetailsContainer>
   )
 }

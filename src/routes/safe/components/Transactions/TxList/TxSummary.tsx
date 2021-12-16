@@ -10,7 +10,7 @@ import {
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { InlineEthHashInfo } from './styled'
+import { InlineEthHashInfo, StyledGridRow } from './styled'
 import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
 import { IS_PRODUCTION } from 'src/utils/constants'
@@ -22,13 +22,6 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 
 type Props = { txDetails: ExpandedTxDetails }
-
-const StyledGridRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-content: flex-start;
-  max-width: 500px;
-`
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -112,7 +105,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
       {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
       {confirmations?.map(({ signature }, index) => (
-        <TxDataRow title={`Signature ${index + 1} :`} value={signature} inlineType="hash" key={index} />
+        <TxDataRow title={`Signature ${index + 1} :`} value={signature} inlineType="rawData" key={index} />
       ))}
       {confirmations?.length > 1 && (
         <TxDataRow title="Signatures :" value={signaturesFromConfirmations} inlineType="rawData" />

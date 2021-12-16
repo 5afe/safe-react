@@ -29,7 +29,6 @@ const NormalBreakingText = styled(Text)`
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
   if (isTransferTxInfo(txDetails.txInfo) || isSettingsChangeTxInfo(txDetails.txInfo)) {
-    // txInfo.type === TRANSFER || SETTINGS_CHANGE
     return <TxInfo txInfo={txDetails.txInfo} />
   }
 
@@ -130,7 +129,6 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
         >
           <TxOwners txDetails={data} />
         </div>
-        {/* FIX: HOW CAN txLocation !== 'history' ???? */}
         {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
           <div
             className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}
