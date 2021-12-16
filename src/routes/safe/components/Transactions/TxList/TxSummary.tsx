@@ -27,7 +27,7 @@ const StyledGridRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-content: flex-start;
-  max-width: 480px;
+  max-width: 500px;
 `
 
 const FlexWrapper = styled.div<{ margin: number }>`
@@ -39,9 +39,32 @@ const FlexWrapper = styled.div<{ margin: number }>`
   }
 `
 
+type TxDataRowType = { inlineType?: 'hash' | 'rawData'; title: string; value: string }
+
+const TxDataRow = ({ inlineType, title, value }: TxDataRowType) => (
+  <StyledGridRow>
+    <Text size="xl" as="span">
+      {title}
+    </Text>
+    {inlineType === 'hash' && (
+      <InlineEthHashInfo textSize="xl" hash={value} shortenHash={8} showCopyBtn explorerUrl={getExplorerInfo(value)} />
+    )}
+    {inlineType === 'rawData' && (
+      <FlexWrapper margin={5}>
+        <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
+        <CopyToClipboardBtn textToCopy={value || ''} />
+      </FlexWrapper>
+    )}
+    {!inlineType && (
+      <Text size="xl" as="span">
+        {value}
+      </Text>
+    )}
+  </StyledGridRow>
+)
+
 export const TxSummary = ({ txDetails }: Props): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData, txInfo } = txDetails
-  const explorerUrl = txHash ? getExplorerInfo(txHash) : undefined
 
   let created, confirmations, safeTxHash, baseGas, gasPrice, gasToken, refundReceiver, safeTxGas
   if (isMultiSigExecutionDetails(detailedExecutionInfo)) {
@@ -73,146 +96,28 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
           <TxShareButton id={txDetails.txId} />
         </div>
       )}
-      <div className="tx-hash">
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            Transaction hash:
-          </Text>
-          {txHash ? (
-            <InlineEthHashInfo textSize="xl" hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
-          ) : (
-            <Text size="xl" as="span">
-              {NOT_AVAILABLE}
-            </Text>
-          )}
-        </StyledGridRow>
-      </div>
-      {safeTxHash && (
-        <div className="tx-hash">
-          <StyledGridRow>
-            <Text size="xl" as="span">
-              SafeTxHash:
-            </Text>
-            <InlineEthHashInfo textSize="xl" hash={safeTxHash} shortenHash={8} showCopyBtn />
-          </StyledGridRow>
-        </div>
-      )}
-      {created && (
-        <div className="tx-created">
-          <StyledGridRow>
-            <Text size="xl" as="span">
-              Created:
-            </Text>
-            <Text size="xl" as="span">
-              {formatDateTime(created)}
-            </Text>
-          </StyledGridRow>
-        </div>
-      )}
-      <div className="tx-executed">
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            Executed:
-          </Text>
-          <Text size="xl" as="span">
-            {executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE}
-          </Text>
-        </StyledGridRow>
-      </div>
+      {txHash && <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />}
+      {safeTxHash && <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" />}
+      {created && <TxDataRow title="Created:" value={formatDateTime(created)} />}
+      <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
       <br></br>
-      {/* TODO: Refactor repeated code to a component*/}
+
+      {/* Advanced TxData */}
       {txData?.operation !== undefined && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            Operation:
-          </Text>
-          <Text size="xl" as="span">
-            {`${txData?.operation} (${Operation[txData?.operation].toLowerCase()})`}
-          </Text>
-        </StyledGridRow>
+        <TxDataRow title="Operation:" value={`${txData?.operation} (${Operation[txData?.operation].toLowerCase()})`} />
       )}
-      {safeTxGas && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            safeTxGas:
-          </Text>
-          <Text size="xl" as="span">
-            {safeTxGas}
-          </Text>
-        </StyledGridRow>
-      )}
-      {baseGas && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            baseGas:
-          </Text>
-          <Text size="xl" as="span">
-            {baseGas}
-          </Text>
-        </StyledGridRow>
-      )}
-      {gasPrice && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            gasPrice:
-          </Text>
-          <Text size="xl" as="span">
-            {gasPrice}
-          </Text>
-        </StyledGridRow>
-      )}
-      {gasToken && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            gasToken:
-          </Text>
-          <Text size="xl" as="span">
-            <InlineEthHashInfo textSize="xl" hash={gasToken} shortenHash={8} showCopyBtn />
-          </Text>
-        </StyledGridRow>
-      )}
-      {refundReceiver && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            refundReceiver:
-          </Text>
-          <Text size="xl" as="span">
-            <InlineEthHashInfo textSize="xl" hash={refundReceiver} shortenHash={8} showCopyBtn />
-          </Text>
-        </StyledGridRow>
-      )}
+      {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
+      {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
+      {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
+      {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
+      {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
       {confirmations?.map(({ signature }, index) => (
-        <StyledGridRow key={index}>
-          <Text size="xl" as="span">
-            {`Signature ${index + 1} :`}
-          </Text>
-          <Text size="xl" as="span">
-            <InlineEthHashInfo textSize="xl" hash={signature} shortenHash={8} showCopyBtn />
-          </Text>
-        </StyledGridRow>
+        <TxDataRow title={`Signature ${index + 1} :`} value={signature} inlineType="hash" key={index} />
       ))}
       {confirmations?.length > 1 && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            {`Signatures :`}
-          </Text>
-          <FlexWrapper margin={5}>
-            <Text size="xl">{signaturesFromConfirmations ? getByteLength(signaturesFromConfirmations) : 0} bytes</Text>
-            <CopyToClipboardBtn textToCopy={signaturesFromConfirmations || ''} />
-          </FlexWrapper>
-        </StyledGridRow>
+        <TxDataRow title="Signatures :" value={signaturesFromConfirmations} inlineType="rawData" />
       )}
-      {txData?.hexData && (
-        <StyledGridRow>
-          <Text size="xl" as="span">
-            Raw data:
-          </Text>
-          <FlexWrapper margin={5}>
-            <Text size="xl">{txData?.hexData ? getByteLength(txData?.hexData) : 0} bytes</Text>
-            <CopyToClipboardBtn textToCopy={txData?.hexData || ''} />
-          </FlexWrapper>
-        </StyledGridRow>
-      )}
+      {txData?.hexData && <TxDataRow title="Raw data:" value={txData?.hexData} inlineType="rawData" />}
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
