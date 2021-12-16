@@ -11,7 +11,6 @@ import {
   isTransferTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
@@ -21,6 +20,7 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
+import { useTransactionActions } from './hooks/useTransactionActions'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -79,12 +79,12 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
-  actions?: TransactionActions
 }
 
-export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
+export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
+  const { canExecute, canCancel } = useTransactionActions(transaction)
 
   if (loading) {
     return (
@@ -120,13 +120,12 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': txLocation !== 'history' && !actions?.isUserAnOwner,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
         <TxOwners txDetails={data} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
+      {!data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>
