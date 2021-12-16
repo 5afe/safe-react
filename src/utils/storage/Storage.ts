@@ -1,8 +1,9 @@
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { LS_NAMESPACE, LS_SEPARATOR } from '../constants'
 
 type BrowserStorage = typeof localStorage | typeof sessionStorage
 
-const DEFAULT_PREFIX = 'SAFE__'
+const DEFAULT_PREFIX = `${LS_NAMESPACE}${LS_SEPARATOR}`
 
 class Storage {
   private prefix: string
@@ -26,7 +27,7 @@ class Storage {
       logError(Errors._700, `key ${key} – ${err.message}`)
     }
 
-    if (!saved) return
+    if (!saved || saved === 'undefined') return
 
     try {
       return JSON.parse(saved) as T

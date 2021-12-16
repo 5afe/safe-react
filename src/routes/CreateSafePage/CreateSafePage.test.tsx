@@ -675,7 +675,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
 
@@ -732,7 +732,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
 
@@ -794,7 +794,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
 
@@ -856,7 +856,7 @@ describe('<CreateSafePage>', () => {
       expect(estimateGasForDeployingSafeSpy).toHaveBeenCalledWith(addresses, owners, userAccount, mockedDateValue)
 
       await waitFor(() =>
-        expect(screen.getByText('The creation will cost approximately 0.02302 Ether', { exact: false })),
+        expect(screen.getByText('The creation will cost approximately 0.02302 ETH', { exact: false })),
       )
     })
   })

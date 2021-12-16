@@ -14,18 +14,9 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
   const txInfo = transaction.txInfo as Creation
   const timestamp = transaction.timestamp
 
-  const creator = useKnownAddress(txInfo.creator.value, {
-    name: txInfo.creator?.name,
-    image: txInfo.creator?.logoUri,
-  })
-  const factory = useKnownAddress(txInfo.factory?.value, {
-    name: txInfo.factory?.name,
-    image: txInfo.factory?.logoUri,
-  })
-  const implementation = useKnownAddress(txInfo.implementation?.value, {
-    name: txInfo.implementation?.name,
-    image: txInfo.implementation?.logoUri,
-  })
+  const creator = useKnownAddress(txInfo.creator)
+  const factory = useKnownAddress(txInfo.factory)
+  const implementation = useKnownAddress(txInfo.implementation)
 
   return (
     <TxDetailsContainer>
@@ -61,8 +52,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             hash={txInfo.creator.value}
             showCopyBtn
             explorerUrl={getExplorerInfo(txInfo.creator.value)}
-            name={creator.name}
-            customAvatar={creator.image}
+            name={creator.name || undefined}
+            customAvatar={creator.logoUri || undefined}
             showAvatar
           />
         </div>
@@ -76,8 +67,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               hash={txInfo.factory.value}
               showCopyBtn
               explorerUrl={getExplorerInfo(txInfo.factory.value)}
-              name={factory.name}
-              customAvatar={factory.image}
+              name={factory?.name || undefined}
+              customAvatar={factory?.logoUri || undefined}
               showAvatar
             />
           ) : (
@@ -96,8 +87,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               hash={txInfo.implementation.value}
               showCopyBtn
               explorerUrl={getExplorerInfo(txInfo.implementation.value)}
-              name={implementation.name}
-              customAvatar={implementation.image}
+              name={implementation?.name || undefined}
+              customAvatar={implementation?.logoUri || undefined}
               showAvatar
             />
           ) : (

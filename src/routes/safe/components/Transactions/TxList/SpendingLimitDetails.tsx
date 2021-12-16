@@ -7,7 +7,8 @@ import { sameString } from 'src/utils/strings'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionData, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getTxTo } from './utils'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'
@@ -28,10 +29,16 @@ const SpendingLimitRow = styled.div`
   margin-bottom: 16px;
 `
 
-export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
+type SpendingLimitProps = {
+  txData: TransactionData
+  txInfo: TransactionInfo
+}
+
+export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProps): React.ReactElement => {
+  const { dataDecoded } = txData
   const [beneficiary, tokenAddress, amount, resetTimeMin] = useMemo(
-    () => data.parameters?.map(({ value }) => value) ?? [],
-    [data.parameters],
+    () => dataDecoded?.parameters?.map(({ value }) => value) ?? [],
+    [dataDecoded?.parameters],
   )
 
   const resetTimeLabel = useMemo(
@@ -40,6 +47,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
   )
 
   const tokenInfo = useTokenInfo(tokenAddress as string)
+  const txTo = getTxTo({ txInfo })
 
   return (
     <>
@@ -49,7 +57,12 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary as string} />
+        <AddressInfo
+          title="Beneficiary"
+          address={(beneficiary as string) || txTo?.value || '0x'}
+          name={txTo?.name || undefined}
+          logoUri={txTo?.logoUri || undefined}
+        />
       </SpendingLimitRow>
       <SpendingLimitRow>
         {tokenInfo && (
@@ -63,9 +76,14 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
   )
 }
 
-export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  const [beneficiary, tokenAddress] = useMemo(() => data.parameters?.map(({ value }) => value) ?? [], [data.parameters])
+export const DeleteSpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProps): React.ReactElement => {
+  const { dataDecoded } = txData
+  const [beneficiary, tokenAddress] = useMemo(
+    () => dataDecoded?.parameters?.map(({ value }) => value) ?? [],
+    [dataDecoded?.parameters],
+  )
   const tokenInfo = useTokenInfo(tokenAddress as string)
+  const txTo = getTxTo({ txInfo })
 
   return (
     <>
@@ -75,7 +93,12 @@ export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary as string} />
+        <AddressInfo
+          title="Beneficiary"
+          address={(beneficiary as string) || txTo?.value || '0x'}
+          name={txTo?.name || undefined}
+          logoUri={txTo?.logoUri || undefined}
+        />
       </SpendingLimitRow>
       <SpendingLimitRow>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</SpendingLimitRow>
     </>

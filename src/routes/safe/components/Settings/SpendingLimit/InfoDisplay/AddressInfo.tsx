@@ -11,10 +11,12 @@ import { sameString } from 'src/utils/strings'
 interface AddressInfoProps {
   address: string
   title?: string
+  name?: string
+  logoUri?: string
 }
 
-const AddressInfo = ({ address, title }: AddressInfoProps): ReactElement => {
-  const name = useSelector((state) => addressBookEntryName(state, { address }))
+const AddressInfo = ({ address, title, name, logoUri }: AddressInfoProps): ReactElement => {
+  const addessBookName = useSelector((state) => addressBookEntryName(state, { address }))
 
   return (
     <>
@@ -25,11 +27,12 @@ const AddressInfo = ({ address, title }: AddressInfoProps): ReactElement => {
       )}
       <PrefixedEthHashInfo
         hash={address}
-        name={sameString(name, ADDRESS_BOOK_DEFAULT_NAME) ? undefined : name}
+        name={sameString(addessBookName, ADDRESS_BOOK_DEFAULT_NAME) ? name : addessBookName}
         showCopyBtn
         showAvatar
         textSize="lg"
         explorerUrl={getExplorerInfo(address)}
+        customAvatar={logoUri || undefined}
       />
     </>
   )

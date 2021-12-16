@@ -2,7 +2,7 @@ import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { matchPath, Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { matchPath, Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { useAnalytics } from 'src/utils/googleAnalytics'
@@ -33,36 +33,35 @@ const Safe = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
   const location = useLocation()
-  const history = useHistory()
+  const { pathname, search } = location
   const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
   useEffect(() => {
-    const unsubscribe = history.listen(switchNetworkWithUrl)
-    return unsubscribe
-  }, [history])
-
-  useEffect(() => {
-    let pathname = location.pathname
+    let trackedPath = pathname
 
     // Anonymize safe address
     if (hasPrefixedSafeAddressInUrl()) {
-      pathname = pathname.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
+      trackedPath = trackedPath.replace(getPrefixedSafeAddressSlug(), 'SAFE_ADDRESS')
     }
 
     // Anonymize deeplinked transaction
     if (isDeeplinkedTx()) {
-      const match = matchPath(location.pathname, {
+      const match = matchPath(pathname, {
         path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
       })
 
-      pathname = pathname.replace(match?.params[TRANSACTION_ID_SLUG], 'TRANSACTION_ID')
+      trackedPath = trackedPath.replace(match?.params[TRANSACTION_ID_SLUG], 'TRANSACTION_ID')
     }
 
-    trackPage(pathname + location.search)
+    trackPage(trackedPath + search)
+
+    // Set the initial network id from the URL.
+    // It depends on the chains
+    switchNetworkWithUrl({ pathname })
 
     // Track when pathname changes
-  }, [location.pathname, location.search, trackPage])
+  }, [pathname, search, trackPage])
 
   return (
     <Switch>

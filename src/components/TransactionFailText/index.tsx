@@ -8,7 +8,7 @@ import InfoIcon from 'src/assets/icons/info_red.svg'
 
 import { useSelector } from 'react-redux'
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 
 const styles = createStyles({
   executionWarningRow: {
@@ -33,9 +33,9 @@ export const TransactionFailText = ({
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
   const threshold = useSelector(currentSafeThreshold)
-  const isOwner = useSelector(grantedSelector)
+  const isWrongChain = useSelector(shouldSwitchWalletChain)
 
-  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE && isOwner) {
+  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE) {
     return null
   }
 
@@ -51,11 +51,10 @@ export const TransactionFailText = ({
     <Row align="center">
       <Paragraph color="error" className={classes.executionWarningRow}>
         <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-
-        {isOwner ? (
-          <>This transaction will most likely fail. {errorMessage}</>
+        {isWrongChain ? (
+          <>Your wallet is connected to the wrong chain.</>
         ) : (
-          <>You are currently not an owner of this Safe and won&apos;t be able to submit this tx.</>
+          <>This transaction will most likely fail. {errorMessage}</>
         )}
       </Paragraph>
     </Row>

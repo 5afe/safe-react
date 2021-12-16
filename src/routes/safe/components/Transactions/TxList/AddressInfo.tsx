@@ -16,7 +16,7 @@ type Props = EthHashInfoRestProps & {
 }
 
 export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): ReactElement | null => {
-  const toInfo = useKnownAddress(address, { name, image: avatarUrl })
+  const toInfo = useKnownAddress({ value: address, name: name || null, logoUri: avatarUrl || null })
 
   if (address === '') {
     return null
@@ -25,9 +25,9 @@ export const AddressInfo = ({ address, name, avatarUrl, ...rest }: Props): React
   return (
     <PrefixedEthHashInfo
       hash={address}
-      name={toInfo.name}
+      name={toInfo.name || undefined}
       showAvatar
-      customAvatar={toInfo.image}
+      customAvatar={toInfo.logoUri || undefined}
       showCopyBtn
       explorerUrl={getExplorerInfo(address)}
       {...rest}

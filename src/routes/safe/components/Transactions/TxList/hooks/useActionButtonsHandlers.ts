@@ -83,6 +83,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
 
   const disabledActions = useMemo(
     () =>
+      !currentUser ||
       isPending ||
       (txStatus === TransactionStatus.AWAITING_EXECUTION && locationContext.current.txLocation === 'queued.queued') ||
       (txStatus === TransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),

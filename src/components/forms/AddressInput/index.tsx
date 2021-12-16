@@ -80,7 +80,7 @@ const AddressInput = ({
           })
       } else {
         // A regular address hash
-        if (!allValidators(address)) {
+        if (!mustBeEthereumAddress(address)) {
           const parsed = parsePrefixedAddress(address)
           const checkedAddress = checksumAddress(parsed.address) || parsed.address
 
@@ -89,7 +89,7 @@ const AddressInput = ({
         }
       }
     },
-    [setCurrentInput, setResolutions, allValidators, fieldMutator],
+    [setCurrentInput, setResolutions, fieldMutator],
   )
 
   useEffect(() => {

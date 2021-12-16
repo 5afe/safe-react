@@ -68,6 +68,7 @@ export const SAFE_APP_EVENTS: Record<string, EventArgs> = {
 
 export const SETTINGS_EVENTS: Record<string, EventArgs> = {
   ADVANCED: { ...SAFE_EVENTS.SETTINGS, label: 'Advanced' },
+  APPEARANCE: { ...SAFE_EVENTS.SETTINGS, label: 'Appearance' },
   DETAILS: { ...SAFE_EVENTS.SETTINGS, label: 'Details' },
   OWNERS: { ...SAFE_EVENTS.SETTINGS, label: 'Owners' },
 }

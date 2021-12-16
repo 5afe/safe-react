@@ -113,19 +113,19 @@ export const addressInList =
   (address: string): boolean =>
     list.some((ownerAddress) => sameAddress(ownerAddress.value, address))
 
-export const getTxTo = (tx: Transaction): AddressEx | undefined => {
-  switch (tx.txInfo.type) {
+export const getTxTo = ({ txInfo }: Pick<Transaction, 'txInfo'>): AddressEx | undefined => {
+  switch (txInfo.type) {
     case 'Transfer': {
-      return tx.txInfo.recipient
+      return txInfo.recipient
     }
     case 'SettingsChange': {
       return undefined
     }
     case 'Custom': {
-      return tx.txInfo.to
+      return txInfo.to
     }
     case 'Creation': {
-      return tx.txInfo.factory || undefined
+      return txInfo.factory || undefined
     }
   }
 }
@@ -162,11 +162,13 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
     ? txDetails.detailedExecutionInfo
     : getMultisigExecutionInfo(txDetails)
 
+  // Will only be used as a fallback whilst waiting on backend tx creation cache
+  const now = Date.now()
   const timestamp = isTxQueued(txDetails.txStatus)
     ? isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)
       ? txDetails.detailedExecutionInfo.submittedAt
-      : 0
-    : txDetails.executedAt || 0
+      : now
+    : txDetails.executedAt || now
 
   const tx: Transaction = {
     id: txDetails.txId,

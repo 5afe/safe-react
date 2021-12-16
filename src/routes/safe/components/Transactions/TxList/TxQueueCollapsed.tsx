@@ -3,7 +3,6 @@ import { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useAssetInfo } from './hooks/useAssetInfo'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionStatus } from './hooks/useTransactionStatus'
 import { useTransactionType } from './hooks/useTransactionType'
 import { TxCollapsed } from './TxCollapsed'
@@ -28,10 +27,9 @@ const calculateVotes = (executionInfo: MultisigExecutionInfo): CalculatedVotes |
 type TxQueuedCollapsedProps = {
   isGrouped?: boolean
   transaction: Transaction
-  actions?: TransactionActions
 }
 
-export const TxQueueCollapsed = ({ isGrouped = false, transaction, actions }: TxQueuedCollapsedProps): ReactElement => {
+export const TxQueueCollapsed = ({ isGrouped = false, transaction }: TxQueuedCollapsedProps): ReactElement => {
   const executionInfo = transaction.executionInfo as MultisigExecutionInfo
   const nonce = executionInfo?.nonce
   const type = useTransactionType(transaction)
@@ -48,7 +46,6 @@ export const TxQueueCollapsed = ({ isGrouped = false, transaction, actions }: Tx
       info={info}
       time={transaction.timestamp}
       votes={votes}
-      actions={actions}
       status={status}
     />
   )

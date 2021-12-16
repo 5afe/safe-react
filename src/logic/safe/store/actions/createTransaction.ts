@@ -130,7 +130,7 @@ export const createTransaction =
     const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
     const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
-    let txHash
+    let txHash = ''
     const txArgs: TxArgs & { sender: string } = {
       safeInstance,
       to,

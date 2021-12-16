@@ -6,6 +6,11 @@ import { setWeb3 } from './getWeb3'
 import { fetchProvider, removeProvider } from './store/actions'
 import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
+import { ChainId, CHAIN_ID } from 'src/config/chain.d'
+
+const NETWORK_NAMES: Record<ChainId, string> = {
+  [CHAIN_ID.ETHEREUM]: 'mainnet',
+}
 
 const getOnboardConfiguration = () => {
   let lastUsedAddress = ''
@@ -15,7 +20,8 @@ const getOnboardConfiguration = () => {
   return {
     networkId: parseInt(_getChainId(), 10),
     // Is it mandatory for Ledger to work to send network name in lowercase
-    networkName: getChainName().toLowerCase(),
+    // @FIXME: Move to CGW
+    networkName: NETWORK_NAMES[_getChainId()] || getChainName().toLowerCase(),
     subscriptions: {
       wallet: (wallet: Wallet) => {
         if (wallet.provider) {

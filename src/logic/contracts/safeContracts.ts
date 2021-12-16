@@ -39,6 +39,7 @@ const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => 
   // We had L1 contracts in three L2 networks, xDai, EWC and Volta so even if network is L2 we have to check that safe version is after v1.3.0
   const useL2ContractVersion = chainConfig.l2 && semverSatisfies(safeVersion, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
+
   return (
     getDeployment({
       version: safeVersion,
@@ -63,8 +64,12 @@ const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => 
  */
 const getGnosisSafeContractInstance = (web3: Web3, chainId: ChainId): GnosisSafe => {
   const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: LATEST_SAFE_VERSION })
+  const contractAddress = safeSingletonDeployment?.networkAddresses[chainId]
 
-  const contractAddress = safeSingletonDeployment?.networkAddresses[chainId] ?? safeSingletonDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`GnosisSafe contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[], contractAddress) as unknown as GnosisSafe
 }
 
@@ -82,8 +87,12 @@ const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFac
     getProxyFactoryDeployment({
       version: LATEST_SAFE_VERSION,
     })
+  const contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
 
-  const contractAddress = proxyFactoryDeployment?.networkAddresses[chainId] ?? proxyFactoryDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`GnosisSafeProxyFactory contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(proxyFactoryDeployment?.abi as AbiItem[], contractAddress) as unknown as ProxyFactory
 }
 
@@ -101,9 +110,12 @@ const getFallbackHandlerContractInstance = (web3: Web3, chainId: ChainId): Compa
     getFallbackHandlerDeployment({
       version: LATEST_SAFE_VERSION,
     })
+  const contractAddress = fallbackHandlerDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    fallbackHandlerDeployment?.networkAddresses[chainId] ?? fallbackHandlerDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`FallbackHandler contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(
     fallbackHandlerDeployment?.abi as AbiItem[],
     contractAddress,
@@ -120,8 +132,12 @@ const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend =
     getMultiSendCallOnlyDeployment({
       network: chainId.toString(),
     }) || getMultiSendCallOnlyDeployment()
+  const contractAddress = multiSendDeployment?.networkAddresses[chainId]
 
-  const contractAddress = multiSendDeployment?.networkAddresses[chainId] ?? multiSendDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`MultiSend contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown as MultiSend
 }
 
@@ -135,9 +151,11 @@ export const getSignMessageLibAddress = (chainId: ChainId): string | undefined =
     getSignMessageLibDeployment({
       network: chainId.toString(),
     }) || getSignMessageLibDeployment()
+  const contractAddress = signMessageLibDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    signMessageLibDeployment?.networkAddresses[chainId] ?? signMessageLibDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`SignMessageLib contract not found for chainId: ${chainId}`)
+  }
 
   return contractAddress
 }
@@ -153,9 +171,12 @@ export const getSignMessageLibContractInstance = (web3: Web3, chainId: ChainId):
     getSignMessageLibDeployment({
       network: chainId.toString(),
     }) || getSignMessageLibDeployment()
+  const contractAddress = signMessageLibDeployment?.networkAddresses[chainId]
 
-  const contractAddress =
-    signMessageLibDeployment?.networkAddresses[chainId] ?? signMessageLibDeployment?.defaultAddress
+  if (!contractAddress) {
+    throw new Error(`SignMessageLib contract not found for chainId: ${chainId}`)
+  }
+
   return new web3.eth.Contract(signMessageLibDeployment?.abi as AbiItem[], contractAddress) as unknown as SignMessageLib
 }
 

@@ -186,7 +186,7 @@ export const processTransaction =
         dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: TransactionStatus.PENDING_FAILED }))
       }
 
-      const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
+      const executeData = safeInstance.methods.approveHash(txHash || '').encodeABI()
       const contractErrorMessage = await getContractErrorMessage({
         safeInstance,
         from,
