@@ -24,7 +24,10 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
-import { SettingsChange, DisableModule, MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SettingsChange, DisableModule, MultiSend, Custom, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
+import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
+import { AppReduxState } from 'src/store'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -116,9 +119,10 @@ export const TxCollapsed = ({
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
+  const txStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
   const toAddress = getTxTo(transaction)
 
-  const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
+  const willBeReplaced = txStatus === TransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
   const onChainRejection =
     isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
@@ -176,14 +180,13 @@ export const TxCollapsed = ({
   // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
-      {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
+      {txStatus === TransactionStatus.PENDING ? (
         <CircularProgressPainter color={status.color}>
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
-          <SmallDot color={status.color} />
-        )
+        (txStatus === TransactionStatus.AWAITING_EXECUTION ||
+          txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) && <SmallDot color={status.color} />
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}

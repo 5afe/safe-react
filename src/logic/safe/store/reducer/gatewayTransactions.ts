@@ -1,4 +1,4 @@
-import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
@@ -7,48 +7,42 @@ import {
   ADD_HISTORY_TRANSACTIONS,
   ADD_QUEUED_TRANSACTIONS,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import { UPDATE_TRANSACTION_STATUS } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import {
   HistoryGatewayResponse,
   isConflictHeader,
   isDateLabel,
   isLabel,
   isMultisigExecutionInfo,
-  isStatusPending,
   isTransactionSummary,
   QueuedGatewayResponse,
   StoreStructure,
   Transaction,
-  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
+import { ChainId } from 'src/config/chain.d'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
-type GatewayTransactionsState = Record<string, Record<string, StoreStructure>>
+export type GatewayTransactionsState = Record<ChainId, Record<string, StoreStructure>>
 
 type BasePayload = { chainId: string; safeAddress: string; isTail?: boolean }
+
 export type HistoryPayload = BasePayload & { values: HistoryGatewayResponse['results'] }
+
 export type QueuedPayload = BasePayload & { values: QueuedGatewayResponse['results'] }
+
 export type TransactionDetailsPayload = {
   chainId: string
   safeAddress: string
   transactionId: string
   value: Transaction['txDetails']
 }
-export type TransactionStatusPayload = {
-  chainId: string
-  safeAddress: string
-  nonce: number
-  id?: string
-  txStatus: TransactionStatus
-}
 
-type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload | TransactionStatusPayload
+type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
 
 export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState, Payload>(
   {
@@ -127,25 +121,12 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
 
         const newTx = value.transaction
         if (label === 'queued') {
-          const oldQueued = state[chainId]?.[safeAddress]?.queued?.queued || {}
-          const prevTx = oldQueued?.[txNonce]?.find(({ id }) => sameString(id, newTx.id))
-          if (prevTx && isStatusPending(prevTx.txStatus)) {
-            // Prioritize "PENDING" transactions as awaiting resolution
-            newTx.txStatus = TransactionStatus.PENDING
-          }
-
           if (newQueued?.[txNonce]) {
             newQueued[txNonce] = [...newQueued[txNonce], newTx]
           } else {
             newQueued = { ...newQueued, [txNonce]: [newTx] }
           }
         } else {
-          const oldNext = state[chainId]?.[safeAddress]?.queued?.next || {}
-          const prevTx = oldNext?.[txNonce]?.find(({ id }) => sameString(id, newTx.id))
-          if (prevTx && isStatusPending(prevTx.txStatus)) {
-            // Prioritize "PENDING" transactions as awaiting resolution
-            newTx.txStatus = TransactionStatus.PENDING
-          }
           newNext = { [txNonce]: [newTx] }
         }
       })
@@ -195,97 +176,6 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
             txGroup[timestamp][txIndex]['txDetails'] = value
             break txLocationLoop
           }
-        }
-      }
-
-      // update state
-      return {
-        // all the safes with their respective states
-        ...state,
-        [chainId]: {
-          // current safe
-          [safeAddress]: {
-            history: newHistory,
-            queued: newQueued,
-          },
-        },
-      }
-    },
-    [UPDATE_TRANSACTION_STATUS]: (state, action: Action<TransactionStatusPayload>) => {
-      // if we provide the tx ID that sole tx will have the _pending_ status.
-      // if not, all the txs that share the same nonce will have the _pending_ status.
-      const { chainId, nonce, id, safeAddress, txStatus } = action.payload
-      const clonedStoredTxs = cloneDeep(state[chainId]?.[safeAddress])
-      const { queued: newQueued, history: newHistory } = clonedStoredTxs
-
-      let txLocation: TxLocation | undefined
-      let historyLocation: string | undefined
-
-      if (newQueued.next[nonce]) {
-        txLocation = 'queued.next'
-      } else if (newQueued.queued[nonce]) {
-        txLocation = 'queued.queued'
-      } else {
-        Object.entries(newHistory).forEach(([timestamp, transactions]) => {
-          const txIndex = transactions.findIndex(
-            (transaction) => Number((transaction.executionInfo as MultisigExecutionInfo).nonce) === nonce,
-          )
-
-          if (txIndex !== -1) {
-            txLocation = 'history'
-            historyLocation = `${timestamp}[${txIndex}]`
-          }
-        })
-      }
-
-      if (!txLocation) {
-        return state
-      }
-
-      switch (txLocation) {
-        case 'history': {
-          if (historyLocation) {
-            const txToUpdate = get(newHistory, historyLocation)
-            txToUpdate.txStatus = txStatus
-          }
-          break
-        }
-        case 'queued.next': {
-          newQueued.next[nonce] = newQueued.next[nonce].map((txToUpdate) => {
-            // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
-            if (txStatus === TransactionStatus.PENDING_FAILED && txToUpdate.txStatus !== TransactionStatus.PENDING) {
-              return txToUpdate
-            }
-
-            if (typeof id !== 'undefined') {
-              if (sameString(txToUpdate.id, id)) {
-                txToUpdate.txStatus = txStatus
-              }
-            } else {
-              txToUpdate.txStatus = txStatus
-            }
-            return txToUpdate
-          })
-          break
-        }
-        case 'queued.queued': {
-          newQueued.queued[nonce] = newQueued.queued[nonce].map((txToUpdate) => {
-            // TODO: review if is this `PENDING` status required under `queued.queued` list
-            // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
-            if (txStatus === TransactionStatus.PENDING_FAILED && txToUpdate.txStatus !== TransactionStatus.PENDING) {
-              return txToUpdate
-            }
-
-            if (typeof id !== 'undefined') {
-              if (sameString(txToUpdate.id, id)) {
-                txToUpdate.txStatus = txStatus
-              }
-            } else {
-              txToUpdate.txStatus = txStatus
-            }
-            return txToUpdate
-          })
-          break
         }
       }
 

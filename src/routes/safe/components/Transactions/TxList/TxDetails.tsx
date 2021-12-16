@@ -21,6 +21,7 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
+import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -85,6 +86,7 @@ type TxDetailsProps = {
 export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
+  const willBeReplaced = transaction.txStatus === TransactionStatus.WILL_BE_REPLACED
 
   if (loading) {
     return (
@@ -106,14 +108,14 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
 
   return (
     <TxDetailsContainer>
-      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
+      <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
         <TxSummary txDetails={data} />
       </div>
       <div
         className={cn('tx-details', {
           'no-padding': isMultiSendTxInfo(data.txInfo),
           'not-executed': !data.executedAt,
-          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+          'will-be-replaced': willBeReplaced,
         })}
       >
         <TxDataGroup txDetails={data} />
@@ -121,13 +123,13 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
       <div
         className={cn('tx-owners', {
           'no-owner': txLocation !== 'history' && !actions?.isUserAnOwner,
-          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+          'will-be-replaced': willBeReplaced,
         })}
       >
         <TxOwners txDetails={data} />
       </div>
       {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
-        <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
+        <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
           <TxExpandedActions transaction={transaction} />
         </div>
       )}

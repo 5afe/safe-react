@@ -1,4 +1,4 @@
-import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Operation, TransactionDetails, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -37,6 +37,7 @@ import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
 import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
+import { updateTransactionStatus } from './updateTransactionStatus'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -57,29 +58,23 @@ type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
-export type ExecutingTxHistoryState = {
-  isExecution?: boolean
-}
-
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 export const isKeystoneError = (err: Error): boolean => {
   return err.message.startsWith('#ktek_error')
 }
 
-const navigateToTx = (safeAddress: string, txDetails: TransactionDetails, isExecution = false) => {
+const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
   if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
     return
   }
   const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    //@TODO: Rename
     [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
   })
 
-  const state: ExecutingTxHistoryState = { isExecution }
-  history.push(txRoute, state)
+  history.push(txRoute)
 }
 
 export const createTransaction =
@@ -152,8 +147,14 @@ export const createTransaction =
       sigs,
     }
 
+    let safeTxHash = ''
+
     try {
-      const safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
+      safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
+
+      if (isExecution) {
+        dispatch(updateTransactionStatus({ safeTxHash, status: TransactionStatus.PENDING }))
+      }
 
       if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
         const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
@@ -192,7 +193,7 @@ export const createTransaction =
             const txDetails = await saveTxToHistory({ ...txArgs, origin })
 
             if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, txDetails, isExecution)
+              navigateToTx(safeAddress, txDetails)
             }
           } catch (err) {
             logError(Errors._803, err.message)
@@ -217,6 +218,10 @@ export const createTransaction =
       onError?.()
 
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+
+      if (isExecution && safeTxHash) {
+        dispatch(updateTransactionStatus({ safeTxHash, status: TransactionStatus.PENDING_FAILED }))
+      }
 
       const executeDataUsedSignatures = safeInstance.methods
         .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)

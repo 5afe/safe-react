@@ -1,14 +1,8 @@
-import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  isMultiSigExecutionDetails,
-  isStatusAwaitingConfirmation,
-  isStatusAwaitingExecution,
-  isTxPending,
-  Transaction,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
@@ -17,6 +11,8 @@ import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/T
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
+import { AppReduxState } from 'src/store'
+import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -35,6 +31,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const locationContext = useRef(useContext(TxLocationContext))
   const dispatch = useDispatch()
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
+  const txStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
 
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -78,7 +75,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     hoverContext.current.setActiveHover()
   }, [])
 
-  const isPending = useMemo(() => isTxPending(transaction.txStatus), [transaction.txStatus])
+  const isPending = useMemo(() => txStatus === TransactionStatus.PENDING, [txStatus])
 
   const signaturePending = addressInList(
     (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
@@ -87,9 +84,9 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const disabledActions = useMemo(
     () =>
       isPending ||
-      (isStatusAwaitingExecution(transaction.txStatus) && locationContext.current.txLocation === 'queued.queued') ||
-      (isStatusAwaitingConfirmation(transaction.txStatus) && !signaturePending(currentUser)),
-    [currentUser, isPending, signaturePending, transaction.txStatus],
+      (txStatus === TransactionStatus.AWAITING_EXECUTION && locationContext.current.txLocation === 'queued.queued') ||
+      (txStatus === TransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),
+    [currentUser, isPending, signaturePending, txStatus],
   )
 
   return {

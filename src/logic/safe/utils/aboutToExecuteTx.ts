@@ -1,7 +1,12 @@
-import { TransactionListItem, Transaction, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  TransactionListItem,
+  Transaction,
+  MultisigExecutionInfo,
+  TransactionStatus,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { getNotificationsFromTxType } from 'src/logic/notifications'
-import { isStatusFailed, isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
@@ -37,9 +42,10 @@ export const getNotification = (
     // that is: it was executed
     if (executedTx !== undefined) {
       const notificationsQueue = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.STANDARD_TX)
-      const notification = isStatusFailed(executedTx.txStatus)
-        ? notificationsQueue.afterExecutionError
-        : notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+      const notification =
+        executedTx.txStatus === TransactionStatus.FAILED
+          ? notificationsQueue.afterExecutionError
+          : notificationsQueue.afterExecution.noMoreConfirmationsNeeded
 
       // reset nonce value
       setNonce(undefined)

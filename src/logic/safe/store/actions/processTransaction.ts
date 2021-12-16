@@ -130,15 +130,6 @@ export const processTransaction =
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          dispatch(
-            updateTransactionStatus({
-              chainId,
-              txStatus: TransactionStatus.PENDING,
-              safeAddress,
-              nonce: tx.nonce,
-              id: tx.id,
-            }),
-          )
           await saveTxToHistory({ ...txArgs, signature })
 
           dispatch(fetchTransactions(chainId, safeAddress))
@@ -162,17 +153,9 @@ export const processTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          dispatch(
-            updateTransactionStatus({
-              chainId,
-              txStatus: TransactionStatus.PENDING,
-              safeAddress,
-              nonce: tx.nonce,
-              // if we provide the tx ID that sole tx will have the _pending_ status.
-              // if not, all the txs that share the same nonce will have the _pending_ status.
-              id: tx.id,
-            }),
-          )
+          if (isExecution) {
+            dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: TransactionStatus.PENDING }))
+          }
 
           try {
             await saveTxToHistory({ ...txArgs })
@@ -184,17 +167,6 @@ export const processTransaction =
           } catch (e) {
             logError(Errors._804, e.message)
           }
-        })
-        .on('error', () => {
-          dispatch(
-            updateTransactionStatus({
-              chainId,
-              txStatus: TransactionStatus.PENDING_FAILED,
-              safeAddress,
-              nonce: tx.nonce,
-              id: tx.id,
-            }),
-          )
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(chainId, safeAddress))
@@ -210,15 +182,9 @@ export const processTransaction =
 
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-      dispatch(
-        updateTransactionStatus({
-          chainId,
-          txStatus: TransactionStatus.PENDING_FAILED,
-          safeAddress,
-          nonce: tx.nonce,
-          id: tx.id,
-        }),
-      )
+      if (isExecution) {
+        dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: TransactionStatus.PENDING_FAILED }))
+      }
 
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
       const contractErrorMessage = await getContractErrorMessage({
