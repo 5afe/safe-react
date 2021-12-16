@@ -8,6 +8,7 @@ import {
   isMultiSigExecutionDetails,
   isStatusAwaitingConfirmation,
   isTxQueued,
+  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress, SafeRouteSlugs, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { Centered } from './styled'
@@ -24,23 +25,30 @@ import {
   addHistoryTransactions,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { HistoryPayload, QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ExecutingTxHistoryState } from 'src/logic/safe/store/actions/createTransaction'
 
 const TxSingularDetails = (): ReactElement => {
   const { [TRANSACTION_ID_SLUG]: safeTxHash = '' } = useParams<SafeRouteSlugs>()
-
   const [fetchedTxId, setFetchedTxId] = useState<string>('')
+  const [liveTx, setLiveTx] = useState<{ txLocation: TxLocation; transaction: Transaction }>()
   const location = useLocation<ExecutingTxHistoryState>()
   const dispatch = useDispatch()
   const chainId = useSelector(currentChainId)
 
   // We must use the tx from the store as the queue actions alter the tx
-  const liveTx = useSelector(
+  const indexedTx = useSelector(
     (state: AppReduxState) =>
       getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: fetchedTxId }),
     shallowEqual,
   )
+
+  useEffect(() => {
+    if (indexedTx != null) {
+      setLiveTx(indexedTx)
+    }
+  }, [indexedTx])
 
   useEffect(() => {
     let isCurrent = true
@@ -51,6 +59,8 @@ const TxSingularDetails = (): ReactElement => {
 
     const getTransaction = async (): Promise<void> => {
       setFetchedTxId('')
+      setLiveTx(undefined)
+
       let txDetails: TransactionDetails
       try {
         txDetails = await fetchSafeTransaction(safeTxHash)
@@ -94,6 +104,7 @@ const TxSingularDetails = (): ReactElement => {
       // Add transaction to store
       dispatch(isTxQueued(tx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
     }
+
     getTransaction()
 
     return () => {
