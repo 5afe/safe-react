@@ -16,6 +16,17 @@ import {
   TransactionStatus,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
+export const LocalTransactionStatus: Record<string, TransactionStatus> = {
+  AWAITING_CONFIRMATIONS: 'AWAITING_CONFIRMATIONS',
+  AWAITING_EXECUTION: 'AWAITING_EXECUTION',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED',
+  SUCCESS: 'SUCCESS',
+  PENDING: 'PENDING',
+  PENDING_FAILED: 'PENDING_FAILED',
+  WILL_BE_REPLACED: 'WILL_BE_REPLACED',
+}
+
 export type Transaction = TransactionSummary & {
   txDetails?: ExpandedTxDetails
 }
@@ -105,8 +116,12 @@ export const isMultisigExecutionInfo = (value: TransactionSummary['executionInfo
   return value?.type === 'MULTISIG'
 }
 
-export const isTxQueued = (value: TransactionStatus): boolean => {
-  return ['PENDING', 'PENDING_FAILED', 'AWAITING_CONFIRMATIONS', 'AWAITING_EXECUTION', 'WILL_BE_REPLACED'].includes(
-    value,
-  )
+export const isTxQueued = (value: LocalTransactionStatus): boolean => {
+  return [
+    LocalTransactionStatus.PENDING,
+    LocalTransactionStatus.PENDING_FAILED,
+    LocalTransactionStatus.AWAITING_CONFIRMATIONS,
+    LocalTransactionStatus.AWAITING_EXECUTION,
+    LocalTransactionStatus.WILL_BE_REPLACED,
+  ].includes(value)
 }

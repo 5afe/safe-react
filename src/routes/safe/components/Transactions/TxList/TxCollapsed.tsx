@@ -2,7 +2,7 @@ import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
-import { MultiSend, Custom, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useSelector } from 'react-redux'
 
 import { CustomIconText } from 'src/components/CustomIconText'
@@ -10,6 +10,7 @@ import {
   isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from './TxCollapsedActions'
@@ -121,7 +122,7 @@ export const TxCollapsed = ({
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
 
-  const willBeReplaced = txStatus === TransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
   const onChainRejection =
     isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
@@ -181,13 +182,13 @@ export const TxCollapsed = ({
   // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
-      {txStatus === TransactionStatus.PENDING ? (
+      {txStatus === LocalTransactionStatus.PENDING ? (
         <CircularProgressPainter color={status.color}>
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (txStatus === TransactionStatus.AWAITING_EXECUTION ||
-          txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) && <SmallDot color={status.color} />
+        (txStatus === LocalTransactionStatus.AWAITING_EXECUTION ||
+          txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && <SmallDot color={status.color} />
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}

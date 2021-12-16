@@ -1,10 +1,10 @@
 import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
-import { MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from 'src/routes/safe/components/Transactions/TxList/hooks/useActionButtonsHandlers'
 import { AppReduxState } from 'src/store'
 import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
@@ -32,7 +32,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   }
 
   const getConfirmTooltipTitle = () => {
-    if (txStatus === TransactionStatus.AWAITING_EXECUTION) {
+    if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -55,7 +55,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
             onMouseLeave={handleOnMouseLeave}
             className="primary"
           >
-            {txStatus === TransactionStatus.AWAITING_EXECUTION ? 'Execute' : 'Confirm'}
+            {txStatus === LocalTransactionStatus.AWAITING_EXECUTION ? 'Execute' : 'Confirm'}
           </Button>
         </span>
       </Tooltip>

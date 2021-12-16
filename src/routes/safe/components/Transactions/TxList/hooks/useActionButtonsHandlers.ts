@@ -1,8 +1,12 @@
-import { MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isMultiSigExecutionDetails,
+  LocalTransactionStatus,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
@@ -75,7 +79,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     hoverContext.current.setActiveHover()
   }, [])
 
-  const isPending = useMemo(() => txStatus === TransactionStatus.PENDING, [txStatus])
+  const isPending = useMemo(() => txStatus === LocalTransactionStatus.PENDING, [txStatus])
 
   const signaturePending = addressInList(
     (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
@@ -85,8 +89,9 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     () =>
       !currentUser ||
       isPending ||
-      (txStatus === TransactionStatus.AWAITING_EXECUTION && locationContext.current.txLocation === 'queued.queued') ||
-      (txStatus === TransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),
+      (txStatus === LocalTransactionStatus.AWAITING_EXECUTION &&
+        locationContext.current.txLocation === 'queued.queued') ||
+      (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),
     [currentUser, isPending, signaturePending, txStatus],
   )
 

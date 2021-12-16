@@ -1,5 +1,4 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
-import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { ChainId } from 'src/config/chain.d'
 import {
@@ -10,6 +9,7 @@ import {
 } from 'src/logic/safe/store/actions/utils'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getMockedSafeInstance, getMockedStoredTServiceModel } from 'src/test/utils/safeHelper'
+import { LocalTransactionStatus } from '../../models/types/gateway.d'
 import {
   inMemoryPartialSafeInformation,
   localSafesInfo,
@@ -37,7 +37,7 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '1'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold, nonce })
-    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.SUCCESS }
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.SUCCESS }
 
     // when
     const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
@@ -50,7 +50,7 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '10'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold, nonce })
-    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.SUCCESS }
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.SUCCESS }
 
     // when
     const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
@@ -63,7 +63,7 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '10'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold })
-    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.FAILED }
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.FAILED }
 
     // when
     const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)

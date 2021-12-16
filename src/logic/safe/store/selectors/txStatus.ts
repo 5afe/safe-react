@@ -3,7 +3,11 @@ import { createSelector } from 'reselect'
 import { ChainId } from 'src/config/chain.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { AppReduxState } from 'src/store'
-import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isMultiSigExecutionDetails,
+  LocalTransactionStatus,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { LocalStatusesState, LOCAL_TRANSACTIONS_ID } from '../reducer/localTransactions'
 
 const localStatuses = (state: AppReduxState): LocalStatusesState => {
@@ -15,9 +19,10 @@ export const selectTxStatus = createSelector(
   currentChainId,
   (_: AppReduxState, tx: Transaction): Transaction => tx,
   (localTxStatusesState: LocalStatusesState, chainId: string, tx: Transaction): TransactionStatus => {
-    const isUnknownStatus = [TransactionStatus.AWAITING_CONFIRMATIONS, TransactionStatus.AWAITING_EXECUTION].includes(
-      tx.txStatus,
-    )
+    const isUnknownStatus = [
+      LocalTransactionStatus.AWAITING_CONFIRMATIONS,
+      LocalTransactionStatus.AWAITING_EXECUTION,
+    ].includes(tx.txStatus)
 
     if (!isUnknownStatus) {
       return tx.txStatus

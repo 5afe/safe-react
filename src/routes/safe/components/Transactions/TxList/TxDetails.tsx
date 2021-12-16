@@ -9,6 +9,7 @@ import {
   isMultiSigExecutionDetails,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
@@ -20,7 +21,6 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
-import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useTransactionActions } from './hooks/useTransactionActions'
 
 const NormalBreakingText = styled(Text)`
@@ -85,7 +85,7 @@ type TxDetailsProps = {
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
-  const willBeReplaced = transaction.txStatus === TransactionStatus.WILL_BE_REPLACED
+  const willBeReplaced = transaction.txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const { canExecute, canCancel } = useTransactionActions(transaction)
 
   if (loading) {

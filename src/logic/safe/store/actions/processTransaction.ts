@@ -27,13 +27,14 @@ import { Dispatch, DispatchReturn } from './types'
 import { PayableTx } from 'src/types/contracts/types'
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGasParam } from '../../transactions/gas'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { LocalTransactionStatus } from '../models/types/gateway.d'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -154,7 +155,7 @@ export const processTransaction =
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
           if (isExecution) {
-            dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: TransactionStatus.PENDING }))
+            dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING }))
           }
 
           try {
@@ -183,7 +184,7 @@ export const processTransaction =
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
       if (isExecution) {
-        dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: TransactionStatus.PENDING_FAILED }))
+        dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
       }
 
       const executeData = safeInstance.methods.approveHash(txHash || '').encodeABI()

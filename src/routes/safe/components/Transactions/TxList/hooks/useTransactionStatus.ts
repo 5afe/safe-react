@@ -1,9 +1,9 @@
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-import { MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
@@ -22,30 +22,30 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
 
   useEffect(() => {
     switch (txStatus) {
-      case TransactionStatus.SUCCESS:
+      case LocalTransactionStatus.SUCCESS:
         setStatus({ color: 'primary', text: 'Success' })
         break
-      case TransactionStatus.FAILED:
+      case LocalTransactionStatus.FAILED:
         setStatus({ color: 'error', text: 'Failed' })
         break
-      case TransactionStatus.CANCELLED:
+      case LocalTransactionStatus.CANCELLED:
         setStatus({ color: 'error', text: 'Cancelled' })
         break
-      case TransactionStatus.WILL_BE_REPLACED:
+      case LocalTransactionStatus.WILL_BE_REPLACED:
         setStatus({ color: 'placeHolder', text: 'Transaction will be replaced' })
         break
-      case TransactionStatus.AWAITING_CONFIRMATIONS:
+      case LocalTransactionStatus.AWAITING_CONFIRMATIONS:
         const signaturePending = addressInList((executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined)
         const text = signaturePending(currentUser) ? 'Needs your confirmation' : 'Needs confirmations'
         setStatus({ color: 'rinkeby', text })
         break
-      case TransactionStatus.AWAITING_EXECUTION:
+      case LocalTransactionStatus.AWAITING_EXECUTION:
         setStatus({ color: 'rinkeby', text: 'Needs execution' })
         break
-      case TransactionStatus.PENDING:
+      case LocalTransactionStatus.PENDING:
         setStatus({ color: 'rinkeby', text: 'Pending' })
         break
-      case TransactionStatus.PENDING_FAILED:
+      case LocalTransactionStatus.PENDING_FAILED:
         setStatus({ color: 'rinkeby', text: 'Execution failed' })
         break
     }

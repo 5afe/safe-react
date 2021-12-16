@@ -1,12 +1,12 @@
 import { Icon, Tooltip } from '@gnosis.pm/safe-react-components'
-import { MultisigExecutionInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
 import { AppReduxState } from 'src/store'
 import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
@@ -37,7 +37,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   const txStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
 
   const getTitle = () => {
-    if (txStatus === TransactionStatus.AWAITING_EXECUTION) {
+    if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -58,7 +58,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
             onMouseLeave={handleOnMouseLeave}
           >
             <Icon
-              type={txStatus === TransactionStatus.AWAITING_EXECUTION ? 'rocket' : 'check'}
+              type={txStatus === LocalTransactionStatus.AWAITING_EXECUTION ? 'rocket' : 'check'}
               color="primary"
               size="sm"
             />

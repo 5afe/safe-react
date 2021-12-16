@@ -1,4 +1,4 @@
-import { Operation, TransactionDetails, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -36,7 +36,7 @@ import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } fr
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
-import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
+import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
 import { updateTransactionStatus } from './updateTransactionStatus'
 
 export interface CreateTransactionArgs {
@@ -153,7 +153,7 @@ export const createTransaction =
       safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
 
       if (isExecution) {
-        dispatch(updateTransactionStatus({ safeTxHash, status: TransactionStatus.PENDING }))
+        dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING }))
       }
 
       if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
@@ -220,7 +220,7 @@ export const createTransaction =
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
       if (isExecution && safeTxHash) {
-        dispatch(updateTransactionStatus({ safeTxHash, status: TransactionStatus.PENDING_FAILED }))
+        dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
       }
 
       const executeDataUsedSignatures = safeInstance.methods

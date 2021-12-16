@@ -1,8 +1,7 @@
 import { AccordionDetails } from '@gnosis.pm/safe-react-components'
-import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useContext, useEffect, useState } from 'react'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'
@@ -19,7 +18,7 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
 
   useEffect(() => {
     if (activeHover && activeHover !== transaction.id) {
-      setTx((currTx) => ({ ...currTx, txStatus: TransactionStatus.WILL_BE_REPLACED }))
+      setTx((currTx) => ({ ...currTx, txStatus: LocalTransactionStatus.WILL_BE_REPLACED }))
       return
     }
 
