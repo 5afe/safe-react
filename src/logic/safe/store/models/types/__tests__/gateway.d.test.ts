@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import {
   isDateLabel,
   isLabel,
@@ -11,7 +12,6 @@ import {
   isMultiSigExecutionDetails,
   isModuleExecutionInfo,
   isMultisigExecutionInfo,
-  isTxPending,
   isTxQueued,
 } from '../gateway.d'
 
@@ -254,11 +254,9 @@ describe('isMultisigExecutionInfo', () => {
 })
 describe('isTxQueued', () => {
   it('returns true when it is a queued transaction status', () => {
-    const statuses = ['PENDING', 'PENDING_FAILED', 'AWAITING_EXECUTION', 'AWAITING_CONFIRMATIONS', 'WILL_BE_REPLACED']
-    statuses.forEach((status) =>
-      // @ts-ignore - Sending an invalid object
-      expect(isTxQueued(status)).toBe(true),
-    )
+    const statuses = ['PENDING', 'PENDING_FAILED', 'AWAITING_CONFIRMATIONS', 'AWAITING_EXECUTION', 'WILL_BE_REPLACED']
+
+    statuses.forEach((status) => expect(isTxQueued(status as TransactionStatus)).toBe(true))
   })
   it('returns false when it is not a queued transaction status', () => {
     //@ts-ignore - Sending a string

@@ -106,11 +106,7 @@ export const isMultisigExecutionInfo = (value: TransactionSummary['executionInfo
 }
 
 export const isTxQueued = (value: TransactionStatus): boolean => {
-  return [
-    TransactionStatus.PENDING,
-    TransactionStatus.PENDING_FAILED,
-    TransactionStatus.AWAITING_CONFIRMATIONS,
-    TransactionStatus.AWAITING_EXECUTION,
-    TransactionStatus.WILL_BE_REPLACED,
-  ].includes(value)
+  return ['PENDING', 'PENDING_FAILED', 'AWAITING_CONFIRMATIONS', 'AWAITING_EXECUTION', 'WILL_BE_REPLACED'].includes(
+    value,
+  )
 }
