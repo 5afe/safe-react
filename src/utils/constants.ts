@@ -42,4 +42,7 @@ const isProdGateway = () => {
 }
 
 export const GATEWAY_URL =
-  IS_PRODUCTION || isProdGateway() ? 'https://safe-client.gnosis.io/v1' : 'https://safe-client.staging.gnosisdev.com/v1'
+  process.env.GATEWAY_URL ||
+  (IS_PRODUCTION || isProdGateway()
+    ? 'https://safe-client.gnosis.io/v1'
+    : 'https://safe-client.staging.gnosisdev.com/v1')
