@@ -16,6 +16,10 @@ import {
   TransactionStatus,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
+/**
+ * We can't use the enum values from the SDK directly when comparing to strings
+ * Not sure if a bug or a feature 🤷
+ */
 export const LocalTransactionStatus: Record<string, TransactionStatus> = {
   AWAITING_CONFIRMATIONS: 'AWAITING_CONFIRMATIONS',
   AWAITING_EXECUTION: 'AWAITING_EXECUTION',
