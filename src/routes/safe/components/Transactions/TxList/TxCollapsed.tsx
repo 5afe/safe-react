@@ -25,10 +25,9 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
-import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
-import { AppReduxState } from 'src/store'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
@@ -117,12 +116,13 @@ export const TxCollapsed = ({
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
-  const txStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
   const userAddress = useSelector(userAccountSelector)
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
-
+  const txStatus = useLocalTxStatus(transaction)
+  const isPending = txStatus === LocalTransactionStatus.PENDING
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
+
   const onChainRejection =
     isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
@@ -175,14 +175,16 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {!!userAddress && txLocation !== 'history' && transaction && <TxCollapsedActions transaction={transaction} />}
+      {!isPending && userAddress && txLocation !== 'history' && transaction && (
+        <TxCollapsedActions transaction={transaction} />
+      )}
     </div>
   )
 
   // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
-      {txStatus === LocalTransactionStatus.PENDING ? (
+      {isPending ? (
         <CircularProgressPainter color={status.color}>
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>

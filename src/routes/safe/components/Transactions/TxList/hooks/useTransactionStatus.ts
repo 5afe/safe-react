@@ -2,12 +2,11 @@ import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
-import { AppReduxState } from 'src/store'
 
 export type TransactionStatusProps = {
   color: ThemeColors
@@ -17,7 +16,7 @@ export type TransactionStatusProps = {
 export const useTransactionStatus = (transaction: Transaction): TransactionStatusProps => {
   const currentUser = useSelector(userAccountSelector)
   const [status, setStatus] = useState<TransactionStatusProps>({ color: 'primary', text: '' })
-  const txStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
+  const txStatus = useLocalTxStatus(transaction)
   const { executionInfo } = transaction
 
   useEffect(() => {

@@ -8,8 +8,7 @@ import styled from 'styled-components'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
-import { AppReduxState } from 'src/store'
-import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
@@ -34,7 +33,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
     disabledActions,
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
-  const txStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
+  const txStatus = useLocalTxStatus(transaction)
 
   const getTitle = () => {
     if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION) {

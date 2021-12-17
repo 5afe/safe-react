@@ -22,6 +22,7 @@ import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
 import { useTransactionActions } from './hooks/useTransactionActions'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -85,7 +86,9 @@ type TxDetailsProps = {
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
-  const willBeReplaced = transaction.txStatus === LocalTransactionStatus.WILL_BE_REPLACED
+  const txStatus = useLocalTxStatus(transaction)
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
+  const isPending = txStatus === LocalTransactionStatus.PENDING
   const { canExecute, canCancel } = useTransactionActions(transaction)
 
   if (loading) {
@@ -120,14 +123,16 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       >
         <TxDataGroup txDetails={data} />
       </div>
-      <div
-        className={cn('tx-owners', {
-          'will-be-replaced': willBeReplaced,
-        })}
-      >
-        <TxOwners txDetails={data} />
-      </div>
-      {!data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
+      {!isPending && (
+        <div
+          className={cn('tx-owners', {
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxOwners txDetails={data} />
+        </div>
+      )}
+      {!isPending && !data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
           <TxExpandedActions transaction={transaction} />
         </div>
