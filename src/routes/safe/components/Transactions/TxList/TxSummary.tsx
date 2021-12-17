@@ -60,17 +60,17 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
       {/* Advanced TxData */}
       {txData?.operation !== undefined && (
-        <TxDataRow title="Operation:" value={`${txData?.operation} (${Operation[txData.operation].toLowerCase()})`} />
+        <TxDataRow title="Operation:" value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`} />
       )}
       {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
       {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
       {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
       {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
       {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
-      {confirmations?.length > 1 && (
+      {confirmations?.length > 0 && (
         <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
       )}
-      {txData?.hexData && <TxDataRow title="Raw data:" value={txData?.hexData} inlineType="rawData" />}
+      {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
