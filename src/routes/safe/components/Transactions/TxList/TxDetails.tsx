@@ -123,15 +123,13 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       >
         <TxDataGroup txDetails={data} />
       </div>
-      {!isPending && (
-        <div
-          className={cn('tx-owners', {
-            'will-be-replaced': willBeReplaced,
-          })}
-        >
-          <TxOwners txDetails={data} />
-        </div>
-      )}
+      <div
+        className={cn('tx-owners', {
+          'will-be-replaced': willBeReplaced,
+        })}
+      >
+        <TxOwners txDetails={data} isPending={isPending} />
+      </div>
       {!isPending && !data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
           <TxExpandedActions transaction={transaction} />

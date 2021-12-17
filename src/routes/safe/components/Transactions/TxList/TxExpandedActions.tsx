@@ -12,7 +12,7 @@ type TxExpandedActionsProps = {
   transaction: Transaction
 }
 
-export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): ReactElement | null => {
+export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): ReactElement => {
   const {
     canCancel,
     handleConfirmButtonClick,
@@ -24,6 +24,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
   const txStatus = useLocalTxStatus(transaction)
+  const isAwaitingExecution = txStatus === LocalTransactionStatus.AWAITING_EXECUTION
 
   const onExecuteOrConfirm = (event) => {
     handleOnMouseLeave()
@@ -31,7 +32,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   }
 
   const getConfirmTooltipTitle = () => {
-    if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION) {
+    if (isAwaitingExecution) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -54,7 +55,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
             onMouseLeave={handleOnMouseLeave}
             className="primary"
           >
-            {txStatus === LocalTransactionStatus.AWAITING_EXECUTION ? 'Execute' : 'Confirm'}
+            {isAwaitingExecution ? 'Execute' : 'Confirm'}
           </Button>
         </span>
       </Tooltip>

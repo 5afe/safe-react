@@ -10,9 +10,13 @@ import { TxCollapsed } from './TxCollapsed'
 
 export type CalculatedVotes = { votes: string; submitted: number; required: number }
 
-const calculateVotes = (executionInfo: MultisigExecutionInfo): CalculatedVotes => {
+const calculateVotes = (executionInfo: MultisigExecutionInfo, isPending: boolean): CalculatedVotes | undefined => {
+  if (!executionInfo) return
+
   const submitted = executionInfo.confirmationsSubmitted
   const required = executionInfo.confirmationsRequired
+
+  if (isPending && submitted < required) return
 
   return {
     votes: `${submitted} out of ${required}`,
@@ -34,7 +38,7 @@ export const TxQueueCollapsed = ({ isGrouped = false, transaction }: TxQueuedCol
   const status = useTransactionStatus(transaction)
   const txStatus = useLocalTxStatus(transaction)
   const isPending = txStatus === LocalTransactionStatus.PENDING
-  const votes = !isPending && executionInfo ? calculateVotes(executionInfo) : undefined
+  const votes = calculateVotes(executionInfo, isPending)
 
   return (
     <TxCollapsed

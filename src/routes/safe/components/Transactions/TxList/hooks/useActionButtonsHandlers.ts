@@ -1,5 +1,5 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
+import { MouseEvent as ReactMouseEvent, useCallback, useContext, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -35,6 +35,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const dispatch = useDispatch()
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
   const txStatus = useLocalTxStatus(transaction)
+  const isPending = txStatus === LocalTransactionStatus.PENDING
 
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -78,21 +79,16 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     hoverContext.current.setActiveHover()
   }, [])
 
-  const isPending = useMemo(() => txStatus === LocalTransactionStatus.PENDING, [txStatus])
-
   const signaturePending = addressInList(
     (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
   )
 
-  const disabledActions = useMemo(
-    () =>
-      !currentUser ||
-      isPending ||
-      (txStatus === LocalTransactionStatus.AWAITING_EXECUTION &&
-        locationContext.current.txLocation === 'queued.queued') ||
-      (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)),
-    [currentUser, isPending, signaturePending, txStatus],
-  )
+  const disabledActions =
+    !currentUser ||
+    isPending ||
+    (txStatus === LocalTransactionStatus.AWAITING_EXECUTION &&
+      locationContext.current.txLocation === 'queued.queued') ||
+    (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser))
 
   return {
     canCancel,
