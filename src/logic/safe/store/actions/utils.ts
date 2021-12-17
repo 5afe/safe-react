@@ -10,9 +10,10 @@ import { ChainId } from 'src/config/chain.d'
 import { SafeInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Transaction, isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 
-export const getNewTxNonce = async (lastTxNonce: number | undefined, safeInstance: GnosisSafe): Promise<string> => {
-  // use current's safe nonce as fallback
-  return lastTxNonce ? `${lastTxNonce + 1}` : (await safeInstance.methods.nonce().call()).toString()
+export const getNewTxNonce = async (lastTxNonce = -1, safeInstance: GnosisSafe): Promise<string> => {
+  const safeInstanceNonce = await safeInstance.methods.nonce().call()
+  const getNewTxNonce = Math.max(lastTxNonce + 1, +safeInstanceNonce)
+  return getNewTxNonce.toString()
 }
 
 export const shouldExecuteTransaction = async (
