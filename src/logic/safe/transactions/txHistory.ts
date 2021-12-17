@@ -1,12 +1,13 @@
+import { MultisigTransactionRequest, proposeTransaction, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { _getChainId } from 'src/config'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { MultisigTransactionRequest, proposeTransaction, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { GATEWAY_URL } from 'src/utils/constants'
 import { TxArgs } from '../store/models/types/transaction'
 
-type ProposeTxBodyProps = Omit<MultisigTransactionRequest, 'safeTxHash'> & {
+type ProposeTxBody = Omit<MultisigTransactionRequest, 'safeTxHash'> & {
   safeInstance: GnosisSafe
   data: string | number[]
 }
@@ -26,7 +27,7 @@ const calculateBodyFrom = async ({
   sender,
   origin,
   signature,
-}: ProposeTxBodyProps): Promise<MultisigTransactionRequest> => {
+}: ProposeTxBody): Promise<MultisigTransactionRequest> => {
   const safeTxHash = await safeInstance.methods
     .getTransactionHash(to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver || '', nonce)
     .call()
@@ -49,7 +50,7 @@ const calculateBodyFrom = async ({
   }
 }
 
-type SaveTxToHistoryProps = TxArgs & { origin?: string | null; signature?: string }
+type SaveTxToHistoryTypes = TxArgs & { origin?: string | null; signature?: string }
 
 export const saveTxToHistory = async ({
   baseGas,
@@ -66,7 +67,7 @@ export const saveTxToHistory = async ({
   signature,
   to,
   valueInWei,
-}: SaveTxToHistoryProps): Promise<TransactionDetails> => {
+}: SaveTxToHistoryTypes): Promise<TransactionDetails> => {
   const address = checksumAddress(safeInstance.options.address)
   const body = await calculateBodyFrom({
     safeInstance,
