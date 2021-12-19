@@ -39,7 +39,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   let signaturesFromConfirmations
   if (confirmations?.length > 0) {
-    const signatures = confirmations?.map(({ signer, signature }) =>
+    const signatures = confirmations.map(({ signer, signature }) =>
       makeConfirmation({ owner: signer.value, signature }),
     )
     signaturesFromConfirmations = generateSignaturesFromTxConfirmations(signatures)

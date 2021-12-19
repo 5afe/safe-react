@@ -126,7 +126,6 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
       <div>
         <div
           className={cn('tx-owners', {
-            'no-owner': !isHistoryTxList && !actions?.isUserAnOwner,
             'will-be-replaced': willBeReplaced,
           })}
         >
