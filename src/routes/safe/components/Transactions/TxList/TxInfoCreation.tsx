@@ -29,7 +29,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
       <div className="tx-summary">
         <TxDataRow title="Transaction hash:" value={txInfo.transactionHash} inlineType="hash" />
         <TxDataRow title="Created:" value={formatDateTime(timestamp)} />
-        <TxDataRow title="Creator:" value={null}>
+        <TxDataRow title="Creator:">
           <PrefixedEthHashInfo
             textSize="xl"
             hash={txInfo.creator.value}
@@ -40,7 +40,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             showAvatar
           />
         </TxDataRow>
-        <TxDataRow title="Factory:" value={null}>
+        <TxDataRow title="Factory:">
           {txInfo.factory ? (
             <PrefixedEthHashInfo
               textSize="xl"
@@ -57,7 +57,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             </Text>
           )}
         </TxDataRow>
-        <TxDataRow title="Mastercopy:" value={null}>
+        <TxDataRow title="Mastercopy:">
           {txInfo.implementation ? (
             <PrefixedEthHashInfo
               textSize="xl"

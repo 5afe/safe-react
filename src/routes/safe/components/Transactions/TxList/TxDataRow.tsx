@@ -15,23 +15,23 @@ const FlexWrapper = styled.div<{ margin: number }>`
   }
 `
 
-type TxDataRowType = { children?: ReactNode; inlineType?: 'hash' | 'rawData'; title: string; value: string | null }
+type TxDataRowType = { children?: ReactNode; inlineType?: 'hash' | 'rawData'; title: string; value?: string }
 
 export const TxDataRow = ({ children, inlineType, title, value }: TxDataRowType): ReactElement => (
   <StyledGridRow>
     <Text size="xl" as="span">
       {title}
     </Text>
-    {inlineType === 'hash' && typeof value === 'string' && (
+    {value && inlineType === 'hash' && (
       <InlineEthHashInfo textSize="xl" hash={value} shortenHash={8} showCopyBtn explorerUrl={getExplorerInfo(value)} />
     )}
-    {inlineType === 'rawData' && typeof value === 'string' && (
+    {value && inlineType === 'rawData' && (
       <FlexWrapper margin={5}>
         <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
-        {value && <CopyToClipboardBtn textToCopy={value || ''} />}
+        <CopyToClipboardBtn textToCopy={value} />
       </FlexWrapper>
     )}
-    {!inlineType && typeof value === 'string' && (
+    {!inlineType && value && (
       <Text size="xl" as="span">
         {value}
       </Text>
