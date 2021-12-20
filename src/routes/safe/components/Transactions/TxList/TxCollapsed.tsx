@@ -1,6 +1,7 @@
 import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
+import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
 import styled from 'styled-components'
 
 import { CustomIconText } from 'src/components/CustomIconText'
@@ -14,7 +15,6 @@ import { TxCollapsedActions } from './TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
@@ -23,8 +23,9 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
-import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
+import { useSelector } from 'react-redux'
 
 const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
@@ -98,7 +99,6 @@ type TxCollapsedProps = {
   info?: AssetInfo
   time: number
   votes?: CalculatedVotes
-  actions?: TransactionActions
   status: TransactionStatusProps
 }
 
@@ -110,11 +110,11 @@ export const TxCollapsed = ({
   info,
   time,
   votes,
-  actions,
   status,
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
+  const userAddress = useSelector(userAccountSelector)
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
 
@@ -171,7 +171,7 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {actions?.isUserAnOwner && transaction && <TxCollapsedActions transaction={transaction} />}
+      {!!userAddress && txLocation !== 'history' && transaction && <TxCollapsedActions transaction={transaction} />}
     </div>
   )
 

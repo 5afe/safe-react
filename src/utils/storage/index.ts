@@ -24,18 +24,15 @@ export const getStoragePrefix = (id = _getChainId()): string => {
   return `_immortal|v2_${name}__`
 }
 
-export const loadFromStorage = async <T = unknown>(
-  key: string,
-  prefix = getStoragePrefix(),
-): Promise<T | undefined> => {
+export const loadFromStorage = <T = unknown>(key: string, prefix = getStoragePrefix()): T | undefined => {
   return storage.getItem(`${prefix}${key}`)
 }
 
-export const saveToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
+export const saveToStorage = <T = unknown>(key: string, value: T): void => {
   storage.setItem<T>(`${getStoragePrefix()}${key}`, value)
 }
 
-export const removeFromStorage = async (key: string): Promise<void> => {
+export const removeFromStorage = (key: string): void => {
   storage.removeItem(`${getStoragePrefix()}${key}`)
 }
 

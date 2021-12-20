@@ -21,8 +21,8 @@ const useLocalSafes = (): LocalSafes => {
   // Reload added Safes from the localStorage when addedAddresses changes
   useEffect(() => {
     const getLocalSafes = () => {
-      getChains().forEach(async ({ chainId }) => {
-        const localSafe = await getLocalNetworkSafesById(chainId)
+      getChains().forEach(({ chainId }) => {
+        const localSafe = getLocalNetworkSafesById(chainId)
         setLocalSafes((prevSafes) => ({
           ...prevSafes,
           ...(localSafe && { [chainId]: localSafe }),
