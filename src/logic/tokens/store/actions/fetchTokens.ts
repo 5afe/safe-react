@@ -19,10 +19,3 @@ const createERC721TokenContract = (tokenAddress: string): ERC721 => {
 export const getERC20TokenContract = createERC20TokenContract
 
 export const getERC721TokenContract = createERC721TokenContract
-
-export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
-  const web3 = getWeb3()
-  const byteCode = await web3.eth.getCode(contractAddress)
-
-  return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
-}
