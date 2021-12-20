@@ -107,24 +107,6 @@ export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   return `${transactionService}/api/v${TX_SERVICE_VERSION}`
 }
 
-const getChainsUrl = (): string => {
-  return `${GATEWAY_URL}/chains`
-}
-
-const getChainUrl = (): string => {
-  return `${getChainsUrl()}/${_getChainId()}`
-}
-
-// @TODO: Migrate to SDK
-export const getMasterCopiesUrl = (): string => {
-  return `${getChainUrl()}/about/master-copies`
-}
-
-// @TODO: Migrate to SDK
-export const getDataDecoderUrl = (): string => {
-  return `${getChainUrl()}/data-decoder`
-}
-
 export const getDisabledWallets = (): ChainInfo['disabledWallets'] => {
   return getChainInfo().disabledWallets
 }

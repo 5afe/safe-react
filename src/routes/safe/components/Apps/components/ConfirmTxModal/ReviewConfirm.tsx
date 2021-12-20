@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { toBN } from 'web3-utils'
+import { DecodedDataResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
@@ -19,7 +20,6 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { BasicTxInfo, DecodeTxs } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
-import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
@@ -80,7 +80,7 @@ export const ReviewConfirm = ({
   showDecodedTxData,
 }: Props): ReactElement => {
   const isMultiSend = txs.length > 1
-  const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
+  const [decodedData, setDecodedData] = useState<DecodedDataResponse | null>(null)
   const dispatch = useDispatch()
   const nativeCurrency = getNativeCurrency()
   const explorerUrl = getExplorerInfo(safeAddress)
