@@ -4,14 +4,12 @@ import { toWei } from 'web3-utils'
 
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { getNewTxNonce } from 'src/logic/safe/store/actions/utils'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
 import { extractSafeAddress } from 'src/routes/routes'
-import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
+import { fetchSafeTxGasEstimation } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -86,9 +84,14 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   useEffect(() => {
     const getSafeNonce = async () => {
       if (safeAddress) {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const lastTxNonce = getLastTxNonce(state)
-        const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
+        const { recommendedNonce } = await fetchSafeTxGasEstimation({
+          safeAddress,
+          to: '0xD9BA894E0097f8cC2BBc9D24D308b98e36dc6D02',
+          value: '0',
+          data: '0x095ea7b3000000000000000000000000ae9844f89d98c150f5e61bfc676d68b4921559900000000000000000000000000000000000000000000000000001c6bf52634000',
+          operation: 0,
+        })
+        const nonce = recommendedNonce.toString()
         setSafeNonce(nonce)
       }
     }
