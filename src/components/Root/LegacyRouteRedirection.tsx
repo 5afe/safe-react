@@ -11,7 +11,7 @@ type Props = {
 }
 
 const XDAI_SHORT_NAME = 'xdai'
-const GNOSIS_CHAIN_SHORT_NAME = 'mc'
+const GNOSIS_CHAIN_SHORT_NAME = 'gc'
 const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, hash, search } = window.location
