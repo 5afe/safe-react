@@ -1,5 +1,3 @@
-// import * as gateway from '@gnosis.pm/safe-react-gateway-sdk'
-
 import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
 
