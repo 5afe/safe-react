@@ -53,7 +53,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
         </div>
       )}
       {txHash && <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />}
-      {safeTxHash && <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" />}
+      {safeTxHash && <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" hasExplorer={false} />}
       {created && <TxDataRow title="Created:" value={formatDateTime(created)} />}
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
       <br></br>
