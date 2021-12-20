@@ -92,7 +92,7 @@ beforeEach(async () => {
       error: false,
       description: 'Transfer all your assets in batch',
       chainIds: ['4'],
-      provider: null,
+      provider: undefined,
       fetchStatus: FETCH_STATUS.SUCCESS,
     }),
   )
