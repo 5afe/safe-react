@@ -10,7 +10,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { LocalStatusesState, LOCAL_TRANSACTIONS_ID } from '../reducer/localTransactions'
 
-const localStatuses = (state: AppReduxState): LocalStatusesState => {
+export const localStatuses = (state: AppReduxState): LocalStatusesState => {
   return state[LOCAL_TRANSACTIONS_ID]
 }
 
