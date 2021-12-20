@@ -29,10 +29,6 @@ export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 
 export const SAFE_POLLING_INTERVAL = process.env.NODE_ENV === 'test' ? 4500 : 15000
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY || ''
 export const ETHGASSTATION_API_KEY = process.env.REACT_APP_ETHGASSTATION_API_KEY
-export const CONFIG_SERVICE_URL =
-  process.env.CONFIG_SERVICE_URL || IS_PRODUCTION
-    ? 'https://safe-config.gnosis.io/api/v1'
-    : 'https://safe-config.staging.gnosisdev.com/api/v1'
 export const GATEWAY_URL =
   IS_PRODUCTION || window.location.hash === '#prod'
     ? 'https://safe-client.gnosis.io/v1'
