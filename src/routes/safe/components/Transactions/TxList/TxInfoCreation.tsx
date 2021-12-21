@@ -1,14 +1,20 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
+import styled from 'styled-components'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
-import { InlineEthHashInfo, TxDetailsContainer } from './styled'
+import { TxDetailsContainer } from './styled'
 import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { TxDataRow } from './TxDataRow'
+
+const StyledPadding = styled.div`
+  background-color: ${({ theme }) => theme.colors.white};
+`
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement => {
   const txInfo = transaction.txInfo as Creation
@@ -21,32 +27,9 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
   return (
     <TxDetailsContainer>
       <div className="tx-summary">
-        <div className="tx-hash">
-          <Text size="xl" strong as="span">
-            Transaction hash:{' '}
-          </Text>
-          <InlineEthHashInfo
-            textSize="xl"
-            hash={txInfo.transactionHash}
-            shortenHash={8}
-            showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.transactionHash)}
-          />
-        </div>
-        <div className="tx-created">
-          <Text size="xl" strong as="span">
-            Created:{' '}
-          </Text>
-          <Text size="xl" as="span">
-            {formatDateTime(timestamp)}
-          </Text>
-        </div>
-      </div>
-      <div className="tx-details">
-        <div className="tx-creator">
-          <Text size="xl" strong>
-            Creator:{' '}
-          </Text>
+        <TxDataRow title="Transaction hash:" value={txInfo.transactionHash} inlineType="hash" />
+        <TxDataRow title="Created:" value={formatDateTime(timestamp)} />
+        <TxDataRow title="Creator:">
           <PrefixedEthHashInfo
             textSize="xl"
             hash={txInfo.creator.value}
@@ -56,11 +39,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
             customAvatar={creator.logoUri || undefined}
             showAvatar
           />
-        </div>
-        <div className="tx-factory">
-          <Text size="xl" strong>
-            Factory:{' '}
-          </Text>
+        </TxDataRow>
+        <TxDataRow title="Factory:">
           {txInfo.factory ? (
             <PrefixedEthHashInfo
               textSize="xl"
@@ -76,11 +56,8 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               {NOT_AVAILABLE}
             </Text>
           )}
-        </div>
-        <div className="tx-mastercopy">
-          <Text size="xl" strong>
-            Mastercopy:{' '}
-          </Text>
+        </TxDataRow>
+        <TxDataRow title="Mastercopy:">
           {txInfo.implementation ? (
             <PrefixedEthHashInfo
               textSize="xl"
@@ -96,9 +73,10 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
               {NOT_AVAILABLE}
             </Text>
           )}
-        </div>
+        </TxDataRow>
       </div>
-      <div className="tx-owners" />
+      {/* filler */}
+      <StyledPadding />
     </TxDetailsContainer>
   )
 }

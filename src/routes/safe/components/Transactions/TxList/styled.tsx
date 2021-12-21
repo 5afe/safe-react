@@ -345,21 +345,27 @@ export const TxDetailsContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.separator} !important;
   column-gap: 2px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
+  grid-template-columns: 2fr 1fr;
   row-gap: 2px;
   width: 100%;
 
   & > div {
-    background-color: ${({ theme }) => theme.colors.white};
+    display: grid;
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
     line-break: anywhere;
     overflow: hidden;
-    padding: 20px 24px;
     word-break: break-all;
+    gap: 2px;
+
+    & > div {
+      padding: 20px 24px;
+      background-color: ${({ theme }) => theme.colors.white};
+    }
   }
 
   .tx-summary {
+    background-color: ${({ theme }) => theme.colors.white};
   }
 
   .tx-share {
@@ -378,24 +384,17 @@ export const TxDetailsContainer = styled.div`
 
   .tx-owners {
     padding: 24px;
-    grid-column-start: 2;
     grid-row-end: span 2;
-    grid-row-start: 1;
-
-    &.no-owner {
-      grid-row-end: span 3;
-    }
   }
 
   .tx-details-actions {
-    align-items: center;
+    align-items: flex-end;
     display: flex;
-    height: 60px;
+    gap: 8px;
     justify-content: center;
 
     button {
       color: ${({ theme }) => theme.colors.white};
-      margin: 0 8px;
 
       &:hover {
         color: ${({ theme }) => theme.colors.white};
@@ -543,4 +542,10 @@ export const NoTransactions = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 60px;
+`
+export const StyledGridRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  justify-content: flex-start;
+  max-width: 500px;
 `

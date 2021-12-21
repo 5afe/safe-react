@@ -86,6 +86,9 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
 
+  const willBeReplaced = transaction.txStatus === 'WILL_BE_REPLACED'
+  const isHistoryTxList = txLocation === 'history'
+
   if (loading) {
     return (
       <Centered padding={10}>
@@ -106,31 +109,34 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
 
   return (
     <TxDetailsContainer>
-      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
-        <TxSummary txDetails={data} />
-      </div>
-      <div
-        className={cn('tx-details', {
-          'no-padding': isMultiSendTxInfo(data.txInfo),
-          'not-executed': !data.executedAt,
-          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
-        })}
-      >
-        <TxDataGroup txDetails={data} />
-      </div>
-      <div
-        className={cn('tx-owners', {
-          'no-owner': txLocation !== 'history' && !actions?.isUserAnOwner,
-          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
-        })}
-      >
-        <TxOwners txDetails={data} />
-      </div>
-      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
-        <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
-          <TxExpandedActions transaction={transaction} />
+      <div>
+        <div
+          className={cn('tx-details', {
+            'no-padding': isMultiSendTxInfo(data.txInfo),
+            'not-executed': !data.executedAt,
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxDataGroup txDetails={data} />
         </div>
-      )}
+        <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <TxSummary txDetails={data} />
+        </div>
+      </div>
+      <div>
+        <div
+          className={cn('tx-owners', {
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxOwners txDetails={data} />
+        </div>
+        {!data.executedAt && !isHistoryTxList && actions?.isUserAnOwner && (
+          <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
+            <TxExpandedActions transaction={transaction} />
+          </div>
+        )}
+      </div>
     </TxDetailsContainer>
   )
 }

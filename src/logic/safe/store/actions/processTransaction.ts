@@ -27,6 +27,7 @@ import { Dispatch, DispatchReturn } from './types'
 import { PayableTx } from 'src/types/contracts/types'
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
@@ -101,7 +102,7 @@ export const processTransaction =
 
     let txHash
     let transaction
-    const txArgs = {
+    const txArgs: TxArgs = {
       ...tx, // merge the previous tx with new data
       safeInstance,
       to: tx.to,

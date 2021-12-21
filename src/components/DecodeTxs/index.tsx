@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import get from 'lodash/get'
 import { Text, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
-import { hexToBytes } from 'web3-utils'
 
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
+import { getByteLength } from 'src/utils/getByteLength'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -49,21 +49,6 @@ const TxListItem = styled.div`
 const ElementWrapper = styled.div`
   margin-bottom: 15px;
 `
-
-export const getByteLength = (data: string | string[]): number => {
-  try {
-    if (!Array.isArray(data)) {
-      data = data.split(',')
-    }
-    // Return the sum of the byte sizes of each hex string
-    return data.reduce((result, hex) => {
-      const bytes = hexToBytes(hex)
-      return result + bytes.length
-    }, 0)
-  } catch (err) {
-    return 0
-  }
-}
 
 export const BasicTxInfo = ({
   txRecipient,

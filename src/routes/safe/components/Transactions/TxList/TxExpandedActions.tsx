@@ -41,6 +41,11 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   // https://github.com/facebook/react/issues/4492
   return (
     <>
+      {canCancel && (
+        <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
+          Reject
+        </Button>
+      )}
       <Tooltip title={getConfirmTooltipTitle()} placement="top">
         <span>
           <Button
@@ -56,11 +61,6 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
           </Button>
         </span>
       </Tooltip>
-      {canCancel && (
-        <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
-          Reject
-        </Button>
-      )}
     </>
   )
 }
