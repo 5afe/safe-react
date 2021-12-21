@@ -10,6 +10,7 @@ import { sameString } from 'src/utils/strings'
 import { extractSafeAddress } from 'src/routes/routes'
 import { AppReduxState } from 'src/store'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -84,8 +85,12 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   useEffect(() => {
     const getSafeNonce = async () => {
       if (safeAddress) {
-        const recommendedNonce = (await getRecommendedNonce(safeAddress)).toString()
-        setSafeNonce(recommendedNonce)
+        try {
+          const recommendedNonce = (await getRecommendedNonce(safeAddress)).toString()
+          setSafeNonce(recommendedNonce)
+        } catch (e) {
+          logError(Errors._616, e.message)
+        }
       }
     }
 
