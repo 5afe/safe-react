@@ -20,7 +20,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { PayableTx } from 'src/types/contracts/types.d'
@@ -35,9 +35,10 @@ import { extractShortChainName, generateSafeRoute, history, SAFE_ROUTES } from '
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
-import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
 import { getShortName } from 'src/config'
 import { IS_PRODUCTION } from 'src/utils/constants'
+import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -117,9 +118,13 @@ export const createTransaction =
     const chainId = currentChainId(state)
 
     const lastTx = getLastTransaction(state)
-    const lastTxNonce = getLastTxNonce(state)
-
-    const nextNonce = await getNewTxNonce(lastTxNonce, safeInstance)
+    let nextNonce: string
+    try {
+      nextNonce = (await getRecommendedNonce(safeAddress)).toString()
+    } catch (e) {
+      logError(Errors._616, e.message)
+      nextNonce = await safeInstance.methods.nonce().call()
+    }
     const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
     const isExecution = !delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
