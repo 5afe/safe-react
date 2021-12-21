@@ -2169,9 +2169,10 @@
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@https://github.com/gnosis/safe-react-gateway-sdk#add-post-estimations-v2":
-  version "2.7.3"
-  resolved "https://github.com/gnosis/safe-react-gateway-sdk#ebfe9648bffd9b9e3f4e6317fa93a566457eaf6a"
+"@gnosis.pm/safe-react-gateway-sdk@^2.7.4":
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.7.4.tgz#3a1d96e30d10e4859579b558586fd25cd4ae3480"
+  integrity sha512-S6Dw9/TVm5xrzjrlc5194zoXg6DbzvIhr7rqWzl5nAtPSRi8REawyysZQGESzqAKO3GpE+GEPf5y5srTprv5oA==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
