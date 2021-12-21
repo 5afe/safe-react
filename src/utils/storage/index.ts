@@ -41,5 +41,5 @@ export const removeFromStorage = async (key: string): Promise<void> => {
 
 // This function is only meant to be used in L2-UX migration to gather information from other networks
 export const saveMigratedKeyToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
-  storage.setItem(key, value)
+  storage.setItem(`_immortal|${key}`, value)
 }
