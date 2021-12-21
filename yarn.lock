@@ -2163,17 +2163,10 @@
     react-media "^1.10.0"
     web3-utils "^1.6.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@2.7.2":
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.7.2.tgz#26366cee442e4be5cdde277179dbdd6e611b966f"
-  integrity sha512-PoWaGkQqjGSYMEtjfMipL3DzCUVRL0AVD4fsWhKJ+5T7msZGCC200mYQX8XXSZcICc+fuJkZNHC5MyPFo7eL/A==
-  dependencies:
-    isomorphic-unfetch "^3.1.0"
-
-"@gnosis.pm/safe-react-gateway-sdk@^2.5.6":
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.6.tgz#7b8713bb16a542c4af27d6e1f2d8925a21aaeb51"
-  integrity sha512-flM/i80oFwSRlW0U8HE7QurwwPpNTUjBv7gZNAjgOpGhub51r7Uf1LtSm89Mnxnh2mtj4Whl8ZC4RMoXdV3yvw==
+"@gnosis.pm/safe-react-gateway-sdk@2.7.4", "@gnosis.pm/safe-react-gateway-sdk@^2.5.6":
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.7.4.tgz#3a1d96e30d10e4859579b558586fd25cd4ae3480"
+  integrity sha512-S6Dw9/TVm5xrzjrlc5194zoXg6DbzvIhr7rqWzl5nAtPSRi8REawyysZQGESzqAKO3GpE+GEPf5y5srTprv5oA==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
