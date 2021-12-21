@@ -2170,10 +2170,10 @@
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.5.8":
-  version "2.5.8"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.5.8.tgz#e43b1346829a127f5e87c3e45bfc0afb3d28773c"
-  integrity sha512-ZMVblmKe4YEGoznNzZxKr2coXS3ZIRpLX80ErlcAauv1YbJgdIGpRyloiGkOtwshwI3y5pRm0FI1QU8mrcUlwg==
+"@gnosis.pm/safe-react-gateway-sdk@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.6.0.tgz#347122ad67aa4a38caa40758ebf35a8f9e98358c"
+  integrity sha512-mGse0EJ4e77sgf5gtTvaYIToLmjxdIQ6YlV0VgLHTXb3WLm1dQ5bTiynU4Nr4guc27qu45puDx4sqXBUmuMybQ==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
