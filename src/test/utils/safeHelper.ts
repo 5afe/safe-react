@@ -3,8 +3,8 @@ import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
 import { PromiEvent } from 'web3-core'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ContractOptions, ContractSendMethod, DeployOptions, EventData, PastEventOptions } from 'web3-eth-contract'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionStatus, TransferDirection, TokenType, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { TransferDirection, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const mockNonPayableTransactionObject = (callResult?: string): NonPayableTransactionObject<string | void | boolean | string[]> => {
   return {
@@ -88,7 +88,7 @@ export const getMockedSafeInstance = (safeProps: SafeMethodsProps): GnosisSafe =
 export const getMockedStoredTServiceModel = (txProps?: Transaction): Transaction => ({
     id: "multisig_123",
     timestamp: 123456,
-    txStatus: TransactionStatus.PENDING,
+    txStatus: LocalTransactionStatus.PENDING,
     txInfo: {
       type: 'Transfer',
       sender: { value: "0x123", name: null, logoUri: null },

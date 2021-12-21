@@ -7,8 +7,12 @@ import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain.d'
-import { SafeInfo, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
-import { Transaction, isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  Transaction,
+  isMultisigExecutionInfo,
+  LocalTransactionStatus,
+} from 'src/logic/safe/store/models/types/gateway.d'
 
 export const getNewTxNonce = async (lastTxNonce = -1, safeInstance: GnosisSafe): Promise<string> => {
   const safeInstanceNonce = await safeInstance.methods.nonce().call()
@@ -45,7 +49,7 @@ export const shouldExecuteTransaction = async (
   // Once the previous tx is executed, the current tx will be available to be executed
   // by the user using the exec button.
   if (lastTx && isMultisigExecutionInfo(lastTx.executionInfo)) {
-    return lastTx.txStatus === TransactionStatus.SUCCESS && lastTx.executionInfo.nonce + 1 === Number(nonce)
+    return lastTx.txStatus === LocalTransactionStatus.SUCCESS && lastTx.executionInfo.nonce + 1 === Number(nonce)
   }
 
   return false
