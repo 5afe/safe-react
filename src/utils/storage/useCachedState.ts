@@ -10,7 +10,7 @@ const useCachedState = <T>(key: string): [T | undefined, React.Dispatch<React.Se
   }, [key, setCache])
 
   useEffect(() => {
-    local.setItem<T | undefined | null>(key, cache)
+    local.setItem<T | undefined>(key, cache)
   }, [key, cache])
 
   return [cache, setCache]
