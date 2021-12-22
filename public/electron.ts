@@ -27,7 +27,9 @@ function createServer(port: number): void {
   const app = express()
   const staticRoute = path.join(__dirname, '../build')
 
-  app.use(express.static(staticRoute))
+  // We define same route as in package.json -> homepage
+  // If no homepage is defined we can totally remove that parameter
+  app.use('/app', express.static(staticRoute))
   https.createServer(options, app).listen(port, '127.0.0.1')
 }
 
@@ -95,7 +97,9 @@ function createWindow(port = DEFAULT_PORT) {
     mainWindow.show()
   })
 
-  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `https://localhost:${port}`)
+  // We define same route as in package.json -> homepage
+  // If no homepage is defined we can totally remove /app
+  mainWindow.loadURL(isDev ? 'http://localhost:3000/app' : `https://localhost:${port}/app`)
 
   if (isDev) {
     // Open the DevTools.
@@ -136,7 +140,7 @@ process.on('uncaughtException', function (error) {
 })
 
 app.userAgentFallback =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/11.3.0 Safari/537.36'
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.5.2 Safari/537.36'
 
 app.commandLine.appendSwitch('ignore-certificate-errors')
 app.whenReady().then(async () => {
