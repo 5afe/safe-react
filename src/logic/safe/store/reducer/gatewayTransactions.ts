@@ -131,7 +131,11 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
             newQueued = { ...newQueued, [txNonce]: [newTx] }
           }
         } else {
-          newNext = { [txNonce]: [newTx] }
+          if (newNext?.[txNonce]) {
+            newNext[txNonce] = [...newNext[txNonce], newTx]
+          } else {
+            newNext = { [txNonce]: [newTx] }
+          }
         }
       })
 
