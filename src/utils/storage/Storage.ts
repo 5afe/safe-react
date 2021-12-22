@@ -14,7 +14,7 @@ class Storage {
     this.storage = storage
   }
 
-  public prefixKey = (key: string): string => {
+  private prefixKey = (key: string): string => {
     return `${this.prefix}${key}`
   }
 
