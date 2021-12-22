@@ -142,13 +142,24 @@ process.on('uncaughtException', function (error) {
 app.userAgentFallback =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.5.2 Safari/537.36'
 
-app.commandLine.appendSwitch('ignore-certificate-errors')
 app.whenReady().then(async () => {
   // Hide the menu
   Menu.setApplicationMenu(null)
 
   const port = await getFreePort()
+
   if (!isDev) {
+    // Allow self-signed certificates only for the Electron-created localhost server
+    app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+      const parsedUrl = new URL(url)
+      if (parsedUrl.origin === `https://localhost:${port}`) {
+        event.preventDefault()
+        callback(true)
+      } else {
+        callback(false)
+      }
+    })
+
     createServer(port)
   }
 
