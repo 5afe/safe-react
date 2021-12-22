@@ -28,7 +28,7 @@ function createServer(port: number): void {
   const staticRoute = path.join(__dirname, '../build')
 
   app.use(express.static(staticRoute))
-  https.createServer(options, app).listen(port)
+  https.createServer(options, app).listen(port, '127.0.0.1')
 }
 
 let mainWindow
