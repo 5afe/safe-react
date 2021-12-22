@@ -20,7 +20,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Dispatch, DispatchReturn } from './types'
@@ -33,7 +33,8 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGasParam } from '../../transactions/gas'
-import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
+import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import { LocalTransactionStatus } from '../models/types/gateway.d'
 
 interface ProcessTransactionArgs {
@@ -85,9 +86,13 @@ export const processTransaction =
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
     const lastTx = getLastTransaction(state)
-    const lastTxNonce = getLastTxNonce(state)
-
-    const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
+    let nonce: string
+    try {
+      nonce = (await getRecommendedNonce(safeAddress)).toString()
+    } catch (e) {
+      logError(Errors._616, e.message)
+      nonce = await safeInstance.methods.nonce().call()
+    }
     const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
     const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined

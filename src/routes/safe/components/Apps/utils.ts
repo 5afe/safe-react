@@ -46,6 +46,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
     iconUrl: appsIconSvg,
     description: '',
     fetchStatus: FETCH_STATUS.LOADING,
+    chainIds: [],
   }
 }
 
