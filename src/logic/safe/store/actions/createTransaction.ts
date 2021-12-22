@@ -36,8 +36,6 @@ import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } fr
 import { generatePath } from 'react-router-dom'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
-import { getShortName } from 'src/config'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
 import { updateTransactionStatus } from './updateTransactionStatus'
