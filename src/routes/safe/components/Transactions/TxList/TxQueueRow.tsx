@@ -1,9 +1,7 @@
 import { AccordionDetails } from '@gnosis.pm/safe-react-components'
-import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useContext, useEffect, useState } from 'react'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { useTransactionActions } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'
@@ -16,12 +14,11 @@ type TxQueueRowProps = {
 
 export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps): ReactElement => {
   const { activeHover } = useContext(TxHoverContext)
-  const actions = useTransactionActions(transaction)
   const [tx, setTx] = useState<Transaction>(transaction)
 
   useEffect(() => {
     if (activeHover && activeHover !== transaction.id) {
-      setTx((currTx) => ({ ...currTx, txStatus: TransactionStatus.WILL_BE_REPLACED }))
+      setTx((currTx) => ({ ...currTx, txStatus: LocalTransactionStatus.WILL_BE_REPLACED }))
       return
     }
 
@@ -37,10 +34,10 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
       }}
     >
       <StyledAccordionSummary>
-        <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} actions={actions} />
+        <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} />
       </StyledAccordionSummary>
       <AccordionDetails>
-        <TxDetails transaction={tx} actions={actions} />
+        <TxDetails transaction={tx} />
       </AccordionDetails>
     </NoPaddingAccordion>
   )

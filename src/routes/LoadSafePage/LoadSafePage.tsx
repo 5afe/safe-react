@@ -81,7 +81,7 @@ function Load(): ReactElement {
     dispatch(addressBookSafeLoad([...ownerEntries, safeEntry]))
   }
 
-  const onSubmitLoadSafe = async (values: LoadSafeFormValues) => {
+  const onSubmitLoadSafe = async (values: LoadSafeFormValues): Promise<void> => {
     const address = values[FIELD_LOAD_SAFE_ADDRESS]
     if (!isValidAddress(address)) {
       return
@@ -91,10 +91,10 @@ function Load(): ReactElement {
 
     const checksummedAddress = checksumAddress(address || '')
     const safeProps = await buildSafe(checksummedAddress)
-    const storedSafes = (await loadStoredSafes()) || {}
+    const storedSafes = loadStoredSafes() || {}
     storedSafes[checksummedAddress] = safeProps
 
-    await saveSafes(storedSafes)
+    saveSafes(storedSafes)
     dispatch(addOrUpdateSafe(safeProps))
 
     // Go to the newly added Safe

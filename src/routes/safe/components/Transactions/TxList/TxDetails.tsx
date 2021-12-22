@@ -9,9 +9,9 @@ import {
   isMultiSigExecutionDetails,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
@@ -21,6 +21,8 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
+import { useTransactionActions } from './hooks/useTransactionActions'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -79,12 +81,15 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
-  actions?: TransactionActions
 }
 
-export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
+export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
+  const txStatus = useLocalTxStatus(transaction)
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
+  const isPending = txStatus === LocalTransactionStatus.PENDING
+  const { canExecute, canCancel } = useTransactionActions(transaction)
 
   if (loading) {
     return (
@@ -106,28 +111,27 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
 
   return (
     <TxDetailsContainer>
-      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
+      <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
         <TxSummary txDetails={data} />
       </div>
       <div
         className={cn('tx-details', {
           'no-padding': isMultiSendTxInfo(data.txInfo),
           'not-executed': !data.executedAt,
-          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+          'will-be-replaced': willBeReplaced,
         })}
       >
         <TxDataGroup txDetails={data} />
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': txLocation !== 'history' && !actions?.isUserAnOwner,
-          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+          'will-be-replaced': willBeReplaced,
         })}
       >
-        <TxOwners txDetails={data} />
+        <TxOwners txDetails={data} isPending={isPending} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
-        <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
+      {!isPending && !data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
+        <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
           <TxExpandedActions transaction={transaction} />
         </div>
       )}

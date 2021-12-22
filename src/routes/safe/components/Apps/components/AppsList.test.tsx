@@ -1,6 +1,6 @@
 import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
-import * as configServiceApi from 'src/logic/config/utils'
+
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
@@ -16,23 +16,9 @@ jest.mock('src/routes/routes', () => {
 
 const spyTrackEventGA = jest.fn()
 
-beforeEach(async () => {
-  // Includes an id that doesn't exist in the remote apps to check that there's no error
-  await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, ['14', '24', '228'])
-
-  // populate custom app
-  await saveToStorage(appUtils.APPS_STORAGE_KEY, [
-    {
-      url: 'https://apps.gnosis-safe.io/drain-safe',
-    },
-  ])
-
-  jest.spyOn(googleAnalytics, 'useAnalytics').mockImplementation(() => ({
-    trackPage: jest.fn(),
-    trackEvent: spyTrackEventGA,
-  }))
-
-  jest.spyOn(configServiceApi, 'fetchSafeAppsList').mockImplementation(() =>
+jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
+  __esModule: true,
+  getSafeApps: () =>
     Promise.resolve([
       {
         id: 13,
@@ -42,7 +28,7 @@ beforeEach(async () => {
         error: false,
         description: 'Money markets on the Ethereum blockchain',
         fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
+        chainIds: ['1', '4'],
         provider: null,
       },
       {
@@ -53,7 +39,7 @@ beforeEach(async () => {
 
         description: 'Decentralised naming for wallets, websites, & more.',
         fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
+        chainIds: ['1', '4'],
         provider: null,
       },
       {
@@ -63,7 +49,7 @@ beforeEach(async () => {
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
         description: 'Trade synthetic assets on Ethereum',
         fetchStatus: 'SUCCESS',
-        chainIds: [1, 4],
+        chainIds: ['1', '4'],
         provider: null,
       },
       {
@@ -73,11 +59,27 @@ beforeEach(async () => {
         iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
         description: 'A Safe app to compose custom transactions',
         fetchStatus: 'SUCCESS',
-        chainIds: [1, 4, 56, 100, 137, 246, 73799],
+        chainIds: ['1', '4', '56', '100', '137', '246', '73799'],
         provider: null,
       },
     ]),
-  )
+}))
+
+beforeEach(() => {
+  // Includes an id that doesn't exist in the remote apps to check that there's no error
+  saveToStorage(appUtils.PINNED_SAFE_APP_IDS, ['14', '24', '228'])
+
+  // populate custom app
+  saveToStorage(appUtils.APPS_STORAGE_KEY, [
+    {
+      url: 'https://apps.gnosis-safe.io/drain-safe',
+    },
+  ])
+
+  jest.spyOn(googleAnalytics, 'useAnalytics').mockImplementation(() => ({
+    trackPage: jest.fn(),
+    trackEvent: spyTrackEventGA,
+  }))
 
   jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValueOnce(
     Promise.resolve({
@@ -87,8 +89,8 @@ beforeEach(async () => {
       iconUrl: 'https://apps.gnosis-safe.io/drain-safe/logo.svg',
       error: false,
       description: 'Transfer all your assets in batch',
-      chainIds: [4],
-      provider: null,
+      chainIds: ['4'],
+      provider: undefined,
       fetchStatus: FETCH_STATUS.SUCCESS,
     }),
   )
@@ -206,7 +208,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
 
 describe('Safe Apps -> AppsList -> Pinning apps', () => {
   it('Shows a tutorial message when there are no pinned apps', async () => {
-    await saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [])
+    saveToStorage(appUtils.PINNED_SAFE_APP_IDS, [])
 
     render(<AppsList />)
 

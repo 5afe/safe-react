@@ -381,10 +381,6 @@ export const TxDetailsContainer = styled.div`
     grid-column-start: 2;
     grid-row-end: span 2;
     grid-row-start: 1;
-
-    &.no-owner {
-      grid-row-end: span 3;
-    }
   }
 
   .tx-details-actions {

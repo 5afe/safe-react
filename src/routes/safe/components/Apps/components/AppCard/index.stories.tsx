@@ -21,6 +21,7 @@ export const LoadedApp = (): React.ReactElement => (
       iconUrl: 'https://cryptologos.cc/logos/versions/gnosis-gno-gno-logo-circle.svg?v=007',
       description: 'Gnosis safe app',
       fetchStatus: FETCH_STATUS.SUCCESS,
+      chainIds: ['4'],
     }}
   />
 )

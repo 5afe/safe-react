@@ -15,7 +15,13 @@ const StyledImg = styled(Img)`
   border-radius: 50%;
 `
 
-export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
+export const TxOwners = ({
+  txDetails,
+  isPending,
+}: {
+  txDetails: ExpandedTxDetails
+  isPending: boolean
+}): ReactElement | null => {
   const { txInfo, detailedExecutionInfo } = txDetails
 
   if (!detailedExecutionInfo || isModuleExecutionInfo(detailedExecutionInfo)) {
@@ -69,7 +75,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
           </div>
         </OwnerListItem>
       ))}
-      {confirmationsNeeded <= 0 ? (
+      {isPending || confirmationsNeeded <= 0 ? (
         <OwnerListItem>
           <span className="icon">
             {detailedExecutionInfo.executor ? (
@@ -80,7 +86,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
           </span>
           <div className="legend">
             <Text color="primary" size="xl" strong>
-              {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
+              {detailedExecutionInfo.executor ? 'Executed' : isPending ? 'Executing' : 'Execute'}
             </Text>
             {detailedExecutionInfo.executor && (
               <AddressInfo

@@ -2,20 +2,21 @@ import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
+import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
 
 import { CustomIconText } from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from './TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
-import { KNOWN_MODULES } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
@@ -24,17 +25,19 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
-import { SettingsChange, DisableModule, MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useKnownAddress } from './hooks/useKnownAddress'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
-const TxInfo = ({ info }: { info: AssetInfo }) => {
+const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
     return <TokenTransferAmount assetInfo={info} />
   }
 
-  if (isSettingsChangeTxInfo(info)) {
+  if (isSettingsChangeTxInfo(info) && !isCustomTxInfo(info)) {
     const UNKNOWN_MODULE = 'Unknown module'
 
-    switch ((info as SettingsChange).settingsInfo?.type) {
+    switch (info.settingsInfo?.type) {
       case 'SET_FALLBACK_HANDLER':
       case 'ADD_OWNER':
       case 'REMOVE_OWNER':
@@ -44,10 +47,9 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
         break
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
-        const disableInfo = (info as SettingsChange).settingsInfo as DisableModule
         return (
           <Text size="xl" as="span">
-            {KNOWN_MODULES[disableInfo.module.value] ?? UNKNOWN_MODULE}
+            {name || UNKNOWN_MODULE}
           </Text>
         )
     }
@@ -99,7 +101,6 @@ type TxCollapsedProps = {
   info?: AssetInfo
   time: number
   votes?: CalculatedVotes
-  actions?: TransactionActions
   status: TransactionStatusProps
 }
 
@@ -111,14 +112,17 @@ export const TxCollapsed = ({
   info,
   time,
   votes,
-  actions,
   status,
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
+  const userAddress = useSelector(userAccountSelector)
   const toAddress = getTxTo(transaction)
+  const toInfo = useKnownAddress(toAddress)
+  const txStatus = useLocalTxStatus(transaction)
+  const isPending = txStatus === LocalTransactionStatus.PENDING
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
 
-  const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
   const onChainRejection =
     isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
@@ -132,14 +136,16 @@ export const TxCollapsed = ({
     <div className={'tx-type' + willBeReplaced + onChainRejection}>
       <CustomIconText
         address={toAddress?.value || '0x'}
-        iconUrl={type.icon}
+        iconUrl={type.icon || toInfo?.logoUri || undefined}
         iconUrlFallback={type.fallbackIcon}
-        text={type.text}
+        text={type.text || toInfo?.name || undefined}
       />
     </div>
   )
 
-  const txCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
+  const txCollapsedInfo = (
+    <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} name={toInfo?.name || undefined} />}</div>
+  )
 
   const timestamp = useRef<HTMLDivElement | null>(null)
 
@@ -169,21 +175,22 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {actions?.isUserAnOwner && transaction && <TxCollapsedActions transaction={transaction} />}
+      {!isPending && userAddress && txLocation !== 'history' && transaction && (
+        <TxCollapsedActions transaction={transaction} />
+      )}
     </div>
   )
 
   // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
-      {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
+      {isPending ? (
         <CircularProgressPainter color={status.color}>
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
-          <SmallDot color={status.color} />
-        )
+        (txStatus === LocalTransactionStatus.AWAITING_EXECUTION ||
+          txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && <SmallDot color={status.color} />
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}
