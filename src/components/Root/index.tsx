@@ -7,22 +7,20 @@ import App from 'src/components/App'
 import GlobalErrorBoundary from 'src/components/GlobalErrorBoundary'
 import AppRoutes from 'src/routes'
 import { store } from 'src/store'
-import { history } from 'src/routes/routes'
+import { getNetworkRootRoutes, history, ROOT_ROUTE } from 'src/routes/routes'
 import theme from 'src/theme/mui'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import Providers from '../Providers'
-import './index.module.scss'
-import './OnboardCustom.module.scss'
-import './KeystoneCustom.module.scss'
 import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
+import { isValidChainId, _getChainId } from 'src/config'
 import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
-import { useSelector } from 'react-redux'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { isValidChainId } from 'src/config'
-import { setChainId } from 'src/logic/config/utils'
+
+import './index.module.scss'
+import './OnboardCustom.module.scss'
+import './KeystoneCustom.module.scss'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -31,7 +29,6 @@ const removePreloader = () => {
 }
 
 const RootConsumer = (): React.ReactElement | null => {
-  const chainId = useSelector(currentChainId)
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -44,10 +41,14 @@ const RootConsumer = (): React.ReactElement | null => {
         logError(Errors._904, err.message)
         setIsError(true)
       } finally {
-        // If chain is not returned from CGW, revert to default
-        if (!isValidChainId(chainId)) {
-          setChainId(DEFAULT_CHAIN_ID)
+        if (isValidChainId(_getChainId())) {
+          return
         }
+
+        // If chain is not returned from CGW, revert to default
+        const chainRoute =
+          getNetworkRootRoutes().find(({ chainId }) => chainId === DEFAULT_CHAIN_ID)?.chainId || ROOT_ROUTE
+        history.replace(chainRoute)
       }
     }
     initChains()
