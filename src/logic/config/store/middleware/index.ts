@@ -6,12 +6,11 @@ import { clearSafeList } from 'src/logic/safe/store/actions/clearSafeList'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { CONFIG_ACTIONS } from '../actions'
-import { ConfigPayload } from '../reducer/reducer.d'
 
 export const configMiddleware =
   ({ dispatch }) =>
   (next: Dispatch) =>
-  async (action: Action<ConfigPayload>) => {
+  async (action: Action<typeof CONFIG_ACTIONS.SET_CHAIN_ID>) => {
     const handledAction = next(action)
 
     switch (action.type) {
