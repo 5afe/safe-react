@@ -11,7 +11,7 @@ export const LOCAL_TRANSACTIONS_STATUSES_KEY = 'localTxStatuses'
 export const localTransactionsMiddleware =
   ({ getState }: typeof reduxStore) =>
   (next: Dispatch) =>
-  async (action: Action<typeof UPDATE_TRANSACTION_STATUS>) => {
+  async (action: Action<typeof UPDATE_TRANSACTION_STATUS>): Promise<Action<'UPDATE_TRANSACTION_STATUS'>> => {
     const handledAction = next(action)
 
     switch (action.type) {
