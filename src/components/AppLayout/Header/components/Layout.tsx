@@ -95,7 +95,6 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
-  const { isDesktop } = window
 
   return (
     <Row className={classes.summary}>
@@ -131,7 +130,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
         }
       />
 
-      {!isDesktop && <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />}
+      <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />
     </Row>
   )
 }
