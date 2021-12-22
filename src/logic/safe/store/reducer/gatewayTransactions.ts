@@ -119,6 +119,10 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
           return
         }
 
+        if (!label) {
+          label = newNext[txNonce] ? 'next' : 'queued'
+        }
+
         const newTx = value.transaction
         if (label === 'queued') {
           if (newQueued?.[txNonce]) {
