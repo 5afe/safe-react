@@ -72,7 +72,6 @@ const Container = (): React.ReactElement => {
             SAFE_ROUTES.TRANSACTIONS,
             SAFE_ROUTES.TRANSACTIONS_HISTORY,
             SAFE_ROUTES.TRANSACTIONS_QUEUE,
-            // Must be below the above due to :txId slug recognising history/queue
             SAFE_ROUTES.TRANSACTIONS_SINGULAR,
           ]}
           render={() => wrapInSuspense(<TxList />, null)}

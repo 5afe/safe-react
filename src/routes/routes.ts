@@ -53,8 +53,7 @@ export const SAFE_ROUTES = {
   TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
-  // RegExp route rejection, i.e. !history|queue does not work so it is important to have singular after the above two in Switches
-  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}(${hashRegExp}+)`, // [TRANSACTION_HASH_SLUG] === 'txId'
+  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}(${hashRegExp}+)`, // [TRANSACTION_HASH_SLUG] === 'safeTxHash'
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
