@@ -14,12 +14,6 @@ import {
   LocalTransactionStatus,
 } from 'src/logic/safe/store/models/types/gateway.d'
 
-export const getNewTxNonce = async (lastTxNonce = -1, safeInstance: GnosisSafe): Promise<string> => {
-  const safeInstanceNonce = await safeInstance.methods.nonce().call()
-  const getNewTxNonce = Math.max(lastTxNonce + 1, +safeInstanceNonce)
-  return getNewTxNonce.toString()
-}
-
 export const shouldExecuteTransaction = async (
   safeInstance: GnosisSafe,
   nonce: string,

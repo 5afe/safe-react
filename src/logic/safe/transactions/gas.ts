@@ -27,7 +27,7 @@ export const estimateSafeTxGas = async (
   }
 
   try {
-    const safeTxGasEstimation = await fetchSafeTxGasEstimation({
+    const { safeTxGas } = await fetchSafeTxGasEstimation({
       safeAddress,
       to: checksumAddress(txRecipient),
       value: txAmount,
@@ -35,7 +35,7 @@ export const estimateSafeTxGas = async (
       operation,
     })
 
-    return safeTxGasEstimation
+    return safeTxGas
   } catch (error) {
     console.info('Error calculating tx gas estimation', error.message)
     throw error
