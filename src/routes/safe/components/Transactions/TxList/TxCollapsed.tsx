@@ -1,14 +1,16 @@
 import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
-import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
 import styled from 'styled-components'
+import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
 
 import { CustomIconText } from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from './TxCollapsedActions'
@@ -25,7 +27,7 @@ import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
-import { useSelector } from 'react-redux'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
@@ -117,8 +119,10 @@ export const TxCollapsed = ({
   const userAddress = useSelector(userAccountSelector)
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
+  const txStatus = useLocalTxStatus(transaction)
+  const isPending = txStatus === LocalTransactionStatus.PENDING
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
 
-  const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
   const onChainRejection =
     isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
@@ -171,21 +175,22 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {!!userAddress && txLocation !== 'history' && transaction && <TxCollapsedActions transaction={transaction} />}
+      {!isPending && userAddress && txLocation !== 'history' && transaction && (
+        <TxCollapsedActions transaction={transaction} />
+      )}
     </div>
   )
 
   // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
-      {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
+      {isPending ? (
         <CircularProgressPainter color={status.color}>
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
-          <SmallDot color={status.color} />
-        )
+        (txStatus === LocalTransactionStatus.AWAITING_EXECUTION ||
+          txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && <SmallDot color={status.color} />
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}

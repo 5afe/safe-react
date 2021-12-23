@@ -28,9 +28,9 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {!IS_PRODUCTION && (
+      {!IS_PRODUCTION && isMultiSigExecutionDetails(txDetails.detailedExecutionInfo) && (
         <div className="tx-share">
-          <TxShareButton id={txDetails.txId} />
+          <TxShareButton safeTxHash={txDetails.detailedExecutionInfo.safeTxHash} />
         </div>
       )}
       <div className="tx-hash">

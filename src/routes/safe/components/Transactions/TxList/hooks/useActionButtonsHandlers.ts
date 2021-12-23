@@ -1,12 +1,10 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
+import { MouseEvent as ReactMouseEvent, useCallback, useContext, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
   isMultiSigExecutionDetails,
-  isStatusAwaitingConfirmation,
-  isStatusAwaitingExecution,
-  isTxPending,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -17,6 +15,7 @@ import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/T
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -35,6 +34,8 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const locationContext = useRef(useContext(TxLocationContext))
   const dispatch = useDispatch()
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
+  const txStatus = useLocalTxStatus(transaction)
+  const isPending = txStatus === LocalTransactionStatus.PENDING
 
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -78,20 +79,16 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     hoverContext.current.setActiveHover()
   }, [])
 
-  const isPending = useMemo(() => isTxPending(transaction.txStatus), [transaction.txStatus])
-
   const signaturePending = addressInList(
     (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
   )
 
-  const disabledActions = useMemo(
-    () =>
-      !currentUser ||
-      isPending ||
-      (isStatusAwaitingExecution(transaction.txStatus) && locationContext.current.txLocation === 'queued.queued') ||
-      (isStatusAwaitingConfirmation(transaction.txStatus) && !signaturePending(currentUser)),
-    [currentUser, isPending, signaturePending, transaction.txStatus],
-  )
+  const disabledActions =
+    !currentUser ||
+    isPending ||
+    (txStatus === LocalTransactionStatus.AWAITING_EXECUTION &&
+      locationContext.current.txLocation === 'queued.queued') ||
+    (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser))
 
   return {
     canCancel,

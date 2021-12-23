@@ -5,7 +5,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeApp } from '../../types'
-import { fetchSafeAppsList } from 'src/logic/config/utils'
+import { fetchSafeAppsList } from 'src/logic/safe/api/fetchSafeApps'
 
 type ReturnType = {
   remoteSafeApps: SafeApp[]

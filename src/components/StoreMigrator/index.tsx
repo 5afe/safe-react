@@ -28,6 +28,23 @@ const StoreMigrator = (): ReactElement | null => {
     setNetworksToMigrate(remainingNetworks)
   }, [])
 
+  // Fix broken keys that start with v2_
+  useEffect(() => {
+    try {
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('v2_')) {
+          const val = localStorage.getItem(key)
+          localStorage.removeItem(key)
+          if (val) {
+            localStorage.setItem(`_immortal|${key}`, val)
+          }
+        }
+      })
+    } catch (err) {
+      // ignore
+    }
+  }, [])
+
   // Add an event listener to receive the data to be migrated and save it into the storage
   useEffect(() => {
     if (!currentNetwork) return

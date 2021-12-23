@@ -20,20 +20,22 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Dispatch, DispatchReturn } from './types'
 import { PayableTx } from 'src/types/contracts/types'
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGasParam } from '../../transactions/gas'
-import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
+import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
+import { LocalTransactionStatus } from '../models/types/gateway.d'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -84,9 +86,13 @@ export const processTransaction =
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
     const lastTx = getLastTransaction(state)
-    const lastTxNonce = getLastTxNonce(state)
-
-    const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
+    let nonce: string
+    try {
+      nonce = (await getRecommendedNonce(safeAddress)).toString()
+    } catch (e) {
+      logError(Errors._616, e.message)
+      nonce = await safeInstance.methods.nonce().call()
+    }
     const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
     const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
@@ -130,15 +136,6 @@ export const processTransaction =
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          dispatch(
-            updateTransactionStatus({
-              chainId,
-              txStatus: TransactionStatus.PENDING,
-              safeAddress,
-              nonce: tx.nonce,
-              id: tx.id,
-            }),
-          )
           await saveTxToHistory({ ...txArgs, signature })
 
           dispatch(fetchTransactions(chainId, safeAddress))
@@ -162,17 +159,9 @@ export const processTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          dispatch(
-            updateTransactionStatus({
-              chainId,
-              txStatus: TransactionStatus.PENDING,
-              safeAddress,
-              nonce: tx.nonce,
-              // if we provide the tx ID that sole tx will have the _pending_ status.
-              // if not, all the txs that share the same nonce will have the _pending_ status.
-              id: tx.id,
-            }),
-          )
+          if (isExecution) {
+            dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING }))
+          }
 
           try {
             await saveTxToHistory({ ...txArgs })
@@ -184,17 +173,6 @@ export const processTransaction =
           } catch (e) {
             logError(Errors._804, e.message)
           }
-        })
-        .on('error', () => {
-          dispatch(
-            updateTransactionStatus({
-              chainId,
-              txStatus: TransactionStatus.PENDING_FAILED,
-              safeAddress,
-              nonce: tx.nonce,
-              id: tx.id,
-            }),
-          )
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(chainId, safeAddress))
@@ -210,15 +188,9 @@ export const processTransaction =
 
       dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-      dispatch(
-        updateTransactionStatus({
-          chainId,
-          txStatus: TransactionStatus.PENDING_FAILED,
-          safeAddress,
-          nonce: tx.nonce,
-          id: tx.id,
-        }),
-      )
+      if (isExecution) {
+        dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
+      }
 
       const executeData = safeInstance.methods.approveHash(txHash || '').encodeABI()
       const contractErrorMessage = await getContractErrorMessage({
