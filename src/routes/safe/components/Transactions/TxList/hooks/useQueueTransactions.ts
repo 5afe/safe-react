@@ -42,7 +42,7 @@ export const useQueueTransactions = (): QueueTransactionsInfo | undefined => {
     }
 
     setTxsCount({ next, queued })
-  }, [nextTxs, queuedTxs])
+  }, [dispatch, nextTxs, queuedTxs])
 
   // no data loaded to the store yet
   if ((!nextTxs && !queuedTxs) || typeof txsCount === 'undefined') {
