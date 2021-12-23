@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       max-parallel: 15
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-18.04]
+        os: [macos-10.15, windows-latest, ubuntu-18.04]
 
     steps:
       - name: Check out Git repository
@@ -70,18 +70,18 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Desktop OSX
-          path: ./dist/Safe[ ]Multisig*.dmg
+          path: ./dist/Safe*.dmg
 
       - name: 'Upload Artifacts Linux'
         if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Linux
-          path: ./dist/Safe[ ]Multisig*.AppImage
+          path: ./dist/Safe*.AppImage
 
       - name: 'Upload Artifacts Windows'
         if: startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Windows
-          path: ./dist/Safe[ ]Multisig*.exe
+          path: ./dist/Safe*.exe
