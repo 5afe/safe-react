@@ -5,7 +5,15 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { isTxQueued, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
-import { extractSafeAddress, SafeRouteSlugs, TRANSACTION_ID_SLUG } from 'src/routes/routes'
+import {
+  extractPrefixedSafeAddress,
+  extractSafeAddress,
+  generateSafeRoute,
+  SafeRouteSlugs,
+  SAFE_ROUTES,
+  TRANSACTION_ID_SLUG,
+  history,
+} from 'src/routes/routes'
 import { Centered } from './styled'
 import { getTransactionWithLocationByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxLocationContext } from './TxLocationProvider'
@@ -54,6 +62,8 @@ const TxSingularDetails = (): ReactElement => {
     setFetchedTx(undefined)
 
     if (!safeTxHash) {
+      const txsRoute = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, extractPrefixedSafeAddress())
+      history.replace(txsRoute)
       return
     }
 
