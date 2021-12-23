@@ -47,6 +47,7 @@ import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectible
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
+import { localTransactionsMiddleware } from 'src/logic/safe/store/middleware/localTransactionsMiddleware'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
@@ -72,6 +73,7 @@ const enhancer = composeEnhancers(
     providerWatcher,
     addressBookMiddleware,
     configMiddleware,
+    localTransactionsMiddleware,
   ),
 )
 
