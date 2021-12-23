@@ -14,6 +14,12 @@ export const localStatuses = (state: AppReduxState): LocalStatusesState => {
   return state[LOCAL_TRANSACTIONS_ID]
 }
 
+// @FIXME: this is a dirty hack.
+// Ask backend to add safeTxHash in tx list items.
+const getSafeTxHashFromId = (id: string): string => {
+  return id.split('_').pop() || ''
+}
+
 export const selectTxStatus = createSelector(
   localStatuses,
   currentChainId,
@@ -32,7 +38,7 @@ export const selectTxStatus = createSelector(
     const hash =
       detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
         ? detailedExecutionInfo.safeTxHash
-        : null
+        : getSafeTxHashFromId(tx.id)
     const statusesOnChain = localTxStatusesState[chainId as ChainId]
     const localStatus = hash && statusesOnChain ? statusesOnChain[hash] : undefined
     return localStatus || tx.txStatus
