@@ -20,27 +20,35 @@ const getSafeTxHashFromId = (id: string): string => {
   return id.split('_').pop() || ''
 }
 
+export const getLocalTxStatus = (
+  localTxStatusesState: LocalStatusesState,
+  chainId: ChainId,
+  tx: Transaction,
+): TransactionStatus => {
+  const isUnknownStatus = [
+    LocalTransactionStatus.AWAITING_CONFIRMATIONS,
+    LocalTransactionStatus.AWAITING_EXECUTION,
+  ].includes(tx.txStatus)
+
+  if (!isUnknownStatus) {
+    return tx.txStatus
+  }
+
+  const { detailedExecutionInfo } = tx.txDetails || {}
+  const hash =
+    detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
+      ? detailedExecutionInfo.safeTxHash
+      : getSafeTxHashFromId(tx.id)
+  const statusesOnChain = localTxStatusesState[chainId as ChainId]
+  const localStatus = hash && statusesOnChain ? statusesOnChain[hash] : undefined
+  return localStatus || tx.txStatus
+}
+
 export const selectTxStatus = createSelector(
   localStatuses,
   currentChainId,
   (_: AppReduxState, tx: Transaction): Transaction => tx,
   (localTxStatusesState: LocalStatusesState, chainId: string, tx: Transaction): TransactionStatus => {
-    const isUnknownStatus = [
-      LocalTransactionStatus.AWAITING_CONFIRMATIONS,
-      LocalTransactionStatus.AWAITING_EXECUTION,
-    ].includes(tx.txStatus)
-
-    if (!isUnknownStatus) {
-      return tx.txStatus
-    }
-
-    const { detailedExecutionInfo } = tx.txDetails || {}
-    const hash =
-      detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
-        ? detailedExecutionInfo.safeTxHash
-        : getSafeTxHashFromId(tx.id)
-    const statusesOnChain = localTxStatusesState[chainId as ChainId]
-    const localStatus = hash && statusesOnChain ? statusesOnChain[hash] : undefined
-    return localStatus || tx.txStatus
+    return getLocalTxStatus(localTxStatusesState, chainId, tx)
   },
 )
