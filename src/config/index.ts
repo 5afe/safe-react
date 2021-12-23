@@ -8,6 +8,7 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
+  GATEWAY_URL,
   DEFAULT_CHAIN_ID,
   ETHERSCAN_API_KEY,
   INFURA_TOKEN,
@@ -89,7 +90,6 @@ export const getGasPriceOracles = (): Extract<ChainInfo['gasPrice'][number], Gas
   const isOracleType = (gasPrice: ChainInfo['gasPrice'][number]): gasPrice is GasPriceOracle => {
     return gasPrice.type === GAS_PRICE_TYPE.ORACLE
   }
-
   return getChainInfo().gasPrice.filter(isOracleType)
 }
 
@@ -100,22 +100,11 @@ export const getFixedGasPrice = (): Extract<ChainInfo['gasPrice'][number], GasPr
   return getChainInfo().gasPrice.filter(isFixed)[0]
 }
 
+// @TODO: Remove after Safe Apps reliance
 export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   const { transactionService } = getChainInfo()
   // To avoid breaking changes, we define the version the web uses manually
   return `${transactionService}/api/v${TX_SERVICE_VERSION}`
-}
-
-export const getTokensServiceUrl = (): string => {
-  return `${getTxServiceUrl()}/tokens`
-}
-
-export const getMasterCopiesUrl = (): string => {
-  return `${getTxServiceUrl()}/about/master-copies/`
-}
-
-export const getDataDecoderUrl = (): string => {
-  return `${getTxServiceUrl()}/data-decoder/`
 }
 
 export const getDisabledWallets = (): ChainInfo['disabledWallets'] => {

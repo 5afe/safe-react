@@ -1,16 +1,15 @@
-import axios from 'axios'
+import { getDecodedData, DecodedDataResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getDataDecoderUrl } from 'src/config'
-import { DecodedData } from 'src/types/transactions/decode.d'
+import { _getChainId } from 'src/config'
+import { GATEWAY_URL } from './constants'
 
-export const fetchTxDecoder = async (txData: string): Promise<DecodedData | null> => {
-  if (!txData?.length || txData === '0x') {
+export const fetchTxDecoder = async (encodedData: string): Promise<DecodedDataResponse | null> => {
+  if (!encodedData?.length || encodedData === '0x') {
     return null
   }
 
   try {
-    const res = await axios.post<DecodedData>(getDataDecoderUrl(), { data: txData })
-    return res.data
+    return await getDecodedData(GATEWAY_URL, _getChainId(), encodedData)
   } catch (error) {
     return null
   }
