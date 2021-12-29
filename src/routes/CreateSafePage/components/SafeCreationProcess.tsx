@@ -33,9 +33,10 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { getShortName } from 'src/config'
+import { getExplorerInfo, getShortName } from 'src/config'
 import { getGasParam } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { InlineEthHashInfo } from 'src/routes/safe/components/Transactions/TxList/styled'
 
 type ModalDataType = {
   safeAddress: string
@@ -60,6 +61,8 @@ function SafeCreationProcess(): ReactElement {
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
+  const [showCouldNotLoadModal, setShowCouldNotLoadModal] = useState(false)
+  const [newSafeAddress, setNewSafeAddress] = useState<string>('')
 
   const createNewSafe = useCallback(() => {
     const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
@@ -158,16 +161,22 @@ function SafeCreationProcess(): ReactElement {
     // a default 5s wait before starting to request safe information
     await sleep(5000)
 
-    // exponential delay between attempts for around 4 min
-    await backOff(() => getSafeInfo(newSafeAddress), {
-      startingDelay: 750,
-      maxDelay: 20000,
-      numOfAttempts: 19,
-      retry: (e) => {
-        console.info('waiting for client-gateway to provide safe information', e)
-        return true
-      },
-    })
+    try {
+      // exponential delay between attempts for around 4 min
+      await backOff(() => getSafeInfo(newSafeAddress), {
+        startingDelay: 750,
+        maxDelay: 20000,
+        numOfAttempts: 19,
+        retry: (e) => {
+          console.info('waiting for client-gateway to provide safe information', e)
+          return true
+        },
+      })
+    } catch (e) {
+      setShowCouldNotLoadModal(true)
+      setNewSafeAddress(newSafeAddress)
+      return
+    }
 
     const safeProps = await buildSafe(newSafeAddress)
     await dispatch(addOrUpdateSafe(safeProps))
@@ -215,6 +224,8 @@ function SafeCreationProcess(): ReactElement {
     })
   }
 
+  const explorerUrl = newSafeAddress ? getExplorerInfo(newSafeAddress) : undefined
+
   return (
     <>
       <SafeDeployment
@@ -253,6 +264,35 @@ function SafeCreationProcess(): ReactElement {
                 variant="contained"
               >
                 Continue
+              </Button>
+            </ButtonContainer>
+          }
+        />
+      )}
+      {showCouldNotLoadModal && (
+        <GenericModal
+          onClose={onCancel}
+          title="Couldn't load the safe"
+          body={
+            <div data-testid="safe-could-not-load-popup">
+              <Paragraph>We can&apos;t load the created safe yet.</Paragraph>
+              <Paragraph>
+                It was created however as is available in{' '}
+                <InlineEthHashInfo hash={newSafeAddress} showCopyBtn explorerUrl={explorerUrl} />
+              </Paragraph>
+            </div>
+          }
+          footer={
+            <ButtonContainer>
+              <Button
+                testId="safe-created-button"
+                onClick={onCancel}
+                color="primary"
+                type={'button'}
+                size="small"
+                variant="contained"
+              >
+                Ok
               </Button>
             </ButtonContainer>
           }
