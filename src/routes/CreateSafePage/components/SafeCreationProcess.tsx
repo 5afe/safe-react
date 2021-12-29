@@ -158,8 +158,11 @@ function SafeCreationProcess(): ReactElement {
     // a default 5s wait before starting to request safe information
     await sleep(5000)
 
+    // exponential delay between attempts for around 4 min
     await backOff(() => getSafeInfo(newSafeAddress), {
       startingDelay: 750,
+      maxDelay: 20000,
+      numOfAttempts: 19,
       retry: (e) => {
         console.info('waiting for client-gateway to provide safe information', e)
         return true
