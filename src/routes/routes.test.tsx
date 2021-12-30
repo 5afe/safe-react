@@ -56,12 +56,12 @@ describe('extractPrefixedSafeAddress', () => {
     expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName, safeAddress: validSafeAddress })
   })
 
-  it('returns the current chain prefix with safe address when a malformed chain is supplied', () => {
+  it('returns the malformed chain prefix with safe address when a malformed chain is supplied', () => {
     const route = `/fakechain:${validSafeAddress}/balances`
     history.push(route)
 
     // 'rin' is default dev env shortName
-    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: validSafeAddress })
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'fakechain', safeAddress: validSafeAddress })
   })
 
   // matchPath will fail because of chainSpecificSafeAddressPathRegExp path
