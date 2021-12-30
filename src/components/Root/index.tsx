@@ -18,11 +18,6 @@ import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
-import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
-import { useSelector } from 'react-redux'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { isValidChainId } from 'src/config'
-import { setChainId } from 'src/logic/config/utils'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -31,7 +26,6 @@ const removePreloader = () => {
 }
 
 const RootConsumer = (): React.ReactElement | null => {
-  const chainId = useSelector(currentChainId)
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -43,11 +37,6 @@ const RootConsumer = (): React.ReactElement | null => {
       } catch (err) {
         logError(Errors._904, err.message)
         setIsError(true)
-      } finally {
-        // If chain is not returned from CGW, revert to default
-        if (!isValidChainId(chainId)) {
-          setChainId(DEFAULT_CHAIN_ID)
-        }
       }
     }
     initChains()
