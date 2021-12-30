@@ -272,26 +272,19 @@ function SafeCreationProcess(): ReactElement {
       {showCouldNotLoadModal && (
         <GenericModal
           onClose={onCancel}
-          title="Couldn't load the safe"
+          title="Could not load the safe"
           body={
             <div data-testid="safe-could-not-load-popup">
               <Paragraph>We can&apos;t load the created safe yet.</Paragraph>
               <Paragraph>
-                It was created however as is available in{' '}
+                It was created however and is available in{' '}
                 <InlineEthHashInfo hash={newSafeAddress} showCopyBtn explorerUrl={explorerUrl} />
               </Paragraph>
             </div>
           }
           footer={
             <ButtonContainer>
-              <Button
-                testId="safe-created-button"
-                onClick={onCancel}
-                color="primary"
-                type={'button'}
-                size="small"
-                variant="contained"
-              >
+              <Button onClick={onCancel} color="primary" type={'button'} size="small" variant="contained">
                 Ok
               </Button>
             </ButtonContainer>
