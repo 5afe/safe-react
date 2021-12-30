@@ -272,13 +272,13 @@ function SafeCreationProcess(): ReactElement {
       {showCouldNotLoadModal && (
         <GenericModal
           onClose={onCancel}
-          title="Could not load the safe"
+          title="Unable to load the new Safe"
           body={
             <div data-testid="safe-could-not-load-popup">
-              <Paragraph>We can&apos;t load the created safe yet.</Paragraph>
+              <Paragraph>We are currently unable to load the Safe but it was successfully created</Paragraph>
               <Paragraph>
-                It was created however and is available in{' '}
-                <InlineEthHashInfo hash={newSafeAddress} showCopyBtn explorerUrl={explorerUrl} />
+                and can be found under the following address{' '}
+                <InlineEthHashInfo hash={newSafeAddress} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
               </Paragraph>
             </div>
           }
