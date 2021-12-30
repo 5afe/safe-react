@@ -7,6 +7,9 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { lg, sm } from 'src/theme/variables'
 import { TransactionFees } from '../TransactionsFees'
+import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
+import { extractSafeAddress } from 'src/routes/routes'
+import { useEffect, useState } from 'react'
 
 type CustomReviewInfoTextProps = {
   safeNonce?: string
@@ -32,6 +35,9 @@ export const ReviewInfoText = ({
   const { nonce } = useSelector(currentSafe)
   const safeNonceNumber = parseInt(safeNonce, 10)
   const lastTxNonce = useSelector(getLastTxNonce)
+  const storeNextNonce = `${lastTxNonce && lastTxNonce + 1}`
+  const safeAddress = extractSafeAddress()
+  const [recommendedNonce, setRecommendedNonce] = useState<string>(storeNextNonce)
 
   const isTxNonceOutOfOrder = () => {
     if (safeNonceNumber === nonce) return false
@@ -42,17 +48,39 @@ export const ReviewInfoText = ({
 
   const transactionsToGo = safeNonceNumber - nonce
 
+  useEffect(() => {
+    const fetchRecommendedNonce = async () => {
+      try {
+        const recommendedNonce = (await getRecommendedNonce(safeAddress)).toString()
+        setRecommendedNonce(recommendedNonce)
+      } catch (e) {
+        return
+      }
+    }
+    fetchRecommendedNonce()
+  }, [safeAddress])
+
+  const warningMessage = () => {
+    if (transactionsToGo < 0) {
+      return `Nonce ${safeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
+    }
+
+    return (
+      <>
+        <Text size="lg" as="span" color="text" strong>
+          {transactionsToGo}
+        </Text>
+        {` transaction${transactionsToGo > 1 ? 's' : ''} will need to be created and executed before this transaction,
+        are you sure you want to do this?`}
+      </>
+    )
+  }
+
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
       {shouldShowWarning ? (
         <Paragraph size="lg" align="center">
-          <Text size="lg" as="span" color="text" strong>
-            {transactionsToGo}
-          </Text>
-          {` transaction${
-            transactionsToGo > 1 ? 's' : ''
-          } will need to be created and executed before this transaction, are you
-                sure you want to do this?`}
+          {warningMessage()}
         </Paragraph>
       ) : (
         <TransactionFees
