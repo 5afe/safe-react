@@ -38,8 +38,8 @@ export const shouldExecuteTransaction = async (
     return true
   }
 
-  // If the previous tx is not executed or the different between lastTx.nonce and nonce is > 1
-  // it's delayed using the approval mechanisms.
+  // If the previous tx is not executed or the difference between lastTx.nonce and nonce is > 1
+  // it's delayed using the approval mechanism.
   // Once the previous tx is executed, the current tx will be available to be executed
   // by the user using the exec button.
   if (lastTx && isMultisigExecutionInfo(lastTx.executionInfo)) {
