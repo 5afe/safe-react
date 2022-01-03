@@ -39,15 +39,6 @@ export const ReviewInfoText = ({
   const safeAddress = extractSafeAddress()
   const [recommendedNonce, setRecommendedNonce] = useState<string>(storeNextNonce)
 
-  const isTxNonceOutOfOrder = () => {
-    if (safeNonceNumber === nonce) return false
-    if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
-    return true
-  }
-  const shouldShowWarning = isTxNonceOutOfOrder()
-
-  const transactionsToGo = safeNonceNumber - nonce
-
   useEffect(() => {
     const fetchRecommendedNonce = async () => {
       try {
@@ -61,28 +52,38 @@ export const ReviewInfoText = ({
   }, [safeAddress])
 
   const warningMessage = () => {
-    if (transactionsToGo < 0) {
-      return `Nonce ${safeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
+    const isTxNonceOutOfOrder = () => {
+      if (safeNonceNumber === nonce) return false
+      if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
+      return true
     }
+    const shouldShowWarning = isTxNonceOutOfOrder()
 
+    const transactionsToGo = safeNonceNumber - nonce
+
+    if (!shouldShowWarning) return null
     return (
-      <>
-        <Text size="lg" as="span" color="text" strong>
-          {transactionsToGo}
-        </Text>
-        {` transaction${transactionsToGo > 1 ? 's' : ''} will need to be created and executed before this transaction,
+      <Paragraph size="lg" align="center">
+        {transactionsToGo < 0 ? (
+          `Nonce ${safeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
+        ) : (
+          <>
+            <Text size="lg" as="span" color="text" strong>
+              {transactionsToGo}
+            </Text>
+            {` transaction${
+              transactionsToGo > 1 ? 's' : ''
+            } will need to be created and executed before this transaction,
         are you sure you want to do this?`}
-      </>
+          </>
+        )}
+      </Paragraph>
     )
   }
 
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
-      {shouldShowWarning ? (
-        <Paragraph size="lg" align="center">
-          {warningMessage()}
-        </Paragraph>
-      ) : (
+      {warningMessage() || (
         <TransactionFees
           gasCostFormatted={gasCostFormatted}
           isCreation={isCreation}
