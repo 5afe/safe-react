@@ -224,7 +224,9 @@ function SafeCreationProcess(): ReactElement {
     })
   }
 
-  const explorerUrl = newSafeAddress ? getExplorerInfo(newSafeAddress) : undefined
+  const explorerUrl = (safeAddress: string) => {
+    return safeAddress ? getExplorerInfo(safeAddress) : undefined
+  }
 
   return (
     <>
@@ -274,17 +276,22 @@ function SafeCreationProcess(): ReactElement {
           onClose={onCancel}
           title="Unable to load the new Safe"
           body={
-            <div data-testid="safe-could-not-load-popup">
-              <Paragraph>We are currently unable to load the Safe but it was successfully created</Paragraph>
+            <div>
               <Paragraph>
+                We are currently unable to load the Safe but it was successfully created <br />
                 and can be found under the following address{' '}
-                <InlineEthHashInfo hash={newSafeAddress} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
+                <InlineEthHashInfo
+                  hash={newSafeAddress}
+                  shortenHash={8}
+                  showCopyBtn
+                  explorerUrl={explorerUrl(newSafeAddress)}
+                />
               </Paragraph>
             </div>
           }
           footer={
             <ButtonContainer>
-              <Button onClick={onCancel} color="primary" type={'button'} size="small" variant="contained">
+              <Button onClick={onCancel} color="primary" type="button" size="small" variant="contained">
                 Ok
               </Button>
             </ButtonContainer>
