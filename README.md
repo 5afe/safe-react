@@ -23,7 +23,7 @@ For support requests, please open up a [bug issue](https://github.com/gnosis/saf
 - Production: https://gnosis-safe.io/app/
 - Staging: https://safe-team.staging.gnosisdev.com/app/
 - Dev: https://safe-team.dev.gnosisdev.com/app/
-- PRs: https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/
+- PRs: `https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/`
 
 ## Getting Started
 
