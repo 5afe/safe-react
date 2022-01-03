@@ -7,7 +7,7 @@ import App from 'src/components/App'
 import GlobalErrorBoundary from 'src/components/GlobalErrorBoundary'
 import AppRoutes from 'src/routes'
 import { store } from 'src/store'
-import { history } from 'src/routes/routes'
+import { history, WELCOME_ROUTE } from 'src/routes/routes'
 import theme from 'src/theme/mui'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import Providers from '../Providers'
@@ -36,14 +36,14 @@ const RootConsumer = (): React.ReactElement | null => {
     const initChains = async () => {
       try {
         await loadChains()
+        if (!isValidChainId(_getChainId())) {
+          setChainId(DEFAULT_CHAIN_ID)
+          history.push(WELCOME_ROUTE)
+        }
         setHasChains(true)
       } catch (err) {
         logError(Errors._904, err.message)
         setIsError(true)
-      } finally {
-        if (!isValidChainId(_getChainId())) {
-          setChainId(DEFAULT_CHAIN_ID)
-        }
       }
     }
     initChains()
