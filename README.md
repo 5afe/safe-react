@@ -10,7 +10,7 @@ The most trusted platform to store digital assets on Ethereum. More info at [gno
 
 For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
 
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.gnosis-safe.io).
 
 ## Related repos
 
@@ -20,10 +20,10 @@ For support requests, please open up a [bug issue](https://github.com/gnosis/saf
 
 ## Deployed environments
 
-* Production: https://gnosis-safe.io/app/
-* Staging: https://safe-team.staging.gnosisdev.com/app/
-* Dev: https://safe-team.dev.gnosisdev.com/app/
-* PRs: https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/
+- Production: https://gnosis-safe.io/app/
+- Staging: https://safe-team.staging.gnosisdev.com/app/
+- Dev: https://safe-team.dev.gnosisdev.com/app/
+- PRs: `https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/`
 
 ## Getting Started
 

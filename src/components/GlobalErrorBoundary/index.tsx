@@ -92,7 +92,7 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
               In case the problem persists, please reach out to us via{' '}
             </Text>
             <LinkWrapper>
-              <a target="_blank" href="https://discord.gg/M82FMJST7x" rel="noopener noreferrer">
+              <a target="_blank" href="https://chat.gnosis-safe.io" rel="noopener noreferrer">
                 <Text color="primary" size="lg" as="span">
                   Discord
                 </Text>
