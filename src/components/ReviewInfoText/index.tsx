@@ -7,6 +7,9 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { lg, sm } from 'src/theme/variables'
 import { TransactionFees } from '../TransactionsFees'
+import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
+import { extractSafeAddress } from 'src/routes/routes'
+import { useEffect, useState } from 'react'
 
 type CustomReviewInfoTextProps = {
   safeNonce?: string
@@ -32,29 +35,55 @@ export const ReviewInfoText = ({
   const { nonce } = useSelector(currentSafe)
   const safeNonceNumber = parseInt(safeNonce, 10)
   const lastTxNonce = useSelector(getLastTxNonce)
+  const storeNextNonce = `${lastTxNonce && lastTxNonce + 1}`
+  const safeAddress = extractSafeAddress()
+  const [recommendedNonce, setRecommendedNonce] = useState<string>(storeNextNonce)
 
-  const isTxNonceOutOfOrder = () => {
-    if (safeNonceNumber === nonce) return false
-    if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
-    return true
+  useEffect(() => {
+    const fetchRecommendedNonce = async () => {
+      try {
+        const recommendedNonce = (await getRecommendedNonce(safeAddress)).toString()
+        setRecommendedNonce(recommendedNonce)
+      } catch (e) {
+        return
+      }
+    }
+    fetchRecommendedNonce()
+  }, [safeAddress])
+
+  const warningMessage = () => {
+    const isTxNonceOutOfOrder = () => {
+      if (safeNonceNumber === nonce) return false
+      if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
+      return true
+    }
+    const shouldShowWarning = isTxNonceOutOfOrder()
+
+    const transactionsToGo = safeNonceNumber - nonce
+
+    if (!shouldShowWarning) return null
+    return (
+      <Paragraph size="lg" align="center">
+        {transactionsToGo < 0 ? (
+          `Nonce ${safeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
+        ) : (
+          <>
+            <Text size="lg" as="span" color="text" strong>
+              {transactionsToGo}
+            </Text>
+            {` transaction${
+              transactionsToGo > 1 ? 's' : ''
+            } will need to be created and executed before this transaction,
+        are you sure you want to do this?`}
+          </>
+        )}
+      </Paragraph>
+    )
   }
-  const shouldShowWarning = isTxNonceOutOfOrder()
-
-  const transactionsToGo = safeNonceNumber - nonce
 
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
-      {shouldShowWarning ? (
-        <Paragraph size="lg" align="center">
-          <Text size="lg" as="span" color="text" strong>
-            {transactionsToGo}
-          </Text>
-          {` transaction${
-            transactionsToGo > 1 ? 's' : ''
-          } will need to be created and executed before this transaction, are you
-                sure you want to do this?`}
-        </Paragraph>
-      ) : (
+      {warningMessage() || (
         <TransactionFees
           gasCostFormatted={gasCostFormatted}
           isCreation={isCreation}
