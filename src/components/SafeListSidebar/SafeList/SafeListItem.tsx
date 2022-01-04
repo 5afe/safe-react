@@ -26,17 +26,9 @@ const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
 `
 
-const StyledListItemSecondaryAction = styled(ListItemSecondaryAction)`
-  top: 0;
-  right: 0;
-  bottom: 0;
-  transform: none;
-`
-
 const StyledButton = styled(Button)`
   &.MuiButton-root.MuiButton-text {
-    padding: 0 16px;
-    border-radius: 0;
+    padding: 8px 16px;
     min-width: auto;
     height: 100%;
   }
@@ -117,7 +109,7 @@ const SafeListItem = ({
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
-      <StyledListItemSecondaryAction>
+      <ListItemSecondaryAction>
         {ethBalance ? (
           <StyledText size="lg">
             {formatAmount(ethBalance)} {nativeCurrencySymbol}
@@ -129,7 +121,7 @@ const SafeListItem = ({
             </Text>
           </StyledButton>
         ) : null}
-      </StyledListItemSecondaryAction>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
