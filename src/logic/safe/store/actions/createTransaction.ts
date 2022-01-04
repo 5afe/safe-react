@@ -92,10 +92,19 @@ const getNonce = async (state: AppReduxState, safeAddress: string): Promise<stri
   return nextNonce
 }
 
-const getSafeTxGas = async (props: SafeTxGasEstimationProps, safeVersion: string): Promise<string> => {
+const getSafeTxGas = async (props: CreateTransactionArgs, safeVersion: string): Promise<string> => {
+  const estimationProps: SafeTxGasEstimationProps = {
+    safeAddress: props.safeAddress,
+    txData: props.txData!, // Overwritten with fallback at beginning of createTransaction
+    txRecipient: props.to,
+    txAmount: props.valueInWei,
+    operation: props.operation!, // Overwritten with fallback at beginning of createTransaction
+  }
+
+  // @TODO: Don't fallback to any value if estimation fails
   let safeTxGas = '0'
   try {
-    safeTxGas = await estimateSafeTxGas(props, safeVersion)
+    safeTxGas = await estimateSafeTxGas(estimationProps, safeVersion)
   } catch (err) {
     logError(Errors._617, err.message)
   }
@@ -113,7 +122,7 @@ const createNotifications = (notifiedTransaction: string, origin: string | null,
   return {
     closePending: () => dispatch(closeSnackbarAction({ key: beforeExecutionKey })),
 
-    showOnError: (err: Error & { code: number }, contractErrorMessage?: string) => {
+    showOnError: (err: Error & { code: number }, contractErrorMessage: string | null) => {
       const msg = !err
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {
@@ -128,26 +137,35 @@ const createNotifications = (notifiedTransaction: string, origin: string | null,
   }
 }
 
+// {
+//   safeAddress,
+//   to,
+//   valueInWei,
+//   txData = EMPTY_DATA,
+//   notifiedTransaction,
+//   txNonce,
+//   operation = Operation.CALL,
+//   navigateToTransactionsTab = true,
+//   origin = null,
+//   safeTxGas: safeTxGasArg,
+//   ethParameters,
+//   delayExecution = false,
+// }
+
 export const createTransaction =
   (
-    {
-      safeAddress,
-      to,
-      valueInWei,
-      txData = EMPTY_DATA,
-      notifiedTransaction,
-      txNonce,
-      operation = Operation.CALL,
-      navigateToTransactionsTab = true,
-      origin = null,
-      safeTxGas: safeTxGasArg,
-      ethParameters,
-      delayExecution = false,
-    }: CreateTransactionArgs,
+    props: CreateTransactionArgs,
     onUserConfirm?: ConfirmEventHandler,
     onError?: ErrorEventHandler,
   ): CreateTransactionAction =>
   async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
+    // Fallbacks
+    props.txData ??= EMPTY_DATA
+    props.operation ??= Operation.CALL
+    props.navigateToTransactionsTab ??= true
+    // @TODO: Remove
+    props.delayExecution ??= false
+
     const txHash = ''
     const state = getState()
 
@@ -158,35 +176,33 @@ export const createTransaction =
     // Selectors
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
     const safeVersion = currentSafeCurrentVersion(state) as string
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+    const safeInstance = getGnosisSafeInstanceAt(props.safeAddress, safeVersion)
     const chainId = currentChainId(state)
 
     // Use the user-provided none or the recommented nonce
-    const nonce = txNonce?.toString() ?? (await getNonce(state, safeAddress))
+    const nonce = props.txNonce?.toString() ?? (await getNonce(state, props.safeAddress))
 
     // Execute right away?
     const lastTx = getLastTransaction(state)
-    const isExecution = !delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
+    const isExecution = !props.delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
 
     // Safe tx gas
-    const safeTxGas =
-      safeTxGasArg ??
-      (await getSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation }, safeVersion))
+    const safeTxGas = props.safeTxGas ?? (await getSafeTxGas(props, safeVersion))
 
     // We're making a new tx, so there are no other signatures
     // Just pass our own address for an unsigned execution
     // Contract will compare the sender address to this
     const sigs = getPreValidatedSignatures(from)
 
-    const notifications = createNotifications(notifiedTransaction, origin, dispatch)
+    const notifications = createNotifications(props.notifiedTransaction, origin, dispatch)
 
     // Prepare a TxArgs object
     const txArgs: TxArgs & { sender: string } = {
       safeInstance,
-      to,
-      valueInWei,
-      data: txData,
-      operation,
+      to: props.to,
+      valueInWei: props.valueInWei,
+      data: props.txData,
+      operation: props.operation,
       nonce: Number.parseInt(nonce),
       safeTxGas,
       baseGas: '0',
@@ -198,7 +214,7 @@ export const createTransaction =
     }
 
     // SafeTxHash acts as the unique ID of a tx throughout the app
-    const safeTxHash = generateSafeTxHash(safeAddress, safeVersion, txArgs)
+    const safeTxHash = generateSafeTxHash(props.safeAddress, safeVersion, txArgs)
 
     // On transaction completion (either confirming or executing)
     const onComplete = async (signature?: string): Promise<void> => {
@@ -216,10 +232,10 @@ export const createTransaction =
       onUserConfirm?.(safeTxHash)
 
       // Go to a tx deep-link
-      if (navigateToTransactionsTab) {
-        navigateToTx(safeAddress, txDetails)
+      if (props.navigateToTransactionsTab) {
+        navigateToTx(props.safeAddress, txDetails)
       } else {
-        dispatch(fetchTransactions(chainId, safeAddress))
+        dispatch(fetchTransactions(chainId, props.safeAddress))
       }
     }
 
@@ -227,7 +243,12 @@ export const createTransaction =
       if (!checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
         throw new Error('Cannot do an offline signature')
       }
-      return await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
+      return await tryOffChainSigning(
+        safeTxHash,
+        { ...txArgs, safeAddress: props.safeAddress },
+        hardwareWallet,
+        safeVersion,
+      )
     }
 
     // Mark the tx as pending
@@ -257,9 +278,9 @@ export const createTransaction =
       const sendParams: PayableTx = {
         from,
         value: 0,
-        gas: ethParameters?.ethGasLimit,
-        [getGasParam()]: ethParameters?.ethGasPriceInGWei,
-        nonce: ethParameters?.ethNonce,
+        gas: props.ethParameters?.ethGasLimit,
+        [getGasParam()]: props.ethParameters?.ethGasPriceInGWei,
+        nonce: props.ethParameters?.ethNonce,
       }
 
       const txPromiEvent = tx.send(sendParams)
@@ -284,7 +305,18 @@ export const createTransaction =
       }
 
       const executeDataUsedSignatures = safeInstance.methods
-        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+        .execTransaction(
+          props.to,
+          props.valueInWei,
+          props.txData,
+          props.operation,
+          0,
+          0,
+          0,
+          ZERO_ADDRESS,
+          ZERO_ADDRESS,
+          sigs,
+        )
         .encodeABI()
 
       const contractErrorMessage = await getContractErrorMessage({
