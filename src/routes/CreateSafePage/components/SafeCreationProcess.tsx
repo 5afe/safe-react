@@ -36,7 +36,11 @@ import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/rout
 import { getExplorerInfo, getShortName } from 'src/config'
 import { getGasParam } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { InlineEthHashInfo } from 'src/routes/safe/components/Transactions/TxList/styled'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+
+export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  display: inline-flex;
+`
 
 type ModalDataType = {
   safeAddress: string
@@ -274,11 +278,10 @@ function SafeCreationProcess(): ReactElement {
           body={
             <div>
               <Paragraph>
-                We are currently unable to load the Safe but it was successfully created <br />
-                and can be found under the following address{' '}
-                <InlineEthHashInfo
+                We are currently unable to load the Safe but it was successfully created and can be found <br />
+                under the following address{' '}
+                <InlinePrefixedEthHashInfo
                   hash={newSafeAddress}
-                  shortenHash={8}
                   showCopyBtn
                   explorerUrl={getExplorerInfo(newSafeAddress)}
                 />
@@ -288,7 +291,7 @@ function SafeCreationProcess(): ReactElement {
           footer={
             <ButtonContainer>
               <Button onClick={onCancel} color="primary" type="button" size="small" variant="contained">
-                Ok
+                OK
               </Button>
             </ButtonContainer>
           }
