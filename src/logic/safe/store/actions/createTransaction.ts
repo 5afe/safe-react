@@ -102,6 +102,32 @@ const getSafeTxGas = async (props: SafeTxGasEstimationProps, safeVersion: string
   return safeTxGas
 }
 
+const createNotifications = (notifiedTransaction: string, origin: string | null, dispatch) => {
+  // Notifications
+  // Each tx gets a slot in the global snackbar queue
+  // When multiple snackbars are shown, it will re-use the same slot for
+  // notifications about different states of the tx
+  const notificationSlot = getNotificationsFromTxType(notifiedTransaction, origin)
+  const beforeExecutionKey = dispatch(enqueueSnackbar(notificationSlot.beforeExecution))
+
+  return {
+    closePending: () => dispatch(closeSnackbarAction({ key: beforeExecutionKey })),
+
+    showOnError: (err: Error & { code: number }, contractErrorMessage?: string) => {
+      const msg = !err
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationSlot.afterExecutionError,
+            ...(contractErrorMessage && {
+              message: `${notificationSlot.afterExecutionError.message} - ${contractErrorMessage}`,
+            }),
+          }
+
+      dispatch(enqueueSnackbar({ key: err.code, ...msg }))
+    },
+  }
+}
+
 export const createTransaction =
   (
     {
@@ -122,6 +148,7 @@ export const createTransaction =
     onError?: ErrorEventHandler,
   ): CreateTransactionAction =>
   async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
+    const txHash = ''
     const state = getState()
 
     // Wallet connection
@@ -151,15 +178,9 @@ export const createTransaction =
     // Contract will compare the sender address to this
     const sigs = getPreValidatedSignatures(from)
 
-    // Notifications
-    // Each tx gets a slot in the global snackbar queue
-    // When multiple snackbars are shown, it will re-use the same slot for
-    // notifications about different states of the tx
-    const notificationSlot = getNotificationsFromTxType(notifiedTransaction, origin)
-    const beforeExecutionKey = dispatch(enqueueSnackbar(notificationSlot.beforeExecution))
+    const notifications = createNotifications(notifiedTransaction, origin, dispatch)
 
     // Prepare a TxArgs object
-    let txHash = ''
     const txArgs: TxArgs & { sender: string } = {
       safeInstance,
       to,
@@ -189,7 +210,7 @@ export const createTransaction =
         return
       }
 
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      notifications.closePending()
 
       // This is used to communicate the safeTxHash to a Safe App caller
       onUserConfirm?.(safeTxHash)
@@ -197,6 +218,8 @@ export const createTransaction =
       // Go to a tx deep-link
       if (navigateToTransactionsTab) {
         navigateToTx(safeAddress, txDetails)
+      } else {
+        dispatch(fetchTransactions(chainId, safeAddress))
       }
     }
 
@@ -222,7 +245,7 @@ export const createTransaction =
         signature = undefined
       }
       if (signature) {
-        onComplete()
+        onComplete(signature)
         return
       }
     }
@@ -239,43 +262,22 @@ export const createTransaction =
         nonce: ethParameters?.ethNonce,
       }
 
-      await tx
-        .send(sendParams)
-        .once('transactionHash', async (hash) => {
-          onUserConfirm?.(safeTxHash)
+      const txPromiEvent = tx.send(sendParams)
 
-          txHash = hash
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      txPromiEvent.once('transactionHash', async () => {
+        onComplete()
 
-          try {
-            const txDetails = await saveTxToHistory({ ...txArgs, origin })
+        // store the pending transaction's nonce
+        isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
+      })
 
-            if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, txDetails)
-            }
-          } catch (err) {
-            logError(Errors._803, err.message)
-
-            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
-            if (!isExecution) {
-              return
-            }
-          }
-
-          // store the pending transaction's nonce
-          isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
-
-          dispatch(fetchTransactions(chainId, safeAddress))
-        })
-        .then(async (receipt) => {
-          dispatch(fetchTransactions(chainId, safeAddress))
-          return receipt.transactionHash
-        })
+      await txPromiEvent
     } catch (err) {
       logError(Errors._803, err.message)
+
       onError?.()
 
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      notifications.closePending()
 
       if (isExecution && safeTxHash) {
         dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
@@ -295,16 +297,7 @@ export const createTransaction =
         logError(Errors._803, contractErrorMessage)
       }
 
-      const notification = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationSlot.afterExecutionError,
-            ...(contractErrorMessage && {
-              message: `${notificationSlot.afterExecutionError.message} - ${contractErrorMessage}`,
-            }),
-          }
-
-      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
+      notifications.showOnError(isTxPendingError(err) ? null : err, contractErrorMessage)
     }
 
     return txHash
