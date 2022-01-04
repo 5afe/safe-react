@@ -1,4 +1,4 @@
-import { Text, Icon } from '@gnosis.pm/safe-react-components'
+import { Text, Icon, Button } from '@gnosis.pm/safe-react-components'
 import { useEffect, useRef, ReactElement } from 'react'
 import { useHistory } from 'react-router'
 import ListItem from '@material-ui/core/ListItem/ListItem'
@@ -6,7 +6,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/L
 import styled from 'styled-components'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import Link from 'src/components/layout/Link'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
@@ -25,6 +24,29 @@ import { getChainById } from 'src/config'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
+`
+
+const StyledListItemSecondaryAction = styled(ListItemSecondaryAction)`
+  top: 0;
+  right: 0;
+  bottom: 0;
+  transform: none;
+`
+
+const StyledButton = styled(Button)`
+  &.MuiButton-root.MuiButton-text {
+    padding: 0 16px;
+    border-radius: 0;
+    min-width: auto;
+    height: 100%;
+  }
+`
+
+const StyledText = styled(Text)`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
 `
 
 const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
@@ -95,17 +117,19 @@ const SafeListItem = ({
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
-      <ListItemSecondaryAction>
+      <StyledListItemSecondaryAction>
         {ethBalance ? (
-          `${formatAmount(ethBalance)} ${nativeCurrencySymbol}`
+          <StyledText size="lg">
+            {formatAmount(ethBalance)} {nativeCurrencySymbol}
+          </StyledText>
         ) : showAddSafeLink ? (
-          <Link to={generateSafeRoute(LOAD_SPECIFIC_SAFE_ROUTE, routesSlug)} onClick={handleLoadSafe}>
-            <Text size="sm" color="primary">
+          <StyledButton onClick={handleLoadSafe} size="md" variant="outlined">
+            <Text size="lg" color="primary">
               Add Safe
             </Text>
-          </Link>
+          </StyledButton>
         ) : null}
-      </ListItemSecondaryAction>
+      </StyledListItemSecondaryAction>
     </ListItem>
   )
 }
