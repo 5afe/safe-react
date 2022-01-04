@@ -61,7 +61,7 @@ export const ReviewInfoText = ({
 
     const transactionsToGo = safeNonceNumber - nonce
 
-    if (!shouldShowWarning) return null
+    if (!shouldShowWarning || isNaN(transactionsToGo)) return null
     return (
       <Paragraph size="lg" align="center">
         {transactionsToGo < 0 ? (
