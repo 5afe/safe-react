@@ -173,8 +173,8 @@ function SafeCreationProcess(): ReactElement {
         },
       })
     } catch (e) {
-      setShowCouldNotLoadModal(true)
       setNewSafeAddress(newSafeAddress)
+      setShowCouldNotLoadModal(true)
       return
     }
 
@@ -224,10 +224,6 @@ function SafeCreationProcess(): ReactElement {
     })
   }
 
-  const explorerUrl = (safeAddress: string) => {
-    return safeAddress ? getExplorerInfo(safeAddress) : undefined
-  }
-
   return (
     <>
       <SafeDeployment
@@ -271,7 +267,7 @@ function SafeCreationProcess(): ReactElement {
           }
         />
       )}
-      {showCouldNotLoadModal && (
+      {showCouldNotLoadModal && newSafeAddress && (
         <GenericModal
           onClose={onCancel}
           title="Unable to load the new Safe"
@@ -284,7 +280,7 @@ function SafeCreationProcess(): ReactElement {
                   hash={newSafeAddress}
                   shortenHash={8}
                   showCopyBtn
-                  explorerUrl={explorerUrl(newSafeAddress)}
+                  explorerUrl={getExplorerInfo(newSafeAddress)}
                 />
               </Paragraph>
             </div>
