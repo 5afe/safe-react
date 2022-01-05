@@ -216,7 +216,16 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       setEstimateGasArgs(spendingLimitTxData)
     }
     calculateSpendingLimit()
-  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values, safeModules])
+  }, [
+    safeAddress,
+    safeVersion,
+    connectedWalletAddress,
+    spendingLimits,
+    existentSpendingLimit,
+    txToken,
+    values,
+    safeModules,
+  ])
 
   const handleSubmit = async (txParameters: TxParameters): Promise<void> => {
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
