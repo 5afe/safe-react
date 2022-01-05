@@ -28,12 +28,12 @@ export const ReviewInfoText = ({
   isCreation,
   isExecution,
   isOffChainSignature,
-  safeNonce = '',
+  safeNonce: txParamsSafeNonce = '',
   testId,
   txEstimationExecutionStatus,
 }: ReviewInfoTextProps): React.ReactElement => {
   const { nonce } = useSelector(currentSafe)
-  const safeNonceNumber = parseInt(safeNonce, 10)
+  const safeNonceNumber = parseInt(txParamsSafeNonce, 10)
   const lastTxNonce = useSelector(getLastTxNonce)
   const storeNextNonce = `${lastTxNonce && lastTxNonce + 1}`
   const safeAddress = extractSafeAddress()
@@ -53,19 +53,19 @@ export const ReviewInfoText = ({
 
   const warningMessage = () => {
     const isTxNonceOutOfOrder = () => {
-      if (safeNonceNumber === nonce) return false
+      // safeNonce can be undefined while waiting for the request.
+      if (isNaN(safeNonceNumber) || safeNonceNumber === nonce) return false
       if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
       return true
     }
     const shouldShowWarning = isTxNonceOutOfOrder()
+    if (!shouldShowWarning) return null
 
     const transactionsToGo = safeNonceNumber - nonce
-
-    if (!shouldShowWarning) return null
     return (
       <Paragraph size="lg" align="center">
         {transactionsToGo < 0 ? (
-          `Nonce ${safeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
+          `Nonce ${txParamsSafeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
         ) : (
           <>
             <Text size="lg" as="span" color="text" strong>
