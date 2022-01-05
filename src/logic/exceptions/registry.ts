@@ -48,7 +48,7 @@ enum ErrorCodes {
   _811 = '811: Error calculating ERC721 transfer data for adding a Safe owner',
   _812 = '812: Error calculating ERC721 transfer data for removing a Safe owner',
   _813 = '813: Error calculating ERC721 transfer data for replacing a Safe owner',
-  _814 = '814: Error doing an offline tx signature',
+  _814 = '814: Error performing an offline tx signature',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',

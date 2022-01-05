@@ -2,11 +2,13 @@ import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 
 import { Notification, NOTIFICATIONS } from './notificationTypes'
-
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getAppInfoFromOrigin } from 'src/routes/safe/components/Apps/utils'
 import { store } from 'src/store'
+import { isTxPendingError } from '../wallets/getWeb3'
+import enqueueSnackbar from './store/actions/enqueueSnackbar'
 
 const setNotificationOrigin = (notification: Notification, origin: string): Notification => {
   if (!origin) {
@@ -261,3 +263,29 @@ export const enhanceSnackbarForAction = (
     ),
   },
 })
+
+export const createTxNotifications = (notifiedTransaction: string, origin: string | null, dispatch: Dispatch) => {
+  // Notifications
+  // Each tx gets a slot in the global snackbar queue
+  // When multiple snackbars are shown, it will re-use the same slot for
+  // notifications about different states of the tx
+  const notificationSlot = getNotificationsFromTxType(notifiedTransaction, origin)
+  const beforeExecutionKey = dispatch(enqueueSnackbar(notificationSlot.beforeExecution))
+
+  return {
+    closePending: () => dispatch(closeSnackbarAction({ key: beforeExecutionKey })),
+
+    showOnError: (err: Error & { code: number }, contractErrorMessage: string | null) => {
+      const msg = isTxPendingError(err)
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationSlot.afterExecutionError,
+            ...(contractErrorMessage && {
+              message: `${notificationSlot.afterExecutionError.message} - ${contractErrorMessage}`,
+            }),
+          }
+
+      dispatch(enqueueSnackbar({ key: err.code, ...msg }))
+    },
+  }
+}

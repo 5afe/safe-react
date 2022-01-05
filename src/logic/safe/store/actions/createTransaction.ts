@@ -4,7 +4,7 @@ import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
+import { createTxNotifications } from 'src/logic/notifications'
 import {
   getApprovalTransaction,
   getExecutionTransaction,
@@ -16,26 +16,21 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
-import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
-import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
+import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
 import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
 import { updateTransactionStatus } from './updateTransactionStatus'
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { _getChainId } from 'src/config'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 
@@ -78,18 +73,6 @@ const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
   history.push(txRoute)
 }
 
-const getNonce = async (safeAddress: string, safeVersion: string): Promise<string> => {
-  let nextNonce: string
-  try {
-    nextNonce = (await getRecommendedNonce(safeAddress)).toString()
-  } catch (e) {
-    logError(Errors._616, e.message)
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-    nextNonce = await safeInstance.methods.nonce().call()
-  }
-  return nextNonce
-}
-
 const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
     safeAddress: txProps.safeAddress,
@@ -108,66 +91,6 @@ const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Prom
   return safeTxGas
 }
 
-const createNotifications = (notifiedTransaction: string, origin: string | null, dispatch: Dispatch) => {
-  // Notifications
-  // Each tx gets a slot in the global snackbar queue
-  // When multiple snackbars are shown, it will re-use the same slot for
-  // notifications about different states of the tx
-  const notificationSlot = getNotificationsFromTxType(notifiedTransaction, origin)
-  const beforeExecutionKey = dispatch(enqueueSnackbar(notificationSlot.beforeExecution))
-
-  return {
-    closePending: () => dispatch(closeSnackbarAction({ key: beforeExecutionKey })),
-
-    showOnError: (err: Error & { code: number }, contractErrorMessage: string | null) => {
-      const msg = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationSlot.afterExecutionError,
-            ...(contractErrorMessage && {
-              message: `${notificationSlot.afterExecutionError.message} - ${contractErrorMessage}`,
-            }),
-          }
-
-      dispatch(enqueueSnackbar({ key: err.code, ...msg }))
-    },
-  }
-}
-
-const fetchOnchainError = async (
-  safeInstance: GnosisSafe,
-  txProps: RequiredTxProps,
-  sigs: string,
-  from: string,
-): Promise<string | null> => {
-  const executeDataUsedSignatures = safeInstance.methods
-    .execTransaction(
-      txProps.to,
-      txProps.valueInWei,
-      txProps.txData,
-      txProps.operation,
-      0,
-      0,
-      0,
-      ZERO_ADDRESS,
-      ZERO_ADDRESS,
-      sigs,
-    )
-    .encodeABI()
-
-  const contractErrorMessage = await getContractErrorMessage({
-    safeInstance,
-    from,
-    data: executeDataUsedSignatures,
-  })
-
-  if (contractErrorMessage) {
-    logError(Errors._803, contractErrorMessage)
-  }
-
-  return contractErrorMessage
-}
-
 export const createTransaction = (
   props: CreateTransactionArgs,
   confirmCallback?: ConfirmEventHandler,
@@ -176,7 +99,9 @@ export const createTransaction = (
   return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
     // Wallet connection
     const ready = await onboardUser()
-    if (!ready) return
+    if (!ready) {
+      return
+    }
 
     // Assign fallback values to certain props
     const txProps: RequiredTxProps = {
@@ -191,11 +116,11 @@ export const createTransaction = (
     // Selectors
     const state = getState()
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const safeVersion = currentSafeCurrentVersion(state) as string
+    const safeVersion = currentSafeCurrentVersion(state)
     const safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, safeVersion)
 
     // Notifications
-    const notifications = createNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
+    const notifications = createTxNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
 
     // Use the user-provided none or the recommented nonce
     const nonce = txProps.txNonce?.toString() ?? (await getNonce(txProps.safeAddress, safeVersion))
@@ -263,7 +188,21 @@ export const createTransaction = (
         dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
       }
 
-      const contractErrorMessage = await fetchOnchainError(safeInstance, txProps, txArgs.sigs, from)
+      const executeDataUsedSignatures = safeInstance.methods
+        .execTransaction(
+          txProps.to,
+          txProps.valueInWei,
+          txProps.txData,
+          txProps.operation,
+          0,
+          0,
+          0,
+          ZERO_ADDRESS,
+          ZERO_ADDRESS,
+          txArgs.sigs,
+        )
+        .encodeABI()
+      const contractErrorMessage = await fetchOnchainError(executeDataUsedSignatures, safeInstance, from)
 
       notifications.showOnError(err, contractErrorMessage)
     }
