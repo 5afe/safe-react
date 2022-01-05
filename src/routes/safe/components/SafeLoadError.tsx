@@ -31,8 +31,8 @@ export const ErrorContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  // Offset so that it is centered based on the whole page
-  margin-left: -105px;
+  // Offset so that it is centered relative to the header
+  margin-top: -30px;
 `
 
 export default SafeLoadError
