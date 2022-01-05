@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Button from 'src/components/layout/Button'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 
-const LoadError = (): ReactElement => {
+const SafeLoadError = (): ReactElement => {
   const history = useHistory()
 
   const handleClick = () => {
@@ -31,6 +31,8 @@ export const ErrorContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  // Offset so that it is centered based on the whole page
+  margin-left: -105px;
 `
 
-export default LoadError
+export default SafeLoadError
