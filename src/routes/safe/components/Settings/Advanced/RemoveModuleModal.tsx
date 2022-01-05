@@ -10,13 +10,9 @@ import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { getExplorerInfo } from 'src/config'
-import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-
-import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-
 import { useStyles } from './style'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -25,23 +21,24 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 
 interface RemoveModuleModalProps {
   onClose: () => void
-  selectedModulePair: ModulePair
+  selectedModuleAddress: string
 }
 
-export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): ReactElement => {
+export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModuleModalProps): ReactElement => {
   const classes = useStyles()
 
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-
-  const [, moduleAddress] = selectedModulePair
 
   const {
     gasCostFormatted,
@@ -64,9 +61,30 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const txData = getDisableModuleTxData(selectedModulePair, safeAddress, safeVersion)
-    setTxData(txData)
-  }, [selectedModulePair, safeAddress, safeVersion])
+    let isCurrent = true
+
+    const calculateRemoveOwnerData = async () => {
+      try {
+        const txData = await getDisableModuleTxData({
+          moduleAddress: selectedModuleAddress,
+          safeAddress,
+          safeVersion,
+          connectedWalletAddress,
+        })
+
+        if (isCurrent) {
+          setTxData(txData)
+        }
+      } catch (error) {
+        logError(Errors._806, `${selectedModuleAddress} - ${error.message}`)
+      }
+    }
+    calculateRemoveOwnerData()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [connectedWalletAddress, safeAddress, safeVersion, selectedModuleAddress])
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {
@@ -83,7 +101,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         }),
       )
     } catch (e) {
-      logError(Errors._806, `${selectedModulePair} – ${e.message}`)
+      logError(Errors._806, `${selectedModuleAddress} - ${e.message}`)
     }
   }
 
@@ -136,10 +154,10 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
                     <PrefixedEthHashInfo
-                      hash={moduleAddress}
+                      hash={selectedModuleAddress}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(moduleAddress)}
+                      explorerUrl={getExplorerInfo(selectedModuleAddress)}
                     />
                   </Col>
                 </Row>

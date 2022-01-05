@@ -5,6 +5,7 @@ import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransa
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 
 /**
  * Builds a collection of tuples with (prev, module) module addresses
@@ -39,11 +40,23 @@ export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | n
   return null
 }
 
-export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string, safeVersion: string): string => {
-  const [previousModule, module] = modulePair
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+type DisableModuleParams = {
+  moduleAddress: string
+  safeAddress: string
+  safeVersion: string
+  connectedWalletAddress: string
+}
 
-  return safeInstance.methods.disableModule(previousModule, module).encodeABI()
+export const getDisableModuleTxData = async ({
+  moduleAddress,
+  safeAddress,
+  safeVersion,
+  connectedWalletAddress,
+}: DisableModuleParams): Promise<string> => {
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+  const safeTx = await sdk.getDisableModuleTx(moduleAddress, { safeTxGas: 0 })
+
+  return safeTx.data.data
 }
 
 type EnableModuleParams = {
