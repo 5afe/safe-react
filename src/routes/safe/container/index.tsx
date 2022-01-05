@@ -42,7 +42,7 @@ const Container = (): React.ReactElement => {
     return () => {
       clearTimeout(failedTimeout)
     }
-  }, [owners, isSafeLoaded])
+  }, [isSafeLoaded])
 
   const [modal, setModal] = useState({
     isOpen: false,
