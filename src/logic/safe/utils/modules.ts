@@ -1,6 +1,6 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -63,20 +63,24 @@ type EnableModuleParams = {
   moduleAddress: string
   safeAddress: string
   safeVersion: string
+  connectedWalletAddress: string
 }
-export const enableModuleTx = ({
+
+export const enableModuleTx = async ({
   moduleAddress,
   safeAddress,
   safeVersion,
-}: EnableModuleParams): CreateTransactionArgs => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+  connectedWalletAddress,
+}: EnableModuleParams): Promise<CreateTransactionArgs> => {
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+  const safeTx = await sdk.getEnableModuleTx(moduleAddress, { safeTxGas: 0 })
 
   return {
     safeAddress,
     to: safeAddress,
     operation: Operation.CALL,
     valueInWei: '0',
-    txData: safeInstance.methods.enableModule(moduleAddress).encodeABI(),
+    txData: safeTx.data.data,
     notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
   }
 }
