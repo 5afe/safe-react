@@ -264,7 +264,14 @@ export const enhanceSnackbarForAction = (
   },
 })
 
-export const createTxNotifications = (notifiedTransaction: string, origin: string | null, dispatch: Dispatch) => {
+export const createTxNotifications = (
+  notifiedTransaction: string,
+  origin: string | null,
+  dispatch: Dispatch,
+): {
+  closePending: () => void
+  showOnError: (err: Error & { code: number }, contractErrorMessage: string | null) => void
+} => {
   // Notifications
   // Each tx gets a slot in the global snackbar queue
   // When multiple snackbars are shown, it will re-use the same slot for
