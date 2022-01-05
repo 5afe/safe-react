@@ -17,7 +17,7 @@ const SafeLoadError = (): ReactElement => {
     <ErrorContainer>
       <img src="./resources/error.png" alt="Error" />
       <Title size="xs">This Safe couldn&apos;t be loaded</Title>
-      <Button onClick={handleClick} color="primary" size="md" variant="contained">
+      <Button onClick={handleClick} color="primary" size="medium" variant="contained">
         Back to Main Page
       </Button>
     </ErrorContainer>
