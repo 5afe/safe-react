@@ -31,7 +31,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const currentUser = useSelector(userAccountSelector)
   const actionContext = useRef(useContext(TransactionActionStateContext))
   const hoverContext = useRef(useContext(TxHoverContext))
-  const locationContext = useRef(useContext(TxLocationContext))
+  const locationContext = useContext(TxLocationContext)
   const dispatch = useDispatch()
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
   const txStatus = useLocalTxStatus(transaction)
@@ -86,8 +86,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const disabledActions =
     !currentUser ||
     isPending ||
-    (txStatus === LocalTransactionStatus.AWAITING_EXECUTION &&
-      locationContext.current.txLocation === 'queued.queued') ||
+    (txStatus === LocalTransactionStatus.AWAITING_EXECUTION && locationContext.txLocation === 'queued.queued') ||
     (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser))
 
   return {
