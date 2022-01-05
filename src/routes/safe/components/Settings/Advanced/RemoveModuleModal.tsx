@@ -148,7 +148,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <ModalHeader onClose={onClose} title="Remove Guard" />
+              <ModalHeader onClose={onClose} title="Remove Module" />
               <Hairline />
               <Block>
                 <Row className={classes.modalOwner}>
