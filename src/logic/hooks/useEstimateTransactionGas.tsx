@@ -19,32 +19,12 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
+import useCanTxExecute from './useCanTxExecute'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
   SUCCESS = 'SUCCESS',
-}
-
-export const checkIfTxIsExecution = (
-  threshold: number,
-  preApprovingOwner?: string,
-  txConfirmations?: number,
-  txType?: string,
-): boolean => {
-  if (
-    threshold === 1 ||
-    sameString(txType, 'spendingLimit') ||
-    (txConfirmations !== undefined && txConfirmations >= threshold)
-  ) {
-    return true
-  }
-
-  if (preApprovingOwner && txConfirmations) {
-    return txConfirmations + 1 === threshold
-  }
-
-  return false
 }
 
 export const checkIfTxIsApproveAndExecution = (
@@ -133,12 +113,14 @@ export const useEstimateTransactionGas = ({
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
+
+  const isExecution = useCanTxExecute(threshold, preApprovingOwner, txConfirmations?.size, txType)
+
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
         return
       }
-      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
@@ -257,6 +239,7 @@ export const useEstimateTransactionGas = ({
     providerName,
     manualGasPrice,
     manualGasLimit,
+    isExecution,
   ])
 
   return gasEstimation
