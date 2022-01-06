@@ -9,14 +9,14 @@ import { lg, sm } from 'src/theme/variables'
 import { TransactionFees } from '../TransactionsFees'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { extractSafeAddress } from 'src/routes/routes'
-import { useEffect, useState } from 'react'
+import { ComponentProps, useEffect, useState } from 'react'
 
 type CustomReviewInfoTextProps = {
   safeNonce?: string
   testId?: string
 }
 
-type ReviewInfoTextProps = Parameters<typeof TransactionFees>[0] & CustomReviewInfoTextProps
+type ReviewInfoTextProps = ComponentProps<typeof TransactionFees> & CustomReviewInfoTextProps
 
 const ReviewInfoTextWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
