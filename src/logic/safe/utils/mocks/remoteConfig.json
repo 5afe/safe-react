@@ -128,63 +128,6 @@
       ]
     },
     {
-      "transactionService": "https://safe-transaction.optimism.gnosis.io",
-      "chainId": "10",
-      "chainName": "Optimism",
-      "shortName": "oeth",
-      "l2": true,
-      "description": "",
-      "rpcUri": {
-        "authentication": "NO_AUTHENTICATION",
-        "value": "https://mainnet.optimism.io/"
-      },
-      "safeAppsRpcUri": {
-        "authentication": "NO_AUTHENTICATION",
-        "value": "https://mainnet.optimism.io/"
-      },
-      "publicRpcUri": {
-        "authentication": "NO_AUTHENTICATION",
-        "value": "https://mainnet.optimism.io/"
-      },
-      "blockExplorerUriTemplate": {
-        "address": "https://optimistic.etherscan.io/address/{{address}}",
-        "txHash": "https://optimistic.etherscan.io/tx/{{txHash}}",
-        "api": "https://api-optimistic.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
-      },
-      "nativeCurrency": {
-        "name": "Ether",
-        "symbol": "OETH",
-        "decimals": 18,
-        "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/chains/10/currency_logo.png"
-      },
-      "theme": {
-        "textColor": "#ffffff",
-        "backgroundColor": "#EB3431"
-      },
-      "gasPrice": [],
-      "disabledWallets": [
-        "authereum",
-        "coinbase",
-        "fortmatic",
-        "keystone",
-        "lattice",
-        "ledger",
-        "opera",
-        "operaTouch",
-        "portis",
-        "torus",
-        "trezor",
-        "trust",
-        "walletLink"
-      ],
-      "features": [
-        "CONTRACT_INTERACTION",
-        "ERC721",
-        "SAFE_APPS",
-        "SAFE_TX_GAS_OPTIONAL"
-      ]
-    },
-    {
       "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
       "chainId": "4",
       "chainName": "Rinkeby",

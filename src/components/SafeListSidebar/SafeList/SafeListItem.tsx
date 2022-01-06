@@ -31,6 +31,10 @@ const StyledButton = styled(Button)`
     padding: 8px 16px;
     min-width: auto;
     height: 100%;
+
+    &:hover {
+      background-color: #cbf1eb;
+    }
   }
 `
 
