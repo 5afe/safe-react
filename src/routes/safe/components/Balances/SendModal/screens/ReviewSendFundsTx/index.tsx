@@ -39,6 +39,8 @@ import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 import { getNativeCurrencyAddress } from 'src/config/utils'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const useStyles = makeStyles(styles)
 
@@ -108,7 +110,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     gasLimit,
     gasEstimation,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -121,10 +122,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     manualGasLimit,
   })
 
+  const { threshold = 1 } = useSelector(currentSafe)
+  const canExecute = useCanTxExecute(threshold, tx.txType)
+
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
-  const doExecute = isExecution && executionApproved
+  const doExecute = canExecute && executionApproved
 
   const submitTx = async (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
@@ -251,7 +255,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               </Paragraph>
             </Row>
 
-            {isExecution && !isSpendingLimit && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canExecute && !isSpendingLimit && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
