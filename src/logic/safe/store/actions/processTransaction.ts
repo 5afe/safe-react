@@ -24,7 +24,6 @@ import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTran
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGasParam } from '../../transactions/gas'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
@@ -83,9 +82,6 @@ export const processTransaction = ({
     // Notifications
     const notifications = createTxNotifications(notifiedTransaction, tx.origin, dispatch)
 
-    // Transaction hash to retrieve error
-    let txHash: string
-
     // Get the recommended nonce
     const nonce = await getNonce(safeAddress, safeVersion)
 
@@ -136,11 +132,6 @@ export const processTransaction = ({
       if (isExecution && tx.safeTxHash) {
         dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
       }
-
-      const executeData = safeInstance.methods.approveHash(txHash || '').encodeABI()
-      const contractErrorMessage = await fetchOnchainError(executeData, safeInstance, from)
-
-      notifications.showOnError(err, contractErrorMessage)
     }
 
     const onlyConfirm = async (): Promise<string | undefined> => {
@@ -191,7 +182,7 @@ export const processTransaction = ({
 
     // On-chain signature or execution
     try {
-      txHash = await sendTx()
+      await sendTx()
       onComplete()
     } catch (err) {
       onError(err)
