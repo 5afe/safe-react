@@ -21,8 +21,9 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
-import { useTransactionActions } from './hooks/useTransactionActions'
 import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import { useSelector } from 'react-redux'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -89,7 +90,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const txStatus = useLocalTxStatus(transaction)
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
-  const { canExecute, canCancel } = useTransactionActions(transaction)
+  const currentUser = useSelector(userAccountSelector)
 
   if (loading) {
     return (
@@ -130,7 +131,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       >
         <TxOwners txDetails={data} isPending={isPending} />
       </div>
-      {!isPending && !data.executedAt && txLocation !== 'history' && (canExecute || canCancel) && (
+      {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
           <TxExpandedActions transaction={transaction} />
         </div>
