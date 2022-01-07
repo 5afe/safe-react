@@ -1,24 +1,25 @@
-import { Dispatch, ReactElement, SetStateAction } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Title } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import Button from 'src/components/layout/Button'
-import { WELCOME_ROUTE } from 'src/routes/routes'
+import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
 import { useDispatch } from 'react-redux'
-import { clearCurrentSession } from 'src/logic/currentSession/store/actions/clearCurrentSession'
+import removeViewedSafe from 'src/logic/currentSession/store/actions/removeViewedSafe'
 
-type Props = {
-  setHasLoadFailed: Dispatch<SetStateAction<boolean>>
-}
-
-const SafeLoadError = ({ setHasLoadFailed }: Props): ReactElement => {
+const SafeLoadError = (): ReactElement => {
   const dispatch = useDispatch()
   const history = useHistory()
 
+  useEffect(() => {
+    // Remove the errorneous Safe from the list of viewed safes on unmount
+    return () => {
+      dispatch(removeViewedSafe(extractSafeAddress()))
+    }
+  }, [dispatch])
+
   const handleClick = () => {
-    setHasLoadFailed(false)
-    dispatch(clearCurrentSession())
     history.push(WELCOME_ROUTE)
   }
 
