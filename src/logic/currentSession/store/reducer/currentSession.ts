@@ -40,6 +40,7 @@ const currentSessionReducer = handleActions<CurrentSessionState, CurrentSessionP
       return newState
     },
     [CLEAR_CURRENT_SESSION]: () => {
+      saveCurrentSessionToStorage(initialState)
       return initialState
     },
   },

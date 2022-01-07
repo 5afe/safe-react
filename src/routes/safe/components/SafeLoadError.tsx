@@ -1,15 +1,24 @@
-import { ReactElement } from 'react'
+import { Dispatch, ReactElement, SetStateAction } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Title } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import Button from 'src/components/layout/Button'
 import { WELCOME_ROUTE } from 'src/routes/routes'
+import { useDispatch } from 'react-redux'
+import { clearCurrentSession } from 'src/logic/currentSession/store/actions/clearCurrentSession'
 
-const SafeLoadError = (): ReactElement => {
+type Props = {
+  setHasLoadFailed: Dispatch<SetStateAction<boolean>>
+}
+
+const SafeLoadError = ({ setHasLoadFailed }: Props): ReactElement => {
+  const dispatch = useDispatch()
   const history = useHistory()
 
   const handleClick = () => {
+    setHasLoadFailed(false)
+    dispatch(clearCurrentSession())
     history.push(WELCOME_ROUTE)
   }
 
