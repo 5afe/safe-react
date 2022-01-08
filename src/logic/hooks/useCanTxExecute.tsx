@@ -5,14 +5,12 @@ import { currentSafe } from '../safe/store/selectors'
 import { nextTransactions } from '../safe/store/selectors/gatewayTransactions'
 import useGetRecommendedNonce from './useGetRecommendedNonce'
 
-type UseCanTxExecuteType = (preApprovingOwner?: string, txConfirmations?: number) => boolean
-
 export const calculateCanTxExecute = (
   currentSafeNonce: number,
   hasQueueNextTx = false,
-  preApprovingOwner = '',
+  preApprovingOwner: string,
   threshold: number,
-  txConfirmations = 0,
+  txConfirmations: number,
   recommendedNonce?: number,
 ): boolean => {
   // Do not display "Execute checkbox" if there's a tx in the next queue
@@ -22,7 +20,7 @@ export const calculateCanTxExecute = (
   // Single owner
   if (threshold === 1) {
     // transaction is the next nonce
-    return isNextTx ? true : false
+    return isNextTx
   }
 
   if (txConfirmations >= threshold) {
@@ -37,12 +35,14 @@ export const calculateCanTxExecute = (
   return false
 }
 
+type UseCanTxExecuteType = (preApprovingOwner?: string, txConfirmations?: number) => boolean
+
 // Review default values
 const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirmations = 0) => {
   const [canTxExecute, setCanTxExecute] = useState(false)
   const nextQueuedTx = useSelector(nextTransactions)
   const hasQueueNextTx = nextQueuedTx && Object.keys(nextQueuedTx).length > 0
-  const { threshold = 1 } = useSelector(currentSafe)
+  const { threshold } = useSelector(currentSafe)
 
   const safeAddress = extractSafeAddress()
   const recommendedNonce = useGetRecommendedNonce(safeAddress) // to be changed. should be txNonce
