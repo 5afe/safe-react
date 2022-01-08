@@ -25,6 +25,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -55,7 +56,6 @@ export const ChangeThresholdModal = ({
     gasCostFormatted,
     txEstimationExecutionStatus,
     isCreation,
-    isExecution,
     isOffChainSignature,
     gasLimit,
     gasPriceFormatted,
@@ -67,6 +67,7 @@ export const ChangeThresholdModal = ({
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

@@ -24,6 +24,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 interface RemoveGuardModalProps {
   onClose: () => void
@@ -44,7 +45,6 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
     gasLimit,
@@ -58,6 +58,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

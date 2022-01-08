@@ -25,6 +25,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { logError } from 'src/logic/exceptions/CodedException'
 import ErrorCodes from 'src/logic/exceptions/registry'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -63,7 +64,6 @@ export const ReviewRemoveOwnerModal = ({
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -73,6 +73,7 @@ export const ReviewRemoveOwnerModal = ({
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

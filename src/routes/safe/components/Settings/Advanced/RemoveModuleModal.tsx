@@ -25,6 +25,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -46,7 +47,6 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
     gasLimit,
@@ -60,7 +60,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     manualGasPrice,
     manualGasLimit,
   })
-
+  const isExecution = useCanTxExecute()
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {

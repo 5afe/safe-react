@@ -25,6 +25,7 @@ import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const Container = styled.div`
   max-width: 480px;
@@ -94,7 +95,6 @@ export const ReviewMessage = ({
     gasEstimation,
     isOffChainSignature,
     isCreation,
-    isExecution,
     gasCostFormatted,
     txEstimationExecutionStatus,
   } = useEstimateTransactionGas({
@@ -106,6 +106,7 @@ export const ReviewMessage = ({
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

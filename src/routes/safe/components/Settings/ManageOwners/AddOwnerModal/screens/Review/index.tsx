@@ -24,6 +24,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -56,7 +57,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     gasCostFormatted,
     gasPriceFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
   } = useEstimateTransactionGas({
@@ -66,6 +66,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

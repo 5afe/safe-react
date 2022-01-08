@@ -68,7 +68,6 @@ export type TransactionGasEstimationResult = {
   gasPrice: string // Current price of gas unit
   gasPriceFormatted: string // Current gas price formatted
   gasLimit: string // Minimum gas requited to execute the Tx
-  isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
   isOffChainSignature: boolean // Returns true if offChainSignature is available
 }
@@ -77,7 +76,6 @@ const getDefaultGasEstimation = (
   txEstimationExecutionStatus: EstimationStatus,
   gasPrice: string,
   gasPriceFormatted: string,
-  isExecution = false,
   isCreation = false,
   isOffChainSignature = false,
 ): TransactionGasEstimationResult => {
@@ -89,7 +87,6 @@ const getDefaultGasEstimation = (
     gasPrice,
     gasPriceFormatted,
     gasLimit: '0',
-    isExecution,
     isCreation,
     isOffChainSignature,
   }
@@ -125,9 +122,7 @@ export const useEstimateTransactionGas = ({
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
       if (isOffChainSignature && !isCreation) {
-        setGasEstimation(
-          getDefaultGasEstimation(EstimationStatus.SUCCESS, '1', '1', isExecution, isCreation, isOffChainSignature),
-        )
+        setGasEstimation(getDefaultGasEstimation(EstimationStatus.SUCCESS, '1', '1', isCreation, isOffChainSignature))
         return
       }
       const approvalAndExecution = checkIfTxIsApproveAndExecution(
@@ -209,7 +204,6 @@ export const useEstimateTransactionGas = ({
           gasPrice,
           gasPriceFormatted,
           gasLimit,
-          isExecution,
           isCreation,
           isOffChainSignature,
         })

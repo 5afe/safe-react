@@ -36,6 +36,7 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 import { ActionCallback, CREATE } from '.'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -172,7 +173,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
     gasPrice,
@@ -187,6 +187,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

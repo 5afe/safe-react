@@ -23,6 +23,7 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
 import { extractSafeAddress } from 'src/routes/routes'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -54,7 +55,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
     gasLimit,
@@ -68,6 +68,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     manualGasPrice,
     manualGasLimit,
   })
+  const isExecution = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
