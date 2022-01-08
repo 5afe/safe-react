@@ -28,6 +28,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -57,7 +58,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -66,7 +66,8 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCurrency.decimals) : '0',
   })
 
-  const doExecute = isExecution && executionApproved
+  const canTxExecute = useCanTxExecute()
+  const doExecute = canTxExecute && executionApproved
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const submitTx = (txParameters: TxParameters) => {
@@ -151,7 +152,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               </Col>
             </Row>
 
-            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail

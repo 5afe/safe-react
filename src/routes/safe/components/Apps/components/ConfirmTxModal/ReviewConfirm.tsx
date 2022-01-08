@@ -31,6 +31,7 @@ import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const Container = styled.div`
   max-width: 480px;
@@ -109,7 +110,6 @@ export const ReviewConfirm = ({
     gasEstimation,
     isOffChainSignature,
     isCreation,
-    isExecution,
     gasCostFormatted,
     txEstimationExecutionStatus,
   } = useEstimateTransactionGas({
@@ -124,7 +124,8 @@ export const ReviewConfirm = ({
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
-  const doExecute = isExecution && executionApproved
+  const canTxExecute = useCanTxExecute()
+  const doExecute = canTxExecute && executionApproved
 
   // Decode tx data.
   useEffect(() => {
@@ -225,7 +226,7 @@ export const ReviewConfirm = ({
 
             {!isMultiSend && <Divider />}
 
-            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail

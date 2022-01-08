@@ -32,6 +32,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const useStyles = makeStyles(styles)
 
@@ -75,7 +76,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
   } = useEstimateTransactionGas({
@@ -87,7 +87,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     manualGasLimit,
   })
 
-  const doExecute = isExecution && executionApproved
+  const canTxExecute = useCanTxExecute()
+  const doExecute = canTxExecute && executionApproved
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
@@ -226,7 +227,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Col>
             </Row>
 
-            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail

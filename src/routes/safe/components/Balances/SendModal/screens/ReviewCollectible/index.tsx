@@ -30,6 +30,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const useStyles = makeStyles(styles)
 
@@ -69,7 +70,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
   } = useEstimateTransactionGas({
@@ -79,8 +79,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     manualGasPrice,
     manualGasLimit,
   })
-
-  const doExecute = isExecution && executionApproved
+  const canTxExecute = useCanTxExecute()
+  const doExecute = canTxExecute && executionApproved
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
@@ -194,7 +194,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               </Row>
             )}
 
-            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail
