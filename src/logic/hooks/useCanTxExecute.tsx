@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { extractSafeAddress } from 'src/routes/routes'
-import { sameString } from 'src/utils/strings'
 import { currentSafe } from '../safe/store/selectors'
 import { nextTransactions } from '../safe/store/selectors/gatewayTransactions'
 import useGetRecommendedNonce from './useGetRecommendedNonce'
 
-type UseCanTxExecuteType = (
-  threshold: number,
-  preApprovingOwner?: string,
-  txConfirmations?: number,
-  txType?: string,
-) => boolean
+type UseCanTxExecuteType = (preApprovingOwner?: string, txConfirmations?: number) => boolean
 
 export const calculateCanTxExecute = (
   currentSafeNonce: number,
@@ -19,16 +13,19 @@ export const calculateCanTxExecute = (
   preApprovingOwner = '',
   threshold: number,
   txConfirmations = 0,
-  txType = '',
   recommendedNonce?: number,
 ): boolean => {
   // Do not display "Execute checkbox" if there's a tx in the next queue
   if (hasQueueNextTx) return false
 
-  // Single owner Safe AND transaction is the next nonce
-  const isSingleOwnerNextTx = threshold === 1 && recommendedNonce === currentSafeNonce
+  const isNextTx = recommendedNonce === currentSafeNonce
+  // Single owner
+  if (threshold === 1) {
+    // transaction is the next nonce
+    return isNextTx ? true : false
+  }
 
-  if (isSingleOwnerNextTx || sameString(txType, 'spendingLimit') || txConfirmations >= threshold) {
+  if (txConfirmations >= threshold) {
     return true
   }
 
@@ -41,10 +38,11 @@ export const calculateCanTxExecute = (
 }
 
 // Review default values
-const useCanTxExecute: UseCanTxExecuteType = (threshold, preApprovingOwner = '', txConfirmations = 0, txType) => {
+const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirmations = 0) => {
   const [canTxExecute, setCanTxExecute] = useState(false)
   const nextQueuedTx = useSelector(nextTransactions)
   const hasQueueNextTx = nextQueuedTx && Object.keys(nextQueuedTx).length > 0
+  const { threshold = 1 } = useSelector(currentSafe)
 
   const safeAddress = extractSafeAddress()
   const recommendedNonce = useGetRecommendedNonce(safeAddress) // to be changed. should be txNonce
@@ -57,11 +55,10 @@ const useCanTxExecute: UseCanTxExecuteType = (threshold, preApprovingOwner = '',
       preApprovingOwner,
       threshold,
       txConfirmations,
-      txType,
       recommendedNonce,
     )
     setCanTxExecute(result)
-  }, [currentSafeNonce, hasQueueNextTx, preApprovingOwner, recommendedNonce, threshold, txConfirmations, txType])
+  }, [currentSafeNonce, hasQueueNextTx, preApprovingOwner, recommendedNonce, threshold, txConfirmations])
 
   return canTxExecute
 }

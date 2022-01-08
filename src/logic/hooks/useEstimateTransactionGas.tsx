@@ -114,7 +114,7 @@ export const useEstimateTransactionGas = ({
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
-  const isExecution = useCanTxExecute(threshold, preApprovingOwner, txConfirmations?.size, txType)
+  const isExecution = useCanTxExecute(preApprovingOwner, txConfirmations?.size)
 
   useEffect(() => {
     const estimateGas = async () => {

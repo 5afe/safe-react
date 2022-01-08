@@ -3,7 +3,6 @@ import { calculateCanTxExecute } from '../useCanTxExecute'
 describe('useCanTxExecute tests', () => {
   describe('calculateCanTxExecute test', () => {
     beforeEach(() => {
-      txType = ''
       hasQueueNextTx = false
       currentSafeNonce = 8
       recommendedNonce = 8
@@ -27,7 +26,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -48,7 +46,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -69,7 +66,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -90,7 +86,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -102,15 +97,6 @@ describe('useCanTxExecute tests', () => {
       threshold = 3
       txConfirmations = 3
 
-      console.log(
-        currentSafeNonce,
-        hasQueueNextTx,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        txType,
-        recommendedNonce,
-      )
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
@@ -118,14 +104,13 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
       // then
       expect(result).toBe(true)
     })
-    it(`should return true if the transaction is spendingLimit`, () => {
+    it.skip(`should return true if the transaction is spendingLimit`, () => {
       // given
       txType = 'spendingLimit'
 
@@ -136,7 +121,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -157,7 +141,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -176,7 +159,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
@@ -196,7 +178,6 @@ describe('useCanTxExecute tests', () => {
         preApprovingOwner,
         threshold,
         txConfirmations,
-        txType,
         recommendedNonce,
       )
 
