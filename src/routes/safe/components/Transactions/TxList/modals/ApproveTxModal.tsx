@@ -37,7 +37,6 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
-import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -261,8 +260,7 @@ export const ApproveTxModal = ({
     manualGasPrice,
     manualGasLimit,
   })
-  const isExecution = useCanTxExecute()
-  const doExecute = isExecution && approveAndExecute
+  const doExecute = canExecute && approveAndExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const approveTx = (txParameters: TxParameters) => {
