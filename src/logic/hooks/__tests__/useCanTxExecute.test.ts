@@ -3,46 +3,47 @@ import { calculateCanTxExecute } from '../useCanTxExecute'
 describe('useCanTxExecute tests', () => {
   describe('calculateCanTxExecute test', () => {
     beforeEach(() => {
-      hasQueueNextTx = false
+      threshold = 1
+      isExecution = false
       currentSafeNonce = 8
       recommendedNonce = 8
+      txConfirmations = 0
+      preApprovingOwner = ''
     })
     // to be overriden as necessary
     let threshold
     let preApprovingOwner
     let txConfirmations
-    let txType
     let currentSafeNonce
     let recommendedNonce
     let hasQueueNextTx
-    it(`should return false there are queued txs`, () => {
+    let isExecution
+    it(`should return true if isExecution`, () => {
       // given
-      hasQueueNextTx = true
+      isExecution = true
 
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
-        hasQueueNextTx,
         preApprovingOwner,
         threshold,
         txConfirmations,
         recommendedNonce,
+        isExecution,
       )
 
       // then
-      expect(result).toBe(false)
+      expect(result).toBe(true)
     })
-    it(`should return true if the safe threshold is 1 and no queued txs`, () => {
+    it(`should return true if single owner and recommendedNonce is same as safeNonce`, () => {
       // given
       threshold = 1
       currentSafeNonce = 8
       recommendedNonce = 8
-      hasQueueNextTx = false
 
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
-        hasQueueNextTx,
         preApprovingOwner,
         threshold,
         txConfirmations,
@@ -52,37 +53,15 @@ describe('useCanTxExecute tests', () => {
       // then
       expect(result).toBe(true)
     })
-    it(`should return false if the safe threshold is 1 and there are queued txs`, () => {
+    it(`should return false if single owner and recommendedNonce is different than safeNonce`, () => {
       // given
       threshold = 1
       currentSafeNonce = 8
-      recommendedNonce = 8
-      hasQueueNextTx = true
+      recommendedNonce = 12
 
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
-        hasQueueNextTx,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
-
-      // then
-      expect(result).toBe(false)
-    })
-
-    it(`should return false if the safe threshold is 1, there are no queued txs but recommendedNonce does not match safeNonce`, () => {
-      // given
-      threshold = 1
-      currentSafeNonce = 8
-      recommendedNonce = 10
-
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        hasQueueNextTx,
         preApprovingOwner,
         threshold,
         txConfirmations,
@@ -100,7 +79,6 @@ describe('useCanTxExecute tests', () => {
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
-        hasQueueNextTx,
         preApprovingOwner,
         threshold,
         txConfirmations,
@@ -109,43 +87,6 @@ describe('useCanTxExecute tests', () => {
 
       // then
       expect(result).toBe(true)
-    })
-    it.skip(`should return true if the transaction is spendingLimit`, () => {
-      // given
-      txType = 'spendingLimit'
-
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        hasQueueNextTx,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
-
-      // then
-      expect(result).toBe(true)
-    })
-    it.skip(`should return false if the number of confirmations meets the threshold but txNonce > safeNonce`, () => {
-      // given
-      threshold = 5
-      txConfirmations = 5
-      currentSafeNonce = 8
-      recommendedNonce = 10
-
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        hasQueueNextTx,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
-
-      // then
-      expect(result).toBe(false)
     })
     it(`should return false if the number of confirmations does not meet the threshold and there is no preApprovingOwner`, () => {
       // given
@@ -155,7 +96,6 @@ describe('useCanTxExecute tests', () => {
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
-        hasQueueNextTx,
         preApprovingOwner,
         threshold,
         txConfirmations,
@@ -174,7 +114,6 @@ describe('useCanTxExecute tests', () => {
       // when
       const result = calculateCanTxExecute(
         currentSafeNonce,
-        hasQueueNextTx,
         preApprovingOwner,
         threshold,
         txConfirmations,
