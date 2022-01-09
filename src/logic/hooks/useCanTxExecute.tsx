@@ -10,7 +10,10 @@ export const calculateCanTxExecute = (
   threshold: number,
   txConfirmations: number,
   recommendedNonce?: number,
+  isExecution?: boolean, // when executing from the TxList
 ): boolean => {
+  if (isExecution) return true
+
   const isNextTx = recommendedNonce === currentSafeNonce
   // Single owner
   if (threshold === 1) {
@@ -30,10 +33,10 @@ export const calculateCanTxExecute = (
   return false
 }
 
-type UseCanTxExecuteType = (preApprovingOwner?: string, txConfirmations?: number) => boolean
+type UseCanTxExecuteType = (isExecution?: boolean, preApprovingOwner?: string, txConfirmations?: number) => boolean
 
 // Review default values
-const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirmations = 0) => {
+const useCanTxExecute: UseCanTxExecuteType = (isExecution = false, preApprovingOwner = '', txConfirmations = 0) => {
   const [canTxExecute, setCanTxExecute] = useState(false)
   const { threshold } = useSelector(currentSafe)
 
@@ -48,6 +51,7 @@ const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirma
       threshold,
       txConfirmations,
       recommendedNonce,
+      isExecution,
     )
     setCanTxExecute(result)
   }, [currentSafeNonce, preApprovingOwner, recommendedNonce, threshold, txConfirmations])

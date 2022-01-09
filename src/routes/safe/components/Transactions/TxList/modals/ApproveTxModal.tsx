@@ -198,7 +198,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
 
 type Props = {
   onClose: () => void
-  canExecute?: boolean
+  isExecution?: boolean
   isCancelTx?: boolean
   isOpen: boolean
   transaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
@@ -207,7 +207,7 @@ type Props = {
 
 export const ApproveTxModal = ({
   onClose,
-  canExecute = false,
+  isExecution = false,
   isCancelTx = false,
   isOpen,
   transaction,
@@ -216,7 +216,7 @@ export const ApproveTxModal = ({
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
-  const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
+  const [approveAndExecute, setApproveAndExecute] = useState(isExecution)
   const executionInfo = transaction.executionInfo as MultisigExecutionInfo
   const thresholdReached = !!(transaction.executionInfo && isThresholdReached(executionInfo))
   const _threshold = executionInfo?.confirmationsRequired ?? 0
@@ -259,8 +259,9 @@ export const ApproveTxModal = ({
     operation,
     manualGasPrice,
     manualGasLimit,
+    isExecution,
   })
-  const doExecute = canExecute && approveAndExecute
+  const doExecute = isExecution && approveAndExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const approveTx = (txParameters: TxParameters) => {
@@ -288,7 +289,7 @@ export const ApproveTxModal = ({
           },
           userAddress,
           notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
-          approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
+          approveAndExecute: isExecution && approveAndExecute && isTheTxReadyToBeExecuted,
           ethParameters: txParameters,
           thresholdReached,
         }),
@@ -298,7 +299,7 @@ export const ApproveTxModal = ({
   }
 
   const getParametersStatus = () => {
-    if (canExecute || approveAndExecute) {
+    if (isExecution || approveAndExecute) {
       return 'SAFE_DISABLED'
     }
 
@@ -347,7 +348,7 @@ export const ApproveTxModal = ({
                     <Bold className={classes.nonceNumber}>{nonce}</Bold>
                   </Paragraph>
 
-                  {oneConfirmationLeft && canExecute && !isCancelTx && (
+                  {oneConfirmationLeft && isExecution && !isCancelTx && (
                     <ExecuteCheckbox onChange={setApproveAndExecute} />
                   )}
 

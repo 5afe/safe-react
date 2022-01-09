@@ -58,6 +58,7 @@ type UseEstimateTransactionGasProps = {
   txType?: string
   manualGasPrice?: string
   manualGasLimit?: string
+  isExecution?: boolean
 }
 
 export type TransactionGasEstimationResult = {
@@ -103,6 +104,7 @@ export const useEstimateTransactionGas = ({
   txType,
   manualGasPrice,
   manualGasLimit,
+  isExecution,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
@@ -111,14 +113,14 @@ export const useEstimateTransactionGas = ({
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
-  const isExecution = useCanTxExecute(preApprovingOwner, txConfirmations?.size)
+  const canExecute = useCanTxExecute(isExecution, preApprovingOwner, txConfirmations?.size)
 
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
         return
       }
-      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
+      const isOffChainSignature = checkIfOffChainSignatureIsPossible(canExecute, smartContractWallet, safeVersion)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
       if (isOffChainSignature && !isCreation) {
@@ -151,7 +153,7 @@ export const useEstimateTransactionGas = ({
           )
         }
 
-        if (isExecution || approvalAndExecution) {
+        if (canExecute || approvalAndExecution) {
           ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
             safeVersion,
@@ -159,7 +161,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txAmount: txAmount || '0',
             txConfirmations,
-            isExecution,
+            isExecution: canExecute,
             isOffChainSignature,
             operation: operation || Operation.CALL,
             from,
@@ -175,7 +177,7 @@ export const useEstimateTransactionGas = ({
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
-        if (isExecution) {
+        if (canExecute) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,
             safeVersion,
@@ -233,7 +235,7 @@ export const useEstimateTransactionGas = ({
     providerName,
     manualGasPrice,
     manualGasLimit,
-    isExecution,
+    canExecute,
   ])
 
   return gasEstimation
