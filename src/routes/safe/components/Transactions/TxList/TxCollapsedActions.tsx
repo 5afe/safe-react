@@ -36,7 +36,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   const txStatus = useLocalTxStatus(transaction)
 
   const getTitle = () => {
-    if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION) {
+    if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -57,7 +57,11 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
             onMouseLeave={handleOnMouseLeave}
           >
             <Icon
-              type={txStatus === LocalTransactionStatus.AWAITING_EXECUTION ? 'rocket' : 'check'}
+              type={
+                txStatus === LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED
+                  ? 'rocket'
+                  : 'check'
+              }
               color="primary"
               size="sm"
             />
