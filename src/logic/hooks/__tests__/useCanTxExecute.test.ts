@@ -1,7 +1,7 @@
 import { calculateCanTxExecute } from '../useCanTxExecute'
 
 describe('useCanTxExecute tests', () => {
-  describe('calculateCanTxExecute test', () => {
+  describe('calculateCanTxExecute tests', () => {
     beforeEach(() => {
       threshold = 1
       isExecution = false

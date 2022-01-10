@@ -14,11 +14,10 @@ export const calculateCanTxExecute = (
 ): boolean => {
   if (isExecution) return true
 
-  const isNextTx = recommendedNonce === currentSafeNonce
   // Single owner
   if (threshold === 1) {
-    // transaction is the next nonce
-    return isNextTx
+    // is next tx
+    return recommendedNonce === currentSafeNonce
   }
 
   if (txConfirmations >= threshold) {

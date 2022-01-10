@@ -58,7 +58,7 @@ type UseEstimateTransactionGasProps = {
   txType?: string
   manualGasPrice?: string
   manualGasLimit?: string
-  isExecution?: boolean
+  isExecution?: boolean // If called from the TransactionList "next transaction"
 }
 
 export type TransactionGasEstimationResult = {
