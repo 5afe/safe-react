@@ -87,23 +87,16 @@ export const processTransaction = ({
 
     // Execute right away?
     const isExecution =
-      approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, getLastTransaction(state)))
+      approveAndExecute && (await shouldExecuteTransaction(safeInstance, nonce, getLastTransaction(state)))
 
     const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
 
     const txArgs = {
       ...tx, // Merge previous tx with new data
       safeInstance,
-      to: tx.to,
       valueInWei: tx.value,
       data: tx.data ?? EMPTY_DATA,
-      operation: tx.operation,
-      nonce: tx.nonce,
-      safeTxGas: tx.safeTxGas,
-      baseGas: tx.baseGas,
       gasPrice: tx.gasPrice || '0',
-      gasToken: tx.gasToken,
-      refundReceiver: tx.refundReceiver,
       sender: from,
       sigs:
         generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner) || getPreValidatedSignatures(from),
