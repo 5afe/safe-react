@@ -11,11 +11,14 @@ export const calculateCanTxExecute = (
   txConfirmations: number,
   recommendedNonce?: number,
   isExecution?: boolean, // when executing from the TxList
+  manualSafeNonce?: number,
 ): boolean => {
   if (isExecution) return true
 
   // Single owner
   if (threshold === 1) {
+    // nonce was changed manually to be executed
+    if (manualSafeNonce === currentSafeNonce) return true
     // is next tx
     return recommendedNonce === currentSafeNonce
   }
@@ -32,10 +35,20 @@ export const calculateCanTxExecute = (
   return false
 }
 
-type UseCanTxExecuteType = (isExecution?: boolean, preApprovingOwner?: string, txConfirmations?: number) => boolean
+type UseCanTxExecuteType = (
+  isExecution?: boolean,
+  manualSafeNonce?: number,
+  preApprovingOwner?: string,
+  txConfirmations?: number,
+) => boolean
 
 // Review default values
-const useCanTxExecute: UseCanTxExecuteType = (isExecution = false, preApprovingOwner = '', txConfirmations = 0) => {
+const useCanTxExecute: UseCanTxExecuteType = (
+  isExecution = false,
+  manualSafeNonce,
+  preApprovingOwner = '',
+  txConfirmations = 0,
+) => {
   const [canTxExecute, setCanTxExecute] = useState(false)
   const { threshold } = useSelector(currentSafe)
 
@@ -51,9 +64,10 @@ const useCanTxExecute: UseCanTxExecuteType = (isExecution = false, preApprovingO
       txConfirmations,
       recommendedNonce,
       isExecution,
+      manualSafeNonce,
     )
     setCanTxExecute(result)
-  }, [currentSafeNonce, preApprovingOwner, recommendedNonce, threshold, txConfirmations, isExecution])
+  }, [currentSafeNonce, preApprovingOwner, recommendedNonce, threshold, txConfirmations, isExecution, manualSafeNonce])
 
   return canTxExecute
 }

@@ -25,6 +25,8 @@ import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { sameString } from 'src/utils/strings'
+import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 interface RemoveGuardModalProps {
   onClose: () => void
@@ -39,6 +41,8 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
 
   const txData = useMemo(() => getRemoveGuardTxData(safeAddress, safeVersion), [safeAddress, safeVersion])
 
@@ -57,8 +61,9 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
-  const isExecution = useCanTxExecute()
+  const isExecution = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -86,6 +91,8 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const oldSafeNonce = recommendedSafeNonce?.toString()
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -97,6 +104,11 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
+    }
+
+    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
     }
   }
 

@@ -25,6 +25,8 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
+import { sameString } from 'src/utils/strings'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -59,6 +61,8 @@ export const ReviewReplaceOwnerModal = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
 
   const {
     gasLimit,
@@ -74,8 +78,9 @@ export const ReviewReplaceOwnerModal = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
-  const isExecution = useCanTxExecute()
+  const isExecution = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -110,6 +115,8 @@ export const ReviewReplaceOwnerModal = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const oldSafeNonce = recommendedSafeNonce?.toString()
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -121,6 +128,11 @@ export const ReviewReplaceOwnerModal = ({
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
+    }
+
+    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
     }
   }
 

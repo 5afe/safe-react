@@ -40,6 +40,7 @@ import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 const useStyles = makeStyles(styles)
 
@@ -102,6 +103,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
 
   const {
     gasCostFormatted,
@@ -119,11 +122,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
-  const canTxExecute = useCanTxExecute()
+
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
   const doExecute = canTxExecute && executionApproved
 
   const submitTx = async (txParameters: TxParameters) => {
@@ -180,6 +185,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const oldSafeNonce = recommendedSafeNonce?.toString()
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -191,6 +198,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
+    }
+
+    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
     }
   }
 
