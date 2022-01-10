@@ -121,7 +121,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
 
         if (!label) {
           const oldNext = state[chainId]?.[safeAddress]?.queued?.next
-          label = oldNext[txNonce] ? 'next' : 'queued'
+          label = oldNext?.[txNonce] ? 'next' : 'queued'
         }
 
         const newTx = value.transaction
