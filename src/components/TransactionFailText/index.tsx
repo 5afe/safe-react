@@ -41,25 +41,25 @@ export const TransactionFailText = ({
     return null
   }
 
-  let errorMessage = 'To save gas costs, avoid creating the transaction.'
+  let errorDesc = 'To save gas costs, avoid creating the transaction.'
   if (isExecution) {
-    errorMessage =
+    errorDesc =
       threshold && threshold > 1
         ? `To save gas costs, reject this transaction`
         : `To save gas costs, avoid executing the transaction.`
   }
 
+  const error = isGranted
+    ? `This transaction will most likely fail. ${errorDesc}`
+    : isWrongChain
+    ? 'Your wallet is connected to the wrong chain.'
+    : 'You are currently not an owner of this Safe and won&apos;t be able to submit this transaction.'
+
   return (
     <Row align="center">
       <Paragraph color="error" className={classes.executionWarningRow}>
         <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-        {isGranted ? (
-          <>This transaction will most likely fail. {errorMessage}</>
-        ) : isWrongChain ? (
-          <>Your wallet is connected to the wrong chain.</>
-        ) : (
-          <>You are currently not an owner of this Safe and won&apos;t be able to submit this tx.</>
-        )}
+        {error}
       </Paragraph>
     </Row>
   )
