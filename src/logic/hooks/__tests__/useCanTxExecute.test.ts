@@ -9,6 +9,7 @@ describe('useCanTxExecute tests', () => {
       recommendedNonce = 8
       txConfirmations = 0
       preApprovingOwner = ''
+      manualSafeNonce = recommendedNonce
     })
     // to be overriden as necessary
     let threshold
@@ -16,8 +17,8 @@ describe('useCanTxExecute tests', () => {
     let txConfirmations
     let currentSafeNonce
     let recommendedNonce
-    let hasQueueNextTx
     let isExecution
+    let manualSafeNonce
     it(`should return true if isExecution`, () => {
       // given
       isExecution = true
@@ -34,6 +35,48 @@ describe('useCanTxExecute tests', () => {
 
       // then
       expect(result).toBe(true)
+    })
+    it(`should return true if single owner and edited nonce is same as safeNonce`, () => {
+      // given
+      threshold = 1
+      currentSafeNonce = 8
+      recommendedNonce = 12
+      manualSafeNonce = 8
+
+      // when
+      const result = calculateCanTxExecute(
+        currentSafeNonce,
+        preApprovingOwner,
+        threshold,
+        txConfirmations,
+        recommendedNonce,
+        undefined,
+        manualSafeNonce,
+      )
+
+      // then
+      expect(result).toBe(true)
+    })
+    it(`should return false if single owner and edited nonce is different than safeNonce`, () => {
+      // given
+      threshold = 1
+      currentSafeNonce = 8
+      recommendedNonce = 8
+      manualSafeNonce = 20
+
+      // when
+      const result = calculateCanTxExecute(
+        currentSafeNonce,
+        preApprovingOwner,
+        threshold,
+        txConfirmations,
+        recommendedNonce,
+        undefined,
+        manualSafeNonce,
+      )
+
+      // then
+      expect(result).toBe(false)
     })
     it(`should return true if single owner and recommendedNonce is same as safeNonce`, () => {
       // given
@@ -52,6 +95,27 @@ describe('useCanTxExecute tests', () => {
 
       // then
       expect(result).toBe(true)
+    })
+    it(`should return false if single owner and recommendedNonce is greater than safeNonce and no edited nonce`, () => {
+      // given
+      threshold = 1
+      currentSafeNonce = 8
+      recommendedNonce = 11
+      manualSafeNonce = undefined
+
+      // when
+      const result = calculateCanTxExecute(
+        currentSafeNonce,
+        preApprovingOwner,
+        threshold,
+        txConfirmations,
+        recommendedNonce,
+        undefined,
+        manualSafeNonce,
+      )
+
+      // then
+      expect(result).toBe(false)
     })
     it(`should return false if single owner and recommendedNonce is different than safeNonce`, () => {
       // given

@@ -18,7 +18,9 @@ export const calculateCanTxExecute = (
   // Single owner
   if (threshold === 1) {
     // nonce was changed manually to be executed
-    if (manualSafeNonce === currentSafeNonce) return true
+    if (manualSafeNonce) {
+      return manualSafeNonce === currentSafeNonce
+    }
     // is next tx
     return recommendedNonce === currentSafeNonce
   }
