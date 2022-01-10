@@ -1,12 +1,11 @@
 import { createBrowserHistory } from 'history'
 import { generatePath, matchPath } from 'react-router-dom'
 
-import { getShortName } from 'src/config'
 import { getChains } from 'src/config/cache/chains'
 import { ChainId, ShortName } from 'src/config/chain.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
-import { isValidPrefix, parsePrefixedAddress } from 'src/utils/prefixedAddress'
+import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export const history = createBrowserHistory({
   basename: PUBLIC_URL,
@@ -90,7 +89,7 @@ export const extractPrefixedSafeAddress = (
   const { prefix, address } = parsePrefixedAddress(prefixedSafeAddress || '')
 
   return {
-    shortName: isValidPrefix(prefix) ? prefix : getShortName(),
+    shortName: prefix,
     safeAddress: checksumAddress(address),
   }
 }

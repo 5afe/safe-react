@@ -25,17 +25,21 @@ import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { switchNetworkWithUrl } from 'src/utils/history'
 import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
+import { useAddressedRouteKey } from './safe/container/hooks/useAddressedRouteKey'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
-const Safe = React.lazy(() => import('./safe/container'))
+const SafeContainer = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
   const location = useLocation()
   const { pathname, search } = location
   const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
+
+  // Component key that changes when addressed route slug changes
+  const { key } = useAddressedRouteKey()
 
   useEffect(() => {
     let trackedPath = pathname
@@ -111,7 +115,13 @@ const Routes = (): React.ReactElement => {
       />
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
       <Route component={CreateSafePage} exact path={OPEN_SAFE_ROUTE} />
-      <Route component={Safe} path={ADDRESSED_ROUTE} />
+      <Route
+        path={ADDRESSED_ROUTE}
+        render={() => {
+          // Rerender the container/reset its state when prefix/address changes
+          return <SafeContainer key={key} />
+        }}
+      />
       <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
       <Redirect to={ROOT_ROUTE} />
     </Switch>
