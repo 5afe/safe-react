@@ -54,7 +54,7 @@ const useCanTxExecute: UseCanTxExecuteType = (isExecution = false, preApprovingO
       isExecution,
     )
     setCanTxExecute(result)
-  }, [currentSafeNonce, preApprovingOwner, recommendedNonce, threshold, txConfirmations])
+  }, [currentSafeNonce, preApprovingOwner, recommendedNonce, threshold, txConfirmations, isExecution])
 
   return canTxExecute
 }
