@@ -45,3 +45,9 @@ body > div:first-child {
   display: flex;
   min-height: 100%;
 }
+
+html[class="darkMode"],
+html[class="darkMode"] div[style*="background-image"],
+html[class="darkMode"] img:not([id="safe-logo"]) {
+  filter: invert(1) hue-rotate(180deg);
+}
