@@ -94,6 +94,20 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const currentUser = useSelector(userAccountSelector)
   const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
+  const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
+
+  // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
+  const getModuleDetails = () => {
+    if (!transaction.txDetails || !isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)) {
+      return null
+    }
+
+    return (
+      <div className="tx-module">
+        <TxModuleInfo detailedExecutionInfo={transaction.txDetails?.detailedExecutionInfo} />
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -118,21 +132,17 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
         <TxSummary txDetails={data} />
       </div>
+      {isMultiSend && getModuleDetails()}
       <div
         className={cn('tx-details', {
-          'no-padding': isMultiSendTxInfo(data.txInfo),
+          'no-padding': isMultiSend,
           'not-executed': !data.executedAt,
           'will-be-replaced': willBeReplaced,
         })}
       >
         <TxDataGroup txDetails={data} />
       </div>
-      {/* Cannot use hasModule due to type inference */}
-      {transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo) && (
-        <div className="tx-module">
-          <TxModuleInfo detailedExecutionInfo={transaction.txDetails?.detailedExecutionInfo} />
-        </div>
-      )}
+      {!isMultiSend && getModuleDetails()}
       <div
         className={cn('tx-owners', {
           'will-be-replaced': willBeReplaced,
