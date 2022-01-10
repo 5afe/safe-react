@@ -53,7 +53,7 @@ export const TransactionFailText = ({
     ? `This transaction will most likely fail. ${errorDesc}`
     : isWrongChain
     ? 'Your wallet is connected to the wrong chain.'
-    : 'You are currently not an owner of this Safe and won&apos;t be able to submit this transaction.'
+    : "You are currently not an owner of this Safe and won't be able to submit this transaction."
 
   return (
     <Row align="center">
