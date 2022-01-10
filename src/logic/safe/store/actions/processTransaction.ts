@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
   checkIfOffChainSignatureIsPossible,
   generateSignaturesFromTxConfirmations,
@@ -189,6 +189,10 @@ export const processTransaction =
       if (isExecution) {
         dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
       }
+
+      const notification = NOTIFICATIONS.TX_PENDING_MSG
+
+      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
     }
 
     return txHash
