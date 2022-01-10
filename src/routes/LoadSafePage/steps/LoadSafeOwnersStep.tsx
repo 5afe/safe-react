@@ -14,7 +14,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { disabled, extraSmallFontSize, lg, md, sm } from 'src/theme/variables'
 import { minMaxLength } from 'src/components/forms/validator'
 import { getExplorerInfo } from 'src/config'
-import { FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
+import { FIELD_SAFE_OWNER_ENS_LIST, FIELD_SAFE_OWNER_LIST } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 
 export const loadSafeOwnersStepLabel = 'Owners'
@@ -22,6 +22,7 @@ export const loadSafeOwnersStepLabel = 'Owners'
 function LoadSafeOwnersStep(): ReactElement {
   const loadSafeForm = useForm()
   const ownersWithName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_LIST]
+  const ownersWithENSName = loadSafeForm.getState().values[FIELD_SAFE_OWNER_ENS_LIST]
 
   return (
     <>
@@ -40,6 +41,8 @@ function LoadSafeOwnersStep(): ReactElement {
         <Block margin="md" padding="md">
           {ownersWithName.map(({ address, name }, index) => {
             const ownerFieldName = `owner-address-${address}`
+            const ownerName = ownersWithENSName[address] || 'Owner Name'
+
             return (
               <OwnerContainer key={address} data-testid="owner-row">
                 <Col xs={4}>
@@ -47,7 +50,7 @@ function LoadSafeOwnersStep(): ReactElement {
                     component={TextField}
                     initialValue={name}
                     name={ownerFieldName}
-                    placeholder="Owner Name"
+                    placeholder={ownerName}
                     text="Owner Name"
                     type="text"
                     validate={minMaxLength(0, 50)}
