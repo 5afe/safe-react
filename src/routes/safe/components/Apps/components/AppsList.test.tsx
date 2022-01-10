@@ -1,10 +1,12 @@
-import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
-import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
+import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
+import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import * as googleAnalytics from 'src/utils/googleAnalytics'
+
+import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 
 jest.mock('src/routes/routes', () => {
   const original = jest.requireActual('src/routes/routes')
@@ -30,6 +32,9 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
         fetchStatus: 'SUCCESS',
         chainIds: ['1', '4'],
         provider: null,
+        accessControl: {
+          type: 'NO_RESTRICTIONS',
+        },
       },
       {
         id: 3,
@@ -41,6 +46,10 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
         fetchStatus: 'SUCCESS',
         chainIds: ['1', '4'],
         provider: null,
+        accessControl: {
+          type: 'DOMAIN_ALLOWLIST',
+          value: ['https://gnosis-safe.io'],
+        },
       },
       {
         id: 14,
@@ -51,6 +60,9 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
         fetchStatus: 'SUCCESS',
         chainIds: ['1', '4'],
         provider: null,
+        accessControl: {
+          type: 'NO_RESTRICTIONS',
+        },
       },
       {
         id: 24,
@@ -61,6 +73,10 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
         fetchStatus: 'SUCCESS',
         chainIds: ['1', '4', '56', '100', '137', '246', '73799'],
         provider: null,
+        accessControl: {
+          type: 'DOMAIN_ALLOWLIST',
+          value: ['https://gnosis-safe.io'],
+        },
       },
     ]),
 }))
@@ -92,6 +108,9 @@ beforeEach(() => {
       chainIds: ['4'],
       provider: undefined,
       fetchStatus: FETCH_STATUS.SUCCESS,
+      accessControl: {
+        type: SafeAppAccessPolicyTypes.NoRestrictions,
+      },
     }),
   )
 })
