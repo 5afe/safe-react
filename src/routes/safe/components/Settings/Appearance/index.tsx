@@ -68,11 +68,11 @@ const Appearance = (): ReactElement => {
       </Container>
 
       <Container>
-        <Heading tag="h2">Dark mode (experimental)</Heading>
+        <Heading tag="h2">Theme (experimental)</Heading>
         <FormGroup>
           <FormControlLabel
             control={<Checkbox checked={darkMode} onChange={() => setDarkMode(!darkMode)} name="showShortName" />}
-            label="Dark mode"
+            label="Inverted colors"
           />
         </FormGroup>
       </Container>
