@@ -34,6 +34,7 @@ import { getGasParam } from '../../transactions/gas'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import { LocalTransactionStatus } from '../models/types/gateway.d'
+import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -190,7 +191,12 @@ export const processTransaction =
         dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
       }
 
-      const notification = NOTIFICATIONS.TX_PENDING_MSG
+      const notification = isTxPendingError(err)
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationsQueue.afterExecutionError,
+            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+          }
 
       dispatch(enqueueSnackbar({ key: err.code, ...notification }))
     }
