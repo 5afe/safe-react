@@ -47,6 +47,7 @@ class TxProcessor extends TxSender {
       const state = getState()
 
       const { tx } = props
+
       const txProps = {
         navigateToTransactionsTab: false,
         notifiedTransaction: props.notifiedTransaction,
@@ -59,7 +60,7 @@ class TxProcessor extends TxSender {
         valueInWei: tx.value,
         safeTxGas: tx.safeTxGas,
         ethParameters: props.ethParameters,
-        delayExecution: props.approveAndExecute || false,
+        delayExecution: !props.approveAndExecute,
       }
 
       // Populate instance vars
@@ -68,6 +69,9 @@ class TxProcessor extends TxSender {
       } catch (err) {
         return
       }
+
+      this.safeTxHash = tx.safeTxHash
+      this.isExecution = props.approveAndExecute || this.isExecution
 
       const preApprovingOwner = txProps.delayExecution && !props.thresholdReached ? props.userAddress : undefined
 

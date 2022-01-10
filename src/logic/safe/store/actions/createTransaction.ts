@@ -254,6 +254,7 @@ export class TxSender {
       !txProps.delayExecution && (await shouldExecuteTransaction(safeInstance, this.nonce, getLastTransaction(state)))
 
     this.txProps = txProps
+    this.dispatch = dispatch
   }
 }
 
