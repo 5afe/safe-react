@@ -55,7 +55,7 @@ const useCanTxExecute: UseCanTxExecuteType = (
   const { threshold } = useSelector(currentSafe)
 
   const safeAddress = extractSafeAddress()
-  const recommendedNonce = useGetRecommendedNonce(safeAddress) // to be changed. should be txNonce
+  const recommendedNonce = useGetRecommendedNonce(safeAddress)
   const { nonce: currentSafeNonce } = useSelector(currentSafe)
 
   useEffect(() => {

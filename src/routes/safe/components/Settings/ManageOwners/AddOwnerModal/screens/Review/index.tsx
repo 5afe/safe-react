@@ -25,8 +25,6 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
-import { sameString } from 'src/utils/strings'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -52,8 +50,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
-  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -106,7 +103,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
-    const oldSafeNonce = recommendedSafeNonce?.toString()
     const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
@@ -121,7 +117,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
       setManualSafeTxGas(newSafeTxGas)
     }
 
-    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+    if (newSafeNonce) {
       const newSafeNonceNumber = parseInt(newSafeNonce, 10)
       setManualSafeNonce(newSafeNonceNumber)
     }

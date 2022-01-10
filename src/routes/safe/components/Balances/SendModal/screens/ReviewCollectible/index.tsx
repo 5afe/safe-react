@@ -15,7 +15,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import { sameString, textShortener } from 'src/utils/strings'
+import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 
 import { styles } from './style'
@@ -31,7 +31,6 @@ import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 const useStyles = makeStyles(styles)
 
@@ -58,8 +57,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
-  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
 
   const txToken = nftTokens.find(
@@ -138,7 +136,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
-    const oldSafeNonce = recommendedSafeNonce?.toString()
     const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
@@ -153,7 +150,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
       setManualSafeTxGas(newSafeTxGas)
     }
 
-    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+    if (newSafeNonce) {
       const newSafeNonceNumber = parseInt(newSafeNonce, 10)
       setManualSafeNonce(newSafeNonceNumber)
     }

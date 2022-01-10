@@ -26,8 +26,6 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
-import { sameString } from 'src/utils/strings'
 
 const Container = styled.div`
   max-width: 480px;
@@ -90,8 +88,7 @@ export const ReviewMessage = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
-  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -156,7 +153,6 @@ export const ReviewMessage = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
-    const oldSafeNonce = recommendedSafeNonce?.toString()
     const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
@@ -171,7 +167,7 @@ export const ReviewMessage = ({
       setManualSafeTxGas(newSafeTxGas)
     }
 
-    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+    if (newSafeNonce) {
       const newSafeNonceNumber = parseInt(newSafeNonce, 10)
       setManualSafeNonce(newSafeNonceNumber)
     }

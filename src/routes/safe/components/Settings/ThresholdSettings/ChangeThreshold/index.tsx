@@ -26,8 +26,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
-import { sameString } from 'src/utils/strings'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -53,8 +51,7 @@ export const ChangeThresholdModal = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
   const [disabledSubmitForm, setDisabledSubmitForm] = useState<boolean>(true)
-  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
-  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasCostFormatted,
@@ -119,7 +116,6 @@ export const ChangeThresholdModal = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
-    const oldSafeNonce = recommendedSafeNonce?.toString()
     const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
@@ -134,7 +130,7 @@ export const ChangeThresholdModal = ({
       setManualSafeTxGas(newSafeTxGas)
     }
 
-    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+    if (newSafeNonce) {
       const newSafeNonceNumber = parseInt(newSafeNonce, 10)
       setManualSafeNonce(newSafeNonceNumber)
     }

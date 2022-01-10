@@ -24,8 +24,6 @@ import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
 import { extractSafeAddress } from 'src/routes/routes'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
-import { sameString } from 'src/utils/strings'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -44,8 +42,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-  const recommendedSafeNonce = useGetRecommendedNonce(safeAddress)
-  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>(recommendedSafeNonce)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   useEffect(() => {
     const {
@@ -107,7 +104,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
-    const oldSafeNonce = recommendedSafeNonce?.toString()
     const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
@@ -122,7 +118,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       setManualSafeTxGas(newSafeTxGas)
     }
 
-    if (newSafeNonce && !sameString(oldSafeNonce, newSafeNonce)) {
+    if (newSafeNonce) {
       const newSafeNonceNumber = parseInt(newSafeNonce, 10)
       setManualSafeNonce(newSafeNonceNumber)
     }
