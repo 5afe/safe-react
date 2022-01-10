@@ -15,6 +15,7 @@ import Hairline from 'src/components/layout/Hairline'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import {
   FIELD_LOAD_SAFE_ADDRESS,
+  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
@@ -31,6 +32,7 @@ function ReviewLoadStep(): ReactElement {
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
+  const ownersWithENSName = formValues[FIELD_SAFE_OWNER_ENS_LIST]
   const safeName = getLoadSafeName(formValues, addressBook)
   const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
@@ -118,7 +120,7 @@ function ReviewLoadStep(): ReactElement {
                 <Col align="center" xs={12}>
                   <PrefixedEthHashInfo
                     hash={owner.address}
-                    name={owner.name}
+                    name={owner.name || ownersWithENSName[owner.address]}
                     showAvatar
                     showCopyBtn
                     explorerUrl={getExplorerInfo(owner.address)}

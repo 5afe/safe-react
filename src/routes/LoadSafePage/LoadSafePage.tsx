@@ -30,6 +30,7 @@ import {
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
+  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
   LoadSafeFormValues,
 } from './fields/loadFields'
@@ -54,6 +55,7 @@ function Load(): ReactElement {
       [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
       [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
       [FIELD_SAFE_OWNER_LIST]: [],
+      [FIELD_SAFE_OWNER_ENS_LIST]: {},
     }
     setInitialFormValues(initialValues)
   }, [safeAddress, safeRandomName])
@@ -64,13 +66,13 @@ function Load(): ReactElement {
     const ownerEntries = ownerList
       .map((owner) => {
         const ownerFieldName = `owner-address-${owner.address}`
-        const ownerNameValue = values[ownerFieldName]
+        const ownerNameValue = values[ownerFieldName] || values[FIELD_SAFE_OWNER_ENS_LIST][owner.address]
         return {
           ...owner,
           name: ownerNameValue,
         }
       })
-      .filter((owner) => !!owner.name)
+      .filter(Boolean)
 
     const safeEntry = makeAddressBookEntry({
       address: checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS] || ''),
