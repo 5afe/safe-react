@@ -170,8 +170,6 @@ export const processTransaction =
               logError(Errors._804, e.message)
             }
           }
-
-          dispatch(fetchTransactions(chainId, safeAddress))
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(chainId, safeAddress))
