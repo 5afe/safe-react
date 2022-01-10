@@ -160,17 +160,15 @@ export const processTransaction =
 
           if (isExecution) {
             dispatch(updateTransactionStatus({ safeTxHash: tx.safeTxHash, status: LocalTransactionStatus.PENDING }))
+            aboutToExecuteTx.setNonce(txArgs.nonce)
           }
 
-          try {
-            await saveTxToHistory({ ...txArgs })
-
-            // store the pending transaction's nonce
-            isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
-
-            dispatch(fetchTransactions(chainId, safeAddress))
-          } catch (e) {
-            logError(Errors._804, e.message)
+          if (!isExecution) {
+            try {
+              await saveTxToHistory({ ...txArgs })
+            } catch (e) {
+              logError(Errors._804, e.message)
+            }
           }
         })
         .then(async (receipt) => {
