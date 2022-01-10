@@ -275,7 +275,11 @@ class TxCreator extends TxSender {
       }
 
       // Populate instance vars
-      this.prepare(dispatch, getState(), txProps)
+      try {
+        await this.prepare(dispatch, getState(), txProps)
+      } catch (err) {
+        return
+      }
 
       // Selectors
       const state = getState()

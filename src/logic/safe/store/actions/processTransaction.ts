@@ -62,7 +62,12 @@ class TxProcessor extends TxSender {
         delayExecution: props.approveAndExecute || false,
       }
 
-      this.prepare(dispatch, state, txProps)
+      // Populate instance vars
+      try {
+        await this.prepare(dispatch, state, txProps)
+      } catch (err) {
+        return
+      }
 
       const preApprovingOwner = txProps.delayExecution && !props.thresholdReached ? props.userAddress : undefined
 
