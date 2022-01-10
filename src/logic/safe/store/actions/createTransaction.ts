@@ -33,6 +33,7 @@ import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/ty
 import { updateTransactionStatus } from './updateTransactionStatus'
 import { _getChainId } from 'src/config'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { TxArgs } from '../models/types/transaction'
 
 export interface CreateTransactionArgs {
@@ -107,12 +108,18 @@ export class TxSender {
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
     const { txArgs, safeTxHash, txProps, dispatch, notifications } = this
 
-    let txDetails: TransactionDetails
-    try {
-      txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
-    } catch (err) {
-      // catch
-      return
+    let txDetails: TransactionDetails | null = null
+
+    // Send the tx to the backend if
+    // 1) It's a confirmation w/o exection
+    // 2) It's a creation + execution w/o pre-approved signatures
+    if (!this.isExecution || !signature) {
+      try {
+        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+      } catch (err) {
+        // catch
+        return
+      }
     }
 
     notifications.closePending()
@@ -121,7 +128,7 @@ export class TxSender {
     confirmCallback?.(safeTxHash)
 
     // Go to a tx deep-link
-    if (txProps.navigateToTransactionsTab) {
+    if (txDetails && txProps.navigateToTransactionsTab) {
       navigateToTx(txProps.safeAddress, txDetails)
     }
 
@@ -181,6 +188,7 @@ export class TxSender {
     // When signing on-chain don't mark as pending as it is never removed
     if (isExecution) {
       dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING }))
+      aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
     const tx = isExecution
