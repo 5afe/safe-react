@@ -247,7 +247,7 @@ export class TxSender {
     this.notifications = createTxNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
 
     // Use the user-provided none or the recommented nonce
-    this.nonce = txProps.txNonce?.toString() ?? (await getNonce(txProps.safeAddress, this.safeVersion))
+    this.nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, this.safeVersion))
 
     // Execute right away?
     this.isExecution =
