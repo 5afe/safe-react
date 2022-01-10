@@ -163,6 +163,14 @@ export const processTransaction =
             aboutToExecuteTx.setNonce(txArgs.nonce)
           }
 
+          if (!isExecution) {
+            try {
+              await saveTxToHistory({ ...txArgs })
+            } catch (e) {
+              logError(Errors._804, e.message)
+            }
+          }
+
           dispatch(fetchTransactions(chainId, safeAddress))
         })
         .then(async (receipt) => {
