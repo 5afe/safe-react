@@ -12,22 +12,9 @@ For technical information please refer to the [Gnosis Developer Portal](https://
 
 For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.gnosis-safe.io).
 
-## Transactions
+## Transaction Details
 
-The status of a transaction can vary depending on whether it has just been submitted, confirmed or was (successfully) executed. An overview of transaction statuses is as follows:
-
-| Status                                                                       | Description                                                              |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Needs your confirmation /<br>Needs confirmations<br>`AWAITING_CONFIRMATIONS` | The transaction still requires confirmations.                            |
-| Needs execution<br>`AWAITING_EXECUTION`                                      | The transaction has sufficient confirmations but has yet to be executed. |
-| Cancelled<br>`CANCELLED`                                                     | The transaction was cancelled.                                           |
-| Failed<br>`FAILED`                                                           | The transaction failed.                                                  |
-| Pending\*<br>`PENDING`                                                       | The transaction has been submitted and is waiting to be mined.           |
-| Execution Failed\*<br>`PENDING_FAILED`                                       | The requested execution failed but it can be attempted again.            |
-| Success<br>`SUCCESS`                                                         | The transaction was successfully executed.                               |
-| Transaction will be replaced<br>`WILL_BE_REPLACED`                           | A corresponding rejection transaction has been created.                  |
-
-\*frontend-only statuses used for UI changes.
+Please see the [transaction details](docs/transaction-details.md) notes for more information about transactions.
 
 ## Related repos
 
