@@ -127,7 +127,7 @@ export const ReviewConfirm = ({
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const [shouldExecute, setShouldExecute] = useState<boolean>(true)
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
-  const isExecution = canTxExecute && shouldExecute
+  const willExecute = canTxExecute && shouldExecute
 
   // Decode tx data.
   useEffect(() => {
@@ -203,7 +203,7 @@ export const ReviewConfirm = ({
       safeTxGas={Math.max(parseInt(gasEstimation), params?.safeTxGas || 0).toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={willExecute}
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
@@ -241,7 +241,7 @@ export const ReviewConfirm = ({
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Container>
@@ -251,7 +251,7 @@ export const ReviewConfirm = ({
             <ReviewInfoText
               gasCostFormatted={isOwner ? gasCostFormatted : undefined}
               isCreation={isCreation}
-              isExecution={isExecution}
+              isExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
