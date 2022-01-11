@@ -58,7 +58,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
-  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const [shouldExecute, setShouldExecute] = useState<boolean>(true)
 
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
@@ -82,7 +82,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     manualSafeNonce,
   })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
-  const doExecute = canTxExecute && executionApproved
+  const willExecute = canTxExecute && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             safeTxGas: txParameters.safeTxGas,
             ethParameters: txParameters,
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-            delayExecution: !executionApproved,
+            delayExecution: !shouldExecute,
           }),
         )
       } else {
@@ -159,7 +159,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={doExecute}
+      isExecution={willExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -202,21 +202,21 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               </Row>
             )}
 
-            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={doExecute}
+              isTransactionExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Block>
           <ReviewInfoText
             gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
-            isExecution={doExecute}
+            isExecution={willExecute}
             isOffChainSignature={isOffChainSignature}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}

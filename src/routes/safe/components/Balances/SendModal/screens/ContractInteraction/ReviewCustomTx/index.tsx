@@ -50,7 +50,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const nativeCurrency = getNativeCurrency()
-  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const [shouldExecute, setShouldExecute] = useState<boolean>(true)
 
   const {
     gasLimit,
@@ -67,7 +67,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   })
 
   const canTxExecute = useCanTxExecute()
-  const doExecute = canTxExecute && executionApproved
+  const willExecute = canTxExecute && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const submitTx = (txParameters: TxParameters) => {
@@ -86,7 +86,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          delayExecution: !executionApproved,
+          delayExecution: !shouldExecute,
         }),
       )
     } else {
@@ -98,7 +98,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={doExecute}
+      isExecution={willExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -152,14 +152,14 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               </Col>
             </Row>
 
-            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={doExecute}
+              isTransactionExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Block>
@@ -167,7 +167,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={doExecute}
+              isExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}

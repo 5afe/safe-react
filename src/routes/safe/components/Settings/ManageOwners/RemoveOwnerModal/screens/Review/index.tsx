@@ -75,7 +75,7 @@ export const ReviewRemoveOwnerModal = ({
     manualGasLimit,
     manualSafeNonce,
   })
-  const isExecution = useCanTxExecute(false, manualSafeNonce)
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -138,7 +138,7 @@ export const ReviewRemoveOwnerModal = ({
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -232,7 +232,7 @@ export const ReviewRemoveOwnerModal = ({
             onEdit={toggleEditMode}
             compact={false}
             isTransactionCreation={isCreation}
-            isTransactionExecution={isExecution}
+            isTransactionExecution={canTxExecute}
             isOffChainSignature={isOffChainSignature}
           />
 
@@ -240,7 +240,7 @@ export const ReviewRemoveOwnerModal = ({
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={isExecution}
+              isExecution={canTxExecute}
               isOffChainSignature={isOffChainSignature}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}

@@ -44,7 +44,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     txData: EMPTY_DATA,
     txRecipient: safeAddress,
   })
-  const isExecution = useCanTxExecute()
+  const canTxExecute = useCanTxExecute()
 
   const origin = gwTransaction.safeAppInfo
     ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
@@ -83,7 +83,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={'0'}
@@ -113,7 +113,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   onEdit={toggleEditMode}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={isExecution}
+                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
@@ -122,7 +122,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
-                  isExecution={isExecution}
+                  isExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}

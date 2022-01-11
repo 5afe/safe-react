@@ -62,7 +62,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     manualGasLimit,
     manualSafeNonce,
   })
-  const isExecution = useCanTxExecute(false, manualSafeNonce)
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
@@ -129,7 +129,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     >
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation}
@@ -165,7 +165,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={isExecution}
+                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
@@ -173,7 +173,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
-                  isExecution={isExecution}
+                  isExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}

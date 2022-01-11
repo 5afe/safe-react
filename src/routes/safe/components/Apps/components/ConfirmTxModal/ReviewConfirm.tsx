@@ -125,9 +125,9 @@ export const ReviewConfirm = ({
   })
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
-  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const [shouldExecute, setShouldExecute] = useState<boolean>(true)
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
-  const isExecution = canTxExecute && executionApproved
+  const isExecution = canTxExecute && shouldExecute
 
   // Decode tx data.
   useEffect(() => {
@@ -161,7 +161,7 @@ export const ReviewConfirm = ({
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          delayExecution: !executionApproved,
+          delayExecution: !shouldExecute,
         },
         handleUserConfirmation,
         onReject,
@@ -234,7 +234,7 @@ export const ReviewConfirm = ({
 
             {!isMultiSend && <Divider />}
 
-            {canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail

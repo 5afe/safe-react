@@ -115,14 +115,14 @@ export const useEstimateTransactionGas = ({
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
-  const canExecute = useCanTxExecute(isExecution, manualSafeNonce, preApprovingOwner, txConfirmations?.size)
+  const canTxExecute = useCanTxExecute(isExecution, manualSafeNonce, preApprovingOwner, txConfirmations?.size)
 
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
         return
       }
-      const isOffChainSignature = checkIfOffChainSignatureIsPossible(canExecute, smartContractWallet, safeVersion)
+      const isOffChainSignature = checkIfOffChainSignatureIsPossible(canTxExecute, smartContractWallet, safeVersion)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
       if (isOffChainSignature && !isCreation) {
@@ -155,7 +155,7 @@ export const useEstimateTransactionGas = ({
           )
         }
 
-        if (canExecute || approvalAndExecution) {
+        if (canTxExecute || approvalAndExecution) {
           ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
             safeVersion,
@@ -163,7 +163,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txAmount: txAmount || '0',
             txConfirmations,
-            isExecution: canExecute,
+            isExecution: canTxExecute,
             isOffChainSignature,
             operation: operation || Operation.CALL,
             from,
@@ -179,7 +179,7 @@ export const useEstimateTransactionGas = ({
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
-        if (canExecute) {
+        if (canTxExecute) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,
             safeVersion,
@@ -238,7 +238,7 @@ export const useEstimateTransactionGas = ({
     manualGasPrice,
     manualGasLimit,
     manualSafeNonce,
-    canExecute,
+    canTxExecute,
   ])
 
   return gasEstimation

@@ -60,7 +60,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     manualGasLimit,
     manualSafeNonce,
   })
-  const isExecution = useCanTxExecute(false, manualSafeNonce)
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -123,7 +123,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     >
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation}
@@ -158,7 +158,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={isExecution}
+                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
@@ -166,7 +166,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
-                  isExecution={isExecution}
+                  isExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}

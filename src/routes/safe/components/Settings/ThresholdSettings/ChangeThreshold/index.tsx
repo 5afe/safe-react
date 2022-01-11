@@ -69,7 +69,7 @@ export const ChangeThresholdModal = ({
     manualGasLimit,
     manualSafeNonce,
   })
-  const isExecution = useCanTxExecute(false, manualSafeNonce)
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -139,7 +139,7 @@ export const ChangeThresholdModal = ({
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -188,7 +188,7 @@ export const ChangeThresholdModal = ({
                     txParameters={txParameters}
                     onEdit={toggleEditMode}
                     isTransactionCreation={isCreation}
-                    isTransactionExecution={isExecution}
+                    isTransactionExecution={canTxExecute}
                     isOffChainSignature={isOffChainSignature}
                   />
                 </Block>
@@ -196,7 +196,7 @@ export const ChangeThresholdModal = ({
                   <ReviewInfoText
                     gasCostFormatted={gasCostFormatted}
                     isCreation={isCreation}
-                    isExecution={isExecution}
+                    isExecution={canTxExecute}
                     isOffChainSignature={isOffChainSignature}
                     safeNonce={txParameters.safeNonce}
                     txEstimationExecutionStatus={txEstimationExecutionStatus}
