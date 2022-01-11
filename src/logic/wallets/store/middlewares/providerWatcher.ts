@@ -1,5 +1,5 @@
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
-import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getAccountFrom, getChainIdFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
 import { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from 'src/logic/wallets/store/actions/removeProvider'
@@ -33,15 +33,16 @@ const providerWatcherMware = (store) => (next) => async (action) => {
 
         watcherInterval = setInterval(async () => {
           const web3 = getWeb3()
-          const providerInfo = await getProviderInfo(web3)
+          const account = await getAccountFrom(web3)
+          const network = await getChainIdFrom(web3)
 
-          const networkChanged = currentProviderProps.network !== providerInfo.network
+          const networkChanged = currentProviderProps.network !== network
 
           if (networkChanged) {
             store.dispatch(closeSnackbar({ dismissAll: true }))
           }
 
-          if (currentProviderProps.account !== providerInfo.account || networkChanged) {
+          if (currentProviderProps.account !== account || networkChanged) {
             store.dispatch(fetchProvider(currentProviderProps.name))
           }
         }, 2000)
