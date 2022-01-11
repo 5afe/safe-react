@@ -13,7 +13,6 @@ import {
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 
@@ -28,7 +27,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {!IS_PRODUCTION && isMultiSigExecutionDetails(txDetails.detailedExecutionInfo) && (
+      {isMultiSigExecutionDetails(txDetails.detailedExecutionInfo) && (
         <div className="tx-share">
           <TxShareButton safeTxHash={txDetails.detailedExecutionInfo.safeTxHash} />
         </div>
