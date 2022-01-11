@@ -12,9 +12,9 @@ For technical information please refer to the [Gnosis Developer Portal](https://
 
 For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.gnosis-safe.io).
 
-## Transaction Details
+## Transactions
 
-Please see the [transaction details](docs/transaction-details.md) notes for more information about transactions.
+Please see the [transaction](docs/transaction.md) notes for more information about transaction details.
 
 ## Related repos
 
