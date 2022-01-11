@@ -35,8 +35,10 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   const nonce = useSelector(currentSafeNonce)
   const txStatus = useLocalTxStatus(transaction)
 
+  const isAwaitingExecution =
+    txStatus === LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED
   const getTitle = () => {
-    if (txStatus === LocalTransactionStatus.AWAITING_EXECUTION) {
+    if (isAwaitingExecution) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -56,11 +58,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           >
-            <Icon
-              type={txStatus === LocalTransactionStatus.AWAITING_EXECUTION ? 'rocket' : 'check'}
-              color="primary"
-              size="sm"
-            />
+            <Icon type={isAwaitingExecution ? 'rocket' : 'check'} color="primary" size="sm" />
           </IconButton>
         </span>
       </Tooltip>
