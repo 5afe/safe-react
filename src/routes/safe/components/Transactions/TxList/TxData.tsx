@@ -16,6 +16,7 @@ import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
 import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getInteractionTitle } from '../helpers/utils'
 
 type DetailsWithTxInfoProps = {
   children: ReactNode
@@ -36,13 +37,7 @@ const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps)
 
   return (
     <>
-      <TxInfoDetails
-        address={txData.to.value}
-        name={name}
-        avatarUrl={avatarUrl}
-        title={`Send ${amount} ${nativeCurrency.symbol} to:`}
-      />
-
+      <TxInfoDetails address={txData.to.value} name={name} avatarUrl={avatarUrl} title={getInteractionTitle(amount)} />
       {children}
     </>
   )
