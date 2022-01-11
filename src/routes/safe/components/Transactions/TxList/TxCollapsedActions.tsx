@@ -34,9 +34,11 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
   const txStatus = useLocalTxStatus(transaction)
+  const isAwaitingExecution = [
+    LocalTransactionStatus.AWAITING_EXECUTION,
+    LocalTransactionStatus.PENDING_FAILED,
+  ].includes(txStatus)
 
-  const isAwaitingExecution =
-    txStatus === (LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED)
   const getTitle = () => {
     if (isAwaitingExecution) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
