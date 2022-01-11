@@ -5,6 +5,6 @@ import { GATEWAY_URL } from 'src/utils/constants'
 
 export const fetchSafeAppsList = async (): Promise<SafeAppData[]> => {
   return getSafeApps(GATEWAY_URL, _getChainId(), {
-    clientUrl: window.location.origin,
+    client_url: window.location.origin,
   })
 }
