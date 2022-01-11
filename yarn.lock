@@ -2170,9 +2170,8 @@
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@https://github.com/gnosis/safe-react-gateway-sdk.git#ab08ad5270f61d6cd83eeca214bfe3199393ebe0":
+"@gnosis.pm/safe-react-gateway-sdk@file:.yalc/@gnosis.pm/safe-react-gateway-sdk":
   version "2.8.0"
-  resolved "https://github.com/gnosis/safe-react-gateway-sdk.git#ab08ad5270f61d6cd83eeca214bfe3199393ebe0"
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
