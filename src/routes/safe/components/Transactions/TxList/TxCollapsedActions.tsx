@@ -36,7 +36,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   const txStatus = useLocalTxStatus(transaction)
 
   const isAwaitingExecution =
-    txStatus === LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED
+    txStatus === (LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED)
   const getTitle = () => {
     if (isAwaitingExecution) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce

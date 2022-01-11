@@ -24,8 +24,9 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
   const txStatus = useLocalTxStatus(transaction)
+  console.log({ txStatus })
   const isAwaitingExecution =
-    txStatus === LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED
+    txStatus === (LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED)
 
   const onExecuteOrConfirm = (event) => {
     handleOnMouseLeave()
