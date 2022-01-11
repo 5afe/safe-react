@@ -24,7 +24,7 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-import { getTxTo, isCancelTxDetails } from './utils'
+import { getTxTo, isAwaitingExecution, isCancelTxDetails } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
@@ -189,8 +189,9 @@ export const TxCollapsed = ({
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (txStatus === LocalTransactionStatus.AWAITING_EXECUTION ||
-          txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && <SmallDot color={status.color} />
+        (isAwaitingExecution(txStatus) || txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && (
+          <SmallDot color={status.color} />
+        )
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}
