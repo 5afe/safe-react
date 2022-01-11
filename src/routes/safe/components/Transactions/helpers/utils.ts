@@ -20,7 +20,7 @@ export const ethereumTxParametersTitle = (isExecution: boolean): string => {
 }
 
 export const getInteractionTitle = (value: number | string): string => {
-  if (value === 0 || (typeof value === 'string' && parseFloat(value) === 0)) {
+  if (Number(value) === 0) {
     return 'Interact with:'
   }
 
