@@ -137,54 +137,52 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
   return (
     <TxParamsState txData={txData} txValue={txValue} txType={tx.txType || ''} onSubmit={submitTx} onBack={onPrev}>
-      <>
-        {/* Header */}
-        <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
+      {/* Header */}
+      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
 
-        <Hairline />
+      <Hairline />
 
-        <Block className={classes.container}>
-          {/* SafeInfo */}
-          <SafeInfo />
-          <Divider withArrow />
+      <Block className={classes.container}>
+        {/* SafeInfo */}
+        <SafeInfo />
+        <Divider withArrow />
 
-          {/* Recipient */}
-          <Row margin="xs">
-            <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-              Recipient
-            </Paragraph>
-          </Row>
-          <Row align="center" margin="md" data-testid="recipient-review-step">
-            <Col xs={12}>
-              <PrefixedEthHashInfo
-                hash={tx.recipientAddress}
-                name={tx.recipientName}
-                showCopyBtn
-                showAvatar
-                explorerUrl={getExplorerInfo(tx.recipientAddress)}
-              />
-            </Col>
-          </Row>
+        {/* Recipient */}
+        <Row margin="xs">
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+            Recipient
+          </Paragraph>
+        </Row>
+        <Row align="center" margin="md" data-testid="recipient-review-step">
+          <Col xs={12}>
+            <PrefixedEthHashInfo
+              hash={tx.recipientAddress}
+              name={tx.recipientName}
+              showCopyBtn
+              showAvatar
+              explorerUrl={getExplorerInfo(tx.recipientAddress)}
+            />
+          </Col>
+        </Row>
 
-          {/* Amount */}
-          <Row margin="xs">
-            <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-              Amount
-            </Paragraph>
-          </Row>
-          <Row align="center" margin="md">
-            <Img alt={txToken?.name as string} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
-            <Paragraph
-              className={classes.amount}
-              noMargin
-              size="md"
-              data-testid={`amount-${txToken?.symbol as string}-review-step`}
-            >
-              {tx.amount} {txToken?.symbol}
-            </Paragraph>
-          </Row>
-        </Block>
-      </>
+        {/* Amount */}
+        <Row margin="xs">
+          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+            Amount
+          </Paragraph>
+        </Row>
+        <Row align="center" margin="md">
+          <Img alt={txToken?.name as string} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
+          <Paragraph
+            className={classes.amount}
+            noMargin
+            size="md"
+            data-testid={`amount-${txToken?.symbol as string}-review-step`}
+          >
+            {tx.amount} {txToken?.symbol}
+          </Paragraph>
+        </Row>
+      </Block>
     </TxParamsState>
   )
 }

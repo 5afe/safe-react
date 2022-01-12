@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import styled from 'styled-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -13,19 +13,28 @@ import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from '../TxParametersDetail'
 
 type Props = {
-  children: ReactElement
+  children: ReactNode
   txData: string
-  txValue: string
-  txType: string
+  txValue?: string
+  txType?: string
   onSubmit: (txParams: TxParameters, delayExecution: boolean) => void
-  onBack: () => void
+  onBack?: (...rest: any) => void
+  submitText?: string
 }
 
 const Container = styled.div`
   padding: 0 ${lg} ${md};
 `
 
-export const TxParamsState = ({ children, txData, txValue, txType, onSubmit, onBack }: Props): React.ReactElement => {
+export const TxParamsState = ({
+  children,
+  txData,
+  txValue = '0',
+  txType,
+  onSubmit,
+  onBack,
+  submitText,
+}: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -57,7 +66,7 @@ export const TxParamsState = ({ children, txData, txValue, txType, onSubmit, onB
 
   const doExecute = executionApproved && isExecution
 
-  const closeEditModalCallback = (txParameters: TxParameters) => {
+  const onClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
     const oldMaxPrioFee = gasMaxPrioFeeFormatted
@@ -102,7 +111,7 @@ export const TxParamsState = ({ children, txData, txValue, txType, onSubmit, onB
       ethGasPrice={gasPriceFormatted}
       ethMaxPrioFee={gasMaxPrioFeeFormatted}
       safeTxGas={gasEstimation}
-      closeEditModalCallback={closeEditModalCallback}
+      closeEditModalCallback={onClose}
     >
       {(txParameters: TxParameters, toggleEditMode: () => unknown) => (
         <>
@@ -138,11 +147,11 @@ export const TxParamsState = ({ children, txData, txValue, txType, onSubmit, onB
           {/* Footer */}
           <Modal.Footer withoutBorder={!isSpendingLimit && submitStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: onBack, text: 'Back' }}
+              cancelButtonProps={{ onClick: onBack || onClose, text: 'Back' }}
               confirmButtonProps={{
                 onClick: () => onSubmitClick(txParameters),
                 status: submitStatus,
-                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : submitText,
                 testId: 'submit-tx-btn',
               }}
             />
