@@ -35,6 +35,7 @@ import { _getChainId } from 'src/config'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { TxArgs } from '../models/types/transaction'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -102,6 +103,7 @@ export class TxSender {
   txProps: RequiredTxProps
   from: string
   dispatch: Dispatch
+  safeInstance: GnosisSafe
   safeVersion: string
 
   // On transaction completion (either confirming or executing)
@@ -130,13 +132,14 @@ export class TxSender {
     // Go to a tx deep-link
     if (txDetails && txProps.navigateToTransactionsTab) {
       navigateToTx(txProps.safeAddress, txDetails)
+      return
     }
 
     dispatch(fetchTransactions(_getChainId(), txProps.safeAddress))
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isExecution, safeVersion, from, safeTxHash, txProps, dispatch, notifications } = this
+    const { txArgs, isExecution, from, safeTxHash, txProps, dispatch, notifications, safeInstance } = this
 
     logError(Errors._803, err.message)
 
@@ -148,7 +151,6 @@ export class TxSender {
       dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
     }
 
-    const safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, safeVersion)
     const executeDataUsedSignatures = safeInstance.methods
       .execTransaction(
         txProps.to,
@@ -249,7 +251,7 @@ export class TxSender {
     this.from = account
 
     this.safeVersion = currentSafeCurrentVersion(state)
-    const safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, this.safeVersion)
+    this.safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, this.safeVersion)
 
     // Notifications
     this.notifications = createTxNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
@@ -259,7 +261,8 @@ export class TxSender {
 
     // Execute right away?
     this.isExecution =
-      !txProps.delayExecution && (await shouldExecuteTransaction(safeInstance, this.nonce, getLastTransaction(state)))
+      !txProps.delayExecution &&
+      (await shouldExecuteTransaction(this.safeInstance, this.nonce, getLastTransaction(state)))
 
     this.txProps = txProps
     this.dispatch = dispatch
@@ -292,11 +295,10 @@ class TxCreator extends TxSender {
 
       // Selectors
       const state = getState()
-      const safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, this.safeVersion)
 
       // Prepare a TxArgs object
       this.txArgs = {
-        safeInstance,
+        safeInstance: this.safeInstance,
         to: txProps.to,
         valueInWei: txProps.valueInWei,
         data: txProps.txData,

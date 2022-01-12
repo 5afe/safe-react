@@ -282,13 +282,13 @@ export const createTxNotifications = (
   return {
     closePending: () => dispatch(closeSnackbarAction({ key: beforeExecutionKey })),
 
-    showOnError: (err: Error & { code: number }, contractErrorMessage: string | null) => {
+    showOnError: (err: Error & { code: number }, customErrorMessage: string | null) => {
       const msg = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {
             ...notificationSlot.afterExecutionError,
-            ...(contractErrorMessage && {
-              message: `${notificationSlot.afterExecutionError.message} - ${contractErrorMessage}`,
+            ...(customErrorMessage && {
+              message: `${notificationSlot.afterExecutionError.message} - ${customErrorMessage}`,
             }),
           }
 
