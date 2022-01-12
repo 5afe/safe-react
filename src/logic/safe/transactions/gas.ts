@@ -236,24 +236,23 @@ export const isMaxFeeParam = (): boolean => {
 
 export const createSendParams = (
   from: string,
-  ethNonce: TxParameters['ethNonce'],
-  ethGasLimit: TxParameters['ethGasLimit'],
-  ethGasPriceInGWei: TxParameters['ethGasPriceInGWei'],
-  ethMaxPrioFeeInGWei?: TxParameters['ethMaxPrioFeeInGWei'],
+  txParams: Pick<TxParameters, 'ethGasLimit' | 'ethNonce' | 'ethMaxPrioFeeInGWei' | 'ethGasPriceInGWei'>,
 ): PayableTx => {
   const sendParams: PayableTx = {
     from,
     value: 0,
-    gas: ethGasLimit,
-    nonce: ethNonce,
+    gas: txParams.ethGasLimit,
+    nonce: txParams.ethNonce,
   }
 
   if (isMaxFeeParam()) {
-    sendParams.maxPriorityFeePerGas = ethMaxPrioFeeInGWei
-    sendParams.maxFeePerGas = ethGasPriceInGWei
+    sendParams.maxPriorityFeePerGas = txParams.ethMaxPrioFeeInGWei
+    sendParams.maxFeePerGas = txParams.ethGasPriceInGWei
   } else {
-    sendParams.gasPrice = ethGasPriceInGWei
+    sendParams.gasPrice = txParams.ethGasPriceInGWei
   }
+
+  console.log({ sendParams })
 
   return sendParams
 }

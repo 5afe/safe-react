@@ -88,7 +88,10 @@ function SafeCreationProcess(): ReactElement {
         const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
         const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
-        const sendParams = createSendParams(userAddressAccount, undefined, gasLimit.toString(), gasPrice)
+        const sendParams = createSendParams(userAddressAccount, {
+          ethGasLimit: gasLimit.toString(),
+          ethGasPriceInGWei: gasPrice,
+        })
 
         deploymentTx
           .send(sendParams)

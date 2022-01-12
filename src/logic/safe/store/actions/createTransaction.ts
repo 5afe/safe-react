@@ -178,13 +178,7 @@ export const createTransaction =
       }
 
       const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-      const sendParams = createSendParams(
-        from,
-        ethParameters?.ethNonce,
-        ethParameters?.ethGasLimit,
-        ethParameters?.ethGasPriceInGWei,
-        ethParameters?.ethMaxPrioFeeInGWei,
-      )
+      const sendParams = createSendParams(from, ethParameters!)
 
       await tx
         .send(sendParams)
