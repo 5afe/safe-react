@@ -252,7 +252,5 @@ export const createSendParams = (
     sendParams.gasPrice = txParams.ethGasPriceInGWei
   }
 
-  console.log({ sendParams })
-
   return sendParams
 }
