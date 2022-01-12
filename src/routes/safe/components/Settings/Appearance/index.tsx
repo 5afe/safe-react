@@ -15,6 +15,7 @@ import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
 import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
+import useDarkMode from 'src/logic/hooks/useDarkMode'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -31,6 +32,7 @@ const Appearance = (): ReactElement => {
   const copyShortName = useSelector(copyShortNameSelector)
   const showShortName = useSelector(showShortNameSelector)
   const safeAddress = extractSafeAddress()
+  const [darkMode, setDarkMode] = useDarkMode()
 
   const { trackEvent } = useAnalytics()
 
@@ -48,21 +50,33 @@ const Appearance = (): ReactElement => {
     dispatch(setCopyShortName({ copyShortName: checked }))
 
   return (
-    <Container>
-      <Heading tag="h2">Use Chain-Specific Addresses</Heading>
-      <Paragraph>You can choose whether to prepend EIP-3770 short chain names accross Safes.</Paragraph>
-      <StyledPrefixedEthHashInfo hash={safeAddress} />
-      <FormGroup>
-        <FormControlLabel
-          control={<Checkbox checked={showShortName} onChange={handleShowChange} name="showShortName" />}
-          label="Prepend addresses with chain prefix."
-        />
-        <FormControlLabel
-          control={<Checkbox checked={copyShortName} onChange={handleCopyChange} name="copyShortName" />}
-          label="Copy addresses with chain prefix."
-        />
-      </FormGroup>
-    </Container>
+    <>
+      <Container>
+        <Heading tag="h2">Use Chain-Specific Addresses</Heading>
+        <Paragraph>You can choose whether to prepend EIP-3770 short chain names accross Safes.</Paragraph>
+        <StyledPrefixedEthHashInfo hash={safeAddress} />
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={showShortName} onChange={handleShowChange} name="showShortName" />}
+            label="Prepend addresses with chain prefix."
+          />
+          <FormControlLabel
+            control={<Checkbox checked={copyShortName} onChange={handleCopyChange} name="copyShortName" />}
+            label="Copy addresses with chain prefix."
+          />
+        </FormGroup>
+      </Container>
+
+      <Container>
+        <Heading tag="h2">Theme (experimental)</Heading>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={darkMode} onChange={() => setDarkMode(!darkMode)} name="showShortName" />}
+            label="Inverted colors"
+          />
+        </FormGroup>
+      </Container>
+    </>
   )
 }
 
