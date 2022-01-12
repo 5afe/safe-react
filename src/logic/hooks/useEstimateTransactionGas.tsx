@@ -26,6 +26,9 @@ export enum EstimationStatus {
   SUCCESS = 'SUCCESS',
 }
 
+const DEFAULT_MAX_GAS_FEE = '3.5'
+const DEFAULT_MAX_PRIO_FEE = '2.5'
+
 export const checkIfTxIsExecution = (
   threshold: number,
   preApprovingOwner?: string,
@@ -77,6 +80,7 @@ type UseEstimateTransactionGasProps = {
   safeTxGas?: string
   txType?: string
   manualGasPrice?: string
+  manualMaxPrioFee?: string
   manualGasLimit?: string
 }
 
@@ -87,6 +91,8 @@ export type TransactionGasEstimationResult = {
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
   gasPriceFormatted: string // Current gas price formatted
+  gasMaxPrioFee: string // Current max prio gas price
+  gasMaxPrioFeeFormatted: string // Current max prio gas formatted
   gasLimit: string // Minimum gas requited to execute the Tx
   isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
@@ -97,6 +103,8 @@ const getDefaultGasEstimation = (
   txEstimationExecutionStatus: EstimationStatus,
   gasPrice: string,
   gasPriceFormatted: string,
+  gasMaxPrioFee: string,
+  gasMaxPrioFeeFormatted: string,
   isExecution = false,
   isCreation = false,
   isOffChainSignature = false,
@@ -108,6 +116,8 @@ const getDefaultGasEstimation = (
     gasCostFormatted: '< 0.001',
     gasPrice,
     gasPriceFormatted,
+    gasMaxPrioFee,
+    gasMaxPrioFeeFormatted,
     gasLimit: '0',
     isExecution,
     isCreation,
@@ -125,10 +135,11 @@ export const useEstimateTransactionGas = ({
   safeTxGas,
   txType,
   manualGasPrice,
+  manualMaxPrioFee,
   manualGasLimit,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
-    getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0'),
+    getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0', '0', '0'),
   )
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
@@ -144,7 +155,16 @@ export const useEstimateTransactionGas = ({
 
       if (isOffChainSignature && !isCreation) {
         setGasEstimation(
-          getDefaultGasEstimation(EstimationStatus.SUCCESS, '1', '1', isExecution, isCreation, isOffChainSignature),
+          getDefaultGasEstimation(
+            EstimationStatus.SUCCESS,
+            toWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
+            DEFAULT_MAX_GAS_FEE,
+            toWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
+            DEFAULT_MAX_PRIO_FEE,
+            isExecution,
+            isCreation,
+            isOffChainSignature,
+          ),
         )
         return
       }
@@ -193,6 +213,8 @@ export const useEstimateTransactionGas = ({
 
         const gasPrice = manualGasPrice ? toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = fromWei(gasPrice, 'gwei')
+        const gasMaxPrioFee = manualMaxPrioFee ? toWei(manualMaxPrioFee, 'gwei') : DEFAULT_MAX_PRIO_FEE
+        const gasMaxPrioFeeFormatted = fromWei(gasMaxPrioFee, 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
         const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
@@ -226,6 +248,8 @@ export const useEstimateTransactionGas = ({
           gasCostFormatted,
           gasPrice,
           gasPriceFormatted,
+          gasMaxPrioFee,
+          gasMaxPrioFeeFormatted,
           gasLimit,
           isExecution,
           isCreation,
@@ -234,7 +258,15 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         console.warn(error.message)
         // If safeTxGas estimation fail we set this value to 0 (so up to all gasLimit can be used)
-        setGasEstimation(getDefaultGasEstimation(EstimationStatus.FAILURE, '1', '1'))
+        setGasEstimation(
+          getDefaultGasEstimation(
+            EstimationStatus.FAILURE,
+            toWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
+            DEFAULT_MAX_GAS_FEE,
+            toWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
+            DEFAULT_MAX_PRIO_FEE,
+          ),
+        )
       }
     }
 
@@ -256,6 +288,7 @@ export const useEstimateTransactionGas = ({
     txType,
     providerName,
     manualGasPrice,
+    manualMaxPrioFee,
     manualGasLimit,
   ])
 

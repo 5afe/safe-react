@@ -35,6 +35,7 @@ type Props = {
   initialSafeTxGas?: string
   initialEthGasLimit?: string
   initialEthGasPrice?: string
+  initialEthMaxPrioFee?: string
 }
 
 /**

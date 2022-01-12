@@ -105,6 +105,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const {
     gasCostFormatted,
     gasPriceFormatted,
+    gasMaxPrioFeeFormatted,
     gasLimit,
     gasEstimation,
     txEstimationExecutionStatus,
@@ -178,11 +179,17 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
+    const oldMaxPrioFee = gasMaxPrioFeeFormatted
+    const newMaxPrioFee = txParameters.ethMaxPrioFee
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newMaxPrioFee && oldMaxPrioFee !== newMaxPrioFee) {
+      setManualGasPrice(txParameters.ethMaxPrioFee)
     }
 
     if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
@@ -200,6 +207,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       isExecution={doExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
+      ethMaxPrioFee={gasMaxPrioFeeFormatted}
       safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
     >

@@ -156,6 +156,13 @@ export const TxParametersDetail = ({
                 <Text size="lg">{isMaxFeeParam() ? 'Max fee per gas' : 'Gas price'}</Text>
                 <Text size="lg">{txParameters.ethGasPrice}</Text>
               </TxParameterWrapper>
+
+              {isMaxFeeParam() && (
+                <TxParameterWrapper>
+                  <Text size="lg">Max priority fee</Text>
+                  <Text size="lg">{txParameters.ethMaxPrioFee}</Text>
+                </TxParameterWrapper>
+              )}
             </>
           )}
           <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
