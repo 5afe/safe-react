@@ -1,4 +1,3 @@
-import { TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
@@ -10,7 +9,6 @@ import {
 import {
   HistoryGatewayResponse,
   isConflictHeader,
-  isDateLabel,
   isLabel,
   isMultisigExecutionInfo,
   isTransactionSummary,
@@ -51,28 +49,27 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
       const newHistory: StoreStructure['history'] = cloneDeep(state[chainId]?.[safeAddress]?.history || {})
 
       values.forEach((value) => {
-        if (isDateLabel(value)) {
+        if (!isTransactionSummary(value)) {
           // DATE_LABEL is discarded as it's not needed for the current implementation
           return
         }
 
-        if (isTransactionSummary(value)) {
-          const transaction = (value as any).transaction as TransactionSummary
-          const startOfDate = getLocalStartOfDate(transaction.timestamp)
+        const transaction = value.transaction
+        const startOfDate = getLocalStartOfDate(transaction.timestamp)
 
-          if (typeof newHistory[startOfDate] === 'undefined') {
-            newHistory[startOfDate] = []
-          }
+        if (newHistory[startOfDate] === undefined) {
+          newHistory[startOfDate] = []
+        }
 
-          const txExist = newHistory[startOfDate].some(({ id }) => sameString(id, transaction.id))
+        const txIndex = newHistory[startOfDate].findIndex(({ id }) => sameString(id, transaction.id))
 
-          if (!txExist) {
-            newHistory[startOfDate].push(transaction)
-            // pushing a newer transaction to the existing list messes the transactions order
-            // this happens when most recent transactions are added to the existing txs in the store
-            newHistory[startOfDate] = newHistory[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
-          }
-          return
+        if (txIndex >= 0) {
+          newHistory[startOfDate][txIndex] = transaction
+        } else {
+          newHistory[startOfDate].push(transaction)
+          // pushing a newer transaction to the existing list messes the transactions order
+          // this happens when most recent transactions are added to the existing txs in the store
+          newHistory[startOfDate] = newHistory[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
         }
       })
 
