@@ -38,57 +38,53 @@ interface ProcessTransactionArgs {
 
 type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
-class TxProcessor extends TxSender {
-  public processTransaction(props: ProcessTransactionArgs): ProcessTransactionAction {
-    return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
-      // Selectors
-      const state = getState()
+export const processTransaction = (props: ProcessTransactionArgs): ProcessTransactionAction => {
+  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+    const sender = new TxSender()
 
-      const { tx } = props
+    // Selectors
+    const state = getState()
 
-      const txProps = {
-        navigateToTransactionsTab: false,
-        notifiedTransaction: props.notifiedTransaction,
-        operation: tx.operation,
-        origin: tx.origin,
-        safeAddress: props.safeAddress,
-        to: tx.to,
-        txData: tx.data ?? EMPTY_DATA,
-        txNonce: '',
-        valueInWei: tx.value,
-        safeTxGas: tx.safeTxGas,
-        ethParameters: props.ethParameters,
-        delayExecution: !props.approveAndExecute,
-      }
+    const { tx } = props
 
-      // Populate instance vars
-      try {
-        await this.prepare(dispatch, state, txProps)
-      } catch (err) {
-        return
-      }
-
-      this.safeTxHash = tx.safeTxHash
-      this.isExecution = props.approveAndExecute || this.isExecution
-
-      const preApprovingOwner = txProps.delayExecution && !props.thresholdReached ? props.userAddress : undefined
-
-      this.txArgs = {
-        ...tx, // Merge previous tx with new data
-        safeInstance: this.safeInstance,
-        valueInWei: tx.value,
-        data: txProps.txData,
-        gasPrice: tx.gasPrice || '0',
-        sender: this.from,
-        sigs:
-          generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner) ||
-          getPreValidatedSignatures(this.from),
-      }
-
-      this.submitTx(state)
+    const txProps = {
+      navigateToTransactionsTab: false,
+      notifiedTransaction: props.notifiedTransaction,
+      operation: tx.operation,
+      origin: tx.origin,
+      safeAddress: props.safeAddress,
+      to: tx.to,
+      txData: tx.data ?? EMPTY_DATA,
+      txNonce: '',
+      valueInWei: tx.value,
+      safeTxGas: tx.safeTxGas,
+      ethParameters: props.ethParameters,
+      delayExecution: !props.approveAndExecute,
     }
+
+    // Populate instance vars
+    try {
+      await sender.prepare(dispatch, state, txProps)
+    } catch (err) {
+      return
+    }
+
+    const preApprovingOwner = txProps.delayExecution && !props.thresholdReached ? props.userAddress : undefined
+
+    sender.txArgs = {
+      ...tx, // Merge previous tx with new data
+      safeInstance: sender.safeInstance,
+      valueInWei: tx.value,
+      data: txProps.txData,
+      gasPrice: tx.gasPrice || '0',
+      sender: sender.from,
+      sigs:
+        generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner) ||
+        getPreValidatedSignatures(sender.from),
+    }
+
+    sender.safeTxHash = tx.safeTxHash
+
+    sender.submitTx(state)
   }
 }
-
-const sender = new TxProcessor()
-export const processTransaction = sender.processTransaction.bind(sender)

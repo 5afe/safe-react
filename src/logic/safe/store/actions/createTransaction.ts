@@ -184,7 +184,7 @@ export class TxSender {
   }
 
   async sendTx(): Promise<string> {
-    const { txArgs, isExecution, from, safeTxHash, txProps, safeVersion, dispatch } = this
+    const { txArgs, isExecution, from, safeTxHash, txProps, dispatch } = this
 
     // When signing on-chain don't mark as pending as it is never removed
     if (isExecution) {
@@ -192,9 +192,7 @@ export class TxSender {
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
-    const tx = isExecution
-      ? getExecutionTransaction(txArgs)
-      : getApprovalTransaction(getGnosisSafeInstanceAt(txProps.safeAddress, safeVersion), safeTxHash)
+    const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
 
     const sendParams: PayableTx = {
       from,
@@ -268,61 +266,58 @@ export class TxSender {
   }
 }
 
-class TxCreator extends TxSender {
-  public createTransaction(
-    props: CreateTransactionArgs,
-    confirmCallback?: ConfirmEventHandler,
-    errorCallback?: ErrorEventHandler,
-  ): CreateTransactionAction {
-    return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
-      // Assign fallback values to certain props
-      const txProps = {
-        ...props,
-        txData: props.txData ?? EMPTY_DATA,
-        operation: props.operation ?? Operation.CALL,
-        navigateToTransactionsTab: props.navigateToTransactionsTab ?? true,
-        origin: props.origin ?? null,
-        delayExecution: props.delayExecution ?? false,
-      }
+export const createTransaction = (
+  props: CreateTransactionArgs,
+  confirmCallback?: ConfirmEventHandler,
+  errorCallback?: ErrorEventHandler,
+): CreateTransactionAction => {
+  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+    const sender = new TxSender()
 
-      // Populate instance vars
-      try {
-        await this.prepare(dispatch, getState(), txProps)
-      } catch (err) {
-        return
-      }
+    // Selectors
+    const state = getState()
 
-      // Selectors
-      const state = getState()
-
-      // Prepare a TxArgs object
-      this.txArgs = {
-        safeInstance: this.safeInstance,
-        to: txProps.to,
-        valueInWei: txProps.valueInWei,
-        data: txProps.txData,
-        operation: txProps.operation,
-        nonce: Number.parseInt(this.nonce),
-        safeTxGas: txProps.safeTxGas ?? (await getSafeTxGas(txProps, this.safeVersion)),
-        baseGas: '0',
-        gasPrice: '0',
-        gasToken: ZERO_ADDRESS,
-        refundReceiver: ZERO_ADDRESS,
-        sender: this.from,
-        // We're making a new tx, so there are no other signatures
-        // Just pass our own address for an unsigned execution
-        // Contract will compare the sender address to this
-        sigs: getPreValidatedSignatures(this.from),
-      }
-
-      // SafeTxHash acts as the unique ID of a tx throughout the app
-      this.safeTxHash = generateSafeTxHash(txProps.safeAddress, this.safeVersion, this.txArgs)
-
-      // Start the creation
-      this.submitTx(state, confirmCallback, errorCallback)
+    // Assign fallback values to certain props
+    const txProps = {
+      ...props,
+      txData: props.txData ?? EMPTY_DATA,
+      operation: props.operation ?? Operation.CALL,
+      navigateToTransactionsTab: props.navigateToTransactionsTab ?? true,
+      origin: props.origin ?? null,
+      delayExecution: !!props.delayExecution,
     }
+
+    // Populate instance vars
+    try {
+      await sender.prepare(dispatch, state, txProps)
+    } catch (err) {
+      return
+    }
+
+    // Prepare a TxArgs object
+    sender.txArgs = {
+      safeInstance: sender.safeInstance,
+      to: txProps.to,
+      valueInWei: txProps.valueInWei,
+      data: txProps.txData,
+      operation: txProps.operation,
+      nonce: Number.parseInt(sender.nonce),
+      safeTxGas: txProps.safeTxGas ?? (await getSafeTxGas(txProps, sender.safeVersion)),
+      baseGas: '0',
+      gasPrice: '0',
+      gasToken: ZERO_ADDRESS,
+      refundReceiver: ZERO_ADDRESS,
+      sender: sender.from,
+      // We're making a new tx, so there are no other signatures
+      // Just pass our own address for an unsigned execution
+      // Contract will compare the sender address to this
+      sigs: getPreValidatedSignatures(sender.from),
+    }
+
+    // SafeTxHash acts as the unique ID of a tx throughout the app
+    sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
+
+    // Start the creation
+    sender.submitTx(state, confirmCallback, errorCallback)
   }
 }
-
-const sender = new TxCreator()
-export const createTransaction = sender.createTransaction.bind(sender)
