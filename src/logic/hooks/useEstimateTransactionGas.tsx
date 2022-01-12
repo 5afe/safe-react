@@ -26,8 +26,8 @@ export enum EstimationStatus {
   SUCCESS = 'SUCCESS',
 }
 
-const DEFAULT_MAX_GAS_FEE = '3.5'
-const DEFAULT_MAX_PRIO_FEE = '2.5'
+const DEFAULT_MAX_GAS_FEE = String(3.5e9) // 3.5 GWEI
+const DEFAULT_MAX_PRIO_FEE = String(2.5e9) // 2.5 GWEI
 
 export const checkIfTxIsExecution = (
   threshold: number,
@@ -157,9 +157,9 @@ export const useEstimateTransactionGas = ({
         setGasEstimation(
           getDefaultGasEstimation(
             EstimationStatus.SUCCESS,
-            toWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
+            fromWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
             DEFAULT_MAX_GAS_FEE,
-            toWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
+            fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
             DEFAULT_MAX_PRIO_FEE,
             isExecution,
             isCreation,
@@ -261,10 +261,10 @@ export const useEstimateTransactionGas = ({
         setGasEstimation(
           getDefaultGasEstimation(
             EstimationStatus.FAILURE,
-            toWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
             DEFAULT_MAX_GAS_FEE,
-            toWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
+            fromWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
             DEFAULT_MAX_PRIO_FEE,
+            fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
           ),
         )
       }
