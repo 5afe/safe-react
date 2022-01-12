@@ -19,6 +19,7 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
+import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -216,7 +217,8 @@ export const useEstimateTransactionGas = ({
         const gasMaxPrioFee = manualMaxPrioFee ? toWei(manualMaxPrioFee, 'gwei') : DEFAULT_MAX_PRIO_FEE
         const gasMaxPrioFeeFormatted = fromWei(gasMaxPrioFee, 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
-        const estimatedGasCosts = parseInt(gasLimit, 10) * parseInt(gasPrice, 10)
+        const totalPricePerGas = parseInt(gasPrice, 10) + (isMaxFeeParam() ? parseInt(gasMaxPrioFee, 10) : 0)
+        const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
