@@ -132,7 +132,6 @@ export class TxSender {
     // Go to a tx deep-link
     if (txDetails && txProps.navigateToTransactionsTab) {
       navigateToTx(txProps.safeAddress, txDetails)
-      return
     }
 
     dispatch(fetchTransactions(_getChainId(), txProps.safeAddress))
