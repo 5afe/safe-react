@@ -119,14 +119,12 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 }
 
 export const reverseENSLookup = async (address: string): Promise<string> => {
-  const NO_NAME = ''
-
   const web3 = getWeb3ReadOnly()
   const lookup = address.toLowerCase().substr(2) + '.addr.reverse'
   const ResolverContract = await web3.eth.ens.getResolver(lookup)
   const nh = namehash(lookup)
 
-  let name = NO_NAME
+  let name = ''
   let verifiedAddress = ''
   try {
     name = await ResolverContract.methods.name(nh).call()
@@ -136,7 +134,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
   }
 
   const isValidAddress = sameString(verifiedAddress, address)
-  return isValidAddress ? name : NO_NAME
+  return isValidAddress ? name : ''
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
