@@ -18,11 +18,16 @@ export const loadLastUsedProvider = async (): Promise<string | undefined> => {
   return lastUsedProvider
 }
 
+type ProviderWatcherAction = {
+  type: string
+  payload: ProviderState
+}
+
 let watcherInterval: NodeJS.Timer
 const providerWatcherMware =
   (store: ReturnType<typeof reduxStore>) =>
   (next: Dispatch) =>
-  async (action: { type: string; payload: ProviderState }) => {
+  async (action: ProviderWatcherAction): Promise<ProviderWatcherAction> => {
     const handledAction = next(action)
 
     if (watchedActions.includes(action.type)) {
@@ -39,15 +44,16 @@ const providerWatcherMware =
           watcherInterval = setInterval(async () => {
             const web3 = getWeb3()
             const network = await getChainIdFrom(web3)
+            const account = await getAccountFrom(web3)
 
-            if (currentProviderProps.network === network) {
-              return
+            const hasChangedNetwork = currentProviderProps.network !== network
+            const hasChangedAccount = currentProviderProps.account !== account
+
+            if (hasChangedNetwork) {
+              store.dispatch(closeSnackbar({ dismissAll: true }))
             }
 
-            store.dispatch(closeSnackbar({ dismissAll: true }))
-
-            const account = await getAccountFrom(web3)
-            if (currentProviderProps.account !== account) {
+            if (hasChangedNetwork || hasChangedAccount) {
               store.dispatch(fetchProvider(currentProviderProps.name))
             }
           }, 2000)
