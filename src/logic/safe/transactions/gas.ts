@@ -9,6 +9,8 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { hasFeature } from '../utils/safeVersion'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { PayableTx } from 'src/types/contracts/types'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 type SafeTxGasEstimationProps = {
   safeAddress: string
@@ -232,6 +234,26 @@ export const isMaxFeeParam = (): boolean => {
   return hasFeature(FEATURES.EIP1559)
 }
 
-export const getGasParam = (): string => {
-  return isMaxFeeParam() ? 'maxFeePerGas' : 'gasPrice'
+export const createSendParams = (
+  from: string,
+  ethNonce: TxParameters['ethNonce'],
+  ethGasLimit: TxParameters['ethGasLimit'],
+  ethGasPriceInGWei: TxParameters['ethGasPriceInGWei'],
+  ethMaxPrioFeeInGWei?: TxParameters['ethMaxPrioFeeInGWei'],
+): PayableTx => {
+  const sendParams: PayableTx = {
+    from,
+    value: 0,
+    gas: ethGasLimit,
+    nonce: ethNonce,
+  }
+
+  if (isMaxFeeParam()) {
+    sendParams.maxPriorityFeePerGas = ethMaxPrioFeeInGWei
+    sendParams.maxFeePerGas = ethGasPriceInGWei
+  } else {
+    sendParams.gasPrice = ethGasPriceInGWei
+  }
+
+  return sendParams
 }

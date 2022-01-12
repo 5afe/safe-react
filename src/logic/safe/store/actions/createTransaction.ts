@@ -1,3 +1,4 @@
+import { createSendParams } from './../../transactions/gas'
 import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
@@ -11,7 +12,7 @@ import {
   saveTxToHistory,
   tryOffChainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas, getGasParam } from 'src/logic/safe/transactions/gas'
+import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -23,7 +24,6 @@ import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/ut
 import { shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
@@ -51,7 +51,7 @@ export interface CreateTransactionArgs {
   txNonce?: number | string
   valueInWei: string
   safeTxGas?: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   delayExecution?: boolean
 }
 
@@ -178,13 +178,13 @@ export const createTransaction =
       }
 
       const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-      const sendParams: PayableTx = {
+      const sendParams = createSendParams(
         from,
-        value: 0,
-        gas: ethParameters?.ethGasLimit,
-        [getGasParam()]: ethParameters?.ethGasPriceInGWei,
-        nonce: ethParameters?.ethNonce,
-      }
+        ethParameters?.ethNonce,
+        ethParameters?.ethGasLimit,
+        ethParameters?.ethGasPriceInGWei,
+        ethParameters?.ethMaxPrioFeeInGWei,
+      )
 
       await tx
         .send(sendParams)

@@ -24,17 +24,16 @@ import { shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Dispatch, DispatchReturn } from './types'
-import { PayableTx } from 'src/types/contracts/types'
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { onboardUser } from 'src/components/ConnectButton'
-import { getGasParam } from '../../transactions/gas'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import { LocalTransactionStatus } from '../models/types/gateway.d'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { createSendParams } from '../../transactions/gas'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -57,7 +56,7 @@ interface ProcessTransactionArgs {
     refundReceiver: string
   }
   userAddress: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   thresholdReached: boolean
 }
 
@@ -144,13 +143,13 @@ export const processTransaction =
 
       transaction = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, tx.safeTxHash)
 
-      const sendParams: PayableTx = {
+      const sendParams = createSendParams(
         from,
-        value: 0,
-        gas: ethParameters?.ethGasLimit,
-        [getGasParam()]: ethParameters?.ethGasPriceInGWei,
-        nonce: ethParameters?.ethNonce,
-      }
+        ethParameters?.ethNonce,
+        ethParameters?.ethGasLimit,
+        ethParameters?.ethGasPriceInGWei,
+        ethParameters?.ethMaxPrioFeeInGWei,
+      )
 
       await transaction
         .send(sendParams)
