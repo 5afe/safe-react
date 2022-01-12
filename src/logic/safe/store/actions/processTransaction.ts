@@ -1,16 +1,14 @@
 import { List } from 'immutable'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { generateSignaturesFromTxConfirmations, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
-import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { TxSender } from './createTransaction'
 
 interface ProcessTransactionArgs {
@@ -77,7 +75,7 @@ class TxProcessor extends TxSender {
 
       this.txArgs = {
         ...tx, // Merge previous tx with new data
-        safeInstance: getGnosisSafeInstanceAt(txProps.safeAddress, currentSafeCurrentVersion(state)),
+        safeInstance: this.safeInstance,
         valueInWei: tx.value,
         data: txProps.txData,
         gasPrice: tx.gasPrice || '0',
