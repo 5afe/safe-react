@@ -228,6 +228,10 @@ export const estimateGasForTransactionApproval = async ({
   })
 }
 
+export const isMaxFeeParam = (): boolean => {
+  return hasFeature(FEATURES.EIP1559)
+}
+
 export const getGasParam = (): string => {
-  return hasFeature(FEATURES.EIP1559) ? 'maxFeePerGas' : 'gasPrice'
+  return isMaxFeeParam() ? 'maxFeePerGas' : 'gasPrice'
 }

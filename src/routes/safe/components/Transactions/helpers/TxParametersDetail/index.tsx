@@ -8,6 +8,7 @@ import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactio
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
 import useSafeTxGas from '../useSafeTxGas'
+import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -152,7 +153,7 @@ export const TxParametersDetail = ({
               </TxParameterWrapper>
 
               <TxParameterWrapper>
-                <Text size="lg">Gas price</Text>
+                <Text size="lg">{isMaxFeeParam() ? 'Max fee per gas' : 'Gas price'}</Text>
                 <Text size="lg">{txParameters.ethGasPrice}</Text>
               </TxParameterWrapper>
             </>
