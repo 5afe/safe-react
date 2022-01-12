@@ -17,7 +17,7 @@ type Props = {
   txData: string
   txValue?: string
   txType?: string
-  onSubmit: (txParams: TxParameters, delayExecution: boolean) => void
+  onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
   onBack?: (...rest: any) => void
   submitText?: string
 }
