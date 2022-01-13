@@ -10,7 +10,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { hasFeature } from '../utils/safeVersion'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-type SafeTxGasEstimationProps = {
+export type SafeTxGasEstimationProps = {
   safeAddress: string
   txData: string
   txRecipient: string

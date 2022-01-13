@@ -1,5 +1,5 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
-import { useState, lazy } from 'react'
+import { useState, lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
@@ -8,6 +8,8 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
+import SafeLoadError from '../components/SafeLoadError'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -27,6 +29,20 @@ const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const owners = useSelector(currentSafeOwners)
   const isSafeLoaded = owners.length > 0
+  const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (isSafeLoaded) {
+      return
+    }
+
+    const failedTimeout = setTimeout(() => {
+      setHasLoadFailed(true)
+    }, SAFE_POLLING_INTERVAL)
+    return () => {
+      clearTimeout(failedTimeout)
+    }
+  }, [isSafeLoaded])
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -35,6 +51,10 @@ const Container = (): React.ReactElement => {
     footer: null,
     onClose: () => {},
   })
+
+  if (hasLoadFailed) {
+    return <SafeLoadError />
+  }
 
   if (!isSafeLoaded) {
     return (
@@ -94,5 +114,4 @@ const Container = (): React.ReactElement => {
     </>
   )
 }
-
 export default Container
