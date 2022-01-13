@@ -38,11 +38,15 @@ const isProdGateway = () => {
   }
 }
 
+// @TODO: Remove after xDai rename passes QA
+// GC was added to the staging Django but it is not in fact a 'staging' chain and we
+// therefore have to reference the production CGW
+const isTestingGnosisChain = () => {
+  return process.env.NODE_ENV === 'test' ? false : _getChainId() === '100'
+}
+
 export const GATEWAY_URL =
   process.env.REACT_APP_GATEWAY_URL ||
-  (IS_PRODUCTION ||
-  isProdGateway() ||
-  // @TODO: Remove after xDai rename passes QA
-  _getChainId() === '100'
+  (IS_PRODUCTION || isProdGateway() || isTestingGnosisChain()
     ? 'https://safe-client.gnosis.io'
     : 'https://safe-client.staging.gnosisdev.com')
