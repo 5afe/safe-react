@@ -36,7 +36,8 @@ const getContractErrorMessage = async ({
 
     const contractOutput = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
     return decodeMessage(contractOutput)
-  } catch (e) {
+  } catch (err) {
+    logError(Errors._817, err.message)
     return null
   }
 }
