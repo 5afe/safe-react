@@ -12,7 +12,7 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { PayableTx } from 'src/types/contracts/types'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-type SafeTxGasEstimationProps = {
+export type SafeTxGasEstimationProps = {
   safeAddress: string
   txData: string
   txRecipient: string
