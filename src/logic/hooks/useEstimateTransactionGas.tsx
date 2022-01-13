@@ -164,7 +164,6 @@ export const useEstimateTransactionGas = ({
             txAmount: txAmount || '0',
             txConfirmations,
             isExecution: canTxExecute,
-            isOffChainSignature,
             operation: operation || Operation.CALL,
             from,
             safeTxGas: safeTxGasEstimation,
