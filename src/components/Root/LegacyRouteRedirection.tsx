@@ -10,6 +10,11 @@ type Props = {
   history: History
 }
 
+enum SHORT_NAME {
+  GNOSIS_CHAIN = 'gno',
+  XDAI = 'xdai',
+}
+
 const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
 
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
@@ -17,7 +22,16 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
 
   const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
 
-  if (!isLegacyRoute) return null
+  if (!isLegacyRoute) {
+    const XDAI_ROUTE_PREFIX = `${PUBLIC_URL}/${SHORT_NAME.XDAI}:`
+    const GNO_ROUTE_PREFIX = `${PUBLIC_URL}/${SHORT_NAME.GNOSIS_CHAIN}:`
+
+    const hasxDaiShortName = pathname.includes(XDAI_ROUTE_PREFIX)
+    if (hasxDaiShortName) {
+      history.replace(`${pathname.replace(XDAI_ROUTE_PREFIX, GNO_ROUTE_PREFIX)}${search}`)
+    }
+    return null
+  }
 
   // :subdir was '/safes' or '/load'
   const match = matchPath<{ [LEGACY_SAFE_ADDRESS_SLUG]: string }>(hash, {
