@@ -33,6 +33,17 @@ const getInitialChainId = (): ChainId => {
 
 let _chainId = getInitialChainId()
 
+export const getGatewayUrl = () => {
+  // @TODO: Remove after xDai rename passes QA
+  // loadChains needs to be switched over to this function
+  // the GATEWAY_URL logic moved here
+
+  // GC was added to the staging Django but it is not in fact a 'staging' chain and we
+  // therefore have to reference the production CGW
+  const isTestingGC = process.env.NODE_ENV === 'test' ? false : _getChainId() === '100'
+  return isTestingGC ? 'https://safe-client.gnosis.io' : GATEWAY_URL
+}
+
 export const _setChainId = (newChainId: ChainId) => {
   _chainId = newChainId
 }

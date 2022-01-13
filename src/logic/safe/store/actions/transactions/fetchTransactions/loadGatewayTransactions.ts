@@ -1,9 +1,8 @@
 import { getTransactionHistory, getTransactionQueue } from '@gnosis.pm/safe-react-gateway-sdk'
-import { _getChainId } from 'src/config'
+import { getGatewayUrl, _getChainId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { GATEWAY_URL } from 'src/utils/constants'
 
 /*************/
 /*  HISTORY  */
@@ -27,7 +26,7 @@ export const loadPagedHistoryTransactions = async (
 
   try {
     const { results, next, previous } = await getTransactionHistory(
-      GATEWAY_URL,
+      getGatewayUrl(),
       chainId,
       checksumAddress(safeAddress),
       historyPointers[chainId][safeAddress].next,
@@ -44,7 +43,11 @@ export const loadPagedHistoryTransactions = async (
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   const chainId = _getChainId()
   try {
-    const { results, next, previous } = await getTransactionHistory(GATEWAY_URL, chainId, checksumAddress(safeAddress))
+    const { results, next, previous } = await getTransactionHistory(
+      getGatewayUrl(),
+      chainId,
+      checksumAddress(safeAddress),
+    )
 
     if (!historyPointers[chainId]) {
       historyPointers[chainId] = {}
@@ -82,7 +85,7 @@ export const loadPagedQueuedTransactions = async (
 
   try {
     const { results, next, previous } = await getTransactionQueue(
-      GATEWAY_URL,
+      getGatewayUrl(),
       chainId,
       checksumAddress(safeAddress),
       queuedPointers[chainId][safeAddress].next,
@@ -99,7 +102,11 @@ export const loadPagedQueuedTransactions = async (
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   const chainId = _getChainId()
   try {
-    const { results, next, previous } = await getTransactionQueue(GATEWAY_URL, chainId, checksumAddress(safeAddress))
+    const { results, next, previous } = await getTransactionQueue(
+      getGatewayUrl(),
+      chainId,
+      checksumAddress(safeAddress),
+    )
 
     if (!queuedPointers[chainId]) {
       queuedPointers[chainId] = {}
