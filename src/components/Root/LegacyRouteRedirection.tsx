@@ -1,9 +1,9 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
-import { PUBLIC_URL } from 'src/utils/constants'
+import { DEFAULT_CHAIN_ID, PUBLIC_URL } from 'src/utils/constants'
 import { History } from 'history'
-import { ShortName } from 'src/config/chain'
 import { NETWORK_TO_MIGRATE } from '../StoreMigrator/utils'
+import { ShortName, CHAIN_ID } from 'src/config/chain.d'
 
 type Props = {
   history: History
@@ -47,9 +47,11 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   }
 
   const subdomain = window.location.hostname.split('.')[0]
+
+  const DEFAULT_SHORT_NAME = DEFAULT_CHAIN_ID === CHAIN_ID.RINKEBY ? LEGACY_ROUTE_SHORT_NAMES.rinkeby : 'eth'
   const shortName = Object.keys(LEGACY_ROUTE_SHORT_NAMES).includes(subdomain)
     ? LEGACY_ROUTE_SHORT_NAMES[subdomain]
-    : 'eth' // When not mapped subdomain, it is mainnet as it had no subdomain
+    : DEFAULT_SHORT_NAME
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')
