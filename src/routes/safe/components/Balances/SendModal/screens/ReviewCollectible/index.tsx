@@ -217,7 +217,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={willExecute}
-            isOffChainSignature={isOffChainSignature}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

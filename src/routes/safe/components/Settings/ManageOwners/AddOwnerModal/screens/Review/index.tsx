@@ -223,7 +223,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={canTxExecute}
-            isOffChainSignature={isOffChainSignature}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

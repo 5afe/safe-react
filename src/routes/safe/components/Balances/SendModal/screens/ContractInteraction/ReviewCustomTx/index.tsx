@@ -168,7 +168,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
               isExecution={willExecute}
-              isOffChainSignature={isOffChainSignature}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

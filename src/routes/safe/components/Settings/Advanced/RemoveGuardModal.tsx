@@ -167,7 +167,6 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={canTxExecute}
-                  isOffChainSignature={isOffChainSignature}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

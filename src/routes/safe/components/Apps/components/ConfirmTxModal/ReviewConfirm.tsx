@@ -252,7 +252,6 @@ export const ReviewConfirm = ({
               gasCostFormatted={isOwner ? gasCostFormatted : undefined}
               isCreation={isCreation}
               isExecution={willExecute}
-              isOffChainSignature={isOffChainSignature}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

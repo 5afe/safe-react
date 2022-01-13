@@ -369,7 +369,6 @@ export const ApproveTxModal = ({
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={willExecute}
-                  isOffChainSignature={isOffChainSignature}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

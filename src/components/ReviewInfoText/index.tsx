@@ -27,7 +27,6 @@ export const ReviewInfoText = ({
   gasCostFormatted,
   isCreation,
   isExecution,
-  isOffChainSignature,
   safeNonce: txParamsSafeNonce = '',
   testId,
   txEstimationExecutionStatus,
@@ -88,7 +87,6 @@ export const ReviewInfoText = ({
           gasCostFormatted={gasCostFormatted}
           isCreation={isCreation}
           isExecution={isExecution}
-          isOffChainSignature={isOffChainSignature}
           txEstimationExecutionStatus={txEstimationExecutionStatus}
         />
       )}

@@ -240,7 +240,6 @@ export const ReviewMessage = ({
               gasCostFormatted={isOwner ? gasCostFormatted : undefined}
               isCreation={isCreation}
               isExecution={canTxExecute}
-              isOffChainSignature={isOffChainSignature}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
