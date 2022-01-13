@@ -22,9 +22,9 @@ export const TransactionFees = ({
   isCreation,
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
-  const { currentVersion: safeVersion = '' } = useSelector(currentSafe)
+  const { currentVersion: safeVersion } = useSelector(currentSafe)
   const { smartContractWallet } = useSelector(providerSelector)
-  const canTxExecute = useCanTxExecute()
+  const canTxExecute = useCanTxExecute(isExecution)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(canTxExecute, smartContractWallet, safeVersion)
 
   const nativeCurrency = getNativeCurrency()

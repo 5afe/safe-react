@@ -44,7 +44,6 @@ type UseCanTxExecuteType = (
   txConfirmations?: number,
 ) => boolean
 
-// Review default values
 const useCanTxExecute: UseCanTxExecuteType = (
   isExecution = false,
   manualSafeNonce,
