@@ -1,4 +1,6 @@
 import { Dispatch } from 'redux'
+
+import { ChainId } from 'src/config/chain'
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getAccountFrom, getChainIdFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
@@ -43,7 +45,8 @@ const providerWatcherMware =
 
           watcherInterval = setInterval(async () => {
             const web3 = getWeb3()
-            const network = await getChainIdFrom(web3)
+
+            const network = (await getChainIdFrom(web3)).toString() as ChainId
             const account = await getAccountFrom(web3)
 
             const hasChangedNetwork = currentProviderProps.network !== network
