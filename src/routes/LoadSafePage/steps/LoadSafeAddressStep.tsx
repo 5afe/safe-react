@@ -28,9 +28,9 @@ import {
   LoadSafeFormValues,
 } from '../fields/loadFields'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { getLoadSafeName, getOwnerName } from '../fields/utils'
+import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { userAccountSelector } from '../../../logic/wallets/store/selectors'
+import { reverseENSLookup } from '../../../logic/wallets/getWeb3'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -41,7 +41,6 @@ function LoadSafeAddressStep(): ReactElement {
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
   const chainId = useSelector(currentChainId)
-  const connectedWalletAddress = useSelector(userAccountSelector)
 
   const loadSafeForm = useForm()
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
@@ -74,7 +73,7 @@ function LoadSafeAddressStep(): ReactElement {
 
         const ownersWithENSName = await Promise.all(
           owners.map(async ({ value: address }) => {
-            const ensName = await getOwnerName(address, connectedWalletAddress)
+            const ensName = await reverseENSLookup(address)
             return makeAddressBookEntry({ address, name: ensName, chainId })
           }),
         )
