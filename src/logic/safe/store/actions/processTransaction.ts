@@ -10,6 +10,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { TxSender } from './createTransaction'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -66,6 +67,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     try {
       await sender.prepare(dispatch, state, txProps)
     } catch (err) {
+      logError(Errors._815, err.message)
       return
     }
 

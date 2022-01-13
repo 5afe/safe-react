@@ -119,7 +119,7 @@ export class TxSender {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
-        // catch
+        logError(Errors._816, err.message)
         return
       }
     }
@@ -291,6 +291,7 @@ export const createTransaction = (
     try {
       await sender.prepare(dispatch, state, txProps)
     } catch (err) {
+      logError(Errors._815, err.message)
       return
     }
 
