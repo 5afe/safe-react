@@ -1,10 +1,9 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
-import { getChainInfo } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
-import { sameString } from 'src/utils/strings'
 import { History } from 'history'
-import { getChains } from 'src/config/cache/chains'
+import { ShortName } from 'src/config/chain'
+import { NETWORK_TO_MIGRATE } from '../StoreMigrator/utils'
 
 type Props = {
   history: History
@@ -12,12 +11,25 @@ type Props = {
 
 const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
 
+// Legacy route subdomains mapped to their shortNames
+const LEGACY_ROUTE_SHORT_NAMES: Record<NETWORK_TO_MIGRATE, ShortName> = {
+  arbitrum: 'arb1',
+  bsc: 'bnb',
+  ewc: 'ewt',
+  polygon: 'matic',
+  rinkeby: 'rin',
+  volta: 'vt',
+  xdai: 'xdai',
+}
+
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, hash, search } = window.location
 
   const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
 
-  if (!isLegacyRoute) return null
+  if (!isLegacyRoute) {
+    return null
+  }
 
   // :subdir was '/safes' or '/load'
   const match = matchPath<{ [LEGACY_SAFE_ADDRESS_SLUG]: string }>(hash, {
@@ -34,12 +46,14 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
     )
   }
 
-  const chainLabel = window.location.hostname.split('.')[0] // 'rinkeby'
-  const chain = getChains().find((chain) => sameString(chain.chainName, chainLabel)) || getChainInfo()
+  const subdomain = window.location.hostname.split('.')[0]
+  const shortName = Object.keys(LEGACY_ROUTE_SHORT_NAMES).includes(subdomain)
+    ? LEGACY_ROUTE_SHORT_NAMES[subdomain]
+    : 'eth' // When not mapped subdomain, it is mainnet as it had no subdomain
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')
-  const newPathname = (hash.slice(0, safeAddressIndex) + `${chain.shortName}:` + hash.slice(safeAddressIndex)).replace(
+  const newPathname = (hash.slice(0, safeAddressIndex) + `${shortName}:` + hash.slice(safeAddressIndex)).replace(
     /(#\/safes|#\/)/, // Remove '#/safes' and '#/'
     '',
   )
