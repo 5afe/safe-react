@@ -339,7 +339,7 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled.div`
+export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   ${willBeReplaced};
 
   background-color: ${({ theme }) => theme.colors.separator} !important;
@@ -379,7 +379,7 @@ export const TxDetailsContainer = styled.div`
   .tx-owners {
     padding: 24px;
     grid-column-start: 2;
-    grid-row-end: span 2;
+    grid-row-end: span ${({ ownerRows }) => ownerRows || 2};
     grid-row-start: 1;
   }
 

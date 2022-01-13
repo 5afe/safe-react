@@ -39,13 +39,11 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
         setStatus({ color: 'rinkeby', text })
         break
       case LocalTransactionStatus.AWAITING_EXECUTION:
+      case LocalTransactionStatus.PENDING_FAILED:
         setStatus({ color: 'rinkeby', text: 'Needs execution' })
         break
       case LocalTransactionStatus.PENDING:
         setStatus({ color: 'rinkeby', text: 'Pending' })
-        break
-      case LocalTransactionStatus.PENDING_FAILED:
-        setStatus({ color: 'rinkeby', text: 'Execution failed' })
         break
     }
   }, [setStatus, txStatus, currentUser, executionInfo])
