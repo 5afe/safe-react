@@ -1,3 +1,4 @@
+import { _getChainId } from 'src/config'
 import { CHAIN_ID } from 'src/config/chain.d'
 
 export const APP_ENV = process.env.REACT_APP_ENV
@@ -39,4 +40,9 @@ const isProdGateway = () => {
 
 export const GATEWAY_URL =
   process.env.REACT_APP_GATEWAY_URL ||
-  (IS_PRODUCTION || isProdGateway() ? 'https://safe-client.gnosis.io' : 'https://safe-client.staging.gnosisdev.com')
+  (IS_PRODUCTION ||
+  isProdGateway() ||
+  // @TODO: Remove after xDai rename passes QA
+  _getChainId() === '100'
+    ? 'https://safe-client.gnosis.io'
+    : 'https://safe-client.staging.gnosisdev.com')
