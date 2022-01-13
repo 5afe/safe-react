@@ -2,25 +2,18 @@ import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
 import { DEFAULT_CHAIN_ID, PUBLIC_URL } from 'src/utils/constants'
 import { History } from 'history'
-import { NETWORK_TO_MIGRATE } from '../StoreMigrator/utils'
-import { ShortName, CHAIN_ID } from 'src/config/chain.d'
+import { CHAIN_ID } from 'src/config/chain.d'
 
 type Props = {
   history: History
 }
 
-const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
-
-// Legacy route subdomains mapped to their shortNames
-const LEGACY_ROUTE_SHORT_NAMES: Record<NETWORK_TO_MIGRATE, ShortName> = {
-  arbitrum: 'arb1',
-  bsc: 'bnb',
-  ewc: 'ewt',
-  polygon: 'matic',
-  rinkeby: 'rin',
-  volta: 'vt',
-  xdai: 'xdai',
+enum SHORT_NAME {
+  RINKEBY = 'rin',
+  MAINNET = 'eth',
 }
+
+const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
 
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, hash, search } = window.location
@@ -46,16 +39,15 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
     )
   }
 
-  const subdomain = window.location.hostname.split('.')[0]
-
-  const DEFAULT_SHORT_NAME = DEFAULT_CHAIN_ID === CHAIN_ID.RINKEBY ? LEGACY_ROUTE_SHORT_NAMES.rinkeby : 'eth'
-  const shortName = Object.keys(LEGACY_ROUTE_SHORT_NAMES).includes(subdomain)
-    ? LEGACY_ROUTE_SHORT_NAMES[subdomain]
-    : DEFAULT_SHORT_NAME
+  const DEFAULT_SHORT_NAME = DEFAULT_CHAIN_ID === CHAIN_ID.RINKEBY ? SHORT_NAME.RINKEBY : SHORT_NAME.MAINNET
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')
-  const newPathname = (hash.slice(0, safeAddressIndex) + `${shortName}:` + hash.slice(safeAddressIndex)).replace(
+  const newPathname = (
+    hash.slice(0, safeAddressIndex) +
+    `${DEFAULT_SHORT_NAME}:` +
+    hash.slice(safeAddressIndex)
+  ).replace(
     /(#\/safes|#\/)/, // Remove '#/safes' and '#/'
     '',
   )
