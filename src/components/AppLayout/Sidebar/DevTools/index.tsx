@@ -12,7 +12,7 @@ import { getShortName } from 'src/config'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { generatePrefixedAddressRoutes } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { nextTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const prepareTx = async (address: string): Promise<void> => {
@@ -66,7 +66,7 @@ const getStatusUrl = (address: string): string => {
 const DevTools = (): ReactElement => {
   const history = useHistory()
   const { owners, threshold = 1, address } = useSelector(currentSafe) ?? {}
-  const nextTxs = useSelector(nextTransactions)
+  const nextTx = useSelector(nextTransaction)
   const isGranted = useSelector(grantedSelector)
 
   const { TRANSACTIONS_QUEUE, TRANSACTIONS_HISTORY } = generatePrefixedAddressRoutes({
@@ -98,7 +98,7 @@ const DevTools = (): ReactElement => {
           onClick={() => createExecutedTx(address)}
           size="md"
           variant="bordered"
-          disabled={!!nextTxs || !isGranted}
+          disabled={!!nextTx || !isGranted}
         >
           Execute Transaction
         </StyledButton>
