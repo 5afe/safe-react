@@ -8,7 +8,9 @@ let chains: ChainInfo[] = []
 export const getChains = (): ChainInfo[] => chains
 
 export const loadChains = async () => {
-  const { results = [] } = await getChainsConfig(GATEWAY_URL, { limit: 100 })
+  // @FIXME: just for testing the Gnosis Chain
+  const GATEWAY_URL_S = 'https://safe-client.staging.gnosisdev.com' || GATEWAY_URL
+  const { results = [] } = await getChainsConfig(GATEWAY_URL_S, { limit: 100 })
   chains = results
   // Set the initail web3 provider after loading chains
   setWeb3ReadOnly()
