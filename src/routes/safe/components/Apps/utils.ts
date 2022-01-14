@@ -4,6 +4,7 @@ import memoize from 'lodash/memoize'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
+import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { SafeApp } from './types'
 
@@ -47,6 +48,9 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
     description: '',
     fetchStatus: FETCH_STATUS.LOADING,
     chainIds: [],
+    accessControl: {
+      type: SafeAppAccessPolicyTypes.NoRestrictions,
+    },
   }
 }
 
