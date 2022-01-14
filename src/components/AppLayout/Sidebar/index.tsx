@@ -6,6 +6,7 @@ import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import DebugToggle from './DebugToggle'
 import { IS_PRODUCTION } from 'src/utils/constants'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const DevTools = lazy(() => import('./DevTools'))
 
@@ -80,12 +81,14 @@ const Sidebar = ({
       </>
     ) : null}
     <HelpContainer>
-      {!IS_PRODUCTION && safeAddress && (
-        <>
-          <StyledDivider />
-          <DevTools />
-        </>
-      )}
+      {!IS_PRODUCTION &&
+        safeAddress &&
+        wrapInSuspense(
+          <>
+            <StyledDivider />
+            <DevTools />
+          </>,
+        )}
       {!IS_PRODUCTION && <DebugToggle />}
 
       <StyledDivider />
