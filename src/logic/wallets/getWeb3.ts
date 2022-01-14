@@ -12,8 +12,8 @@ import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
-import { sameString } from '../../utils/strings'
 import { Errors, logError } from '../exceptions/CodedException'
+import { Contract } from 'web3-eth-contract'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -121,20 +121,26 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 export const reverseENSLookup = async (address: string): Promise<string> => {
   const web3 = getWeb3ReadOnly()
   const lookup = address.toLowerCase().substr(2) + '.addr.reverse'
-  const ResolverContract = await web3.eth.ens.getResolver(lookup)
   const nh = namehash(lookup)
 
+  let ResolverContract: Contract
   let name = ''
+  try {
+    ResolverContract = await web3.eth.ens.getResolver(lookup)
+  } catch (err) {
+    logError(Errors._103, err.message)
+    return name
+  }
+
   let verifiedAddress = ''
   try {
     name = await ResolverContract.methods.name(nh).call()
     verifiedAddress = await web3.eth.ens.getAddress(name)
-  } catch (error) {
-    logError(Errors._103, error.message)
+  } catch (err) {
+    logError(Errors._103, err.message)
   }
 
-  const isValidAddress = sameString(verifiedAddress, address)
-  return isValidAddress ? name : ''
+  return verifiedAddress === address ? name : ''
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
