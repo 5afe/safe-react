@@ -19,8 +19,8 @@ import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
 import { isValidChainId, _getChainId } from 'src/config'
-import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
 import { setChainId } from 'src/logic/config/utils'
+import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
 import XDaiGCRedirection from './XDaiGCRedirection'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner

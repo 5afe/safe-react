@@ -1,24 +1,7 @@
 import { render } from '@testing-library/react'
-
-import { PUBLIC_URL } from 'src/utils/constants'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { history } from 'src/routes/routes'
-import LegacyRouteRedirection, { isLegacyRoute } from '../LegacyRouteRedirection'
-
-describe('isLegacyRoute', () => {
-  it('returns true for legacy safe routes', () => {
-    history.push({ hash: `#/safes/${ZERO_ADDRESS}` })
-    expect(isLegacyRoute(window.location.pathname, window.location.hash)).toBe(true)
-  })
-  it('returns false for non-legacy safe routes', () => {
-    history.push(`/rin:${ZERO_ADDRESS}`)
-    expect(isLegacyRoute(window.location.pathname, window.location.hash)).toBe(false)
-  })
-  it('returns false for all other routes', () => {
-    history.push(`/load`)
-    expect(isLegacyRoute(window.location.pathname, window.location.hash)).toBe(false)
-  })
-})
+import LegacyRouteRedirection from '../LegacyRouteRedirection'
 
 describe('LegacyRouteRedirection', () => {
   it('redirects legacy safe links and prepends the short chain name', () => {

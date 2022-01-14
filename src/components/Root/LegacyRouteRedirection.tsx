@@ -1,26 +1,26 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
+import { DEFAULT_CHAIN_ID, PUBLIC_URL } from 'src/utils/constants'
 import { History } from 'history'
-
-import { getChainInfo } from 'src/config'
-import { PUBLIC_URL } from 'src/utils/constants'
-import { sameString } from 'src/utils/strings'
-import { getChains } from 'src/config/cache/chains'
+import { CHAIN_ID } from 'src/config/chain.d'
 
 type Props = {
   history: History
 }
 
-const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
-
-export const isLegacyRoute = (pathname: string, hash: string): boolean => {
-  return pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
+enum SHORT_NAME {
+  RINKEBY = 'rin',
+  MAINNET = 'eth',
 }
+
+const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
 
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, hash, search } = window.location
 
-  if (!isLegacyRoute(pathname, hash)) {
+  const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
+
+  if (!isLegacyRoute) {
     return null
   }
 
@@ -39,12 +39,15 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
     )
   }
 
-  const chainLabel = window.location.hostname.split('.')[0] // 'rinkeby'
-  const chain = getChains().find((chain) => sameString(chain.chainName, chainLabel)) || getChainInfo()
+  const DEFAULT_SHORT_NAME = DEFAULT_CHAIN_ID === CHAIN_ID.RINKEBY ? SHORT_NAME.RINKEBY : SHORT_NAME.MAINNET
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')
-  const newPathname = (hash.slice(0, safeAddressIndex) + `${chain.shortName}:` + hash.slice(safeAddressIndex)).replace(
+  const newPathname = (
+    hash.slice(0, safeAddressIndex) +
+    `${DEFAULT_SHORT_NAME}:` +
+    hash.slice(safeAddressIndex)
+  ).replace(
     /(#\/safes|#\/)/, // Remove '#/safes' and '#/'
     '',
   )
