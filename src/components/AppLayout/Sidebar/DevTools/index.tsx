@@ -1,11 +1,19 @@
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 import { fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { Button } from '@gnosis.pm/safe-react-components'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 
-import { getHashedExplorerUrl, getShortName } from 'src/config'
+import { getShortName } from 'src/config'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { generatePrefixedAddressRoutes } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const prepareTx = async (address: string): Promise<void> => {
   const newTxBtn = screen.getByText('New transaction')
@@ -21,7 +29,8 @@ const prepareTx = async (address: string): Promise<void> => {
   fireEvent.change(tokenInput, { target: { value: ZERO_ADDRESS } })
 
   const amountInput = await screen.findByPlaceholderText('Amount*')
-  fireEvent.change(amountInput, { target: { value: '0.0001' } }) // TODO: Check possible
+  // @TODO: Check that amount is possible
+  fireEvent.change(amountInput, { target: { value: '0.0001' } })
 
   const reviewBtn = await screen.findByText('Review')
   fireEvent.click(reviewBtn)
@@ -54,8 +63,11 @@ const getStatusUrl = (address: string): string => {
   return `https://rimeissner.dev/safe-status-check/#/${getShortName()}:${address}`
 }
 
-const DevTools = () => {
+const DevTools = (): ReactElement => {
+  const history = useHistory()
   const { owners, threshold = 1, address } = useSelector(currentSafe) ?? {}
+  const nextTx = useSelector(nextTransaction)
+  const isGranted = useSelector(grantedSelector)
 
   const { TRANSACTIONS_QUEUE, TRANSACTIONS_HISTORY } = generatePrefixedAddressRoutes({
     shortName: getShortName(),
@@ -64,23 +76,51 @@ const DevTools = () => {
 
   return (
     <>
-      Threshold: {threshold} / {owners?.length || 0}
-      <br />
-      <Link to={TRANSACTIONS_QUEUE}>Queue</Link>
-      <br />
-      <Link to={TRANSACTIONS_HISTORY}>History</Link>
-      <a href={getHashedExplorerUrl(address)} target="_blank" rel="noreferrer">
-        Explorer
-      </a>
-      <a href={getStatusUrl(address)} target="_blank" rel="noreferrer">
-        Safe Status
-      </a>
-      <br />
-      <button onClick={() => createQueuedTx(address)}>Create queued tx</button>
-      <br />
-      <button onClick={() => createExecutedTx(address)}>Create and execute tx</button>
+      <List dense>
+        <ListItem>
+          <ListItemText primary="Developer Tools" secondary={`Threshold: ${threshold} / ${owners?.length || 0}`} />
+        </ListItem>
+        <ListItem button>
+          <ListItemText onClick={() => history.push(TRANSACTIONS_QUEUE)}>Queue</ListItemText>
+        </ListItem>
+        <ListItem button>
+          <ListItemText onClick={() => history.push(TRANSACTIONS_HISTORY)}>History</ListItemText>
+        </ListItem>
+        <ListItem button>
+          <ListItemText onClick={() => window.open(getStatusUrl(address), '_blank')}>Safe Status</ListItemText>
+        </ListItem>
+      </List>
+      <ButtonWrapper>
+        <StyledButton onClick={() => createQueuedTx(address)} size="md" variant="bordered" disabled={!isGranted}>
+          Queue Transaction
+        </StyledButton>
+        <StyledButton
+          onClick={() => createExecutedTx(address)}
+          size="md"
+          variant="bordered"
+          disabled={!!nextTx || !isGranted}
+        >
+          Execute Transaction
+        </StyledButton>
+      </ButtonWrapper>
     </>
   )
 }
 
 export default DevTools
+
+const StyledButton = styled(Button)`
+  &.MuiButton-root {
+    padding: 0 12px !important;
+    margin-top: 6px;
+    width: 100%;
+  }
+
+  & .MuiButton-label {
+    font-size: 14px !important;
+  }
+`
+
+const ButtonWrapper = styled.div`
+  margin: 0 12px;
+`

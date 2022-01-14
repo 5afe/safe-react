@@ -79,10 +79,13 @@ const Sidebar = ({
         <List items={items} />
       </>
     ) : null}
-
-    {!IS_PRODUCTION && safeAddress && <DevTools />}
-
     <HelpContainer>
+      {!IS_PRODUCTION && safeAddress && (
+        <>
+          <StyledDivider />
+          <DevTools />
+        </>
+      )}
       {!IS_PRODUCTION && <DebugToggle />}
 
       <StyledDivider />
