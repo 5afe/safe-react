@@ -21,6 +21,7 @@ import { loadChains } from 'src/config/cache/chains'
 import { isValidChainId, _getChainId } from 'src/config'
 import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
 import { setChainId } from 'src/logic/config/utils'
+import XDaiGCRedirection from './XDaiGCRedirection'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -79,6 +80,7 @@ const RootConsumer = (): React.ReactElement | null => {
 const Root = (): React.ReactElement => (
   <>
     <LegacyRouteRedirection history={history} />
+    <XDaiGCRedirection history={history} />
     <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
       <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
         <RootConsumer />

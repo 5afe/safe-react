@@ -1,35 +1,26 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
+import { History } from 'history'
+
 import { getChainInfo } from 'src/config'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
-import { History } from 'history'
 import { getChains } from 'src/config/cache/chains'
 
 type Props = {
   history: History
 }
 
-enum SHORT_NAME {
-  GNOSIS_CHAIN = 'gno',
-  XDAI = 'xdai',
-}
-
 const LEGACY_SAFE_ADDRESS_SLUG = 'safeAddress'
+
+export const isLegacyRoute = (pathname: string, hash: string): boolean => {
+  return pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
+}
 
 const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, hash, search } = window.location
 
-  const isLegacyRoute = pathname === `${PUBLIC_URL}/` && hash.startsWith('#/')
-
-  if (!isLegacyRoute) {
-    const XDAI_ROUTE_PREFIX = `${PUBLIC_URL}/${SHORT_NAME.XDAI}:`
-    const GNO_ROUTE_PREFIX = `${PUBLIC_URL}/${SHORT_NAME.GNOSIS_CHAIN}:`
-
-    const hasxDaiShortName = pathname.includes(XDAI_ROUTE_PREFIX)
-    if (hasxDaiShortName) {
-      history.replace(`${pathname.replace(XDAI_ROUTE_PREFIX, GNO_ROUTE_PREFIX)}${search}`)
-    }
+  if (!isLegacyRoute(pathname, hash)) {
     return null
   }
 
