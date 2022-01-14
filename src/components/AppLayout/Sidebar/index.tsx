@@ -1,3 +1,4 @@
+import { lazy } from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
@@ -5,7 +6,8 @@ import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import DebugToggle from './DebugToggle'
 import { IS_PRODUCTION } from 'src/utils/constants'
-import DevTools from './DevTools'
+
+const DevTools = lazy(() => import('./DevTools'))
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
