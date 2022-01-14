@@ -5,6 +5,7 @@ import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import DebugToggle from './DebugToggle'
 import { IS_PRODUCTION } from 'src/utils/constants'
+import DevTools from './DevTools'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -76,6 +77,8 @@ const Sidebar = ({
         <List items={items} />
       </>
     ) : null}
+
+    {!IS_PRODUCTION && safeAddress && <DevTools />}
 
     <HelpContainer>
       {!IS_PRODUCTION && <DebugToggle />}
