@@ -32,20 +32,24 @@ function ReviewLoadStep(): ReactElement {
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
-  const ownersWithENSName = formValues[FIELD_SAFE_OWNER_ENS_LIST]
   const safeName = getLoadSafeName(formValues, addressBook)
   const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
+  const ownersWithENSName = formValues[FIELD_SAFE_OWNER_ENS_LIST]
+
+  console.log(formValues)
 
   const ownerListWithNames = ownerList.map((owner) => {
     const ownerFieldName = `owner-address-${owner.address}`
-    const ownerNameValue = formValues[ownerFieldName]
+    const ownerNameValue = formValues[ownerFieldName] || ownersWithENSName[owner.address]
     return {
       ...owner,
       name: ownerNameValue,
     }
   })
+
+  console.log(ownerListWithNames)
 
   const isUserConnectedWalletASAfeOwner = checkIfUserAddressIsAnOwner(ownerList, userAddress)
 
@@ -120,7 +124,7 @@ function ReviewLoadStep(): ReactElement {
                 <Col align="center" xs={12}>
                   <PrefixedEthHashInfo
                     hash={owner.address}
-                    name={owner.name || ownersWithENSName[owner.address]}
+                    name={owner.name}
                     showAvatar
                     showCopyBtn
                     explorerUrl={getExplorerInfo(owner.address)}

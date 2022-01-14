@@ -23,6 +23,7 @@ import {
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
   FIELD_SAFE_OWNERS_LIST,
+  FIELD_SAFE_OWNER_ENS_LIST,
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
@@ -37,6 +38,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
+import { reverseENSLookup } from '../../logic/wallets/getWeb3'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -78,8 +80,11 @@ function CreateSafePage(): ReactElement {
 
   useEffect(() => {
     if (provider && userWalletAddress) {
-      const initialValuesFromUrl = getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
-      setInitialFormValues(initialValuesFromUrl)
+      const setInitialValues = async () => {
+        const initialValuesFromUrl = await getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
+        setInitialFormValues(initialValuesFromUrl)
+      }
+      setInitialValues()
     }
   }, [provider, userWalletAddress, addressBook, location, safeRandomName])
 
@@ -134,7 +139,7 @@ export default CreateSafePage
 const DEFAULT_THRESHOLD_VALUE = 1
 
 // initial values can be present in the URL because the Old MultiSig migration
-function getInitialValues(userAddress, addressBook, location, suggestedSafeName): CreateSafeFormValues {
+async function getInitialValues(userAddress, addressBook, location, suggestedSafeName): Promise<CreateSafeFormValues> {
   const query = queryString.parse(location.search, { arrayFormat: 'comma' })
   const { name, owneraddresses, ownernames, threshold } = query
 
@@ -145,8 +150,25 @@ function getInitialValues(userAddress, addressBook, location, suggestedSafeName)
 
   // we set the owner names
   const ownersNamesFromUrl = Array.isArray(ownernames) ? ownernames : [ownernames]
-  const userAddressName = [addressBook[userAddress]?.name || 'My Wallet']
+  const userAddressName = [addressBook[userAddress]?.name || '']
   const ownerNames = isOwnersPresentInTheUrl ? ownersNamesFromUrl : userAddressName
+
+  const ownersWithENSName = await Promise.all(
+    owners.map(async (address) => {
+      const ensName = await reverseENSLookup(address)
+      return {
+        address,
+        name: ensName,
+      }
+    }),
+  )
+
+  const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {
+    return {
+      ...acc,
+      [address]: name,
+    }
+  }, {})
 
   const thresholdFromURl = Number(threshold)
   const isValidThresholdInTheUrl =
@@ -160,6 +182,7 @@ function getInitialValues(userAddress, addressBook, location, suggestedSafeName)
       nameFieldName: `owner-name-${index}`,
       addressFieldName: `owner-address-${index}`,
     })),
+    [FIELD_SAFE_OWNER_ENS_LIST]: ownersWithENSNameRecord,
     // we set owners address values as owner-address-${index} format in the form state
     ...owners.reduce(
       (ownerAddressFields, ownerAddress, index) => ({
