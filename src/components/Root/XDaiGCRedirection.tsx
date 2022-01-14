@@ -18,21 +18,23 @@ const XDaiGCRedirection = ({ history }: Props): ReactElement | null => {
   const { pathname, search, hash } = window.location
 
   if (isLegacyRoute(pathname, hash)) {
-    console.log('isLegacyRoute')
     return null
   }
 
-  const XDAI_ROUTE_PREFIX = `${PUBLIC_URL}/${SHORT_NAME.XDAI}:`
-  const GNO_ROUTE_PREFIX = `${PUBLIC_URL}/${SHORT_NAME.GNOSIS_CHAIN}:`
-
-  const hasXDaiShortName = pathname.includes(XDAI_ROUTE_PREFIX)
+  // window.location.pathname will have PUBLIC_URL
+  const hasXDaiShortName = pathname.includes(`${PUBLIC_URL}/${SHORT_NAME.XDAI}:`)
 
   if (!hasXDaiShortName) {
     return null
   }
 
-  const newPathname = `${pathname.replace(XDAI_ROUTE_PREFIX, GNO_ROUTE_PREFIX)}${search}`
-  console.log('newPathname', newPathname)
+  // history.location.pathname is modified as history object has
+  // { basename: PUBLIC_URL }
+  const newPathname = `${history.location.pathname.replace(
+    `/${SHORT_NAME.XDAI}:`,
+    `/${SHORT_NAME.GNOSIS_CHAIN}:`,
+  )}${search}`
+
   return (
     <Router history={history}>
       <Redirect to={newPathname} />
