@@ -18,6 +18,7 @@ import {
   isMultiSigExecutionDetails,
   isTransferTxInfo,
   isTxQueued,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -194,3 +195,7 @@ export const isDeeplinkedTx = (): boolean => {
 
   return !txMatch && !!deeplinkMatch?.params?.[TRANSACTION_ID_SLUG]
 }
+
+export const isAwaitingExecution = (
+  txStatus: typeof LocalTransactionStatus[keyof typeof LocalTransactionStatus],
+): boolean => [LocalTransactionStatus.AWAITING_EXECUTION, LocalTransactionStatus.PENDING_FAILED].includes(txStatus)

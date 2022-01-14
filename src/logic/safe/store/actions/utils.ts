@@ -13,6 +13,9 @@ import {
   isMultisigExecutionInfo,
   LocalTransactionStatus,
 } from 'src/logic/safe/store/models/types/gateway.d'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 
 export const shouldExecuteTransaction = async (
   safeInstance: GnosisSafe,
@@ -38,8 +41,8 @@ export const shouldExecuteTransaction = async (
     return true
   }
 
-  // If the previous tx is not executed or the different between lastTx.nonce and nonce is > 1
-  // it's delayed using the approval mechanisms.
+  // If the previous tx is not executed or the difference between lastTx.nonce and nonce is > 1
+  // it's delayed using the approval mechanism.
   // Once the previous tx is executed, the current tx will be available to be executed
   // by the user using the exec button.
   if (lastTx && isMultisigExecutionInfo(lastTx.executionInfo)) {
@@ -104,4 +107,16 @@ export const buildSafeOwners = (
 
   // nothing to do without remote owners, so we return the stored list
   return localSafeOwners
+}
+
+export const getNonce = async (safeAddress: string, safeVersion: string): Promise<string> => {
+  let nextNonce: string
+  try {
+    nextNonce = (await getRecommendedNonce(safeAddress)).toString()
+  } catch (e) {
+    logError(Errors._616, e.message)
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+    nextNonce = await safeInstance.methods.nonce().call()
+  }
+  return nextNonce
 }
