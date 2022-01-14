@@ -24,6 +24,7 @@ import { useStyles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -58,6 +59,7 @@ export const ReviewReplaceOwnerModal = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -65,7 +67,6 @@ export const ReviewReplaceOwnerModal = ({
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -74,7 +75,9 @@ export const ReviewReplaceOwnerModal = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -109,6 +112,7 @@ export const ReviewReplaceOwnerModal = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -121,12 +125,17 @@ export const ReviewReplaceOwnerModal = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -235,15 +244,14 @@ export const ReviewReplaceOwnerModal = ({
             onEdit={toggleEditMode}
             compact={false}
             isTransactionCreation={isCreation}
-            isTransactionExecution={isExecution}
+            isTransactionExecution={canTxExecute}
             isOffChainSignature={isOffChainSignature}
           />
 
           <ReviewInfoText
             gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
-            isExecution={isExecution}
-            isOffChainSignature={isOffChainSignature}
+            isExecution={canTxExecute}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

@@ -7,7 +7,7 @@ interface ExecuteCheckboxProps {
   onChange: (val: boolean) => unknown
 }
 
-const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement | null => {
+const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(e.target.checked)
   }
