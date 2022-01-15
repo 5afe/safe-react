@@ -26,6 +26,7 @@ import { setChainId } from 'src/logic/config/utils'
 import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
 import { useAddressedRouteKey } from './safe/container/hooks/useAddressedRouteKey'
 import { setChainIdFromUrl } from 'src/utils/history'
+import { CHAIN_ID } from 'src/config/chain.d'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -81,7 +82,8 @@ const Routes = (): React.ReactElement => {
         getNetworkRootRoutes().map(({ chainId, route }) => (
           <Route
             key={chainId}
-            path={route}
+            // /xdai also sets chainId correctly
+            path={chainId === CHAIN_ID.GNOSIS_CHAIN ? [route, '/xdai'] : route}
             render={() => {
               setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
