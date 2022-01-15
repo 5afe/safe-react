@@ -9,11 +9,13 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
 import { getShortName } from 'src/config'
-import { currentSafe } from 'src/logic/safe/store/selectors'
+import { currentSafe, currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import { generatePrefixedAddressRoutes } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+
+const TX_AMOUNT = '0.0001'
 
 const prepareTx = async (address: string): Promise<void> => {
   const newTxBtn = screen.getByText('New transaction')
@@ -29,13 +31,13 @@ const prepareTx = async (address: string): Promise<void> => {
   fireEvent.change(tokenInput, { target: { value: ZERO_ADDRESS } })
 
   const amountInput = await screen.findByPlaceholderText('Amount*')
-  // @TODO: Check that amount is possible
-  fireEvent.change(amountInput, { target: { value: '0.0001' } })
+  fireEvent.change(amountInput, { target: { value: TX_AMOUNT } })
 
   const reviewBtn = await screen.findByText('Review')
   fireEvent.click(reviewBtn)
 
-  await waitForElementToBeRemoved(await screen.findByText('Estimating'), { timeout: 10000 })
+  const estimatingBtn = await screen.findByText('Estimating')
+  await waitForElementToBeRemoved(estimatingBtn, { timeout: 10000 })
 }
 
 const submitTx = async (): Promise<void> => {
@@ -68,6 +70,15 @@ const DevTools = (): ReactElement => {
   const { owners, threshold = 1, address } = useSelector(currentSafe) ?? {}
   const nextTx = useSelector(nextTransaction)
   const isGranted = useSelector(grantedSelector)
+  const ethBalance = useSelector(currentSafeEthBalance)
+
+  const hasSufficientFunds = (): boolean => {
+    let hasFunds = false
+    try {
+      hasFunds = parseFloat(ethBalance) > parseFloat(TX_AMOUNT)
+    } catch (err) {}
+    return hasFunds
+  }
 
   const { TRANSACTIONS_QUEUE, TRANSACTIONS_HISTORY } = generatePrefixedAddressRoutes({
     shortName: getShortName(),
@@ -91,14 +102,19 @@ const DevTools = (): ReactElement => {
         </ListItem>
       </List>
       <ButtonWrapper>
-        <StyledButton onClick={() => createQueuedTx(address)} size="md" variant="bordered" disabled={!isGranted}>
+        <StyledButton
+          onClick={() => createQueuedTx(address)}
+          size="md"
+          variant="bordered"
+          disabled={!isGranted || !hasSufficientFunds()}
+        >
           Queue Transaction
         </StyledButton>
         <StyledButton
           onClick={() => createExecutedTx(address)}
           size="md"
           variant="bordered"
-          disabled={!!nextTx || !isGranted}
+          disabled={!isGranted || !hasSufficientFunds() || !nextTx}
         >
           Execute Transaction
         </StyledButton>
