@@ -100,16 +100,26 @@ export type TransactionGasEstimationResult = {
   isOffChainSignature: boolean // Returns true if offChainSignature is available
 }
 
-const getDefaultGasEstimation = (
-  txEstimationExecutionStatus: EstimationStatus,
-  gasPrice: string,
-  gasPriceFormatted: string,
-  gasMaxPrioFee: string,
-  gasMaxPrioFeeFormatted: string,
+type DefaultGasEstimationParams = {
+  txEstimationExecutionStatus: EstimationStatus
+  gasPrice: string
+  gasPriceFormatted: string
+  gasMaxPrioFee: string
+  gasMaxPrioFeeFormatted: string
+  isExecution?: boolean
+  isCreation?: boolean
+  isOffChainSignature?: boolean
+}
+const getDefaultGasEstimation = ({
+  txEstimationExecutionStatus,
+  gasPrice,
+  gasPriceFormatted,
+  gasMaxPrioFee,
+  gasMaxPrioFeeFormatted,
   isExecution = false,
   isCreation = false,
   isOffChainSignature = false,
-): TransactionGasEstimationResult => {
+}: DefaultGasEstimationParams): TransactionGasEstimationResult => {
   return {
     txEstimationExecutionStatus,
     gasEstimation: '0',
@@ -140,7 +150,13 @@ export const useEstimateTransactionGas = ({
   manualGasLimit,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
-    getDefaultGasEstimation(EstimationStatus.LOADING, '0', '0', '0', '0'),
+    getDefaultGasEstimation({
+      txEstimationExecutionStatus: EstimationStatus.LOADING,
+      gasPrice: '0',
+      gasPriceFormatted: '0',
+      gasMaxPrioFee: '0',
+      gasMaxPrioFeeFormatted: '0',
+    }),
   )
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
@@ -156,16 +172,16 @@ export const useEstimateTransactionGas = ({
 
       if (isOffChainSignature && !isCreation) {
         setGasEstimation(
-          getDefaultGasEstimation(
-            EstimationStatus.SUCCESS,
-            fromWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
-            DEFAULT_MAX_GAS_FEE,
-            fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
-            DEFAULT_MAX_PRIO_FEE,
+          getDefaultGasEstimation({
+            txEstimationExecutionStatus: EstimationStatus.SUCCESS,
+            gasPrice: fromWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
+            gasPriceFormatted: DEFAULT_MAX_GAS_FEE,
+            gasMaxPrioFee: fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
+            gasMaxPrioFeeFormatted: DEFAULT_MAX_PRIO_FEE,
             isExecution,
             isCreation,
             isOffChainSignature,
-          ),
+          }),
         )
         return
       }
@@ -261,13 +277,13 @@ export const useEstimateTransactionGas = ({
         console.warn(error.message)
         // If safeTxGas estimation fail we set this value to 0 (so up to all gasLimit can be used)
         setGasEstimation(
-          getDefaultGasEstimation(
-            EstimationStatus.FAILURE,
-            DEFAULT_MAX_GAS_FEE,
-            fromWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
-            DEFAULT_MAX_PRIO_FEE,
-            fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
-          ),
+          getDefaultGasEstimation({
+            txEstimationExecutionStatus: EstimationStatus.FAILURE,
+            gasPrice: DEFAULT_MAX_GAS_FEE,
+            gasPriceFormatted: fromWei(DEFAULT_MAX_GAS_FEE, 'gwei'),
+            gasMaxPrioFee: DEFAULT_MAX_PRIO_FEE,
+            gasMaxPrioFeeFormatted: fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
+          }),
         )
       }
     }
