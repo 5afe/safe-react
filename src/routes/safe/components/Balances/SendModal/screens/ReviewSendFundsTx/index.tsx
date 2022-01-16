@@ -1,3 +1,4 @@
+import { RecordOf } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,15 +24,14 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
-import { RecordOf } from 'immutable'
 
 import { styles } from './style'
 import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const useStyles = makeStyles(styles)
@@ -171,12 +171,12 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <Img alt={txToken?.name as string} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
+          <Img alt={txToken?.name} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
           <Paragraph
             className={classes.amount}
             noMargin
             size="md"
-            data-testid={`amount-${txToken?.symbol as string}-review-step`}
+            data-testid={`amount-${txToken?.symbol}-review-step`}
           >
             {tx.amount} {txToken?.symbol}
           </Paragraph>

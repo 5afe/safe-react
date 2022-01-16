@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components'
+
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -56,7 +57,7 @@ export const TxParamsState = ({
   } = useEstimateTransactionGas({
     txData,
     txRecipient: safeAddress,
-    txType: txType,
+    txType,
     txAmount: txValue,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
@@ -70,21 +71,23 @@ export const TxParamsState = ({
   const onClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
+    const oldGasLimit = gasLimit
+    const newGasLimit = txParameters.ethGasLimit
     const oldMaxPrioFee = gasMaxPrioFeeFormatted
     const newMaxPrioFee = txParameters.ethMaxPrioFee
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(txParameters.ethGasPrice)
+      setManualGasPrice(newGasPrice)
     }
 
     if (newMaxPrioFee && oldMaxPrioFee !== newMaxPrioFee) {
-      setManualGasPrice(txParameters.ethMaxPrioFee)
+      setManualGasPrice(newMaxPrioFee)
     }
 
-    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit)
+    if (newGasLimit && oldGasLimit !== newGasLimit) {
+      setManualGasLimit(newGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {

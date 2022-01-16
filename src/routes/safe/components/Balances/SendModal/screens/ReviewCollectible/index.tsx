@@ -21,9 +21,9 @@ import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 import { styles } from './style'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 const useStyles = makeStyles(styles)
 
@@ -58,9 +58,9 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
     const calculateERC721TransferData = async () => {
       try {
-        const txData = await generateERC721TransferTxData(tx, safeAddress)
+        const encodedAbiTxData = await generateERC721TransferTxData(tx, safeAddress)
         if (isCurrent) {
-          setTxData(txData)
+          setTxData(encodedAbiTxData)
         }
       } catch (error) {
         console.error('Error calculating ERC721 transfer data:', error.message)
@@ -81,7 +81,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             safeAddress,
             to: tx.assetAddress,
             valueInWei: '0',
-            txData: txData,
+            txData,
             txNonce: txParameters.safeNonce,
             safeTxGas: txParameters.safeTxGas,
             ethParameters: txParameters,
@@ -131,7 +131,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           <Row align="center" margin="md">
             <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.image} />
             <Paragraph className={classes.amount} noMargin size="md">
-              {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId as string)})
+              {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId.toString())})
             </Paragraph>
           </Row>
         )}

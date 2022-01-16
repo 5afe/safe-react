@@ -18,8 +18,8 @@ import { useStyles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
 import { TxParamsState } from '../../Transactions/helpers/TxParamsState'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 interface RemoveGuardModalProps {
   onClose: () => void

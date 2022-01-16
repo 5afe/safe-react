@@ -7,7 +7,7 @@ import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selector
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
-import useSafeTxGas from '../useSafeTxGas'
+import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
 const TxParameterWrapper = styled.div`

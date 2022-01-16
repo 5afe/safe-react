@@ -14,9 +14,13 @@ import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { minValue } from 'src/components/forms/validator'
 import { Modal } from 'src/components/Modal'
-
-import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
-import useSafeTxGas from '../useSafeTxGas'
+import {
+  ParametersStatus,
+  areSafeParamsEnabled,
+  areEthereumParamsVisible,
+  ethereumTxParametersTitle,
+} from 'src/routes/safe/components/Transactions/helpers/utils'
+import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
 const StyledDivider = styled(Divider)`

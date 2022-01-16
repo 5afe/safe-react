@@ -16,9 +16,9 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
 
 import { useStyles } from './style'
-import { TxParamsState } from '../../../Transactions/helpers/TxParamsState'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
