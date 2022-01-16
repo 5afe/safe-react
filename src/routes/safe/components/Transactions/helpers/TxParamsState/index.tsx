@@ -16,6 +16,7 @@ import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers
 
 type Props = {
   children: ReactNode
+  operation?: number
   txData: string
   txValue?: string
   txTo?: string
@@ -23,6 +24,7 @@ type Props = {
   onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
   onBack?: (...rest: any) => void
   submitText?: string
+  isConfirmDisabled?: boolean
 }
 
 const Container = styled.div`
@@ -31,6 +33,7 @@ const Container = styled.div`
 
 export const TxParamsState = ({
   children,
+  operation,
   txData,
   txValue = '0',
   txTo,
@@ -38,6 +41,7 @@ export const TxParamsState = ({
   onSubmit,
   onBack,
   submitText,
+  isConfirmDisabled,
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -64,6 +68,7 @@ export const TxParamsState = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    operation,
   })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -157,6 +162,7 @@ export const TxParamsState = ({
               confirmButtonProps={{
                 onClick: () => onSubmitClick(txParameters),
                 status: submitStatus,
+                disabled: isConfirmDisabled,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : submitText,
                 testId: 'submit-tx-btn',
               }}
