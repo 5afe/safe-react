@@ -18,6 +18,7 @@ const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
 
 const TxInfo = styled.div`
   padding: 8px 0;
+  overflow-x: auto;
 `
 
 const StyledMethodName = styled(Text)`
