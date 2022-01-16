@@ -22,7 +22,6 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { sameString } from 'src/utils/strings'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 
@@ -33,6 +32,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
+import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -92,11 +92,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCurrency.decimals) : '0'
   const txData = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
-
-  const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
+  const isSpendingLimitTx = isSpendingLimit(tx.txType)
 
   const submitTx = async (txParameters: TxParameters, delayExecution: boolean) => {
-    if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
+    if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimit = getSpendingLimitContract()
       try {

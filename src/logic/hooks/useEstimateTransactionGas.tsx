@@ -18,8 +18,8 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { sameString } from 'src/utils/strings'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
+import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -36,11 +36,7 @@ export const checkIfTxIsExecution = (
   txConfirmations?: number,
   txType?: string,
 ): boolean => {
-  if (
-    threshold === 1 ||
-    sameString(txType, 'spendingLimit') ||
-    (txConfirmations !== undefined && txConfirmations >= threshold)
-  ) {
+  if (threshold === 1 || isSpendingLimit(txType) || (txConfirmations !== undefined && txConfirmations >= threshold)) {
     return true
   }
 
@@ -58,7 +54,7 @@ export const checkIfTxIsApproveAndExecution = (
   preApprovingOwner?: string,
 ): boolean => {
   if (preApprovingOwner) {
-    return txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
+    return txConfirmations + 1 === threshold || isSpendingLimit(txType)
   }
 
   if (threshold === 1) {
@@ -69,7 +65,7 @@ export const checkIfTxIsApproveAndExecution = (
 }
 
 export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
-  txConfirmations === 0 && !sameString(txType, 'spendingLimit')
+  txConfirmations === 0 && !isSpendingLimit(txType)
 
 type UseEstimateTransactionGasProps = {
   txData: string

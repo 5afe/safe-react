@@ -10,7 +10,8 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { lg, md } from 'src/theme/variables'
-import { TxParametersDetail } from '../TxParametersDetail'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 type Props = {
   children: ReactNode
@@ -40,7 +41,7 @@ export const TxParamsState = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
   const safeAddress = extractSafeAddress()
-  const isSpendingLimit = txType === 'spendingLimit'
+  const isSpendingLimitTx = isSpendingLimit(txType)
 
   const {
     gasCostFormatted,
@@ -118,11 +119,11 @@ export const TxParamsState = ({
           {children}
 
           <Container>
-            {!isSpendingLimit && isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {!isSpendingLimitTx && isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
-            {!isSpendingLimit && (
+            {!isSpendingLimitTx && (
               <TxParametersDetail
                 txParameters={txParameters}
                 onEdit={toggleEditMode}
@@ -133,7 +134,7 @@ export const TxParamsState = ({
             )}
           </Container>
 
-          {!isSpendingLimit && (
+          {!isSpendingLimitTx && (
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
@@ -145,7 +146,7 @@ export const TxParamsState = ({
           )}
 
           {/* Footer */}
-          <Modal.Footer withoutBorder={!isSpendingLimit && submitStatus !== ButtonStatus.LOADING}>
+          <Modal.Footer withoutBorder={!isSpendingLimitTx && submitStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
               cancelButtonProps={{ onClick: onBack || onClose, text: 'Back' }}
               confirmButtonProps={{
