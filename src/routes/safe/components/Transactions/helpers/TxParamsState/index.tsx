@@ -18,6 +18,7 @@ type Props = {
   children: ReactNode
   txData: string
   txValue?: string
+  txTo?: string
   txType?: string
   onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
   onBack?: (...rest: any) => void
@@ -32,6 +33,7 @@ export const TxParamsState = ({
   children,
   txData,
   txValue = '0',
+  txTo,
   txType,
   onSubmit,
   onBack,
@@ -56,7 +58,7 @@ export const TxParamsState = ({
     isOffChainSignature,
   } = useEstimateTransactionGas({
     txData,
-    txRecipient: safeAddress,
+    txRecipient: txTo || safeAddress,
     txType,
     txAmount: txValue,
     safeTxGas: manualSafeTxGas,
