@@ -21,7 +21,7 @@ import {
   getNetworkRootRoutes,
   TRANSACTION_ID_SLUG,
 } from './routes'
-import { getShortName } from 'src/config'
+import { getChainById, getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
 import { useAddressedRouteKey } from './safe/container/hooks/useAddressedRouteKey'
@@ -72,9 +72,21 @@ const Routes = (): React.ReactElement => {
       />
 
       <Route
-        // Redirect xdai to gno
+        // Redirect /xdai root to /gnosis-chain
+        path="/xdai"
+        render={() => {
+          const { route = '/gnosis-chain' } =
+            getNetworkRootRoutes().find(({ chainId }) => chainId === CHAIN_ID.GNOSIS_CHAIN) || {}
+          return <Redirect to={route} />
+        }}
+      />
+      <Route
+        // Redirect xdai: shortName to gno:
         path="/xdai\::url*"
-        render={() => <Redirect to={location.pathname.replace(/\/xdai:/, '/gno:')} />}
+        render={() => {
+          const { shortName = 'gno' } = getChainById(CHAIN_ID.GNOSIS_CHAIN)
+          return <Redirect to={location.pathname.replace(/\/xdai:/, `/${shortName}:`)} />
+        }}
       />
 
       {
@@ -83,7 +95,7 @@ const Routes = (): React.ReactElement => {
           <Route
             key={chainId}
             // /xdai also sets chainId correctly
-            path={chainId === CHAIN_ID.GNOSIS_CHAIN ? [route, '/xdai'] : route}
+            path={route}
             render={() => {
               setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
