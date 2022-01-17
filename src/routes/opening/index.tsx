@@ -10,7 +10,6 @@ import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
@@ -24,7 +23,6 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
-import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -43,7 +41,6 @@ export const SafeDeployment = ({
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
   const provider = useSelector(providerNameSelector)
-  const chainId = useSelector(currentChainId)
   const dispatch = useDispatch()
 
   const confirmationStep = isConfirmationStep(stepIndex)
@@ -96,11 +93,10 @@ export const SafeDeployment = ({
   }
 
   useEffect(() => {
-    if (provider && chainId) {
-      instantiateSafeContracts()
+    if (provider) {
       setLoading(false)
     }
-  }, [provider, chainId])
+  }, [provider])
 
   // creating safe from from submission
   useEffect(() => {
