@@ -51,8 +51,6 @@ beforeEach(() => {
   )
 
   jest.spyOn(safeAppsGatewaySDK, 'getSafeApps').mockReturnValueOnce(
-    // remove this after update the bug in the types in the safe-react-gateway-sdk
-    // @ts-ignore
     Promise.resolve([
       {
         id: 13,
@@ -63,7 +61,7 @@ beforeEach(() => {
         chainIds: ['1', '4'],
         provider: undefined,
         accessControl: {
-          type: 'NO_RESTRICTIONS',
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
         },
       },
       {
@@ -76,7 +74,7 @@ beforeEach(() => {
         chainIds: ['1', '4'],
         provider: undefined,
         accessControl: {
-          type: 'DOMAIN_ALLOWLIST',
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.DomainAllowlist,
           value: ['https://gnosis-safe.io'],
         },
       },
@@ -89,7 +87,7 @@ beforeEach(() => {
         chainIds: ['1', '4'],
         provider: undefined,
         accessControl: {
-          type: 'NO_RESTRICTIONS',
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
         },
       },
       {
@@ -100,9 +98,8 @@ beforeEach(() => {
         description: 'A Safe app to compose custom transactions',
         chainIds: ['1', '4', '56', '100', '137', '246', '73799'],
         provider: undefined,
-
         accessControl: {
-          type: 'DOMAIN_ALLOWLIST',
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.DomainAllowlist,
           value: ['https://gnosis-safe.io'],
         },
       },

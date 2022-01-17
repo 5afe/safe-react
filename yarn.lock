@@ -1978,10 +1978,10 @@
     react-media "^1.10.0"
     web3-utils "^1.6.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.8.1.tgz#3ed166fb49fa19837c9ce8d9ba4f29a14755e9c4"
-  integrity sha512-J6gJT6sbXvEPqhrWepEEgwYseo4UVUU3wNS9GNIpGMuh0zi7ZU0Gld+yXqSAoZWtS3hCntg7lyuM8W31AEjQLQ==
+"@gnosis.pm/safe-react-gateway-sdk@2.8.2":
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.8.2.tgz#10c8158a9f3f0296ad1ee52e16f9fb41fa82f350"
+  integrity sha512-UJa7wLd9CvtPhnO+o1nLcURIfdEpVBB2XeHU0oU100y45DdVnCGsLcrSdmslIRH/odhhs3JYpXOJCzlfJQW+2A==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
