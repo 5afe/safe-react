@@ -37,7 +37,7 @@ import {
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
-import { getLoadSafeName } from './fields/utils'
+import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 
 function Load(): ReactElement {
@@ -65,11 +65,10 @@ function Load(): ReactElement {
 
     const ownerEntries = ownerList
       .map((owner) => {
-        const ownerFieldName = `owner-address-${owner.address}`
-        const ownerNameValue = values[ownerFieldName] || values[FIELD_SAFE_OWNER_ENS_LIST][owner.address]
+        const ownerName = getOwnerName(values, owner.address)
         return {
           ...owner,
-          name: ownerNameValue,
+          name: ownerName,
         }
       })
       .filter(Boolean)

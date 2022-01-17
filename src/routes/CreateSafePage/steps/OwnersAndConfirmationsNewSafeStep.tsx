@@ -122,7 +122,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             const hasOwnerAddressError = formErrors[addressFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
-            const ensName = ownersWithENSName[ownerAddress] || 'Owner Name'
+            const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
             const handleScan = (address: string, closeQrModal: () => void): void => {
               createSafeForm.change(addressFieldName, address)
@@ -135,7 +135,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                   <OwnerNameField
                     component={TextField}
                     name={nameFieldName}
-                    placeholder={ensName}
+                    placeholder={ownerName}
                     text="Owner Name"
                     type="text"
                     validate={minMaxLength(0, 50)}

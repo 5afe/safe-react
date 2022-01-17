@@ -36,7 +36,7 @@ export const loadSafeAddressStepLabel = 'Name and address'
 
 function LoadSafeAddressStep(): ReactElement {
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
-  const [ownersWithENSName, setOwnersWithENSName] = useState<any>([])
+  const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
