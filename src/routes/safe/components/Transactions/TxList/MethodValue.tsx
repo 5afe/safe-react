@@ -13,7 +13,7 @@ const NestedWrapper = styled.div`
   padding-left: 4px;
 `
 
-const GenericValueWrapper = styled.div`
+const ValueWrapper = styled.div`
   min-width: 50%;
   flex-shrink: 0;
 `
@@ -25,10 +25,14 @@ interface RenderValueProps {
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
-  const getTextValue = (value: string) => <HexEncodedData limit={60} hexData={value} />
+  const getTextValue = (value: string) => (
+    <ValueWrapper>
+      <HexEncodedData limit={60} hexData={value} />
+    </ValueWrapper>
+  )
 
   const getArrayValue = (parentId: string, value: string[] | string) => (
-    <GenericValueWrapper>
+    <ValueWrapper>
       [
       <NestedWrapper>
         {(value as string[]).map((currentValue, index) => {
@@ -43,7 +47,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
         })}
       </NestedWrapper>
       ]
-    </GenericValueWrapper>
+    </ValueWrapper>
   )
 
   if (isArrayParameter(type) || Array.isArray(value)) {
@@ -56,7 +60,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
   if (isArrayParameter(type) && isAddress(type)) {
     return (
-      <div>
+      <ValueWrapper>
         [
         <NestedWrapper>
           {(props.value as string[]).map((address) => {
@@ -67,7 +71,7 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
           })}
         </NestedWrapper>
         ]
-      </div>
+      </ValueWrapper>
     )
   }
 

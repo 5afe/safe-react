@@ -10,6 +10,7 @@ const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;
   display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
   align-items: center;
+  flex-wrap: wrap;
 
   p:first-of-type {
     margin-right: ${({ isArrayParameter }) => (isArrayParameter ? '0' : '4px')};
