@@ -21,12 +21,11 @@ import {
   getNetworkRootRoutes,
   TRANSACTION_ID_SLUG,
 } from './routes'
-import { getChainById, getShortName } from 'src/config'
+import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
 import { useAddressedRouteKey } from './safe/container/hooks/useAddressedRouteKey'
 import { setChainIdFromUrl } from 'src/utils/history'
-import { CHAIN_ID } from 'src/config/chain.d'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -72,30 +71,23 @@ const Routes = (): React.ReactElement => {
       />
 
       <Route
-        // Redirect /xdai root to /gnosis-chain
+        // Redirect /xdai root to /gno
         path="/xdai"
-        render={() => {
-          const { route = '/gnosis-chain' } =
-            getNetworkRootRoutes().find(({ chainId }) => chainId === CHAIN_ID.GNOSIS_CHAIN) || {}
-          return <Redirect to={route} />
-        }}
+        render={() => <Redirect to="/gno" />}
       />
       <Route
         // Redirect xdai: shortName to gno:
         path="/xdai\::url*"
-        render={() => {
-          const { shortName = 'gno' } = getChainById(CHAIN_ID.GNOSIS_CHAIN)
-          return <Redirect to={location.pathname.replace(/\/xdai:/, `/${shortName}:`)} />
-        }}
+        render={() => <Redirect to={location.pathname.replace(/\/xdai:/, `gno:`)} />}
       />
 
       {
         // Redirection to open network specific welcome pages
-        getNetworkRootRoutes().map(({ chainId, route }) => (
+        getNetworkRootRoutes().map(({ chainId, route, shortName }) => (
           <Route
             key={chainId}
             // /xdai also sets chainId correctly
-            path={route}
+            path={[route, shortName]}
             render={() => {
               setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
