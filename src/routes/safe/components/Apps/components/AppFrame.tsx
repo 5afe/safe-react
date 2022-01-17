@@ -320,7 +320,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
           src={appUrl}
           title={safeApp.name}
           onLoad={onIframeLoad}
-          allow={'camera'}
+          allow="camera"
         />
       </StyledCard>
 
