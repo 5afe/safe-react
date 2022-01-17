@@ -47,6 +47,7 @@ export const TxParamsState = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
   const safeAddress = extractSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
@@ -68,12 +69,13 @@ export const TxParamsState = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
     operation,
   })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  const canTxExecute = useCanTxExecute()
+  const canTxExecute = useCanTxExecute(undefined, manualSafeNonce)
   const doExecute = executionApproved && canTxExecute
 
   const onClose = (txParameters: TxParameters) => {
@@ -85,6 +87,7 @@ export const TxParamsState = ({
     const newMaxPrioFee = txParameters.ethMaxPrioFee
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(newGasPrice)
@@ -100,6 +103,11 @@ export const TxParamsState = ({
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
+    }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
     }
   }
 
