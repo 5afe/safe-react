@@ -21,6 +21,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 type Props = {
   onClose: () => void
@@ -36,7 +37,6 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
     gasPriceFormatted,
@@ -48,6 +48,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     txAmount: '0',
     operation: Operation.DELEGATE,
   })
+  const canTxExecute = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -82,7 +83,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -122,7 +123,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
               onEdit={toggleEditMode}
               compact={false}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={canTxExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Block>
@@ -130,8 +131,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
+              isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

@@ -25,6 +25,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -50,12 +51,12 @@ export const ChangeThresholdModal = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
   const [disabledSubmitForm, setDisabledSubmitForm] = useState<boolean>(true)
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
     isCreation,
-    isExecution,
     isOffChainSignature,
     gasLimit,
     gasPriceFormatted,
@@ -66,7 +67,9 @@ export const ChangeThresholdModal = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -113,6 +116,7 @@ export const ChangeThresholdModal = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -125,12 +129,17 @@ export const ChangeThresholdModal = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -179,7 +188,7 @@ export const ChangeThresholdModal = ({
                     txParameters={txParameters}
                     onEdit={toggleEditMode}
                     isTransactionCreation={isCreation}
-                    isTransactionExecution={isExecution}
+                    isTransactionExecution={canTxExecute}
                     isOffChainSignature={isOffChainSignature}
                   />
                 </Block>
@@ -187,8 +196,7 @@ export const ChangeThresholdModal = ({
                   <ReviewInfoText
                     gasCostFormatted={gasCostFormatted}
                     isCreation={isCreation}
-                    isExecution={isExecution}
-                    isOffChainSignature={isOffChainSignature}
+                    isExecution={canTxExecute}
                     safeNonce={txParameters.safeNonce}
                     txEstimationExecutionStatus={txEstimationExecutionStatus}
                   />

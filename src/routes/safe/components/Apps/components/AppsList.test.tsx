@@ -1,4 +1,5 @@
 import * as safeAppsGatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
+
 import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
@@ -43,6 +44,9 @@ beforeEach(() => {
       chainIds: ['4'],
       provider: undefined,
       fetchStatus: FETCH_STATUS.SUCCESS,
+      accessControl: {
+        type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
+      },
     }),
   )
 
@@ -58,6 +62,9 @@ beforeEach(() => {
         description: 'Money markets on the Ethereum blockchain',
         chainIds: ['1', '4'],
         provider: undefined,
+        accessControl: {
+          type: 'NO_RESTRICTIONS',
+        },
       },
       {
         id: 3,
@@ -68,6 +75,10 @@ beforeEach(() => {
         description: 'Decentralised naming for wallets, websites, & more.',
         chainIds: ['1', '4'],
         provider: undefined,
+        accessControl: {
+          type: 'DOMAIN_ALLOWLIST',
+          value: ['https://gnosis-safe.io'],
+        },
       },
       {
         id: 14,
@@ -77,6 +88,9 @@ beforeEach(() => {
         description: 'Trade synthetic assets on Ethereum',
         chainIds: ['1', '4'],
         provider: undefined,
+        accessControl: {
+          type: 'NO_RESTRICTIONS',
+        },
       },
       {
         id: 24,
@@ -86,6 +100,11 @@ beforeEach(() => {
         description: 'A Safe app to compose custom transactions',
         chainIds: ['1', '4', '56', '100', '137', '246', '73799'],
         provider: undefined,
+
+        accessControl: {
+          type: 'DOMAIN_ALLOWLIST',
+          value: ['https://gnosis-safe.io'],
+        },
       },
     ]),
   )

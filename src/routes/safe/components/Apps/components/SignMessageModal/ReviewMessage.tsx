@@ -25,6 +25,7 @@ import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const Container = styled.div`
   max-width: 480px;
@@ -87,6 +88,7 @@ export const ReviewMessage = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -94,7 +96,6 @@ export const ReviewMessage = ({
     gasEstimation,
     isOffChainSignature,
     isCreation,
-    isExecution,
     gasCostFormatted,
     txEstimationExecutionStatus,
   } = useEstimateTransactionGas({
@@ -105,7 +106,9 @@ export const ReviewMessage = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -150,6 +153,7 @@ export const ReviewMessage = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -162,6 +166,11 @@ export const ReviewMessage = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   return (
@@ -171,7 +180,7 @@ export const ReviewMessage = ({
       safeTxGas={gasEstimation}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
     >
       {(txParameters, toggleEditMode) => (
         <div>
@@ -220,7 +229,7 @@ export const ReviewMessage = ({
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={canTxExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Container>
@@ -230,8 +239,7 @@ export const ReviewMessage = ({
             <ReviewInfoText
               gasCostFormatted={isOwner ? gasCostFormatted : undefined}
               isCreation={isCreation}
-              isExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
+              isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
