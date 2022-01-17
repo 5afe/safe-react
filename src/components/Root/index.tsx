@@ -37,7 +37,6 @@ const RootConsumer = (): React.ReactElement | null => {
       try {
         await loadChains()
         if (!isValidChainId(_getChainId())) {
-          // Contracts are instantiated in config middleware upon id change
           setChainId(DEFAULT_CHAIN_ID)
           history.push(WELCOME_ROUTE)
         }
@@ -48,6 +47,9 @@ const RootConsumer = (): React.ReactElement | null => {
       }
     }
     initChains()
+
+    // Set store chainId and init contracts/session
+    setChainId(_getChainId())
   }, [])
 
   // Chains failed to load

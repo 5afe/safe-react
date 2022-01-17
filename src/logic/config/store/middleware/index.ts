@@ -1,6 +1,5 @@
 import { Action } from 'redux'
 import { _setChainId } from 'src/config'
-import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 
 import { clearCurrentSession } from 'src/logic/currentSession/store/actions/clearCurrentSession'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
@@ -21,9 +20,6 @@ export const configMiddleware =
     switch (action.type) {
       case CONFIG_ACTIONS.SET_CHAIN_ID: {
         _setChainId(currentChainId(state))
-
-        // Relies of _chainId, which is set by _setChainId
-        instantiateSafeContracts()
 
         dispatch(clearSafeList())
         dispatch(clearCurrentSession())
