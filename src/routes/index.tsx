@@ -73,6 +73,7 @@ const Routes = (): React.ReactElement => {
       <Route
         // Redirect /xdai root to /gno
         path="/xdai"
+        exact
         render={() => <Redirect to="/gno" />}
       />
       <Route
@@ -86,7 +87,7 @@ const Routes = (): React.ReactElement => {
         getNetworkRootRoutes().map(({ chainId, route, shortName }) => (
           <Route
             key={chainId}
-            path={[route, shortName]}
+            path={[route, `/${shortName}`]}
             render={() => {
               setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
