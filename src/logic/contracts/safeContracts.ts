@@ -15,7 +15,7 @@ import { getChainById, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3, getChainIdFrom } from 'src/logic/wallets/getWeb3'
+import { getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { ProxyFactory } from 'src/types/contracts/proxy_factory.d'
 import { CompatibilityFallbackHandler } from 'src/types/contracts/compatibility_fallback_handler.d'
@@ -195,7 +195,7 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
 }
 
 export const instantiateSafeContracts = () => {
-  const web3 = getWeb3()
+  const web3 = getWeb3ReadOnly()
   const chainId = _getChainId()
 
   // Create ProxyFactory Master Copy

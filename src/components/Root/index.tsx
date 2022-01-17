@@ -38,7 +38,7 @@ const RootConsumer = (): React.ReactElement | null => {
       try {
         await loadChains()
         if (!isValidChainId(_getChainId())) {
-          // Contracts are instantiated in setChainId
+          // Contracts are instantiated in config middleware upon id change
           setChainId(DEFAULT_CHAIN_ID)
           history.push(WELCOME_ROUTE)
         } else {
