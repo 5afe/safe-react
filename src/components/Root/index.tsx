@@ -21,7 +21,6 @@ import { loadChains } from 'src/config/cache/chains'
 import { isValidChainId, _getChainId } from 'src/config'
 import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
 import { setChainId } from 'src/logic/config/utils'
-import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -41,8 +40,6 @@ const RootConsumer = (): React.ReactElement | null => {
           // Contracts are instantiated in config middleware upon id change
           setChainId(DEFAULT_CHAIN_ID)
           history.push(WELCOME_ROUTE)
-        } else {
-          instantiateSafeContracts()
         }
         setHasChains(true)
       } catch (err) {
