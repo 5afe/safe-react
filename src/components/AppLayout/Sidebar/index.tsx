@@ -1,10 +1,9 @@
-import { createElement, lazy } from 'react'
+import { lazy } from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
 import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
-import DebugToggle from './DebugToggle'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
@@ -51,6 +50,13 @@ type Props = {
   items: ListItemType[]
 }
 
+// This doesn't play well if exported to its own file
+const lazyLoad = (path: string): React.ReactElement => {
+  // import(path) does not work unless it is a template literal
+  const Component = lazy(() => import(`${path}`))
+  return wrapInSuspense(<Component />)
+}
+
 const Sidebar = ({
   items,
   balance,
@@ -79,15 +85,14 @@ const Sidebar = ({
       </>
     ) : null}
     <HelpContainer>
-      {!IS_PRODUCTION &&
-        safeAddress &&
-        wrapInSuspense(
-          <>
-            <StyledDivider />
-            {createElement(lazy(() => import('./DevTools')))}
-          </>,
-        )}
-      {!IS_PRODUCTION && <DebugToggle />}
+      {!IS_PRODUCTION && safeAddress && (
+        <>
+          <StyledDivider />
+          {lazyLoad('./DevTools')}
+        </>
+      )}
+
+      {!IS_PRODUCTION && lazyLoad('./DebugToggle')}
 
       <StyledDivider />
 
