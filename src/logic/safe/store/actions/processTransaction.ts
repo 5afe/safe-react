@@ -86,6 +86,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     }
 
     sender.safeTxHash = tx.safeTxHash
+    sender.isExecution = props.approveAndExecute || sender.isExecution
 
     sender.submitTx(state)
   }
