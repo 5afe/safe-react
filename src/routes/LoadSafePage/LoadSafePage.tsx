@@ -71,7 +71,7 @@ function Load(): ReactElement {
           name: ownerName,
         }
       })
-      .filter(Boolean)
+      .filter((owner) => !!owner.name)
 
     const safeEntry = makeAddressBookEntry({
       address: checksumAddress(values[FIELD_LOAD_SAFE_ADDRESS] || ''),

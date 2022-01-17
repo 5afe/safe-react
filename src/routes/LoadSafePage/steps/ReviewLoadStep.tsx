@@ -15,12 +15,11 @@ import Hairline from 'src/components/layout/Hairline'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import {
   FIELD_LOAD_SAFE_ADDRESS,
-  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
 } from '../fields/loadFields'
-import { getLoadSafeName } from '../fields/utils'
+import { getLoadSafeName, getOwnerName } from '../fields/utils'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
@@ -36,20 +35,14 @@ function ReviewLoadStep(): ReactElement {
   const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
-  const ownersWithENSName = formValues[FIELD_SAFE_OWNER_ENS_LIST]
-
-  console.log(formValues)
 
   const ownerListWithNames = ownerList.map((owner) => {
-    const ownerFieldName = `owner-address-${owner.address}`
-    const ownerNameValue = formValues[ownerFieldName] || ownersWithENSName[owner.address]
+    const ownerName = getOwnerName(formValues, owner.address)
     return {
       ...owner,
-      name: ownerNameValue,
+      name: ownerName,
     }
   })
-
-  console.log(ownerListWithNames)
 
   const isUserConnectedWalletASAfeOwner = checkIfUserAddressIsAnOwner(ownerList, userAddress)
 
