@@ -20,6 +20,7 @@ import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import useCanTxExecute from './useCanTxExecute'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -29,23 +30,6 @@ export enum EstimationStatus {
 
 const DEFAULT_MAX_GAS_FEE = String(3.5e9) // 3.5 GWEI
 const DEFAULT_MAX_PRIO_FEE = String(2.5e9) // 2.5 GWEI
-
-export const checkIfTxIsExecution = (
-  threshold: number,
-  preApprovingOwner?: string,
-  txConfirmations?: number,
-  txType?: string,
-): boolean => {
-  if (threshold === 1 || isSpendingLimit(txType) || (txConfirmations !== undefined && txConfirmations >= threshold)) {
-    return true
-  }
-
-  if (preApprovingOwner && txConfirmations) {
-    return txConfirmations + 1 === threshold
-  }
-
-  return false
-}
 
 export const checkIfTxIsApproveAndExecution = (
   threshold: number,
@@ -79,6 +63,8 @@ type UseEstimateTransactionGasProps = {
   manualGasPrice?: string
   manualMaxPrioFee?: string
   manualGasLimit?: string
+  manualSafeNonce?: number // Edited nonce
+  isExecution?: boolean // If called from the TransactionList "next transaction"
 }
 
 export type TransactionGasEstimationResult = {
@@ -91,7 +77,6 @@ export type TransactionGasEstimationResult = {
   gasMaxPrioFee: string // Current max prio gas price
   gasMaxPrioFeeFormatted: string // Current max prio gas formatted
   gasLimit: string // Minimum gas requited to execute the Tx
-  isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
   isOffChainSignature: boolean // Returns true if offChainSignature is available
 }
@@ -102,7 +87,6 @@ type DefaultGasEstimationParams = {
   gasPriceFormatted: string
   gasMaxPrioFee: string
   gasMaxPrioFeeFormatted: string
-  isExecution?: boolean
   isCreation?: boolean
   isOffChainSignature?: boolean
 }
@@ -112,7 +96,6 @@ const getDefaultGasEstimation = ({
   gasPriceFormatted,
   gasMaxPrioFee,
   gasMaxPrioFeeFormatted,
-  isExecution = false,
   isCreation = false,
   isOffChainSignature = false,
 }: DefaultGasEstimationParams): TransactionGasEstimationResult => {
@@ -126,7 +109,6 @@ const getDefaultGasEstimation = ({
     gasMaxPrioFee,
     gasMaxPrioFeeFormatted,
     gasLimit: '0',
-    isExecution,
     isCreation,
     isOffChainSignature,
   }
@@ -144,6 +126,8 @@ export const useEstimateTransactionGas = ({
   manualGasPrice,
   manualMaxPrioFee,
   manualGasLimit,
+  manualSafeNonce,
+  isExecution,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation({
@@ -157,13 +141,15 @@ export const useEstimateTransactionGas = ({
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
+
+  const canTxExecute = useCanTxExecute(isExecution, manualSafeNonce, preApprovingOwner, txConfirmations?.size)
+
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
         return
       }
-      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
-      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
+      const isOffChainSignature = checkIfOffChainSignatureIsPossible(canTxExecute, smartContractWallet, safeVersion)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
       if (isOffChainSignature && !isCreation) {
@@ -174,7 +160,6 @@ export const useEstimateTransactionGas = ({
             gasPriceFormatted: DEFAULT_MAX_GAS_FEE,
             gasMaxPrioFee: fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'),
             gasMaxPrioFeeFormatted: DEFAULT_MAX_PRIO_FEE,
-            isExecution,
             isCreation,
             isOffChainSignature,
           }),
@@ -207,7 +192,7 @@ export const useEstimateTransactionGas = ({
           )
         }
 
-        if (isExecution || approvalAndExecution) {
+        if (canTxExecute || approvalAndExecution) {
           ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
             safeVersion,
@@ -215,8 +200,7 @@ export const useEstimateTransactionGas = ({
             txData,
             txAmount: txAmount || '0',
             txConfirmations,
-            isExecution,
-            isOffChainSignature,
+            isExecution: canTxExecute,
             operation: operation || Operation.CALL,
             from,
             safeTxGas: safeTxGasEstimation,
@@ -234,7 +218,7 @@ export const useEstimateTransactionGas = ({
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
-        if (isExecution) {
+        if (canTxExecute) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,
             safeVersion,
@@ -265,7 +249,6 @@ export const useEstimateTransactionGas = ({
           gasMaxPrioFee,
           gasMaxPrioFeeFormatted,
           gasLimit,
-          isExecution,
           isCreation,
           isOffChainSignature,
         })
@@ -304,6 +287,8 @@ export const useEstimateTransactionGas = ({
     manualGasPrice,
     manualMaxPrioFee,
     manualGasLimit,
+    manualSafeNonce,
+    canTxExecute,
   ])
 
   return gasEstimation

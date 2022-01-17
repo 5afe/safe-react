@@ -76,7 +76,6 @@ export const estimateTransactionGasLimit = async ({
   safeTxGas,
   from,
   isExecution,
-  isOffChainSignature = false,
   approvalAndExecution,
 }: TransactionEstimationProps): Promise<number> => {
   if (!from) {
@@ -109,7 +108,6 @@ export const estimateTransactionGasLimit = async ({
     txAmount,
     txRecipient,
     from,
-    isOffChainSignature,
   })
 }
 
@@ -197,7 +195,6 @@ type TransactionApprovalEstimationProps = {
   txData: string
   operation: number
   from: string
-  isOffChainSignature: boolean
 }
 
 export const estimateGasForTransactionApproval = async ({
@@ -208,12 +205,7 @@ export const estimateGasForTransactionApproval = async ({
   txData,
   operation,
   from,
-  isOffChainSignature,
 }: TransactionApprovalEstimationProps): Promise<number> => {
-  if (isOffChainSignature) {
-    return 0
-  }
-
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
   const nonce = await safeInstance.methods.nonce().call()

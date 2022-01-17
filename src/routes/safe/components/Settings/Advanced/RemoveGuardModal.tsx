@@ -10,16 +10,15 @@ import Modal from 'src/components/Modal'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { TxParamsState } from '../../Transactions/helpers/TxParamsState'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 interface RemoveGuardModalProps {
   onClose: () => void
