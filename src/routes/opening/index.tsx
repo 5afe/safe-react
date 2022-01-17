@@ -24,6 +24,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -42,6 +43,7 @@ export const SafeDeployment = ({
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
   const provider = useSelector(providerNameSelector)
+  const chainId = useSelector(currentChainId)
   const dispatch = useDispatch()
 
   const confirmationStep = isConfirmationStep(stepIndex)
@@ -94,15 +96,11 @@ export const SafeDeployment = ({
   }
 
   useEffect(() => {
-    const loadContracts = async () => {
-      await instantiateSafeContracts()
+    if (provider && chainId) {
+      instantiateSafeContracts()
       setLoading(false)
     }
-
-    if (provider) {
-      loadContracts()
-    }
-  }, [provider])
+  }, [provider, chainId])
 
   // creating safe from from submission
   useEffect(() => {

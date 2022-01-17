@@ -194,9 +194,9 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
   return masterCopyAddress
 }
 
-export const instantiateSafeContracts = async () => {
+export const instantiateSafeContracts = () => {
   const web3 = getWeb3()
-  const chainId = (await getChainIdFrom(web3)).toString() as ChainId
+  const chainId = _getChainId()
 
   // Create ProxyFactory Master Copy
   proxyFactoryMaster = getProxyFactoryContractInstance(web3, chainId)
@@ -211,8 +211,8 @@ export const instantiateSafeContracts = async () => {
   multiSend = getMultiSendContractInstance(web3, chainId)
 }
 
-export const getSafeMasterContract = async () => {
-  await instantiateSafeContracts()
+export const getSafeMasterContract = () => {
+  instantiateSafeContracts()
   return safeMaster
 }
 

@@ -37,6 +37,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -44,6 +45,7 @@ function CreateSafePage(): ReactElement {
   const providerName = useSelector(providerNameSelector)
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const provider = !!providerName && !isWrongNetwork
+  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
     const checkIfSafeIsPendingToBeCreated = async (): Promise<void> => {
@@ -55,14 +57,14 @@ function CreateSafePage(): ReactElement {
         loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY),
       )
 
-      if (provider) {
-        await instantiateSafeContracts()
+      if (provider && chainId) {
+        instantiateSafeContracts()
         setSafePendingToBeCreated(safePendingToBeCreated)
       }
       setIsLoading(false)
     }
     checkIfSafeIsPendingToBeCreated()
-  }, [provider])
+  }, [provider, chainId])
 
   const userWalletAddress = useSelector(userAccountSelector)
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
