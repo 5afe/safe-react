@@ -81,7 +81,7 @@ export const ReviewReplaceOwnerModal = ({
     <TxParamsState txData={data} onSubmit={onSubmit} onBack={onClickBack}>
       <ModalHeader onClose={onClose} title="Replace owner" subTitle="2 of 2" />
       <Hairline />
-      <Block>
+      <Block margin="md">
         <Row className={classes.root}>
           <Col layout="column" xs={4}>
             <Block className={classes.details}>
@@ -171,8 +171,8 @@ export const ReviewReplaceOwnerModal = ({
             <Hairline />
           </Col>
         </Row>
+        <Hairline />
       </Block>
-      <Hairline />
     </TxParamsState>
   )
 }

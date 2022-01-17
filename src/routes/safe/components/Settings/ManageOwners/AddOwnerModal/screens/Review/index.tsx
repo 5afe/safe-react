@@ -70,7 +70,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     <TxParamsState txData={data} onSubmit={onSubmit} onBack={onClickBack}>
       <ModalHeader onClose={onClose} title="Add new owner" subTitle="3 of 3" />
       <Hairline />
-      <Block>
+      <Block margin="md">
         <Row className={classes.root}>
           <Col layout="column" xs={4}>
             <Block className={classes.details}>
@@ -140,6 +140,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             <Hairline />
           </Col>
         </Row>
+        <Hairline />
       </Block>
     </TxParamsState>
   )
