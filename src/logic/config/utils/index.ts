@@ -1,4 +1,3 @@
-import { _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { store } from 'src/store'
 import { setChainIdAction } from 'src/logic/config/store/actions'

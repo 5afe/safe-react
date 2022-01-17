@@ -28,6 +28,8 @@ import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
 import { extractSafeAddress } from 'src/routes/routes'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
+import { _getChainId } from 'src/config'
+import { setChainId } from 'src/logic/config/utils'
 
 const notificationStyles = {
   success: {
@@ -78,6 +80,7 @@ const App: React.FC = ({ children }) => {
   // Load the Safes from LS just once,
   // they'll be reloaded on network change
   useEffect(() => {
+    setChainId(_getChainId())
     dispatch(loadSafesFromStorage())
     dispatch(loadCurrentSessionFromStorage())
   }, [dispatch])
