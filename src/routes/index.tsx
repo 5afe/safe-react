@@ -78,7 +78,7 @@ const Routes = (): React.ReactElement => {
       <Route
         // Redirect xdai: shortName to gno:
         path="/xdai\::url*"
-        render={() => <Redirect to={location.pathname.replace(/\/xdai:/, `gno:`)} />}
+        render={() => <Redirect to={location.pathname.replace(/\/xdai:/, `/gno:`)} />}
       />
 
       {
@@ -86,7 +86,6 @@ const Routes = (): React.ReactElement => {
         getNetworkRootRoutes().map(({ chainId, route, shortName }) => (
           <Route
             key={chainId}
-            // /xdai also sets chainId correctly
             path={[route, shortName]}
             render={() => {
               setChainId(chainId)
