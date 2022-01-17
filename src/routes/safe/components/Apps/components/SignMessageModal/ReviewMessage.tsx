@@ -114,6 +114,7 @@ export const ReviewMessage = ({
   return (
     <TxParamsState
       txData={txData}
+      txTo={txRecipient}
       onSubmit={confirmTransactions}
       onBack={handleTxRejection}
       operation={Operation.DELEGATE}

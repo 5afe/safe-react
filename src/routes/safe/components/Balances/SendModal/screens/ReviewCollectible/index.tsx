@@ -100,7 +100,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   }
 
   return (
-    <TxParamsState txData={txData} onSubmit={submitTx} onBack={onPrev}>
+    <TxParamsState txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
       <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send collectible" />
       <Hairline />
       <Block className={classes.container}>

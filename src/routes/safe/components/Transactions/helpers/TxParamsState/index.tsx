@@ -120,7 +120,7 @@ export const TxParamsState = ({
       return
     }
 
-    onSubmit(txParameters, !executionApproved)
+    onSubmit(txParameters, !doExecute)
   }
 
   return (

@@ -52,7 +52,14 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   }
 
   return (
-    <TxParamsState txData={multiSendCallData} onSubmit={handleSubmit} onBack={onClose} submitText="Update Safe">
+    <TxParamsState
+      txData={multiSendCallData}
+      txTo={getMultisendContractAddress()}
+      operation={Operation.DELEGATE}
+      onSubmit={handleSubmit}
+      onBack={onClose}
+      submitText="Update Safe"
+    >
       <ModalHeader onClose={onClose} title="Update safe version" />
       <Block className={classes.modalContent}>
         <Row>

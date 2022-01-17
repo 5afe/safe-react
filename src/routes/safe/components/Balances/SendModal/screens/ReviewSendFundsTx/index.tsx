@@ -135,7 +135,14 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   }
 
   return (
-    <TxParamsState txData={txData} txValue={txValue} txType={tx.txType || ''} onSubmit={submitTx} onBack={onPrev}>
+    <TxParamsState
+      txData={txData}
+      txValue={txValue}
+      txTo={txRecipient}
+      txType={tx.txType || ''}
+      onSubmit={submitTx}
+      onBack={onPrev}
+    >
       {/* Header */}
       <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
 
