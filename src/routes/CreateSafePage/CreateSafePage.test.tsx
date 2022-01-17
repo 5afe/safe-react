@@ -20,6 +20,7 @@ const estimateGasForDeployingSafeSpy = jest.spyOn(safeContracts, 'estimateGasFor
 const calculateGasPriceSpy = jest.spyOn(ethTransactions, 'calculateGasPrice')
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
+jest.spyOn(getWeb3ReadOnly().eth.ens, 'getResolver')
 
 jest.mock('src/logic/contracts/safeContracts', () => {
   // Require the original module to not be mocked...

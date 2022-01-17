@@ -9,6 +9,7 @@ import * as safeVersion from 'src/logic/safe/utils/safeVersion'
 import { GATEWAY_URL } from 'src/utils/constants'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
+jest.spyOn(getWeb3ReadOnly().eth.ens, 'getResolver')
 
 jest.spyOn(safeVersion, 'getSafeVersionInfo').mockImplementation(async () => ({
   current: '1.3.0',
