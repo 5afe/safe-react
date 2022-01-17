@@ -3,7 +3,7 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import Value, { ValueWrapper } from 'src/routes/safe/components/Transactions/TxList/MethodValue'
+import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
 import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
@@ -24,6 +24,11 @@ const TxInfo = styled.div`
 
 const StyledMethodName = styled(Text)`
   white-space: nowrap;
+`
+
+const ValueWrapper = styled.div`
+  min-width: 50%;
+  flex-shrink: 0;
 `
 
 export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {

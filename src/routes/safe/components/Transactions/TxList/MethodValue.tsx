@@ -13,11 +13,6 @@ const NestedWrapper = styled.div`
   padding-left: 4px;
 `
 
-export const ValueWrapper = styled.div`
-  min-width: 50%;
-  flex-shrink: 0;
-`
-
 interface RenderValueProps {
   method: string
   type: string
