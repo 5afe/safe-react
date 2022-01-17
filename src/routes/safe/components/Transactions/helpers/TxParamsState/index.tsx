@@ -13,6 +13,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 type Props = {
   children: ReactNode
@@ -57,7 +58,6 @@ export const TxParamsState = ({
     gasLimit,
     gasEstimation,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -73,7 +73,8 @@ export const TxParamsState = ({
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  const doExecute = executionApproved && isExecution
+  const canTxExecute = useCanTxExecute()
+  const doExecute = executionApproved && canTxExecute
 
   const onClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
@@ -129,7 +130,7 @@ export const TxParamsState = ({
           {children}
 
           <Container>
-            {!isSpendingLimitTx && isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
@@ -148,8 +149,7 @@ export const TxParamsState = ({
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
+              isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
