@@ -14,6 +14,7 @@ import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { sameString } from '../../utils/strings'
 import { Errors, logError } from '../exceptions/CodedException'
+import { Contract } from 'web3-eth-contract'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -121,11 +122,19 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 export const reverseENSLookup = async (address: string): Promise<string> => {
   const web3 = getWeb3ReadOnly()
   const lookup = address.toLowerCase().substr(2) + '.addr.reverse'
-  const ResolverContract = await web3.eth.ens.getResolver(lookup)
   const nh = namehash(lookup)
 
+  let ResolverContract: Contract
   let name = ''
   let verifiedAddress = ''
+
+  try {
+    ResolverContract = await web3.eth.ens.getResolver(lookup)
+  } catch (error) {
+    logError(Errors._103, error.message)
+    return name
+  }
+
   try {
     name = await ResolverContract.methods.name(nh).call()
     verifiedAddress = await web3.eth.ens.getAddress(name)
