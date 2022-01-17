@@ -60,7 +60,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
       title="Remove Transaction Guard"
       open
     >
-      <TxParamsState txData={txData} txValue="0" onSubmit={removeTransactionGuard} submitText="Remove">
+      <TxParamsState txData={txData} onSubmit={removeTransactionGuard} submitText="Remove">
         <ModalHeader onClose={onClose} title="Remove Guard" />
         <Hairline />
         <Block>

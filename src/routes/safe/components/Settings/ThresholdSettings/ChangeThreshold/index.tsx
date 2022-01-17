@@ -86,7 +86,7 @@ export const ChangeThresholdModal = ({
         {() => (
           <Block className={classes.modalContent}>
             <Row>
-              <Paragraph weight="bolder">Any transaction requires the confirmationZZZZ of:</Paragraph>
+              <Paragraph weight="bolder">Any transaction requires the confirmation of:</Paragraph>
             </Row>
             <Row align="center" className={classes.inputRow} margin="xl">
               <Col xs={2}>

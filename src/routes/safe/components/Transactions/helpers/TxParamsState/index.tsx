@@ -89,15 +89,15 @@ export const TxParamsState = ({
     const newSafeTxGas = txParameters.safeTxGas
     const newSafeNonce = txParameters.safeNonce
 
-    if (newGasPrice && oldGasPrice !== newGasPrice) {
+    if (oldGasPrice !== newGasPrice) {
       setManualGasPrice(newGasPrice)
     }
 
-    if (newMaxPrioFee && oldMaxPrioFee !== newMaxPrioFee) {
+    if (oldMaxPrioFee !== newMaxPrioFee) {
       setManualGasPrice(newMaxPrioFee)
     }
 
-    if (newGasLimit && oldGasLimit !== newGasLimit) {
+    if (oldGasLimit !== newGasLimit) {
       setManualGasLimit(newGasLimit)
     }
 

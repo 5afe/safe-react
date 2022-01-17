@@ -22,6 +22,8 @@ import {
 } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
+import { extractSafeAddress } from 'src/routes/routes'
+import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -104,6 +106,8 @@ export const EditTxParametersForm = ({
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
+  const safeAddress = extractSafeAddress()
+  const recommendedNonce = useGetRecommendedNonce(safeAddress)
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -130,7 +134,7 @@ export const EditTxParametersForm = ({
       <Block className={classes.container}>
         <GnoForm
           initialValues={{
-            safeNonce: safeNonce || '0',
+            safeNonce: safeNonce || recommendedNonce || '0',
             safeTxGas: safeTxGas || '',
             ethNonce: ethNonce || '',
             ethGasLimit: ethGasLimit || '',
