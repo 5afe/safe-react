@@ -16,7 +16,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 import { useStyles } from './style'
 
@@ -79,7 +79,7 @@ export const ChangeThresholdModal = ({
   }
 
   return (
-    <TxParamsState txData={data} onSubmit={handleSubmit}>
+    <TxModalWrapper txData={data} onSubmit={handleSubmit}>
       <ModalHeader onClose={onClose} title="Change threshold" />
       <Hairline />
       <GnoForm initialValues={{ threshold: editedThreshold.toString() }} onSubmit={handleSubmit}>
@@ -117,6 +117,6 @@ export const ChangeThresholdModal = ({
           </Block>
         )}
       </GnoForm>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

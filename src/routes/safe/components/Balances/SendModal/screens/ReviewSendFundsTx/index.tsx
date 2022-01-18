@@ -26,7 +26,7 @@ import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 
 import { styles } from './style'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -135,7 +135,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   }
 
   return (
-    <TxParamsState
+    <TxModalWrapper
       txData={txData}
       txValue={txValue}
       txTo={txRecipient}
@@ -189,7 +189,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           </Paragraph>
         </Row>
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }
 

@@ -17,7 +17,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 import { useStyles } from './style'
 
@@ -66,7 +66,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       title="Remove Module"
       open
     >
-      <TxParamsState txData={txData} onSubmit={removeSelectedModule} submitText="Remove">
+      <TxModalWrapper txData={txData} onSubmit={removeSelectedModule} submitText="Remove">
         <ModalHeader onClose={onClose} title="Remove Guard" />
         <Hairline />
         <Block>
@@ -87,7 +87,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
             </Paragraph>
           </Row>
         </Block>
-      </TxParamsState>
+      </TxModalWrapper>
     </Modal>
   )
 }

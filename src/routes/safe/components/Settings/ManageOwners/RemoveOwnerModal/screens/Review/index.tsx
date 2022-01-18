@@ -19,7 +19,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { logError } from 'src/logic/exceptions/CodedException'
 import ErrorCodes from 'src/logic/exceptions/registry'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
@@ -79,7 +79,7 @@ export const ReviewRemoveOwnerModal = ({
   }, [safeAddress, safeVersion, connectedWalletAddress, owner.address, threshold])
 
   return (
-    <TxParamsState txData={data} onSubmit={onSubmit} onBack={onClickBack}>
+    <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
       <ModalHeader onClose={onClose} title="Remove owner" subTitle="3 of 3" />
       <Hairline />
       <Block margin="md">
@@ -159,6 +159,6 @@ export const ReviewRemoveOwnerModal = ({
         </Row>
         <Hairline />
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

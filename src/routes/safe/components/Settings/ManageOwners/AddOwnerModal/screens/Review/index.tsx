@@ -18,7 +18,7 @@ import { styles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 const useStyles = makeStyles(styles)
 
@@ -67,7 +67,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   }, [connectedWalletAddress, safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   return (
-    <TxParamsState txData={data} onSubmit={onSubmit} onBack={onClickBack}>
+    <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
       <ModalHeader onClose={onClose} title="Add new owner" subTitle="3 of 3" />
       <Hairline />
       <Block margin="md">
@@ -142,6 +142,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
         </Row>
         <Hairline />
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

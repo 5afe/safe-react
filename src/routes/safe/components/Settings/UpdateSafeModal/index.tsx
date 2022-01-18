@@ -13,7 +13,7 @@ import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 import { useStyles } from './style'
 
@@ -52,7 +52,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   }
 
   return (
-    <TxParamsState
+    <TxModalWrapper
       txData={multiSendCallData}
       txTo={getMultisendContractAddress()}
       operation={Operation.DELEGATE}
@@ -85,6 +85,6 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
           </Paragraph>
         </Row>
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

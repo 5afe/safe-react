@@ -18,7 +18,7 @@ import { useStyles } from './style'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -78,7 +78,7 @@ export const ReviewReplaceOwnerModal = ({
   }, [safeAddress, safeVersion, connectedWalletAddress, owner.address, newOwner.address])
 
   return (
-    <TxParamsState txData={data} onSubmit={onSubmit} onBack={onClickBack}>
+    <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
       <ModalHeader onClose={onClose} title="Replace owner" subTitle="2 of 2" />
       <Hairline />
       <Block margin="md">
@@ -173,6 +173,6 @@ export const ReviewReplaceOwnerModal = ({
         </Row>
         <Hairline />
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

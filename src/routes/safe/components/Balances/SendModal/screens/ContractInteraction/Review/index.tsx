@@ -25,7 +25,7 @@ import {
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 const useStyles = makeStyles(styles)
 
@@ -89,7 +89,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   return (
-    <TxParamsState
+    <TxModalWrapper
       txData={txInfo?.txData}
       txValue={txInfo?.txAmount}
       txTo={txInfo?.txRecipient}
@@ -173,7 +173,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </Col>
         </Row>
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }
 

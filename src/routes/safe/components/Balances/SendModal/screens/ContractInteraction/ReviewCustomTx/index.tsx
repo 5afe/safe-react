@@ -21,7 +21,7 @@ import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -70,7 +70,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   }
 
   return (
-    <TxParamsState txData={txData} txValue={txValue} txTo={txRecipient} onSubmit={submitTx} onBack={onPrev}>
+    <TxModalWrapper txData={txData} txValue={txValue} txTo={txRecipient} onSubmit={submitTx} onBack={onPrev}>
       <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
       <Hairline />
       <Block className={classes.container}>
@@ -118,7 +118,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           </Col>
         </Row>
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }
 

@@ -29,7 +29,7 @@ import Hairline from 'src/components/layout/Hairline'
 import { isModuleEnabled } from 'src/logic/safe/utils/modules'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
 
 const useExistentSpendingLimit = ({
@@ -211,7 +211,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     'One-time spending limit'
 
   return (
-    <TxParamsState
+    <TxModalWrapper
       txData={estimateGasArgs.txData || ''}
       txTo={estimateGasArgs.to}
       operation={estimateGasArgs.operation}
@@ -258,6 +258,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
           </Col>
         )}
       </Modal.Body>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

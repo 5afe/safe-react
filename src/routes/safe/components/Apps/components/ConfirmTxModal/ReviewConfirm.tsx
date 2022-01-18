@@ -24,7 +24,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 const Container = styled.div`
   max-width: 480px;
@@ -132,7 +132,7 @@ export const ReviewConfirm = ({
   }
 
   return (
-    <TxParamsState
+    <TxModalWrapper
       txData={txData}
       txValue={txValue}
       operation={operation}
@@ -169,6 +169,6 @@ export const ReviewConfirm = ({
           {!isMultiSend && <Divider />}
         </Container>
       </div>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

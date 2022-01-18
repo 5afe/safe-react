@@ -19,7 +19,7 @@ import Hairline from 'src/components/layout/Hairline'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 const Container = styled.div`
   max-width: 480px;
@@ -112,7 +112,7 @@ export const ReviewMessage = ({
   }
 
   return (
-    <TxParamsState
+    <TxModalWrapper
       txData={txData}
       txTo={txRecipient}
       onSubmit={confirmTransactions}
@@ -161,6 +161,6 @@ export const ReviewMessage = ({
           Signing a message with the Gnosis Safe requires a transaction on the blockchain
         </InfoMessage>
       </Container>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }

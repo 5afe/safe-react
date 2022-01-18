@@ -16,7 +16,7 @@ import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { extractSafeAddress } from 'src/routes/routes'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -71,7 +71,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       title="Remove spending limit"
       description="Remove the selected spending limit"
     >
-      <TxParamsState
+      <TxModalWrapper
         txData={txData}
         txTo={SPENDING_LIMIT_MODULE_ADDRESS}
         onSubmit={removeSelectedSpendingLimit}
@@ -97,7 +97,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
             <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
           </Col>
         </Modal.Body>
-      </TxParamsState>
+      </TxModalWrapper>
     </Modal>
   )
 }

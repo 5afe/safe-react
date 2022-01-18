@@ -32,7 +32,7 @@ const Container = styled.div`
   padding: 0 ${lg} ${md};
 `
 
-export const TxParamsState = ({
+export const TxModalWrapper = ({
   children,
   operation,
   txData,

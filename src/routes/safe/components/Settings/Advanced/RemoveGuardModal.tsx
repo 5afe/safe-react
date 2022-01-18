@@ -14,7 +14,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
@@ -60,7 +60,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
       title="Remove Transaction Guard"
       open
     >
-      <TxParamsState txData={txData} onSubmit={removeTransactionGuard} submitText="Remove">
+      <TxModalWrapper txData={txData} onSubmit={removeTransactionGuard} submitText="Remove">
         <ModalHeader onClose={onClose} title="Remove Guard" />
         <Hairline />
         <Block>
@@ -81,7 +81,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
             </Paragraph>
           </Row>
         </Block>
-      </TxParamsState>
+      </TxModalWrapper>
     </Modal>
   )
 }

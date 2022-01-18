@@ -22,7 +22,7 @@ import { styles } from './style'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { extractSafeAddress } from 'src/routes/routes'
-import { TxParamsState } from 'src/routes/safe/components/Transactions/helpers/TxParamsState'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 const useStyles = makeStyles(styles)
@@ -100,7 +100,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   }
 
   return (
-    <TxParamsState txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
+    <TxModalWrapper txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
       <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send collectible" />
       <Hairline />
       <Block className={classes.container}>
@@ -136,7 +136,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </Row>
         )}
       </Block>
-    </TxParamsState>
+    </TxModalWrapper>
   )
 }
 
