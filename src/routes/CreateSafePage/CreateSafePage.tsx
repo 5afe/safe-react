@@ -38,7 +38,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { reverseENSLookup } from '../../logic/wallets/getWeb3'
+import { getDomainPart, reverseENSLookup } from '../../logic/wallets/getWeb3'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -156,9 +156,10 @@ async function getInitialValues(userAddress, addressBook, location, suggestedSaf
   const ownersWithENSName = await Promise.all(
     owners.map(async (address) => {
       const ensName = await reverseENSLookup(address)
+      const ensDomain = getDomainPart(ensName)
       return {
         address,
-        name: ensName,
+        name: ensDomain,
       }
     }),
   )

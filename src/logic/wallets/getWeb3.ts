@@ -128,6 +128,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
   let name = ''
   let verifiedAddress = ''
 
+  // There is no resolver contract for some networks
   try {
     ResolverContract = await web3.eth.ens.getResolver(lookup)
   } catch (error) {
@@ -145,6 +146,8 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
   const isValidAddress = sameString(verifiedAddress, address)
   return isValidAddress ? name : ''
 }
+
+export const getDomainPart = (name: string): string => name.split('.')[0]
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
 

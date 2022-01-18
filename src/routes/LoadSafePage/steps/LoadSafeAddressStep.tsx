@@ -30,7 +30,7 @@ import {
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { reverseENSLookup } from '../../../logic/wallets/getWeb3'
+import { getDomainPart, reverseENSLookup } from '../../../logic/wallets/getWeb3'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -74,7 +74,8 @@ function LoadSafeAddressStep(): ReactElement {
         const ownersWithENSName = await Promise.all(
           owners.map(async ({ value: address }) => {
             const ensName = await reverseENSLookup(address)
-            return makeAddressBookEntry({ address, name: ensName, chainId })
+            const ensDomain = getDomainPart(ensName)
+            return makeAddressBookEntry({ address, name: ensDomain, chainId })
           }),
         )
 
