@@ -56,7 +56,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       safeAddress: props.safeAddress,
       to: tx.to,
       txData: tx.data ?? EMPTY_DATA,
-      txNonce: '',
+      txNonce: tx.nonce,
       valueInWei: tx.value,
       safeTxGas: tx.safeTxGas,
       ethParameters: props.ethParameters,

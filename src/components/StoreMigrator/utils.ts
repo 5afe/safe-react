@@ -65,7 +65,7 @@ function parsePayload<T>(entry: string): T | null {
   }
 }
 
-function isSameOrigin(event: MessageEvent): boolean {
+export function isSameOrigin(event: MessageEvent): boolean {
   return event.origin === self.origin
 }
 
