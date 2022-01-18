@@ -104,7 +104,3 @@ beforeEach(() => {
 beforeAll(async () => {
   await loadChains()
 })
-
-Object.defineProperty(window, 'BroadcastChannel', {
-  value: jest.fn(),
-})
