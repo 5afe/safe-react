@@ -9,6 +9,7 @@ enum ErrorCodes {
   _100 = '100: Invalid input in the address field',
   _101 = '101: Failed to resolve the address',
   _102 = '102: Error getting an address checksum',
+  _103 = '103: Error retrieving ENS Name for address',
   _200 = '200: Failed migrating to the address book v2',
   _300 = '300: Error switching the wallet network',
   _301 = '301: Error adding a new wallet network',

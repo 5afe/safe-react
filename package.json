@@ -165,6 +165,7 @@
     ]
   },
   "dependencies": {
+    "@ethersproject/hash": "^5.5.0",
     "@gnosis.pm/safe-apps-sdk": "6.2.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^1.1.1",
