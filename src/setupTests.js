@@ -105,5 +105,6 @@ beforeAll(async () => {
   await loadChains()
 })
 
-// BroadcastChannel doesn't exist in test env
-window.BroadcastChannel = jest.fn()
+Object.defineProperty(window, 'BroadcastChannel', {
+  value: jest.fn(),
+})
