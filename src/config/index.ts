@@ -8,7 +8,6 @@ import {
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
-  GATEWAY_URL,
   DEFAULT_CHAIN_ID,
   ETHERSCAN_API_KEY,
   INFURA_TOKEN,

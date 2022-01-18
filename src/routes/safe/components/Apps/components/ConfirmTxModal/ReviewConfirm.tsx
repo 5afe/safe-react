@@ -31,6 +31,7 @@ import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const Container = styled.div`
   max-width: 480px;
@@ -102,6 +103,7 @@ export const ReviewConfirm = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -109,7 +111,6 @@ export const ReviewConfirm = ({
     gasEstimation,
     isOffChainSignature,
     isCreation,
-    isExecution,
     gasCostFormatted,
     txEstimationExecutionStatus,
   } = useEstimateTransactionGas({
@@ -120,11 +121,13 @@ export const ReviewConfirm = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
-  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
-  const doExecute = isExecution && executionApproved
+  const [shouldExecute, setShouldExecute] = useState<boolean>(true)
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
+  const willExecute = canTxExecute && shouldExecute
 
   // Decode tx data.
   useEffect(() => {
@@ -158,7 +161,7 @@ export const ReviewConfirm = ({
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          delayExecution: !executionApproved,
+          delayExecution: !shouldExecute,
         },
         handleUserConfirmation,
         onReject,
@@ -173,6 +176,7 @@ export const ReviewConfirm = ({
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -185,6 +189,11 @@ export const ReviewConfirm = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   return (
@@ -194,7 +203,7 @@ export const ReviewConfirm = ({
       safeTxGas={Math.max(parseInt(gasEstimation), params?.safeTxGas || 0).toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
-      isExecution={doExecute}
+      isExecution={willExecute}
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
@@ -225,14 +234,14 @@ export const ReviewConfirm = ({
 
             {!isMultiSend && <Divider />}
 
-            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={doExecute}
+              isTransactionExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Container>
@@ -242,8 +251,7 @@ export const ReviewConfirm = ({
             <ReviewInfoText
               gasCostFormatted={isOwner ? gasCostFormatted : undefined}
               isCreation={isCreation}
-              isExecution={doExecute}
-              isOffChainSignature={isOffChainSignature}
+              isExecution={willExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

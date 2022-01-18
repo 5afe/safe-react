@@ -58,7 +58,7 @@ describe('ConfirmTxModal Component', () => {
       />,
     )
 
-    expect(screen.getByText('Send 2 ETH to:')).toBeInTheDocument()
+    expect(screen.getByText('Interact with (and send 2 ETH to):')).toBeInTheDocument()
     expect(screen.getByText(txs[0].to)).toBeInTheDocument()
   })
 
@@ -92,7 +92,7 @@ describe('ConfirmTxModal Component', () => {
     )
 
     // No ETH value should be sent to the multisend address
-    expect(screen.getByText('Send 0 ETH to:')).toBeInTheDocument()
+    expect(screen.getByText('Interact with:')).toBeInTheDocument()
     expect(screen.getByText(MULTISEND_ADDRESS)).toBeInTheDocument()
   })
 
@@ -239,7 +239,7 @@ describe('ConfirmTxModal Component', () => {
       />,
     )
 
-    expect(screen.getByText('Send 0 ETH to:')).toBeInTheDocument()
+    expect(screen.getByText('Interact with:')).toBeInTheDocument()
   })
 
   test('Accepts value equal 2 eth as a number (backward compatibility with the legacy v0.x SDKs)', () => {
@@ -267,7 +267,7 @@ describe('ConfirmTxModal Component', () => {
       />,
     )
 
-    expect(screen.getByText('Send 2 ETH to:')).toBeInTheDocument()
+    expect(screen.getByText('Interact with (and send 2 ETH to):')).toBeInTheDocument()
   })
 
   test('Accepts value as a number in multisend transactions (backward compatibility with the legacy v0.x SDKs)', () => {
@@ -301,7 +301,7 @@ describe('ConfirmTxModal Component', () => {
     )
 
     // No ETH value should be sent to the multisend address
-    expect(screen.getByText('Send 0 ETH to:')).toBeInTheDocument()
+    expect(screen.getByText('Interact with:')).toBeInTheDocument()
     expect(screen.getByText(MULTISEND_ADDRESS)).toBeInTheDocument()
   })
 })

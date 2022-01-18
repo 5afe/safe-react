@@ -54,6 +54,28 @@ const goToWelcomePage = () => {
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
+/**
+ * Parse MM error message, as a workaround for a bug in web3.js that doesn't do it correctly.
+ * It returns a formatting error like this:
+ *
+ * `[ethjs-query] while formatting outputs from RPC '{"value":{"code":-32000,"message":"intrinsic gas too low"}}'`
+ */
+const parseError = (err: Error): Error => {
+  const prefix = '[ethjs-query] while formatting outputs from RPC '
+
+  if (!err.message.startsWith(prefix)) return err
+
+  const json = err.message.split(prefix).pop() || ''
+  let actualMessage = ''
+  try {
+    actualMessage = JSON.parse(json.slice(1, -1)).value.message
+  } catch (e) {
+    actualMessage = ''
+  }
+
+  return actualMessage ? new Error(actualMessage) : err
+}
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
@@ -107,7 +129,7 @@ function SafeCreationProcess(): ReactElement {
                 resolve(txReceipt)
               })
               .catch((error) => {
-                reject(error)
+                reject(parseError(error))
               })
           })
           .then((txReceipt) => {
@@ -115,7 +137,7 @@ function SafeCreationProcess(): ReactElement {
             resolve(txReceipt)
           })
           .catch((error) => {
-            reject(error)
+            reject(parseError(error))
           })
       }),
     )

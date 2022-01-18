@@ -17,7 +17,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   OPTIMISM: '10',
   KOVAN: '42',
   BSC: '56',
-  XDAI: '100',
+  GNOSIS_CHAIN: '100',
   POLYGON: '137',
   ENERGY_WEB_CHAIN: '246',
   LOCAL: '4447',
