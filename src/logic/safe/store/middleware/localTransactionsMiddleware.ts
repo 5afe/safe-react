@@ -12,7 +12,7 @@ import { localStatuses } from '../selectors/txStatus'
 const channel = new BroadcastChannel(UPDATE_TRANSACTION_STATUS)
 channel.onmessage = (event: MessageEvent) => {
   if (event.data.type === UPDATE_TRANSACTION_STATUS && isSameOrigin(event)) {
-    reduxStore.dispatch(updateTransactionStatus({ ...event.data.payload, broadcast: true }))
+    reduxStore.dispatch(updateTransactionStatus({ ...event.data.payload, isBroadcast: true }))
   }
 }
 
@@ -26,7 +26,7 @@ export const localTransactionsMiddleware =
 
     switch (action.type) {
       case UPDATE_TRANSACTION_STATUS: {
-        if (!action.payload.broadcast) {
+        if (!action.payload.isBroadcast) {
           channel.postMessage(action)
         }
 
