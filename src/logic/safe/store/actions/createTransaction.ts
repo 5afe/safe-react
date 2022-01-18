@@ -120,8 +120,8 @@ export class TxSender {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
         logError(Errors._816, err.message)
+        return
       }
-      return
     }
 
     notifications.closePending()
