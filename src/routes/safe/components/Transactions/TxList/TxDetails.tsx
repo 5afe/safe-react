@@ -129,7 +129,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   return (
     <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
-      <div>
+      <div className={cn('tx-data')}>
         <div
           className={cn('tx-details', {
             'no-padding': isMultiSendTxInfo(data.txInfo),
@@ -143,9 +143,9 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
         <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
           <TxSummary txDetails={data} />
         </div>
+        {!isMultiSend && getModuleDetails()}
       </div>
       <div>
-        {!isMultiSend && getModuleDetails()}
         <div
           className={cn('tx-owners', {
             'will-be-replaced': willBeReplaced,

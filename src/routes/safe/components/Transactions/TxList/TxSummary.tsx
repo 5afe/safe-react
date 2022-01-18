@@ -1,5 +1,6 @@
+import { ReactElement, useState } from 'react'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ReactElement } from 'react'
+import { ButtonLink } from '@gnosis.pm/safe-react-components'
 
 import { formatDateTime } from 'src/utils/date'
 import {
@@ -15,11 +16,31 @@ import DelegateCallWarning from './DelegateCallWarning'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { TxDataRow } from './TxDataRow'
+import styled from 'styled-components'
+
+const StyledButtonLink = styled(ButtonLink)`
+  padding-left: 0;
+
+  & > p {
+    margin-left: 0;
+  }
+`
+
+const CollapsibleSection = styled.div<{ show: boolean }>`
+  height: ${({ show }) => (show ? '100%' : '0px')};
+  overflow: hidden;
+  transition: height 0.2s ease-out;
+`
 
 type Props = { txDetails: ExpandedTxDetails }
 
 export const TxSummary = ({ txDetails }: Props): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData, txInfo } = txDetails
+  const [expanded, setExpanded] = useState(false)
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded)
+  }
 
   let created, confirmations, safeTxHash, baseGas, gasPrice, gasToken, refundReceiver, safeTxGas
   if (isMultiSigExecutionDetails(detailedExecutionInfo)) {
@@ -58,24 +79,29 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       <br></br>
 
       {/* Advanced TxData */}
-      {txData?.operation !== undefined && (
-        <TxDataRow title="Operation:" value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`} />
-      )}
-      {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
-      {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
-      {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
-      {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
-      {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
-      {confirmations?.length > 0 && (
-        <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
-      )}
-      {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
-      {txData?.operation === Operation.DELEGATE && (
-        <div className="tx-operation">
-          <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
-        </div>
-      )}
-      {isMultiSendTxInfo(txInfo) && <TxInfoMultiSend txInfo={txInfo} />}
+      <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
+        Advanced Details
+      </StyledButtonLink>
+      <CollapsibleSection show={expanded}>
+        {txData?.operation !== undefined && (
+          <TxDataRow title="Operation:" value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`} />
+        )}
+        {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
+        {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
+        {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
+        {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
+        {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
+        {confirmations?.length > 0 && (
+          <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
+        )}
+        {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
+        {txData?.operation === Operation.DELEGATE && (
+          <div className="tx-operation">
+            <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
+          </div>
+        )}
+        {isMultiSendTxInfo(txInfo) && <TxInfoMultiSend txInfo={txInfo} />}
+      </CollapsibleSection>
     </>
   )
 }

@@ -89,12 +89,6 @@ export const StyledTransactions = styled.div`
     &:last-child {
       border-bottom: none;
     }
-
-    &:last-of-type {
-      div {
-        row-gap: 0px;
-      }
-    }
   }
 `
 
@@ -356,7 +350,6 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
     line-break: anywhere;
     overflow: hidden;
     word-break: break-all;
-    gap: 2px;
 
     & > div {
       padding: 20px 24px;
@@ -372,6 +365,17 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
     float: right;
   }
 
+  .tx-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+
+    & > div:last-of-type {
+      flex: 1;
+    }
+  }
+
   .tx-details {
     &.not-executed {
       grid-row-end: span 2;
@@ -384,7 +388,6 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-owners {
     padding: 24px;
-    grid-column-start: 2;
     grid-row-end: span ${({ ownerRows }) => ownerRows || 2};
     grid-row-start: 1;
   }
