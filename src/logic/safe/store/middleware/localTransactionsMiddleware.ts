@@ -8,13 +8,11 @@ import { updateTransactionStatus, UPDATE_TRANSACTION_STATUS } from '../actions/u
 import { TransactionStatusPayload } from '../reducer/localTransactions'
 import { localStatuses } from '../selectors/txStatus'
 
-// Test env and Safari don't support BroadcastChannel
-const hasBroadcastChannel = !!window?.BroadcastChannel
-
 // Share updated statuses between tabs/windows
-const channel = hasBroadcastChannel && new BroadcastChannel(UPDATE_TRANSACTION_STATUS)
+// Test env and Safari don't support BroadcastChannel
+const channel = !!window?.BroadcastChannel ? new BroadcastChannel(UPDATE_TRANSACTION_STATUS) : null
 
-if (hasBroadcastChannel) {
+if (channel) {
   channel.onmessage = (event: MessageEvent) => {
     if (event.data.type === UPDATE_TRANSACTION_STATUS && isSameOrigin(event)) {
       reduxStore.dispatch(updateTransactionStatus({ ...event.data.payload, isBroadcast: true }))
@@ -32,7 +30,7 @@ export const localTransactionsMiddleware =
 
     switch (action.type) {
       case UPDATE_TRANSACTION_STATUS: {
-        if (hasBroadcastChannel && !action.payload.isBroadcast) {
+        if (channel && !action.payload.isBroadcast) {
           channel.postMessage(action)
         }
 
