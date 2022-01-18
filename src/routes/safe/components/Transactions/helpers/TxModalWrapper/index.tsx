@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
 import styled from 'styled-components'
+import { List, Record } from 'immutable'
 
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -12,8 +13,9 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { isSpendingLimit, ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { ConfirmationProps } from 'src/logic/safe/store/models/types/confirmation'
 
 type Props = {
   children: ReactNode
@@ -26,6 +28,10 @@ type Props = {
   onBack?: (...rest: any) => void
   submitText?: string
   isConfirmDisabled?: boolean
+  txConfirmations?: List<Record<ConfirmationProps> & Readonly<ConfirmationProps>>
+  txPreApprovingOwner?: string
+  isExecution?: boolean
+  parametersStatus?: ParametersStatus
 }
 
 const Container = styled.div`
@@ -43,6 +49,10 @@ export const TxModalWrapper = ({
   onBack,
   submitText,
   isConfirmDisabled,
+  txConfirmations,
+  txPreApprovingOwner,
+  isExecution,
+  parametersStatus,
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -71,11 +81,14 @@ export const TxModalWrapper = ({
     manualGasLimit,
     manualSafeNonce,
     operation,
+    txConfirmations,
+    preApprovingOwner: txPreApprovingOwner,
+    isExecution,
   })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  const canTxExecute = useCanTxExecute(undefined, manualSafeNonce)
+  const canTxExecute = useCanTxExecute(isExecution, manualSafeNonce)
   const doExecute = executionApproved && canTxExecute
 
   const onClose = (txParameters: TxParameters) => {
@@ -138,7 +151,8 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {/* if isExecution, the checkbox is handled in the parent */}
+            {!isExecution && !isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
@@ -149,6 +163,7 @@ export const TxModalWrapper = ({
                 isTransactionCreation={isCreation}
                 isTransactionExecution={doExecute}
                 isOffChainSignature={isOffChainSignature}
+                parametersStatus={parametersStatus}
               />
             )}
           </Container>

@@ -1,18 +1,10 @@
-import { List } from 'immutable'
-import {
-  Erc20Transfer,
-  Erc721Transfer,
-  MultisigExecutionInfo,
-  Operation,
-  TokenType,
-} from '@gnosis.pm/safe-react-gateway-sdk'
-import { useMemo, useRef, useState } from 'react'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'
 
-import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
-import { ReviewInfoText } from 'src/components/ReviewInfoText'
+import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Hairline from 'src/components/layout/Hairline'
@@ -20,23 +12,18 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { isThresholdReached } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { useTxInfo } from 'src/routes/safe/components/Transactions/TxList/hooks/useTxInfo'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -64,136 +51,6 @@ const getModalTitleAndDescription = (
   }
 
   return modalInfo
-}
-
-const useTxInfo = (transaction: Props['transaction']) => {
-  const t = useRef(transaction)
-  const safeAddress = extractSafeAddress()
-
-  const confirmations = useMemo(
-    () =>
-      t.current.txDetails.detailedExecutionInfo && isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? List(
-            t.current.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-              makeConfirmation({ owner: signer.value, signature }),
-            ),
-          )
-        : List([]),
-    [],
-  )
-
-  const data = useMemo(() => t.current.txDetails.txData?.hexData ?? EMPTY_DATA, [])
-
-  const baseGas = useMemo(
-    () =>
-      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.baseGas
-        : '0',
-    [],
-  )
-
-  const gasPrice = useMemo(
-    () =>
-      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.gasPrice
-        : '0',
-    [],
-  )
-
-  const safeTxGas = useMemo(
-    () =>
-      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.safeTxGas
-        : '0',
-    [],
-  )
-
-  const gasToken = useMemo(
-    () =>
-      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.gasToken
-        : ZERO_ADDRESS,
-    [],
-  )
-
-  const nonce = useMemo(() => (t.current.executionInfo as MultisigExecutionInfo)?.nonce ?? 0, [])
-
-  const refundReceiver = useMemo(
-    () =>
-      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.refundReceiver.value
-        : ZERO_ADDRESS,
-    [],
-  )
-
-  const safeTxHash = useMemo(
-    () =>
-      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.safeTxHash
-        : EMPTY_DATA,
-    [],
-  )
-
-  const value = useMemo(() => {
-    switch (t.current.txInfo.type) {
-      case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
-          return t.current.txInfo.transferInfo.value
-        } else {
-          return t.current.txDetails.txData?.value ?? '0'
-        }
-      case 'Custom':
-        return t.current.txInfo.value
-      case 'Creation':
-      case 'SettingsChange':
-      default:
-        return '0'
-    }
-  }, [])
-
-  const to = useMemo(() => {
-    switch (t.current.txInfo.type) {
-      case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
-          return t.current.txInfo.recipient.value
-        } else {
-          return (t.current.txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
-        }
-      case 'Custom':
-        return t.current.txInfo.to.value
-      case 'Creation':
-      case 'SettingsChange':
-      default:
-        return safeAddress
-    }
-  }, [safeAddress])
-
-  const operation = useMemo(() => t.current.txDetails.txData?.operation ?? Operation.CALL, [])
-
-  const origin = useMemo(
-    () =>
-      t.current.safeAppInfo ? JSON.stringify({ name: t.current.safeAppInfo.name, url: t.current.safeAppInfo.url }) : '',
-    [],
-  )
-
-  const id = useMemo(() => t.current.id, [])
-
-  return {
-    confirmations,
-    data,
-    baseGas,
-    gasPrice,
-    safeTxGas,
-    gasToken,
-    nonce,
-    refundReceiver,
-    safeTxHash,
-    value,
-    to,
-    operation,
-    origin,
-    id,
-  }
 }
 
 type Props = {
@@ -224,8 +81,6 @@ export const ApproveTxModal = ({
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
-  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
-  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const {
     confirmations,
     data,
@@ -242,27 +97,6 @@ export const ApproveTxModal = ({
     origin,
     id,
   } = useTxInfo(transaction)
-  const {
-    gasLimit,
-    gasPriceFormatted,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-  } = useEstimateTransactionGas({
-    txRecipient: to,
-    txData: data,
-    txConfirmations: confirmations,
-    txAmount: value,
-    preApprovingOwner: shouldExecute ? userAddress : undefined,
-    safeTxGas,
-    operation,
-    manualGasPrice,
-    manualGasLimit,
-    isExecution,
-  })
-  const willExecute = isExecution && shouldExecute
-  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const approveTx = (txParameters: TxParameters) => {
     if (thresholdReached && confirmations.size < _threshold) {
@@ -306,91 +140,36 @@ export const ApproveTxModal = ({
     return 'DISABLED'
   }
 
-  const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = gasPriceFormatted
-    const newGasPrice = txParameters.ethGasPrice
-
-    if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(txParameters.ethGasPrice)
-    }
-
-    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit)
-    }
-  }
-
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
-      <EditableTxParameters
-        isOffChainSignature={isOffChainSignature}
-        isExecution={willExecute}
+      <TxModalWrapper
+        txData={data}
+        txTo={to}
+        txConfirmations={confirmations}
+        txPreApprovingOwner={shouldExecute ? userAddress : undefined}
+        onSubmit={approveTx}
+        onBack={onClose}
+        isExecution
         parametersStatus={getParametersStatus()}
-        ethGasLimit={gasLimit}
-        ethGasPrice={gasPriceFormatted}
-        safeNonce={nonce.toString()}
-        safeTxGas={safeTxGas}
-        closeEditModalCallback={closeEditModalCallback}
       >
-        {(txParameters, toggleEditMode) => {
-          return (
-            <>
-              <ModalHeader onClose={onClose} title={title} />
+        <ModalHeader onClose={onClose} title={title} />
 
-              <Hairline />
+        <Hairline />
 
-              {/* Tx info */}
-              <Block className={classes.container}>
-                <Row style={{ flexDirection: 'column' }}>
-                  <Paragraph>{description}</Paragraph>
-                  <Paragraph color="medium" size="sm">
-                    Transaction nonce:
-                    <br />
-                    <Bold className={classes.nonceNumber}>{nonce}</Bold>
-                  </Paragraph>
+        {/* Tx info */}
+        <Block className={classes.container}>
+          <Row style={{ flexDirection: 'column' }}>
+            <Paragraph>{description}</Paragraph>
+            <Paragraph color="medium" size="sm">
+              Transaction nonce:
+              <br />
+              <Bold className={classes.nonceNumber}>{nonce}</Bold>
+            </Paragraph>
 
-                  {oneConfirmationLeft && isExecution && !isCancelTx && <ExecuteCheckbox onChange={setShouldExecute} />}
-
-                  {/* Tx Parameters */}
-                  {(shouldExecute || !isOffChainSignature) && (
-                    <TxParametersDetail
-                      txParameters={txParameters}
-                      onEdit={toggleEditMode}
-                      parametersStatus={getParametersStatus()}
-                      isTransactionCreation={isCreation}
-                      isTransactionExecution={willExecute}
-                      isOffChainSignature={isOffChainSignature}
-                    />
-                  )}
-                </Row>
-              </Block>
-
-              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-                <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
-                  isCreation={isCreation}
-                  isExecution={willExecute}
-                  safeNonce={txParameters.safeNonce}
-                  txEstimationExecutionStatus={txEstimationExecutionStatus}
-                />
-              )}
-
-              {/* Footer */}
-              <GenericModal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
-                <GenericModal.Footer.Buttons
-                  cancelButtonProps={{ onClick: onClose, text: 'Close' }}
-                  confirmButtonProps={{
-                    onClick: () => approveTx(txParameters),
-                    type: 'submit',
-                    status: buttonStatus,
-                    text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
-                    testId: isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID,
-                  }}
-                />
-              </GenericModal.Footer>
-            </>
-          )
-        }}
-      </EditableTxParameters>
+            {oneConfirmationLeft && isExecution && !isCancelTx && <ExecuteCheckbox onChange={setShouldExecute} />}
+          </Row>
+        </Block>
+      </TxModalWrapper>
     </Modal>
   )
 }
