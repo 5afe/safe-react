@@ -1,44 +1,51 @@
-import { getShortName } from 'src/config'
 import * as configUtils from 'src/logic/config/utils'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { history, WELCOME_ROUTE } from 'src/routes/routes'
-import { switchNetworkWithUrl } from '../history'
+import { history } from 'src/routes/routes'
+import { setChainIdFromUrl } from '../history'
 
-describe('switchNetworkWithUrl', () => {
+describe('setChainIdFromUrl', () => {
   it('does not switch the network when there is no shortName in the url', () => {
     const setChainIdMock = jest.spyOn(configUtils, 'setChainId')
+    const pathname = `/welcome`
 
-    history.push(`/rin:${ZERO_ADDRESS}`)
+    history.push(pathname)
 
-    switchNetworkWithUrl({ pathname: '/welcome' })
+    const result = setChainIdFromUrl(pathname)
 
+    expect(result).toBe(false)
     expect(setChainIdMock).not.toHaveBeenCalled()
   })
-  it('does not switch the network when the shortName has not changed', () => {
-    // chainId defaults to RINKEBY in non-production environments if it can't be read from LS
+  it('does not switch the network when the chainId has not changed', () => {
     const setChainIdMock = jest.spyOn(configUtils, 'setChainId')
+    const pathname = `/rin:${ZERO_ADDRESS}`
 
-    history.push(`/rin:${ZERO_ADDRESS}`)
+    history.push(pathname)
 
-    switchNetworkWithUrl(history.location)
+    const result = setChainIdFromUrl(pathname)
 
+    expect(result).toBe(true)
     expect(setChainIdMock).not.toHaveBeenCalled()
   })
   it('switches the network when the shortName changes', () => {
-    // chainId defaults to RINKEBY in non-production environments if it can't be read from LS
     const setChainIdMock = jest.spyOn(configUtils, 'setChainId')
+    const pathname = `/eth:${ZERO_ADDRESS}`
 
-    history.push(`/eth:${ZERO_ADDRESS}`)
+    history.push(pathname)
 
-    switchNetworkWithUrl(history.location)
+    const result = setChainIdFromUrl(pathname)
 
+    expect(result).toBe(true)
     expect(setChainIdMock).toHaveBeenCalled()
   })
   it('redirects to the Welcome page when incorrect shortName is in the URL', () => {
-    history.push(`/fakechain:${ZERO_ADDRESS}`)
+    const setChainIdMock = jest.spyOn(configUtils, 'setChainId')
+    const pathname = `/fakechain:${ZERO_ADDRESS}`
 
-    switchNetworkWithUrl(history.location)
+    history.push(pathname)
 
-    expect(history.location.pathname).toBe(WELCOME_ROUTE)
+    const result = setChainIdFromUrl(pathname)
+
+    expect(result).toBe(false)
+    expect(setChainIdMock).not.toHaveBeenCalled()
   })
 })
