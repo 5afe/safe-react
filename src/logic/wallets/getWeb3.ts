@@ -147,7 +147,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
   return isValidAddress ? name : ''
 }
 
-export const getDomainPart = (name: string): string => name.split('.')[0]
+export const removeTld = (name: string): string => name.replace(/\.[^.]+$/, '')
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
 
