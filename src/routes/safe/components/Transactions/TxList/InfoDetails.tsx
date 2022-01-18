@@ -3,7 +3,7 @@ import { ReactElement, ReactNode } from 'react'
 
 type InfoDetailsProps = {
   children: ReactNode
-  title: string
+  title: string | ReactElement
 }
 
 export const InfoDetails = ({ children, title }: InfoDetailsProps): ReactElement => (

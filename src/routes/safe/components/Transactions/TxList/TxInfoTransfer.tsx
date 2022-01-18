@@ -1,11 +1,12 @@
 import { Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useEffect, useState } from 'react'
+import { Text } from '@gnosis.pm/safe-react-components'
 
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { TxInfoDetails } from './TxInfoDetails'
 
 type Details = {
-  title: string
+  title: string | ReactElement
   address: string
   name: string | undefined // AddressEx returns null if unknown
 }
@@ -18,13 +19,29 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
     if (assetInfo && assetInfo.type === 'Transfer') {
       if (txInfo.direction.toUpperCase() === 'INCOMING') {
         setDetails({
-          title: `Received ${assetInfo.amountWithSymbol} from:`,
+          title: (
+            <Text size="xl" as="span">
+              Received{' '}
+              <Text size="xl" as="span" strong>
+                {assetInfo.amountWithSymbol}
+              </Text>{' '}
+              from:
+            </Text>
+          ),
           address: txInfo.sender.value,
           name: txInfo.sender.name || undefined,
         })
       } else {
         setDetails({
-          title: `Send ${assetInfo.amountWithSymbol} to:`,
+          title: (
+            <Text size="xl" as="span">
+              Send{' '}
+              <Text size="xl" as="span" strong>
+                {assetInfo.amountWithSymbol}
+              </Text>{' '}
+              to:
+            </Text>
+          ),
           address: txInfo.recipient.value,
           name: txInfo.recipient.name || undefined,
         })
