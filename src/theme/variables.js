@@ -19,6 +19,10 @@ const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
 
+const grey500 = '#E2E3E3'
+const black400 = '#566976'
+const black600 = '#111B22'
+
 module.exports = {
   background,
   boldFont: 700,
@@ -65,4 +69,7 @@ module.exports = {
   xs,
   xxl,
   xxlFontSize: '32px',
+  grey500,
+  black400,
+  black600,
 }

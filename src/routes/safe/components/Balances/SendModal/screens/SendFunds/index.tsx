@@ -243,7 +243,7 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo />
+                <SafeInfo text="Send from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -259,8 +259,8 @@ const SendFunds = ({
                     role="listbox"
                     tabIndex={0}
                   >
-                    <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Row margin="sm">
+                      <Paragraph color="disabled" noMargin size="md">
                         Recipient
                       </Paragraph>
                     </Row>
