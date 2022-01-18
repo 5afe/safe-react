@@ -44,7 +44,7 @@ export const ActionModal = (): ReactElement | null => {
     case 'execute':
       return (
         <ApproveTxModal
-          canExecute
+          isExecution
           isOpen
           onClose={onClose}
           transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}

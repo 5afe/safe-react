@@ -12,7 +12,6 @@ import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
-import { sameString } from '../../utils/strings'
 import { Errors, logError } from '../exceptions/CodedException'
 import { Contract } from 'web3-eth-contract'
 
@@ -126,25 +125,22 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
 
   let ResolverContract: Contract
   let name = ''
-  let verifiedAddress = ''
-
-  // There is no resolver contract for some networks
   try {
     ResolverContract = await web3.eth.ens.getResolver(lookup)
-  } catch (error) {
-    logError(Errors._103, error.message)
+  } catch (err) {
+    logError(Errors._103, err.message)
     return name
   }
 
+  let verifiedAddress = ''
   try {
     name = await ResolverContract.methods.name(nh).call()
     verifiedAddress = await web3.eth.ens.getAddress(name)
-  } catch (error) {
-    logError(Errors._103, error.message)
+  } catch (err) {
+    logError(Errors._103, err.message)
   }
 
-  const isValidAddress = sameString(verifiedAddress, address)
-  return isValidAddress ? name : ''
+  return verifiedAddress === address ? name : ''
 }
 
 export const removeTld = (name: string): string => name.replace(/\.[^.]+$/, '')

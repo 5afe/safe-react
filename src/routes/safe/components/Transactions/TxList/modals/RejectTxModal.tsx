@@ -20,6 +20,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 type Props = {
   isOpen: boolean
@@ -35,7 +36,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
     gasLimit,
@@ -44,6 +44,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     txData: EMPTY_DATA,
     txRecipient: safeAddress,
   })
+  const canTxExecute = useCanTxExecute()
 
   const origin = gwTransaction.safeAppInfo
     ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
@@ -82,7 +83,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={'0'}
@@ -112,7 +113,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   onEdit={toggleEditMode}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={isExecution}
+                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
@@ -121,8 +122,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
-                  isExecution={isExecution}
-                  isOffChainSignature={isOffChainSignature}
+                  isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

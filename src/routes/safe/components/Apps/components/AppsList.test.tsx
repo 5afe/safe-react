@@ -1,6 +1,7 @@
+import * as safeAppsGatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
+
 import AppsList, { PINNED_APPS_LIST_TEST_ID, ALL_APPS_LIST_TEST_ID } from './AppsList'
 import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-utils'
-
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
@@ -15,55 +16,6 @@ jest.mock('src/routes/routes', () => {
 })
 
 const spyTrackEventGA = jest.fn()
-
-jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
-  __esModule: true,
-  getSafeApps: () =>
-    Promise.resolve([
-      {
-        id: 13,
-        url: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k',
-        name: 'Compound',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k/Compound.png',
-        error: false,
-        description: 'Money markets on the Ethereum blockchain',
-        fetchStatus: 'SUCCESS',
-        chainIds: ['1', '4'],
-        provider: null,
-      },
-      {
-        id: 3,
-        url: 'https://app.ens.domains',
-        name: 'ENS App',
-        iconUrl: 'https://app.ens.domains/android-chrome-144x144.png',
-
-        description: 'Decentralised naming for wallets, websites, & more.',
-        fetchStatus: 'SUCCESS',
-        chainIds: ['1', '4'],
-        provider: null,
-      },
-      {
-        id: 14,
-        url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
-        name: 'Synthetix',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
-        description: 'Trade synthetic assets on Ethereum',
-        fetchStatus: 'SUCCESS',
-        chainIds: ['1', '4'],
-        provider: null,
-      },
-      {
-        id: 24,
-        url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
-        name: 'Transaction Builder',
-        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
-        description: 'A Safe app to compose custom transactions',
-        fetchStatus: 'SUCCESS',
-        chainIds: ['1', '4', '56', '100', '137', '246', '73799'],
-        provider: null,
-      },
-    ]),
-}))
 
 beforeEach(() => {
   // Includes an id that doesn't exist in the remote apps to check that there's no error
@@ -92,7 +44,66 @@ beforeEach(() => {
       chainIds: ['4'],
       provider: undefined,
       fetchStatus: FETCH_STATUS.SUCCESS,
+      accessControl: {
+        type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
+      },
     }),
+  )
+
+  jest.spyOn(safeAppsGatewaySDK, 'getSafeApps').mockReturnValueOnce(
+    Promise.resolve([
+      {
+        id: 13,
+        url: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k',
+        name: 'Compound',
+        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k/Compound.png',
+        description: 'Money markets on the Ethereum blockchain',
+        chainIds: ['1', '4'],
+        provider: undefined,
+        accessControl: {
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
+        },
+      },
+      {
+        id: 3,
+        url: 'https://app.ens.domains',
+        name: 'ENS App',
+        iconUrl: 'https://app.ens.domains/android-chrome-144x144.png',
+
+        description: 'Decentralised naming for wallets, websites, & more.',
+        chainIds: ['1', '4'],
+        provider: undefined,
+        accessControl: {
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.DomainAllowlist,
+          value: ['https://gnosis-safe.io'],
+        },
+      },
+      {
+        id: 14,
+        url: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA',
+        name: 'Synthetix',
+        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA/Synthetix.png',
+        description: 'Trade synthetic assets on Ethereum',
+        chainIds: ['1', '4'],
+        provider: undefined,
+        accessControl: {
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
+        },
+      },
+      {
+        id: 24,
+        url: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs',
+        name: 'Transaction Builder',
+        iconUrl: 'https://cloudflare-ipfs.com/ipfs/QmdVaZxDov4bVARScTLErQSRQoxgqtBad8anWuw3YPQHCs/tx-builder.png',
+        description: 'A Safe app to compose custom transactions',
+        chainIds: ['1', '4', '56', '100', '137', '246', '73799'],
+        provider: undefined,
+        accessControl: {
+          type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.DomainAllowlist,
+          value: ['https://gnosis-safe.io'],
+        },
+      },
+    ]),
   )
 })
 

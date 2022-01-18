@@ -114,7 +114,7 @@ jobs:
         with:
           message: |
             ## Deployment links
-            :orange_circle: [Safe Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rinkeby) | :white_circle: [Safe Mainnet](${{ env.REVIEW_FEATURE_URL }}/mainnet) | :purple_circle: [Safe Polygon](${{ env.REVIEW_FEATURE_URL }}/polygon) | :yellow_circle: [Safe BSC](${{ env.REVIEW_FEATURE_URL }}/bsc) | :black_circle: [Safe Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arbitrum) | :green_circle: [Safe xDai](${{ env.REVIEW_FEATURE_URL }}/xdai)
+            :orange_circle: [Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rin) | :white_circle: [Mainnet](${{ env.REVIEW_FEATURE_URL }}/eth) | :purple_circle: [Polygon](${{ env.REVIEW_FEATURE_URL }}/matic) | :yellow_circle: [BSC](${{ env.REVIEW_FEATURE_URL }}/bnb) | :black_circle: [Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arb1) | :green_circle: [Gnosis Chain](${{ env.REVIEW_FEATURE_URL }}/gno)
             -|-|-|-|-|-
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'

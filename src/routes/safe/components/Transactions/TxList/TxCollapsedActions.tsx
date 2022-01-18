@@ -6,9 +6,10 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
-import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
 import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import { isAwaitingExecution } from './utils'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
@@ -34,11 +35,10 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
   const txStatus = useLocalTxStatus(transaction)
+  const isAwaitingEx = isAwaitingExecution(txStatus)
 
-  const isAwaitingExecution =
-    txStatus === LocalTransactionStatus.AWAITING_EXECUTION || LocalTransactionStatus.PENDING_FAILED
   const getTitle = () => {
-    if (isAwaitingExecution) {
+    if (isAwaitingEx) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -58,7 +58,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           >
-            <Icon type={isAwaitingExecution ? 'rocket' : 'check'} color="primary" size="sm" />
+            <Icon type={isAwaitingEx ? 'rocket' : 'check'} color="primary" size="sm" />
           </IconButton>
         </span>
       </Tooltip>

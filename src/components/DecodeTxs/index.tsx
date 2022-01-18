@@ -10,9 +10,10 @@ import get from 'lodash/get'
 import { Text, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
 import { hexToBytes } from 'web3-utils'
 
-import { getExplorerInfo, getNativeCurrency } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
+import { getInteractionTitle } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -80,14 +81,12 @@ export const BasicTxInfo = ({
   txValue: string
   recipientName?: string
 }): ReactElement => {
-  const nativeCurrency = getNativeCurrency()
-
   return (
     <BasicTxInfoWrapper>
       {/* TO */}
       <>
         <Text size="lg" strong>
-          {`Send ${txValue} ${nativeCurrency.symbol} to:`}
+          {getInteractionTitle(txValue)}
         </Text>
         <PrefixedEthHashInfo
           hash={txRecipient}
