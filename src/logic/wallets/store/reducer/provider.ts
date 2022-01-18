@@ -6,7 +6,7 @@ import { makeProvider, ProviderRecord, ProviderProps } from 'src/logic/wallets/s
 
 export const PROVIDER_REDUCER_ID = 'providers'
 
-export type ProviderState = ProviderRecord
+export type ProviderState = ProviderRecord & { keepStorageKey?: boolean }
 
 const providerReducer = handleActions(
   {
