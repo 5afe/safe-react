@@ -5,13 +5,14 @@ import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
+  isModuleExecutionInfo,
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
@@ -21,6 +22,10 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import { useSelector } from 'react-redux'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import TxModuleInfo from './TxModuleInfo'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -79,15 +84,30 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
-  actions?: TransactionActions
 }
 
-export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
+export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
+  const txStatus = useLocalTxStatus(transaction)
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
+  const isPending = txStatus === LocalTransactionStatus.PENDING
+  const currentUser = useSelector(userAccountSelector)
+  const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
+  const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
 
-  const willBeReplaced = transaction.txStatus === 'WILL_BE_REPLACED'
-  const isHistoryTxList = txLocation === 'history'
+  // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
+  const getModuleDetails = () => {
+    if (!transaction.txDetails || !isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)) {
+      return null
+    }
+
+    return (
+      <div className="tx-module">
+        <TxModuleInfo detailedExecutionInfo={transaction.txDetails?.detailedExecutionInfo} />
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -108,7 +128,7 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
   }
 
   return (
-    <TxDetailsContainer>
+    <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
       <div>
         <div
           className={cn('tx-details', {
@@ -119,19 +139,21 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
         >
           <TxDataGroup txDetails={data} />
         </div>
+        {isMultiSend && getModuleDetails()}
         <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
           <TxSummary txDetails={data} />
         </div>
       </div>
       <div>
+        {!isMultiSend && getModuleDetails()}
         <div
           className={cn('tx-owners', {
             'will-be-replaced': willBeReplaced,
           })}
         >
-          <TxOwners txDetails={data} />
+          <TxOwners txDetails={data} isPending={isPending} />
         </div>
-        {!data.executedAt && !isHistoryTxList && actions?.isUserAnOwner && (
+        {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (
           <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
             <TxExpandedActions transaction={transaction} />
           </div>

@@ -8,8 +8,8 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -22,6 +22,9 @@ import { OwnerValues } from '../..'
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -43,9 +46,11 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     owners,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -53,7 +58,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     gasCostFormatted,
     gasPriceFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
   } = useEstimateTransactionGas({
@@ -62,23 +66,29 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     let isCurrent = true
 
-    const calculateAddOwnerData = () => {
+    const calculateAddOwnerData = async () => {
       try {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+        const safeTx = await sdk.getAddOwnerTx(
+          { ownerAddress: values.ownerAddress, threshold: +values.threshold },
+          { safeTxGas: 0 },
+        )
+        const txData = safeTx.data.data
 
         if (isCurrent) {
           setData(txData)
         }
       } catch (error) {
-        console.error('Error calculating ERC721 transfer data:', error.message)
+        logError(Errors._811, error.message)
       }
     }
     calculateAddOwnerData()
@@ -86,13 +96,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, safeVersion, values.ownerAddress, values.threshold])
+  }, [connectedWalletAddress, safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -105,12 +116,17 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -199,15 +215,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             onEdit={toggleEditMode}
             compact={false}
             isTransactionCreation={isCreation}
-            isTransactionExecution={isExecution}
+            isTransactionExecution={canTxExecute}
             isOffChainSignature={isOffChainSignature}
           />
 
           <ReviewInfoText
             gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
-            isExecution={isExecution}
-            isOffChainSignature={isOffChainSignature}
+            isExecution={canTxExecute}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

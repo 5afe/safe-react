@@ -23,13 +23,14 @@ import {
 } from './routes'
 import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
-import { switchNetworkWithUrl } from 'src/utils/history'
 import { isDeeplinkedTx } from './safe/components/Transactions/TxList/utils'
+import { useAddressedRouteKey } from './safe/container/hooks/useAddressedRouteKey'
+import { setChainIdFromUrl } from 'src/utils/history'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
-const Safe = React.lazy(() => import('./safe/container'))
+const SafeContainer = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
   const location = useLocation()
@@ -37,6 +38,10 @@ const Routes = (): React.ReactElement => {
   const defaultSafe = useSelector(lastViewedSafe)
   const { trackPage } = useAnalytics()
 
+  // Component key that changes when addressed route slug changes
+  const { key } = useAddressedRouteKey()
+
+  // Google Analytics
   useEffect(() => {
     let trackedPath = pathname
 
@@ -55,12 +60,6 @@ const Routes = (): React.ReactElement => {
     }
 
     trackPage(trackedPath + search)
-
-    // Set the initial network id from the URL.
-    // It depends on the chains
-    switchNetworkWithUrl({ pathname })
-
-    // Track when pathname changes
   }, [pathname, search, trackPage])
 
   return (
@@ -70,12 +69,25 @@ const Routes = (): React.ReactElement => {
         path="/:url*(/+)"
         render={() => <Redirect to={location.pathname.replace(/\/+$/, `${location.search}${location.hash}`)} />}
       />
+
+      <Route
+        // Redirect /xdai root to /gno
+        path="/xdai"
+        exact
+        render={() => <Redirect to="/gno" />}
+      />
+      <Route
+        // Redirect xdai: shortName to gno:
+        path="/xdai\::url*"
+        render={() => <Redirect to={location.pathname.replace(/\/xdai:/, `/gno:`)} />}
+      />
+
       {
         // Redirection to open network specific welcome pages
-        getNetworkRootRoutes().map(({ chainId, route }) => (
+        getNetworkRootRoutes().map(({ chainId, route, shortName }) => (
           <Route
             key={chainId}
-            path={route}
+            path={[route, `/${shortName}`]}
             render={() => {
               setChainId(chainId)
               return <Redirect to={ROOT_ROUTE} />
@@ -83,6 +95,7 @@ const Routes = (): React.ReactElement => {
           />
         ))
       }
+
       <Route
         exact
         path={ROOT_ROUTE}
@@ -109,9 +122,19 @@ const Routes = (): React.ReactElement => {
           return <Redirect to={WELCOME_ROUTE} />
         }}
       />
+
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
+
       <Route component={CreateSafePage} exact path={OPEN_SAFE_ROUTE} />
-      <Route component={Safe} path={ADDRESSED_ROUTE} />
+
+      <Route
+        path={ADDRESSED_ROUTE}
+        render={() => {
+          // Routes with a shortName prefix
+          const validShortName = setChainIdFromUrl(pathname)
+          return validShortName ? <SafeContainer key={key} /> : <Redirect to={WELCOME_ROUTE} />
+        }}
+      />
       <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
       <Redirect to={ROOT_ROUTE} />
     </Switch>

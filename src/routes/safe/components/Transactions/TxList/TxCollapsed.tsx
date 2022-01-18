@@ -2,19 +2,21 @@ import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
+import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
 
 import { CustomIconText } from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
+  LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from './TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
-import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
@@ -22,9 +24,10 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-import { getTxTo, isCancelTxDetails } from './utils'
-import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getTxTo, isAwaitingExecution, isCancelTxDetails } from './utils'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
 const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
@@ -98,7 +101,6 @@ type TxCollapsedProps = {
   info?: AssetInfo
   time: number
   votes?: CalculatedVotes
-  actions?: TransactionActions
   status: TransactionStatusProps
 }
 
@@ -110,15 +112,17 @@ export const TxCollapsed = ({
   info,
   time,
   votes,
-  actions,
   status,
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
+  const userAddress = useSelector(userAccountSelector)
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
+  const txStatus = useLocalTxStatus(transaction)
+  const isPending = txStatus === LocalTransactionStatus.PENDING
+  const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
 
-  const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
   const onChainRejection =
     isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
@@ -171,19 +175,21 @@ export const TxCollapsed = ({
 
   const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {actions?.isUserAnOwner && transaction && <TxCollapsedActions transaction={transaction} />}
+      {!isPending && userAddress && txLocation !== 'history' && transaction && (
+        <TxCollapsedActions transaction={transaction} />
+      )}
     </div>
   )
 
   // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
-      {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
+      {isPending ? (
         <CircularProgressPainter color={status.color}>
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
+        (isAwaitingExecution(txStatus) || txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && (
           <SmallDot color={status.color} />
         )
       )}

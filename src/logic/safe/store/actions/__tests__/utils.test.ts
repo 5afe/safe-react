@@ -1,15 +1,10 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
-import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { ChainId } from 'src/config/chain.d'
-import {
-  buildSafeOwners,
-  extractRemoteSafeInfo,
-  getNewTxNonce,
-  shouldExecuteTransaction,
-} from 'src/logic/safe/store/actions/utils'
+import { buildSafeOwners, extractRemoteSafeInfo, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getMockedSafeInstance, getMockedStoredTServiceModel } from 'src/test/utils/safeHelper'
+import { LocalTransactionStatus } from '../../models/types/gateway.d'
 import {
   inMemoryPartialSafeInformation,
   localSafesInfo,
@@ -37,7 +32,7 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '1'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold, nonce })
-    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.SUCCESS }
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.SUCCESS }
 
     // when
     const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
@@ -50,7 +45,7 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '10'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold, nonce })
-    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.SUCCESS }
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.SUCCESS }
 
     // when
     const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
@@ -63,66 +58,13 @@ describe('shouldExecuteTransaction', () => {
     const nonce = '10'
     const threshold = '1'
     const safeInstance = getMockedSafeInstance({ threshold })
-    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: TransactionStatus.FAILED }
+    const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.FAILED }
 
     // when
     const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(false)
-  })
-})
-
-describe('getNewTxNonce', () => {
-  it('It should return 2 if given the last transaction with nonce 1', async () => {
-    // given
-    const safeInstance = getMockedSafeInstance({})
-    const lastTxFromStoreExecuted = {
-      ...lastTxFromStore,
-      executionInfo: { type: 'MULTISIG', nonce: 1, confirmationsRequired: 1, confirmationsSubmitted: 1 },
-    }
-    const expectedResult = '2'
-
-    // when
-    const result = await getNewTxNonce(lastTxFromStoreExecuted.executionInfo.nonce, safeInstance)
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('It should return 0 if given a safe with nonce 0 and no transactions should use safe contract instance for retrieving nonce', async () => {
-    // given
-    const safeNonce = '0'
-    const safeInstance = getMockedSafeInstance({ nonce: safeNonce })
-    const expectedResult = '0'
-    const mockFnCall = jest.fn().mockImplementation(() => safeNonce)
-    const mockFnNonce = jest.fn().mockImplementation(() => ({ call: mockFnCall }))
-
-    safeInstance.methods.nonce = mockFnNonce
-
-    // when
-    const result = await getNewTxNonce(undefined, safeInstance)
-
-    // then
-    expect(result).toBe(expectedResult)
-    expect(mockFnNonce).toHaveBeenCalled()
-    expect(mockFnCall).toHaveBeenCalled()
-    mockFnNonce.mockRestore()
-    mockFnCall.mockRestore()
-  })
-  it('Given a Safe and the last transaction, should return nonce of the last transaction + 1', async () => {
-    // given
-    const safeInstance = getMockedSafeInstance({})
-    const expectedResult = '11'
-    const lastTxFromStoreExecuted = {
-      ...lastTxFromStore,
-      executionInfo: { type: 'MULTISIG', nonce: 10, confirmationsRequired: 1, confirmationsSubmitted: 1 },
-    }
-
-    // when
-    const result = await getNewTxNonce(lastTxFromStoreExecuted.executionInfo.nonce, safeInstance)
-
-    // then
-    expect(result).toBe(expectedResult)
   })
 })
 

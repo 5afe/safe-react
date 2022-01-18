@@ -10,7 +10,6 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
-import { IS_PRODUCTION } from 'src/utils/constants'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
@@ -47,9 +46,9 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {!IS_PRODUCTION && (
+      {isMultiSigExecutionDetails(txDetails.detailedExecutionInfo) && (
         <div className="tx-share">
-          <TxShareButton id={txDetails.txId} />
+          <TxShareButton safeTxHash={txDetails.detailedExecutionInfo.safeTxHash} />
         </div>
       )}
       {txHash && <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />}

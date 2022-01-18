@@ -7,8 +7,8 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -22,6 +22,10 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { logError } from 'src/logic/exceptions/CodedException'
+import ErrorCodes from 'src/logic/exceptions/registry'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -48,10 +52,12 @@ export const ReviewRemoveOwnerModal = ({
     owners,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const numOptions = owners ? owners.length - 1 : 0
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasLimit,
@@ -59,7 +65,6 @@ export const ReviewRemoveOwnerModal = ({
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -68,7 +73,9 @@ export const ReviewRemoveOwnerModal = ({
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -82,19 +89,18 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
-        // FixMe: if the order returned by the service is the same as in the contracts
-        //  the data lookup can be removed from here
-        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const safeOwners = await gnosisSafe.methods.getOwners().call()
-        const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
-        const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, owner.address, threshold).encodeABI()
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+        const safeTx = await sdk.getRemoveOwnerTx(
+          { ownerAddress: owner.address, threshold: +threshold },
+          { safeTxGas: 0 },
+        )
+        const txData = safeTx.data.data
 
         if (isCurrent) {
           setData(txData)
         }
       } catch (error) {
-        console.error('Error calculating ERC721 transfer data:', error.message)
+        logError(ErrorCodes._812, error.message)
       }
     }
     calculateRemoveOwnerData()
@@ -102,13 +108,14 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, safeVersion, owner.address, threshold])
+  }, [safeAddress, safeVersion, connectedWalletAddress, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -121,12 +128,17 @@ export const ReviewRemoveOwnerModal = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -220,7 +232,7 @@ export const ReviewRemoveOwnerModal = ({
             onEdit={toggleEditMode}
             compact={false}
             isTransactionCreation={isCreation}
-            isTransactionExecution={isExecution}
+            isTransactionExecution={canTxExecute}
             isOffChainSignature={isOffChainSignature}
           />
 
@@ -228,8 +240,7 @@ export const ReviewRemoveOwnerModal = ({
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
+              isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

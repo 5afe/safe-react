@@ -1,6 +1,6 @@
-import ChainIndicator from '.'
-import { render } from 'src/utils/test-utils'
 import { ChainId } from 'src/config/chain.d'
+import { render } from 'src/utils/test-utils'
+import ChainIndicator from '.'
 
 describe('<ChainIndicator>', () => {
   it('renders Rinkeby indicator', () => {

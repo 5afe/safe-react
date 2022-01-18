@@ -1,7 +1,6 @@
+import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
-import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk/dist/src/ethereumLibs/EthAdapter'
-
 import { getSDKWeb3ReadOnly, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors } from '../exceptions/CodedException'

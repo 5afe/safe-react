@@ -1,6 +1,7 @@
 import { ReactElement, useState } from 'react'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { RequestId } from '@gnosis.pm/safe-apps-sdk'
+import { DecodedDataParameterValue, DecodedDataResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
@@ -8,7 +9,6 @@ import { TransactionParams } from 'src/routes/safe/components/Apps/components/Ap
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { SafeAppLoadError } from './SafeAppLoadError'
 import { ReviewConfirm } from './ReviewConfirm'
-import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode'
 import { DecodedTxDetail } from './DecodedTxDetail'
 
 export type ConfirmTxModalProps = {
@@ -38,7 +38,7 @@ const isTxValid = (t: Transaction): boolean => {
   return isAddressValid && !!t.data && typeof t.data === 'string'
 }
 
-export type DecodedTxDetail = DecodedDataParameterValue | DecodedData | undefined
+export type DecodedTxDetail = DecodedDataParameterValue | DecodedDataResponse | undefined
 
 export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
   const [decodedTxDetails, setDecodedTxDetails] = useState<DecodedTxDetail>()

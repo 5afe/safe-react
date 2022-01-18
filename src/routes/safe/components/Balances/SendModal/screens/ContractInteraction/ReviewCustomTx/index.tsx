@@ -28,6 +28,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -49,7 +50,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const nativeCurrency = getNativeCurrency()
-  const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const [shouldExecute, setShouldExecute] = useState<boolean>(true)
 
   const {
     gasLimit,
@@ -57,7 +58,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
   } = useEstimateTransactionGas({
@@ -66,7 +66,8 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCurrency.decimals) : '0',
   })
 
-  const doExecute = isExecution && executionApproved
+  const canTxExecute = useCanTxExecute()
+  const willExecute = canTxExecute && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const submitTx = (txParameters: TxParameters) => {
@@ -85,7 +86,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          delayExecution: !executionApproved,
+          delayExecution: !shouldExecute,
         }),
       )
     } else {
@@ -97,7 +98,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={doExecute}
+      isExecution={willExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -151,14 +152,14 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
               </Col>
             </Row>
 
-            {isExecution && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
 
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={doExecute}
+              isTransactionExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Block>
@@ -166,8 +167,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={doExecute}
-              isOffChainSignature={isOffChainSignature}
+              isExecution={willExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

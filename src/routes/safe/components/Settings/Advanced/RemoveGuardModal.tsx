@@ -24,6 +24,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../../Balances/SendModal/screens/ModalHeader'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 interface RemoveGuardModalProps {
   onClose: () => void
@@ -38,13 +39,13 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const txData = useMemo(() => getRemoveGuardTxData(safeAddress, safeVersion), [safeAddress, safeVersion])
 
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
     gasLimit,
@@ -57,7 +58,9 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -85,6 +88,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -96,6 +100,11 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
+    }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
     }
   }
 
@@ -114,7 +123,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
     >
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation}
@@ -149,7 +158,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={isExecution}
+                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
@@ -157,8 +166,7 @@ export const RemoveGuardModal = ({ onClose, guardAddress }: RemoveGuardModalProp
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
-                  isExecution={isExecution}
-                  isOffChainSignature={isOffChainSignature}
+                  isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

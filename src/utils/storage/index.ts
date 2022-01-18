@@ -8,7 +8,7 @@ const STORAGE_KEYS: Record<ChainId, string> = {
   [CHAIN_ID.ETHEREUM]: 'MAINNET',
   [CHAIN_ID.RINKEBY]: 'RINKEBY',
   [CHAIN_ID.BSC]: 'BSC',
-  [CHAIN_ID.XDAI]: 'XDAI',
+  [CHAIN_ID.GNOSIS_CHAIN]: 'XDAI',
   [CHAIN_ID.POLYGON]: 'POLYGON',
   [CHAIN_ID.ENERGY_WEB_CHAIN]: 'ENERGY_WEB_CHAIN',
   [CHAIN_ID.ARBITRUM]: 'ARBITRUM',
@@ -24,22 +24,19 @@ export const getStoragePrefix = (id = _getChainId()): string => {
   return `_immortal|v2_${name}__`
 }
 
-export const loadFromStorage = async <T = unknown>(
-  key: string,
-  prefix = getStoragePrefix(),
-): Promise<T | undefined> => {
+export const loadFromStorage = <T = unknown>(key: string, prefix = getStoragePrefix()): T | undefined => {
   return storage.getItem(`${prefix}${key}`)
 }
 
-export const saveToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
+export const saveToStorage = <T = unknown>(key: string, value: T): void => {
   storage.setItem<T>(`${getStoragePrefix()}${key}`, value)
 }
 
-export const removeFromStorage = async (key: string): Promise<void> => {
+export const removeFromStorage = (key: string): void => {
   storage.removeItem(`${getStoragePrefix()}${key}`)
 }
 
 // This function is only meant to be used in L2-UX migration to gather information from other networks
 export const saveMigratedKeyToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
-  storage.setItem(key, value)
+  storage.setItem(`_immortal|${key}`, value)
 }
