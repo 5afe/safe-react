@@ -9,6 +9,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { fontColor, sm, xs } from 'src/theme/variables'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import axios from 'axios'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
 
 const useStyles = makeStyles({
   item: {
@@ -102,14 +103,14 @@ const useStyles = makeStyles({
 
 const fetchImage = async (uri: string): Promise<string> => {
   try {
-    const { data: json } = await axios.get<{ image?: string }>(uri)
-    return json.image || ''
+    const { data } = await axios.get<{ image?: string }>(uri)
+    return data.image || ''
   } catch (e) {
     return ''
   }
 }
 
-const Item = ({ data, onSend }): ReactElement => {
+const Item = ({ data, onSend }: { data: NFTToken; onSend: () => unknown }): ReactElement => {
   const granted = useSelector(grantedSelector)
   const classes = useStyles({ backgroundColor: data.color, granted })
   const [image, setImage] = useState<string>(data.image || '')
