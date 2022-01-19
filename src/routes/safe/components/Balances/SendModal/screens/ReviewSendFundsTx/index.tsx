@@ -150,7 +150,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
       <Block className={classes.container}>
         {/* SafeInfo */}
-        <SafeInfo />
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
 
         {/* Recipient */}

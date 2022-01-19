@@ -1,7 +1,9 @@
 import { ReactElement } from 'react'
 import { Checkbox, FormControlLabel } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
 import Row from 'src/components/layout/Row'
-import Paragraph from '../layout/Paragraph'
+import Img from 'src/components/layout/Img'
+import InfoIcon from 'src/assets/icons/info.svg'
 
 interface ExecuteCheckboxProps {
   onChange: (val: boolean) => unknown
@@ -13,14 +15,19 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
   }
   return (
     <Row margin="md">
-      <Paragraph noMargin>
-        If you want to sign the transaction now but manually execute it later, click on the checkbox below.
-      </Paragraph>
       <FormControlLabel
-        control={<Checkbox defaultChecked color="primary" onChange={handleChange} />}
+        control={<Checkbox defaultChecked color="secondary" onChange={handleChange} />}
         label="Execute transaction"
         data-testid="execute-checkbox"
       />
+      <Tooltip
+        placement="top"
+        title="If you want to sign the transaction now but manually execute it later, click on the checkbox below."
+      >
+        <span>
+          <Img alt="Info Tooltip" height={16} src={InfoIcon} />
+        </span>
+      </Tooltip>
     </Row>
   )
 }
