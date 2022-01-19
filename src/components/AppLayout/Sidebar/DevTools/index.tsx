@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 
 import { getShortName } from 'src/config'
 import { currentSafe, currentSafeEthBalance } from 'src/logic/safe/store/selectors'
-import { generatePrefixedAddressRoutes } from 'src/routes/routes'
+import { extractSafeAddress, generatePrefixedAddressRoutes } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -67,7 +67,8 @@ const getStatusUrl = (address: string): string => {
 
 const DevTools = (): ReactElement => {
   const history = useHistory()
-  const { owners, threshold = 1, address } = useSelector(currentSafe) ?? {}
+  const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
+  const safeAddress = extractSafeAddress()
   const nextTx = useSelector(nextTransaction)
   const isGranted = useSelector(grantedSelector)
   const ethBalance = useSelector(currentSafeEthBalance)
@@ -82,7 +83,7 @@ const DevTools = (): ReactElement => {
 
   const { TRANSACTIONS_QUEUE, TRANSACTIONS_HISTORY } = generatePrefixedAddressRoutes({
     shortName: getShortName(),
-    safeAddress: address,
+    safeAddress,
   })
 
   return (
@@ -98,12 +99,12 @@ const DevTools = (): ReactElement => {
           <ListItemText onClick={() => history.push(TRANSACTIONS_HISTORY)}>History</ListItemText>
         </ListItem>
         <ListItem button>
-          <ListItemText onClick={() => window.open(getStatusUrl(address), '_blank')}>Safe Status</ListItemText>
+          <ListItemText onClick={() => window.open(getStatusUrl(safeAddress), '_blank')}>Safe Status</ListItemText>
         </ListItem>
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => createQueuedTx(address)}
+          onClick={() => createQueuedTx(safeAddress)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
@@ -111,7 +112,7 @@ const DevTools = (): ReactElement => {
           Queue Transaction
         </StyledButton>
         <StyledButton
-          onClick={() => createExecutedTx(address)}
+          onClick={() => createExecutedTx(safeAddress)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds() || !nextTx}
