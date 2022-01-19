@@ -36,7 +36,6 @@ import { getLastTransaction } from '../selectors/gatewayTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { TxArgs } from '../models/types/transaction'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -104,18 +103,24 @@ export class TxSender {
   dispatch: Dispatch
   safeInstance: GnosisSafe
   safeVersion: string
-  isUserOwner: boolean
+  approveAndExecute: boolean
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications } = this
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isExecution, approveAndExecute = false } = this
 
     let txDetails: TransactionDetails | null = null
+
+    const isOffChainSigning = !isExecution && signature
+    const isOnChainSigning = isExecution && !signature
+
+    // If 1/? threshold and owner chooses to execute created tx immediately
+    const isImmediateExecution = isOnChainSigning && !approveAndExecute
 
     // Propose the tx to the backend if an owner and
     // 1) It's a confirmation w/o exection
     // 2) It's a creation + execution w/o pre-approved signatures
-    if (this.isUserOwner && (!this.isExecution || !signature)) {
+    if (isOffChainSigning || isImmediateExecution) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
@@ -255,8 +260,6 @@ export class TxSender {
 
     // Use the user-provided none or the recommented nonce
     this.nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, this.safeVersion))
-
-    this.isUserOwner = grantedSelector(state)
 
     this.txProps = txProps
     this.dispatch = dispatch
