@@ -1,12 +1,14 @@
 import { makeStyles } from '@material-ui/core/styles'
 // import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Button from 'src/components/layout/Button'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { fontColor, sm, xs } from 'src/theme/variables'
+import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
+import axios from 'axios'
 
 const useStyles = makeStyles({
   item: {
@@ -98,14 +100,29 @@ const useStyles = makeStyles({
   },
 } as any)
 
+const fetchImage = async (uri: string): Promise<string> => {
+  try {
+    const { data: json } = await axios.get<{ image?: string }>(uri)
+    return json.image || ''
+  } catch (e) {
+    return ''
+  }
+}
+
 const Item = ({ data, onSend }): ReactElement => {
   const granted = useSelector(grantedSelector)
   const classes = useStyles({ backgroundColor: data.color, granted })
+  const [image, setImage] = useState<string>(data.image || '')
+
+  useEffect(() => {
+    if (image || !data.uri) return
+    fetchImage(data.uri).then(setImage)
+  }, [image, setImage, data.uri])
 
   return (
     <div className={classes.item}>
       <div className={classes.mainContent}>
-        <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
+        <div className={classes.image} style={{ backgroundImage: `url(${image || NFTIcon})` }} />
         <div className={classes.textContainer}>
           {data.name && (
             <h3 className={classes.title} title={data.name}>

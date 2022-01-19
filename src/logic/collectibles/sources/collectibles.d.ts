@@ -41,6 +41,7 @@ export interface NFTToken {
   color: string
   description: string
   image: string
+  uri: string
   name: string
   tokenId: number | string
 }

@@ -2,7 +2,6 @@ import { SafeCollectibleResponse, TokenType } from '@gnosis.pm/safe-react-gatewa
 
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchSafeCollectibles } from 'src/logic/tokens/api/fetchSafeCollectibles'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
@@ -57,7 +56,7 @@ class Gnosis {
     return {
       address: mainAssetAddress,
       description: asset.name,
-      image: asset.logoUri || NFTIcon,
+      image: asset.logoUri,
       name: asset.name,
       numberOfTokens,
       slug: `${mainAssetAddress}_${asset.name}`,
@@ -84,7 +83,8 @@ class Gnosis {
       assetAddress: token.address,
       color: 'red',
       description: token.description || '',
-      image: token.imageUri || NFTIcon,
+      image: token.imageUri,
+      uri: token.uri,
       name: token.name || '',
       tokenId: token.id,
     }))
