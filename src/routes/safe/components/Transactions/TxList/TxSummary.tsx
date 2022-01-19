@@ -27,9 +27,9 @@ const StyledButtonLink = styled(ButtonLink)`
 `
 
 const CollapsibleSection = styled.div<{ show: boolean }>`
-  height: ${({ show }) => (show ? '100%' : '0px')};
+  max-height: ${({ show }) => (show ? '500px' : '0px')}; // We need to set a fixed height for the animation to work
   overflow: hidden;
-  transition: height 0.2s ease-out;
+  transition: ${({ show }) => (show ? 'max-height 0.4s ease-in-out' : 'max-height 0.2s cubic-bezier(0, 1, 0, 1)')};
 `
 
 type Props = { txDetails: ExpandedTxDetails }
