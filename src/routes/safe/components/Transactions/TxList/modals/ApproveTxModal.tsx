@@ -248,7 +248,6 @@ export const ApproveTxModal = ({
   const {
     gasLimit,
     gasPriceFormatted,
-    gasCostFormatted,
     gasMaxPrioFeeFormatted,
     txEstimationExecutionStatus,
     isOffChainSignature,
@@ -379,7 +378,6 @@ export const ApproveTxModal = ({
 
               {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
                 <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={willExecute}
                   safeNonce={txParameters.safeNonce}

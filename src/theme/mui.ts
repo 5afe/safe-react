@@ -426,6 +426,8 @@ const theme = createTheme({
     },
     MuiFormControlLabel: {
       label: {
+        letterSpacing: 0,
+        fontSize: '16px',
         '&$disabled': {
           color: primary,
         },

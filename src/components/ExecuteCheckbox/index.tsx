@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
+import { Tooltip } from '@gnosis.pm/safe-react-components'
 import { Checkbox, FormControlLabel } from '@material-ui/core'
-import Tooltip from '@material-ui/core/Tooltip'
 import Row from 'src/components/layout/Row'
 import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info.svg'
@@ -14,7 +14,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
     onChange(e.target.checked)
   }
   return (
-    <Row margin="md">
+    <Row style={{ alignItems: 'center' }}>
       <FormControlLabel
         control={<Checkbox defaultChecked color="secondary" onChange={handleChange} />}
         label="Execute transaction"
