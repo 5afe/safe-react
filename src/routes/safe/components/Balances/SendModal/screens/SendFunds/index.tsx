@@ -243,7 +243,7 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo text="Send from" />
+                <SafeInfo text="Sending from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div

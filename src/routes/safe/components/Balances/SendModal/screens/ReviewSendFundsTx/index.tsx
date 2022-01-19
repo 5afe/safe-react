@@ -222,7 +222,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
           <Block className={classes.container}>
             {/* SafeInfo */}
-            <SafeInfo />
+            <SafeInfo text="Sending from" />
             <Divider withArrow />
 
             {/* Recipient */}
@@ -261,8 +261,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               </Paragraph>
             </Row>
 
-            {canTxExecute && !isSpendingLimit && <ExecuteCheckbox onChange={setShouldExecute} />}
-
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
             {!isSpendingLimit && (
@@ -274,6 +272,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 isOffChainSignature={isOffChainSignature}
               />
             )}
+            {canTxExecute && !isSpendingLimit && <ExecuteCheckbox onChange={setShouldExecute} />}
           </Block>
 
           {/* Disclaimer */}

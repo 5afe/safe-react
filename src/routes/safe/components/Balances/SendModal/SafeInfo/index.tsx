@@ -11,6 +11,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import Img from '../../../../../../components/layout/Img'
 
 const BalanceWrapper = styled.div`
+  width: 100%;
   text-align: center;
 `
 
@@ -40,18 +41,20 @@ const SafeInfo = ({ text }: SafeInfoProps): React.ReactElement => {
   return (
     <>
       {ethBalance && (
-        <BalanceWrapper>
-          <StyledBlock>
-            <Img src={nativeCurrency.logoUri} />
-          </StyledBlock>
-          <Paragraph
-            data-testid="current-eth-balance"
-            size="xl"
-            color="black600"
-            noMargin
-            style={{ marginTop: '8px' }}
-          >{`${ethBalance} ${nativeCurrency.symbol}`}</Paragraph>
-        </BalanceWrapper>
+        <Row margin="md">
+          <BalanceWrapper>
+            <StyledBlock>
+              <Img src={nativeCurrency.logoUri} />
+            </StyledBlock>
+            <Paragraph
+              data-testid="current-eth-balance"
+              size="xl"
+              color="black600"
+              noMargin
+              style={{ marginTop: '8px' }}
+            >{`${ethBalance} ${nativeCurrency.symbol}`}</Paragraph>
+          </BalanceWrapper>
+        </Row>
       )}
       {text && (
         <Row margin="sm">
