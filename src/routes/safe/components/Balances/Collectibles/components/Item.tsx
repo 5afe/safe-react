@@ -101,38 +101,49 @@ const useStyles = makeStyles({
   },
 } as any)
 
-const fetchImage = async (uri: string): Promise<string> => {
+interface Metadata {
+  image: string
+  name: string
+  description: string
+}
+
+const fetchMetadata = async (uri: string): Promise<Metadata | null> => {
   try {
-    const { data } = await axios.get<{ image?: string }>(uri)
-    return data.image || ''
+    const { data } = await axios.get<Metadata>(uri)
+    return data || null
   } catch (e) {
-    return ''
+    return null
   }
 }
 
 const Item = ({ data, onSend }: { data: NFTToken; onSend: () => unknown }): ReactElement => {
   const granted = useSelector(grantedSelector)
   const classes = useStyles({ backgroundColor: data.color, granted })
-  const [image, setImage] = useState<string>(data.image || '')
+  const [metadata, setMetadata] = useState<Metadata | null>(null)
+  const name = data.name || metadata?.name || ''
+  const desc = data.description || metadata?.description || ''
 
   useEffect(() => {
-    if (image || !data.uri) return
-    fetchImage(data.uri).then(setImage)
-  }, [image, setImage, data.uri])
+    if (metadata || !data.uri) return
+    fetchMetadata(data.uri).then(setMetadata)
+  }, [metadata, setMetadata, data.uri])
 
   return (
     <div className={classes.item}>
       <div className={classes.mainContent}>
-        <div className={classes.image} style={{ backgroundImage: `url(${image || NFTIcon})` }} />
+        <div
+          className={classes.image}
+          style={{ backgroundImage: `url(${data.image || metadata?.image || NFTIcon})` }}
+        />
         <div className={classes.textContainer}>
-          {data.name && (
-            <h3 className={classes.title} title={data.name}>
-              {data.name}
+          {name && (
+            <h3 className={classes.title} title={name}>
+              {name}
             </h3>
           )}
-          {data.description && (
-            <p className={classes.text} title={data.description}>
-              {data.description}
+          {desc && (
+            <p className={classes.text} title={desc}>
+              {desc}
             </p>
           )}
         </div>
