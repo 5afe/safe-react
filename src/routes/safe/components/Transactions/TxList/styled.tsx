@@ -337,10 +337,9 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   ${willBeReplaced};
 
   background-color: ${({ theme }) => theme.colors.separator} !important;
-  column-gap: 2px;
   display: grid;
+  gap: 2px;
   grid-template-columns: 2fr 1fr;
-  row-gap: 2px;
   width: 100%;
 
   & > div {
@@ -359,6 +358,16 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-summary {
     background-color: ${({ theme }) => theme.colors.white};
+    // grows to the height of tx-owner column
+    flex-grow: 1;
+  }
+
+  .tx-creation {
+    // to occupy the unexistant "owners" column
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .tx-share {

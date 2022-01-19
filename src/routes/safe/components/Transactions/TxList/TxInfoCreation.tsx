@@ -11,9 +11,10 @@ import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxDataRow } from './TxDataRow'
+import { md } from 'src/theme/variables'
 
-const StyledPadding = styled.div`
-  background-color: ${({ theme }) => theme.colors.white};
+const StyledTxCreationAddress = styled.div`
+  margin-bottom: ${md};
 `
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement => {
@@ -26,57 +27,68 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
 
   return (
     <TxDetailsContainer>
-      <div className="tx-summary">
-        <TxDataRow title="Transaction hash:" value={txInfo.transactionHash} inlineType="hash" />
-        <TxDataRow title="Created:" value={formatDateTime(timestamp)} />
-        <TxDataRow title="Creator:">
-          <PrefixedEthHashInfo
-            textSize="xl"
-            hash={txInfo.creator.value}
-            showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.creator.value)}
-            name={creator.name || undefined}
-            customAvatar={creator.logoUri || undefined}
-            showAvatar
-          />
-        </TxDataRow>
-        <TxDataRow title="Factory:">
-          {txInfo.factory ? (
+      <div className="tx-creation">
+        <div>
+          <StyledTxCreationAddress>
+            <Text size="xl" strong>
+              Creator:
+            </Text>
             <PrefixedEthHashInfo
               textSize="xl"
-              hash={txInfo.factory.value}
+              hash={txInfo.creator.value}
               showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.factory.value)}
-              name={factory?.name || undefined}
-              customAvatar={factory?.logoUri || undefined}
+              explorerUrl={getExplorerInfo(txInfo.creator.value)}
+              name={creator.name || undefined}
+              customAvatar={creator.logoUri || undefined}
               showAvatar
             />
-          ) : (
-            <Text size="xl" as="span">
-              {NOT_AVAILABLE}
+          </StyledTxCreationAddress>
+          <StyledTxCreationAddress>
+            <Text size="xl" strong>
+              Factory:
             </Text>
-          )}
-        </TxDataRow>
-        <TxDataRow title="Mastercopy:">
-          {txInfo.implementation ? (
-            <PrefixedEthHashInfo
-              textSize="xl"
-              hash={txInfo.implementation.value}
-              showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.implementation.value)}
-              name={implementation?.name || undefined}
-              customAvatar={implementation?.logoUri || undefined}
-              showAvatar
-            />
-          ) : (
-            <Text size="xl" as="span">
-              {NOT_AVAILABLE}
+            {txInfo.factory ? (
+              <PrefixedEthHashInfo
+                textSize="xl"
+                hash={txInfo.factory.value}
+                showCopyBtn
+                explorerUrl={getExplorerInfo(txInfo.factory.value)}
+                name={factory?.name || undefined}
+                customAvatar={factory?.logoUri || undefined}
+                showAvatar
+              />
+            ) : (
+              <Text size="xl" as="span">
+                {NOT_AVAILABLE}
+              </Text>
+            )}
+          </StyledTxCreationAddress>
+          <StyledTxCreationAddress>
+            <Text size="xl" strong>
+              Mastercopy:
             </Text>
-          )}
-        </TxDataRow>
+            {txInfo.implementation ? (
+              <PrefixedEthHashInfo
+                textSize="xl"
+                hash={txInfo.implementation.value}
+                showCopyBtn
+                explorerUrl={getExplorerInfo(txInfo.implementation.value)}
+                name={implementation?.name || undefined}
+                customAvatar={implementation?.logoUri || undefined}
+                showAvatar
+              />
+            ) : (
+              <Text size="xl" as="span">
+                {NOT_AVAILABLE}
+              </Text>
+            )}
+          </StyledTxCreationAddress>
+        </div>
+        <div>
+          <TxDataRow title="Transaction hash:" value={txInfo.transactionHash} inlineType="hash" />
+          <TxDataRow title="Created:" value={formatDateTime(timestamp)} />
+        </div>
       </div>
-      {/* filler */}
-      <StyledPadding />
     </TxDetailsContainer>
   )
 }
