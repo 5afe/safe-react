@@ -21,6 +21,7 @@ const useStyles = makeStyles(
     },
     cardOuter: {
       boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+      marginBottom: '15px',
     },
     gridRow: {
       boxSizing: 'border-box',
