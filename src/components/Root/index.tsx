@@ -40,6 +40,9 @@ const RootConsumer = (): React.ReactElement | null => {
       }
     }
     initChains()
+
+    // Set store chainId and init contracts/session
+    setChainId(_getChainId())
   }, [])
 
   // Chains failed to load

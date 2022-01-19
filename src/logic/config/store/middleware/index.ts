@@ -6,9 +6,10 @@ import { clearSafeList } from 'src/logic/safe/store/actions/clearSafeList'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { CONFIG_ACTIONS } from '../actions'
+import { store as reduxStore } from 'src/store'
 
 export const configMiddleware =
-  ({ dispatch }) =>
+  ({ dispatch }: typeof reduxStore) =>
   (next: Dispatch) =>
   async (action: Action<typeof CONFIG_ACTIONS.SET_CHAIN_ID>) => {
     const handledAction = next(action)
