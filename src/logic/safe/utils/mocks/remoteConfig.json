@@ -65,6 +65,59 @@
       ]
     },
     {
+      "transactionService": "https://safe-transaction.xdai.gnosis.io",
+      "chainId": "100",
+      "chainName": "Gnosis Chain",
+      "shortName": "gno",
+      "l2": true,
+      "description": "Gnosis Chain",
+      "rpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.xdaichain.com/oe-only/"
+      },
+      "safeAppsRpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.xdaichain.com/oe-only/"
+      },
+      "publicRpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.xdaichain.com/oe-only/"
+      },
+      "blockExplorerUriTemplate": {
+        "address": "https://blockscout.com/xdai/mainnet/address/{{address}}/transactions",
+        "txHash": "https://blockscout.com/xdai/mainnet/tx/{{txHash}}/",
+        "api": "https://blockscout.com/poa/xdai/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+      },
+      "nativeCurrency": {
+        "name": "xDai",
+        "symbol": "XDAI",
+        "decimals": 18,
+        "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/chains/100/currency_logo.png"
+      },
+      "theme": {
+        "textColor": "#ffffff",
+        "backgroundColor": "#48A9A6"
+      },
+      "gasPrice": [
+        {
+          "type": "FIXED",
+          "weiValue": "4000000000"
+        }
+      ],
+      "disabledWallets": [
+        "metamask",
+        "walletConnect"
+      ],
+      "features": [
+        "CONTRACT_INTERACTION",
+        "EIP1559",
+        "ERC721",
+        "SAFE_APPS",
+        "SAFE_TX_GAS_OPTIONAL",
+        "SPENDING_LIMIT"
+      ]
+    },
+    {
       "transactionService": "https://safe-transaction-polygon.staging.gnosisdev.com",
       "chainId": "137",
       "chainName": "Polygon",
