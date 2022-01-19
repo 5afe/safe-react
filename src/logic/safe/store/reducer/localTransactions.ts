@@ -9,6 +9,7 @@ import { LOCAL_TRANSACTIONS_STATUSES_KEY } from '../middleware/localTransactions
 export type TransactionStatusPayload = {
   safeTxHash: string
   status: TransactionStatus
+  isBroadcast?: boolean
 }
 
 export type LocalStatusesState = Record<ChainId, Record<string, TransactionStatus>>
