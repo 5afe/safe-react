@@ -1956,19 +1956,25 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk-types/-/safe-core-sdk-types-0.1.1.tgz#908c394cb4660493b4e9c8e01b5a7aa36efafd30"
   integrity sha512-PghXGDaI5Foq37nZGmI90U2OKMeGtxh5KqkDqou9aFHwGVa/nf9HRQPxG9/XUzcyfe9OlKttDlJnR3XnC3dSDw==
 
-"@gnosis.pm/safe-core-sdk@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk/-/safe-core-sdk-1.1.1.tgz#333b416c142358e43c099f5eb6136f0545f867cc"
-  integrity sha512-SApP5EnuIlX6p0RDzz0MHbSR4+Y203Ab6LE6B37IYJBVtQ//cVCWDZU59G7qgbw+eADQ+B9+6h5N7s1p2eO5hA==
+"@gnosis.pm/safe-core-sdk@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk/-/safe-core-sdk-1.3.0.tgz#ba21c6163c6a06e3fc51f5c7dac650e46fe8a779"
+  integrity sha512-laKkyJUv0llPPG5ep2+18v/anIEGi+KjarNoeVAutYzIeAAkSvvVbY8qyfczh5bWQkqvQ3K1l/QLUJ8Kx4hm3g==
   dependencies:
     "@gnosis.pm/safe-core-sdk-types" "^0.1.1"
-    "@gnosis.pm/safe-deployments" "^1.4.0"
+    "@gnosis.pm/safe-deployments" "^1.7.0"
     ethereumjs-util "^7.1.3"
+    semver "^7.3.5"
 
-"@gnosis.pm/safe-deployments@^1.4.0", "@gnosis.pm/safe-deployments@^1.5.0":
+"@gnosis.pm/safe-deployments@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.5.0.tgz#5e01ccc2e2d78bf91ecb4453a64d1cac3a5ba2d6"
   integrity sha512-IDU7I+IQr1zUU94/uD8shDVI+/nUA1unQUg8jtbTG0YGcmm49Lu8G01rqtWt2mhLxZWzFsgbLWGnU+/BzUqk7g==
+
+"@gnosis.pm/safe-deployments@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.7.0.tgz#dd5fde901595545131d447888e327cc72e41d370"
+  integrity sha512-OWc73XDBOJzoDk7GAQsasOxHnXKdJdOb28Jkv+JNie2LlRwZe1SMCu0iTozhwpLFp4BC+iDtuVWN7EVpe142ag==
 
 "@gnosis.pm/safe-react-components@^0.9.0":
   version "0.9.0"
