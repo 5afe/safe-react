@@ -13,7 +13,7 @@ type Payloads = AddressBookEntry | AddressBookState
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
-  // We check that name exist before trimming to avoid issues during migration to unified domain
+  // We check that name exist before trimming
   const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name ? entry.name.trim() : '' }))
   addressBookEntries
     // exclude those entries with invalid name
@@ -67,7 +67,6 @@ const addressBookReducer = handleActions<AddressBookState, Payloads>(
     },
     [ADDRESS_BOOK_ACTIONS.SAFE_LOAD]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.IMPORT]: batchLoadEntries,
-    [ADDRESS_BOOK_ACTIONS.MIGRATE]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.SYNC]: (_, action: Action<AddressBookState>): AddressBookState => action.payload,
   },
   initialAddressBookState,

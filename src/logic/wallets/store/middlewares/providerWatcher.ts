@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux'
 
 import { ChainId } from 'src/config/chain'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getAccountFrom, getChainIdFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
@@ -14,10 +15,8 @@ const watchedActions = [ADD_PROVIDER, REMOVE_PROVIDER]
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
 
-export const loadLastUsedProvider = async (): Promise<string | undefined> => {
-  const lastUsedProvider = await loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
-
-  return lastUsedProvider
+export const loadLastUsedProvider = (): string | undefined => {
+  return loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
 }
 
 type ProviderWatcherAction = {
@@ -40,6 +39,8 @@ const providerWatcherMware =
           if (watcherInterval) {
             clearInterval(watcherInterval)
           }
+
+          instantiateSafeContracts()
 
           saveToStorage(LAST_USED_PROVIDER_KEY, currentProviderProps.name)
 
