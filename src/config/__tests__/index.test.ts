@@ -9,8 +9,13 @@ describe('Config getters', () => {
     })
 
     it('gets a public RPC from the config', () => {
-      setChainId(CHAIN_ID.POLYGON)
-      expect(getPublicRpcUrl()).toBe('https://polygon-rpc.com/')
+      setChainId(CHAIN_ID.ETHEREUM)
+      expect(getPublicRpcUrl()).toMatch('https://mainnet.infura.io/v3/')
+    })
+
+    it('returns nothing for a non-existent config', () => {
+      setChainId(CHAIN_ID.UNKNOWN)
+      expect(getPublicRpcUrl()).toBe('')
     })
   })
 })
