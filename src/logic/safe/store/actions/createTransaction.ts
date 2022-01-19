@@ -36,6 +36,7 @@ import { getLastTransaction } from '../selectors/gatewayTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { TxArgs } from '../models/types/transaction'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -53,9 +54,7 @@ export interface CreateTransactionArgs {
 }
 
 type RequiredTxProps = CreateTransactionArgs &
-  Required<
-    Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin' | 'delayExecution'>
-  >
+  Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin'>>
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
@@ -105,6 +104,7 @@ export class TxSender {
   dispatch: Dispatch
   safeInstance: GnosisSafe
   safeVersion: string
+  isUserOwner: boolean
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
@@ -112,10 +112,10 @@ export class TxSender {
 
     let txDetails: TransactionDetails | null = null
 
-    // Send the tx to the backend if
+    // Propose the tx to the backend if an owner and
     // 1) It's a confirmation w/o exection
     // 2) It's a creation + execution w/o pre-approved signatures
-    if (!this.isExecution || !signature) {
+    if (this.isUserOwner && (!this.isExecution || !signature)) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
@@ -256,10 +256,7 @@ export class TxSender {
     // Use the user-provided none or the recommented nonce
     this.nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, this.safeVersion))
 
-    // Execute right away?
-    this.isExecution =
-      !txProps.delayExecution &&
-      (await shouldExecuteTransaction(this.safeInstance, this.nonce, getLastTransaction(state)))
+    this.isUserOwner = grantedSelector(state)
 
     this.txProps = txProps
     this.dispatch = dispatch
@@ -284,7 +281,6 @@ export const createTransaction = (
       operation: props.operation ?? Operation.CALL,
       navigateToTransactionsTab: props.navigateToTransactionsTab ?? true,
       origin: props.origin ?? null,
-      delayExecution: !!props.delayExecution,
     }
 
     // Populate instance vars
@@ -294,6 +290,11 @@ export const createTransaction = (
       logError(Errors._815, err.message)
       return
     }
+
+    // Execute right away?
+    sender.isExecution =
+      !props.delayExecution &&
+      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
     // Prepare a TxArgs object
     sender.txArgs = {

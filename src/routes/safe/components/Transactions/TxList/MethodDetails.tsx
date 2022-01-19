@@ -10,6 +10,7 @@ const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;
   display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
   align-items: center;
+  flex-wrap: wrap;
 
   p:first-of-type {
     margin-right: ${({ isArrayParameter }) => (isArrayParameter ? '0' : '4px')};
@@ -18,10 +19,12 @@ const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
 
 const TxInfo = styled.div`
   padding: 8px 0;
+  overflow-x: auto;
 `
 
-const StyledMethodName = styled(Text)`
-  white-space: nowrap;
+const ValueWrapper = styled.div`
+  min-width: 50%;
+  flex-shrink: 0;
 `
 
 export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
@@ -33,10 +36,12 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
 
       {data.parameters?.map((param, index) => (
         <TxDetailsMethodParam key={`${data.method}_param-${index}`} isArrayParameter={isArrayParameter(param.type)}>
-          <StyledMethodName size="xl" strong>
+          <Text size="xl" strong>
             {param.name}({param.type}):
-          </StyledMethodName>
-          <Value method={data.method} type={param.type} value={param.value as string} />
+          </Text>
+          <ValueWrapper>
+            <Value method={data.method} type={param.type} value={param.value as string} />
+          </ValueWrapper>
         </TxDetailsMethodParam>
       ))}
     </TxInfo>

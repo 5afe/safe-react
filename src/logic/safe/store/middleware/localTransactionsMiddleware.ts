@@ -1,5 +1,4 @@
 import { Action } from 'redux-actions'
-import { isSameOrigin } from 'src/components/StoreMigrator/utils'
 
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { store as reduxStore } from 'src/store'
@@ -11,6 +10,10 @@ import { localStatuses } from '../selectors/txStatus'
 // Share updated statuses between tabs/windows
 // Test env and Safari don't support BroadcastChannel
 const channel = !!window?.BroadcastChannel ? new BroadcastChannel(UPDATE_TRANSACTION_STATUS) : null
+
+function isSameOrigin(event: MessageEvent): boolean {
+  return event.origin === self.origin
+}
 
 if (channel) {
   channel.onmessage = (event: MessageEvent) => {
