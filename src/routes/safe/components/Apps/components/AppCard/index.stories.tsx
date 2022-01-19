@@ -1,3 +1,4 @@
+import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { getEmptySafeApp } from '../../utils'
 import { AppCard, AddCustomAppCard } from './index'
@@ -21,6 +22,10 @@ export const LoadedApp = (): React.ReactElement => (
       iconUrl: 'https://cryptologos.cc/logos/versions/gnosis-gno-gno-logo-circle.svg?v=007',
       description: 'Gnosis safe app',
       fetchStatus: FETCH_STATUS.SUCCESS,
+      chainIds: ['4'],
+      accessControl: {
+        type: SafeAppAccessPolicyTypes.NoRestrictions,
+      },
     }}
   />
 )

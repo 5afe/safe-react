@@ -23,6 +23,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -39,11 +40,11 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isOffChainSignature,
     isCreation,
     gasLimit,
@@ -56,8 +57,9 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
-
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
@@ -110,6 +112,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -121,6 +124,11 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
+    }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
     }
   }
 
@@ -139,7 +147,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
     >
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
-        isExecution={isExecution}
+        isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation}
@@ -175,7 +183,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={isExecution}
+                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>
@@ -183,8 +191,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
                 <ReviewInfoText
                   gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
-                  isExecution={isExecution}
-                  isOffChainSignature={isOffChainSignature}
+                  isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />

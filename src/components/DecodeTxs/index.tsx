@@ -1,14 +1,19 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
+import {
+  DecodedDataResponse,
+  DecodedDataBasicParameter,
+  DecodedDataParameterValue,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash/get'
 import { Text, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
 import { hexToBytes } from 'web3-utils'
 
-import { getExplorerInfo, getNativeCurrency } from 'src/config'
-import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
+import { getExplorerInfo } from 'src/config'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
+import { getInteractionTitle } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -76,14 +81,12 @@ export const BasicTxInfo = ({
   txValue: string
   recipientName?: string
 }): ReactElement => {
-  const nativeCurrency = getNativeCurrency()
-
   return (
     <BasicTxInfoWrapper>
       {/* TO */}
       <>
         <Text size="lg" strong>
-          {`Send ${txValue} ${nativeCurrency.symbol} to:`}
+          {getInteractionTitle(txValue)}
         </Text>
         <PrefixedEthHashInfo
           hash={txRecipient}
@@ -156,8 +159,8 @@ const SingleTx = ({
   decodedData,
   onTxItemClick,
 }: {
-  decodedData: DecodedData | null
-  onTxItemClick: (decodedTxDetails: DecodedData) => void
+  decodedData: DecodedDataResponse | null
+  onTxItemClick: (decodedTxDetails: DecodedDataResponse) => void
 }): ReactElement | null => {
   if (!decodedData) {
     return null
@@ -181,7 +184,7 @@ const MultiSendTx = ({
   decodedData,
   onTxItemClick,
 }: {
-  decodedData: DecodedData | null
+  decodedData: DecodedDataResponse | null
   onTxItemClick: (decodedTxDetails: DecodedDataParameterValue) => void
 }): ReactElement | null => {
   const txs: DecodedDataParameterValue[] | undefined = get(decodedData, 'parameters[0].valueDecoded')
@@ -208,7 +211,7 @@ const MultiSendTx = ({
 
 type Props = {
   txs: Transaction[]
-  decodedData: DecodedData | null
+  decodedData: DecodedDataResponse | null
   onTxItemClick: (decodedTxDetails: DecodedTxDetail) => void
 }
 

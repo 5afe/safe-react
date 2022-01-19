@@ -4,14 +4,13 @@ import { toWei } from 'web3-utils'
 
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { getNewTxNonce } from 'src/logic/safe/store/actions/utils'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
 import { extractSafeAddress } from 'src/routes/routes'
-import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
+import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -86,10 +85,12 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   useEffect(() => {
     const getSafeNonce = async () => {
       if (safeAddress) {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const lastTxNonce = getLastTxNonce(state)
-        const nonce = await getNewTxNonce(lastTxNonce, safeInstance)
-        setSafeNonce(nonce)
+        try {
+          const recommendedNonce = (await getRecommendedNonce(safeAddress)).toString()
+          setSafeNonce(recommendedNonce)
+        } catch (e) {
+          logError(Errors._616, e.message)
+        }
       }
     }
 

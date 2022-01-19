@@ -68,7 +68,7 @@ export const checkIfSafeNeedsUpdate = async (
 export const getCurrentMasterContractLastVersion = async (): Promise<string> => {
   let safeMasterVersion: string
   try {
-    const safeMaster = await getSafeMasterContract()
+    const safeMaster = getSafeMasterContract()
     safeMasterVersion = await safeMaster.methods.VERSION().call()
   } catch (err) {
     // Default in case that it's not possible to obtain the version from the contract, returns a hardcoded value or an

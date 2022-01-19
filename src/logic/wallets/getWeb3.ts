@@ -2,6 +2,7 @@ import semverSatisfies from 'semver/functions/satisfies'
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
+import { namehash } from '@ethersproject/hash'
 import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 
 import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
@@ -11,6 +12,8 @@ import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
+import { Errors, logError } from '../exceptions/CodedException'
+import { Contract } from 'web3-eth-contract'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -90,6 +93,7 @@ export const isSmartContractWallet = async (web3Provider: Web3, account: string)
 
 export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
   const account = (await getAccountFrom(web3Instance)) || ''
+  const ensDomain = account ? await reverseENSLookup(account) : ''
   const network = await getChainIdFrom(web3Instance)
   const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)
@@ -100,6 +104,7 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
     available,
     loaded: true,
     account,
+    ensDomain,
     network: network.toString() as ChainId,
     smartContractWallet,
     hardwareWallet,
@@ -111,6 +116,31 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
     return getAddressFromUnstoppableDomain(name)
   }
   return getWeb3ReadOnly().eth.ens.getAddress(name)
+}
+
+export const reverseENSLookup = async (address: string): Promise<string> => {
+  const web3 = getWeb3ReadOnly()
+  const lookup = address.toLowerCase().substr(2) + '.addr.reverse'
+  const nh = namehash(lookup)
+
+  let ResolverContract: Contract
+  let name = ''
+  try {
+    ResolverContract = await web3.eth.ens.getResolver(lookup)
+  } catch (err) {
+    logError(Errors._103, err.message)
+    return name
+  }
+
+  let verifiedAddress = ''
+  try {
+    name = await ResolverContract.methods.name(nh).call()
+    verifiedAddress = await web3.eth.ens.getAddress(name)
+  } catch (err) {
+    logError(Errors._103, err.message)
+  }
+
+  return verifiedAddress === address ? name : ''
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)

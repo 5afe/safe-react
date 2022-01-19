@@ -6,13 +6,13 @@ import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION
 import { PUBLIC_URL } from 'src/utils/constants'
 
 type Props = {
-  id: string
+  safeTxHash: string
 }
 
-const TxShareButton = ({ id }: Props): ReactElement => {
+const TxShareButton = ({ safeTxHash }: Props): ReactElement => {
   const txDetailsPathname = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug(),
-    [TRANSACTION_ID_SLUG]: id,
+    [TRANSACTION_ID_SLUG]: safeTxHash,
   })
   const txDetailsLink = `${window.location.origin}${PUBLIC_URL}${txDetailsPathname}`
 

@@ -1,20 +1,22 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { isTxQueued } from 'src/logic/safe/store/models/types/gateway.d'
-import { extractSafeAddress, SafeRouteSlugs, TRANSACTION_ID_SLUG } from 'src/routes/routes'
-import { Centered } from './styled'
+import { isTxQueued, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import {
-  getTransactionWithLocationByAttribute,
-  historyTransactions,
-  nextTransactions,
-  queuedTransactions,
-} from 'src/logic/safe/store/selectors/gatewayTransactions'
+  extractPrefixedSafeAddress,
+  extractSafeAddress,
+  generateSafeRoute,
+  SafeRouteSlugs,
+  SAFE_ROUTES,
+  TRANSACTION_ID_SLUG,
+  history,
+} from 'src/routes/routes'
+import { Centered } from './styled'
+import { getTransactionWithLocationByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxLocationContext } from './TxLocationProvider'
-import { QueueTxList } from './QueueTxList'
-import { HistoryTxList } from './HistoryTxList'
 import { AppReduxState } from 'src/store'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
@@ -24,65 +26,93 @@ import {
   addHistoryTransactions,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { HistoryPayload, QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { QueueTxList } from './QueueTxList'
+import { HistoryTxList } from './HistoryTxList'
 
 const TxSingularDetails = (): ReactElement => {
-  const { [TRANSACTION_ID_SLUG]: txId = '' } = useParams<SafeRouteSlugs>()
-
+  const { [TRANSACTION_ID_SLUG]: safeTxHash = '' } = useParams<SafeRouteSlugs>()
+  const [fetchedTx, setFetchedTx] = useState<TransactionDetails>()
+  const [liveTx, setLiveTx] = useState<{ txLocation: TxLocation; transaction: Transaction }>()
   const dispatch = useDispatch()
   const chainId = useSelector(currentChainId)
-  const historyTxs = useSelector(historyTransactions)
-  const nextTxs = useSelector(nextTransactions)
-  const queueTxs = useSelector(queuedTransactions)
-  const isLoaded = [historyTxs, nextTxs, queueTxs].every(Boolean)
 
   // We must use the tx from the store as the queue actions alter the tx
-  const liveTx = useSelector(
+  const indexedTx = useSelector(
     (state: AppReduxState) =>
-      getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }),
-    shallowEqual, // Check for txLocation change
+      fetchedTx
+        ? getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: fetchedTx.txId })
+        : null,
+    shallowEqual,
   )
 
+  // The indexedTx can be temporailiy not found when re-fetching the queue
+  // To avoid showing a loader, we use a locally cached version of it
+  useEffect(() => {
+    if (indexedTx != null) {
+      setLiveTx(indexedTx)
+    }
+  }, [indexedTx])
+
+  // When safeTxHash changes, we fetch tx details for this hash
   useEffect(() => {
     let isCurrent = true
 
-    if (!txId || liveTx) {
+    setFetchedTx(undefined)
+
+    if (!safeTxHash) {
+      const txsRoute = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, extractPrefixedSafeAddress())
+      history.replace(txsRoute)
       return
     }
 
     const getTransaction = async (): Promise<void> => {
+      // Remove the previously loaded tx (when making a new tx from the single tx route)
+      setLiveTx(undefined)
+
+      let txDetails: TransactionDetails
       try {
-        const txDetails = await fetchSafeTransaction(txId)
-        if (isCurrent) {
-          const tx = makeTxFromDetails(txDetails)
-
-          const payload: HistoryPayload | QueuedPayload = {
-            chainId,
-            safeAddress: extractSafeAddress(),
-            values: [
-              {
-                transaction: tx,
-                type: 'TRANSACTION', // Other types are discarded in reducer
-                conflictType: 'None', // Not used in reducer
-              },
-            ],
-          }
-
-          // Add transaction to store
-          dispatch(isTxQueued(tx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
-        }
+        txDetails = await fetchSafeTransaction(safeTxHash)
       } catch (e) {
         logError(Errors._614, e.message)
+        return
+      }
+
+      if (isCurrent) {
+        setFetchedTx(txDetails)
       }
     }
+
     getTransaction()
 
     return () => {
       isCurrent = false
     }
-  }, [txId, liveTx, dispatch, chainId])
+  }, [safeTxHash, setFetchedTx, setLiveTx])
 
-  if (!isLoaded || !liveTx) {
+  // Add the tx to the store
+  useEffect(() => {
+    if (!fetchedTx) return
+
+    // Format the tx details into a History or Queue-like tx item
+    const listItemTx = makeTxFromDetails(fetchedTx)
+    const payload: HistoryPayload | QueuedPayload = {
+      chainId,
+      safeAddress: extractSafeAddress(),
+      values: [
+        {
+          transaction: listItemTx,
+          type: 'TRANSACTION', // Other types are discarded in reducer
+          conflictType: 'None', // Not used in reducer
+        },
+      ],
+    }
+    // And add it to the corresponding list in the store
+    dispatch(isTxQueued(listItemTx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
+  }, [fetchedTx, chainId, dispatch])
+
+  if (!liveTx) {
     return (
       <Centered padding={10}>
         <Loader size="sm" />

@@ -92,16 +92,7 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
               In case the problem persists, please reach out to us via{' '}
             </Text>
             <LinkWrapper>
-              <a target="_blank" href="email: mailto:safe@gnosis.io" rel="noopener noreferrer">
-                <Text color="primary" size="lg" as="span">
-                  Email
-                </Text>
-              </a>
-              <Icon type="externalLink" color="primary" size="sm" />
-            </LinkWrapper>
-            or{' '}
-            <LinkWrapper>
-              <a target="_blank" href="https://discordapp.com/invite/FPMRAwK" rel="noopener noreferrer">
+              <a target="_blank" href="https://chat.gnosis-safe.io" rel="noopener noreferrer">
                 <Text color="primary" size="lg" as="span">
                   Discord
                 </Text>

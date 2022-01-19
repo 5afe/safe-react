@@ -6,12 +6,14 @@ import { useSelector } from 'react-redux'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from 'src/routes/safe/components/Transactions/TxList/hooks/useActionButtonsHandlers'
+import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import { isAwaitingExecution } from './utils'
 
 type TxExpandedActionsProps = {
   transaction: Transaction
 }
 
-export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): ReactElement | null => {
+export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): ReactElement => {
   const {
     canCancel,
     handleConfirmButtonClick,
@@ -22,6 +24,8 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
     disabledActions,
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
+  const txStatus = useLocalTxStatus(transaction)
+  const isAwaitingEx = isAwaitingExecution(txStatus)
 
   const onExecuteOrConfirm = (event) => {
     handleOnMouseLeave()
@@ -29,7 +33,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
   }
 
   const getConfirmTooltipTitle = () => {
-    if (transaction.txStatus === 'AWAITING_EXECUTION') {
+    if (isAwaitingEx) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -52,7 +56,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
             onMouseLeave={handleOnMouseLeave}
             className="primary"
           >
-            {transaction.txStatus === 'AWAITING_EXECUTION' ? 'Execute' : 'Confirm'}
+            {isAwaitingEx ? 'Execute' : 'Confirm'}
           </Button>
         </span>
       </Tooltip>

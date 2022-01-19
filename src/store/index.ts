@@ -16,7 +16,14 @@ import currentSessionReducer, {
   CURRENT_SESSION_REDUCER_ID,
 } from 'src/logic/currentSession/store/reducer/currentSession'
 import notificationsReducer, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
-import gatewayTransactionsReducer, { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
+import gatewayTransactionsReducer, {
+  GatewayTransactionsState,
+  GATEWAY_TRANSACTIONS_ID,
+} from 'src/logic/safe/store/reducer/gatewayTransactions'
+import localTransactionsReducer, {
+  LocalStatusesState,
+  LOCAL_TRANSACTIONS_ID,
+} from 'src/logic/safe/store/reducer/localTransactions'
 import tokensReducer, { TokenState, TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
 import providerReducer, { ProviderState, PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
@@ -37,10 +44,10 @@ import appearanceReducer, {
   AppearanceState,
 } from 'src/logic/appearance/reducer/appearance'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
-import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
+import { localTransactionsMiddleware } from 'src/logic/safe/store/middleware/localTransactionsMiddleware'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
@@ -66,6 +73,7 @@ const enhancer = composeEnhancers(
     providerWatcher,
     addressBookMiddleware,
     configMiddleware,
+    localTransactionsMiddleware,
   ),
 )
 
@@ -76,6 +84,7 @@ const reducers = {
   [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
   [TOKEN_REDUCER_ID]: tokensReducer,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactionsReducer,
+  [LOCAL_TRANSACTIONS_ID]: localTransactionsReducer,
   [NOTIFICATIONS_REDUCER_ID]: notificationsReducer,
   [CURRENCY_REDUCER_ID]: currencyValuesReducer,
   [COOKIES_REDUCER_ID]: cookiesReducer,
@@ -96,7 +105,8 @@ export type AppReduxState = CombinedState<{
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
-  [GATEWAY_TRANSACTIONS_ID]: Record<string, Record<string, StoreStructure>>
+  [GATEWAY_TRANSACTIONS_ID]: GatewayTransactionsState
+  [LOCAL_TRANSACTIONS_ID]: LocalStatusesState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_REDUCER_ID]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>

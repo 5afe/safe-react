@@ -1,41 +1,42 @@
-import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
+import { createTxNotifications } from 'src/logic/notifications'
 import {
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
   tryOffChainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas, getGasParam } from 'src/logic/safe/transactions/gas'
-import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
+import { estimateSafeTxGas, getGasParam, SafeTxGasEstimationProps } from 'src/logic/safe/transactions/gas'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
-import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { currentChainId } from 'src/logic/config/store/selectors'
 import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
-import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
-import { getLastTransaction, getLastTxNonce } from '../selectors/gatewayTransactions'
+import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
+import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
+import { updateTransactionStatus } from './updateTransactionStatus'
+import { _getChainId } from 'src/config'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
+import { TxArgs } from '../models/types/transaction'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -52,186 +53,273 @@ export interface CreateTransactionArgs {
   delayExecution?: boolean
 }
 
+type RequiredTxProps = CreateTransactionArgs &
+  Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin'>>
+
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
-export const isKeystoneError = (err: Error): boolean => {
-  return err.message.startsWith('#ktek_error')
-}
-
-const navigateToTx = (safeAddress: string, txId: string) => {
+const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
+  if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
+    return
+  }
   const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txId,
+    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
   })
 
   history.push(txRoute)
 }
 
-export const createTransaction =
-  (
-    {
-      safeAddress,
-      to,
-      valueInWei,
-      txData = EMPTY_DATA,
-      notifiedTransaction,
-      txNonce,
-      operation = Operation.CALL,
-      navigateToTransactionsTab = true,
-      origin = null,
-      safeTxGas: safeTxGasArg,
-      ethParameters,
-      delayExecution = false,
-    }: CreateTransactionArgs,
-    onUserConfirm?: ConfirmEventHandler,
-    onError?: ErrorEventHandler,
-  ): CreateTransactionAction =>
-  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
-    const state = getState()
+const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
+  const estimationProps: SafeTxGasEstimationProps = {
+    safeAddress: txProps.safeAddress,
+    txData: txProps.txData,
+    txRecipient: txProps.to,
+    txAmount: txProps.valueInWei,
+    operation: txProps.operation,
+  }
 
-    const ready = await onboardUser()
-    if (!ready) return
+  let safeTxGas = '0'
+  try {
+    safeTxGas = await estimateSafeTxGas(estimationProps, safeVersion)
+  } catch (err) {
+    logError(Errors._617, err.message)
+  }
+  return safeTxGas
+}
 
-    const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const safeVersion = currentSafeCurrentVersion(state) as string
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-    const chainId = currentChainId(state)
+export class TxSender {
+  notifications: ReturnType<typeof createTxNotifications>
+  nonce: string
+  isExecution: boolean
+  txArgs: TxArgs
+  safeTxHash: string
+  txProps: RequiredTxProps
+  from: string
+  dispatch: Dispatch
+  safeInstance: GnosisSafe
+  safeVersion: string
+  isUserOwner: boolean
 
-    const lastTx = getLastTransaction(state)
-    const lastTxNonce = getLastTxNonce(state)
+  // On transaction completion (either confirming or executing)
+  async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
+    const { txArgs, safeTxHash, txProps, dispatch, notifications } = this
 
-    const nextNonce = await getNewTxNonce(lastTxNonce, safeInstance)
-    const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
+    let txDetails: TransactionDetails | null = null
 
-    const isExecution = !delayExecution && (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
-    let safeTxGas = safeTxGasArg || '0'
-    try {
-      if (safeTxGasArg === undefined) {
-        safeTxGas = await estimateSafeTxGas(
-          { safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation },
-          safeVersion,
-        )
+    // Propose the tx to the backend if an owner and
+    // 1) It's a confirmation w/o exection
+    // 2) It's a creation + execution w/o pre-approved signatures
+    if (this.isUserOwner && (!this.isExecution || !signature)) {
+      try {
+        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+      } catch (err) {
+        logError(Errors._816, err.message)
+        return
       }
-    } catch (error) {
-      safeTxGas = safeTxGasArg || '0'
     }
 
-    const sigs = getPreValidatedSignatures(from)
-    const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
-    const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
+    notifications.closePending()
 
-    let txHash
-    const txArgs: TxArgs & { sender: string } = {
-      safeInstance,
-      to,
-      valueInWei,
-      data: txData,
-      operation,
-      nonce: Number.parseInt(nonce),
-      safeTxGas,
+    // This is used to communicate the safeTxHash to a Safe App caller
+    confirmCallback?.(safeTxHash)
+
+    // Go to a tx deep-link
+    if (txDetails && txProps.navigateToTransactionsTab) {
+      navigateToTx(txProps.safeAddress, txDetails)
+    }
+
+    dispatch(fetchTransactions(_getChainId(), txProps.safeAddress))
+  }
+
+  async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
+    const { txArgs, isExecution, from, safeTxHash, txProps, dispatch, notifications, safeInstance } = this
+
+    logError(Errors._803, err.message)
+
+    errorCallback?.()
+
+    notifications.closePending()
+
+    if (isExecution && safeTxHash) {
+      dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
+    }
+
+    const executeDataUsedSignatures = safeInstance.methods
+      .execTransaction(
+        txProps.to,
+        txProps.valueInWei,
+        txProps.txData,
+        txProps.operation,
+        0,
+        0,
+        0,
+        ZERO_ADDRESS,
+        ZERO_ADDRESS,
+        txArgs.sigs,
+      )
+      .encodeABI()
+    const contractErrorMessage = await fetchOnchainError(executeDataUsedSignatures, safeInstance, from)
+
+    notifications.showOnError(err, contractErrorMessage)
+  }
+
+  async onlyConfirm(hardwareWallet: boolean, smartContractWallet: boolean): Promise<string | undefined> {
+    const { txArgs, isExecution, safeTxHash, txProps, safeVersion } = this
+
+    if (!checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
+      throw new Error('Cannot do an offline signature')
+    }
+    return await tryOffChainSigning(
+      safeTxHash,
+      { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
+      hardwareWallet,
+      safeVersion,
+    )
+  }
+
+  async sendTx(): Promise<string> {
+    const { txArgs, isExecution, from, safeTxHash, txProps, dispatch } = this
+
+    // When signing on-chain don't mark as pending as it is never removed
+    if (isExecution) {
+      dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING }))
+      aboutToExecuteTx.setNonce(txArgs.nonce)
+    }
+
+    const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
+
+    const sendParams: PayableTx = {
+      from,
+      value: 0,
+      gas: txProps.ethParameters?.ethGasLimit,
+      [getGasParam()]: txProps.ethParameters?.ethGasPriceInGWei,
+      nonce: txProps.ethParameters?.ethNonce,
+    }
+
+    const promiEvent = tx.send(sendParams)
+
+    return new Promise((resolve, reject) => {
+      promiEvent.once('transactionHash', resolve) // this happens much faster than receipt
+      promiEvent.once('error', reject)
+    })
+  }
+
+  async submitTx(
+    state: AppReduxState,
+    confirmCallback?: ConfirmEventHandler,
+    errorCallback?: ErrorEventHandler,
+  ): Promise<void> {
+    // Off-chain signature
+    if (!this.isExecution) {
+      try {
+        const { hardwareWallet, smartContractWallet } = providerSelector(state)
+        const signature = await this.onlyConfirm(hardwareWallet, smartContractWallet)
+        this.onComplete(signature, confirmCallback)
+        return
+      } catch (err) {
+        logError(Errors._814, err.message)
+      }
+    }
+
+    // On-chain signature or execution
+    try {
+      await this.sendTx()
+      this.onComplete(undefined, confirmCallback)
+    } catch (err) {
+      this.onError(err, errorCallback)
+    }
+  }
+
+  async prepare(dispatch: Dispatch, state: AppReduxState, txProps: RequiredTxProps): Promise<void> {
+    // Wallet connection
+    const ready = await onboardUser()
+    if (!ready) {
+      throw Error('No wallet connection')
+    }
+
+    // Selectors
+    const { account } = providerSelector(state)
+    this.from = account
+
+    this.safeVersion = currentSafeCurrentVersion(state)
+    this.safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, this.safeVersion)
+
+    // Notifications
+    this.notifications = createTxNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
+
+    // Use the user-provided none or the recommented nonce
+    this.nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, this.safeVersion))
+
+    this.isUserOwner = grantedSelector(state)
+
+    this.txProps = txProps
+    this.dispatch = dispatch
+  }
+}
+
+export const createTransaction = (
+  props: CreateTransactionArgs,
+  confirmCallback?: ConfirmEventHandler,
+  errorCallback?: ErrorEventHandler,
+): CreateTransactionAction => {
+  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+    const sender = new TxSender()
+
+    // Selectors
+    const state = getState()
+
+    // Assign fallback values to certain props
+    const txProps = {
+      ...props,
+      txData: props.txData ?? EMPTY_DATA,
+      operation: props.operation ?? Operation.CALL,
+      navigateToTransactionsTab: props.navigateToTransactionsTab ?? true,
+      origin: props.origin ?? null,
+    }
+
+    // Populate instance vars
+    try {
+      await sender.prepare(dispatch, state, txProps)
+    } catch (err) {
+      logError(Errors._815, err.message)
+      return
+    }
+
+    // Execute right away?
+    sender.isExecution =
+      !props.delayExecution &&
+      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
+
+    // Prepare a TxArgs object
+    sender.txArgs = {
+      safeInstance: sender.safeInstance,
+      to: txProps.to,
+      valueInWei: txProps.valueInWei,
+      data: txProps.txData,
+      operation: txProps.operation,
+      nonce: Number.parseInt(sender.nonce),
+      safeTxGas: txProps.safeTxGas ?? (await getSafeTxGas(txProps, sender.safeVersion)),
       baseGas: '0',
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
       refundReceiver: ZERO_ADDRESS,
-      sender: from,
-      sigs,
+      sender: sender.from,
+      // We're making a new tx, so there are no other signatures
+      // Just pass our own address for an unsigned execution
+      // Contract will compare the sender address to this
+      sigs: getPreValidatedSignatures(sender.from),
     }
 
-    try {
-      const safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
+    // SafeTxHash acts as the unique ID of a tx throughout the app
+    sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
-      if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
-        const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
-
-        if (signature) {
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-          const txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
-
-          dispatch(fetchTransactions(chainId, safeAddress))
-          if (navigateToTransactionsTab) {
-            navigateToTx(safeAddress, txDetails.txId)
-          }
-          onUserConfirm?.(safeTxHash)
-          return
-        }
-      }
-
-      const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-      const sendParams: PayableTx = {
-        from,
-        value: 0,
-        gas: ethParameters?.ethGasLimit,
-        [getGasParam()]: ethParameters?.ethGasPriceInGWei,
-        nonce: ethParameters?.ethNonce,
-      }
-
-      await tx
-        .send(sendParams)
-        .once('transactionHash', async (hash) => {
-          onUserConfirm?.(safeTxHash)
-
-          txHash = hash
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-          try {
-            const txDetails = await saveTxToHistory({ ...txArgs, origin })
-            if (navigateToTransactionsTab) {
-              navigateToTx(safeAddress, txDetails.txId)
-            }
-          } catch (err) {
-            logError(Errors._803, err.message)
-
-            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
-            if (!isExecution) {
-              return
-            }
-          }
-
-          // store the pending transaction's nonce
-          isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
-
-          dispatch(fetchTransactions(chainId, safeAddress))
-        })
-        .then(async (receipt) => {
-          dispatch(fetchTransactions(chainId, safeAddress))
-          return receipt.transactionHash
-        })
-    } catch (err) {
-      logError(Errors._803, err.message)
-      onError?.()
-
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-      const executeDataUsedSignatures = safeInstance.methods
-        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-        .encodeABI()
-
-      const contractErrorMessage = await getContractErrorMessage({
-        safeInstance,
-        from,
-        data: executeDataUsedSignatures,
-      })
-
-      if (contractErrorMessage) {
-        logError(Errors._803, contractErrorMessage)
-      }
-
-      const notification = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationsQueue.afterExecutionError,
-            ...(contractErrorMessage && {
-              message: `${notificationsQueue.afterExecutionError.message} - ${contractErrorMessage}`,
-            }),
-          }
-
-      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
-    }
-
-    return txHash
+    // Start the creation
+    sender.submitTx(state, confirmCallback, errorCallback)
   }
+}

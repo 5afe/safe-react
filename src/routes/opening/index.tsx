@@ -10,7 +10,6 @@ import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
@@ -56,7 +55,12 @@ export const SafeDeployment = ({
       if (isTxPendingError(err)) {
         dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
       } else {
-        dispatch(enqueueSnackbar({ ...NOTIFICATIONS.CREATE_SAFE_FAILED_MSG }))
+        dispatch(
+          enqueueSnackbar({
+            ...NOTIFICATIONS.CREATE_SAFE_FAILED_MSG,
+            message: `${NOTIFICATIONS.CREATE_SAFE_FAILED_MSG.message} – ${err.message}`,
+          }),
+        )
       }
     },
     [dispatch],
@@ -94,13 +98,8 @@ export const SafeDeployment = ({
   }
 
   useEffect(() => {
-    const loadContracts = async () => {
-      await instantiateSafeContracts()
-      setLoading(false)
-    }
-
     if (provider) {
-      loadContracts()
+      setLoading(false)
     }
   }, [provider])
 

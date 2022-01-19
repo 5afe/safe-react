@@ -37,6 +37,7 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 
 import { ActionCallback, CREATE } from '.'
+import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -177,11 +178,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
-    isExecution,
     isCreation,
     isOffChainSignature,
     gasPrice,
@@ -195,7 +196,9 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualGasLimit,
+    manualSafeNonce,
   })
+  const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -267,6 +270,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     const newGasPrice = txParameters.ethGasPrice
     const oldSafeTxGas = gasEstimation
     const newSafeTxGas = txParameters.safeTxGas
+    const newSafeNonce = txParameters.safeNonce
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
@@ -279,6 +283,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+
+    if (newSafeNonce) {
+      const newSafeNonceNumber = parseInt(newSafeNonce, 10)
+      setManualSafeNonce(newSafeNonceNumber)
+    }
   }
 
   let confirmButtonText = 'Submit'
@@ -289,7 +298,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
+      isExecution={canTxExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation}
@@ -339,15 +348,14 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               txParameters={txParameters}
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
+              isTransactionExecution={canTxExecute}
               isOffChainSignature={isOffChainSignature}
             />
           </Modal.Body>
           <ReviewInfoText
             gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
-            isExecution={isExecution}
-            isOffChainSignature={isOffChainSignature}
+            isExecution={canTxExecute}
             safeNonce={txParameters.safeNonce}
             txEstimationExecutionStatus={txEstimationExecutionStatus}
           />

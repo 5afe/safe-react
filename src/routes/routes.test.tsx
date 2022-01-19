@@ -13,6 +13,7 @@ import {
 import { Route, Switch } from 'react-router'
 import { render } from 'src/utils/test-utils'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import Root from 'src/components/Root'
 
 const validSafeAddress = '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f'
 
@@ -47,7 +48,7 @@ describe('chainSpecificSafeAddressPathRegExp', () => {
 })
 
 describe('extractPrefixedSafeAddress', () => {
-  it('returns the chain-specific addresses from the url if both supplied', async () => {
+  it('returns the chain and address from the url if both supplied', async () => {
     const shortName = 'matic'
 
     const route = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { shortName, safeAddress: validSafeAddress })
@@ -56,12 +57,12 @@ describe('extractPrefixedSafeAddress', () => {
     expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName, safeAddress: validSafeAddress })
   })
 
-  it('returns the current chain prefix with safe address when a malformed chain is supplied', () => {
-    const route = `/fakechain:${validSafeAddress}/balances`
+  it('returns the incorrect chain prefix with safe address when an incorrect chain is supplied', () => {
+    const fakeChainShortName = 'fakechain'
+    const route = `/${fakeChainShortName}:${validSafeAddress}/balances`
     history.push(route)
 
-    // 'rin' is default dev env shortName
-    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: validSafeAddress })
+    expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'fakechain', safeAddress: validSafeAddress })
   })
 
   // matchPath will fail because of chainSpecificSafeAddressPathRegExp path
@@ -74,7 +75,7 @@ describe('extractPrefixedSafeAddress', () => {
     expect(extractPrefixedSafeAddress()).toStrictEqual({ shortName: 'rin', safeAddress: '' })
   })
 
-  it('returns the chain prefix with numbers in in', () => {
+  it('returns the chain prefix with zero address', () => {
     const shortName = 'eth'
 
     const route = `/${shortName}:${ZERO_ADDRESS}/balances`

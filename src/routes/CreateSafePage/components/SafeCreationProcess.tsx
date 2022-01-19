@@ -33,9 +33,14 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { getShortName } from 'src/config'
+import { getExplorerInfo, getShortName } from 'src/config'
 import { getGasParam } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+
+export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  display: inline-flex;
+`
 
 type ModalDataType = {
   safeAddress: string
@@ -49,6 +54,28 @@ const goToWelcomePage = () => {
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
+/**
+ * Parse MM error message, as a workaround for a bug in web3.js that doesn't do it correctly.
+ * It returns a formatting error like this:
+ *
+ * `[ethjs-query] while formatting outputs from RPC '{"value":{"code":-32000,"message":"intrinsic gas too low"}}'`
+ */
+const parseError = (err: Error): Error => {
+  const prefix = '[ethjs-query] while formatting outputs from RPC '
+
+  if (!err.message.startsWith(prefix)) return err
+
+  const json = err.message.split(prefix).pop() || ''
+  let actualMessage = ''
+  try {
+    actualMessage = JSON.parse(json.slice(1, -1)).value.message
+  } catch (e) {
+    actualMessage = ''
+  }
+
+  return actualMessage ? new Error(actualMessage) : err
+}
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
@@ -60,6 +87,8 @@ function SafeCreationProcess(): ReactElement {
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
+  const [showCouldNotLoadModal, setShowCouldNotLoadModal] = useState(false)
+  const [newSafeAddress, setNewSafeAddress] = useState<string>('')
 
   const createNewSafe = useCallback(() => {
     const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
@@ -100,7 +129,7 @@ function SafeCreationProcess(): ReactElement {
                 resolve(txReceipt)
               })
               .catch((error) => {
-                reject(error)
+                reject(parseError(error))
               })
           })
           .then((txReceipt) => {
@@ -108,7 +137,7 @@ function SafeCreationProcess(): ReactElement {
             resolve(txReceipt)
           })
           .catch((error) => {
-            reject(error)
+            reject(parseError(error))
           })
       }),
     )
@@ -158,13 +187,22 @@ function SafeCreationProcess(): ReactElement {
     // a default 5s wait before starting to request safe information
     await sleep(5000)
 
-    await backOff(() => getSafeInfo(newSafeAddress), {
-      startingDelay: 750,
-      retry: (e) => {
-        console.info('waiting for client-gateway to provide safe information', e)
-        return true
-      },
-    })
+    try {
+      // exponential delay between attempts for around 4 min
+      await backOff(() => getSafeInfo(newSafeAddress), {
+        startingDelay: 750,
+        maxDelay: 20000,
+        numOfAttempts: 19,
+        retry: (e) => {
+          console.info('waiting for client-gateway to provide safe information', e)
+          return true
+        },
+      })
+    } catch (e) {
+      setNewSafeAddress(newSafeAddress)
+      setShowCouldNotLoadModal(true)
+      return
+    }
 
     const safeProps = await buildSafe(newSafeAddress)
     await dispatch(addOrUpdateSafe(safeProps))
@@ -250,6 +288,32 @@ function SafeCreationProcess(): ReactElement {
                 variant="contained"
               >
                 Continue
+              </Button>
+            </ButtonContainer>
+          }
+        />
+      )}
+      {showCouldNotLoadModal && newSafeAddress && (
+        <GenericModal
+          onClose={onCancel}
+          title="Unable to load the new Safe"
+          body={
+            <div>
+              <Paragraph>
+                We are currently unable to load the Safe but it was successfully created and can be found <br />
+                under the following address{' '}
+                <InlinePrefixedEthHashInfo
+                  hash={newSafeAddress}
+                  showCopyBtn
+                  explorerUrl={getExplorerInfo(newSafeAddress)}
+                />
+              </Paragraph>
+            </div>
+          }
+          footer={
+            <ButtonContainer>
+              <Button onClick={onCancel} color="primary" type="button" size="small" variant="contained">
+                OK
               </Button>
             </ButtonContainer>
           }
