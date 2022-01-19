@@ -25,7 +25,7 @@ type TxDataRowType = {
 
 export const TxDataRow = ({ children, inlineType, hasExplorer = true, title, value }: TxDataRowType): ReactElement => (
   <StyledGridRow>
-    <Text size="xl" as="span">
+    <Text size="xl" as="span" color="placeHolder">
       {title}
     </Text>
     {value && inlineType === 'hash' && (

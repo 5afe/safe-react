@@ -1,4 +1,5 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { md, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -35,6 +36,10 @@ export const ActionAccordion = styled(Accordion)`
   &.MuiAccordion-root {
     &:first-child {
       border-top: none;
+    }
+
+    &:last-child {
+      border-bottom: none;
     }
 
     &.Mui-expanded {
@@ -360,6 +365,7 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
     background-color: ${({ theme }) => theme.colors.white};
     // grows to the height of tx-owner column
     flex-grow: 1;
+    position: relative;
   }
 
   .tx-creation {
@@ -371,7 +377,13 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   }
 
   .tx-share {
-    float: right;
+    position: absolute;
+    top: 20px;
+    right: 24px;
+  }
+
+  .tx-operation {
+    margin-bottom: ${md};
   }
 
   .tx-data {
@@ -382,6 +394,10 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
     & > div:last-of-type {
       flex: 1;
+    }
+
+    &.no-owners {
+      grid-column: span 2;
     }
   }
 
@@ -560,6 +576,22 @@ export const NoTransactions = styled.div`
 export const StyledGridRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
+  gap: ${md};
   justify-content: flex-start;
-  max-width: 500px;
+  max-width: 600px;
+
+  & > * {
+    flex-shrink: 0;
+  }
+`
+
+export const StyledTxInfoDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${sm};
+`
+
+export const StyledDetailsTitle = styled(Text)`
+  text-transform: uppercase;
+  letter-spacing: 1px;
 `

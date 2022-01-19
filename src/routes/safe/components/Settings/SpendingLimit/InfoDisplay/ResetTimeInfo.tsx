@@ -20,7 +20,7 @@ const ResetTimeInfo = ({ title, label, color }: ResetTimeInfoProps): ReactElemen
         <IconText iconSize="md" iconType="fuelIndicator" text={label} textSize="lg" />
       </Row>
     ) : (
-      <Row align="center" margin="md">
+      <Row align="center">
         <Text size="lg">One-time spending limit</Text>
       </Row>
     )}

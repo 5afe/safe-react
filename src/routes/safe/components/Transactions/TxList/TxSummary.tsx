@@ -72,11 +72,23 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
           <TxShareButton safeTxHash={txDetails.detailedExecutionInfo.safeTxHash} />
         </div>
       )}
+      {txData?.operation === Operation.DELEGATE && (
+        <div className="tx-operation">
+          <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
+        </div>
+      )}
+      {isMultiSendTxInfo(txInfo) && (
+        <>
+          <TxInfoMultiSend txInfo={txInfo} />
+          <br />
+        </>
+      )}
+
       {txHash && <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />}
       {safeTxHash && <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" hasExplorer={false} />}
       {created && <TxDataRow title="Created:" value={formatDateTime(created)} />}
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
-      <br></br>
+      <br />
 
       {/* Advanced TxData */}
       <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
@@ -95,12 +107,6 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
           <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
         )}
         {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
-        {txData?.operation === Operation.DELEGATE && (
-          <div className="tx-operation">
-            <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
-          </div>
-        )}
-        {isMultiSendTxInfo(txInfo) && <TxInfoMultiSend txInfo={txInfo} />}
       </CollapsibleSection>
     </>
   )

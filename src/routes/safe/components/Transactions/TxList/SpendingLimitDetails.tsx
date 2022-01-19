@@ -1,4 +1,3 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -8,8 +7,8 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { TransactionData, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { getTxTo } from './utils'
-import { md } from 'src/theme/variables'
+import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { StyledDetailsTitle, StyledTxInfoDetails } from 'src/routes/safe/components/Transactions/TxList/styled'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'
@@ -25,21 +24,6 @@ export const isDeleteAllowance = (method?: string): boolean => {
 export const isSpendingLimitMethod = (method?: string): boolean => {
   return isSetAllowance(method) || isDeleteAllowance(method)
 }
-
-const StyledSpendingLimitDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${md};
-
-  & > * > *:nth(2)-child {
-    margin-top: 4px;
-  }
-`
-
-const StyledDetailsTitle = styled(Text)`
-  text-transform: uppercase;
-  letter-spacing: 1px;
-`
 
 const StyledInfoBlock = styled.div`
   display: flex;
@@ -68,7 +52,7 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
   const txTo = getTxTo({ txInfo })
 
   return (
-    <StyledSpendingLimitDetails>
+    <StyledTxInfoDetails>
       <StyledDetailsTitle size="sm" strong color="placeHolder">
         Modify spending limit:
       </StyledDetailsTitle>
@@ -94,7 +78,7 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
       <StyledInfoBlock>
         <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
       </StyledInfoBlock>
-    </StyledSpendingLimitDetails>
+    </StyledTxInfoDetails>
   )
 }
 
@@ -108,7 +92,7 @@ export const DeleteSpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
   const txTo = getTxTo({ txInfo })
 
   return (
-    <StyledSpendingLimitDetails>
+    <StyledTxInfoDetails>
       <StyledDetailsTitle size="sm" strong color="placeHolder">
         Delete spending limit:
       </StyledDetailsTitle>
@@ -121,6 +105,6 @@ export const DeleteSpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
         />
       </StyledInfoBlock>
       <StyledInfoBlock>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</StyledInfoBlock>
-    </StyledSpendingLimitDetails>
+    </StyledTxInfoDetails>
   )
 }

@@ -95,6 +95,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const currentUser = useSelector(userAccountSelector)
   const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
+  const noOwners = !!(data && data.txInfo.type === 'Transfer' && data.txInfo.direction === 'INCOMING')
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
@@ -129,7 +130,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   return (
     <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
-      <div className={cn('tx-data')}>
+      <div className={cn('tx-data', { 'no-owners': noOwners })}>
         <div
           className={cn('tx-details', {
             'no-padding': isMultiSendTxInfo(data.txInfo),
@@ -145,20 +146,22 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
         </div>
         {!isMultiSend && getModuleDetails()}
       </div>
-      <div>
-        <div
-          className={cn('tx-owners', {
-            'will-be-replaced': willBeReplaced,
-          })}
-        >
-          <TxOwners txDetails={data} isPending={isPending} />
-        </div>
-        {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (
-          <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
-            <TxExpandedActions transaction={transaction} />
+      {!noOwners ? (
+        <div>
+          <div
+            className={cn('tx-owners', {
+              'will-be-replaced': willBeReplaced,
+            })}
+          >
+            <TxOwners txDetails={data} isPending={isPending} />
           </div>
-        )}
-      </div>
+          {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (
+            <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
+              <TxExpandedActions transaction={transaction} />
+            </div>
+          )}
+        </div>
+      ) : null}
     </TxDetailsContainer>
   )
 }
