@@ -65,22 +65,15 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   )
   const [data, setData] = useState('')
 
-  const {
-    gasLimit,
-    gasEstimation,
-    gasPriceFormatted,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-  } = useEstimateTransactionGas({
-    txData: data,
-    txRecipient: tx.assetAddress,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { gasLimit, gasEstimation, gasPriceFormatted, txEstimationExecutionStatus, isOffChainSignature, isCreation } =
+    useEstimateTransactionGas({
+      txData: data,
+      txRecipient: tx.assetAddress,
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
   const willExecute = canTxExecute && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -214,7 +207,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             />
           </Block>
           <ReviewInfoText
-            gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={willExecute}
             safeNonce={txParameters.safeNonce}

@@ -53,23 +53,16 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     setTxData(txData)
   }, [spendingLimit])
 
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-    gasLimit,
-    gasEstimation,
-    gasPriceFormatted,
-  } = useEstimateTransactionGas({
-    txData,
-    txRecipient: SPENDING_LIMIT_MODULE_ADDRESS,
-    txAmount: '0',
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { txEstimationExecutionStatus, isOffChainSignature, isCreation, gasLimit, gasEstimation, gasPriceFormatted } =
+    useEstimateTransactionGas({
+      txData,
+      txRecipient: SPENDING_LIMIT_MODULE_ADDRESS,
+      txAmount: '0',
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -178,7 +171,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
 
               <Row className={classes.modalDescription}>
                 <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}

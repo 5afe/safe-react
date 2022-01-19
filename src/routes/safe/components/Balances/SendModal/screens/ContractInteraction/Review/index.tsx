@@ -33,6 +33,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { TxEstimatedFeesDetail } from '../../../../../Transactions/helpers/TxEstimatedFeesDetail'
 
 const useStyles = makeStyles(styles)
 
@@ -147,6 +148,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     }
   }
 
+  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -235,7 +238,14 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Col>
             </Row>
 
-            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
+            <TxEstimatedFeesDetail
+              txParameters={txParameters}
+              gasCost={canTxExecute ? gasCost : ''}
+              onEdit={toggleEditMode}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={willExecute}
+              isOffChainSignature={isOffChainSignature}
+            />
 
             {/* Tx Parameters */}
             <TxParametersDetail
@@ -245,9 +255,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               isTransactionExecution={willExecute}
               isOffChainSignature={isOffChainSignature}
             />
+
+            {canTxExecute && <ExecuteCheckbox onChange={setShouldExecute} />}
           </Block>
           <ReviewInfoText
-            gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={willExecute}
             safeNonce={txParameters.safeNonce}

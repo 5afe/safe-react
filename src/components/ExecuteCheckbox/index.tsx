@@ -14,7 +14,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
     onChange(e.target.checked)
   }
   return (
-    <Row margin="md" style={{ alignItems: 'center' }}>
+    <Row style={{ alignItems: 'center' }}>
       <FormControlLabel
         control={<Checkbox defaultChecked color="secondary" onChange={handleChange} />}
         label="Execute transaction"

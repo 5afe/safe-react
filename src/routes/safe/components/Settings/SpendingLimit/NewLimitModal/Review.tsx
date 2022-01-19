@@ -172,7 +172,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
   const {
-    gasCostFormatted,
     txEstimationExecutionStatus,
     isCreation,
     isOffChainSignature,
@@ -330,7 +329,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             />
           </Modal.Body>
           <ReviewInfoText
-            gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={canTxExecute}
             safeNonce={txParameters.safeNonce}

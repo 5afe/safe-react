@@ -90,24 +90,17 @@ export const ReviewMessage = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
-  const {
-    gasLimit,
-    gasPriceFormatted,
-    gasEstimation,
-    isOffChainSignature,
-    isCreation,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-  } = useEstimateTransactionGas({
-    txData: txData || '',
-    txRecipient,
-    operation: Operation.DELEGATE,
-    txAmount: '0',
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { gasLimit, gasPriceFormatted, gasEstimation, isOffChainSignature, isCreation, txEstimationExecutionStatus } =
+    useEstimateTransactionGas({
+      txData: txData || '',
+      txRecipient,
+      operation: Operation.DELEGATE,
+      txAmount: '0',
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -237,7 +230,6 @@ export const ReviewMessage = ({
           {/* Gas info */}
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <ReviewInfoText
-              gasCostFormatted={isOwner ? gasCostFormatted : undefined}
               isCreation={isCreation}
               isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}

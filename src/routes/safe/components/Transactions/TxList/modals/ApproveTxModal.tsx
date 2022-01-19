@@ -242,25 +242,19 @@ export const ApproveTxModal = ({
     origin,
     id,
   } = useTxInfo(transaction)
-  const {
-    gasLimit,
-    gasPriceFormatted,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-  } = useEstimateTransactionGas({
-    txRecipient: to,
-    txData: data,
-    txConfirmations: confirmations,
-    txAmount: value,
-    preApprovingOwner: shouldExecute ? userAddress : undefined,
-    safeTxGas,
-    operation,
-    manualGasPrice,
-    manualGasLimit,
-    isExecution,
-  })
+  const { gasLimit, gasPriceFormatted, txEstimationExecutionStatus, isOffChainSignature, isCreation } =
+    useEstimateTransactionGas({
+      txRecipient: to,
+      txData: data,
+      txConfirmations: confirmations,
+      txAmount: value,
+      preApprovingOwner: shouldExecute ? userAddress : undefined,
+      safeTxGas,
+      operation,
+      manualGasPrice,
+      manualGasLimit,
+      isExecution,
+    })
   const willExecute = isExecution && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -366,7 +360,6 @@ export const ApproveTxModal = ({
 
               {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
                 <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={willExecute}
                   safeNonce={txParameters.safeNonce}

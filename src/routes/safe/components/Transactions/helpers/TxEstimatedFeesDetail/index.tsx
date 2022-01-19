@@ -1,13 +1,13 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Text, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
+import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ParametersStatus, areSafeParamsEnabled } from '../utils'
-import useSafeTxGas from '../useSafeTxGas'
+import { ParametersStatus, areEthereumParamsVisible } from '../utils'
+import Bold from 'src/components/layout/Bold'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -19,17 +19,26 @@ const AccordionDetailsWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `
-const StyledText = styled(Text)`
+
+const StyledButtonLink = styled(ButtonLink)`
+  padding-left: 0;
   margin: 8px 0 0 0;
+
+  > p {
+    margin-left: 0;
+  }
 `
 
-const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
-  color: ${(props) => (props.isOutOfOrder ? props.theme.colors.error : props.color)};
+const StyledAccordionSummary = styled(AccordionSummary)`
+  & .MuiAccordionSummary-content {
+    justify-content: space-between;
+  }
 `
 
 type Props = {
   txParameters: TxParameters
-  onEdit?: () => void
+  gasCost: string
+  onEdit: () => void
   compact?: boolean
   parametersStatus?: ParametersStatus
   isTransactionCreation: boolean
@@ -37,8 +46,10 @@ type Props = {
   isOffChainSignature: boolean
 }
 
-export const TxParametersDetail = ({
+export const TxEstimatedFeesDetail = ({
+  onEdit,
   txParameters,
+  gasCost,
   compact = true,
   parametersStatus,
   isTransactionCreation,
@@ -49,24 +60,20 @@ export const TxParametersDetail = ({
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
-  const [isTxNonceOutOfOrder, setIsTxNonceOutOfOrder] = useState(false)
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
 
   const { safeNonce = '' } = txParameters
   const safeNonceNumber = parseInt(safeNonce, 10)
   const lastQueuedTxNonce = useSelector(getLastTxNonce)
-  const showSafeTxGas = useSafeTxGas()
 
   useEffect(() => {
     if (Number.isNaN(safeNonceNumber)) return
     if (safeNonceNumber === nonce) return
     if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
       setIsAccordionExpanded(true)
-      setIsTxNonceOutOfOrder(true)
     }
     if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
       setIsAccordionExpanded(true)
-      setIsTxNonceOutOfOrder(true)
     }
   }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
@@ -80,48 +87,35 @@ export const TxParametersDetail = ({
 
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
-      <AccordionSummary>
-        <Text size="xl">Advanced parameters</Text>
-      </AccordionSummary>
+      <StyledAccordionSummary>
+        <Text size="xl">Estimated fee price</Text>
+        <Text size="xl">
+          <Bold>{gasCost}</Bold>
+        </Text>
+      </StyledAccordionSummary>
       <AccordionDetails>
         <AccordionDetailsWrapper>
-          <StyledText size="md" color="placeHolder">
-            Safe transaction parameters
-          </StyledText>
+          {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
+            <>
+              <TxParameterWrapper>
+                <Text size="lg">Nonce</Text>
+                <Text size="lg">{txParameters.ethNonce}</Text>
+              </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <ColoredText
-              size="lg"
-              isOutOfOrder={isTxNonceOutOfOrder}
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              Safe nonce
-            </ColoredText>
-            <ColoredText
-              size="lg"
-              isOutOfOrder={isTxNonceOutOfOrder}
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              {txParameters.safeNonce}
-            </ColoredText>
-          </TxParameterWrapper>
+              <TxParameterWrapper>
+                <Text size="lg">Gas limit</Text>
+                <Text size="lg">{txParameters.ethGasLimit}</Text>
+              </TxParameterWrapper>
 
-          {showSafeTxGas && (
-            <TxParameterWrapper>
-              <Text
-                size="lg"
-                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-              >
-                SafeTxGas
-              </Text>
-              <Text
-                size="lg"
-                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-              >
-                {txParameters.safeTxGas}
-              </Text>
-            </TxParameterWrapper>
+              <TxParameterWrapper>
+                <Text size="lg">Gas price</Text>
+                <Text size="lg">{txParameters.ethGasPrice}</Text>
+              </TxParameterWrapper>
+            </>
           )}
+          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
+            Edit
+          </StyledButtonLink>
         </AccordionDetailsWrapper>
       </AccordionDetails>
     </Accordion>

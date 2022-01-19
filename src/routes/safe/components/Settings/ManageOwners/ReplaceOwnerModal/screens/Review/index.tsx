@@ -61,22 +61,15 @@ export const ReviewReplaceOwnerModal = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
-  const {
-    gasLimit,
-    gasEstimation,
-    gasPriceFormatted,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isCreation,
-    isOffChainSignature,
-  } = useEstimateTransactionGas({
-    txData: data,
-    txRecipient: safeAddress,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { gasLimit, gasEstimation, gasPriceFormatted, txEstimationExecutionStatus, isCreation, isOffChainSignature } =
+    useEstimateTransactionGas({
+      txData: data,
+      txRecipient: safeAddress,
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -249,7 +242,6 @@ export const ReviewReplaceOwnerModal = ({
           />
 
           <ReviewInfoText
-            gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={canTxExecute}
             safeNonce={txParameters.safeNonce}

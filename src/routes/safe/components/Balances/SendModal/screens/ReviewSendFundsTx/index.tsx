@@ -33,6 +33,7 @@ import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ModalHeader } from '../ModalHeader'
@@ -40,6 +41,28 @@ import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import styled from 'styled-components'
+import { grey500 } from '../../../../../../../theme/variables'
+
+const BalanceWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`
+
+const StyledBlock = styled(Block)`
+  background-color: ${grey500};
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img {
+    width: 26px;
+  }
+`
 
 const useStyles = makeStyles(styles)
 
@@ -204,6 +227,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     }
   }
 
+  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -221,6 +246,24 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           <Hairline />
 
           <Block className={classes.container}>
+            {/* Amount */}
+            <Row align="center" margin="md">
+              <BalanceWrapper>
+                <StyledBlock>
+                  <Img alt={txToken?.name as string} onError={setImageToPlaceholder} src={txToken?.logoUri} />
+                </StyledBlock>
+                <Paragraph
+                  size="xl"
+                  color="black600"
+                  noMargin
+                  style={{ marginTop: '8px' }}
+                  data-testid={`amount-${txToken?.symbol as string}-review-step`}
+                >
+                  {tx.amount} {txToken?.symbol}
+                </Paragraph>
+              </BalanceWrapper>
+            </Row>
+
             {/* SafeInfo */}
             <SafeInfo text="Sending from" />
             <Divider withArrow />
@@ -243,23 +286,16 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               </Col>
             </Row>
 
-            {/* Amount */}
-            <Row margin="xs">
-              <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                Amount
-              </Paragraph>
-            </Row>
-            <Row align="center" margin="md">
-              <Img alt={txToken?.name as string} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
-              <Paragraph
-                className={classes.amount}
-                noMargin
-                size="md"
-                data-testid={`amount-${txToken?.symbol as string}-review-step`}
-              >
-                {tx.amount} {txToken?.symbol}
-              </Paragraph>
-            </Row>
+            {!isSpendingLimit && (
+              <TxEstimatedFeesDetail
+                txParameters={txParameters}
+                gasCost={canTxExecute ? gasCost : ''}
+                onEdit={toggleEditMode}
+                isTransactionCreation={isCreation}
+                isTransactionExecution={willExecute}
+                isOffChainSignature={isOffChainSignature}
+              />
+            )}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
@@ -279,7 +315,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           {/* FIXME Estimation should be fixed to be used with spending limits */}
           {!isSpendingLimit && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
             <ReviewInfoText
-              gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
               isExecution={willExecute}
               safeNonce={txParameters.safeNonce}

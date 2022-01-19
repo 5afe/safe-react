@@ -34,20 +34,13 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   const dispatch = useDispatch()
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
 
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isCreation,
-    isOffChainSignature,
-    gasPriceFormatted,
-    gasLimit,
-    gasEstimation,
-  } = useEstimateTransactionGas({
-    txRecipient: getMultisendContractAddress(),
-    txData: multiSendCallData,
-    txAmount: '0',
-    operation: Operation.DELEGATE,
-  })
+  const { txEstimationExecutionStatus, isCreation, isOffChainSignature, gasPriceFormatted, gasLimit, gasEstimation } =
+    useEstimateTransactionGas({
+      txRecipient: getMultisendContractAddress(),
+      txData: multiSendCallData,
+      txAmount: '0',
+      operation: Operation.DELEGATE,
+    })
   const canTxExecute = useCanTxExecute()
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -129,7 +122,6 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
           </Block>
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <ReviewInfoText
-              gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
               isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}

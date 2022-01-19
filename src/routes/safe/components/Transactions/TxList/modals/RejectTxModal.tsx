@@ -33,17 +33,11 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const safeAddress = extractSafeAddress()
   const classes = useStyles()
 
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-    gasLimit,
-    gasPriceFormatted,
-  } = useEstimateTransactionGas({
-    txData: EMPTY_DATA,
-    txRecipient: safeAddress,
-  })
+  const { txEstimationExecutionStatus, isOffChainSignature, isCreation, gasLimit, gasPriceFormatted } =
+    useEstimateTransactionGas({
+      txData: EMPTY_DATA,
+      txRecipient: safeAddress,
+    })
   const canTxExecute = useCanTxExecute()
 
   const origin = gwTransaction.safeAppInfo
@@ -120,7 +114,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
 
               {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
                 <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}

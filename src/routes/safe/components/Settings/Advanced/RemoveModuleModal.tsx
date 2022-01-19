@@ -45,23 +45,16 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
 
   const [, moduleAddress] = selectedModulePair
 
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-    gasLimit,
-    gasEstimation,
-    gasPriceFormatted,
-  } = useEstimateTransactionGas({
-    txData,
-    txRecipient: safeAddress,
-    txAmount: '0',
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { txEstimationExecutionStatus, isOffChainSignature, isCreation, gasLimit, gasEstimation, gasPriceFormatted } =
+    useEstimateTransactionGas({
+      txData,
+      txRecipient: safeAddress,
+      txAmount: '0',
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -171,7 +164,6 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               </Block>
               <Row className={classes.modalDescription}>
                 <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}

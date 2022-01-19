@@ -53,22 +53,15 @@ export const ChangeThresholdModal = ({
   const [disabledSubmitForm, setDisabledSubmitForm] = useState<boolean>(true)
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isCreation,
-    isOffChainSignature,
-    gasLimit,
-    gasPriceFormatted,
-    gasEstimation,
-  } = useEstimateTransactionGas({
-    txData: data,
-    txRecipient: safeAddress,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { txEstimationExecutionStatus, isCreation, isOffChainSignature, gasLimit, gasPriceFormatted, gasEstimation } =
+    useEstimateTransactionGas({
+      txData: data,
+      txRecipient: safeAddress,
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -194,7 +187,6 @@ export const ChangeThresholdModal = ({
                 </Block>
                 {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                   <ReviewInfoText
-                    gasCostFormatted={gasCostFormatted}
                     isCreation={isCreation}
                     isExecution={canTxExecute}
                     safeNonce={txParameters.safeNonce}

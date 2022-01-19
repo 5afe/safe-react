@@ -52,19 +52,12 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const nativeCurrency = getNativeCurrency()
   const [shouldExecute, setShouldExecute] = useState<boolean>(true)
 
-  const {
-    gasLimit,
-    gasEstimation,
-    gasPriceFormatted,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isCreation,
-    isOffChainSignature,
-  } = useEstimateTransactionGas({
-    txRecipient: tx.contractAddress as string,
-    txData: tx.data ? tx.data.trim() : '',
-    txAmount: tx.value ? toTokenUnit(tx.value, nativeCurrency.decimals) : '0',
-  })
+  const { gasLimit, gasEstimation, gasPriceFormatted, txEstimationExecutionStatus, isCreation, isOffChainSignature } =
+    useEstimateTransactionGas({
+      txRecipient: tx.contractAddress as string,
+      txData: tx.data ? tx.data.trim() : '',
+      txAmount: tx.value ? toTokenUnit(tx.value, nativeCurrency.decimals) : '0',
+    })
 
   const canTxExecute = useCanTxExecute()
   const willExecute = canTxExecute && shouldExecute
@@ -165,7 +158,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           </Block>
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
             <ReviewInfoText
-              gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
               isExecution={willExecute}
               safeNonce={txParameters.safeNonce}

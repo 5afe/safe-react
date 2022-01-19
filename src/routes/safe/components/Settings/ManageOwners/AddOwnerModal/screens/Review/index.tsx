@@ -52,22 +52,15 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
-  const {
-    gasLimit,
-    gasEstimation,
-    gasCostFormatted,
-    gasPriceFormatted,
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-  } = useEstimateTransactionGas({
-    txData: data,
-    txRecipient: safeAddress,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-    manualSafeNonce,
-  })
+  const { gasLimit, gasEstimation, gasPriceFormatted, txEstimationExecutionStatus, isOffChainSignature, isCreation } =
+    useEstimateTransactionGas({
+      txData: data,
+      txRecipient: safeAddress,
+      safeTxGas: manualSafeTxGas,
+      manualGasPrice,
+      manualGasLimit,
+      manualSafeNonce,
+    })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -220,7 +213,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           />
 
           <ReviewInfoText
-            gasCostFormatted={gasCostFormatted}
             isCreation={isCreation}
             isExecution={canTxExecute}
             safeNonce={txParameters.safeNonce}
