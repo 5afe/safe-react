@@ -16,7 +16,7 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getChainInfo, getChainName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -86,11 +86,10 @@ const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
 // Some apps still need chain name, as they didn't update to chainId based SDK versions
-// This apps expect a network name in UPPERCASE
 // With naming changing in the config service some names aren't the expected ones
 // Ex: Ethereum -> MAINNET, Gnosis Chain -> XDAI
 const getLegacyChainName = (chainName: string) => {
-  let network = chainName.toUpperCase()
+  let network = chainName
   switch (chainName) {
     case 'Ethereum':
       network = 'MAINNET'
@@ -176,11 +175,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: getChainName().toLowerCase() as LowercaseNetworks,
+        // FIXME `network` is deprecated. we should find how many apps are still using it
+        network: getLegacyChainName(chainName).toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
-  }, [ethBalance, safeAddress, appUrl, sendMessageToIframe])
+  }, [chainName, ethBalance, safeAddress, appUrl, sendMessageToIframe])
 
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
@@ -200,7 +200,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
       // FIXME `network` is deprecated. we should find how many apps are still using it
-      network: getLegacyChainName(chainName),
+      // Apps using this property expect this to be in UPPERCASE
+      network: getLegacyChainName(chainName).toUpperCase(),
       chainId: parseInt(chainId, 10),
       owners,
       threshold,
