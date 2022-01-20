@@ -18,7 +18,7 @@ import {
 } from '../fields/createSafeFields'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { removeTld, reverseENSLookup } from '../../../logic/wallets/getWeb3'
+import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const nameNewSafeStepLabel = 'Name'
 

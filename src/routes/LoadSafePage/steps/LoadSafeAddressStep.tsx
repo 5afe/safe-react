@@ -30,7 +30,7 @@ import {
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { removeTld, reverseENSLookup } from '../../../logic/wallets/getWeb3'
+import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
