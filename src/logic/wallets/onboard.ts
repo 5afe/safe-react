@@ -2,7 +2,7 @@ import Onboard from 'bnc-onboard'
 import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 
 import { _getChainId, getChainName } from 'src/config'
-import { getWeb3, setWeb3, isSmartContractWallet, getChainIdFrom } from 'src/logic/wallets/getWeb3'
+import { getWeb3, setWeb3, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
@@ -23,24 +23,26 @@ export const loadLastUsedProvider = (): string | undefined => {
   return loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
 }
 
-// 'mainnet' is hardcoded in onboard v1
-const NETWORK_NAMES: Record<ChainId, string> = {
-  [CHAIN_ID.ETHEREUM]: 'mainnet',
+const getNetworkName = (chainId: ChainId) => {
+  // 'mainnet' is hardcoded in onboard v1
+  const NETWORK_NAMES: Record<ChainId, string> = {
+    [CHAIN_ID.ETHEREUM]: 'mainnet',
+  }
+
+  // Ledger requires lowercase names
+  return NETWORK_NAMES[chainId] || getChainName().toLowerCase()
 }
 
-const hasENSSupport = (network: ChainId): boolean => {
-  return getChains()
-    .filter(({ features }) => features.includes(FEATURES.DOMAIN_LOOKUP))
-    .some(({ chainId }) => chainId === network)
+const hasENSSupport = (chainId: ChainId): boolean => {
+  return getChains().some((chain) => {
+    chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP)
+  })
 }
 
-const getOnboard = (): API => {
-  let providerChainId: ChainId = ''
-
+const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
-    networkId: parseInt(_getChainId(), 10),
-    // Ledger requires lowercase names
-    networkName: NETWORK_NAMES[_getChainId()] || getChainName().toLowerCase(),
+    networkId: parseInt(chainId, 10),
+    networkName: getNetworkName(chainId),
     subscriptions: {
       wallet: async (wallet) => {
         if (!wallet.provider) {
@@ -48,16 +50,12 @@ const getOnboard = (): API => {
         }
 
         setWeb3(wallet.provider)
-        const web3 = getWeb3()
-
-        // The provider object does not update when the unified UI changes network
-        providerChainId = (await getChainIdFrom(web3)).toString()
 
         const name = wallet.name || ''
         const hardwareWallet = wallet.type === 'hardware'
         const { address } = onboard().getState()
         const smartContractWallet =
-          (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(web3, address))) || false
+          (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(getWeb3(), address))) || false
 
         store.dispatch(
           updateProviderWallet({
@@ -78,7 +76,7 @@ const getOnboard = (): API => {
 
         instantiateSafeContracts()
       },
-      ens: hasENSSupport(providerChainId) ? (ens) => store.dispatch(updateProviderEns(ens?.name || '')) : undefined,
+      ens: hasENSSupport(chainId) ? (ens) => store.dispatch(updateProviderEns(ens?.name || '')) : undefined,
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
@@ -100,7 +98,7 @@ let currentOnboardInstance: API
 export const onboard = (): API => {
   const chainId = _getChainId()
   if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
-    currentOnboardInstance = getOnboard()
+    currentOnboardInstance = getOnboard(chainId)
   }
 
   return currentOnboardInstance

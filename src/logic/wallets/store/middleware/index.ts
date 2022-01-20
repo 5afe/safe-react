@@ -24,19 +24,16 @@ const providerMiddleware =
     // Onboard sends provider details via separate subscriptions: wallet, account, network
     // Payloads from all three need to be combined to be `loaded` and `available`
     switch (type) {
-      case PROVIDER_ACTIONS.WALLET:
-      case PROVIDER_ACTIONS.ACCOUNT:
+      // @ts-expect-error - Fallthrough case in switch.
+      case PROVIDER_ACTIONS.WALLET: {
+        hasWallet = Object.values(payload).every((value) => value != null)
+      }
+      // @ts-expect-error - Fallthrough case in switch.
+      case PROVIDER_ACTIONS.ACCOUNT: {
+        hasAccount = !!payload
+      }
       case PROVIDER_ACTIONS.NETWORK: {
-        // Check Onboard subscription payloads
-        if (type === PROVIDER_ACTIONS.WALLET) {
-          hasWallet = Object.values(payload).every((value) => value != null)
-        }
-        if (type === PROVIDER_ACTIONS.ACCOUNT) {
-          hasAccount = !!payload
-        }
-        if (type === PROVIDER_ACTIONS.NETWORK) {
-          hasNetwork = !!payload
-        }
+        hasNetwork = !!payload
 
         // Not all provider details are loaded
         if (!hasWallet || !hasAccount || !hasNetwork) {
