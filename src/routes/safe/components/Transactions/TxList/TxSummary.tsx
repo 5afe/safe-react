@@ -14,8 +14,6 @@ import { NOT_AVAILABLE } from './utils'
 import TxShareButton from './TxShareButton'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
-import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
-import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
 
 const StyledButtonLink = styled(ButtonLink)`
@@ -57,14 +55,6 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
     refundReceiver = detailedExecutionInfo.refundReceiver?.value
   }
   const isIncomingTx = txInfo.type === 'Transfer' && txInfo.direction === 'INCOMING'
-
-  let signaturesFromConfirmations
-  if (confirmations?.length > 0) {
-    const signatures = confirmations.map(({ signer, signature }) =>
-      makeConfirmation({ owner: signer.value, signature }),
-    )
-    signaturesFromConfirmations = generateSignaturesFromTxConfirmations(signatures)
-  }
 
   return (
     <>
@@ -109,9 +99,15 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
             {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
             {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
             {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
-            {confirmations?.length > 0 && (
-              <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
-            )}
+            {confirmations?.length > 0 &&
+              confirmations.map(({ signature }, index) => (
+                <TxDataRow
+                  title={`Signature ${index}:`}
+                  key={`signature-${index}:`}
+                  value={signature}
+                  inlineType="rawData"
+                />
+              ))}
             {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
           </CollapsibleSection>
         </>
