@@ -18,8 +18,8 @@ describe('Get gas param', () => {
     expect(getGasParam()).toBe('maxFeePerGas')
   })
 
-  it('should return gasPrice for Arbitrum', () => {
-    setChainId(CHAIN_ID.ARBITRUM)
+  it('should return gasPrice for Volta', () => {
+    setChainId(CHAIN_ID.VOLTA)
     expect(getGasParam()).toBe('gasPrice')
   })
 

@@ -1,8 +1,7 @@
 import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
-import { DEFAULT_CHAIN_ID, PUBLIC_URL } from 'src/utils/constants'
+import { IS_PRODUCTION, PUBLIC_URL } from 'src/utils/constants'
 import { History } from 'history'
-import { CHAIN_ID } from 'src/config/chain.d'
 
 type Props = {
   history: History
@@ -39,7 +38,7 @@ const LegacyRouteRedirection = ({ history }: Props): ReactElement | null => {
     )
   }
 
-  const DEFAULT_SHORT_NAME = DEFAULT_CHAIN_ID === CHAIN_ID.RINKEBY ? SHORT_NAME.RINKEBY : SHORT_NAME.MAINNET
+  const DEFAULT_SHORT_NAME = IS_PRODUCTION ? SHORT_NAME.MAINNET : SHORT_NAME.RINKEBY
 
   // Insert shortName before Safe address
   const safeAddressIndex = hash.indexOf('0x')
