@@ -33,9 +33,11 @@ const providerMiddleware =
       case PROVIDER_ACTIONS.ACCOUNT: {
         hasAccount = !!payload
       }
+      // @ts-expect-error - Fallthrough case in switch.
       case PROVIDER_ACTIONS.NETWORK: {
         hasNetwork = !!payload
-
+      }
+      default:
         // Not all provider details are loaded
         if (!hasWallet || !hasAccount || !hasNetwork) {
           break
@@ -61,9 +63,6 @@ const providerMiddleware =
           store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
         }
 
-        break
-      }
-      default:
         break
     }
 
