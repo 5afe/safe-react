@@ -38,8 +38,8 @@ const getOnboard = (): API => {
         }
 
         const name = wallet.name || ''
+        const hardwareWallet = wallet.type === 'hardware'
         const { address } = onboard().getState()
-        const hardwareWallet = !!wallet.type && wallet.type === 'hardware'
         const smartContractWallet =
           (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(getWeb3(), address))) || false
 
