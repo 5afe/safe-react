@@ -85,6 +85,23 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
+// Some apps still need chain name, as they didn't update to chainId based SDK versions
+// This apps expect a network name in UPPERCASE
+// With naming changing in the config service some names aren't the expected ones
+// Ex: Ethereum -> MAINNET, Gnosis Chain -> XDAI
+const getLegacyChainName = (chainName: string) => {
+  let network = chainName.toUpperCase()
+  switch (chainName) {
+    case 'Ethereum':
+      network = 'MAINNET'
+      break
+    case 'Gnosis Chain':
+      network = 'XDAI'
+  }
+
+  return network
+}
+
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
@@ -182,7 +199,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: chainName,
+      // FIXME `network` is deprecated. we should find how many apps are still using it
+      network: getLegacyChainName(chainName),
       chainId: parseInt(chainId, 10),
       owners,
       threshold,
