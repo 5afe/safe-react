@@ -2,7 +2,7 @@ import { ReactElement, ReactNode } from 'react'
 import styled from 'styled-components'
 import { CopyToClipboardBtn, Text } from '@gnosis.pm/safe-react-components'
 
-import { InlineEthHashInfo, StyledGridRow } from './styled'
+import { InlinePrefixedEthHashInfo, StyledGridRow } from './styled'
 import { getExplorerInfo } from 'src/config'
 import { getByteLength } from 'src/utils/getByteLength'
 
@@ -29,7 +29,7 @@ export const TxDataRow = ({ children, inlineType, hasExplorer = true, title, val
       {title}
     </Text>
     {value && inlineType === 'hash' && (
-      <InlineEthHashInfo
+      <InlinePrefixedEthHashInfo
         textSize="xl"
         hash={value}
         shortenHash={8}

@@ -35,7 +35,7 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
         setDetails({
           title: (
             <Text size="xl" as="span">
-              Send{' '}
+              Sent{' '}
               <Text size="xl" as="span" strong>
                 {assetInfo.amountWithSymbol}
               </Text>{' '}

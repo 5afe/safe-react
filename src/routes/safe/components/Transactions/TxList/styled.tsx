@@ -1,4 +1,5 @@
-import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
@@ -502,11 +503,11 @@ export const OwnerListItem = styled.li`
   }
 `
 
-export const InlineEthHashInfo = styled(EthHashInfo)`
+export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
 
   span {
-    font-weight: normal;
+    font-weight: bold;
   }
 `
 
