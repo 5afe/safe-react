@@ -26,7 +26,8 @@ const providerMiddleware =
     switch (type) {
       // @ts-expect-error - Fallthrough case in switch.
       case PROVIDER_ACTIONS.WALLET: {
-        hasWallet = Object.values(payload).every((value) => value != null)
+        // Wallet has name, hardware/smart contract wallet flag set
+        hasWallet = Object.values(payload).some(Boolean)
       }
       // @ts-expect-error - Fallthrough case in switch.
       case PROVIDER_ACTIONS.ACCOUNT: {
