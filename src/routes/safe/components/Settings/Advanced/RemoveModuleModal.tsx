@@ -9,35 +9,56 @@ import Row from 'src/components/layout/Row'
 import Modal from 'src/components/Modal'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
-import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 
 import { useStyles } from './style'
 
 interface RemoveModuleModalProps {
   onClose: () => void
-  selectedModulePair: ModulePair
+  selectedModuleAddress: string
 }
 
-export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): ReactElement => {
+export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModuleModalProps): ReactElement => {
   const classes = useStyles()
 
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
-  const [, moduleAddress] = selectedModulePair
+  const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(() => {
-    const txData = getDisableModuleTxData(selectedModulePair, safeAddress, safeVersion)
-    setTxData(txData)
-  }, [selectedModulePair, safeAddress, safeVersion])
+    let isCurrent = true
+
+    const calculateRemoveOwnerData = async () => {
+      try {
+        const txData = await getDisableModuleTxData({
+          moduleAddress: selectedModuleAddress,
+          safeAddress,
+          safeVersion,
+          connectedWalletAddress,
+        })
+
+        if (isCurrent) {
+          setTxData(txData)
+        }
+      } catch (error) {
+        logError(Errors._806, `${selectedModuleAddress} - ${error.message}`)
+      }
+    }
+    calculateRemoveOwnerData()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [connectedWalletAddress, safeAddress, safeVersion, selectedModuleAddress])
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {
@@ -54,7 +75,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         }),
       )
     } catch (e) {
-      logError(Errors._806, `${selectedModulePair} – ${e.message}`)
+      logError(Errors._806, `${selectedModuleAddress} - ${e.message}`)
     }
   }
 
@@ -67,16 +88,16 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       open
     >
       <TxModalWrapper txData={txData} onSubmit={removeSelectedModule} submitText="Remove">
-        <ModalHeader onClose={onClose} title="Remove Guard" />
+        <ModalHeader onClose={onClose} title="Remove Module" />
         <Hairline />
         <Block>
           <Row className={classes.modalOwner}>
             <Col align="center" xs={1}>
               <PrefixedEthHashInfo
-                hash={moduleAddress}
+                hash={selectedModuleAddress}
                 showCopyBtn
                 showAvatar
-                explorerUrl={getExplorerInfo(moduleAddress)}
+                explorerUrl={getExplorerInfo(selectedModuleAddress)}
               />
             </Col>
           </Row>

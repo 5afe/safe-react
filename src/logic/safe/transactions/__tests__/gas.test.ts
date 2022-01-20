@@ -27,6 +27,10 @@ describe('Get gas param', () => {
       setChainId(CHAIN_ID.RINKEBY)
       expect(isMaxFeeParam()).toBe(true)
     })
+    it('should return gasPrice for Volta', () => {
+      setChainId(CHAIN_ID.VOLTA)
+      expect(isMaxFeeParam()).toBe(false)
+    })
   })
   describe('createSendParams tests', () => {
     const mockAccount = '0x680cde08860141F9D223cE4E620B10Cd6741037E'

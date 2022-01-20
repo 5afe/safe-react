@@ -65,7 +65,14 @@ const TokenSelectField = ({ initialValue, isValid = true, tokens }: TokenSelectF
     <Field
       classes={{ selectMenu: classes.selectMenu }}
       className={isValid ? 'isValid' : 'isInvalid'}
-      component={SelectField}
+      component={(props) => (
+        <SelectField
+          {...props}
+          inputProps={{
+            'data-testid': 'token-input',
+          }}
+        />
+      )}
       displayEmpty
       initialValue={initialValue}
       name="token"
