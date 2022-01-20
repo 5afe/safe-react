@@ -1,5 +1,3 @@
-import { StyledDetailsTitle } from 'src/routes/safe/components/Transactions/TxList/styled'
-import { ReactElement } from 'react'
 import { getNativeCurrency } from 'src/config'
 
 export type ParametersStatus = 'ENABLED' | 'DISABLED' | 'SAFE_DISABLED' | 'ETH_HIDDEN' | 'CANCEL_TRANSACTION'
@@ -21,19 +19,11 @@ export const ethereumTxParametersTitle = (isExecution: boolean): string => {
   return `Owner transaction ${isExecution ? '(Execution)' : '(On-chain approval)'}`
 }
 
-export const getInteractionTitle = (value: number | string): ReactElement => {
+export const getInteractionTitle = (value: number | string): string => {
   if (Number(value) === 0) {
-    return (
-      <StyledDetailsTitle size="sm" strong color="placeHolder">
-        {'Interact with:'}
-      </StyledDetailsTitle>
-    )
+    return 'Interact with:'
   }
 
   const { symbol } = getNativeCurrency()
-  return (
-    <StyledDetailsTitle size="sm" strong color="placeHolder">
-      {`Interact with (and send ${value} ${symbol} to):`}
-    </StyledDetailsTitle>
-  )
+  return `Interact with (and send ${value} ${symbol} to):`
 }

@@ -9,14 +9,14 @@ import DelegateCallWarning from './DelegateCallWarning'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { isSpendingLimitMethod } from './SpendingLimitDetails'
-import { ColumnDisplayAccordionDetails, ActionAccordion, StyledDetailsTitle } from './styled'
+import { ColumnDisplayAccordionDetails, ActionAccordion } from './styled'
 import { TxInfoDetails } from './TxInfoDetails'
 
 type MultiSendTxGroupProps = {
   actionTitle: string
   children: ReactNode
   txDetails: {
-    title: string | ReactElement
+    title: string
     address: string
     name?: string | undefined
     avatarUrl?: string | undefined
@@ -37,11 +37,7 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
         {isDelegateCall && <DelegateCallWarning isKnown={isKnown} />}
         {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
           <TxInfoDetails
-            title={
-              <StyledDetailsTitle size="sm" strong color="placeHolder">
-                {txDetails.title}
-              </StyledDetailsTitle>
-            }
+            title={txDetails.title}
             address={txDetails.address}
             name={txDetails.name}
             avatarUrl={txDetails.avatarUrl}

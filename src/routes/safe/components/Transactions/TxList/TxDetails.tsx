@@ -131,20 +131,41 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   return (
     <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
       <div className={cn('tx-data', { 'no-owners': noOwners })}>
-        <div
-          className={cn('tx-details', {
-            'no-padding': isMultiSendTxInfo(data.txInfo),
-            'not-executed': !data.executedAt,
-            'will-be-replaced': willBeReplaced,
-          })}
-        >
-          <TxDataGroup txDetails={data} />
-        </div>
-        {isMultiSend && getModuleDetails()}
-        <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
-          <TxSummary txDetails={data} />
-        </div>
-        {!isMultiSend && getModuleDetails()}
+        {isMultiSend && (
+          <>
+            <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+              <TxSummary txDetails={data} />
+            </div>
+            {getModuleDetails()}
+            <div
+              className={cn('tx-details', {
+                'no-padding': isMultiSendTxInfo(data.txInfo),
+                'not-executed': !data.executedAt,
+                'will-be-replaced': willBeReplaced,
+              })}
+            >
+              <TxDataGroup txDetails={data} />
+            </div>
+          </>
+        )}
+
+        {!isMultiSend && (
+          <>
+            <div
+              className={cn('tx-details', {
+                'no-padding': isMultiSendTxInfo(data.txInfo),
+                'not-executed': !data.executedAt,
+                'will-be-replaced': willBeReplaced,
+              })}
+            >
+              <TxDataGroup txDetails={data} />
+            </div>
+            {getModuleDetails()}
+            <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+              <TxSummary txDetails={data} />
+            </div>
+          </>
+        )}
       </div>
       {!noOwners ? (
         <div>

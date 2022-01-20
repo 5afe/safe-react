@@ -592,7 +592,7 @@ export const StyledTxInfoDetails = styled.div`
   gap: ${sm};
 `
 
-export const StyledDetailsTitle = styled(Text)`
-  text-transform: uppercase;
-  letter-spacing: 1px;
+export const StyledDetailsTitle = styled(Text)<{ uppercase?: boolean }>`
+  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : null)};
+  letter-spacing: ${({ uppercase }) => (uppercase ? '1px' : null)};
 `

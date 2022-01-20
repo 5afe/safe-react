@@ -39,7 +39,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpanded = () => {
-    setExpanded(!expanded)
+    setExpanded((val) => !val)
   }
 
   let created, confirmations, safeTxHash, baseGas, gasPrice, gasToken, refundReceiver, safeTxGas

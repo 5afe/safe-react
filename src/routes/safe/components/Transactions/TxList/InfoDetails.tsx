@@ -1,5 +1,4 @@
 import { ReactElement, ReactNode } from 'react'
-import { Text } from '@gnosis.pm/safe-react-components'
 
 import { StyledDetailsTitle, StyledTxInfoDetails } from 'src/routes/safe/components/Transactions/TxList/styled'
 
@@ -11,14 +10,12 @@ type InfoDetailsProps = {
 
 export const InfoDetails = ({ children, title, uppercase = true }: InfoDetailsProps): ReactElement => (
   <StyledTxInfoDetails>
-    {uppercase ? (
-      <StyledDetailsTitle size="sm" strong color="placeHolder">
+    {typeof title === 'string' ? (
+      <StyledDetailsTitle size="sm" strong color="placeHolder" uppercase={uppercase}>
         {title}
       </StyledDetailsTitle>
     ) : (
-      <Text size="sm" strong color="placeHolder">
-        {title}
-      </Text>
+      title
     )}
 
     {children}
