@@ -38,7 +38,7 @@ import {
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { removeTld, reverseENSLookup } from '../../../logic/wallets/getWeb3'
+import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
