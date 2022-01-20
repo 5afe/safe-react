@@ -71,8 +71,8 @@ const getOnboard = (chainId: ChainId): API => {
       address: (address) => {
         store.dispatch(updateProviderAccount(address))
       },
-      network: (networkdId) => {
-        store.dispatch(updateProviderNetwork(networkdId?.toString() || ''))
+      network: (networkId) => {
+        store.dispatch(updateProviderNetwork(networkId?.toString() || ''))
         store.dispatch(closeSnackbar({ dismissAll: true }))
 
         instantiateSafeContracts()

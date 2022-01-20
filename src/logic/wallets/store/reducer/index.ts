@@ -36,9 +36,10 @@ const initialProviderState: ProvidersState = {
   loaded: false,
 }
 
-const createProvider = (provider: ProvidersState) => {
-  const { name, account, network } = provider
-  return { ...provider, loaded: !!name && !!account && !!network }
+const providerFactory = (provider: ProvidersState) => {
+  const { name, hardwareWallet, smartContractWallet, account, network } = provider
+  const hasWallet = !!name || !!hardwareWallet || !!smartContractWallet
+  return { ...provider, loaded: hasWallet && !!account && !!network }
 }
 
 export const PROVIDER_REDUCER_ID = 'providers'
@@ -46,13 +47,13 @@ export const PROVIDER_REDUCER_ID = 'providers'
 const providerReducer = handleActions<ProvidersState, ProviderPayloads>(
   {
     [PROVIDER_ACTIONS.WALLET]: (state: ProvidersState, { payload }: Action<ProviderWalletPayload>) =>
-      createProvider({ ...state, ...payload }),
+      providerFactory({ ...state, ...payload }),
     [PROVIDER_ACTIONS.NETWORK]: (state: ProvidersState, { payload }: Action<ProviderNetworkPayload>) =>
-      createProvider({ ...state, network: payload }),
+      providerFactory({ ...state, network: payload }),
     [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) =>
-      createProvider({ ...state, account: payload, available: !!payload }),
+      providerFactory({ ...state, account: payload, available: !!payload }),
     [PROVIDER_ACTIONS.ENS]: (state: ProvidersState, { payload }: Action<ProviderEnsPayload>) =>
-      createProvider({ ...state, ensDomain: payload }),
+      providerFactory({ ...state, ensDomain: payload }),
   },
   initialProviderState,
 )

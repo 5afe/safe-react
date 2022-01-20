@@ -23,47 +23,39 @@ const providerMiddleware =
 
     // Onboard sends provider details via separate subscriptions: wallet, account, network
     // Payloads from all three need to be combined to be `loaded` and `available`
-    switch (type) {
-      // @ts-expect-error - Fallthrough case in switch.
-      case PROVIDER_ACTIONS.WALLET: {
-        // Wallet has name, hardware/smart contract wallet flag set
-        hasWallet = Object.values(payload).some(Boolean)
-      }
-      // @ts-expect-error - Fallthrough case in switch.
-      case PROVIDER_ACTIONS.ACCOUNT: {
-        hasAccount = !!payload
-      }
-      // @ts-expect-error - Fallthrough case in switch.
-      case PROVIDER_ACTIONS.NETWORK: {
-        hasNetwork = !!payload
-      }
-      default:
-        // Not all provider details are loaded
-        if (!hasWallet || !hasAccount || !hasNetwork) {
-          break
-        }
+    if (type === PROVIDER_ACTIONS.WALLET) {
+      // Wallet has name, hardware/smart contract wallet flag set
+      hasWallet = Object.values(payload).some(Boolean)
+    } else if (type === PROVIDER_ACTIONS.ACCOUNT) {
+      hasAccount = !!payload
+    } else if (type === PROVIDER_ACTIONS.NETWORK) {
+      hasNetwork = !!payload
+    } else {
+      return handledAction
+    }
 
-        // Determine if provider loaded successfully
-        const state = store.getState()
-        const { available, loaded, name } = providerSelector(state)
+    if (!hasWallet || !hasAccount || !hasNetwork) {
+      return handledAction
+    }
 
-        if (!loaded) {
-          store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
-          break
-        }
+    const state = store.getState()
+    const { available, loaded, name } = providerSelector(state)
 
-        if (available) {
-          trackAnalyticsEvent({
-            ...WALLET_EVENTS.CONNECT_WALLET,
-            label: name,
-          })
-        }
+    // @TODO: `loaded` flag that is/was always set to true - should be moved to wallet connection catch
+    // Wallet, account and network did not successfully load
+    if (!loaded) {
+      store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
 
-        if (!available) {
-          store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
-        }
+      return handledAction
+    }
 
-        break
+    if (available) {
+      trackAnalyticsEvent({
+        ...WALLET_EVENTS.CONNECT_WALLET,
+        label: name,
+      })
+    } else {
+      store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
     }
 
     return handledAction
