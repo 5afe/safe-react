@@ -79,7 +79,7 @@ export const TxInfoDetails = ({
   }, [txInfo])
 
   return (
-    <InfoDetails title={title}>
+    <InfoDetails title={title} uppercase={false}>
       <SingleRow>
         <AddressInfo address={address} name={name} avatarUrl={avatarUrl} />
         <EllipsisTransactionDetails
