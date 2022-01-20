@@ -9,14 +9,41 @@ import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ProviderPayloads } from 'src/logic/wallets/store/reducer'
 import { providerSelector } from '../selectors'
 
+let hasWallet = false
+let hasAccount = false
+let hasNetwork = false
+
 const providerMiddleware =
   (store: ReturnType<typeof reduxStore>) =>
   (next: Dispatch) =>
   async (action: Action<ProviderPayloads>): Promise<Action<ProviderPayloads>> => {
     const handledAction = next(action)
 
-    switch (action.type) {
-      case PROVIDER_ACTIONS.ACCOUNT: {
+    const { type, payload } = action
+
+    // Onboard sends provider details via separate subscriptions: wallet, account, network
+    // Payloads from all three need to be combined to be `loaded` and `available`
+    switch (type) {
+      case PROVIDER_ACTIONS.WALLET:
+      case PROVIDER_ACTIONS.ACCOUNT:
+      case PROVIDER_ACTIONS.NETWORK: {
+        // Check Onboard subscription payloads
+        if (type === PROVIDER_ACTIONS.WALLET) {
+          hasWallet = Object.values(payload).every((value) => value != null)
+        }
+        if (type === PROVIDER_ACTIONS.ACCOUNT) {
+          hasAccount = !!payload
+        }
+        if (type === PROVIDER_ACTIONS.NETWORK) {
+          hasNetwork = !!payload
+        }
+
+        // Not all provider details are loaded
+        if (!hasWallet || !hasAccount || !hasNetwork) {
+          break
+        }
+
+        // Determine if provider loaded successfully
         const state = store.getState()
         const { available, loaded, name } = providerSelector(state)
 

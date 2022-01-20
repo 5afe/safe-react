@@ -2,7 +2,7 @@ import Onboard from 'bnc-onboard'
 import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 
 import { _getChainId, getChainName } from 'src/config'
-import { getWeb3, setWeb3, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
+import { getWeb3, setWeb3, isSmartContractWallet, getChainIdFrom } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
@@ -14,6 +14,8 @@ import updateProviderAccount from 'src/logic/wallets/store/actions/updateProvide
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
 import closeSnackbar from '../notifications/store/actions/closeSnackbar'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getChains } from 'src/config/cache/chains'
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
 
@@ -26,22 +28,36 @@ const NETWORK_NAMES: Record<ChainId, string> = {
   [CHAIN_ID.ETHEREUM]: 'mainnet',
 }
 
+const hasENSSupport = (network: ChainId): boolean => {
+  return getChains()
+    .filter(({ features }) => features.includes(FEATURES.DOMAIN_LOOKUP))
+    .some(({ chainId }) => chainId === network)
+}
+
 const getOnboard = (): API => {
+  let providerChainId: ChainId = ''
+
   const config: Initialization = {
     networkId: parseInt(_getChainId(), 10),
     // Ledger requires lowercase names
     networkName: NETWORK_NAMES[_getChainId()] || getChainName().toLowerCase(),
     subscriptions: {
       wallet: async (wallet) => {
-        if (wallet.provider) {
-          setWeb3(wallet.provider)
+        if (!wallet.provider) {
+          return
         }
+
+        setWeb3(wallet.provider)
+        const web3 = getWeb3()
+
+        // The provider object does not update when the unified UI changes network
+        providerChainId = (await getChainIdFrom(web3)).toString()
 
         const name = wallet.name || ''
         const hardwareWallet = wallet.type === 'hardware'
         const { address } = onboard().getState()
         const smartContractWallet =
-          (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(getWeb3(), address))) || false
+          (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(web3, address))) || false
 
         store.dispatch(
           updateProviderWallet({
@@ -62,9 +78,7 @@ const getOnboard = (): API => {
 
         instantiateSafeContracts()
       },
-      ens: (ens) => {
-        store.dispatch(updateProviderEns(ens?.name || ''))
-      },
+      ens: hasENSSupport(providerChainId) ? (ens) => store.dispatch(updateProviderEns(ens?.name || '')) : undefined,
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
