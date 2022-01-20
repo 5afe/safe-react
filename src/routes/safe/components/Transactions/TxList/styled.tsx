@@ -133,7 +133,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 `
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '1fr',
   type: '3fr',
   info: '3fr',
   time: '2.5fr',

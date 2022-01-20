@@ -199,3 +199,7 @@ export const isDeeplinkedTx = (): boolean => {
 export const isAwaitingExecution = (
   txStatus: typeof LocalTransactionStatus[keyof typeof LocalTransactionStatus],
 ): boolean => [LocalTransactionStatus.AWAITING_EXECUTION, LocalTransactionStatus.PENDING_FAILED].includes(txStatus)
+
+export const camelCaseToSpaces = (str: string): string => {
+  return str.replace(/([A-Z])/g, ' $1')
+}

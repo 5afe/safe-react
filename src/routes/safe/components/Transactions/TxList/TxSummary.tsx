@@ -1,6 +1,7 @@
 import { ReactElement, useState } from 'react'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
 import { formatDateTime } from 'src/utils/date'
 import {
@@ -15,8 +16,7 @@ import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
-import { TxDataRow } from './TxDataRow'
-import styled from 'styled-components'
+import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
 
 const StyledButtonLink = styled(ButtonLink)`
   padding-left: 0;
@@ -56,6 +56,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
     } = detailedExecutionInfo)
     refundReceiver = detailedExecutionInfo.refundReceiver?.value
   }
+  const isIncomingTx = txInfo.type === 'Transfer' && txInfo.direction === 'INCOMING'
 
   let signaturesFromConfirmations
   if (confirmations?.length > 0) {
@@ -88,26 +89,33 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       {safeTxHash && <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" hasExplorer={false} />}
       {created && <TxDataRow title="Created:" value={formatDateTime(created)} />}
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
-      <br />
 
       {/* Advanced TxData */}
-      <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
-        Advanced Details
-      </StyledButtonLink>
-      <CollapsibleSection show={expanded}>
-        {txData?.operation !== undefined && (
-          <TxDataRow title="Operation:" value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`} />
-        )}
-        {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
-        {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
-        {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
-        {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
-        {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
-        {confirmations?.length > 0 && (
-          <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
-        )}
-        {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
-      </CollapsibleSection>
+      {!isIncomingTx && (
+        <>
+          <br />
+          <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
+            Advanced Details
+          </StyledButtonLink>
+          <CollapsibleSection show={expanded}>
+            {txData?.operation !== undefined && (
+              <TxDataRow
+                title="Operation:"
+                value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`}
+              />
+            )}
+            {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
+            {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
+            {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
+            {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
+            {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
+            {confirmations?.length > 0 && (
+              <TxDataRow title="Signatures:" value={signaturesFromConfirmations} inlineType="rawData" />
+            )}
+            {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
+          </CollapsibleSection>
+        </>
+      )}
     </>
   )
 }
