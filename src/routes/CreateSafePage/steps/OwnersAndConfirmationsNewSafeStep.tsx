@@ -38,6 +38,7 @@ import {
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { removeTld, reverseENSLookup } from '../../../logic/wallets/getWeb3'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -75,6 +76,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
   function onClickRemoveOwner({ addressFieldName }) {
     const ownersUpdated = owners.filter((owner) => owner.addressFieldName !== addressFieldName)
     createSafeForm.change(FIELD_SAFE_OWNERS_LIST, ownersUpdated)
+    createSafeForm.change(addressFieldName, undefined)
 
     const updatedMaxOwnerNumbers = maxOwnerNumber - 1
     createSafeForm.change(FIELD_MAX_OWNER_NUMBER, updatedMaxOwnerNumbers)
@@ -144,7 +146,13 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 </Col>
                 <Col xs={7}>
                   <AddressInput
-                    fieldMutator={(address) => {
+                    fieldMutator={async (address) => {
+                      const ensName = await reverseENSLookup(address)
+                      const ensDomain = removeTld(ensName)
+                      const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
+                        [address]: ensDomain,
+                      })
+                      createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
                       createSafeForm.change(addressFieldName, address)
                       const addressName = addressBook[address]?.name
                       if (addressName) {

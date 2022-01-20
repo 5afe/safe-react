@@ -1,4 +1,4 @@
-import { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import styled from 'styled-components'
@@ -12,7 +12,7 @@ import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import Heading from 'src/components/layout/Heading'
 import { history } from 'src/routes/routes'
-import { sm, secondary } from 'src/theme/variables'
+import { secondary, sm } from 'src/theme/variables'
 import StepperForm, { StepFormElement } from 'src/components/StepperForm/StepperForm'
 import NameNewSafeStep, { nameNewSafeStepLabel } from './steps/NameNewSafeStep'
 import {
@@ -22,8 +22,8 @@ import {
   FIELD_MAX_OWNER_NUMBER,
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
-  FIELD_SAFE_OWNERS_LIST,
   FIELD_SAFE_OWNER_ENS_LIST,
+  FIELD_SAFE_OWNERS_LIST,
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
@@ -38,7 +38,6 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { removeTld, reverseENSLookup } from '../../logic/wallets/getWeb3'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -80,11 +79,8 @@ function CreateSafePage(): ReactElement {
 
   useEffect(() => {
     if (provider && userWalletAddress) {
-      const setInitialValues = async () => {
-        const initialValuesFromUrl = await getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
-        setInitialFormValues(initialValuesFromUrl)
-      }
-      setInitialValues()
+      const initialValuesFromUrl = getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
+      setInitialFormValues(initialValuesFromUrl)
     }
   }, [provider, userWalletAddress, addressBook, location, safeRandomName])
 
@@ -139,7 +135,7 @@ export default CreateSafePage
 const DEFAULT_THRESHOLD_VALUE = 1
 
 // initial values can be present in the URL because the Old MultiSig migration
-async function getInitialValues(userAddress, addressBook, location, suggestedSafeName): Promise<CreateSafeFormValues> {
+function getInitialValues(userAddress, addressBook, location, suggestedSafeName): CreateSafeFormValues {
   const query = queryString.parse(location.search, { arrayFormat: 'comma' })
   const { name, owneraddresses, ownernames, threshold } = query
 
@@ -153,24 +149,6 @@ async function getInitialValues(userAddress, addressBook, location, suggestedSaf
   const userAddressName = [addressBook[userAddress]?.name || '']
   const ownerNames = isOwnersPresentInTheUrl ? ownersNamesFromUrl : userAddressName
 
-  const ownersWithENSName = await Promise.all(
-    owners.map(async (address) => {
-      const ensName = await reverseENSLookup(address)
-      const ensDomain = removeTld(ensName)
-      return {
-        address,
-        name: ensDomain,
-      }
-    }),
-  )
-
-  const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {
-    return {
-      ...acc,
-      [address]: name,
-    }
-  }, {})
-
   const thresholdFromURl = Number(threshold)
   const isValidThresholdInTheUrl =
     threshold && !Number.isNaN(threshold) && thresholdFromURl <= owners.length && thresholdFromURl > 0
@@ -183,7 +161,7 @@ async function getInitialValues(userAddress, addressBook, location, suggestedSaf
       nameFieldName: `owner-name-${index}`,
       addressFieldName: `owner-address-${index}`,
     })),
-    [FIELD_SAFE_OWNER_ENS_LIST]: ownersWithENSNameRecord,
+    [FIELD_SAFE_OWNER_ENS_LIST]: {},
     // we set owners address values as owner-address-${index} format in the form state
     ...owners.reduce(
       (ownerAddressFields, ownerAddress, index) => ({
