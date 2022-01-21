@@ -22,6 +22,7 @@ import {
   FIELD_LOAD_CUSTOM_SAFE_NAME,
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
+  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
@@ -29,11 +30,13 @@ import {
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
 function LoadSafeAddressStep(): ReactElement {
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
+  const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const [threshold, setThreshold] = useState<number>()
   const [isValidSafeAddress, setIsValidSafeAddress] = useState<boolean>(false)
   const [isSafeInfoLoading, setIsSafeInfoLoading] = useState<boolean>(false)
@@ -64,10 +67,27 @@ function LoadSafeAddressStep(): ReactElement {
       try {
         const { owners, threshold } = await getSafeInfo(safeAddress)
         setIsSafeInfoLoading(false)
-        const ownersWithName = owners.map(({ value: address }) =>
-          makeAddressBookEntry(addressBook[address] || { address, name: '', chainId }),
+        const ownersWithName = owners.map(({ value: address }) => {
+          return makeAddressBookEntry(addressBook[address] || { address, name: '', chainId })
+        })
+
+        const ownersWithENSName = await Promise.all(
+          owners.map(async ({ value: address }) => {
+            const ensName = await reverseENSLookup(address)
+            const ensDomain = removeTld(ensName)
+            return makeAddressBookEntry({ address, name: ensDomain, chainId })
+          }),
         )
+
+        const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {
+          return {
+            ...acc,
+            [address]: name,
+          }
+        }, {})
+
         setOwnersWithName(ownersWithName)
+        setOwnersWithENSName(ownersWithENSNameRecord)
         setThreshold(threshold)
         setIsValidSafeAddress(true)
       } catch (error) {
@@ -96,6 +116,12 @@ function LoadSafeAddressStep(): ReactElement {
       loadSafeForm.change(FIELD_SAFE_OWNER_LIST, ownersWithName)
     }
   }, [ownersWithName, loadSafeForm])
+
+  useEffect(() => {
+    if (ownersWithENSName) {
+      loadSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, ownersWithENSName)
+    }
+  }, [ownersWithENSName, loadSafeForm])
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
     loadSafeForm.change(FIELD_LOAD_SAFE_ADDRESS, value)

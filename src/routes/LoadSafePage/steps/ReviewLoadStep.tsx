@@ -19,7 +19,7 @@ import {
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
 } from '../fields/loadFields'
-import { getLoadSafeName } from '../fields/utils'
+import { getLoadSafeName, getOwnerName } from '../fields/utils'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
@@ -37,11 +37,10 @@ function ReviewLoadStep(): ReactElement {
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
 
   const ownerListWithNames = ownerList.map((owner) => {
-    const ownerFieldName = `owner-address-${owner.address}`
-    const ownerNameValue = formValues[ownerFieldName]
+    const ownerName = getOwnerName(formValues, owner.address)
     return {
       ...owner,
-      name: ownerNameValue,
+      name: ownerName,
     }
   })
 

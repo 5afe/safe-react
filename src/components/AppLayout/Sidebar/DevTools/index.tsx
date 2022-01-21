@@ -50,9 +50,11 @@ const stopExecution = async (): Promise<void> => {
   fireEvent.click(executionCheckbox)
 }
 
-const createQueuedTx = async (address: string): Promise<void> => {
+const createQueuedTx = async (address: string, threshold = 1): Promise<void> => {
   await prepareTx(address)
-  await stopExecution()
+  if (threshold === 1) {
+    await stopExecution()
+  }
   await submitTx()
 }
 
@@ -104,7 +106,7 @@ const DevTools = (): ReactElement => {
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => createQueuedTx(safeAddress)}
+          onClick={() => createQueuedTx(safeAddress, threshold)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
@@ -115,7 +117,7 @@ const DevTools = (): ReactElement => {
           onClick={() => createExecutedTx(safeAddress)}
           size="md"
           variant="bordered"
-          disabled={!isGranted || !hasSufficientFunds() || !nextTx}
+          disabled={!isGranted || !hasSufficientFunds() || !nextTx || threshold > 1}
         >
           Execute Transaction
         </StyledButton>

@@ -6,6 +6,7 @@ import {
   TransactionDetails,
   MultisigExecutionDetails,
   MultisigExecutionInfo,
+  Erc721Transfer,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
@@ -43,6 +44,10 @@ const getAmountWithSymbol = (
   return `${txAmount} ${symbol}`
 }
 
+export const getTokenIdLabel = ({ tokenId }: Erc721Transfer): string => {
+  return tokenId ? `(#${tokenId})` : ''
+}
+
 export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string => {
   if (!txInfo || !isTransferTxInfo(txInfo)) {
     return NOT_AVAILABLE
@@ -60,7 +65,7 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
       )
     case TokenType.ERC721:
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
-      return `1 ${txInfo.transferInfo.tokenSymbol}`
+      return `1 ${txInfo.transferInfo.tokenSymbol} ${getTokenIdLabel(txInfo.transferInfo)}`
     case TokenType.NATIVE_COIN: {
       const nativeCurrency = getNativeCurrency()
       return getAmountWithSymbol(
