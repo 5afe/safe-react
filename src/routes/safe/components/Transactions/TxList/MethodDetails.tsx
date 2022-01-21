@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-
 import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { StyledDetailsTitle } from 'src/routes/safe/components/Transactions/TxList/styled'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
-import { camelCaseToSpaces } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { camelCaseToSpaces } from 'src/utils/camelCaseToSpaces'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
 const TxInfo = styled.div`

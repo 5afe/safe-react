@@ -88,7 +88,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
             Advanced Details
           </StyledButtonLink>
           <CollapsibleSection show={expanded}>
-            {txData?.operation !== undefined && (
+            {txData?.operation && (
               <TxDataRow
                 title="Operation:"
                 value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`}
@@ -99,15 +99,14 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
             {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
             {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
             {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
-            {confirmations?.length > 0 &&
-              confirmations.map(({ signature }, index) => (
-                <TxDataRow
-                  title={`Signature ${index}:`}
-                  key={`signature-${index}:`}
-                  value={signature}
-                  inlineType="rawData"
-                />
-              ))}
+            {confirmations?.map(({ signature }, index) => (
+              <TxDataRow
+                title={`Signature ${index + 1}:`}
+                key={`signature-${index}:`}
+                value={signature}
+                inlineType="rawData"
+              />
+            ))}
             {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
           </CollapsibleSection>
         </>

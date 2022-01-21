@@ -1,4 +1,5 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
