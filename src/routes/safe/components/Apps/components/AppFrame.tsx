@@ -88,13 +88,13 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 // Some apps still need chain name, as they didn't update to chainId based SDK versions
 // With naming changing in the config service some names aren't the expected ones
 // Ex: Ethereum -> MAINNET, Gnosis Chain -> XDAI
-const getLegacyChainName = (chainName: string) => {
+const getLegacyChainName = (chainName: string, chainId: string) => {
   let network = chainName
-  switch (chainName) {
-    case 'Ethereum':
+  switch (chainId) {
+    case '1':
       network = 'MAINNET'
       break
-    case 'Gnosis Chain':
+    case '100':
       network = 'XDAI'
   }
 
@@ -176,11 +176,11 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       data: {
         safeAddress: safeAddress as string,
         // FIXME `network` is deprecated. we should find how many apps are still using it
-        network: getLegacyChainName(chainName).toLowerCase() as LowercaseNetworks,
+        network: getLegacyChainName(chainName, chainId).toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
-  }, [chainName, ethBalance, safeAddress, appUrl, sendMessageToIframe])
+  }, [chainName, chainId, ethBalance, safeAddress, appUrl, sendMessageToIframe])
 
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
@@ -201,7 +201,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       safeAddress,
       // FIXME `network` is deprecated. we should find how many apps are still using it
       // Apps using this property expect this to be in UPPERCASE
-      network: getLegacyChainName(chainName).toUpperCase(),
+      network: getLegacyChainName(chainName, chainId).toUpperCase(),
       chainId: parseInt(chainId, 10),
       owners,
       threshold,
