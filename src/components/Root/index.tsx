@@ -14,10 +14,11 @@ import Providers from '../Providers'
 import './index.module.scss'
 import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
-import StoreMigrator from 'src/components/StoreMigrator'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
+import { setChainId } from 'src/logic/config/utils'
+import { _getChainId } from 'src/config'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -40,6 +41,9 @@ const RootConsumer = (): React.ReactElement | null => {
       }
     }
     initChains()
+
+    // Set store chainId and init contracts/session
+    setChainId(_getChainId())
   }, [])
 
   // Chains failed to load
@@ -62,7 +66,6 @@ const RootConsumer = (): React.ReactElement | null => {
           <Loader size="md" />
         </LoadingContainer>,
       )}
-      <StoreMigrator />
     </App>
   )
 }

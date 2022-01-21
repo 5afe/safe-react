@@ -11,6 +11,8 @@ import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { TxSender } from './createTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
+import { shouldExecuteTransaction } from './utils'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -46,7 +48,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     // Selectors
     const state = getState()
 
-    const { tx } = props
+    const { tx, approveAndExecute } = props
 
     const txProps = {
       navigateToTransactionsTab: false,
@@ -60,7 +62,6 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       valueInWei: tx.value,
       safeTxGas: tx.safeTxGas,
       ethParameters: props.ethParameters,
-      delayExecution: !props.approveAndExecute,
     }
 
     // Populate instance vars
@@ -71,7 +72,14 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       return
     }
 
-    const preApprovingOwner = txProps.delayExecution && !props.thresholdReached ? props.userAddress : undefined
+    // Execute right away?
+    sender.isExecution =
+      approveAndExecute ||
+      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
+
+    sender.approveAndExecute = approveAndExecute
+
+    const preApprovingOwner = approveAndExecute && !props.thresholdReached ? props.userAddress : undefined
 
     sender.txArgs = {
       ...tx, // Merge previous tx with new data

@@ -16,14 +16,14 @@ import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/s
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getChainInfo, getChainName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { getAppInfoFromUrl, getEmptySafeApp } from '../utils'
+import { getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -159,11 +159,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: getChainName().toLowerCase() as LowercaseNetworks,
+        // FIXME `network` is deprecated. we should find how many apps are still using it
+        network: getLegacyChainName(chainName, chainId).toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
-  }, [ethBalance, safeAddress, appUrl, sendMessageToIframe])
+  }, [chainName, chainId, ethBalance, safeAddress, appUrl, sendMessageToIframe])
 
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
@@ -182,7 +183,9 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: chainName,
+      // FIXME `network` is deprecated. we should find how many apps are still using it
+      // Apps using this property expect this to be in UPPERCASE
+      network: getLegacyChainName(chainName, chainId).toUpperCase(),
       chainId: parseInt(chainId, 10),
       owners,
       threshold,
