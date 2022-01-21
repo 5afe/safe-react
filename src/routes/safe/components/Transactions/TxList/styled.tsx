@@ -388,10 +388,6 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
     right: 24px;
   }
 
-  .tx-operation {
-    margin-bottom: ${md};
-  }
-
   .tx-data {
     display: flex;
     flex-direction: column;
