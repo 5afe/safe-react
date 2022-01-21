@@ -82,19 +82,19 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
 
       {/* Advanced TxData */}
-      {!isIncomingTx && (
+      {!isIncomingTx && txData && (
         <>
           <br />
           <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
             Advanced Details
           </StyledButtonLink>
           <CollapsibleSection show={expanded}>
-            {txData?.operation && (
+            {
               <TxDataRow
                 title="Operation:"
                 value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`}
               />
-            )}
+            }
             {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
             {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
             {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
