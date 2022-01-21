@@ -1,8 +1,8 @@
 import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 
-const DelegateCallWarning = ({ isKnown }: { isKnown: boolean }): ReactElement => {
-  if (!isKnown) {
+const DelegateCallWarning = ({ showWarning }: { showWarning: boolean }): ReactElement => {
+  if (showWarning) {
     return (
       <Text size="xl" strong as="span" color="error">
         ⚠️ Unexpected Delegate Call
