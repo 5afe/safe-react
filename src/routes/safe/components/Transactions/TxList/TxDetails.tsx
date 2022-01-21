@@ -26,6 +26,7 @@ import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import TxModuleInfo from './TxModuleInfo'
+import { isIncomingTransfer } from 'src/utils/transferDirection'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -95,7 +96,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const currentUser = useSelector(userAccountSelector)
   const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
-  const noOwners = !!(data && data.txInfo.type === 'Transfer' && data.txInfo.direction === 'INCOMING')
+  const noOwners = isIncomingTransfer(data?.txInfo)
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
@@ -128,47 +129,48 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
-  const noData = !data.txData || (!data.txData.dataDecoded && !data.txData.hexData)
+  const customTxNoData = data.txInfo.type === 'Custom' && !data.txInfo.methodName
+  const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
+  const noTxDataBlock = customTxNoData && !onChainRejection
+  const txData = () =>
+    isMultiSend ? (
+      <>
+        <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <TxSummary txDetails={data} />
+        </div>
+        {getModuleDetails()}
+        <div
+          className={cn('tx-details', {
+            'no-padding': isMultiSendTxInfo(data.txInfo),
+            'not-executed': !data.executedAt,
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxDataGroup txDetails={data} />
+        </div>
+      </>
+    ) : (
+      <>
+        <div
+          className={cn('tx-details', {
+            'no-padding': isMultiSendTxInfo(data.txInfo) || noTxDataBlock,
+            'not-executed': !data.executedAt,
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxDataGroup txDetails={data} />
+        </div>
+        {getModuleDetails()}
+        <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <TxSummary txDetails={data} />
+        </div>
+      </>
+    )
+
   return (
     <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
-      <div className={cn('tx-data', { 'no-owners': noOwners, 'no-data': noData })}>
-        {isMultiSend && (
-          <>
-            <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
-              <TxSummary txDetails={data} />
-            </div>
-            {getModuleDetails()}
-            <div
-              className={cn('tx-details', {
-                'no-padding': isMultiSendTxInfo(data.txInfo),
-                'not-executed': !data.executedAt,
-                'will-be-replaced': willBeReplaced,
-              })}
-            >
-              <TxDataGroup txDetails={data} />
-            </div>
-          </>
-        )}
-
-        {!isMultiSend && (
-          <>
-            <div
-              className={cn('tx-details', {
-                'no-padding': isMultiSendTxInfo(data.txInfo) || noData,
-                'not-executed': !data.executedAt,
-                'will-be-replaced': willBeReplaced,
-              })}
-            >
-              <TxDataGroup txDetails={data} />
-            </div>
-            {getModuleDetails()}
-            <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
-              <TxSummary txDetails={data} />
-            </div>
-          </>
-        )}
-      </div>
-      {!noOwners ? (
+      <div className={cn('tx-data', { 'no-owners': noOwners, 'no-data': noTxDataBlock })}>{txData()}</div>
+      {!noOwners && (
         <div>
           <div
             className={cn('tx-owners', {
@@ -183,7 +185,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
             </div>
           )}
         </div>
-      ) : null}
+      )}
     </TxDetailsContainer>
   )
 }

@@ -41,8 +41,8 @@ export const TxDataRow = ({
     <Text size="xl" as="span" color="placeHolder">
       {title}
     </Text>
-    {isArray && value && method && paramType && <Value method={method} type={paramType} value={value as string} />}
-    {value && typeof value === 'string' && inlineType === 'hash' && (
+    {isArray && value && method && paramType && <Value method={method} type={paramType} value={value} />}
+    {value && inlineType === 'hash' && (
       <InlinePrefixedEthHashInfo
         textSize="xl"
         hash={value}
@@ -51,7 +51,7 @@ export const TxDataRow = ({
         explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
       />
     )}
-    {value && typeof value === 'string' && inlineType === 'rawData' && (
+    {value && inlineType === 'rawData' && (
       <FlexWrapper margin={5}>
         <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
         <CopyToClipboardBtn textToCopy={value} />
