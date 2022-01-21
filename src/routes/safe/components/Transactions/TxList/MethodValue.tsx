@@ -10,7 +10,7 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const NestedWrapper = styled.div`
-  padding-left: 4px;
+  padding-left: 12px;
 `
 
 interface RenderValueProps {

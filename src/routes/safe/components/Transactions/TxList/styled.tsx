@@ -576,10 +576,10 @@ export const NoTransactions = styled.div`
 `
 export const StyledGridRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2.5fr;
   gap: ${md};
   justify-content: flex-start;
-  max-width: 600px;
+  max-width: 800px;
 
   & > * {
     flex-shrink: 0;

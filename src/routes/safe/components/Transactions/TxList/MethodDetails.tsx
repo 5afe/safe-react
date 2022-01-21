@@ -4,6 +4,7 @@ import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
 import { StyledDetailsTitle } from 'src/routes/safe/components/Transactions/TxList/styled'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
 import { camelCaseToSpaces } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
 const TxInfo = styled.div`
   padding: 8px 0;
@@ -13,11 +14,24 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
   const methodName = camelCaseToSpaces(data.method)
   return (
     <TxInfo>
-      <StyledDetailsTitle size="sm" strong color="placeHolder">
+      <StyledDetailsTitle size="sm" strong color="placeHolder" uppercase>
         {methodName}
       </StyledDetailsTitle>
 
       {data.parameters?.map((param, index) => {
+        if (isArrayParameter(param.type)) {
+          return (
+            <TxDataRow
+              key={`${data.method}_param-${index}`}
+              title={`${param.name}(${param.type}):`}
+              value={param.value as string}
+              isArray
+              method={data.method}
+              paramType={param.type}
+            />
+          )
+        }
+
         return (
           <TxDataRow
             key={`${data.method}_param-${index}`}
