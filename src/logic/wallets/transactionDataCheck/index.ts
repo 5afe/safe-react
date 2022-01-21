@@ -1,6 +1,6 @@
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
-import contractDataImage from './images/contractData.png'
+import ledgerImage from './images/ledger.jpg'
 
 const USER_ENABLED_LEDGER_TX_DATA = 'USER_ENABLED_LEDGER_TX_DATA'
 function transactionDataCheck(): any {
@@ -9,8 +9,8 @@ function transactionDataCheck(): any {
     const isTransactionDataEnabled = loadFromStorage<boolean>(USER_ENABLED_LEDGER_TX_DATA)
     if (wallet && wallet.name.toUpperCase() === WALLET_PROVIDER.LEDGER && !isTransactionDataEnabled) {
       return {
-        heading: 'Allow Transaction Data', // edit modal heading here
-        description: `<div><p><strong>Important</strong>: In order to sign transactions with your Ledger device, you will have to activate the "Contract Data" setting in the Ethereum app on your Ledger.</p><img style="width:100%" src=${contractDataImage} /></div>`, // edit modal description that is displayed here. You can include html strings here and they will be rendered as html elements.
+        heading: 'Enable blind signing',
+        description: `<div><p><strong>Important</strong>: In order to sign transactions with your Ledger device, you will have to activate the <a href="https://support.ledger.com/hc/en-us/articles/4405481324433-Enable-blind-signing-in-the-Ethereum-ETH-app?docs=true" style="color: inherit" target="_blank">Bind signing</a> setting in the Ethereum app on your Ledger.</p><a href="https://support.ledger.com/hc/en-us/articles/4405481324433-Enable-blind-signing-in-the-Ethereum-ETH-app?docs=true" target="_blank"><img style="width:100%" src=${ledgerImage} alt="Blind signing"/></a></div>`,
         eventCode: 'allowTransactionData',
         button: {
           text: 'Done',
