@@ -367,6 +367,10 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
     // grows to the height of tx-owner column
     flex-grow: 1;
     position: relative;
+
+    &.no-data {
+      row-span: 2;
+    }
   }
 
   .tx-creation {
@@ -399,6 +403,10 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
     &.no-owners {
       grid-column: span 2;
+    }
+
+    &.no-data {
+      gap: 0;
     }
   }
 
