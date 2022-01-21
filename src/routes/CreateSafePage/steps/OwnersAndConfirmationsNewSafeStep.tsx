@@ -87,6 +87,15 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
     }
   }
 
+  const getENSName = async (address: string): Promise<void> => {
+    const ensName = await reverseENSLookup(address)
+    const ensDomain = removeTld(ensName)
+    const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
+      [address]: ensDomain,
+    })
+    createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
+  }
+
   return (
     <>
       <BlockWithPadding data-testid={'create-safe-owners-confirmation-step'}>
@@ -126,7 +135,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
             const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
-            const handleScan = (address: string, closeQrModal: () => void): void => {
+            const handleScan = async (address: string, closeQrModal: () => void): Promise<void> => {
+              await getENSName(address)
               createSafeForm.change(addressFieldName, address)
               closeQrModal()
             }
@@ -147,12 +157,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 <Col xs={7}>
                   <AddressInput
                     fieldMutator={async (address) => {
-                      const ensName = await reverseENSLookup(address)
-                      const ensDomain = removeTld(ensName)
-                      const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
-                        [address]: ensDomain,
-                      })
-                      createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
+                      await getENSName(address)
                       createSafeForm.change(addressFieldName, address)
                       const addressName = addressBook[address]?.name
                       if (addressName) {
