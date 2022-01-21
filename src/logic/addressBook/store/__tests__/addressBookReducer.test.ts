@@ -41,12 +41,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
       {
         address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
         name: 'Entry 1',
-        chainId: CHAIN_ID.BSC,
+        chainId: CHAIN_ID.VOLTA,
       },
       {
         address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
         name: 'Entry 2',
-        chainId: CHAIN_ID.BSC,
+        chainId: CHAIN_ID.VOLTA,
       },
     ]
     const action = {
