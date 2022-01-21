@@ -23,7 +23,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { getAppInfoFromUrl, getEmptySafeApp } from '../utils'
+import { getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -84,22 +84,6 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
-
-// Some apps still need chain name, as they didn't update to chainId based SDK versions
-// With naming changing in the config service some names aren't the expected ones
-// Ex: Ethereum -> MAINNET, Gnosis Chain -> XDAI
-const getLegacyChainName = (chainName: string, chainId: string) => {
-  let network = chainName
-  switch (chainId) {
-    case '1':
-      network = 'MAINNET'
-      break
-    case '100':
-      network = 'XDAI'
-  }
-
-  return network
-}
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)

@@ -13,10 +13,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 
-import { getChainName, getTxServiceUrl } from 'src/config/'
+import { getChainInfo, getTxServiceUrl } from 'src/config/'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { getLegacyChainName } from '../utils'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -36,6 +37,7 @@ const useIframeMessageHandler = (
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
+  const { chainId, chainName } = getChainInfo()
 
   const sendMessageToIframe = useCallback(
     function <T extends InterfaceMessageIds>(message: InterfaceMessageProps<T>, requestId?: RequestId) {
@@ -82,7 +84,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: getChainName().toLowerCase() as LowercaseNetworks,
+              network: getLegacyChainName(chainName, chainId).toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
@@ -125,6 +127,8 @@ const useIframeMessageHandler = (
       window.removeEventListener('message', onIframeMessage)
     }
   }, [
+    chainName,
+    chainId,
     closeModal,
     closeSnackbar,
     dispatch,
