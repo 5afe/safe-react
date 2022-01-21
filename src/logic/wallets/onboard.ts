@@ -45,14 +45,16 @@ const getOnboard = (chainId: ChainId): API => {
     networkName: getNetworkName(chainId),
     subscriptions: {
       wallet: async (wallet) => {
-        if (!wallet.provider) {
+        if (wallet.provider) {
+          setWeb3(wallet.provider)
+        } else {
           resetWeb3()
-          return
         }
 
-        setWeb3(wallet.provider)
+        if (wallet.name) {
+          saveToStorage(LAST_USED_PROVIDER_KEY, wallet.name)
+        }
 
-        const name = wallet.name || ''
         const hardwareWallet = wallet.type === 'hardware'
         const { address } = onboard().getState()
         const smartContractWallet =
@@ -60,13 +62,11 @@ const getOnboard = (chainId: ChainId): API => {
 
         store.dispatch(
           updateProviderWallet({
-            name,
+            name: wallet.name || '',
             hardwareWallet,
             smartContractWallet,
           }),
         )
-
-        saveToStorage(LAST_USED_PROVIDER_KEY, name)
       },
       address: (address) => {
         store.dispatch(updateProviderAccount(address))
