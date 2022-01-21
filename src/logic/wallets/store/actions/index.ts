@@ -1,6 +1,6 @@
-export * from './addProvider'
-export * from './fetchProvider'
-export * from './removeProvider'
-export { default as addProvider } from './addProvider'
-export { default as fetchProvider } from './fetchProvider'
-export { default as removeProvider } from './removeProvider'
+export enum PROVIDER_ACTIONS {
+  WALLET = 'provider/wallet',
+  ACCOUNT = 'provider/account',
+  NETWORK = 'provider/network',
+  ENS = 'provider/ens',
+}

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
@@ -13,9 +13,7 @@ import {
   providerNameSelector,
   userAccountSelector,
 } from 'src/logic/wallets/store/selectors'
-import { removeProvider } from 'src/logic/wallets/store/actions'
-import onboard from 'src/logic/wallets/onboard'
-import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
+import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -23,7 +21,6 @@ const HeaderComponent = (): React.ReactElement => {
   const userAddress = useSelector(userAccountSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
-  const dispatch = useDispatch()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
@@ -42,7 +39,7 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const onDisconnect = () => {
-    dispatch(removeProvider())
+    onboard().walletReset()
   }
 
   const getProviderInfoBased = () => {
