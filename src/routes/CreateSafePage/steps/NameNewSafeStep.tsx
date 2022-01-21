@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
 import styled from 'styled-components'
@@ -10,13 +10,20 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { FIELD_CREATE_CUSTOM_SAFE_NAME, FIELD_CREATE_SUGGESTED_SAFE_NAME } from '../fields/createSafeFields'
+import {
+  FIELD_CREATE_CUSTOM_SAFE_NAME,
+  FIELD_CREATE_SUGGESTED_SAFE_NAME,
+  FIELD_SAFE_OWNER_ENS_LIST,
+  FIELD_SAFE_OWNERS_LIST,
+} from '../fields/createSafeFields'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const nameNewSafeStepLabel = 'Name'
 
 function NameNewSafeStep(): ReactElement {
+  const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const provider = useSelector(providerNameSelector)
 
   const { setCurrentStep } = useStepper()
@@ -28,8 +35,41 @@ function NameNewSafeStep(): ReactElement {
   }, [provider, setCurrentStep])
 
   const createNewSafeForm = useForm()
-
   const formValues = createNewSafeForm.getState().values
+
+  useEffect(() => {
+    const getInitialOwnerENSNames = async () => {
+      const formValues = createNewSafeForm.getState().values
+      const owners = formValues[FIELD_SAFE_OWNERS_LIST]
+      const ownersWithENSName = await Promise.all(
+        owners.map(async ({ addressFieldName }) => {
+          const address = formValues[addressFieldName]
+          const ensName = await reverseENSLookup(address)
+          const ensDomain = removeTld(ensName)
+          return {
+            address,
+            name: ensDomain,
+          }
+        }),
+      )
+
+      const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {
+        return {
+          ...acc,
+          [address]: name,
+        }
+      }, {})
+
+      setOwnersWithENSName(ownersWithENSNameRecord)
+    }
+    getInitialOwnerENSNames()
+  }, [createNewSafeForm])
+
+  useEffect(() => {
+    if (ownersWithENSName) {
+      createNewSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, ownersWithENSName)
+    }
+  }, [ownersWithENSName, createNewSafeForm])
 
   return (
     <BlockWithPadding data-testid={'create-safe-name-step'}>
