@@ -15,7 +15,6 @@ import TxShareButton from './TxShareButton'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
-import { isIncomingTransfer } from 'src/utils/transferDirection'
 
 const StyledButtonLink = styled(ButtonLink)`
   padding-left: 0;
@@ -55,7 +54,6 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
     } = detailedExecutionInfo)
     refundReceiver = detailedExecutionInfo.refundReceiver?.value
   }
-  const isIncomingTx = isIncomingTransfer(txInfo)
 
   return (
     <>
@@ -82,19 +80,19 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
 
       {/* Advanced TxData */}
-      {!isIncomingTx && txData && (
+      {txData && (
         <>
           <br />
           <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
             Advanced Details
           </StyledButtonLink>
           <CollapsibleSection show={expanded}>
-            {
+            {txData?.operation !== undefined && (
               <TxDataRow
                 title="Operation:"
                 value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`}
               />
-            }
+            )}
             {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
             {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
             {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
