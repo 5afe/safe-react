@@ -1,4 +1,4 @@
-import { Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Transfer, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useEffect, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 
@@ -15,37 +15,27 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
   const assetInfo = useAssetInfo(txInfo)
   const [details, setDetails] = useState<Details | undefined>()
 
+  const makeTitle = (txDirection: string, amountWithSymbol: string) => (
+    <Text size="xl" as="span">
+      {txDirection === TransferDirection.INCOMING ? 'Received ' : 'Sent '}
+      <Text size="xl" as="span" strong>
+        {amountWithSymbol}
+      </Text>
+      {txDirection === TransferDirection.INCOMING ? ' from:' : ' to:'}
+    </Text>
+  )
+
   useEffect(() => {
     if (assetInfo && assetInfo.type === 'Transfer') {
-      if (txInfo.direction.toUpperCase() === 'INCOMING') {
-        setDetails({
-          title: (
-            <Text size="xl" as="span">
-              Received{' '}
-              <Text size="xl" as="span" strong>
-                {assetInfo.amountWithSymbol}
-              </Text>{' '}
-              from:
-            </Text>
-          ),
-          address: txInfo.sender.value,
-          name: txInfo.sender.name || undefined,
-        })
-      } else {
-        setDetails({
-          title: (
-            <Text size="xl" as="span">
-              Sent{' '}
-              <Text size="xl" as="span" strong>
-                {assetInfo.amountWithSymbol}
-              </Text>{' '}
-              to:
-            </Text>
-          ),
-          address: txInfo.recipient.value,
-          name: txInfo.recipient.name || undefined,
-        })
-      }
+      const txDirection = txInfo.direction.toUpperCase()
+      setDetails({
+        title: makeTitle(txDirection, assetInfo.amountWithSymbol),
+        address: txDirection === TransferDirection.INCOMING ? txInfo.sender.value : txInfo.recipient.value,
+        name:
+          txDirection === TransferDirection.INCOMING
+            ? txInfo.sender.name || undefined
+            : txInfo.recipient.name || undefined,
+      })
     }
   }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender])
 
