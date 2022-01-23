@@ -19,7 +19,7 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
       </StyledDetailsTitle>
 
       {data.parameters?.map((param, index) => {
-        if (isArrayParameter(param.type)) {
+        if (isArrayParameter(param.type) || Array.isArray(param.value)) {
           return (
             <TxDataRow
               key={`${data.method}_param-${index}`}

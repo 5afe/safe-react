@@ -20,7 +20,7 @@ interface RenderValueProps {
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
-  const getTextValue = (value: string) => <HexEncodedData limit={60} hexData={value} />
+  const getTextValue = (value: string, key?: string) => <HexEncodedData limit={60} hexData={value} key={key} />
 
   const getArrayValue = (parentId: string, value: string[] | string) => (
     <div>
@@ -33,7 +33,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
               {getArrayValue(key, currentValue)}
             </Text>
           ) : (
-            getTextValue(currentValue)
+            getTextValue(currentValue, key)
           )
         })}
       </NestedWrapper>
