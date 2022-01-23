@@ -26,7 +26,6 @@ import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import TxModuleInfo from './TxModuleInfo'
-import { isIncomingTransfer } from 'src/utils/transferDirection'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -96,7 +95,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const currentUser = useSelector(userAccountSelector)
   const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
-  const noOwners = isIncomingTransfer(data?.txInfo)
+  const noTxOwners = !data?.detailedExecutionInfo
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
@@ -169,8 +168,8 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   return (
     <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
-      <div className={cn('tx-data', { 'no-owners': noOwners, 'no-data': noTxDataBlock })}>{txData()}</div>
-      {!noOwners && (
+      <div className={cn('tx-data', { 'no-owners': noTxOwners, 'no-data': noTxDataBlock })}>{txData()}</div>
+      {!noTxOwners && (
         <div>
           <div
             className={cn('tx-owners', {
