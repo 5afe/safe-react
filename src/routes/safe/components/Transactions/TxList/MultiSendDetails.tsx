@@ -27,14 +27,14 @@ type MultiSendTxGroupProps = {
 
 const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroupProps): ReactElement => {
   const isDelegateCall = txDetails.operation === Operation.DELEGATE
-  const isKnown = !!txDetails.name
   return (
-    <ActionAccordion defaultExpanded={(isDelegateCall && !isKnown) || undefined}>
+    <ActionAccordion defaultExpanded={isDelegateCall || undefined}>
       <AccordionSummary>
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="xl" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
-        {isDelegateCall && <DelegateCallWarning isKnown={isKnown} />}
+        {/* We always warn of nested delegate calls */}
+        {isDelegateCall && <DelegateCallWarning showWarning={isDelegateCall} />}
         {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
           <TxInfoDetails
             title={txDetails.title}

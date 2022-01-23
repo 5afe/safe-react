@@ -4,7 +4,6 @@ import { ReactElement } from 'react'
 import { formatDateTime } from 'src/utils/date'
 import {
   ExpandedTxDetails,
-  isCustomTxInfo,
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
@@ -72,7 +71,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
+          <DelegateCallWarning showWarning={!txData.trustedDelegateCallTarget} />
         </div>
       )}
       {isMultiSendTxInfo(txInfo) && <TxInfoMultiSend txInfo={txInfo} />}

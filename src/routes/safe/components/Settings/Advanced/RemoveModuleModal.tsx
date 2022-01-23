@@ -10,13 +10,9 @@ import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { getExplorerInfo } from 'src/config'
-import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-
-import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-
 import { useStyles } from './style'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -25,43 +21,72 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 
 interface RemoveModuleModalProps {
   onClose: () => void
-  selectedModulePair: ModulePair
+  selectedModuleAddress: string
 }
 
-export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): ReactElement => {
+export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModuleModalProps): ReactElement => {
   const classes = useStyles()
 
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
 
-  const [, moduleAddress] = selectedModulePair
-
-  const { txEstimationExecutionStatus, isOffChainSignature, isCreation, gasLimit, gasEstimation, gasPriceFormatted } =
-    useEstimateTransactionGas({
-      txData,
-      txRecipient: safeAddress,
-      txAmount: '0',
-      safeTxGas: manualSafeTxGas,
-      manualGasPrice,
-      manualGasLimit,
-      manualSafeNonce,
-    })
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isOffChainSignature,
+    isCreation,
+    gasLimit,
+    gasEstimation,
+    gasPriceFormatted,
+  } = useEstimateTransactionGas({
+    txData,
+    txRecipient: safeAddress,
+    txAmount: '0',
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
+    manualGasLimit,
+    manualSafeNonce,
+  })
   const canTxExecute = useCanTxExecute(false, manualSafeNonce)
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const txData = getDisableModuleTxData(selectedModulePair, safeAddress, safeVersion)
-    setTxData(txData)
-  }, [selectedModulePair, safeAddress, safeVersion])
+    let isCurrent = true
+
+    const calculateRemoveOwnerData = async () => {
+      try {
+        const txData = await getDisableModuleTxData({
+          moduleAddress: selectedModuleAddress,
+          safeAddress,
+          safeVersion,
+          connectedWalletAddress,
+        })
+
+        if (isCurrent) {
+          setTxData(txData)
+        }
+      } catch (error) {
+        logError(Errors._806, `${selectedModuleAddress} - ${error.message}`)
+      }
+    }
+    calculateRemoveOwnerData()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [connectedWalletAddress, safeAddress, safeVersion, selectedModuleAddress])
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {
@@ -78,7 +103,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         }),
       )
     } catch (e) {
-      logError(Errors._806, `${selectedModulePair} – ${e.message}`)
+      logError(Errors._806, `${selectedModuleAddress} - ${e.message}`)
     }
   }
 
@@ -131,16 +156,16 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <ModalHeader onClose={onClose} title="Remove Guard" />
+              <ModalHeader onClose={onClose} title="Remove Module" />
               <Hairline />
               <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
                     <PrefixedEthHashInfo
-                      hash={moduleAddress}
+                      hash={selectedModuleAddress}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(moduleAddress)}
+                      explorerUrl={getExplorerInfo(selectedModuleAddress)}
                     />
                   </Col>
                 </Row>
@@ -164,6 +189,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               </Block>
               <Row className={classes.modalDescription}>
                 <ReviewInfoText
+                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={canTxExecute}
                   safeNonce={txParameters.safeNonce}

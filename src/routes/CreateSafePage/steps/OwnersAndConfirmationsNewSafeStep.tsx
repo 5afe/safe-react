@@ -29,10 +29,16 @@ import {
   required,
   THRESHOLD_ERROR,
 } from 'src/components/forms/validator'
-import { FIELD_MAX_OWNER_NUMBER, FIELD_NEW_SAFE_THRESHOLD, FIELD_SAFE_OWNERS_LIST } from '../fields/createSafeFields'
+import {
+  FIELD_MAX_OWNER_NUMBER,
+  FIELD_NEW_SAFE_THRESHOLD,
+  FIELD_SAFE_OWNER_ENS_LIST,
+  FIELD_SAFE_OWNERS_LIST,
+} from '../fields/createSafeFields'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -53,6 +59,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
   const formErrors = createSafeForm.getState().errors || {}
 
   const owners = createSafeFormValues[FIELD_SAFE_OWNERS_LIST]
+  const ownersWithENSName = createSafeFormValues[FIELD_SAFE_OWNER_ENS_LIST]
   const threshold = createSafeFormValues[FIELD_NEW_SAFE_THRESHOLD]
   const maxOwnerNumber = createSafeFormValues[FIELD_MAX_OWNER_NUMBER]
 
@@ -68,14 +75,25 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 
   function onClickRemoveOwner({ addressFieldName }) {
     const ownersUpdated = owners.filter((owner) => owner.addressFieldName !== addressFieldName)
-
     createSafeForm.change(FIELD_SAFE_OWNERS_LIST, ownersUpdated)
+    createSafeForm.change(addressFieldName, undefined)
+
+    const updatedMaxOwnerNumbers = maxOwnerNumber - 1
+    createSafeForm.change(FIELD_MAX_OWNER_NUMBER, updatedMaxOwnerNumbers)
 
     const hasToUpdateThreshold = threshold > ownersUpdated.length
-
     if (hasToUpdateThreshold) {
       createSafeForm.change(FIELD_NEW_SAFE_THRESHOLD, threshold - 1)
     }
+  }
+
+  const getENSName = async (address: string): Promise<void> => {
+    const ensName = await reverseENSLookup(address)
+    const ensDomain = removeTld(ensName)
+    const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
+      [address]: ensDomain,
+    })
+    createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
   }
 
   return (
@@ -113,9 +131,12 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
         <RowHeader>
           {owners.map(({ nameFieldName, addressFieldName }) => {
             const hasOwnerAddressError = formErrors[addressFieldName]
+            const ownerAddress = createSafeFormValues[addressFieldName]
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
+            const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
-            const handleScan = (address: string, closeQrModal: () => void): void => {
+            const handleScan = async (address: string, closeQrModal: () => void): Promise<void> => {
+              await getENSName(address)
               createSafeForm.change(addressFieldName, address)
               closeQrModal()
             }
@@ -126,7 +147,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                   <OwnerNameField
                     component={TextField}
                     name={nameFieldName}
-                    placeholder="Owner Name"
+                    placeholder={ownerName}
                     text="Owner Name"
                     type="text"
                     validate={minMaxLength(0, 50)}
@@ -135,7 +156,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 </Col>
                 <Col xs={7}>
                   <AddressInput
-                    fieldMutator={(address) => {
+                    fieldMutator={async (address) => {
+                      await getENSName(address)
                       createSafeForm.change(addressFieldName, address)
                       const addressName = addressBook[address]?.name
                       if (addressName) {

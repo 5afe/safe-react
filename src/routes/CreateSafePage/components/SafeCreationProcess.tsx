@@ -23,6 +23,7 @@ import {
   FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_GAS_PRICE,
+  FIELD_SAFE_OWNER_ENS_LIST,
 } from '../fields/createSafeFields'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
@@ -172,13 +173,14 @@ function SafeCreationProcess(): ReactElement {
     const owners = createSafeFormValues[FIELD_SAFE_OWNERS_LIST]
 
     // we update the address book with the owners and the new safe
-    const ownersAddressBookEntry = owners.map(({ nameFieldName, addressFieldName }) =>
-      makeAddressBookEntry({
+    const ownersAddressBookEntry = owners.map(({ nameFieldName, addressFieldName }) => {
+      const ownerAddress = createSafeFormValues[addressFieldName]
+      return makeAddressBookEntry({
         address: createSafeFormValues[addressFieldName],
-        name: createSafeFormValues[nameFieldName],
+        name: createSafeFormValues[nameFieldName] || createSafeFormValues[FIELD_SAFE_OWNER_ENS_LIST][ownerAddress],
         chainId,
-      }),
-    )
+      })
+    })
     const safeAddressBookEntry = makeAddressBookEntry({ address: newSafeAddress, name: safeName, chainId })
     await dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
 
