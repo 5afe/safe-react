@@ -53,7 +53,6 @@ export const TxModalWrapper = ({
   const isSpendingLimitTx = isSpendingLimit(txType)
 
   const {
-    gasCostFormatted,
     gasPriceFormatted,
     gasMaxPrioFeeFormatted,
     gasLimit,
@@ -155,7 +154,6 @@ export const TxModalWrapper = ({
 
           {!isSpendingLimitTx && (
             <ReviewInfoText
-              gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
               isExecution={canTxExecute}
               safeNonce={txParameters.safeNonce}
