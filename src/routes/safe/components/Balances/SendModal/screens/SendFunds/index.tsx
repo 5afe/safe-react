@@ -45,6 +45,7 @@ import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelp
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
+import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -147,7 +148,7 @@ const SendFunds = ({
     const { amount, token: tokenAddress, txType } = values ?? {}
     const tokenValidation = composeValidators(required)(tokenAddress)
 
-    const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+    const isSpendingLimitTx = tokenSpendingLimit && isSpendingLimit(txType)
     const tokenDecimals =
       (tokenAddress && Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals)) ||
       nativeCurrency.decimals
@@ -158,7 +159,7 @@ const SendFunds = ({
       minValue(0, false),
       tokenAddress
         ? maxValue(
-            isSpendingLimit
+            isSpendingLimitTx
               ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
               : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
           )
@@ -225,10 +226,10 @@ const SendFunds = ({
           }
 
           const setMaxAllowedAmount = () => {
-            const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+            const isSpendingLimitTx = tokenSpendingLimit && isSpendingLimit(txType)
             let maxAmount = selectedToken?.balance.tokenBalance ?? 0
 
-            if (isSpendingLimit) {
+            if (isSpendingLimitTx) {
               const spendingLimitBalance = fromTokenUnit(
                 new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
                 selectedToken?.decimals ?? 0,

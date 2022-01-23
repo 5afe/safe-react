@@ -1,4 +1,5 @@
 import { getNativeCurrency } from 'src/config'
+import { sameString } from 'src/utils/strings'
 
 export type ParametersStatus = 'ENABLED' | 'DISABLED' | 'SAFE_DISABLED' | 'ETH_HIDDEN' | 'CANCEL_TRANSACTION'
 
@@ -27,3 +28,5 @@ export const getInteractionTitle = (value: number | string): string => {
   const { symbol } = getNativeCurrency()
   return `Interact with (and send ${value} ${symbol} to):`
 }
+
+export const isSpendingLimit = (txType?: string): boolean => sameString(txType, 'spendingLimit')
