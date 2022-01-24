@@ -35,7 +35,7 @@ const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> =>
 const requestAdd = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
   const { chainName, nativeCurrency } = getChainInfo()
 
-  await wallet.provider?.request({
+  await wallet.provider.request({
     method: 'wallet_addEthereumChain',
     params: [
       {
@@ -89,6 +89,6 @@ export const switchWalletChain = async (): Promise<void> => {
   } catch (e) {
     e.log()
     // Fallback to the onboard popup if switching isn't supported
-    await onboard().walletSelect()
+    await onboard().walletCheck()
   }
 }
