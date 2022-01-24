@@ -60,7 +60,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
     }
   }, [connectedWalletAddress, safeAddress, safeVersion, selectedModuleAddress])
 
-  const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
+  const removeSelectedModule = async (txParameters: TxParameters, delayExecution: boolean): Promise<void> => {
     try {
       dispatch(
         createTransaction({
@@ -72,6 +72,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+          delayExecution,
         }),
       )
     } catch (e) {

@@ -17,6 +17,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { useStyles } from './style'
 
@@ -62,7 +63,7 @@ export const ChangeThresholdModal = ({
     setEditedThreshold(value)
   }
 
-  const handleSubmit = (txParameters) => {
+  const handleSubmit = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       createTransaction({
         safeAddress,
@@ -73,6 +74,7 @@ export const ChangeThresholdModal = ({
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+        delayExecution,
       }),
     )
     onClose()

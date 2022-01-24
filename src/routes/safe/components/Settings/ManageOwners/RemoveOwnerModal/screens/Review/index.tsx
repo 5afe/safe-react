@@ -24,7 +24,7 @@ import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
   onClose: () => void
-  onSubmit: (txParameters: TxParameters) => void
+  onSubmit: (txParameters: TxParameters, delayExecution: boolean) => void
   owner: OwnerData
   threshold?: number
 }

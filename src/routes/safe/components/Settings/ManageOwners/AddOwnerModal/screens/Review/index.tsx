@@ -25,7 +25,7 @@ const useStyles = makeStyles(styles)
 type ReviewAddOwnerProps = {
   onClickBack: () => void
   onClose: () => void
-  onSubmit: (txParameters: TxParameters) => void
+  onSubmit: (txParameters: TxParameters, delayExecution: boolean) => void
   values: OwnerValues
 }
 

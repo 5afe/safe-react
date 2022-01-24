@@ -33,7 +33,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     setMultiSendCallData(encodeMultiSendCallData)
   }, [safeAddress, safeCurrentVersion])
 
-  const handleSubmit = (txParameters: TxParameters) => {
+  const handleSubmit = (txParameters: TxParameters, delayExecution: boolean) => {
     // Call the update safe method
     dispatch(
       createTransaction({
@@ -46,6 +46,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         ethParameters: txParameters,
         notifiedTransaction: 'STANDARD_TX',
         operation: Operation.DELEGATE,
+        delayExecution,
       }),
     )
     onClose()

@@ -89,7 +89,7 @@ export const ReviewMessage = ({
     onClose()
   }
 
-  const confirmTransactions = (txParameters: TxParameters) => {
+  const confirmTransactions = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       createTransaction(
         {
@@ -104,6 +104,7 @@ export const ReviewMessage = ({
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          delayExecution,
         },
         handleUserConfirmation,
         handleTxRejection,
