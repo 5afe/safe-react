@@ -1,14 +1,13 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
+import { ParametersStatus, areSafeParamsEnabled } from '../utils'
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
-import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -28,18 +27,8 @@ const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
   color: ${(props) => (props.isOutOfOrder ? props.theme.colors.error : props.color)};
 `
 
-const StyledButtonLink = styled(ButtonLink)`
-  padding-left: 0;
-  margin: 8px 0 0 0;
-
-  > p {
-    margin-left: 0;
-  }
-`
-
 type Props = {
   txParameters: TxParameters
-  onEdit: () => void
   compact?: boolean
   parametersStatus?: ParametersStatus
   isTransactionCreation: boolean
@@ -48,7 +37,6 @@ type Props = {
 }
 
 export const TxParametersDetail = ({
-  onEdit,
   txParameters,
   compact = true,
   parametersStatus,
@@ -92,7 +80,7 @@ export const TxParametersDetail = ({
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
       <AccordionSummary>
-        <Text size="lg">Advanced options</Text>
+        <Text size="xl">Advanced parameters</Text>
       </AccordionSummary>
       <AccordionDetails>
         <AccordionDetailsWrapper>
@@ -133,41 +121,6 @@ export const TxParametersDetail = ({
               </Text>
             </TxParameterWrapper>
           )}
-
-          {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
-            <>
-              <TxParameterWrapper>
-                <StyledText size="md" color="placeHolder">
-                  {ethereumTxParametersTitle(isTransactionExecution)}
-                </StyledText>
-              </TxParameterWrapper>
-
-              <TxParameterWrapper>
-                <Text size="lg">Nonce</Text>
-                <Text size="lg">{txParameters.ethNonce}</Text>
-              </TxParameterWrapper>
-
-              <TxParameterWrapper>
-                <Text size="lg">Gas limit</Text>
-                <Text size="lg">{txParameters.ethGasLimit}</Text>
-              </TxParameterWrapper>
-
-              <TxParameterWrapper>
-                <Text size="lg">{isMaxFeeParam() ? 'Max fee per gas' : 'Gas price'}</Text>
-                <Text size="lg">{txParameters.ethGasPrice}</Text>
-              </TxParameterWrapper>
-
-              {isMaxFeeParam() && (
-                <TxParameterWrapper>
-                  <Text size="lg">Max priority fee</Text>
-                  <Text size="lg">{txParameters.ethMaxPrioFee}</Text>
-                </TxParameterWrapper>
-              )}
-            </>
-          )}
-          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
-            Edit
-          </StyledButtonLink>
         </AccordionDetailsWrapper>
       </AccordionDetails>
     </Accordion>

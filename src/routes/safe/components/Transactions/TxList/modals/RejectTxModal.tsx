@@ -21,6 +21,8 @@ import { ParametersStatus } from 'src/routes/safe/components/Transactions/helper
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
+import { getNativeCurrency } from 'src/config'
 
 type Props = {
   isOpen: boolean
@@ -32,12 +34,19 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const classes = useStyles()
+  const nativeCurrency = getNativeCurrency()
 
-  const { txEstimationExecutionStatus, isOffChainSignature, isCreation, gasLimit, gasPriceFormatted } =
-    useEstimateTransactionGas({
-      txData: EMPTY_DATA,
-      txRecipient: safeAddress,
-    })
+  const {
+    txEstimationExecutionStatus,
+    isOffChainSignature,
+    isCreation,
+    gasLimit,
+    gasPriceFormatted,
+    gasCostFormatted,
+  } = useEstimateTransactionGas({
+    txData: EMPTY_DATA,
+    txRecipient: safeAddress,
+  })
   const canTxExecute = useCanTxExecute()
 
   const origin = gwTransaction.safeAppInfo
@@ -73,6 +82,8 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     confirmButtonText = 'Estimating'
   }
 
+  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
+
   return (
     <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <EditableTxParameters
@@ -101,10 +112,21 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                     <Bold className={classes.nonceNumber}>{nonce}</Bold>
                   </Paragraph>
                 </Row>
+
+                {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                  <TxEstimatedFeesDetail
+                    txParameters={txParameters}
+                    gasCost={gasCost}
+                    onEdit={toggleEditMode}
+                    isTransactionCreation={isCreation}
+                    isTransactionExecution={canTxExecute}
+                    isOffChainSignature={isOffChainSignature}
+                  />
+                )}
+
                 {/* Tx Parameters */}
                 <TxParametersDetail
                   txParameters={txParameters}
-                  onEdit={toggleEditMode}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={canTxExecute}

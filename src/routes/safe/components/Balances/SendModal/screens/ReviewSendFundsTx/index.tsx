@@ -2,6 +2,7 @@ import { RecordOf } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -33,6 +34,27 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { grey500 } from 'src/theme/variables'
+
+const BalanceWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`
+
+const StyledBlock = styled(Block)`
+  background-color: ${grey500};
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img {
+    width: 26px;
+  }
+`
 
 const useStyles = makeStyles(styles)
 
@@ -149,8 +171,26 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       <Hairline />
 
       <Block className={classes.container}>
+        {/* Amount */}
+        <Row align="center" margin="md">
+          <BalanceWrapper>
+            <StyledBlock>
+              <Img alt={txToken?.name as string} onError={setImageToPlaceholder} src={txToken?.logoUri} />
+            </StyledBlock>
+            <Paragraph
+              size="xl"
+              color="black600"
+              noMargin
+              style={{ marginTop: '8px' }}
+              data-testid={`amount-${txToken?.symbol as string}-review-step`}
+            >
+              {tx.amount} {txToken?.symbol}
+            </Paragraph>
+          </BalanceWrapper>
+        </Row>
+
         {/* SafeInfo */}
-        <SafeInfo />
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
 
         {/* Recipient */}
@@ -169,24 +209,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               explorerUrl={getExplorerInfo(tx.recipientAddress)}
             />
           </Col>
-        </Row>
-
-        {/* Amount */}
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Amount
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Img alt={txToken?.name} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
-          <Paragraph
-            className={classes.amount}
-            noMargin
-            size="md"
-            data-testid={`amount-${txToken?.symbol}-review-step`}
-          >
-            {tx.amount} {txToken?.symbol}
-          </Paragraph>
         </Row>
       </Block>
     </TxModalWrapper>
