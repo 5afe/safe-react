@@ -10,7 +10,7 @@ import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation
 import { extractSafeAddress } from 'src/routes/routes'
 import { useEffect, useState } from 'react'
 import { TransactionFailText } from '../TransactionFailText'
-import { EstimationStatus } from '../../logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const ReviewInfoTextWrapper = styled.div`
   padding: 0 ${lg};
@@ -98,7 +98,9 @@ export const ReviewInfoText = ({
             You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently
             connected wallet.
           </Paragraph>
-          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
+            <TransactionFailText isExecution={isExecution} />
+          )}
         </>
       )}
     </ReviewInfoTextWrapper>
