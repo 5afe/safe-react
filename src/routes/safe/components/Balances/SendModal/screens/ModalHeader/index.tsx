@@ -25,10 +25,12 @@ export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps):
   return (
     <Row align="center" className={classes.heading} grow>
       {iconUrl && <img className={classes.icon} alt={typeof title === 'string' ? title : undefined} src={iconUrl} />}
-      <Paragraph className={classes.headingText} noMargin weight="bolder">
+      <Paragraph className={classes.headingText} noMargin weight="bolder" size="xl">
         {title}
       </Paragraph>
-      <Paragraph className={classes.annotation}>{subTitle}</Paragraph>
+      <Paragraph className={classes.annotation} size="sm">
+        {subTitle}
+      </Paragraph>
       <Row className={classes.chainIndicator}>
         {connectedNetwork.chainId && <ChainIndicator chainId={connectedNetwork.chainId} />}
       </Row>
