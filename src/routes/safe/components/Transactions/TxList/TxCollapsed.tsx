@@ -189,9 +189,7 @@ export const TxCollapsed = ({
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (isAwaitingExecution(txStatus) || txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && (
-          <SmallDot color={status.color} />
-        )
+        isAwaitingExecution(txStatus) && <SmallDot color={status.color} />
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}
