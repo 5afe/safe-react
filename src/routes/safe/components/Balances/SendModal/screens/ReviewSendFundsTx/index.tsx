@@ -2,6 +2,7 @@ import { RecordOf } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -33,7 +34,6 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
-import styled from 'styled-components'
 import { grey500 } from 'src/theme/variables'
 
 const BalanceWrapper = styled.div`
@@ -171,9 +171,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       <Hairline />
 
       <Block className={classes.container}>
-        {/* SafeInfo */}
-        <SafeInfo text="Sending from" />
-        <Divider withArrow />
         {/* Amount */}
         <Row align="center" margin="md">
           <BalanceWrapper>

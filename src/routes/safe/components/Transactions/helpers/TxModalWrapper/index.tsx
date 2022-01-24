@@ -6,6 +6,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { extractSafeAddress } from 'src/routes/routes'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
+import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
@@ -14,6 +15,7 @@ import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { getNativeCurrency } from 'src/config'
 
 type Props = {
   children: ReactNode
@@ -52,8 +54,10 @@ export const TxModalWrapper = ({
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
   const safeAddress = extractSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
+  const nativeCurrency = getNativeCurrency()
 
   const {
+    gasCostFormatted,
     gasPriceFormatted,
     gasMaxPrioFeeFormatted,
     gasLimit,
@@ -124,6 +128,8 @@ export const TxModalWrapper = ({
     onSubmit(txParameters, !doExecute)
   }
 
+  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -139,19 +145,29 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
-
-            {/* Tx Parameters */}
-            {/* FIXME TxParameters should be updated to be used with spending limits */}
             {!isSpendingLimitTx && (
-              <TxParametersDetail
+              <TxEstimatedFeesDetail
                 txParameters={txParameters}
+                gasCost={canTxExecute ? gasCost : ''}
                 onEdit={toggleEditMode}
                 isTransactionCreation={isCreation}
                 isTransactionExecution={doExecute}
                 isOffChainSignature={isOffChainSignature}
               />
             )}
+
+            {/* Tx Parameters */}
+            {/* FIXME TxParameters should be updated to be used with spending limits */}
+            {!isSpendingLimitTx && (
+              <TxParametersDetail
+                txParameters={txParameters}
+                isTransactionCreation={isCreation}
+                isTransactionExecution={doExecute}
+                isOffChainSignature={isOffChainSignature}
+              />
+            )}
+
+            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
           </Container>
 
           {!isSpendingLimitTx && (

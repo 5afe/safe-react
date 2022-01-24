@@ -29,7 +29,6 @@ const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
 
 type Props = {
   txParameters: TxParameters
-  onEdit?: () => void
   compact?: boolean
   parametersStatus?: ParametersStatus
   isTransactionCreation: boolean
