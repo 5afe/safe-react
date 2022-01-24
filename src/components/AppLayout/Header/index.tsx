@@ -13,7 +13,7 @@ import {
   providerNameSelector,
   userAccountSelector,
 } from 'src/logic/wallets/store/selectors'
-import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { loadLastUsedProvider, removeLastUsedProvider } from 'src/logic/wallets/onboard'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -39,6 +39,7 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const onDisconnect = () => {
+    removeLastUsedProvider()
     onboard().walletReset()
   }
 

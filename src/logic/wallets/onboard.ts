@@ -7,7 +7,7 @@ import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { store } from 'src/store'
 import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
@@ -21,6 +21,10 @@ const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
 
 export const loadLastUsedProvider = (): string | undefined => {
   return loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
+}
+
+export const removeLastUsedProvider = (): void => {
+  removeFromStorage(LAST_USED_PROVIDER_KEY)
 }
 
 const getNetworkName = (chainId: ChainId) => {
