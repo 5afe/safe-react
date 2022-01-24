@@ -36,7 +36,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { grey500 } from 'src/theme/variables'
 
-const BalanceWrapper = styled.div`
+const AmountWrapper = styled.div`
   width: 100%;
   text-align: center;
 `
@@ -173,7 +173,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       <Block className={classes.container}>
         {/* Amount */}
         <Row align="center" margin="md">
-          <BalanceWrapper>
+          <AmountWrapper>
             <StyledBlock>
               <Img alt={txToken?.name as string} onError={setImageToPlaceholder} src={txToken?.logoUri} />
             </StyledBlock>
@@ -186,7 +186,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             >
               {tx.amount} {txToken?.symbol}
             </Paragraph>
-          </BalanceWrapper>
+          </AmountWrapper>
         </Row>
 
         {/* SafeInfo */}
