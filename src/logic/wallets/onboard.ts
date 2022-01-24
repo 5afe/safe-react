@@ -1,5 +1,6 @@
 import Onboard from 'bnc-onboard'
 import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
 import { getWeb3, setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
@@ -14,7 +15,6 @@ import updateProviderAccount from 'src/logic/wallets/store/actions/updateProvide
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
 import closeSnackbar from '../notifications/store/actions/closeSnackbar'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getChains } from 'src/config/cache/chains'
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
@@ -38,9 +38,7 @@ const getNetworkName = (chainId: ChainId) => {
 }
 
 const hasENSSupport = (chainId: ChainId): boolean => {
-  return getChains().some((chain) => {
-    chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP)
-  })
+  return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
 }
 
 const getOnboard = (chainId: ChainId): API => {
