@@ -143,17 +143,13 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch, notifications, safeInstance } = this
+    const { txArgs, from, txProps, notifications, safeInstance } = this
 
     logError(Errors._803, err.message)
 
     errorCallback?.()
 
     notifications.closePending()
-
-    if (isFinalization && safeTxHash) {
-      dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
-    }
 
     const executeDataUsedSignatures = safeInstance.methods
       .execTransaction(
