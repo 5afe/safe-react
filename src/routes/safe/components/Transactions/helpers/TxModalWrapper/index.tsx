@@ -159,7 +159,7 @@ export const TxModalWrapper = ({
             <ReviewInfoText
               gasCostFormatted={gasCostFormatted}
               isCreation={isCreation}
-              isExecution={canTxExecute}
+              isExecution={doExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
