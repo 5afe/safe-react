@@ -19,25 +19,16 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
       </StyledDetailsTitle>
 
       {data.parameters?.map((param, index) => {
-        if (isArrayParameter(param.type) || Array.isArray(param.value)) {
-          return (
-            <TxDataRow
-              key={`${data.method}_param-${index}`}
-              title={`${param.name}(${param.type}):`}
-              value={param.value as string}
-              isArray
-              method={data.method}
-              paramType={param.type}
-            />
-          )
-        }
-
+        const isArrayValueParam = isArrayParameter(param.type) || Array.isArray(param.value)
         return (
           <TxDataRow
             key={`${data.method}_param-${index}`}
             title={`${param.name}(${param.type}):`}
             value={param.value as string}
-            inlineType={param.type === 'address' ? 'hash' : undefined}
+            isArray={isArrayValueParam}
+            method={isArrayValueParam ? data.method : undefined}
+            paramType={isArrayValueParam ? param.type : undefined}
+            inlineType={!isArrayValueParam && param.type === 'address' ? 'hash' : undefined}
           />
         )
       })}
