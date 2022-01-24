@@ -115,7 +115,7 @@ const SendCollectible = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle="Step 1 of 2" title="Send collectible" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
@@ -173,7 +173,7 @@ const SendCollectible = ({
                     tabIndex={0}
                   >
                     <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                      <Paragraph color="disabled" noMargin size="md">
                         Recipient
                       </Paragraph>
                     </Row>
@@ -209,7 +209,7 @@ const SendCollectible = ({
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Collectible
                     </Paragraph>
                   </Col>
@@ -226,7 +226,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Token ID
                     </Paragraph>
                   </Col>

@@ -166,7 +166,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       onBack={onPrev}
     >
       {/* Header */}
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Send funds" />
 
       <Hairline />
 
@@ -195,7 +195,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
         {/* Recipient */}
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="md">
             Recipient
           </Paragraph>
         </Row>

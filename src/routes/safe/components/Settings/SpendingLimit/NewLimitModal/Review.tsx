@@ -243,7 +243,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       submitText="Submit"
       isConfirmDisabled={existentSpendingLimit === undefined}
     >
-      <ModalHeader onClose={onClose} title="New spending limit" subTitle="2 of 2" />
+      <ModalHeader onClose={onClose} title="New spending limit" subTitle="Step 2 of 2" />
       <Hairline />
 
       <Modal.Body>

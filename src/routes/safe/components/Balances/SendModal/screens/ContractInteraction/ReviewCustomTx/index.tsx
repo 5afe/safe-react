@@ -71,13 +71,13 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
 
   return (
     <TxModalWrapper txData={txData} txValue={txValue} txTo={txRecipient} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Contract interaction" />
       <Hairline />
       <Block className={classes.container}>
         <SafeInfo />
         <Divider withArrow />
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="md">
             Recipient
           </Paragraph>
         </Row>
@@ -94,7 +94,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="md">
             Value
           </Paragraph>
         </Row>
@@ -106,7 +106,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           </Paragraph>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="md">
             Data (hex encoded)
           </Paragraph>
         </Row>

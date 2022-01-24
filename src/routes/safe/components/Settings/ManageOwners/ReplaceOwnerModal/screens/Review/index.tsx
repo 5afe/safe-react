@@ -79,7 +79,7 @@ export const ReviewReplaceOwnerModal = ({
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Replace owner" subTitle="2 of 2" />
+      <ModalHeader onClose={onClose} title="Replace owner" subTitle="Step 2 of 2" />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>

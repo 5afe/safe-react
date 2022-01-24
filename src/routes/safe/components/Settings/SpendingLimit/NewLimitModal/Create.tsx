@@ -47,7 +47,7 @@ const canReview = ({
 const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): ReactElement => {
   return (
     <>
-      <ModalHeader onClose={onCancel} title="New spending limit" subTitle="1 of 2" />
+      <ModalHeader onClose={onCancel} title="New spending limit" subTitle="Step 1 of 2" />
       <Hairline />
       <GnoForm formMutators={formMutators} onSubmit={onReview} initialValues={initialValues}>
         {(...args) => {
