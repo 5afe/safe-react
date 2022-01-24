@@ -254,7 +254,7 @@ describe('isMultisigExecutionInfo', () => {
 })
 describe('isTxQueued', () => {
   it('returns true when it is a queued transaction status', () => {
-    const statuses = ['PENDING', 'AWAITING_CONFIRMATIONS', 'AWAITING_EXECUTION', 'WILL_BE_REPLACED']
+    const statuses = ['PENDING', 'PENDING_FAILED', 'AWAITING_CONFIRMATIONS', 'AWAITING_EXECUTION', 'WILL_BE_REPLACED']
 
     statuses.forEach((status) => expect(isTxQueued(status as TransactionStatus)).toBe(true))
   })
