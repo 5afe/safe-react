@@ -41,6 +41,7 @@ export const ChangeThresholdModal = ({
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
   const [data, setData] = useState('')
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
+  const [disabledSubmitForm, setDisabledSubmitForm] = useState<boolean>(true)
 
   useEffect(() => {
     let isCurrent = true
@@ -60,6 +61,7 @@ export const ChangeThresholdModal = ({
 
   const handleThreshold = ({ target }) => {
     const value = parseInt(target.value)
+    setDisabledSubmitForm(value === editedThreshold || value === threshold)
     setEditedThreshold(value)
   }
 
@@ -81,7 +83,7 @@ export const ChangeThresholdModal = ({
   }
 
   return (
-    <TxModalWrapper txData={data} onSubmit={handleSubmit}>
+    <TxModalWrapper txData={data} onSubmit={handleSubmit} isConfirmDisabled={disabledSubmitForm}>
       <ModalHeader onClose={onClose} title="Change threshold" />
       <Hairline />
       <GnoForm initialValues={{ threshold: editedThreshold.toString() }} onSubmit={handleSubmit}>
