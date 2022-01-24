@@ -93,7 +93,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle="Step 1 of 2" title="Contract interaction" />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}
