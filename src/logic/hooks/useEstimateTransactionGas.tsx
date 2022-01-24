@@ -9,6 +9,7 @@ import {
   checkTransactionExecution,
   estimateSafeTxGas,
   estimateTransactionGasLimit,
+  isMaxFeeParam,
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -18,7 +19,6 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from './useCanTxExecute'
 
@@ -112,6 +112,19 @@ const getDefaultGasEstimation = ({
     isCreation,
     isOffChainSignature,
   }
+}
+
+export const calculateTotalGasCost = (
+  gasLimit: string,
+  gasPrice: string,
+  gasMaxPrioFee: string,
+  decimals: number,
+): [string, string] => {
+  const totalPricePerGas = parseFloat(gasPrice) + parseFloat(gasMaxPrioFee || '0')
+  const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas
+  const gasCost = fromTokenUnit(estimatedGasCosts, decimals)
+  const formattedGasCost = formatAmount(gasCost)
+  return [gasCost, formattedGasCost]
 }
 
 export const useEstimateTransactionGas = ({
@@ -210,13 +223,19 @@ export const useEstimateTransactionGas = ({
 
         const gasPrice = manualGasPrice ? toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = fromWei(gasPrice, 'gwei')
-        const gasMaxPrioFee = manualMaxPrioFee ? toWei(manualMaxPrioFee, 'gwei') : DEFAULT_MAX_PRIO_FEE
+        const gasMaxPrioFee = isMaxFeeParam()
+          ? manualMaxPrioFee
+            ? toWei(manualMaxPrioFee, 'gwei')
+            : DEFAULT_MAX_PRIO_FEE
+          : '0'
         const gasMaxPrioFeeFormatted = fromWei(gasMaxPrioFee, 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
-        const totalPricePerGas = parseInt(gasPrice, 10) + (isMaxFeeParam() ? parseInt(gasMaxPrioFee, 10) : 0)
-        const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas
-        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
-        const gasCostFormatted = formatAmount(gasCost)
+        const [gasCost, gasCostFormatted] = calculateTotalGasCost(
+          gasLimit,
+          gasPrice,
+          gasMaxPrioFee,
+          nativeCurrency.decimals,
+        )
 
         if (canTxExecute) {
           transactionCallSuccess = await checkTransactionExecution({
