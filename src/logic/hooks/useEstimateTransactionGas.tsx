@@ -19,8 +19,7 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-import { calculateCanTxExecute } from './useCanTxExecute'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
+import useCanTxExecute from './useCanTxExecute'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -112,18 +111,7 @@ export const useEstimateTransactionGas = ({
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
-  const recommendedNonce = useGetRecommendedNonce(safeAddress)
-  const { nonce: currentSafeNonce } = useSelector(currentSafe)
-
-  const canTxExecute = calculateCanTxExecute(
-    currentSafeNonce,
-    preApprovingOwner ?? '',
-    threshold,
-    txConfirmations?.size ?? 0,
-    recommendedNonce,
-    isExecution,
-    manualSafeNonce,
-  )
+  const canTxExecute = useCanTxExecute(isExecution, manualSafeNonce, preApprovingOwner, txConfirmations?.size)
 
   useEffect(() => {
     const estimateGas = async () => {
