@@ -174,7 +174,7 @@ const SendFunds = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle="Step 1 of 2" title="Send funds" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}
@@ -305,7 +305,7 @@ const SendFunds = ({
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Amount
                     </Paragraph>
                     <ButtonLink onClick={setMaxAllowedAmount} weight="bold" testId="send-max-btn">

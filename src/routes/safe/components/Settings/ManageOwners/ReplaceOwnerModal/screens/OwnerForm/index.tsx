@@ -74,7 +74,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
 
   return (
     <>
-      <ModalHeader onClose={onClose} title="Replace owner" subTitle="1 of 2" />
+      <ModalHeader onClose={onClose} title="Replace owner" subTitle="Step 1 of 2" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}

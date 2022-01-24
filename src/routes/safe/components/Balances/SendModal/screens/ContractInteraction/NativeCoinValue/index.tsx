@@ -39,7 +39,7 @@ export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.React
   return disabled ? null : (
     <>
       <Row className={classes.fullWidth} margin="xs">
-        <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+        <Paragraph color="disabled" noMargin size="md">
           Value
         </Paragraph>
         <ButtonLink

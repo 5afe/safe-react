@@ -69,7 +69,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
         <Paragraph className={classes.manage} noMargin weight="bolder">
           Contract interaction
         </Paragraph>
-        <Paragraph className={classes.annotation}>1 of 2</Paragraph>
+        <Paragraph className={classes.annotation}>Step 1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
         </IconButton>
@@ -97,7 +97,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                 />
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Value
                     </Paragraph>
                     <ButtonLink onClick={handleClickSendMax} weight="bold">
@@ -131,7 +131,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                     />
                   </Col>
                 </Row>
-                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+                <Paragraph color="disabled" noMargin size="lg">
                   <Switch checked={!isABI} onChange={handleToggleAbi} />
                   Use custom data (hex encoded)
                 </Paragraph>

@@ -133,7 +133,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </AmountWrapper>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Contract Address
           </Paragraph>
         </Row>
@@ -147,7 +147,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           />
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Method
           </Paragraph>
         </Row>
@@ -163,7 +163,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           return (
             <Fragment key={key}>
               <Row margin="xs">
-                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+                <Paragraph color="disabled" noMargin size="lg">
                   {name} ({type})
                 </Paragraph>
               </Row>
@@ -176,7 +176,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           )
         })}
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Data (hex encoded)
           </Paragraph>
         </Row>

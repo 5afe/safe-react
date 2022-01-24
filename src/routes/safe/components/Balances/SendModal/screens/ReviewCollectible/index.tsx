@@ -101,13 +101,13 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   return (
     <TxModalWrapper txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Send collectible" />
       <Hairline />
       <Block className={classes.container}>
         <SafeInfo />
         <Divider withArrow />
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="md">
             Recipient
           </Paragraph>
         </Row>
@@ -123,7 +123,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="md">
             {textShortener({ charsStart: 40, charsEnd: 0 })(tx.assetName)}
           </Paragraph>
         </Row>
