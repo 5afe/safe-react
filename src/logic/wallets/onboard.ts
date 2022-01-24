@@ -1,5 +1,6 @@
 import Onboard from 'bnc-onboard'
 import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
 import { getWeb3, setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
@@ -9,13 +10,15 @@ import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { store } from 'src/store'
-import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
 import closeSnackbar from '../notifications/store/actions/closeSnackbar'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getChains } from 'src/config/cache/chains'
+import getPairingModule from 'src/logic/wallets/pairing/module'
+import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
+import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
 
@@ -45,26 +48,23 @@ const getOnboard = (chainId: ChainId): API => {
     networkName: getNetworkName(chainId),
     subscriptions: {
       wallet: async (wallet) => {
+        // Initialise web3 according to provider
         if (wallet.provider) {
           setWeb3(wallet.provider)
         } else {
           resetWeb3()
         }
 
-        if (wallet.name) {
+        // Cache wallet for reconnection
+        if (wallet.name && !isPairingModule(wallet)) {
           saveToStorage(LAST_USED_PROVIDER_KEY, wallet.name)
         }
-
-        const hardwareWallet = wallet.type === 'hardware'
-        const { address } = onboard().getState()
-        const smartContractWallet =
-          (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(getWeb3(), address))) || false
 
         store.dispatch(
           updateProviderWallet({
             name: wallet.name || '',
-            hardwareWallet,
-            smartContractWallet,
+            hardwareWallet: wallet.type === 'hardware',
+            smartContractWallet: await isSmartContractWallet(getWeb3(), onboard().getState().address),
           }),
         )
       },
@@ -77,11 +77,15 @@ const getOnboard = (chainId: ChainId): API => {
 
         instantiateSafeContracts()
       },
-      ens: hasENSSupport(chainId) ? (ens) => store.dispatch(updateProviderEns(ens?.name || '')) : undefined,
+      ens: hasENSSupport(chainId)
+        ? (ens) => {
+            store.dispatch(updateProviderEns(ens?.name || ''))
+          }
+        : undefined,
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: getSupportedWallets(),
+      wallets: [getPairingModule(chainId), ...getSupportedWallets()],
     },
     walletCheck: [
       { checkName: 'derivationPath' },
@@ -96,7 +100,7 @@ const getOnboard = (chainId: ChainId): API => {
 }
 
 let currentOnboardInstance: API
-export const onboard = (): API => {
+const onboard = (): API => {
   const chainId = _getChainId()
   if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
     currentOnboardInstance = getOnboard(chainId)
@@ -104,5 +108,12 @@ export const onboard = (): API => {
 
   return currentOnboardInstance
 }
-
 export default onboard
+
+export const checkWallet = async (): Promise<boolean> => {
+  if (shouldSwitchNetwork()) {
+    switchNetwork(onboard().getState().wallet, _getChainId()).catch((e) => e.log())
+  }
+
+  return await onboard().walletCheck()
+}

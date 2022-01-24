@@ -36,6 +36,8 @@ const initialProviderState: ProvidersState = {
   loaded: false,
 }
 
+// Note: it may be possible to referece !!onboard().getState().wallet.provider?.connected
+// for the current `loaded` status
 const providerFactory = (provider: ProvidersState) => {
   const { name, hardwareWallet, smartContractWallet, account, network } = provider
   const hasWallet = !!name || !!hardwareWallet || !!smartContractWallet

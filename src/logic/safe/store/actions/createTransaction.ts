@@ -2,7 +2,8 @@ import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import { onboardUser } from 'src/components/ConnectButton'
+import onboard, { checkWallet } from 'src/logic/wallets/onboard'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -60,6 +61,12 @@ type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
+
+const isOnboardReady = async (): Promise<boolean> => {
+  // web3 is set on wallet connection
+  const walletSelected = getWeb3() ? true : await onboard().walletSelect()
+  return walletSelected && checkWallet()
+}
 
 const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
   if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
@@ -242,9 +249,7 @@ export class TxSender {
   }
 
   async prepare(dispatch: Dispatch, state: AppReduxState, txProps: RequiredTxProps): Promise<void> {
-    // Wallet connection
-    const ready = await onboardUser()
-    if (!ready) {
+    if (!(await isOnboardReady())) {
       throw Error('No wallet connection')
     }
 
