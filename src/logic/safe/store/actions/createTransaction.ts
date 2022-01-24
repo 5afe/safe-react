@@ -226,10 +226,11 @@ export class TxSender {
         const { hardwareWallet, smartContractWallet } = providerSelector(state)
         const signature = await this.onlyConfirm(hardwareWallet, smartContractWallet)
         this.onComplete(signature, confirmCallback)
-        return
       } catch (err) {
+        // User likely rejected transaction
         logError(Errors._814, err.message)
       }
+      return
     }
 
     // On-chain signature or execution
