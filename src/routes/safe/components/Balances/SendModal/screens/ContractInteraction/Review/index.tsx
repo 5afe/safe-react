@@ -26,8 +26,30 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import styled from 'styled-components'
+import { grey500 } from 'src/theme/variables'
 
 const useStyles = makeStyles(styles)
+
+const AmountWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`
+
+const StyledBlock = styled(Block)`
+  background-color: ${grey500};
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img {
+    width: 26px;
+  }
+`
 
 export type TransactionReviewType = {
   abi?: string
@@ -99,8 +121,19 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
       <Hairline />
       <Block className={classes.formContainer}>
+        <Row align="center" margin="md">
+          <AmountWrapper>
+            <StyledBlock>
+              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
+            </StyledBlock>
+            <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
+              {tx.value || 0}
+              {' ' + nativeCurrency.symbol}
+            </Paragraph>
+          </AmountWrapper>
+        </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
             Contract Address
           </Paragraph>
         </Row>
@@ -114,30 +147,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           />
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Value
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Col xs={1}>
-            <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
-          </Col>
-          <Col layout="column" xs={11}>
-            <Block justify="left">
-              <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
-                {tx.value || 0}
-                {' ' + nativeCurrency.symbol}
-              </Paragraph>
-            </Block>
-          </Col>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
             Method
           </Paragraph>
         </Row>
-        <Row align="center" margin="md">
-          <Paragraph className={classes.value} size="md" style={{ margin: 0 }}>
+        <Row align="center" margin="lg">
+          <Paragraph className={classes.value} size="lg" style={{ margin: 0 }}>
             {tx.selectedMethod?.name}
           </Paragraph>
         </Row>
@@ -148,12 +163,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           return (
             <Fragment key={key}>
               <Row margin="xs">
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
                   {name} ({type})
                 </Paragraph>
               </Row>
               <Row align="center" margin="md">
-                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
+                <Paragraph className={classes.value} noMargin size="lg" style={{ margin: 0 }}>
                   {value}
                 </Paragraph>
               </Row>
@@ -161,13 +176,13 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           )
         })}
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
             Data (hex encoded)
           </Paragraph>
         </Row>
-        <Row align="center" margin="md">
+        <Row align="center">
           <Col className={classes.outerData}>
-            <Row className={classes.data} size="md">
+            <Row className={classes.data} size="lg">
               {tx.data}
             </Row>
           </Col>
