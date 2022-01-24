@@ -95,7 +95,7 @@ const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Prom
 export class TxSender {
   notifications: ReturnType<typeof createTxNotifications>
   nonce: string
-  isExecution: boolean
+  isFinalization: boolean
   txArgs: TxArgs
   safeTxHash: string
   txProps: RequiredTxProps
@@ -107,12 +107,12 @@ export class TxSender {
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications, isExecution, approveAndExecute = false } = this
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization, approveAndExecute = false } = this
 
     let txDetails: TransactionDetails | null = null
 
-    const isOffChainSigning = !isExecution && signature
-    const isOnChainSigning = isExecution && !signature
+    const isOffChainSigning = !isFinalization && signature
+    const isOnChainSigning = isFinalization && !signature
 
     // If 1/? threshold and owner chooses to execute created tx immediately
     const isImmediateExecution = isOnChainSigning && !approveAndExecute
@@ -143,7 +143,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isExecution, from, safeTxHash, txProps, dispatch, notifications, safeInstance } = this
+    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch, notifications, safeInstance } = this
 
     logError(Errors._803, err.message)
 
@@ -151,7 +151,7 @@ export class TxSender {
 
     notifications.closePending()
 
-    if (isExecution && safeTxHash) {
+    if (isFinalization && safeTxHash) {
       dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
     }
 
@@ -174,12 +174,9 @@ export class TxSender {
     notifications.showOnError(err, contractErrorMessage)
   }
 
-  async onlyConfirm(hardwareWallet: boolean, smartContractWallet: boolean): Promise<string | undefined> {
-    const { txArgs, isExecution, safeTxHash, txProps, safeVersion } = this
+  async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
+    const { txArgs, safeTxHash, txProps, safeVersion } = this
 
-    if (!checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
-      throw new Error('Cannot do an offline signature')
-    }
     return await tryOffChainSigning(
       safeTxHash,
       { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
@@ -189,15 +186,16 @@ export class TxSender {
   }
 
   async sendTx(): Promise<string> {
-    const { txArgs, isExecution, from, safeTxHash, txProps, dispatch } = this
+    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch } = this
 
     // When signing on-chain don't mark as pending as it is never removed
-    if (isExecution) {
+    if (isFinalization) {
       dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING }))
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
-    const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
+    // On-chain transaction intention
+    const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
 
     const sendParams: PayableTx = {
       from,
@@ -220,16 +218,19 @@ export class TxSender {
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<void> {
+    const { isFinalization, safeVersion } = this
+    const { hardwareWallet, smartContractWallet } = providerSelector(state)
+    const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
     // Off-chain signature
-    if (!this.isExecution) {
+    if (!isFinalization && canSignOffChain) {
       try {
-        const { hardwareWallet, smartContractWallet } = providerSelector(state)
-        const signature = await this.onlyConfirm(hardwareWallet, smartContractWallet)
+        const signature = await this.onlyConfirm(hardwareWallet)
         this.onComplete(signature, confirmCallback)
-        return
       } catch (err) {
+        // User likely rejected transaction
         logError(Errors._814, err.message)
       }
+      return
     }
 
     // On-chain signature or execution
@@ -295,7 +296,7 @@ export const createTransaction = (
     }
 
     // Execute right away?
-    sender.isExecution =
+    sender.isFinalization =
       !props.delayExecution &&
       (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
