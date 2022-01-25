@@ -21,7 +21,7 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
 
   const makeTitle = (txDirection: string, amountWithSymbol: string) => (
     <Text size="xl" as="span">
-      {txDirection === TransferDirection.INCOMING ? 'Received' : 'Sent'}{' '}
+      {txDirection === TransferDirection.INCOMING ? 'Received' : 'Send'}{' '}
       <Text size="xl" as="span" strong>
         {amountWithSymbol}
       </Text>

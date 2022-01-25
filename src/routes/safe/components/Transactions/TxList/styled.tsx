@@ -1,7 +1,7 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { md, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -51,7 +51,7 @@ export const ActionAccordion = styled(Accordion)`
     }
 
     .MuiAccordionDetails-root {
-      padding: 16px;
+      padding: ${lg};
     }
   }
 `
