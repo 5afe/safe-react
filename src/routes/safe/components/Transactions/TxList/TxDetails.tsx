@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
+  isCustomTxInfo,
   isModuleExecutionInfo,
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
@@ -130,7 +131,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
-  const customTxNoData = data.txInfo.type === 'Custom' && !data.txInfo.methodName && !data.txInfo.dataSize
+  const customTxNoData = isCustomTxInfo(data.txInfo) && !data.txInfo.methodName && !data.txInfo.dataSize
   const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
   const noTxDataBlock = customTxNoData && !onChainRejection
   const txData = () =>

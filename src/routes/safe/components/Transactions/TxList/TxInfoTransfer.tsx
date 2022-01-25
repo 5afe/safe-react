@@ -2,8 +2,12 @@ import { Transfer, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useEffect, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 
-import { useAssetInfo } from './hooks/useAssetInfo'
+import { AssetInfo, TokenTransferAsset, useAssetInfo } from './hooks/useAssetInfo'
 import { TxInfoDetails } from './TxInfoDetails'
+
+export const isTransferAssetInfo = (value?: AssetInfo): value is TokenTransferAsset => {
+  return value?.type === 'Transfer'
+}
 
 type Details = {
   title: string | ReactElement
@@ -26,15 +30,12 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
   )
 
   useEffect(() => {
-    if (assetInfo && assetInfo.type === 'Transfer') {
+    if (isTransferAssetInfo(assetInfo)) {
       const txDirection = txInfo.direction.toUpperCase()
       setDetails({
         title: makeTitle(txDirection, assetInfo.amountWithSymbol),
         address: txDirection === TransferDirection.INCOMING ? txInfo.sender.value : txInfo.recipient.value,
-        name:
-          txDirection === TransferDirection.INCOMING
-            ? txInfo.sender.name || undefined
-            : txInfo.recipient.name || undefined,
+        name: (txDirection === TransferDirection.INCOMING ? txInfo.sender.name : txInfo.recipient.name) || undefined,
       })
     }
   }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender])
