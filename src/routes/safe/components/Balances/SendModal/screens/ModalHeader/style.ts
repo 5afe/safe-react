@@ -1,4 +1,4 @@
-import { lg, md, secondaryText } from 'src/theme/variables'
+import { lg, md, sm, secondaryText, border } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -24,11 +24,14 @@ export const styles = createStyles({
     width: '24px',
   },
   chainIndicator: {
-    padding: `0 ${md}`,
-    height: '20px',
+    fontSize: '12px',
+    padding: `5px ${sm}`,
+    backgroundColor: `${border}`,
+    borderRadius: '4px',
     alignItems: 'center',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
+    marginRight: '20px',
   },
   icon: {
     width: '20px',
