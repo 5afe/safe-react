@@ -112,7 +112,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   </Paragraph>
                 </Row>
 
-                {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                   <TxEstimatedFeesDetail
                     txParameters={txParameters}
                     gasCost={gasCost}
@@ -134,7 +134,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 />
               </Block>
 
-              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+              {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                 <ReviewInfoText
                   isCreation={isCreation}
                   isExecution={canTxExecute}

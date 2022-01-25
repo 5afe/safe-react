@@ -37,15 +37,7 @@ export const ReviewInfoText = ({
   const storeNextNonce = `${lastTxNonce && lastTxNonce + 1}`
   const safeAddress = extractSafeAddress()
   const [recommendedNonce, setRecommendedNonce] = useState<string>(storeNextNonce)
-
-  let transactionAction
-  if (isCreation) {
-    transactionAction = 'create'
-  } else if (isExecution) {
-    transactionAction = 'execute'
-  } else {
-    transactionAction = 'approve'
-  }
+  const transactionAction = isCreation ? 'create' : isExecution ? 'execute' : 'approve'
 
   useEffect(() => {
     const fetchRecommendedNonce = async () => {
@@ -66,7 +58,6 @@ export const ReviewInfoText = ({
       if (lastTxNonce !== undefined && safeNonceNumber === lastTxNonce + 1) return false
       return true
     }
-    // @FIXME: This can possibly be replace with useCanTxExecute
     const shouldShowWarning = isTxNonceOutOfOrder()
     if (!shouldShowWarning) return null
 

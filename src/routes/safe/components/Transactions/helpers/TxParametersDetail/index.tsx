@@ -68,8 +68,7 @@ export const TxParametersDetail = ({
   const showSafeTxGas = useSafeTxGas()
 
   useEffect(() => {
-    if (Number.isNaN(safeNonceNumber)) return
-    if (safeNonceNumber === nonce) return
+    if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) return
     if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
       setIsAccordionExpanded(true)
       setIsTxNonceOutOfOrder(true)

@@ -365,7 +365,7 @@ export const ApproveTxModal = ({
                     <Bold className={classes.nonceNumber}>{nonce}</Bold>
                   </Paragraph>
 
-                  {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                  {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                     <TxEstimatedFeesDetail
                       txParameters={txParameters}
                       gasCost={gasCost}
@@ -392,7 +392,7 @@ export const ApproveTxModal = ({
                 </Row>
               </Block>
 
-              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+              {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                 <ReviewInfoText
                   isCreation={isCreation}
                   isExecution={willExecute}
