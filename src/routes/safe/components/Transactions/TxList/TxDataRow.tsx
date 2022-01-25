@@ -27,6 +27,44 @@ type TxDataRowType = {
   paramType?: string
 }
 
+const generateInlineTypeValue = (
+  type: TxDataRowType['inlineType'],
+  value?: string,
+  hasExplorer?: boolean,
+): ReactElement | null => {
+  if (!value) return null
+  switch (type) {
+    case 'address':
+      return (
+        <InlinePrefixedEthHashInfo
+          textSize="xl"
+          hash={value}
+          shortenHash={8}
+          showCopyBtn
+          explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
+        />
+      )
+    case 'hash':
+      return (
+        <InlineEthHashInfo
+          textSize="xl"
+          hash={value}
+          shortenHash={8}
+          showCopyBtn
+          explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
+        />
+      )
+    case 'rawData':
+      return (
+        <FlexWrapper margin={5}>
+          <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
+          <CopyToClipboardBtn textToCopy={value} />
+        </FlexWrapper>
+      )
+  }
+  return null
+}
+
 export const TxDataRow = ({
   children,
   inlineType,
@@ -42,30 +80,7 @@ export const TxDataRow = ({
       {title}
     </Text>
     {isArray && value && method && paramType && <Value method={method} type={paramType} value={value} />}
-    {value && inlineType === 'address' && (
-      <InlinePrefixedEthHashInfo
-        textSize="xl"
-        hash={value}
-        shortenHash={8}
-        showCopyBtn
-        explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
-      />
-    )}
-    {value && inlineType === 'hash' && (
-      <InlineEthHashInfo
-        textSize="xl"
-        hash={value}
-        shortenHash={8}
-        showCopyBtn
-        explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
-      />
-    )}
-    {value && inlineType === 'rawData' && (
-      <FlexWrapper margin={5}>
-        <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
-        <CopyToClipboardBtn textToCopy={value} />
-      </FlexWrapper>
-    )}
+    {generateInlineTypeValue(inlineType, value, hasExplorer)}
     {!inlineType && !isArray && value && (
       <Text size="xl" as="span">
         {value}
