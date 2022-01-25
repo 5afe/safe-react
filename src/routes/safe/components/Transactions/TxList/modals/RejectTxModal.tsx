@@ -126,6 +126,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
 
                 {/* Tx Parameters */}
                 <TxParametersDetail
+                  onEdit={toggleEditMode}
                   txParameters={txParameters}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
