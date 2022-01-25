@@ -35,7 +35,7 @@ const NormalBreakingText = styled(Text)`
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
   if (isTransferTxInfo(txDetails.txInfo) || isSettingsChangeTxInfo(txDetails.txInfo)) {
-    return <TxInfo txInfo={txDetails.txInfo} />
+    return <TxInfo txInfo={txDetails.txInfo} txStatus={txDetails.txStatus} />
   }
 
   if (isCancelTxDetails(txDetails.txInfo) && isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {

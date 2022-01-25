@@ -1,9 +1,10 @@
-import { Transfer, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionStatus, Transfer, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useEffect, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 
 import { AssetInfo, TokenTransferAsset, useAssetInfo } from './hooks/useAssetInfo'
 import { TxInfoDetails } from './TxInfoDetails'
+import { isTxQueued } from 'src/logic/safe/store/models/types/gateway.d'
 
 export const isTransferAssetInfo = (value?: AssetInfo): value is TokenTransferAsset => {
   return value?.type === 'Transfer'
@@ -15,13 +16,19 @@ type Details = {
   name: string | undefined // AddressEx returns null if unknown
 }
 
-export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement | null => {
+export const TxInfoTransfer = ({
+  txInfo,
+  txStatus,
+}: {
+  txInfo: Transfer
+  txStatus: TransactionStatus
+}): ReactElement | null => {
   const assetInfo = useAssetInfo(txInfo)
   const [details, setDetails] = useState<Details | undefined>()
 
   const makeTitle = (txDirection: string, amountWithSymbol: string) => (
     <Text size="xl" as="span">
-      {txDirection === TransferDirection.INCOMING ? 'Received' : 'Send'}{' '}
+      {txDirection === TransferDirection.INCOMING ? 'Received' : isTxQueued(txStatus) ? 'Send' : 'Sent'}{' '}
       <Text size="xl" as="span" strong>
         {amountWithSymbol}
       </Text>
