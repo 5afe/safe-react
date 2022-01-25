@@ -48,7 +48,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
 
   return (
     <>
-      <ModalHeader onClose={onClose} title="Add new owner" subTitle="2 of 3" />
+      <ModalHeader onClose={onClose} title="Add new owner" subTitle="Step 2 of 3" />
       <Hairline />
       <GnoForm initialValues={{ threshold: initialValues.threshold || threshold.toString() }} onSubmit={handleSubmit}>
         {() => (

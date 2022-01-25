@@ -27,10 +27,10 @@ export const styles = createStyles({
     height: '100%',
   },
   ownersTitle: {
-    padding: lg,
+    padding: `${sm} ${lg}`,
   },
   owner: {
-    padding: sm,
+    padding: `${sm} ${lg}`,
     alignItems: 'center',
   },
   name: {
@@ -38,9 +38,8 @@ export const styles = createStyles({
     overflow: 'hidden',
   },
   selectedOwner: {
-    padding: sm,
+    padding: `${sm} ${lg}`,
     alignItems: 'center',
-    backgroundColor: '#f7f5f5',
   },
   open: {
     paddingLeft: sm,

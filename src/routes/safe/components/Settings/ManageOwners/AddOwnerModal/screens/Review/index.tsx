@@ -68,7 +68,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Add new owner" subTitle="3 of 3" />
+      <ModalHeader onClose={onClose} title="Add new owner" subTitle="Step 3 of 3" />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>
@@ -121,7 +121,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               </Fragment>
             ))}
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
+              <Paragraph color="primary" noMargin size="xs" weight="bolder" style={{ letterSpacing: '1px' }}>
                 ADDING NEW OWNER &darr;
               </Paragraph>
             </Row>
