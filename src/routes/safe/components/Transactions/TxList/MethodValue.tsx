@@ -29,7 +29,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
         {(value as string[]).map((currentValue, index) => {
           const key = `${parentId}-value-${index}`
           return Array.isArray(currentValue) ? (
-            <Text key={key} size="xl">
+            <Text key={key} size="xl" as="span">
               {getArrayValue(key, currentValue)}
             </Text>
           ) : (
@@ -54,10 +54,16 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
       <div>
         [
         <NestedWrapper>
-          {(props.value as string[]).map((address) => {
+          {(props.value as string[]).map((address, index) => {
             const explorerUrl = getExplorerInfo(address)
             return (
-              <PrefixedEthHashInfo key={address} textSize="xl" hash={address} showCopyBtn explorerUrl={explorerUrl} />
+              <PrefixedEthHashInfo
+                key={`${address}_${index}`}
+                textSize="xl"
+                hash={address}
+                showCopyBtn
+                explorerUrl={explorerUrl}
+              />
             )
           })}
         </NestedWrapper>

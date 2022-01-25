@@ -93,9 +93,11 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const currentUser = useSelector(userAccountSelector)
-  const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
-  const noTxOwners = !data?.detailedExecutionInfo
+  const noTxOwners =
+    (data?.detailedExecutionInfo?.type === 'MULTISIG' && !data.detailedExecutionInfo.confirmations.length) ||
+    data?.detailedExecutionInfo?.type === 'MODULE' ||
+    !data?.detailedExecutionInfo
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
@@ -128,7 +130,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
-  const customTxNoData = data.txInfo.type === 'Custom' && !data.txInfo.methodName
+  const customTxNoData = data.txInfo.type === 'Custom' && !data.txInfo.methodName && !data.txInfo.dataSize
   const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
   const noTxDataBlock = customTxNoData && !onChainRejection
   const txData = () =>
@@ -167,7 +169,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
 
   return (
-    <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
+    <TxDetailsContainer>
       <div className={cn('tx-data', { 'no-owners': noTxOwners, 'no-data': noTxDataBlock })}>{txData()}</div>
       {!noTxOwners && (
         <div>

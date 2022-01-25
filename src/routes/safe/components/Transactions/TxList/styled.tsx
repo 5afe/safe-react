@@ -1,4 +1,4 @@
-import { Text, Accordion, AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, sm } from 'src/theme/variables'
@@ -419,8 +419,7 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-owners {
     padding: 24px;
-    grid-row-end: span ${({ ownerRows }) => ownerRows || 2};
-    grid-row-start: 1;
+    grid-row-end: span 2;
   }
 
   .tx-details-actions {
@@ -505,6 +504,14 @@ export const OwnerListItem = styled.li`
 
   &:last-child::before {
     border-left: none;
+  }
+`
+
+export const InlineEthHashInfo = styled(EthHashInfo)`
+  display: inline-flex;
+
+  span {
+    font-weight: bold;
   }
 `
 

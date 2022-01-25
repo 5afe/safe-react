@@ -2,7 +2,7 @@ import { ReactElement, ReactNode } from 'react'
 import styled from 'styled-components'
 import { CopyToClipboardBtn, Text } from '@gnosis.pm/safe-react-components'
 
-import { InlinePrefixedEthHashInfo, StyledGridRow } from './styled'
+import { InlineEthHashInfo, InlinePrefixedEthHashInfo, StyledGridRow } from './styled'
 import { getExplorerInfo } from 'src/config'
 import { getByteLength } from 'src/utils/getByteLength'
 import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
@@ -18,7 +18,7 @@ const FlexWrapper = styled.div<{ margin: number }>`
 
 type TxDataRowType = {
   children?: ReactNode
-  inlineType?: 'hash' | 'rawData'
+  inlineType?: 'hash' | 'rawData' | 'address'
   hasExplorer?: boolean
   title: string
   value?: string
@@ -42,8 +42,17 @@ export const TxDataRow = ({
       {title}
     </Text>
     {isArray && value && method && paramType && <Value method={method} type={paramType} value={value} />}
-    {value && inlineType === 'hash' && (
+    {value && inlineType === 'address' && (
       <InlinePrefixedEthHashInfo
+        textSize="xl"
+        hash={value}
+        shortenHash={8}
+        showCopyBtn
+        explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
+      />
+    )}
+    {value && inlineType === 'hash' && (
+      <InlineEthHashInfo
         textSize="xl"
         hash={value}
         shortenHash={8}

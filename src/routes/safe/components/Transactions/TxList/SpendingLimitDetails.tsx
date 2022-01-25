@@ -53,7 +53,7 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
 
   return (
     <StyledTxInfoDetails>
-      <StyledDetailsTitle size="sm" strong color="placeHolder">
+      <StyledDetailsTitle size="md" strong color="placeHolder">
         Modify spending limit:
       </StyledDetailsTitle>
       <StyledInfoBlock>
@@ -65,16 +65,16 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
           color="placeHolder"
         />
       </StyledInfoBlock>
-      <StyledInfoBlock>
-        {tokenInfo && (
+      {tokenInfo && (
+        <StyledInfoBlock>
           <TokenInfo
             amount={fromTokenUnit(amount as string, tokenInfo.decimals)}
             title="Amount"
             token={tokenInfo}
             color="placeHolder"
           />
-        )}
-      </StyledInfoBlock>
+        </StyledInfoBlock>
+      )}
       <StyledInfoBlock>
         <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
       </StyledInfoBlock>
@@ -104,7 +104,11 @@ export const DeleteSpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
           logoUri={txTo?.logoUri || undefined}
         />
       </StyledInfoBlock>
-      <StyledInfoBlock>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</StyledInfoBlock>
+      {tokenInfo && (
+        <StyledInfoBlock>
+          <TokenInfo amount="" title="Token" token={tokenInfo} />
+        </StyledInfoBlock>
+      )}
     </StyledTxInfoDetails>
   )
 }
