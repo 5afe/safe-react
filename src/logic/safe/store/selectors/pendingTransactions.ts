@@ -8,10 +8,10 @@ import {
   LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { LocalStatusesState, LOCAL_TRANSACTIONS_ID } from '../reducer/localTransactions'
+import { PendingTransactionsState, PENDING_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/pendingTransactions'
 
-export const localStatuses = (state: AppReduxState): LocalStatusesState => {
-  return state[LOCAL_TRANSACTIONS_ID]
+export const localStatuses = (state: AppReduxState): PendingTransactionsState => {
+  return state[PENDING_TRANSACTIONS_ID]
 }
 
 // @FIXME: this is a dirty hack.
@@ -21,7 +21,7 @@ const getSafeTxHashFromId = (id: string): string => {
 }
 
 export const getLocalTxStatus = (
-  localTxStatusesState: LocalStatusesState,
+  pendingTxs: PendingTransactionsState,
   chainId: ChainId,
   tx: Transaction,
 ): TransactionStatus => {
@@ -39,16 +39,16 @@ export const getLocalTxStatus = (
     detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
       ? detailedExecutionInfo.safeTxHash
       : getSafeTxHashFromId(tx.id)
-  const statusesOnChain = localTxStatusesState[chainId as ChainId]
-  const localStatus = hash && statusesOnChain ? statusesOnChain[hash] : undefined
-  return localStatus || tx.txStatus
+  const isPending = pendingTxs?.[chainId as ChainId]?.includes(hash)
+
+  return isPending ? LocalTransactionStatus.PENDING : tx.txStatus
 }
 
 export const selectTxStatus = createSelector(
   localStatuses,
   currentChainId,
   (_: AppReduxState, tx: Transaction): Transaction => tx,
-  (localTxStatusesState: LocalStatusesState, chainId: string, tx: Transaction): TransactionStatus => {
-    return getLocalTxStatus(localTxStatusesState, chainId, tx)
+  (pendingTxs: PendingTransactionsState, chainId: string, tx: Transaction): TransactionStatus => {
+    return getLocalTxStatus(pendingTxs, chainId, tx)
   },
 )

@@ -29,8 +29,8 @@ import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
 import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
-import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
-import { updateTransactionStatus } from './updateTransactionStatus'
+import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
+import { clearTransactionPending, setTransactionPending } from 'src/logic/safe/store/actions/pendingTransactions'
 import { _getChainId } from 'src/config'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
@@ -152,7 +152,7 @@ export class TxSender {
     notifications.closePending()
 
     if (isFinalization && safeTxHash) {
-      dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING_FAILED }))
+      dispatch(clearTransactionPending({ safeTxHash }))
     }
 
     const executeDataUsedSignatures = safeInstance.methods
@@ -188,12 +188,6 @@ export class TxSender {
   async sendTx(): Promise<string> {
     const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch } = this
 
-    // When signing on-chain don't mark as pending as it is never removed
-    if (isFinalization) {
-      dispatch(updateTransactionStatus({ safeTxHash, status: LocalTransactionStatus.PENDING }))
-      aboutToExecuteTx.setNonce(txArgs.nonce)
-    }
-
     // On-chain transaction intention
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
 
@@ -206,6 +200,11 @@ export class TxSender {
     }
 
     const promiEvent = tx.send(sendParams)
+    // When signing on-chain don't mark as pending as it is never removed
+    if (isFinalization) {
+      dispatch(setTransactionPending({ safeTxHash }))
+      aboutToExecuteTx.setNonce(txArgs.nonce)
+    }
 
     return new Promise((resolve, reject) => {
       promiEvent.once('transactionHash', resolve) // this happens much faster than receipt

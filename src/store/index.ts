@@ -20,10 +20,11 @@ import gatewayTransactionsReducer, {
   GatewayTransactionsState,
   GATEWAY_TRANSACTIONS_ID,
 } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import localTransactionsReducer, {
-  LocalStatusesState,
-  LOCAL_TRANSACTIONS_ID,
-} from 'src/logic/safe/store/reducer/localTransactions'
+import {
+  pendingTransactionsReducer,
+  PendingTransactionsState,
+  PENDING_TRANSACTIONS_ID,
+} from 'src/logic/safe/store/reducer/pendingTransactions'
 import tokensReducer, { TokenState, TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import providerMiddleware from 'src/logic/wallets/store/middleware'
 import providerReducer, { ProvidersState, PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer'
@@ -47,7 +48,7 @@ import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectible
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
-import { localTransactionsMiddleware } from 'src/logic/safe/store/middleware/localTransactionsMiddleware'
+import { pendingTransactionsMiddleware } from 'src/logic/safe/store/middleware/pendingTransactionsMiddleware'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
@@ -73,7 +74,7 @@ const enhancer = composeEnhancers(
     providerMiddleware,
     addressBookMiddleware,
     configMiddleware,
-    localTransactionsMiddleware,
+    pendingTransactionsMiddleware,
   ),
 )
 
@@ -84,7 +85,7 @@ const reducers = {
   [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
   [TOKEN_REDUCER_ID]: tokensReducer,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactionsReducer,
-  [LOCAL_TRANSACTIONS_ID]: localTransactionsReducer,
+  [PENDING_TRANSACTIONS_ID]: pendingTransactionsReducer,
   [NOTIFICATIONS_REDUCER_ID]: notificationsReducer,
   [CURRENCY_REDUCER_ID]: currencyValuesReducer,
   [COOKIES_REDUCER_ID]: cookiesReducer,
@@ -106,7 +107,7 @@ export type AppReduxState = CombinedState<{
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: GatewayTransactionsState
-  [LOCAL_TRANSACTIONS_ID]: LocalStatusesState
+  [PENDING_TRANSACTIONS_ID]: PendingTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_REDUCER_ID]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
