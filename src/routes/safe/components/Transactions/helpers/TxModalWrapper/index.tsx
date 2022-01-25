@@ -160,6 +160,7 @@ export const TxModalWrapper = ({
             {/* FIXME TxParameters should be updated to be used with spending limits */}
             {!isSpendingLimitTx && (
               <TxParametersDetail
+                onEdit={toggleEditMode}
                 txParameters={txParameters}
                 isTransactionCreation={isCreation}
                 isTransactionExecution={doExecute}

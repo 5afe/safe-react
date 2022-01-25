@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Text, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionSummary, AccordionDetails, ButtonLink } from '@gnosis.pm/safe-react-components'
 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
@@ -27,9 +27,19 @@ const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
   color: ${(props) => (props.isOutOfOrder ? props.theme.colors.error : props.color)};
 `
 
+const StyledButtonLink = styled(ButtonLink)`
+  padding-left: 0;
+  margin: 8px 0 0 0;
+
+  > p {
+    margin-left: 0;
+  }
+`
+
 type Props = {
   txParameters: TxParameters
   compact?: boolean
+  onEdit: () => void
   parametersStatus?: ParametersStatus
   isTransactionCreation: boolean
   isTransactionExecution: boolean
@@ -37,6 +47,7 @@ type Props = {
 }
 
 export const TxParametersDetail = ({
+  onEdit,
   txParameters,
   compact = true,
   parametersStatus,
@@ -121,6 +132,9 @@ export const TxParametersDetail = ({
               </Text>
             </TxParameterWrapper>
           )}
+          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
+            Edit
+          </StyledButtonLink>
         </AccordionDetailsWrapper>
       </AccordionDetails>
     </Accordion>

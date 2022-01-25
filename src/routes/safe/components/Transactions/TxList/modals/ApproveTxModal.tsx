@@ -380,6 +380,7 @@ export const ApproveTxModal = ({
                   {/* Tx Parameters */}
                   {(shouldExecute || !isOffChainSignature) && (
                     <TxParametersDetail
+                      onEdit={toggleEditMode}
                       txParameters={txParameters}
                       parametersStatus={getParametersStatus()}
                       isTransactionCreation={isCreation}
