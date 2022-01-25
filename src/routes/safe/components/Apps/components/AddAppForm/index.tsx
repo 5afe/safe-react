@@ -1,4 +1,4 @@
-import { theme, Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import { useState, ReactElement, useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
@@ -22,7 +22,7 @@ const StyledTextFileAppName = styled(TextField)`
       &.Mui-disabled {
         color: rgba(0, 0, 0, 0.54);
         &.Mui-error {
-          color: ${theme.colors.error};
+          color: ${(props) => props.theme.colors.error};
         }
       }
     }
