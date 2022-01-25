@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
-import { Title, Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
+import { Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import Field from 'src/components/forms/Field'
@@ -24,9 +24,10 @@ import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSaf
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import { extractSafeAddress } from 'src/routes/routes'
 import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const StyledDivider = styled(Divider)`
-  margin: 0px;
+  margin: 0;
 `
 const StyledDividerFooter = styled(Divider)`
   margin: 16px -24px;
@@ -121,9 +122,9 @@ export const EditTxParametersForm = ({
     <>
       {/* Header */}
       <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
-        <Title size="sm" withoutMargin>
-          Advanced options
-        </Title>
+        <Paragraph size="xl" noMargin>
+          Advanced parameters
+        </Paragraph>
         <IconButton disableRipple onClick={onCloseFormHandler}>
           <Close className={classes.closeIcon} />
         </IconButton>

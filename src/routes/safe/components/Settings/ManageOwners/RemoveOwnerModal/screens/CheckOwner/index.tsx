@@ -26,7 +26,7 @@ export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): React
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 3" title="Remove owner" />
+      <ModalHeader onClose={onClose} subTitle="Step 1 of 3" title="Remove owner" />
       <Hairline />
       <Block className={classes.formContainer}>
         <Row margin="md">
