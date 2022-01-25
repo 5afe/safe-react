@@ -41,11 +41,7 @@ export const checkIfTxIsApproveAndExecution = (
     return txConfirmations + 1 === threshold || isSpendingLimit(txType)
   }
 
-  if (threshold === 1) {
-    return true
-  }
-
-  return false
+  return threshold === 1
 }
 
 export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>

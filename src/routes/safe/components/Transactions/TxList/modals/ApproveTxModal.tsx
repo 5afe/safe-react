@@ -227,6 +227,8 @@ export const ApproveTxModal = ({
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const willExecute = isExecution && shouldExecute
+
   const {
     confirmations,
     data,
@@ -262,9 +264,8 @@ export const ApproveTxModal = ({
     manualGasPrice,
     manualMaxPrioFee,
     manualGasLimit,
-    isExecution,
+    isExecution: willExecute,
   })
-  const willExecute = isExecution && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const approveTx = (txParameters: TxParameters) => {
