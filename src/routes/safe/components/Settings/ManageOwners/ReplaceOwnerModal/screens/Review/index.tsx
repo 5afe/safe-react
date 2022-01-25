@@ -135,7 +135,7 @@ export const ReviewReplaceOwnerModal = ({
                 ),
             )}
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
+              <Paragraph color="primary" noMargin size="xs" weight="bolder" style={{ letterSpacing: '1px' }}>
                 REMOVING OWNER &darr;
               </Paragraph>
             </Row>
@@ -152,7 +152,7 @@ export const ReviewReplaceOwnerModal = ({
               </Col>
             </Row>
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
+              <Paragraph color="primary" noMargin size="xs" weight="bolder" style={{ letterSpacing: '1px' }}>
                 ADDING NEW OWNER &darr;
               </Paragraph>
             </Row>

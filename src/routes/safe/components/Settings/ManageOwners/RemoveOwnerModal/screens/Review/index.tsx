@@ -80,7 +80,7 @@ export const ReviewRemoveOwnerModal = ({
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Remove owner" subTitle="3 of 3" />
+      <ModalHeader onClose={onClose} title="Remove owner" subTitle="Step 3 of 3" />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>
@@ -138,7 +138,7 @@ export const ReviewRemoveOwnerModal = ({
                 ),
             )}
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
+              <Paragraph color="primary" noMargin size="xs" weight="bolder" style={{ letterSpacing: '1px' }}>
                 REMOVING OWNER &darr;
               </Paragraph>
             </Row>
