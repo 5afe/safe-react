@@ -96,7 +96,7 @@ export const TxParametersDetail = ({
       <AccordionDetails>
         <AccordionDetailsWrapper>
           <StyledText size="md" color="placeHolder">
-            Safe transaction
+            Safe transaction parameters
           </StyledText>
 
           <TxParameterWrapper>

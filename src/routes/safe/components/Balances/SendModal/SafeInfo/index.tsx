@@ -34,7 +34,7 @@ const SafeInfo = ({ text }: SafeInfoProps): React.ReactElement => {
     <>
       {text && (
         <Row margin="sm">
-          <Paragraph color="black400" noMargin size="md">
+          <Paragraph color="black400" noMargin size="lg">
             {text}
           </Paragraph>
         </Row>

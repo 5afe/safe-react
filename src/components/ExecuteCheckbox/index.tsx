@@ -29,7 +29,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
       />
       <Tooltip
         placement="top"
-        title="If you want to sign the transaction now but manually execute it later, click on the checkbox below."
+        title="If you want to sign the transaction now but manually execute it later, click on the checkbox."
       >
         <span>
           <Img alt="Info Tooltip" height={16} src={InfoIcon} />

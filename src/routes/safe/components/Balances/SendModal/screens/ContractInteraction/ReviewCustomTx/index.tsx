@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import styled from 'styled-components'
 
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -22,6 +23,27 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { grey500 } from 'src/theme/variables'
+
+const AmountWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`
+
+const StyledBlock = styled(Block)`
+  background-color: ${grey500};
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img {
+    width: 26px;
+  }
+`
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -74,10 +96,21 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
       <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Contract interaction" />
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo />
+        <Row align="center" margin="md">
+          <AmountWrapper>
+            <StyledBlock>
+              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
+            </StyledBlock>
+            <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
+              {tx.value || 0}
+              {' ' + nativeCurrency.symbol}
+            </Paragraph>
+          </AmountWrapper>
+        </Row>
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md">
+          <Paragraph color="disabled" noMargin size="lg">
             Recipient
           </Paragraph>
         </Row>
@@ -94,23 +127,11 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md">
-            Value
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
-          <Paragraph className={classes.value} noMargin size="md">
-            {tx.value || 0}
-            {' ' + nativeCurrency.symbol}
-          </Paragraph>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md">
+          <Paragraph color="disabled" noMargin size="lg">
             Data (hex encoded)
           </Paragraph>
         </Row>
-        <Row align="center" margin="md">
+        <Row align="center">
           <Col className={classes.outerData}>
             <Row className={classes.data} size="md">
               {tx.data}
