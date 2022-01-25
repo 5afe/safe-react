@@ -7,10 +7,20 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { PendingTransactionsState, PENDING_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/pendingTransactions'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { ChainId } from 'src/config/chain'
 
-export const localStatuses = (state: AppReduxState): PendingTransactionsState => {
+export const pendingTxsByChain = (state: AppReduxState): PendingTransactionsState => {
   return state[PENDING_TRANSACTIONS_ID]
 }
+
+export const pendingTxs = createSelector(
+  pendingTxsByChain,
+  currentChainId,
+  (statuses, chainId): PendingTransactionsState[ChainId] => {
+    return statuses[chainId] || new Set()
+  },
+)
 
 // @FIXME: this is a dirty hack.
 // Ask backend to add safeTxHash in tx list items.
@@ -18,7 +28,7 @@ const getSafeTxHashFromId = (id: string): string => {
   return id.split('_').pop() || ''
 }
 
-export const getLocalTxStatus = (pendingTxs: PendingTransactionsState, tx: Transaction): TransactionStatus => {
+export const getLocalTxStatus = (pendingTxs: PendingTransactionsState[ChainId], tx: Transaction): TransactionStatus => {
   const isUnknownStatus = [
     LocalTransactionStatus.AWAITING_CONFIRMATIONS,
     LocalTransactionStatus.AWAITING_EXECUTION,
@@ -35,13 +45,13 @@ export const getLocalTxStatus = (pendingTxs: PendingTransactionsState, tx: Trans
       ? detailedExecutionInfo.safeTxHash
       : getSafeTxHashFromId(tx.id)
 
-  return pendingTxs.has(safeTxHash) ? LocalTransactionStatus.PENDING : tx.txStatus
+  return pendingTxs?.has(safeTxHash) ? LocalTransactionStatus.PENDING : tx.txStatus
 }
 
 export const selectTxStatus = createSelector(
-  localStatuses,
+  pendingTxs,
   (_: AppReduxState, tx: Transaction): Transaction => tx,
-  (pendingTxs: PendingTransactionsState, tx: Transaction): TransactionStatus => {
+  (pendingTxs: PendingTransactionsState[ChainId], tx: Transaction): TransactionStatus => {
     return getLocalTxStatus(pendingTxs, tx)
   },
 )
