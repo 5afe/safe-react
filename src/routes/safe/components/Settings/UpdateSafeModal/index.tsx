@@ -58,7 +58,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
       txTo={getMultisendContractAddress()}
       operation={Operation.DELEGATE}
       onSubmit={handleSubmit}
-      onBack={onClose}
+      onClose={onClose}
       submitText="Update Safe"
     >
       <ModalHeader onClose={onClose} title="Update safe version" />

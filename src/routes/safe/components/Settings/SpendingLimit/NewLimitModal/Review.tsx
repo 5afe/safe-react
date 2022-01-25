@@ -241,7 +241,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       onSubmit={handleSubmit}
       onBack={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}
       submitText="Submit"
-      isConfirmDisabled={existentSpendingLimit === undefined}
+      isSubmitDisabled={existentSpendingLimit === undefined}
     >
       <ModalHeader onClose={onClose} title="New spending limit" subTitle="2 of 2" />
       <Hairline />

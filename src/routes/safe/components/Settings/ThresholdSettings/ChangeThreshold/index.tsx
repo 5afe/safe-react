@@ -83,7 +83,7 @@ export const ChangeThresholdModal = ({
   }
 
   return (
-    <TxModalWrapper txData={data} onSubmit={handleSubmit} isConfirmDisabled={disabledSubmitForm}>
+    <TxModalWrapper txData={data} onSubmit={handleSubmit} isSubmitDisabled={disabledSubmitForm} onClose={onClose}>
       <ModalHeader onClose={onClose} title="Change threshold" />
       <Hairline />
       <GnoForm initialValues={{ threshold: editedThreshold.toString() }} onSubmit={handleSubmit}>

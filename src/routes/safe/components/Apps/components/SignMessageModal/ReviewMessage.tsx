@@ -117,9 +117,9 @@ export const ReviewMessage = ({
       txData={txData}
       txTo={txRecipient}
       onSubmit={confirmTransactions}
-      onBack={handleTxRejection}
+      onClose={handleTxRejection}
       operation={Operation.DELEGATE}
-      isConfirmDisabled={!isOwner}
+      isSubmitDisabled={!isOwner}
     >
       <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 

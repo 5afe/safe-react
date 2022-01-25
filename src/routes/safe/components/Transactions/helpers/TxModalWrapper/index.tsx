@@ -12,20 +12,28 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { isSpendingLimit, ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { useSelector } from 'react-redux'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { List } from 'immutable'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type Props = {
   children: ReactNode
-  operation?: number
+  operation?: Operation
   txData: string
   txValue?: string
   txTo?: string
   txType?: string
+  txConfirmations?: List<Confirmation>
   onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
+  onClose?: () => void
   onBack?: (...rest: any) => void
   submitText?: string
-  isConfirmDisabled?: boolean
+  isSubmitDisabled?: boolean
 }
 
 const Container = styled.div`
@@ -39,10 +47,12 @@ export const TxModalWrapper = ({
   txValue = '0',
   txTo,
   txType,
+  txConfirmations,
   onSubmit,
   onBack,
+  onClose,
   submitText,
-  isConfirmDisabled,
+  isSubmitDisabled,
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -50,8 +60,15 @@ export const TxModalWrapper = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const isOwner = useSelector(grantedSelector)
+  const userAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
+  const preApprovingOwner = isOwner ? userAddress : undefined
+
+  const canTxExecute = useCanTxExecute(preApprovingOwner, Array.from(txConfirmations || []).length)
+
+  const doExecute = executionApproved && canTxExecute
 
   const {
     gasCostFormatted,
@@ -66,7 +83,9 @@ export const TxModalWrapper = ({
     txData,
     txRecipient: txTo || safeAddress,
     txType,
+    txConfirmations,
     txAmount: txValue,
+    preApprovingOwner,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
     manualMaxPrioFee,
@@ -77,10 +96,7 @@ export const TxModalWrapper = ({
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  const canTxExecute = useCanTxExecute(undefined, manualSafeNonce)
-  const doExecute = executionApproved && canTxExecute
-
-  const onClose = (txParameters: TxParameters) => {
+  const onEditClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
     const oldGasLimit = gasLimit
@@ -125,6 +141,14 @@ export const TxModalWrapper = ({
     onSubmit(txParameters, !doExecute)
   }
 
+  const parametersStatus: ParametersStatus = isCreation
+    ? doExecute
+      ? 'ENABLED'
+      : 'ETH_HIDDEN' // allow editing nonce when creating
+    : doExecute
+    ? 'SAFE_DISABLED'
+    : 'DISABLED' // when not creating, nonce cannot be edited
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -133,9 +157,10 @@ export const TxModalWrapper = ({
       ethGasPrice={gasPriceFormatted}
       ethMaxPrioFee={gasMaxPrioFeeFormatted}
       safeTxGas={gasEstimation}
-      closeEditModalCallback={onClose}
+      parametersStatus={parametersStatus}
+      closeEditModalCallback={onEditClose}
     >
-      {(txParameters: TxParameters, toggleEditMode: () => unknown) => (
+      {(txParameters: TxParameters, toggleEditMode: () => void) => (
         <>
           {children}
 
@@ -151,6 +176,7 @@ export const TxModalWrapper = ({
                 isTransactionCreation={isCreation}
                 isTransactionExecution={doExecute}
                 isOffChainSignature={isOffChainSignature}
+                parametersStatus={parametersStatus}
               />
             )}
           </Container>
@@ -168,11 +194,11 @@ export const TxModalWrapper = ({
           {/* Footer */}
           <Modal.Footer withoutBorder={!isSpendingLimitTx && submitStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: onBack || onClose, text: 'Back' }}
+              cancelButtonProps={{ onClick: onBack || onClose, text: onBack ? 'Back' : 'Cancel' }}
               confirmButtonProps={{
                 onClick: () => onSubmitClick(txParameters),
                 status: submitStatus,
-                disabled: isConfirmDisabled,
+                disabled: isSubmitDisabled,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : submitText,
                 testId: 'submit-tx-btn',
               }}

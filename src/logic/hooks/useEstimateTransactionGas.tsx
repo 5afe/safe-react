@@ -60,7 +60,6 @@ type UseEstimateTransactionGasProps = {
   manualMaxPrioFee?: string
   manualGasLimit?: string
   manualSafeNonce?: number // Edited nonce
-  isExecution?: boolean // If called from the TransactionList "next transaction"
 }
 
 export type TransactionGasEstimationResult = {
@@ -136,7 +135,6 @@ export const useEstimateTransactionGas = ({
   manualMaxPrioFee,
   manualGasLimit,
   manualSafeNonce,
-  isExecution,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation({
@@ -151,7 +149,7 @@ export const useEstimateTransactionGas = ({
   const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
-  const canTxExecute = useCanTxExecute(isExecution, manualSafeNonce, preApprovingOwner, txConfirmations?.size)
+  const canTxExecute = useCanTxExecute(preApprovingOwner, txConfirmations?.size)
 
   useEffect(() => {
     const estimateGas = async () => {
