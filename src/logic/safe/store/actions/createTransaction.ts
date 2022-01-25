@@ -30,7 +30,7 @@ import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } fr
 import { generatePath } from 'react-router-dom'
 import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
 import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
-import { clearTransactionPending, setTransactionPending } from 'src/logic/safe/store/actions/pendingTransactions'
+import { removePendingTransaction, addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { _getChainId } from 'src/config'
 import { getLastTransaction } from '../selectors/gatewayTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
@@ -152,7 +152,7 @@ export class TxSender {
     notifications.closePending()
 
     if (isFinalization && safeTxHash) {
-      dispatch(clearTransactionPending({ safeTxHash }))
+      dispatch(removePendingTransaction({ safeTxHash }))
     }
 
     const executeDataUsedSignatures = safeInstance.methods
@@ -202,7 +202,7 @@ export class TxSender {
     const promiEvent = tx.send(sendParams)
     // When signing on-chain don't mark as pending as it is never removed
     if (isFinalization) {
-      dispatch(setTransactionPending({ safeTxHash }))
+      dispatch(addPendingTransaction({ safeTxHash }))
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
