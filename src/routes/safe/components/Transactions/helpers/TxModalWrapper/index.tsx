@@ -48,6 +48,7 @@ export const TxModalWrapper = ({
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
@@ -71,6 +72,7 @@ export const TxModalWrapper = ({
     txAmount: txValue,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualMaxPrioFee,
     manualGasLimit,
     manualSafeNonce,
     operation,
@@ -97,7 +99,7 @@ export const TxModalWrapper = ({
     }
 
     if (oldMaxPrioFee !== newMaxPrioFee) {
-      setManualGasPrice(newMaxPrioFee)
+      setManualMaxPrioFee(newMaxPrioFee)
     }
 
     if (oldGasLimit !== newGasLimit) {
@@ -172,7 +174,7 @@ export const TxModalWrapper = ({
           {!isSpendingLimitTx && (
             <ReviewInfoText
               isCreation={isCreation}
-              isExecution={canTxExecute}
+              isExecution={doExecute}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />

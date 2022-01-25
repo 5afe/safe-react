@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { extractSafeAddress } from 'src/routes/routes'
 import { currentSafe } from '../safe/store/selectors'
@@ -50,27 +49,21 @@ const useCanTxExecute: UseCanTxExecuteType = (
   preApprovingOwner = '',
   txConfirmations = 0,
 ) => {
-  const [canTxExecute, setCanTxExecute] = useState(false)
   const { threshold } = useSelector(currentSafe)
 
   const safeAddress = extractSafeAddress()
   const recommendedNonce = useGetRecommendedNonce(safeAddress)
   const { nonce: currentSafeNonce } = useSelector(currentSafe)
 
-  useEffect(() => {
-    const result = calculateCanTxExecute(
-      currentSafeNonce,
-      preApprovingOwner,
-      threshold,
-      txConfirmations,
-      recommendedNonce,
-      isExecution,
-      manualSafeNonce,
-    )
-    setCanTxExecute(result)
-  }, [currentSafeNonce, preApprovingOwner, recommendedNonce, threshold, txConfirmations, isExecution, manualSafeNonce])
-
-  return canTxExecute
+  return calculateCanTxExecute(
+    currentSafeNonce,
+    preApprovingOwner,
+    threshold,
+    txConfirmations,
+    recommendedNonce,
+    isExecution,
+    manualSafeNonce,
+  )
 }
 
 export default useCanTxExecute

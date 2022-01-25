@@ -198,7 +198,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     safeModules,
   ])
 
-  const handleSubmit = async (txParameters: TxParameters): Promise<void> => {
+  const handleSubmit = async (txParameters: TxParameters, delayExecution: boolean): Promise<void> => {
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
     const advancedOptionsTxParameters = {
       ...txParameters,
@@ -220,7 +220,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         advancedOptionsTxParameters,
       )
 
-      dispatch(createTransaction(spendingLimitTxData))
+      dispatch(createTransaction({ ...spendingLimitTxData, delayExecution }))
     }
   }
 

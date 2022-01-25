@@ -39,7 +39,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     setTxData(txData)
   }, [spendingLimit])
 
-  const removeSelectedSpendingLimit = (txParameters: TxParameters) => {
+  const removeSelectedSpendingLimit = (txParameters: TxParameters, delayExecution: boolean) => {
     try {
       dispatch(
         createTransaction({
@@ -51,6 +51,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
+          delayExecution,
         }),
       )
     } catch (e) {

@@ -17,6 +17,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { useStyles } from './style'
 
@@ -40,6 +41,7 @@ export const ChangeThresholdModal = ({
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
   const [data, setData] = useState('')
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
+  const [disabledSubmitForm, setDisabledSubmitForm] = useState<boolean>(true)
 
   useEffect(() => {
     let isCurrent = true
@@ -59,10 +61,11 @@ export const ChangeThresholdModal = ({
 
   const handleThreshold = ({ target }) => {
     const value = parseInt(target.value)
+    setDisabledSubmitForm(value === editedThreshold || value === threshold)
     setEditedThreshold(value)
   }
 
-  const handleSubmit = (txParameters) => {
+  const handleSubmit = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       createTransaction({
         safeAddress,
@@ -73,13 +76,14 @@ export const ChangeThresholdModal = ({
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+        delayExecution,
       }),
     )
     onClose()
   }
 
   return (
-    <TxModalWrapper txData={data} onSubmit={handleSubmit}>
+    <TxModalWrapper txData={data} onSubmit={handleSubmit} isConfirmDisabled={disabledSubmitForm}>
       <ModalHeader onClose={onClose} title="Change threshold" />
       <Hairline />
       <GnoForm initialValues={{ threshold: editedThreshold.toString() }} onSubmit={handleSubmit}>

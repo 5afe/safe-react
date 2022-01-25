@@ -25,7 +25,7 @@ export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 type ReplaceOwnerProps = {
   onClose: () => void
   onClickBack: () => void
-  onSubmit: (txParameters: TxParameters) => void
+  onSubmit: (txParameters: TxParameters, delayExecution: boolean) => void
   owner: OwnerData
   newOwner: {
     address: string

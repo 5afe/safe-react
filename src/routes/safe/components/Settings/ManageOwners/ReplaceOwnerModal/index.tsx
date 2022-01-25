@@ -34,6 +34,7 @@ export const sendReplaceOwner = async (
   dispatch: Dispatch,
   txParameters: TxParameters,
   connectedWalletAddress: string,
+  delayExecution: boolean,
 ): Promise<void> => {
   const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
   const safeTx = await sdk.getSwapOwnerTx(
@@ -52,6 +53,7 @@ export const sendReplaceOwner = async (
       safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      delayExecution,
     }),
   )
 
@@ -95,7 +97,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
     }
   }
 
-  const onReplaceOwner = async (txParameters: TxParameters) => {
+  const onReplaceOwner = async (txParameters: TxParameters, delayExecution: boolean) => {
     onClose()
 
     try {
@@ -107,6 +109,7 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
         dispatch,
         txParameters,
         connectedWalletAddress,
+        delayExecution,
       )
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
     } catch (error) {

@@ -227,8 +227,11 @@ export const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const nativeCurrency = getNativeCurrency()
+  const willExecute = isExecution && shouldExecute
+
   const {
     confirmations,
     data,
@@ -262,10 +265,10 @@ export const ApproveTxModal = ({
     safeTxGas,
     operation,
     manualGasPrice,
+    manualMaxPrioFee,
     manualGasLimit,
-    isExecution,
+    isExecution: willExecute,
   })
-  const willExecute = isExecution && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const approveTx = (txParameters: TxParameters) => {
@@ -323,7 +326,7 @@ export const ApproveTxModal = ({
     }
 
     if (oldMaxPrioFee !== newMaxPrioFee) {
-      setManualGasPrice(newMaxPrioFee)
+      setManualMaxPrioFee(newMaxPrioFee)
     }
 
     if (oldGasLimit !== newGasLimit) {
