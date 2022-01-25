@@ -96,9 +96,9 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const currentUser = useSelector(userAccountSelector)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
   const noTxOwners =
-    (data?.detailedExecutionInfo?.type === 'MULTISIG' && !data.detailedExecutionInfo.confirmations.length) ||
-    data?.detailedExecutionInfo?.type === 'MODULE' ||
-    !data?.detailedExecutionInfo
+    !data?.detailedExecutionInfo ||
+    (isMultiSigExecutionDetails(data.detailedExecutionInfo) && !data.detailedExecutionInfo.confirmations.length) ||
+    isModuleExecutionInfo(data.detailedExecutionInfo)
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
