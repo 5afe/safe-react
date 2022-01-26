@@ -73,7 +73,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     }
 
     // Execute right away?
-    sender.isExecution =
+    sender.isFinalization =
       approveAndExecute ||
       (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 

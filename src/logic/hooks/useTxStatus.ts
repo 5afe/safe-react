@@ -2,11 +2,12 @@ import { useSelector } from 'react-redux'
 import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { AppReduxState } from 'src/store'
-import { selectTxStatus } from 'src/logic/safe/store/selectors/txStatus'
+import { selectTxStatus } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { useState } from 'react'
 import { useDebounce } from './useDebounce'
 
-const useLocalTxStatus = (transaction: Transaction): TransactionStatus => {
+// Takes into account whether a transaction is pending or not
+const useTxStatus = (transaction: Transaction): TransactionStatus => {
   const storedStatus = useSelector((state: AppReduxState) => selectTxStatus(state, transaction))
   const [localStatus, setLocalStatus] = useState(storedStatus)
 
@@ -19,4 +20,4 @@ const useLocalTxStatus = (transaction: Transaction): TransactionStatus => {
   return localStatus
 }
 
-export default useLocalTxStatus
+export default useTxStatus
