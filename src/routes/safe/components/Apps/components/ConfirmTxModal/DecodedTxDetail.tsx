@@ -43,9 +43,5 @@ export const DecodedTxDetail = ({ decodedTxData: tx }: Props): ReactElement => {
     body = <>{tx.parameters.map((p, index) => getParameterElement(p, index))}</>
   }
 
-  return (
-    <>
-      <Container>{body}</Container>
-    </>
-  )
+  return <Container>{body}</Container>
 }

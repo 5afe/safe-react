@@ -92,14 +92,18 @@ export const ReviewConfirm = ({
 
   // Decode tx data.
   useEffect(() => {
+    let isCurrent = true
     const decodeTxData = async () => {
       const res = await fetchTxDecoder(txData)
-      if (res) {
+      if (res && isCurrent) {
         setDecodedData(res)
       }
     }
 
     decodeTxData()
+    return () => {
+      isCurrent = false
+    }
   }, [txData])
 
   const handleUserConfirmation = (safeTxHash: string): void => {
