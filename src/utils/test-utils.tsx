@@ -13,7 +13,6 @@ import makeSafe from 'src/logic/safe/store/models/safe'
 function renderWithProviders(Components: ReactElement, customState?: any): RenderResult {
   const customStore = {
     ...customState,
-    providers: customState?.providers,
     safes: Map({
       safes: Map(buildSafesState(customState?.safes?.safes)),
       latestMasterContractVersion: customState?.safes?.latestMasterContractVersion || '1.3.0',
