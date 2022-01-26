@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { formatDateTime } from 'src/utils/date'
 import {
   ExpandedTxDetails,
-  isCustomTxInfo,
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
@@ -64,7 +63,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       )}
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          <DelegateCallWarning isKnown={isCustomTxInfo(txInfo) && !!txInfo?.to?.name} />
+          <DelegateCallWarning showWarning={!txData.trustedDelegateCallTarget} />
         </div>
       )}
       {isMultiSendTxInfo(txInfo) && (

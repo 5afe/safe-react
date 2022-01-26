@@ -23,7 +23,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
   const getTextValue = (value: string, key?: string) => <HexEncodedData limit={60} hexData={value} key={key} />
 
   const getArrayValue = (parentId: string, value: string[] | string) => (
-    <div>
+    <>
       [
       <NestedWrapper>
         {(value as string[]).map((currentValue, index) => {
@@ -38,7 +38,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
         })}
       </NestedWrapper>
       ]
-    </div>
+    </>
   )
 
   if (isArrayParameter(type) || Array.isArray(value)) {
@@ -51,7 +51,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
   if (isArrayParameter(type) && isAddress(type)) {
     return (
-      <div>
+      <>
         [
         <NestedWrapper>
           {(props.value as string[]).map((address, index) => {
@@ -68,7 +68,7 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
           })}
         </NestedWrapper>
         ]
-      </div>
+      </>
     )
   }
 

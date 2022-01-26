@@ -11,6 +11,7 @@ import {
 
 const TxInfo = styled.div`
   padding: 8px 0;
+  overflow-x: auto;
 `
 
 export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {

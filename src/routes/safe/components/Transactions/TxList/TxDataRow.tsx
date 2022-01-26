@@ -16,6 +16,11 @@ const FlexWrapper = styled.div<{ margin: number }>`
   }
 `
 
+const ValueWrapper = styled.div`
+  min-width: 50%;
+  flex-shrink: 0;
+`
+
 type TxDataRowType = {
   children?: ReactNode
   inlineType?: 'hash' | 'rawData' | 'address'
@@ -79,7 +84,11 @@ export const TxDataRow = ({
     <Text size="xl" as="span" color="placeHolder">
       {title}
     </Text>
-    {isArray && value && method && paramType && <Value method={method} type={paramType} value={value} />}
+    {isArray && value && method && paramType && (
+      <ValueWrapper>
+        <Value method={method} type={paramType} value={value} />
+      </ValueWrapper>
+    )}
     {generateInlineTypeValue(inlineType, value, hasExplorer)}
     {!inlineType && !isArray && value && (
       <Text size="xl" as="span">

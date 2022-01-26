@@ -7,7 +7,8 @@ import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selector
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
-import useSafeTxGas from '../useSafeTxGas'
+import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
+import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -152,9 +153,16 @@ export const TxParametersDetail = ({
               </TxParameterWrapper>
 
               <TxParameterWrapper>
-                <Text size="lg">Gas price</Text>
+                <Text size="lg">{isMaxFeeParam() ? 'Max fee per gas' : 'Gas price'}</Text>
                 <Text size="lg">{txParameters.ethGasPrice}</Text>
               </TxParameterWrapper>
+
+              {isMaxFeeParam() && (
+                <TxParameterWrapper>
+                  <Text size="lg">Max priority fee</Text>
+                  <Text size="lg">{txParameters.ethMaxPrioFee}</Text>
+                </TxParameterWrapper>
+              )}
             </>
           )}
           <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>

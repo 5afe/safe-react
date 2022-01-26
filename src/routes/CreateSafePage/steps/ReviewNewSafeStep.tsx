@@ -17,6 +17,7 @@ import {
   FIELD_NEW_SAFE_GAS_PRICE,
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_THRESHOLD,
+  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNERS_LIST,
 } from '../fields/createSafeFields'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -46,6 +47,7 @@ function ReviewNewSafeStep(): ReactElement | null {
   const safeName = createSafeFormValues[FIELD_CREATE_CUSTOM_SAFE_NAME] || defaultSafeValue
   const threshold = createSafeFormValues[FIELD_NEW_SAFE_THRESHOLD]
   const owners = createSafeFormValues[FIELD_SAFE_OWNERS_LIST]
+  const ownersWithENSName = createSafeFormValues[FIELD_SAFE_OWNER_ENS_LIST]
   const numberOfOwners = owners.length
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
@@ -110,8 +112,8 @@ function ReviewNewSafeStep(): ReactElement | null {
           </TitleContainer>
           <Hairline />
           {owners.map(({ nameFieldName, addressFieldName }) => {
-            const ownerName = createSafeFormValues[nameFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
+            const ownerName = createSafeFormValues[nameFieldName] || ownersWithENSName[ownerAddress]
             return (
               <React.Fragment key={`owner-${addressFieldName}`}>
                 <OwnersAddressesContainer>

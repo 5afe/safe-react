@@ -11,7 +11,7 @@ import {
   saveTxToHistory,
   tryOffChainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas, getGasParam, SafeTxGasEstimationProps } from 'src/logic/safe/transactions/gas'
+import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -19,7 +19,6 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
-import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
@@ -32,10 +31,10 @@ import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
 import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
 import { updateTransactionStatus } from './updateTransactionStatus'
 import { _getChainId } from 'src/config'
-import { getLastTransaction } from '../selectors/gatewayTransactions'
-import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { TxArgs } from '../models/types/transaction'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
+import { TxArgs } from '../models/types/transaction'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -48,14 +47,12 @@ export interface CreateTransactionArgs {
   txNonce?: number | string
   valueInWei: string
   safeTxGas?: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   delayExecution?: boolean
 }
 
 type RequiredTxProps = CreateTransactionArgs &
-  Required<
-    Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin' | 'delayExecution'>
-  >
+  Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin'>>
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
@@ -105,17 +102,24 @@ export class TxSender {
   dispatch: Dispatch
   safeInstance: GnosisSafe
   safeVersion: string
+  approveAndExecute: boolean
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications } = this
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isExecution, approveAndExecute = false } = this
 
     let txDetails: TransactionDetails | null = null
 
-    // Send the tx to the backend if
+    const isOffChainSigning = !isExecution && signature
+    const isOnChainSigning = isExecution && !signature
+
+    // If 1/? threshold and owner chooses to execute created tx immediately
+    const isImmediateExecution = isOnChainSigning && !approveAndExecute
+
+    // Propose the tx to the backend if an owner and
     // 1) It's a confirmation w/o exection
     // 2) It's a creation + execution w/o pre-approved signatures
-    if (!this.isExecution || !signature) {
+    if (isOffChainSigning || isImmediateExecution) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
@@ -193,15 +197,7 @@ export class TxSender {
     }
 
     const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
-
-    const sendParams: PayableTx = {
-      from,
-      value: 0,
-      gas: txProps.ethParameters?.ethGasLimit,
-      [getGasParam()]: txProps.ethParameters?.ethGasPriceInGWei,
-      nonce: txProps.ethParameters?.ethNonce,
-    }
-
+    const sendParams = createSendParams(from, txProps.ethParameters || {})
     const promiEvent = tx.send(sendParams)
 
     return new Promise((resolve, reject) => {
@@ -221,10 +217,11 @@ export class TxSender {
         const { hardwareWallet, smartContractWallet } = providerSelector(state)
         const signature = await this.onlyConfirm(hardwareWallet, smartContractWallet)
         this.onComplete(signature, confirmCallback)
-        return
       } catch (err) {
+        // User likely rejected transaction
         logError(Errors._814, err.message)
       }
+      return
     }
 
     // On-chain signature or execution
@@ -256,11 +253,6 @@ export class TxSender {
     // Use the user-provided none or the recommented nonce
     this.nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, this.safeVersion))
 
-    // Execute right away?
-    this.isExecution =
-      !txProps.delayExecution &&
-      (await shouldExecuteTransaction(this.safeInstance, this.nonce, getLastTransaction(state)))
-
     this.txProps = txProps
     this.dispatch = dispatch
   }
@@ -284,7 +276,6 @@ export const createTransaction = (
       operation: props.operation ?? Operation.CALL,
       navigateToTransactionsTab: props.navigateToTransactionsTab ?? true,
       origin: props.origin ?? null,
-      delayExecution: !!props.delayExecution,
     }
 
     // Populate instance vars
@@ -294,6 +285,11 @@ export const createTransaction = (
       logError(Errors._815, err.message)
       return
     }
+
+    // Execute right away?
+    sender.isExecution =
+      !props.delayExecution &&
+      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
     // Prepare a TxArgs object
     sender.txArgs = {
