@@ -1,10 +1,18 @@
 import { useSelector } from 'react-redux'
 import { currentSafe } from '../safe/store/selectors'
 
-type UseCanTxExecuteType = (preApprovingOwner?: string, txConfirmations?: number) => boolean
+type UseCanTxExecuteType = (
+  preApprovingOwner?: string,
+  txConfirmations?: number,
+  existingTxThreshold?: number,
+) => boolean
 
-const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirmations = 0) => {
-  const { threshold } = useSelector(currentSafe)
+const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirmations = 0, existingTxThreshold) => {
+  const safeInfo = useSelector(currentSafe)
+
+  // A tx might have been created with a threshold that is different than the current policy
+  // If an existing tx threshold isn't passed, take the current safe threshold
+  const threshold = existingTxThreshold ?? safeInfo.threshold
 
   if (txConfirmations >= threshold) {
     return true

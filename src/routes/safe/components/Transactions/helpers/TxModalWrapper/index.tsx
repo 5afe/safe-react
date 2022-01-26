@@ -30,6 +30,7 @@ type Props = {
   txTo?: string
   txType?: string
   txConfirmations?: List<Confirmation>
+  txThreshold?: number
   onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
   onClose?: () => void
   onBack?: (...rest: any) => void
@@ -63,6 +64,7 @@ export const TxModalWrapper = ({
   txTo,
   txType,
   txConfirmations,
+  txThreshold,
   onSubmit,
   onBack,
   onClose,
@@ -80,9 +82,8 @@ export const TxModalWrapper = ({
   const safeAddress = extractSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
-
-  const canTxExecute = useCanTxExecute(preApprovingOwner, Array.from(txConfirmations || []).length)
-
+  const confirmationsLen = Array.from(txConfirmations || []).length
+  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold)
   const doExecute = executionApproved && canTxExecute
 
   const {
@@ -110,6 +111,7 @@ export const TxModalWrapper = ({
   })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
+  const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
 
   const onEditClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
@@ -175,7 +177,7 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {showCheckbox && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}

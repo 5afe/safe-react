@@ -53,4 +53,18 @@ describe('useCanTxExecute tests', () => {
     const result = useCanTxExecute('', 2)
     expect(result).toBe(false)
   })
+
+  it(`should return true if 3/10 sigs and threshold 3 passed from an arg`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 10 }))
+
+    const result = useCanTxExecute('', 3, 3)
+    expect(result).toBe(true)
+  })
+
+  it(`should return false if 3/3 sigs and threshold 10 passed from an arg`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 3 }))
+
+    const result = useCanTxExecute('', 3, 10)
+    expect(result).toBe(false)
+  })
 })
