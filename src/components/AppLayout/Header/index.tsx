@@ -13,7 +13,7 @@ import {
   providerNameSelector,
   userAccountSelector,
 } from 'src/logic/wallets/store/selectors'
-import onboard, { loadLastUsedProvider, removeLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -38,11 +38,6 @@ const HeaderComponent = (): React.ReactElement => {
     return wallet.type === 'sdk' && wallet.dashboard
   }
 
-  const onDisconnect = () => {
-    removeLastUsedProvider()
-    onboard().walletReset()
-  }
-
   const getProviderInfoBased = () => {
     if (!loaded || !provider) {
       return <ProviderDisconnected />
@@ -59,7 +54,7 @@ const HeaderComponent = (): React.ReactElement => {
     return (
       <UserDetails
         connected={available}
-        onDisconnect={onDisconnect}
+        onDisconnect={onboard().walletReset}
         openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}

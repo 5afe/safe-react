@@ -3,7 +3,7 @@ import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
-import { getWeb3, setWeb3, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
+import { getWeb3, setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from './transactionDataCheck'
 import { getSupportedWallets } from './utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
@@ -23,10 +23,6 @@ export const loadLastUsedProvider = (): string | undefined => {
   return loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
 }
 
-export const removeLastUsedProvider = (): void => {
-  removeFromStorage(LAST_USED_PROVIDER_KEY)
-}
-
 const getNetworkName = (chainId: ChainId) => {
   // 'mainnet' is hardcoded in onboard v1
   const NETWORK_NAMES: Record<ChainId, string> = {
@@ -41,6 +37,8 @@ const hasENSSupport = (chainId: ChainId): boolean => {
   return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
 }
 
+let prevAddress = ''
+
 const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
     networkId: parseInt(chainId, 10),
@@ -49,35 +47,43 @@ const getOnboard = (chainId: ChainId): API => {
       wallet: async (wallet) => {
         if (wallet.provider) {
           setWeb3(wallet.provider)
+          instantiateSafeContracts()
         }
 
         if (wallet.name) {
           saveToStorage(LAST_USED_PROVIDER_KEY, wallet.name)
         }
 
-        const hardwareWallet = wallet.type === 'hardware'
-        const { address } = onboard().getState()
-        const smartContractWallet =
-          (!hardwareWallet && wallet.provider && address && (await isSmartContractWallet(getWeb3(), address))) || false
-
         store.dispatch(
           updateProviderWallet({
             name: wallet.name || '',
-            hardwareWallet,
-            smartContractWallet,
+            hardwareWallet: wallet.type === 'hardware',
+            smartContractWallet: await isSmartContractWallet(getWeb3(), onboard().getState().address),
           }),
         )
       },
       address: (address) => {
         store.dispatch(updateProviderAccount(address))
+
+        if (address) {
+          prevAddress = address
+        }
+
+        // Wallet disconnected
+        if (!address && prevAddress) {
+          resetWeb3()
+          removeFromStorage(LAST_USED_PROVIDER_KEY)
+        }
       },
       network: (networkId) => {
         store.dispatch(updateProviderNetwork(networkId?.toString() || ''))
         store.dispatch(closeSnackbar({ dismissAll: true }))
-
-        instantiateSafeContracts()
       },
-      ens: hasENSSupport(chainId) ? (ens) => store.dispatch(updateProviderEns(ens?.name || '')) : undefined,
+      ens: hasENSSupport(chainId)
+        ? (ens) => {
+            store.dispatch(updateProviderEns(ens?.name || ''))
+          }
+        : undefined,
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
