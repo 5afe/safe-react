@@ -156,7 +156,7 @@ const SendCollectible = ({
             <>
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
-                <SafeInfo />
+                <SafeInfo text="Sending from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -173,7 +173,7 @@ const SendCollectible = ({
                     tabIndex={0}
                   >
                     <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md">
+                      <Paragraph color="disabled" noMargin size="lg">
                         Recipient
                       </Paragraph>
                     </Row>
