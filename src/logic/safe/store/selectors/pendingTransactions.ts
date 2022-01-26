@@ -41,15 +41,6 @@ export const selectTxStatus = createSelector(
   pendingTxsByChain,
   (_: AppReduxState, tx: Transaction) => tx,
   (pendingTxs: PendingTransactionsState[ChainId], tx: Transaction): TransactionStatus => {
-    const isUnknownStatus = [
-      LocalTransactionStatus.AWAITING_CONFIRMATIONS,
-      LocalTransactionStatus.AWAITING_EXECUTION,
-    ].includes(tx.txStatus)
-
-    if (!isUnknownStatus) {
-      return tx.txStatus
-    }
-
     const { detailedExecutionInfo } = tx.txDetails || {}
 
     const safeTxHash =
