@@ -261,7 +261,7 @@ const SendFunds = ({
                     tabIndex={0}
                   >
                     <Row margin="sm">
-                      <Paragraph color="disabled" noMargin size="md">
+                      <Paragraph color="disabled" noMargin size="lg">
                         Recipient
                       </Paragraph>
                     </Row>

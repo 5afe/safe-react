@@ -195,7 +195,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
         {/* Recipient */}
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md">
+          <Paragraph color="disabled" noMargin size="lg">
             Recipient
           </Paragraph>
         </Row>

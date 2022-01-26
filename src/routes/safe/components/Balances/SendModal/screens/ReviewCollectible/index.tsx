@@ -104,10 +104,10 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
       <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Send collectible" />
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo />
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md">
+          <Paragraph color="disabled" noMargin size="lg">
             Recipient
           </Paragraph>
         </Row>
@@ -123,7 +123,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md">
+          <Paragraph color="disabled" noMargin size="lg">
             {textShortener({ charsStart: 40, charsEnd: 0 })(tx.assetName)}
           </Paragraph>
         </Row>
