@@ -38,6 +38,10 @@ const HeaderComponent = (): React.ReactElement => {
     return wallet.type === 'sdk' && wallet.dashboard
   }
 
+  const onDisconnect = () => {
+    onboard().walletReset()
+  }
+
   const getProviderInfoBased = () => {
     if (!loaded || !provider) {
       return <ProviderDisconnected />
@@ -54,7 +58,7 @@ const HeaderComponent = (): React.ReactElement => {
     return (
       <UserDetails
         connected={available}
-        onDisconnect={onboard().walletReset}
+        onDisconnect={onDisconnect}
         openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
