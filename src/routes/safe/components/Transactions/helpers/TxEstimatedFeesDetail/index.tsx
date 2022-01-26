@@ -1,10 +1,9 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
-import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
-import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible } from '../utils'
 import Bold from 'src/components/layout/Bold'
@@ -57,25 +56,9 @@ export const TxEstimatedFeesDetail = ({
   isTransactionExecution,
   isOffChainSignature,
 }: Props): ReactElement | null => {
-  const { nonce } = useSelector(currentSafe)
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
-
-  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
-
-  const { safeNonce = '' } = txParameters
-  const safeNonceNumber = parseInt(safeNonce, 10)
-  const lastQueuedTxNonce = useSelector(getLastTxNonce)
-
-  useEffect(() => {
-    if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) return
-    if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
-      setIsAccordionExpanded(true)
-    }
-    if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
-      setIsAccordionExpanded(true)
-    }
-  }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
     return null
