@@ -5,12 +5,13 @@ type UseCanTxExecuteType = (preApprovingOwner?: string, txConfirmations?: number
 
 const useCanTxExecute: UseCanTxExecuteType = (preApprovingOwner = '', txConfirmations = 0) => {
   const { threshold } = useSelector(currentSafe)
+
   if (txConfirmations >= threshold) {
     return true
   }
 
   // When having a preApprovingOwner it is needed one less confirmation to execute the tx
-  if (preApprovingOwner && txConfirmations) {
+  if (preApprovingOwner) {
     return txConfirmations + 1 === threshold
   }
 

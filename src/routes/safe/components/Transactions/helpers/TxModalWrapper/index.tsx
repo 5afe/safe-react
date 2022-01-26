@@ -41,6 +41,19 @@ const Container = styled.div`
   padding: 0 ${lg} ${md};
 `
 
+/**
+ * Determines which fields are displayed in the TxEditableParameters
+ */
+const getParametersStatus = (isCreation: boolean, doExecute: boolean): ParametersStatus => {
+  return isCreation
+    ? doExecute
+      ? 'ENABLED'
+      : 'ETH_HIDDEN' // allow editing nonce when creating
+    : doExecute
+    ? 'SAFE_DISABLED'
+    : 'DISABLED' // when not creating, nonce cannot be edited
+}
+
 export const TxModalWrapper = ({
   children,
   operation,
@@ -143,13 +156,7 @@ export const TxModalWrapper = ({
     onSubmit(txParameters, !doExecute)
   }
 
-  const parametersStatus: ParametersStatus = isCreation
-    ? doExecute
-      ? 'ENABLED'
-      : 'ETH_HIDDEN' // allow editing nonce when creating
-    : doExecute
-    ? 'SAFE_DISABLED'
-    : 'DISABLED' // when not creating, nonce cannot be edited
+  const parametersStatus = getParametersStatus(isCreation, doExecute)
 
   return (
     <EditableTxParameters
