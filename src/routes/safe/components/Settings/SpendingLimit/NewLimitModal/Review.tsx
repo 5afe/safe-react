@@ -267,10 +267,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             </Text>
           )}
         </Col>
-        <Col margin="lg">
+        <Col margin="md">
           <AddressInfo address={values.beneficiary} title="Beneficiary" />
         </Col>
-        <Col margin="lg">
+        <Col margin="md">
           <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
           {existentSpendingLimit && (
             <Row align="center" margin="md">
@@ -282,7 +282,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         </Col>
 
         {existentSpendingLimit && (
-          <Col margin="md">
+          <Col>
             <Text size="xl" color="error" center strong>
               You are about to replace an existent spending limit
             </Text>
