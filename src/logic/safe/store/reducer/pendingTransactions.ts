@@ -1,5 +1,4 @@
 import { Action, handleActions } from 'redux-actions'
-import { Set } from 'immutable'
 
 import session from 'src/utils/storage/session'
 import { PENDING_TRANSACTIONS_ACTIONS } from 'src/logic/safe/store/actions/pendingTransactions'
@@ -9,15 +8,9 @@ import { _getChainId } from 'src/config'
 export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
 
 type SafeTxHash = string
-export type PendingTransactionsState = Record<ChainId, Set<SafeTxHash>>
+export type PendingTransactionsState = Record<ChainId, Record<SafeTxHash, boolean>>
 
-// It is necessary to convert session-stored state back to a Set otherwise it is an array
-const sessionPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID)
-const initialPendingTxsState = sessionPendingTxsState
-  ? Object.entries(sessionPendingTxsState).reduce<PendingTransactionsState>((acc, [key, entries]) => {
-      return { ...acc, [key]: Set(entries) }
-    }, {})
-  : {}
+const initialPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID) || {}
 
 export type PendingTransactionPayload = {
   safeTxHash: string
@@ -32,12 +25,9 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
     ) => {
       const chainId = _getChainId()
 
-      const prevChainState = state[chainId] || Set<SafeTxHash>()
-      const newChainState = prevChainState.add(action.payload.safeTxHash)
-
       return {
         ...state,
-        [chainId]: newChainState,
+        [chainId]: { ...state[chainId], [action.payload.safeTxHash]: true },
       }
     },
     [PENDING_TRANSACTIONS_ACTIONS.REMOVE]: (
@@ -50,11 +40,9 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
         return state
       }
 
-      const prevChainState = Set(state[chainId] || Set<SafeTxHash>())
-      const newChainState = prevChainState.delete(action.payload.safeTxHash)
       return {
         ...state,
-        [chainId]: newChainState,
+        [chainId]: { ...state[chainId], [action.payload.safeTxHash]: false },
       }
     },
   },

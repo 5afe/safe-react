@@ -11,12 +11,12 @@ import { PendingTransactionsState, PENDING_TRANSACTIONS_ID } from 'src/logic/saf
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain'
 
-export const pendingTxsByChain = (state: AppReduxState): PendingTransactionsState => {
+export const allPendingTxs = (state: AppReduxState): PendingTransactionsState => {
   return state[PENDING_TRANSACTIONS_ID]
 }
 
-const pendingTxs = createSelector(
-  pendingTxsByChain,
+const pendingTxsByChain = createSelector(
+  allPendingTxs,
   currentChainId,
   (statuses, chainId): PendingTransactionsState[ChainId] => {
     return statuses[chainId]
@@ -24,10 +24,10 @@ const pendingTxs = createSelector(
 )
 
 export const isTxPending = createSelector(
-  pendingTxs,
+  pendingTxsByChain,
   (_: AppReduxState, safeTxHash: string) => safeTxHash,
   (pendingTxs: PendingTransactionsState[ChainId], safeTxHash: string): boolean => {
-    return pendingTxs ? pendingTxs.has(safeTxHash) : false
+    return pendingTxs ? !!pendingTxs?.[safeTxHash] : false
   },
 )
 
@@ -38,7 +38,7 @@ export const getSafeTxHashFromId = (id: string): string => {
 }
 
 export const selectTxStatus = createSelector(
-  pendingTxs,
+  pendingTxsByChain,
   (_: AppReduxState, tx: Transaction) => tx,
   (pendingTxs: PendingTransactionsState[ChainId], tx: Transaction): TransactionStatus => {
     const isUnknownStatus = [
@@ -57,6 +57,6 @@ export const selectTxStatus = createSelector(
         ? detailedExecutionInfo.safeTxHash
         : getSafeTxHashFromId(tx.id)
 
-    return pendingTxs && pendingTxs.has(safeTxHash) ? LocalTransactionStatus.PENDING : tx.txStatus
+    return !!pendingTxs?.[safeTxHash] ? LocalTransactionStatus.PENDING : tx.txStatus
   },
 )
