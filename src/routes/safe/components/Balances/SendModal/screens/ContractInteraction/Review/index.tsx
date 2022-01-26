@@ -7,7 +7,6 @@ import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -15,7 +14,6 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import {
@@ -26,30 +24,9 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import styled from 'styled-components'
-import { grey500 } from 'src/theme/variables'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
 
 const useStyles = makeStyles(styles)
-
-const AmountWrapper = styled.div`
-  width: 100%;
-  text-align: center;
-`
-
-const StyledBlock = styled(Block)`
-  background-color: ${grey500};
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & img {
-    width: 26px;
-  }
-`
 
 export type TransactionReviewType = {
   abi?: string
@@ -122,15 +99,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       <Hairline />
       <Block className={classes.formContainer}>
         <Row align="center" margin="md">
-          <AmountWrapper>
-            <StyledBlock>
-              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
-            </StyledBlock>
-            <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
-              {tx.value || 0}
-              {' ' + nativeCurrency.symbol}
-            </Paragraph>
-          </AmountWrapper>
+          <TransferAmount token={getEthAsToken('0')} text={`${tx.value || 0} ${nativeCurrency.symbol}`} />
         </Row>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="lg">

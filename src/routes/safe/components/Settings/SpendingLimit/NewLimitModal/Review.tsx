@@ -32,11 +32,7 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
-import styled from 'styled-components'
-import Block from 'src/components/layout/Block'
-import { grey500 } from 'src/theme/variables'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import Paragraph from 'src/components/layout/Paragraph'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -253,14 +249,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
       <Modal.Body>
         <Col align="center" margin="md">
-          <AmountWrapper>
-            <StyledBlock>
-              <img alt={txToken.name} onError={setImageToPlaceholder} src={txToken.logoUri || ''} />
-            </StyledBlock>
-            <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
-              {fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)} {txToken.symbol}
-            </Paragraph>
-          </AmountWrapper>
+          <TransferAmount
+            token={txToken}
+            text={`${fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)} ${txToken.symbol}`}
+          />
           {existentSpendingLimit && (
             <Text size="lg" color="error" center>
               Previous Amount: {existentSpendingLimit.amount}
@@ -292,23 +284,3 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     </TxModalWrapper>
   )
 }
-
-const AmountWrapper = styled.div`
-  width: 100%;
-  text-align: center;
-`
-
-const StyledBlock = styled(Block)`
-  background-color: ${grey500};
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & img {
-    width: 26px;
-  }
-`

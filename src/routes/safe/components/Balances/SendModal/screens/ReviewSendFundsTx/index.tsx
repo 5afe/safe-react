@@ -2,7 +2,6 @@ import { RecordOf } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -10,7 +9,6 @@ import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -21,7 +19,6 @@ import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchToken
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
@@ -34,27 +31,7 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
-import { grey500 } from 'src/theme/variables'
-
-const AmountWrapper = styled.div`
-  width: 100%;
-  text-align: center;
-`
-
-const StyledBlock = styled(Block)`
-  background-color: ${grey500};
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & img {
-    width: 26px;
-  }
-`
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
 
 const useStyles = makeStyles(styles)
 
@@ -108,7 +85,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const nativeCurrency = getNativeCurrency()
-  const tokens: any = useSelector(extendedSafeTokensSelector)
+  const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, getNativeCurrencyAddress()), [txToken])
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
@@ -172,22 +149,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
       <Block className={classes.container}>
         {/* Amount */}
-        <Row align="center" margin="md">
-          <AmountWrapper>
-            <StyledBlock>
-              <Img alt={txToken?.name as string} onError={setImageToPlaceholder} src={txToken?.logoUri} />
-            </StyledBlock>
-            <Paragraph
-              size="xl"
-              color="black600"
-              noMargin
-              style={{ marginTop: '8px' }}
-              data-testid={`amount-${txToken?.symbol as string}-review-step`}
-            >
-              {tx.amount} {txToken?.symbol}
-            </Paragraph>
-          </AmountWrapper>
-        </Row>
+        {txToken && (
+          <Row align="center" margin="md">
+            <TransferAmount token={txToken} text={`${tx.amount} ${txToken.symbol}`} />
+          </Row>
+        )}
 
         {/* SafeInfo */}
         <SafeInfo text="Sending from" />

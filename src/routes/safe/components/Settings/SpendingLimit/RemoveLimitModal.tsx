@@ -17,11 +17,7 @@ import { AddressInfo, ResetTimeInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import Paragraph from 'src/components/layout/Paragraph'
-import styled from 'styled-components'
-import Block from 'src/components/layout/Block'
-import { grey500 } from 'src/theme/variables'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -89,14 +85,10 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         <Modal.Body>
           <Col align="center" margin="md">
             {tokenInfo && (
-              <AmountWrapper>
-                <StyledBlock>
-                  <img alt={tokenInfo.name} onError={setImageToPlaceholder} src={tokenInfo.logoUri || ''} />
-                </StyledBlock>
-                <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
-                  {fromTokenUnit(spendingLimit.spent.amount, tokenInfo.decimals)} {tokenInfo.symbol}
-                </Paragraph>
-              </AmountWrapper>
+              <TransferAmount
+                token={tokenInfo}
+                text={`${fromTokenUnit(spendingLimit.spent.amount, tokenInfo.decimals)} ${tokenInfo.symbol}`}
+              />
             )}
           </Col>
           <Col margin="md">
@@ -110,23 +102,3 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     </Modal>
   )
 }
-
-const AmountWrapper = styled.div`
-  width: 100%;
-  text-align: center;
-`
-
-const StyledBlock = styled(Block)`
-  background-color: ${grey500};
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & img {
-    width: 26px;
-  }
-`

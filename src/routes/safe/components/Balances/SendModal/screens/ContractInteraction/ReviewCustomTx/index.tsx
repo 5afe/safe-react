@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import styled from 'styled-components'
 
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -9,7 +8,6 @@ import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -17,33 +15,12 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { grey500 } from 'src/theme/variables'
-
-const AmountWrapper = styled.div`
-  width: 100%;
-  text-align: center;
-`
-
-const StyledBlock = styled(Block)`
-  background-color: ${grey500};
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & img {
-    width: 26px;
-  }
-`
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -97,15 +74,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
       <Hairline />
       <Block className={classes.container}>
         <Row align="center" margin="md">
-          <AmountWrapper>
-            <StyledBlock>
-              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
-            </StyledBlock>
-            <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
-              {tx.value || 0}
-              {' ' + nativeCurrency.symbol}
-            </Paragraph>
-          </AmountWrapper>
+          <TransferAmount token={getEthAsToken('0')} text={`${tx.value || 0} ${nativeCurrency.symbol}`} />
         </Row>
         <SafeInfo text="Sending from" />
         <Divider withArrow />
