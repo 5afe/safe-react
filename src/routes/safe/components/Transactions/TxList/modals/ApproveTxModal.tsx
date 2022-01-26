@@ -228,6 +228,7 @@ export const ApproveTxModal = ({ onClose, isCancelTx = false, isOpen, transactio
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <TxModalWrapper
         operation={txInfo.operation}
+        txNonce={txInfo.nonce.toString()}
         txConfirmations={confirmations}
         txTo={txInfo.to}
         txData={txInfo.data}

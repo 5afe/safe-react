@@ -24,6 +24,7 @@ import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 type Props = {
   children: ReactNode
   operation?: Operation
+  txNonce?: string
   txData: string
   txValue?: string
   txTo?: string
@@ -43,6 +44,7 @@ const Container = styled.div`
 export const TxModalWrapper = ({
   children,
   operation,
+  txNonce,
   txData,
   txValue = '0',
   txTo,
@@ -157,6 +159,7 @@ export const TxModalWrapper = ({
       ethGasPrice={gasPriceFormatted}
       ethMaxPrioFee={gasMaxPrioFeeFormatted}
       safeTxGas={gasEstimation}
+      safeNonce={txNonce}
       parametersStatus={parametersStatus}
       closeEditModalCallback={onEditClose}
     >
