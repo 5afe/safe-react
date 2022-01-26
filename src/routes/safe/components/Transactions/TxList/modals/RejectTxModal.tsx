@@ -87,7 +87,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   return (
     <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <EditableTxParameters
-        isOffChainSignature={isOffChainSignature}
         isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}

@@ -339,7 +339,6 @@ export const ApproveTxModal = ({
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
-        isOffChainSignature={isOffChainSignature}
         isExecution={willExecute}
         parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}

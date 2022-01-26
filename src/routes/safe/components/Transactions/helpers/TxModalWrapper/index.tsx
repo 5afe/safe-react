@@ -132,7 +132,6 @@ export const TxModalWrapper = ({
 
   return (
     <EditableTxParameters
-      isOffChainSignature={isOffChainSignature}
       isExecution={doExecute}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
@@ -145,7 +144,7 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {!isSpendingLimitTx && (
+            {!isSpendingLimitTx && canTxExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
                 gasCost={canTxExecute ? gasCost : ''}
@@ -181,7 +180,7 @@ export const TxModalWrapper = ({
           )}
 
           {/* Footer */}
-          <Modal.Footer withoutBorder={!isSpendingLimitTx && submitStatus !== ButtonStatus.LOADING}>
+          <Modal.Footer withoutBorder>
             <Modal.Footer.Buttons
               cancelButtonProps={{ onClick: onBack || onClose, text: 'Back' }}
               confirmButtonProps={{
