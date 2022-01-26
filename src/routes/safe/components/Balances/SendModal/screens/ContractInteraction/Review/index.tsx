@@ -24,7 +24,7 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 
 const useStyles = makeStyles(styles)
 

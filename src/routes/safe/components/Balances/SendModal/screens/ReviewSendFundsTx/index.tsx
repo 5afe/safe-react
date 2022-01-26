@@ -31,7 +31,7 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
-import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 
 const useStyles = makeStyles(styles)
 

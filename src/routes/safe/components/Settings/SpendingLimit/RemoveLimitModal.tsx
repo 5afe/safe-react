@@ -17,7 +17,7 @@ import { AddressInfo, ResetTimeInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void

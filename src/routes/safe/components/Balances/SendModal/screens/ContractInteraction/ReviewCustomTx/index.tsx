@@ -20,7 +20,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount/TransferAmount'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
