@@ -260,10 +260,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
           )}
         </Col>
         <Col margin="md">
-          <AddressInfo address={values.beneficiary} title="Beneficiary" />
+          <AddressInfo address={values.beneficiary} title="Beneficiary" color="placeHolder" />
         </Col>
         <Col margin="md">
-          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
           {existentSpendingLimit && (
             <Row align="center" margin="md">
               <Text size="lg" color="error">

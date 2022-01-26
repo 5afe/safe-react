@@ -92,10 +92,10 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
             )}
           </Col>
           <Col margin="md">
-            <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} />
+            <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} color="placeHolder" />
           </Col>
           <Col>
-            <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+            <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
           </Col>
         </Modal.Body>
       </TxModalWrapper>
