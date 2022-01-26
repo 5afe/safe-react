@@ -23,7 +23,7 @@ import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadable
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
-import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import { AddressInfo, ResetTimeInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import Hairline from 'src/components/layout/Hairline'
@@ -32,6 +32,11 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
+import styled from 'styled-components'
+import Block from 'src/components/layout/Block'
+import { grey500 } from 'src/theme/variables'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -247,20 +252,23 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       <Hairline />
 
       <Modal.Body>
-        <Col margin="lg">
-          <AddressInfo address={values.beneficiary} title="Beneficiary" />
-        </Col>
-        <Col margin="lg">
-          <TokenInfo
-            amount={fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)}
-            title="Amount"
-            token={txToken}
-          />
+        <Col align="center" margin="md">
+          <AmountWrapper>
+            <StyledBlock>
+              <img alt={txToken.name} onError={setImageToPlaceholder} src={txToken.logoUri || ''} />
+            </StyledBlock>
+            <Paragraph size="xl" color="black600" noMargin style={{ marginTop: '8px' }}>
+              {fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)} {txToken.symbol}
+            </Paragraph>
+          </AmountWrapper>
           {existentSpendingLimit && (
-            <Text size="lg" color="error">
+            <Text size="lg" color="error" center>
               Previous Amount: {existentSpendingLimit.amount}
             </Text>
           )}
+        </Col>
+        <Col margin="lg">
+          <AddressInfo address={values.beneficiary} title="Beneficiary" />
         </Col>
         <Col margin="lg">
           <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
@@ -284,3 +292,23 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     </TxModalWrapper>
   )
 }
+
+const AmountWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`
+
+const StyledBlock = styled(Block)`
+  background-color: ${grey500};
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & img {
+    width: 26px;
+  }
+`
