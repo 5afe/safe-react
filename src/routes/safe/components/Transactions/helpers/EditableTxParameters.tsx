@@ -2,13 +2,9 @@ import { useState, useEffect } from 'react'
 import { TxParameters, useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EditTxParametersForm } from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 import { ParametersStatus } from './utils'
-import { useSelector } from 'react-redux'
-
-import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
-  isOffChainSignature: boolean
   isExecution: boolean
   parametersStatus?: ParametersStatus
   ethGasLimit?: TxParameters['ethGasLimit']
@@ -21,7 +17,6 @@ type Props = {
 
 export const EditableTxParameters = ({
   children,
-  isOffChainSignature,
   isExecution,
   parametersStatus,
   ethGasLimit,
@@ -33,8 +28,7 @@ export const EditableTxParameters = ({
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
   const [useManualValues, setUseManualValues] = useState(false)
-  const threshold = useSelector(currentSafeThreshold) || 1
-  const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
+  const defaultParameterStatus = isExecution ? 'ENABLED' : 'ETH_HIDDEN'
   const txParameters = useTransactionParameters({
     parameterStatus: parametersStatus || defaultParameterStatus,
     initialEthGasLimit: ethGasLimit,
@@ -88,7 +82,7 @@ export const EditableTxParameters = ({
       isExecution={isExecution}
       txParameters={txParameters}
       onClose={closeEditFormHandler}
-      parametersStatus={parametersStatus ? parametersStatus : defaultParameterStatus}
+      parametersStatus={parametersStatus ?? defaultParameterStatus}
     />
   ) : (
     children(txParameters, toggleStatus)
