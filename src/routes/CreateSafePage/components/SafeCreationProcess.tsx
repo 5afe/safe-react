@@ -35,7 +35,7 @@ import Button from 'src/components/layout/Button'
 import { boldFont } from 'src/theme/variables'
 import { WELCOME_ROUTE, history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { getExplorerInfo, getShortName } from 'src/config'
-import { getGasParam } from 'src/logic/safe/transactions/gas'
+import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
@@ -111,12 +111,13 @@ function SafeCreationProcess(): ReactElement {
         const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
         const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
+        const sendParams = createSendParams(userAddressAccount, {
+          ethGasLimit: gasLimit.toString(),
+          ethGasPriceInGWei: gasPrice,
+        })
+
         deploymentTx
-          .send({
-            from: userAddressAccount,
-            gas: gasLimit,
-            [getGasParam()]: gasPrice,
-          })
+          .send(sendParams)
           .once('transactionHash', (txHash) => {
             saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
               [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,

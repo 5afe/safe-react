@@ -11,7 +11,7 @@ import {
   saveTxToHistory,
   tryOffChainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas, getGasParam, SafeTxGasEstimationProps } from 'src/logic/safe/transactions/gas'
+import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -19,7 +19,6 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
-import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
@@ -32,10 +31,10 @@ import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
 import { isMultiSigExecutionDetails, LocalTransactionStatus } from '../models/types/gateway.d'
 import { updateTransactionStatus } from './updateTransactionStatus'
 import { _getChainId } from 'src/config'
-import { getLastTransaction } from '../selectors/gatewayTransactions'
-import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { TxArgs } from '../models/types/transaction'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
+import { getLastTransaction } from '../selectors/gatewayTransactions'
+import { TxArgs } from '../models/types/transaction'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -48,7 +47,7 @@ export interface CreateTransactionArgs {
   txNonce?: number | string
   valueInWei: string
   safeTxGas?: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   delayExecution?: boolean
 }
 
@@ -198,15 +197,7 @@ export class TxSender {
     }
 
     const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
-
-    const sendParams: PayableTx = {
-      from,
-      value: 0,
-      gas: txProps.ethParameters?.ethGasLimit,
-      [getGasParam()]: txProps.ethParameters?.ethGasPriceInGWei,
-      nonce: txProps.ethParameters?.ethNonce,
-    }
-
+    const sendParams = createSendParams(from, txProps.ethParameters || {})
     const promiEvent = tx.send(sendParams)
 
     return new Promise((resolve, reject) => {

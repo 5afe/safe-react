@@ -32,8 +32,5 @@ export const useStyles = makeStyles(
     modalDescription: {
       padding: md,
     },
-    accordionContainer: {
-      margin: `0 ${md}`,
-    },
   }),
 )

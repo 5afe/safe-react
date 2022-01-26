@@ -225,7 +225,10 @@ export const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const willExecute = isExecution && shouldExecute
+
   const {
     confirmations,
     data,
@@ -246,6 +249,7 @@ export const ApproveTxModal = ({
     gasLimit,
     gasPriceFormatted,
     gasCostFormatted,
+    gasMaxPrioFeeFormatted,
     txEstimationExecutionStatus,
     isOffChainSignature,
     isCreation,
@@ -258,10 +262,10 @@ export const ApproveTxModal = ({
     safeTxGas,
     operation,
     manualGasPrice,
+    manualMaxPrioFee,
     manualGasLimit,
-    isExecution,
+    isExecution: willExecute,
   })
-  const willExecute = isExecution && shouldExecute
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const approveTx = (txParameters: TxParameters) => {
@@ -309,13 +313,21 @@ export const ApproveTxModal = ({
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
+    const oldGasLimit = gasLimit
+    const newGasLimit = txParameters.ethGasLimit
+    const oldMaxPrioFee = gasMaxPrioFeeFormatted
+    const newMaxPrioFee = txParameters.ethMaxPrioFee
 
-    if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(txParameters.ethGasPrice)
+    if (oldGasPrice !== newGasPrice) {
+      setManualGasPrice(newGasPrice)
     }
 
-    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit)
+    if (oldMaxPrioFee !== newMaxPrioFee) {
+      setManualMaxPrioFee(newMaxPrioFee)
+    }
+
+    if (oldGasLimit !== newGasLimit) {
+      setManualGasLimit(newGasLimit)
     }
   }
 
@@ -327,6 +339,7 @@ export const ApproveTxModal = ({
         parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
+        ethMaxPrioFee={gasMaxPrioFeeFormatted}
         safeNonce={nonce.toString()}
         safeTxGas={safeTxGas}
         closeEditModalCallback={closeEditModalCallback}
