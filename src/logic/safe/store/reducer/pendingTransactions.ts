@@ -1,21 +1,23 @@
 import { Action, handleActions } from 'redux-actions'
+import { Set } from 'immutable'
 
 import session from 'src/utils/storage/session'
 import { PENDING_TRANSACTIONS_ACTIONS } from 'src/logic/safe/store/actions/pendingTransactions'
 import { ChainId } from 'src/config/chain.d'
 import { _getChainId } from 'src/config'
 
+export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
+
 type SafeTxHash = string
 export type PendingTransactionsState = Record<ChainId, Set<SafeTxHash>>
+
+const initialPendingTransactionsState: PendingTransactionsState = session.getItem(PENDING_TRANSACTIONS_ID) || {}
+export const initialPendingTransactionChainState: PendingTransactionsState[ChainId] = Set<SafeTxHash>()
 
 export type PendingTransactionPayload = {
   safeTxHash: string
   isBroadcast?: boolean
 }
-
-export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
-
-const initialPendingTransactionsState: PendingTransactionsState = session.getItem(PENDING_TRANSACTIONS_ID) || {}
 
 export const pendingTransactionsReducer = handleActions<PendingTransactionsState, PendingTransactionPayload>(
   {
@@ -25,8 +27,8 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
     ) => {
       const chainId = _getChainId()
 
-      const prevChainState = state[chainId] || new Set()
-      const newChainState = new Set([...prevChainState, action.payload.safeTxHash])
+      const prevChainState = state[chainId] || initialPendingTransactionChainState
+      const newChainState = prevChainState.add(action.payload.safeTxHash)
 
       return {
         ...state,
@@ -43,15 +45,8 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
         return state
       }
 
-      // Remove entire chain if the only left pending transaction
-      if (state[chainId].size === 1 && state[chainId].has(action.payload.safeTxHash)) {
-        const { [chainId]: _, ...newState } = state
-        return newState
-      }
-
-      // Remove singular pending transaction
-      const newChainState = new Set(state[chainId])
-      newChainState.delete(action.payload.safeTxHash)
+      const prevChainState = Set(state[chainId] || initialPendingTransactionChainState)
+      const newChainState = prevChainState.delete(action.payload.safeTxHash)
       return {
         ...state,
         [chainId]: newChainState,

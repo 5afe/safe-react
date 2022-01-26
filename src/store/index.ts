@@ -49,6 +49,7 @@ import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
 import { pendingTransactionsMiddleware } from 'src/logic/safe/store/middleware/pendingTransactionsMiddleware'
+import { gatewayTransactionsMiddleware } from 'src/logic/safe/store/middleware/gatewayTransactionsMiddleware'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
@@ -74,6 +75,7 @@ const enhancer = composeEnhancers(
     providerMiddleware,
     addressBookMiddleware,
     configMiddleware,
+    gatewayTransactionsMiddleware,
     pendingTransactionsMiddleware,
   ),
 )

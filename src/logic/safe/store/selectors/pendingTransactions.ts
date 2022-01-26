@@ -1,12 +1,17 @@
 import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { createSelector } from 'reselect'
+
 import { AppReduxState } from 'src/store'
 import {
   isMultiSigExecutionDetails,
   LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { PendingTransactionsState, PENDING_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/pendingTransactions'
+import {
+  initialPendingTransactionChainState,
+  PendingTransactionsState,
+  PENDING_TRANSACTIONS_ID,
+} from 'src/logic/safe/store/reducer/pendingTransactions'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain'
 
@@ -18,13 +23,13 @@ export const pendingTxs = createSelector(
   pendingTxsByChain,
   currentChainId,
   (statuses, chainId): PendingTransactionsState[ChainId] => {
-    return statuses[chainId] || new Set()
+    return statuses[chainId] || initialPendingTransactionChainState
   },
 )
 
 // @FIXME: this is a dirty hack.
 // Ask backend to add safeTxHash in tx list items.
-const getSafeTxHashFromId = (id: string): string => {
+export const getSafeTxHashFromId = (id: string): string => {
   return id.split('_').pop() || ''
 }
 
@@ -45,7 +50,7 @@ export const getLocalTxStatus = (pendingTxs: PendingTransactionsState[ChainId], 
       ? detailedExecutionInfo.safeTxHash
       : getSafeTxHashFromId(tx.id)
 
-  return pendingTxs?.has(safeTxHash) ? LocalTransactionStatus.PENDING : tx.txStatus
+  return pendingTxs.has(safeTxHash) ? LocalTransactionStatus.PENDING : tx.txStatus
 }
 
 export const selectTxStatus = createSelector(
