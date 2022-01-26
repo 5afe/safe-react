@@ -3,10 +3,10 @@ import { Action } from 'redux-actions'
 import { store as reduxStore } from 'src/store'
 import { ADD_HISTORY_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
-import { removePendingTransaction } from '../actions/pendingTransactions'
+import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { getSafeTxHashFromId, pendingTxs } from '../selectors/pendingTransactions'
-import { HistoryPayload } from '../reducer/gatewayTransactions'
+import { getSafeTxHashFromId, isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 
 export const gatewayTransactionsMiddleware =
   (store: typeof reduxStore) =>
@@ -16,17 +16,15 @@ export const gatewayTransactionsMiddleware =
 
     switch (action.type) {
       case ADD_HISTORY_TRANSACTIONS: {
-        const state = store.getState()
-        const currentChainPendingTxs = pendingTxs(state)
-
-        // Clear any successful transactions from the pending transactions list
+        // Clear any successful transactions from the pending list
         for (const value of action.payload.values) {
           if (!isTransactionSummary(value)) {
             continue
           }
 
           const safeTxHash = getSafeTxHashFromId(value.transaction.id)
-          if (currentChainPendingTxs.has(safeTxHash)) {
+
+          if (isTxPending(store.getState(), safeTxHash)) {
             store.dispatch(removePendingTransaction({ safeTxHash }))
           }
         }

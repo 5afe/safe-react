@@ -11,8 +11,13 @@ export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
 type SafeTxHash = string
 export type PendingTransactionsState = Record<ChainId, Set<SafeTxHash>>
 
-const initialPendingTransactionsState: PendingTransactionsState = session.getItem(PENDING_TRANSACTIONS_ID) || {}
-export const initialPendingTransactionChainState: PendingTransactionsState[ChainId] = Set<SafeTxHash>()
+// It is necessary to convert session-stored state back to a Set otherwise it is an array
+const sessionPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID)
+const initialPendingTxsState = sessionPendingTxsState
+  ? Object.entries(sessionPendingTxsState).reduce<PendingTransactionsState>((acc, [key, entries]) => {
+      return { ...acc, [key]: Set(entries) }
+    }, {})
+  : {}
 
 export type PendingTransactionPayload = {
   safeTxHash: string
@@ -27,7 +32,7 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
     ) => {
       const chainId = _getChainId()
 
-      const prevChainState = state[chainId] || initialPendingTransactionChainState
+      const prevChainState = state[chainId] || Set<SafeTxHash>()
       const newChainState = prevChainState.add(action.payload.safeTxHash)
 
       return {
@@ -45,7 +50,7 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
         return state
       }
 
-      const prevChainState = Set(state[chainId] || initialPendingTransactionChainState)
+      const prevChainState = Set(state[chainId] || Set<SafeTxHash>())
       const newChainState = prevChainState.delete(action.payload.safeTxHash)
       return {
         ...state,
@@ -53,5 +58,5 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       }
     },
   },
-  initialPendingTransactionsState,
+  initialPendingTxsState,
 )

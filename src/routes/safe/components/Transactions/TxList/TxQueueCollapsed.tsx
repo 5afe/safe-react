@@ -1,7 +1,7 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
-import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
 
+import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { useTransactionStatus } from './hooks/useTransactionStatus'
@@ -36,7 +36,7 @@ export const TxQueueCollapsed = ({ isGrouped = false, transaction }: TxQueuedCol
   const type = useTransactionType(transaction)
   const info = useAssetInfo(transaction.txInfo)
   const status = useTransactionStatus(transaction)
-  const txStatus = useLocalTxStatus(transaction)
+  const txStatus = useTxStatus(transaction)
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const votes = calculateVotes(executionInfo, isPending)
 
