@@ -38,12 +38,8 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       const chainId = _getChainId()
       const { safeTxHash } = action.payload
 
-      if (!state[chainId] || !state[chainId]?.[safeTxHash]) {
-        return state
-      }
-
       // Omit safeTxHash from the pending transactions on current chain
-      const { [safeTxHash]: _, ...newChainState } = state[chainId]
+      const { [safeTxHash]: _, ...newChainState } = state[chainId] || {}
 
       return {
         ...state,
