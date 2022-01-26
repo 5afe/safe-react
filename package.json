@@ -87,7 +87,7 @@
     "@gnosis.pm/safe-apps-sdk": "6.2.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^1.3.0",
-    "@gnosis.pm/safe-deployments": "^1.5.0",
+    "@gnosis.pm/safe-deployments": "^1.8.0",
     "@gnosis.pm/safe-react-components": "^0.9.0",
     "@gnosis.pm/safe-react-gateway-sdk": "2.8.3",
     "@material-ui/core": "^4.12.3",
