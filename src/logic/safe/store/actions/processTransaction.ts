@@ -35,7 +35,7 @@ interface ProcessTransactionArgs {
     refundReceiver: string
   }
   userAddress: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   thresholdReached: boolean
 }
 
