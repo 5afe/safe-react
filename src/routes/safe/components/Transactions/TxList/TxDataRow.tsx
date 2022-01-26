@@ -2,9 +2,10 @@ import { ReactElement, ReactNode } from 'react'
 import styled from 'styled-components'
 import { CopyToClipboardBtn, Text } from '@gnosis.pm/safe-react-components'
 
-import { InlineEthHashInfo, StyledGridRow } from './styled'
+import { InlineEthHashInfo, InlinePrefixedEthHashInfo, StyledGridRow } from './styled'
 import { getExplorerInfo } from 'src/config'
 import { getByteLength } from 'src/utils/getByteLength'
+import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -17,33 +18,70 @@ const FlexWrapper = styled.div<{ margin: number }>`
 
 type TxDataRowType = {
   children?: ReactNode
-  inlineType?: 'hash' | 'rawData'
+  inlineType?: 'hash' | 'rawData' | 'address'
   hasExplorer?: boolean
   title: string
   value?: string
+  isArray?: boolean
+  method?: string
+  paramType?: string
 }
 
-export const TxDataRow = ({ children, inlineType, hasExplorer = true, title, value }: TxDataRowType): ReactElement => (
+const generateInlineTypeValue = (
+  type: TxDataRowType['inlineType'],
+  value?: string,
+  hasExplorer?: boolean,
+): ReactElement | null => {
+  if (!value) return null
+  switch (type) {
+    case 'address':
+      return (
+        <InlinePrefixedEthHashInfo
+          textSize="xl"
+          hash={value}
+          shortenHash={8}
+          showCopyBtn
+          explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
+        />
+      )
+    case 'hash':
+      return (
+        <InlineEthHashInfo
+          textSize="xl"
+          hash={value}
+          shortenHash={8}
+          showCopyBtn
+          explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
+        />
+      )
+    case 'rawData':
+      return (
+        <FlexWrapper margin={5}>
+          <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
+          <CopyToClipboardBtn textToCopy={value} />
+        </FlexWrapper>
+      )
+  }
+  return null
+}
+
+export const TxDataRow = ({
+  children,
+  inlineType,
+  hasExplorer = true,
+  title,
+  value,
+  isArray,
+  method,
+  paramType,
+}: TxDataRowType): ReactElement => (
   <StyledGridRow>
-    <Text size="xl" as="span">
+    <Text size="xl" as="span" color="placeHolder">
       {title}
     </Text>
-    {value && inlineType === 'hash' && (
-      <InlineEthHashInfo
-        textSize="xl"
-        hash={value}
-        shortenHash={8}
-        showCopyBtn
-        explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
-      />
-    )}
-    {value && inlineType === 'rawData' && (
-      <FlexWrapper margin={5}>
-        <Text size="xl">{value ? getByteLength(value) : 0} bytes</Text>
-        <CopyToClipboardBtn textToCopy={value} />
-      </FlexWrapper>
-    )}
-    {!inlineType && value && (
+    {isArray && value && method && paramType && <Value method={method} type={paramType} value={value} />}
+    {generateInlineTypeValue(inlineType, value, hasExplorer)}
+    {!inlineType && !isArray && value && (
       <Text size="xl" as="span">
         {value}
       </Text>

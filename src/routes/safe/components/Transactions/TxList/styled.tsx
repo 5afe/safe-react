@@ -1,4 +1,7 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { lg, md, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -37,6 +40,10 @@ export const ActionAccordion = styled(Accordion)`
       border-top: none;
     }
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     &.Mui-expanded {
       &:last-child {
         border-bottom: none;
@@ -44,7 +51,7 @@ export const ActionAccordion = styled(Accordion)`
     }
 
     .MuiAccordionDetails-root {
-      padding: 16px;
+      padding: ${lg};
     }
   }
 `
@@ -89,12 +96,6 @@ export const StyledTransactions = styled.div`
     &:last-child {
       border-bottom: none;
     }
-
-    &:last-of-type {
-      div {
-        row-gap: 0px;
-      }
-    }
   }
 `
 
@@ -134,7 +135,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 `
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '1fr',
   type: '3fr',
   info: '3fr',
   time: '2.5fr',
@@ -343,10 +344,9 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   ${willBeReplaced};
 
   background-color: ${({ theme }) => theme.colors.separator} !important;
-  column-gap: 2px;
   display: grid;
+  gap: 2px;
   grid-template-columns: 2fr 1fr;
-  row-gap: 2px;
   width: 100%;
 
   & > div {
@@ -356,7 +356,6 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
     line-break: anywhere;
     overflow: hidden;
     word-break: break-all;
-    gap: 2px;
 
     & > div {
       padding: 20px 24px;
@@ -366,10 +365,46 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-summary {
     background-color: ${({ theme }) => theme.colors.white};
+    // grows to the height of tx-owner column
+    flex-grow: 1;
+    position: relative;
+
+    &.no-data {
+      row-span: 2;
+    }
+  }
+
+  .tx-creation {
+    // to occupy the unexistant "owners" column
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .tx-share {
-    float: right;
+    position: absolute;
+    top: 20px;
+    right: 24px;
+  }
+
+  .tx-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+
+    & > div:last-of-type {
+      flex: 1;
+    }
+
+    &.no-owners {
+      grid-column: span 2;
+    }
+
+    &.no-data {
+      gap: 0;
+    }
   }
 
   .tx-details {
@@ -384,9 +419,7 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-owners {
     padding: 24px;
-    grid-column-start: 2;
-    grid-row-end: span ${({ ownerRows }) => ownerRows || 2};
-    grid-row-start: 1;
+    grid-row-end: span 2;
   }
 
   .tx-details-actions {
@@ -478,7 +511,15 @@ export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
 
   span {
-    font-weight: normal;
+    font-weight: bold;
+  }
+`
+
+export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  display: inline-flex;
+
+  span {
+    font-weight: bold;
   }
 `
 
@@ -547,7 +588,23 @@ export const NoTransactions = styled.div`
 `
 export const StyledGridRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2.5fr;
+  gap: ${md};
   justify-content: flex-start;
-  max-width: 500px;
+  max-width: 800px;
+
+  & > * {
+    flex-shrink: 0;
+  }
+`
+
+export const StyledTxInfoDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${sm};
+`
+
+export const StyledDetailsTitle = styled(Text)<{ uppercase?: boolean }>`
+  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : null)};
+  letter-spacing: ${({ uppercase }) => (uppercase ? '1px' : null)};
 `

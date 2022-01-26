@@ -17,7 +17,7 @@ const SingleRow = styled.div`
 `
 
 type TxInfoDetailsProps = {
-  title: string
+  title: string | ReactElement
   address: string
   name?: string | undefined
   avatarUrl?: string | undefined
