@@ -1,9 +1,11 @@
 import semverSatisfies from 'semver/functions/satisfies'
 import Web3 from 'web3'
+import { Contract } from 'web3-eth-contract'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 import { namehash } from '@ethersproject/hash'
 import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
@@ -12,9 +14,7 @@ import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
-import { Contract } from 'web3-eth-contract'
-import { hasFeature } from '../safe/utils/safeVersion'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
