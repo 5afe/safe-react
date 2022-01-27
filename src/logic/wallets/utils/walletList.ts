@@ -1,7 +1,7 @@
 import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
 
-import { getRpcServiceUrl, getDisabledWallets, _getChainId } from 'src/config'
-import { WALLETS } from 'src/config/chain.d'
+import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
+import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
 type Wallet = WalletInitOptions & {
@@ -9,18 +9,18 @@ type Wallet = WalletInitOptions & {
   walletName: WALLETS
 }
 
-const wallets = (): Wallet[] => {
-  const rpcUrl = getRpcServiceUrl()
-  const chainId = _getChainId()
+const wallets = (chainId: ChainId): Wallet[] => {
+  // Ensure RPC matches chainId drilled from Onboard init
+  const { rpcUri } = getChainById(chainId)
+  const rpcUrl = getRpcServiceUrl(rpcUri)
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,
       preferred: true,
-      // as stated in the documentation, `infuraKey` is not mandatory if rpc is provided
-      rpc: { [chainId]: rpcUrl },
-      networkId: parseInt(chainId, 10),
+      // `infuraKey` is not mandatory if rpc is provided
+      rpc: { [chainId]: 'https://rpc.gnosischain.com/' },
       desktop: true,
       bridge: 'https://safe-walletconnect.gnosis.io/',
     },
@@ -71,14 +71,14 @@ const wallets = (): Wallet[] => {
   ]
 }
 
-export const getSupportedWallets = (): WalletInitOptions[] => {
+export const getSupportedWallets = (chainId: ChainId): WalletInitOptions[] => {
   if (window.isDesktop) {
-    return wallets()
-      .filter((wallet) => wallet.desktop)
+    return wallets(chainId)
+      .filter(({ desktop }) => desktop)
       .map(({ desktop, ...rest }) => rest)
   }
 
-  return wallets()
+  return wallets(chainId)
     .map(({ desktop, ...rest }) => rest)
-    .filter((w) => !getDisabledWallets().includes(w.walletName))
+    .filter(({ walletName }) => !getDisabledWallets().includes(walletName))
 }

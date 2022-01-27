@@ -87,7 +87,7 @@ const getOnboard = (chainId: ChainId): API => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: getSupportedWallets(),
+      wallets: getSupportedWallets(chainId),
     },
     walletCheck: [
       { checkName: 'derivationPath' },
