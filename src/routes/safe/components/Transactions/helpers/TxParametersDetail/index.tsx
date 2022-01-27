@@ -206,7 +206,7 @@ const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
         <TxParameterWrapper>
           <Text size="lg">Operation</Text>
           <Text size="lg">
-            {operation} {`(${operation === Operation.DELEGATE ? 'delegate' : 'call'})`}
+            {operation} {`(${Operation[operation].toLowerCase()})`}
           </Text>
         </TxParameterWrapper>
       )}
