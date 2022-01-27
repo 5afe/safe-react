@@ -20,7 +20,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
       walletName: WALLETS.WALLET_CONNECT,
       preferred: true,
       // `infuraKey` is not mandatory if rpc is provided
-      rpc: { [chainId]: 'https://rpc.gnosischain.com/' },
+      rpc: { [chainId]: rpcUrl },
       desktop: true,
       bridge: 'https://safe-walletconnect.gnosis.io/',
     },
