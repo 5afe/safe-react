@@ -16,7 +16,6 @@ const Wrapper = styled.span`
     vertical-align: text-bottom;
     margin-right: 0.15em;
   }
-}
 `
 
 const ChainIndicator = ({ chainId, hideCircle }: Props): React.ReactElement => {
