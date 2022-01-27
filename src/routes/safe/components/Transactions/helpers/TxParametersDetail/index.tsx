@@ -240,23 +240,19 @@ const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
         </TxParameterWrapper>
       )}
 
-      {confirmations?.map((confirmation, i) => {
-        if (!confirmation?.signature) {
-          return null
-        }
-        const { signature } = confirmation
-        return (
+      {confirmations
+        ?.filter(({ signature }) => signature)
+        .map(({ signature }, i) => (
           <TxParameterWrapper key={signature}>
             <Text size="lg">Signature {`${i + 1}`}</Text>
             <TxParameterEndWrapper>
               <Text size="lg" as="span">
                 {signature ? getByteLength(signature) : 0} bytes
               </Text>
-              <CopyToClipboardBtn textToCopy={signature} />
+              {signature && <CopyToClipboardBtn textToCopy={signature} />}
             </TxParameterEndWrapper>
           </TxParameterWrapper>
-        )
-      })}
+        ))}
 
       <TxParameterWrapper>
         <Text size="lg">hexData</Text>
