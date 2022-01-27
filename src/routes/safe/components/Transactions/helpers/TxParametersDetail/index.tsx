@@ -1,13 +1,28 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Text, Accordion, AccordionSummary, AccordionDetails, ButtonLink } from '@gnosis.pm/safe-react-components'
+import {
+  Text,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  ButtonLink,
+  Divider,
+  EthHashInfo,
+  CopyToClipboardBtn,
+} from '@gnosis.pm/safe-react-components'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
-import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { getLastTxNonce, getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ParametersStatus, areSafeParamsEnabled } from '../utils'
+import { ParametersStatus, areSafeParamsEnabled } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
+import { AppReduxState } from 'src/store'
+import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { getExplorerInfo } from 'src/config'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { getByteLength } from 'src/utils/getByteLength'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -34,6 +49,11 @@ const StyledButtonLink = styled(ButtonLink)`
   > p {
     margin-left: 0;
   }
+`
+
+const StyledDivider = styled(Divider)`
+  width: calc(100% + 32px);
+  margin-left: -16px;
 `
 
 type Props = {
@@ -66,9 +86,12 @@ export const TxParametersDetail = ({
   const safeNonceNumber = parseInt(safeNonce, 10)
   const lastQueuedTxNonce = useSelector(getLastTxNonce)
   const showSafeTxGas = useSafeTxGas()
+  const storedTx = useSelector((state: AppReduxState) => getTransactionsByNonce(state, safeNonceNumber || 0))
 
   useEffect(() => {
-    if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) return
+    if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) {
+      return
+    }
     if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
       setIsAccordionExpanded(true)
       setIsTxNonceOutOfOrder(true)
@@ -87,6 +110,10 @@ export const TxParametersDetail = ({
     setIsAccordionExpanded(!isAccordionExpanded)
   }
 
+  const getColor = () => {
+    return areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'
+  }
+
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
       <AccordionSummary>
@@ -99,34 +126,20 @@ export const TxParametersDetail = ({
           </StyledText>
 
           <TxParameterWrapper>
-            <ColoredText
-              size="lg"
-              isOutOfOrder={isTxNonceOutOfOrder}
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
+            <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={getColor()}>
               Safe nonce
             </ColoredText>
-            <ColoredText
-              size="lg"
-              isOutOfOrder={isTxNonceOutOfOrder}
-              color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
+            <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={getColor()}>
               {txParameters.safeNonce}
             </ColoredText>
           </TxParameterWrapper>
 
           {showSafeTxGas && (
             <TxParameterWrapper>
-              <Text
-                size="lg"
-                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-              >
+              <Text size="lg" color={getColor()}>
                 SafeTxGas
               </Text>
-              <Text
-                size="lg"
-                color={areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-              >
+              <Text size="lg" color={getColor()}>
                 {txParameters.safeTxGas}
               </Text>
             </TxParameterWrapper>
@@ -134,8 +147,124 @@ export const TxParametersDetail = ({
           <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
             Edit
           </StyledButtonLink>
+          {storedTx?.length > 0 && <TxAdvancedParametersDetail tx={storedTx[0]} />}
         </AccordionDetailsWrapper>
       </AccordionDetails>
     </Accordion>
+  )
+}
+
+const TxParameterEndWrapper = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px; // EthHashInfo uses a gap between the address and copy button
+`
+
+const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
+  const { txData, detailedExecutionInfo } = tx?.txDetails || {}
+
+  if (!txData || !detailedExecutionInfo) {
+    return null
+  }
+
+  return (
+    <>
+      <StyledDivider />
+
+      {txData.value && (
+        <TxParameterWrapper>
+          <Text size="lg">value</Text>
+          <Text size="lg">{txData.value}</Text>
+        </TxParameterWrapper>
+      )}
+
+      {txData.to.value && (
+        <TxParameterWrapper>
+          <Text size="lg">to</Text>
+          <PrefixedEthHashInfo
+            textSize="lg"
+            hash={txData.to.value}
+            showCopyBtn
+            explorerUrl={getExplorerInfo(txData.to.value)}
+            shortenHash={8}
+          />
+        </TxParameterWrapper>
+      )}
+
+      {isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo.safeTxHash && (
+        <TxParameterWrapper>
+          <Text size="lg">safeTxHash</Text>
+          <EthHashInfo textSize="lg" hash={detailedExecutionInfo.safeTxHash} showCopyBtn shortenHash={8} />
+        </TxParameterWrapper>
+      )}
+
+      {Object.values(Operation).includes(txData.operation) && (
+        <TxParameterWrapper>
+          <Text size="lg">Operation</Text>
+          <Text size="lg">
+            {txData.operation} {`(${txData.operation === Operation.DELEGATE ? 'delegate' : 'call'})`}
+          </Text>
+        </TxParameterWrapper>
+      )}
+
+      {isMultiSigExecutionDetails(detailedExecutionInfo) && (
+        <TxParameterWrapper>
+          <Text size="lg">baseGas</Text>
+          <Text size="lg">{detailedExecutionInfo.baseGas}</Text>
+        </TxParameterWrapper>
+      )}
+
+      {isMultiSigExecutionDetails(detailedExecutionInfo) && (
+        <TxParameterWrapper>
+          <Text size="lg">gasPrice</Text>
+          <Text size="lg">{detailedExecutionInfo.gasPrice}</Text>
+        </TxParameterWrapper>
+      )}
+
+      {isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo.gasToken && (
+        <TxParameterWrapper>
+          <Text size="lg">gasToken</Text>
+          <EthHashInfo textSize="lg" hash={detailedExecutionInfo.gasToken} showCopyBtn shortenHash={8} />
+        </TxParameterWrapper>
+      )}
+
+      {isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo.refundReceiver.value && (
+        <TxParameterWrapper>
+          <Text size="lg">refundReceiver</Text>
+          <EthHashInfo textSize="lg" hash={detailedExecutionInfo.refundReceiver.value} showCopyBtn shortenHash={8} />
+        </TxParameterWrapper>
+      )}
+
+      {isMultiSigExecutionDetails(detailedExecutionInfo) &&
+        detailedExecutionInfo.confirmations?.map((confirmation, i) => {
+          if (!confirmation?.signature) {
+            return null
+          }
+          const { signature } = confirmation
+          return (
+            <TxParameterWrapper key={signature}>
+              <Text size="lg">Signature {`${i + 1}`}</Text>
+              <TxParameterEndWrapper>
+                <Text size="lg" as="span">
+                  {signature ? getByteLength(signature) : 0} bytes
+                </Text>
+                <CopyToClipboardBtn textToCopy={signature} />
+              </TxParameterEndWrapper>
+            </TxParameterWrapper>
+          )
+        })}
+
+      {txData.hexData && (
+        <TxParameterWrapper>
+          <Text size="lg">hexData</Text>
+          <TxParameterEndWrapper>
+            <Text size="lg" as="span">
+              {txData.hexData ? getByteLength(txData.hexData) : 0} bytes{' '}
+            </Text>
+            <CopyToClipboardBtn textToCopy={txData.hexData} />
+          </TxParameterEndWrapper>
+        </TxParameterWrapper>
+      )}
+    </>
   )
 }
