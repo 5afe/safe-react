@@ -170,9 +170,11 @@ export const ReviewConfirm = ({
             txValue={fromTokenUnit(txValue, nativeCurrency.decimals)}
           />
 
-          <DecodeTxsWrapper>
-            <DecodeTxs txs={txs} decodedData={decodedData} />
-          </DecodeTxsWrapper>
+          {txs.length > 0 && (
+            <DecodeTxsWrapper>
+              <DecodeTxs txs={txs} decodedData={decodedData} />
+            </DecodeTxsWrapper>
+          )}
         </Container>
       </div>
     </TxModalWrapper>
