@@ -32,6 +32,7 @@ import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -143,7 +144,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       onBack={onPrev}
     >
       {/* Header */}
-      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send funds" />
 
       <Hairline />
 

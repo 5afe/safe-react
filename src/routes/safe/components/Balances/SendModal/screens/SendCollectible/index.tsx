@@ -28,6 +28,7 @@ import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -115,7 +116,7 @@ const SendCollectible = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="Step 1 of 2" title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send collectible" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {

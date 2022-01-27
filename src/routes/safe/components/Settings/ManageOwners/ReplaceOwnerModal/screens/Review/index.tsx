@@ -20,6 +20,7 @@ import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { Overline } from 'src/components/layout/Typography/Overline'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -80,7 +81,7 @@ export const ReviewReplaceOwnerModal = ({
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Replace owner" subTitle="Step 2 of 2" />
+      <ModalHeader onClose={onClose} title="Replace owner" subTitle={getStepTitle(2, 2)} />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>

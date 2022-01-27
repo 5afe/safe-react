@@ -46,6 +46,7 @@ import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -174,7 +175,7 @@ const SendFunds = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="Step 1 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send funds" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}

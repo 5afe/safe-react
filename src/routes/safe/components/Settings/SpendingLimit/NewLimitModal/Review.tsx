@@ -33,6 +33,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -244,7 +245,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       submitText="Submit"
       isConfirmDisabled={existentSpendingLimit === undefined}
     >
-      <ModalHeader onClose={onClose} title="New spending limit" subTitle="Step 2 of 2" />
+      <ModalHeader onClose={onClose} title="New spending limit" subTitle={getStepTitle(2, 2)} />
       <Hairline />
 
       <Modal.Body>

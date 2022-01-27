@@ -24,6 +24,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -101,7 +102,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   return (
     <TxModalWrapper txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send collectible" />
       <Hairline />
       <Block className={classes.container}>
         <SafeInfo text="Sending from" />

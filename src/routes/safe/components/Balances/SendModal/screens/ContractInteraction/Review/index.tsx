@@ -25,6 +25,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -95,7 +96,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       onSubmit={submitTx}
       onBack={onPrev}
     >
-      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Contract interaction" />
       <Hairline />
       <Block className={classes.formContainer}>
         <Row align="center" margin="md">

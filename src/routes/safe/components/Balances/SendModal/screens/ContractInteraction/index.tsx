@@ -21,6 +21,7 @@ import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -93,7 +94,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="Step 1 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Contract interaction" />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}

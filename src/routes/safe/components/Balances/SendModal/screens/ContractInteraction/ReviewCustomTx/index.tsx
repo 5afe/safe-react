@@ -21,6 +21,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -70,7 +71,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
 
   return (
     <TxModalWrapper txData={txData} txValue={txValue} txTo={txRecipient} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle="Step 2 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Contract interaction" />
       <Hairline />
       <Block className={classes.container}>
         <Row align="center" margin="md">
