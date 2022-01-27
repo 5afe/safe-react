@@ -131,7 +131,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
-  const customTxNoData = isCustomTxInfo(data.txInfo) && !data.txInfo.methodName && !data.txInfo.dataSize
+  const customTxNoData = isCustomTxInfo(data.txInfo) && !data.txInfo.methodName && !parseInt(data.txInfo.dataSize, 10)
   const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
   const noTxDataBlock = customTxNoData && !onChainRejection
   const txData = () =>

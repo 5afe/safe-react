@@ -53,7 +53,7 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
 
   return (
     <StyledTxInfoDetails>
-      <StyledDetailsTitle size="md" strong color="placeHolder">
+      <StyledDetailsTitle size="xl" strong>
         Modify spending limit:
       </StyledDetailsTitle>
       <StyledInfoBlock>
@@ -93,7 +93,7 @@ export const DeleteSpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
 
   return (
     <StyledTxInfoDetails>
-      <StyledDetailsTitle size="sm" strong color="placeHolder">
+      <StyledDetailsTitle size="sm" strong>
         Delete spending limit:
       </StyledDetailsTitle>
       <StyledInfoBlock>

@@ -602,6 +602,11 @@ export const StyledTxInfoDetails = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${sm};
+  margin-bottom: ${md};
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 `
 
 export const StyledDetailsTitle = styled(Text)<{ uppercase?: boolean }>`

@@ -14,8 +14,10 @@ import TxShareButton from './TxShareButton'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
+import { sm } from 'src/theme/variables'
 
 const StyledButtonLink = styled(ButtonLink)`
+  margin-top: ${sm};
   padding-left: 0;
 
   & > p {
@@ -81,7 +83,6 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
       {/* Advanced TxData */}
       {txData && (
         <>
-          <br />
           <StyledButtonLink onClick={toggleExpanded} color="primary" iconSize="sm" textSize="xl">
             Advanced Details
           </StyledButtonLink>
