@@ -5,7 +5,6 @@ import { Token } from 'src/logic/tokens/store/model/token'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import Paragraph from 'src/components/layout/Paragraph'
 import Block from 'src/components/layout/Block'
-import { grey500 } from 'src/theme/variables'
 
 const AmountWrapper = styled.div`
   width: 100%;
@@ -13,10 +12,7 @@ const AmountWrapper = styled.div`
 `
 
 const StyledBlock = styled(Block)`
-  background-color: ${grey500};
   width: 40px;
-  height: 40px;
-  border-radius: 50%;
   margin: auto;
   display: flex;
   align-items: center;
@@ -24,6 +20,7 @@ const StyledBlock = styled(Block)`
 
   & img {
     width: 26px;
+    height: auto;
   }
 `
 
