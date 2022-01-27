@@ -32,7 +32,7 @@ export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps):
         {subTitle}
       </Paragraph>
       <Row className={classes.chainIndicator}>
-        {connectedNetwork.chainId && <ChainIndicator chainId={connectedNetwork.chainId} noCircle />}
+        {connectedNetwork.chainId && <ChainIndicator chainId={connectedNetwork.chainId} hideCircle />}
       </Row>
       <IconButton disableRipple onClick={onClose}>
         <Close className={classes.closeIcon} />

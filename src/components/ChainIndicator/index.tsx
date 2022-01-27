@@ -7,8 +7,7 @@ import { ChainId } from 'src/config/chain.d'
 
 interface Props {
   chainId: ChainId
-  noLabel?: boolean
-  noCircle?: boolean
+  hideCircle?: boolean
 }
 
 const Wrapper = styled.span`
@@ -20,11 +19,11 @@ const Wrapper = styled.span`
 }
 `
 
-const ChainIndicator = ({ chainId, noLabel, noCircle }: Props): React.ReactElement => {
+const ChainIndicator = ({ chainId, hideCircle }: Props): React.ReactElement => {
   return (
     <Wrapper>
-      {!noCircle && <CircleDot networkId={chainId} />}
-      {!noLabel && getChainById(chainId).chainName}
+      {!hideCircle && <CircleDot networkId={chainId} />}
+      {getChainById(chainId).chainName}
     </Wrapper>
   )
 }
