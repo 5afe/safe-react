@@ -11,25 +11,22 @@ import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import onboard from 'src/logic/wallets/onboard'
+import { Skeleton } from '@material-ui/lab'
 
 const styles = () => ({
-  logo: {
-    justifyContent: 'center',
-  },
-  text: {
+  header: {
     letterSpacing: '-0.6px',
     flexGrow: 1,
     textAlign: 'center',
   },
-  connect: {
+  centerText: {
     textAlign: 'center',
-    marginTop: '60px',
   },
-  connectText: {
-    letterSpacing: '1px',
+  justifyCenter: {
+    justifyContent: 'center',
   },
-  img: {
-    margin: '0px 2px',
+  appStore: {
+    height: '35px',
   },
 })
 
@@ -37,39 +34,47 @@ const StyledCard = styled(Card)`
   padding: 20px;
   max-width: 240px;
 `
+
+const StyledDivider = styled(Divider)`
+  width: calc(100% + 40px);
+  margin-left: -20px;
+`
+
 const ConnectDetails = ({ classes }): ReactElement => {
   usePairing()
 
-  const getUri = () => onboard().getState().wallet.provider?.wc?.uri
+  const uri = onboard().getState().wallet.provider?.wc?.uri
 
   return (
     <StyledCard>
       <Row align="center" margin="lg">
-        <Paragraph className={classes.text} noMargin size="xl" weight="bolder">
+        <Paragraph className={classes.header} noMargin size="xl" weight="bolder">
           Connect a Wallet
         </Paragraph>
       </Row>
 
-      <Row className={classes.logo}>
+      <Row className={classes.justifyCenter} margin="lg">
         <KeyRing center circleSize={60} dotRight={20} dotSize={20} dotTop={50} keySize={28} mode="error" />
       </Row>
-      <Block className={classes.connect}>
+
+      <Block className={classes.centerText}>
         <ConnectButton data-testid="heading-connect-btn" />
       </Block>
 
-      <Divider />
+      <StyledDivider />
 
       <Row align="center" margin="lg">
-        <Paragraph className={classes.text} noMargin size="xl" weight="bolder">
+        <Paragraph className={classes.header} noMargin size="xl" weight="bolder">
           Connect to Mobile Safe
         </Paragraph>
       </Row>
 
-      {/* @TODO: Fix center and improve loading state */}
-      {getUri() ? <QRCode value={getUri()} style={{ justifyContent: 'center' }} /> : 'Loading...'}
+      <Row className={classes.justifyCenter}>
+        {uri ? <QRCode value={uri} size={120} /> : <Skeleton variant="rect" width={120} height={120} />}
+      </Row>
 
-      <Row align="center" margin="lg">
-        <Paragraph className={classes.text} noMargin size="sm" weight="bolder">
+      <Row>
+        <Paragraph className={classes.centerText} size="sm">
           Scan this code in the{' '}
           <Link href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">Gnosis Safe app</Link> to sign
           transactions with your mobile device.
@@ -79,15 +84,15 @@ const ConnectDetails = ({ classes }): ReactElement => {
         </Paragraph>
       </Row>
 
-      <Block className={classes.connect}>
+      <Row className={classes.justifyCenter}>
         <a href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">
           <img
             src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
             alt="Download on the App Store"
-            style={{ height: 35 }}
+            className={classes.appStore}
           />
         </a>
-      </Block>
+      </Row>
     </StyledCard>
   )
 }
