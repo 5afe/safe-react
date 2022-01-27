@@ -167,104 +167,105 @@ const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
     return null
   }
 
+  const { value, to, operation, hexData } = txData
+  const { safeTxHash, baseGas, gasPrice, gasToken, refundReceiver, confirmations } =
+    (isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo) || {}
+
   return (
     <>
       <StyledDivider />
 
-      {txData.value && (
+      {value && (
         <TxParameterWrapper>
           <Text size="lg">value</Text>
-          <Text size="lg">{txData.value}</Text>
+          <Text size="lg">{value}</Text>
         </TxParameterWrapper>
       )}
 
-      {txData.to.value && (
+      {to?.value && (
         <TxParameterWrapper>
           <Text size="lg">to</Text>
           <PrefixedEthHashInfo
             textSize="lg"
-            hash={txData.to.value}
+            hash={to.value}
             showCopyBtn
-            explorerUrl={getExplorerInfo(txData.to.value)}
+            explorerUrl={getExplorerInfo(to.value)}
             shortenHash={8}
           />
         </TxParameterWrapper>
       )}
 
-      {isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo.safeTxHash && (
+      {safeTxHash && (
         <TxParameterWrapper>
           <Text size="lg">safeTxHash</Text>
-          <EthHashInfo textSize="lg" hash={detailedExecutionInfo.safeTxHash} showCopyBtn shortenHash={8} />
+          <EthHashInfo textSize="lg" hash={safeTxHash} showCopyBtn shortenHash={8} />
         </TxParameterWrapper>
       )}
 
-      {Object.values(Operation).includes(txData.operation) && (
+      {Object.values(Operation).includes(operation) && (
         <TxParameterWrapper>
           <Text size="lg">Operation</Text>
           <Text size="lg">
-            {txData.operation} {`(${txData.operation === Operation.DELEGATE ? 'delegate' : 'call'})`}
+            {operation} {`(${operation === Operation.DELEGATE ? 'delegate' : 'call'})`}
           </Text>
         </TxParameterWrapper>
       )}
 
-      {isMultiSigExecutionDetails(detailedExecutionInfo) && (
+      {baseGas && (
         <TxParameterWrapper>
           <Text size="lg">baseGas</Text>
-          <Text size="lg">{detailedExecutionInfo.baseGas}</Text>
+          <Text size="lg">{baseGas}</Text>
         </TxParameterWrapper>
       )}
 
-      {isMultiSigExecutionDetails(detailedExecutionInfo) && (
+      {gasPrice && (
         <TxParameterWrapper>
           <Text size="lg">gasPrice</Text>
-          <Text size="lg">{detailedExecutionInfo.gasPrice}</Text>
+          <Text size="lg">{gasPrice}</Text>
         </TxParameterWrapper>
       )}
 
-      {isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo.gasToken && (
+      {gasToken && (
         <TxParameterWrapper>
           <Text size="lg">gasToken</Text>
-          <EthHashInfo textSize="lg" hash={detailedExecutionInfo.gasToken} showCopyBtn shortenHash={8} />
+          <EthHashInfo textSize="lg" hash={gasToken} showCopyBtn shortenHash={8} />
         </TxParameterWrapper>
       )}
 
-      {isMultiSigExecutionDetails(detailedExecutionInfo) && detailedExecutionInfo.refundReceiver.value && (
+      {refundReceiver?.value && (
         <TxParameterWrapper>
           <Text size="lg">refundReceiver</Text>
-          <EthHashInfo textSize="lg" hash={detailedExecutionInfo.refundReceiver.value} showCopyBtn shortenHash={8} />
+          <EthHashInfo textSize="lg" hash={refundReceiver.value} showCopyBtn shortenHash={8} />
         </TxParameterWrapper>
       )}
 
-      {isMultiSigExecutionDetails(detailedExecutionInfo) &&
-        detailedExecutionInfo.confirmations?.map((confirmation, i) => {
-          if (!confirmation?.signature) {
-            return null
-          }
-          const { signature } = confirmation
-          return (
-            <TxParameterWrapper key={signature}>
-              <Text size="lg">Signature {`${i + 1}`}</Text>
-              <TxParameterEndWrapper>
-                <Text size="lg" as="span">
-                  {signature ? getByteLength(signature) : 0} bytes
-                </Text>
-                <CopyToClipboardBtn textToCopy={signature} />
-              </TxParameterEndWrapper>
-            </TxParameterWrapper>
-          )
-        })}
+      {confirmations?.map((confirmation, i) => {
+        if (!confirmation?.signature) {
+          return null
+        }
+        const { signature } = confirmation
+        return (
+          <TxParameterWrapper key={signature}>
+            <Text size="lg">Signature {`${i + 1}`}</Text>
+            <TxParameterEndWrapper>
+              <Text size="lg" as="span">
+                {signature ? getByteLength(signature) : 0} bytes
+              </Text>
+              <CopyToClipboardBtn textToCopy={signature} />
+            </TxParameterEndWrapper>
+          </TxParameterWrapper>
+        )
+      })}
 
-      {txData.hexData && (
-        <TxParameterWrapper>
-          <Text size="lg">hexData</Text>
-          <TxParameterEndWrapper>
-            <Text size="lg" as="span">
-              {txData.hexData ? getByteLength(txData.hexData) : 0} bytes{' '}
-            </Text>
-            <CopyToClipboardBtn textToCopy={txData.hexData} />
-          </TxParameterEndWrapper>
-        </TxParameterWrapper>
-      )}
+      <TxParameterWrapper>
+        <Text size="lg">hexData</Text>
+        <TxParameterEndWrapper>
+          <Text size="lg" as="span">
+            {hexData ? getByteLength(hexData) : 0} bytes
+          </Text>
+          {hexData && <CopyToClipboardBtn textToCopy={hexData} />}
+        </TxParameterEndWrapper>
+      </TxParameterWrapper>
     </>
   )
 }
