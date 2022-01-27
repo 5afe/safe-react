@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import {
@@ -52,7 +52,7 @@ const StyledButtonLink = styled(ButtonLink)`
 `
 
 const StyledDivider = styled(Divider)`
-  width: calc(100% + 32px);
+  margin-right: -16px;
   margin-left: -16px;
 `
 
@@ -102,16 +102,17 @@ export const TxParametersDetail = ({
     }
   }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
+  const color = useMemo(
+    () => (areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'),
+    [parametersStatus, defaultParameterStatus],
+  )
+
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
     return null
   }
 
   const onChangeExpand = () => {
     setIsAccordionExpanded(!isAccordionExpanded)
-  }
-
-  const getColor = () => {
-    return areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'
   }
 
   return (
@@ -126,20 +127,20 @@ export const TxParametersDetail = ({
           </StyledText>
 
           <TxParameterWrapper>
-            <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={getColor()}>
+            <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={color}>
               Safe nonce
             </ColoredText>
-            <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={getColor()}>
+            <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={color}>
               {txParameters.safeNonce}
             </ColoredText>
           </TxParameterWrapper>
 
           {showSafeTxGas && (
             <TxParameterWrapper>
-              <Text size="lg" color={getColor()}>
+              <Text size="lg" color={color}>
                 SafeTxGas
               </Text>
-              <Text size="lg" color={getColor()}>
+              <Text size="lg" color={color}>
                 {txParameters.safeTxGas}
               </Text>
             </TxParameterWrapper>
