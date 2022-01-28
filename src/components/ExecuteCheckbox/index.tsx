@@ -3,12 +3,13 @@ import { Tooltip } from '@gnosis.pm/safe-react-components'
 import { Checkbox, FormControlLabel } from '@material-ui/core'
 import styled from 'styled-components'
 
+import { sm } from 'src/theme/variables'
 import Row from 'src/components/layout/Row'
 import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info.svg'
 
 const StyledFormControlLabel = styled(FormControlLabel)`
-  margin-right: 8px;
+  margin-right: ${sm};
 
   & .MuiFormControlLabel-label {
     font-size: 16px;
