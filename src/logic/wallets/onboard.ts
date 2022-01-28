@@ -4,19 +4,19 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
 import { getWeb3, setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
-import transactionDataCheck from './transactionDataCheck'
-import { getSupportedWallets } from './utils/walletList'
+import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
+import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { store } from 'src/store'
+import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
-import closeSnackbar from '../notifications/store/actions/closeSnackbar'
+import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
 import getPairingModule from 'src/logic/wallets/pairing/module'
-import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
@@ -37,10 +37,10 @@ const getNetworkName = (chainId: ChainId) => {
 }
 
 const hasENSSupport = (chainId: ChainId): boolean => {
-  return getChains().some((chain) => {
-    chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP)
-  })
+  return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
 }
+
+let prevAddress = ''
 
 const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
@@ -48,11 +48,9 @@ const getOnboard = (chainId: ChainId): API => {
     networkName: getNetworkName(chainId),
     subscriptions: {
       wallet: async (wallet) => {
-        // Initialise web3 according to provider
         if (wallet.provider) {
           setWeb3(wallet.provider)
-        } else {
-          resetWeb3()
+          instantiateSafeContracts()
         }
 
         // Cache wallet for reconnection
@@ -70,12 +68,20 @@ const getOnboard = (chainId: ChainId): API => {
       },
       address: (address) => {
         store.dispatch(updateProviderAccount(address))
+
+        if (address) {
+          prevAddress = address
+        }
+
+        // Wallet disconnected
+        if (!address && prevAddress) {
+          resetWeb3()
+          removeFromStorage(LAST_USED_PROVIDER_KEY)
+        }
       },
       network: (networkId) => {
         store.dispatch(updateProviderNetwork(networkId?.toString() || ''))
         store.dispatch(closeSnackbar({ dismissAll: true }))
-
-        instantiateSafeContracts()
       },
       ens: hasENSSupport(chainId)
         ? (ens) => {
@@ -85,7 +91,7 @@ const getOnboard = (chainId: ChainId): API => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: [getPairingModule(chainId), ...getSupportedWallets()],
+      wallets: [getPairingModule(chainId), ...getSupportedWallets(chainId)],
     },
     walletCheck: [
       { checkName: 'derivationPath' },

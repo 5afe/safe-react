@@ -89,6 +89,8 @@ export const switchWalletChain = async (): Promise<void> => {
   } catch (e) {
     e.log()
     // Fallback to the onboard popup if switching isn't supported
+    // walletSelect must be called first: https://docs.blocknative.com/onboard#onboard-user
     await onboard().walletSelect()
+    await onboard().walletCheck()
   }
 }

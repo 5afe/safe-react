@@ -8,6 +8,7 @@ import { trackAnalyticsEvent, WALLET_EVENTS } from 'src/utils/googleAnalytics'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ProviderPayloads } from 'src/logic/wallets/store/reducer'
 import { providerSelector } from '../selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 let hasWallet = false
 let hasAccount = false
@@ -39,7 +40,7 @@ const providerMiddleware =
     }
 
     const state = store.getState()
-    const { available, loaded, name } = providerSelector(state)
+    const { available, loaded, name, network } = providerSelector(state)
 
     // @TODO: `loaded` flag that is/was always set to true - should be moved to wallet connection catch
     // Wallet, account and network did not successfully load
@@ -50,10 +51,15 @@ const providerMiddleware =
     }
 
     if (available) {
-      trackAnalyticsEvent({
-        ...WALLET_EVENTS.CONNECT_WALLET,
-        label: name,
-      })
+      // Only track when wallet connects to same chain as chain displayed in UI
+      if (currentChainId(state) === network) {
+        const event = {
+          ...WALLET_EVENTS.CONNECT_WALLET,
+          label: name,
+        }
+
+        trackAnalyticsEvent(event)
+      }
     } else {
       store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
     }
