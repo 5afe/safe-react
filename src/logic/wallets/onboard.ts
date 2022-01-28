@@ -17,7 +17,6 @@ import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
 import getPairingModule from 'src/logic/wallets/pairing/module'
-import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
@@ -54,7 +53,7 @@ const getOnboard = (chainId: ChainId): API => {
         }
 
         // Cache wallet for reconnection
-        if (wallet.name && !isPairingModule(wallet)) {
+        if (wallet.name) {
           saveToStorage(LAST_USED_PROVIDER_KEY, wallet.name)
         }
 
