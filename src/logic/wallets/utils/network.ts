@@ -5,6 +5,7 @@ import { numberToHex } from 'web3-utils'
 import { getChainInfo, getExplorerUrl, getPublicRpcUrl, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
+import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
@@ -17,14 +18,19 @@ const WALLET_ERRORS = {
  * @see https://github.com/MetaMask/metamask-extension/pull/10905
  */
 const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
-  await wallet.provider.request({
-    method: 'wallet_switchEthereumChain',
-    params: [
-      {
-        chainId: numberToHex(chainId),
-      },
-    ],
-  })
+  // Note: This could support WC too
+  if (isPairingModule(wallet)) {
+    wallet.provider.wc.updateSession({ chainId, accounts: wallet.provider.wc.accounts })
+  } else {
+    await wallet.provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [
+        {
+          chainId: numberToHex(chainId),
+        },
+      ],
+    })
+  }
 }
 
 /**
@@ -35,7 +41,7 @@ const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> =>
 const requestAdd = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
   const { chainName, nativeCurrency } = getChainInfo()
 
-  await wallet.provider?.request({
+  await wallet.provider.request({
     method: 'wallet_addEthereumChain',
     params: [
       {

@@ -15,9 +15,11 @@ import { Skeleton } from '@material-ui/lab'
 
 const styles = () => ({
   header: {
-    letterSpacing: '-0.6px',
+    letterSpacing: '0.4px',
     flexGrow: 1,
     textAlign: 'center',
+    fontWeight: 600,
+    fontSize: '18px',
   },
   centerText: {
     textAlign: 'center',
@@ -48,7 +50,7 @@ const ConnectDetails = ({ classes }): ReactElement => {
   return (
     <StyledCard>
       <Row align="center" margin="lg">
-        <Paragraph className={classes.header} noMargin size="xl" weight="bolder">
+        <Paragraph className={classes.header} noMargin>
           Connect a Wallet
         </Paragraph>
       </Row>
@@ -64,7 +66,7 @@ const ConnectDetails = ({ classes }): ReactElement => {
       <StyledDivider />
 
       <Row align="center" margin="lg">
-        <Paragraph className={classes.header} noMargin size="xl" weight="bolder">
+        <Paragraph className={classes.header} noMargin>
           Connect to Mobile Safe
         </Paragraph>
       </Row>
