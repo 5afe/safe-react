@@ -32,6 +32,7 @@ import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
+import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -100,6 +101,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
+  useThirdPartyCookies()
 
   useEffect(() => {
     const clearTimeouts = () => {
