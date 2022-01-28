@@ -81,7 +81,9 @@ const DevTools = (): ReactElement => {
     return hasFunds
   }
 
-  const debouncedCreatedQueuedTx = useDebounce(createQueuedTx, 1000)
+  const debouncedCreatedQueuedTx = useDebounce(() => {
+    createQueuedTx(safeAddress, threshold)
+  }, 1000)
 
   return (
     <>
@@ -101,7 +103,7 @@ const DevTools = (): ReactElement => {
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => debouncedCreatedQueuedTx(safeAddress, threshold)}
+          onClick={() => debouncedCreatedQueuedTx()}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
