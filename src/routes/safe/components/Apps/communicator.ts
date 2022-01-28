@@ -35,6 +35,10 @@ class AppCommunicator {
   }
 
   private isValidMessage = (msg: SDKMessageEvent): boolean => {
+    if (msg.data.hasOwnProperty('isCookieEnabled')) {
+      return true
+    }
+
     // @ts-expect-error .parent doesn't exist on some possible types
     const sentFromIframe = msg.source.parent === window.parent
     const knownMethod = Object.values(Methods).includes(msg.data.method)

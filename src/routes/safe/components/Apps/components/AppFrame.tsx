@@ -101,7 +101,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
-  useThirdPartyCookies()
+  const { thirdPartyCookiesDisabled } = useThirdPartyCookies()
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -309,6 +309,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   return (
     <AppWrapper>
+      {thirdPartyCookiesDisabled && <p>Third party cookies disabled</p>}
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>

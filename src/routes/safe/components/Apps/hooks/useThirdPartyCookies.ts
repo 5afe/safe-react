@@ -1,37 +1,42 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+
+const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
+  const iframeElement: HTMLIFrameElement = document.createElement('iframe')
+
+  iframeElement.src = uri
+  iframeElement.setAttribute('style', 'display:none')
+  iframeElement.onload = onload
+
+  return iframeElement
+}
 
 const useThirdPartyCookies = (): { thirdPartyCookiesDisabled: boolean } => {
   const iframeRef = useRef<HTMLIFrameElement>()
   const [thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled] = useState<boolean>(false)
 
-  useEffect(() => {
-    const messageHandler = (event) => {
-      // check for trusted origins here
-      console.log('DATA', event.data)
-      try {
-        if (event.data.result) {
-          console.log('THE DATA:', event.data.result)
-          setThirdPartyCookiesDisabled(!event.data.result)
-          window.removeEventListener('message', messageHandler)
-          document.body.removeChild(iframeRef.current as Node)
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    }
+  const messageHandler = useCallback((event: MessageEvent) => {
+    const data = event.data
 
+    try {
+      if (data.hasOwnProperty('isCookieEnabled')) {
+        setThirdPartyCookiesDisabled(!data.isCookieEnabled)
+        window.removeEventListener('message', messageHandler)
+        document.body.removeChild(iframeRef.current as Node)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }, [])
+
+  useEffect(() => {
     window.addEventListener('message', messageHandler)
 
-    const frame: HTMLIFrameElement = document.createElement('iframe')
-    iframeRef.current = frame
-    frame.src = 'https://r0ucr.csb.app/'
-    frame.setAttribute('sandbox', 'allow-scripts allow-same-origin')
-    frame.setAttribute('style', 'display:none')
-    frame.onload = () => {
-      frame?.contentWindow?.postMessage({ test: 'cookie' }, '*')
-    }
-    document.body.appendChild(frame)
-  }, [])
+    const iframeElement: HTMLIFrameElement = createIframe('https://third-party-cookies-test.vercel.app', () => {
+      iframeElement?.contentWindow?.postMessage({ test: 'cookie' }, '*')
+    })
+
+    document.body.appendChild(iframeElement)
+  }, [messageHandler])
 
   return { thirdPartyCookiesDisabled }
 }
