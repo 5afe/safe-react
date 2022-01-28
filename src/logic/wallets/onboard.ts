@@ -120,5 +120,6 @@ export const checkWallet = async (): Promise<boolean> => {
     switchNetwork(onboard().getState().wallet, _getChainId()).catch((e) => e.log())
   }
 
+  await onboard().walletSelect()
   return await onboard().walletCheck()
 }
