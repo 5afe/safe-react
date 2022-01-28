@@ -66,9 +66,13 @@ const StyledDivider = styled(Divider)`
 `
 
 type TxParam = string | ReactElement
-type TxParameterProps = { name: TxParam; value: TxParam; color?: ThemeColors } & ColoredTextProps
-const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement => {
-  const getEl = (prop: TxParam) => {
+type TxParameterProps = { name: TxParam; value?: TxParam | null; color?: ThemeColors } & ColoredTextProps
+const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement | null => {
+  if (value == null || value === '') {
+    return null
+  }
+
+  const getEl = (prop?: TxParam) => {
     return typeof prop === 'string' ? (
       <ColoredText size="lg" {...rest}>
         {prop}
@@ -77,6 +81,7 @@ const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement =
       prop
     )
   }
+
   return (
     <TxParameterWrapper>
       {getEl(name)}
@@ -186,13 +191,11 @@ const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
   return (
     <>
       <StyledDivider />
-
-      {value && <TxParameter name="value" value={value} />}
-
-      {to?.value && (
-        <TxParameter
-          name="to"
-          value={
+      <TxParameter name="value" value={value} />
+      <TxParameter
+        name="to"
+        value={
+          to?.value && (
             <PrefixedEthHashInfo
               textSize="lg"
               hash={to.value}
@@ -200,39 +203,28 @@ const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
               explorerUrl={getExplorerInfo(to.value)}
               shortenHash={8}
             />
-          }
-        />
-      )}
-
-      {safeTxHash && (
-        <TxParameter
-          name="safeTxHash"
-          value={<EthHashInfo textSize="lg" hash={safeTxHash} showCopyBtn shortenHash={8} />}
-        />
-      )}
-
+          )
+        }
+      />
+      <TxParameter
+        name="safeTxHash"
+        value={safeTxHash && <EthHashInfo textSize="lg" hash={safeTxHash} showCopyBtn shortenHash={8} />}
+      />
       {Object.values(Operation).includes(operation) && (
         <TxParameter name="Operation" value={`${operation} (${Operation[operation].toLowerCase()})`} />
       )}
-
-      {baseGas && <TxParameter name="baseGas" value={baseGas} />}
-
-      {gasPrice && <TxParameter name="gasPrice" value={gasPrice} />}
-
-      {gasToken && (
-        <TxParameter
-          name="gasToken"
-          value={<EthHashInfo textSize="lg" hash={gasToken} showCopyBtn shortenHash={8} />}
-        />
-      )}
-
-      {refundReceiver?.value && (
-        <TxParameter
-          name="refundReceiver"
-          value={<EthHashInfo textSize="lg" hash={refundReceiver.value} showCopyBtn shortenHash={8} />}
-        />
-      )}
-
+      <TxParameter name="baseGas" value={baseGas} />
+      <TxParameter name="gasPrice" value={gasPrice} />
+      <TxParameter
+        name="gasToken"
+        value={gasToken && <EthHashInfo textSize="lg" hash={gasToken} showCopyBtn shortenHash={8} />}
+      />
+      <TxParameter
+        name="refundReceiver"
+        value={
+          refundReceiver?.value && <EthHashInfo textSize="lg" hash={refundReceiver.value} showCopyBtn shortenHash={8} />
+        }
+      />
       {confirmations
         ?.filter(({ signature }) => signature)
         .map(({ signature }, i) => (
@@ -249,7 +241,6 @@ const TxAdvancedParametersDetail = ({ tx }: { tx: Transaction }) => {
             }
           />
         ))}
-
       <TxParameter
         name="hexData"
         value={
