@@ -1,9 +1,11 @@
 import semverSatisfies from 'semver/functions/satisfies'
 import Web3 from 'web3'
+import { Contract } from 'web3-eth-contract'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 import { namehash } from '@ethersproject/hash'
 import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
@@ -12,8 +14,7 @@ import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
-import { Errors, logError } from '../exceptions/CodedException'
-import { Contract } from 'web3-eth-contract'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -119,6 +120,10 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 }
 
 export const reverseENSLookup = async (address: string): Promise<string> => {
+  if (!hasFeature(FEATURES.DOMAIN_LOOKUP)) {
+    return ''
+  }
+
   const web3 = getWeb3ReadOnly()
   const lookup = address.toLowerCase().substr(2) + '.addr.reverse'
   const nh = namehash(lookup)
@@ -128,8 +133,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
   try {
     ResolverContract = await web3.eth.ens.getResolver(lookup)
   } catch (err) {
-    logError(Errors._103, err.message)
-    return name
+    return ''
   }
 
   let verifiedAddress = ''
@@ -137,7 +141,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
     name = await ResolverContract.methods.name(nh).call()
     verifiedAddress = await web3.eth.ens.getAddress(name)
   } catch (err) {
-    logError(Errors._103, err.message)
+    return ''
   }
 
   return verifiedAddress === address ? name : ''
