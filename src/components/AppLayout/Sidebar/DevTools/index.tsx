@@ -12,6 +12,7 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { useDebounce } from 'src/logic/hooks/useDebounce'
 
 const TX_AMOUNT = '0.0001'
 
@@ -80,6 +81,8 @@ const DevTools = (): ReactElement => {
     return hasFunds
   }
 
+  const debouncedCreatedQueuedTx = useDebounce(createQueuedTx, 1000)
+
   return (
     <>
       <List dense>
@@ -98,7 +101,7 @@ const DevTools = (): ReactElement => {
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => createQueuedTx(safeAddress, threshold)}
+          onClick={() => debouncedCreatedQueuedTx(safeAddress, threshold)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
