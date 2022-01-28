@@ -1,11 +1,11 @@
+import { lazy, useMemo } from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
 import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION } from 'src/utils/constants'
-import DebugToggle from './DebugToggle'
-import DevTools from './DevTools'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -50,6 +50,13 @@ type Props = {
   items: ListItemType[]
 }
 
+// This doesn't play well if exported to its own file
+const lazyLoad = (path: string): React.ReactElement => {
+  // import(path) does not work unless it is a template literal
+  const Component = lazy(() => import(`${path}`))
+  return wrapInSuspense(<Component />)
+}
+
 const Sidebar = ({
   items,
   balance,
@@ -59,41 +66,43 @@ const Sidebar = ({
   onToggleSafeList,
   onReceiveClick,
   onNewTransactionClick,
-}: Props): React.ReactElement => (
-  <>
-    <SafeHeader
-      address={safeAddress}
-      safeName={safeName}
-      granted={granted}
-      balance={balance}
-      onToggleSafeList={onToggleSafeList}
-      onReceiveClick={onReceiveClick}
-      onNewTransactionClick={onNewTransactionClick}
-    />
+}: Props): React.ReactElement => {
+  const devTools = useMemo(() => lazyLoad('./DevTools'), [])
+  const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
+  return (
+    <>
+      <SafeHeader
+        address={safeAddress}
+        safeName={safeName}
+        granted={granted}
+        balance={balance}
+        onToggleSafeList={onToggleSafeList}
+        onReceiveClick={onReceiveClick}
+        onNewTransactionClick={onNewTransactionClick}
+      />
 
-    {items.length ? (
-      <>
-        <StyledDivider />
-        <List items={items} />
-      </>
-    ) : null}
-    <HelpContainer>
-      {!IS_PRODUCTION && safeAddress && (
+      {items.length ? (
         <>
           <StyledDivider />
-          <DevTools />
+          <List items={items} />
         </>
-      )}
+      ) : null}
+      <HelpContainer>
+        {!IS_PRODUCTION && safeAddress && (
+          <>
+            <StyledDivider />
+            {devTools}
+          </>
+        )}
+        {!IS_PRODUCTION && debugToggle}
+        <StyledDivider />
 
-      {!IS_PRODUCTION && <DebugToggle />}
-
-      <StyledDivider />
-
-      <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-        <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
-      </HelpCenterLink>
-    </HelpContainer>
-  </>
-)
+        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+          <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
+        </HelpCenterLink>
+      </HelpContainer>
+    </>
+  )
+}
 
 export default Sidebar
