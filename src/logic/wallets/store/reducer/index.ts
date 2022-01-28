@@ -38,7 +38,7 @@ const initialProviderState: ProvidersState = {
 
 const providerFactory = (provider: ProvidersState) => {
   const { name, hardwareWallet, smartContractWallet, account, network } = provider
-  const hasWallet = !!name || !!hardwareWallet || !!smartContractWallet
+  const hasWallet = !!name || hardwareWallet || smartContractWallet
   return { ...provider, loaded: hasWallet && !!account && !!network }
 }
 
