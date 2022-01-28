@@ -12,6 +12,7 @@ import {
   CopyToClipboardBtn,
 } from '@gnosis.pm/safe-react-components'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 
 import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce, getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
@@ -45,8 +46,9 @@ const StyledText = styled(Text)`
   margin: 8px 0 0 0;
 `
 
-const ColoredText = styled(Text)<{ isOutOfOrder: boolean }>`
-  color: ${(props) => (props.isOutOfOrder ? props.theme.colors.error : props.color)};
+type ColoredTextProps = { isError?: boolean }
+const ColoredText = styled(Text)<ColoredTextProps>`
+  color: ${(props) => (props.isError ? props.theme.colors.error : props.color)};
 `
 
 const StyledButtonLink = styled(ButtonLink)`
@@ -64,9 +66,16 @@ const StyledDivider = styled(Divider)`
 `
 
 type TxParam = string | ReactElement
-const TxParameter = ({ name, value }: { name: TxParam; value: TxParam }): ReactElement => {
+type TxParameterProps = { name: TxParam; value: TxParam; color?: ThemeColors } & ColoredTextProps
+const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement => {
   const getEl = (prop: TxParam) => {
-    return typeof prop === 'string' ? <Text size="lg">{prop}</Text> : prop
+    return typeof prop === 'string' ? (
+      <ColoredText size="lg" {...rest}>
+        {prop}
+      </ColoredText>
+    ) : (
+      prop
+    )
   }
   return (
     <TxParameterWrapper>
@@ -146,32 +155,13 @@ export const TxParametersDetail = ({
             Safe transaction parameters
           </StyledText>
           <TxParameter
-            name={
-              <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={color}>
-                Safe nonce
-              </ColoredText>
-            }
-            value={
-              <ColoredText size="lg" isOutOfOrder={isTxNonceOutOfOrder} color={color}>
-                {txParameters.safeNonce}
-              </ColoredText>
-            }
+            name="Safe nonce"
+            value={txParameters.safeNonce || ''}
+            isError={isTxNonceOutOfOrder}
+            color={color}
           />
 
-          {showSafeTxGas && (
-            <TxParameter
-              name={
-                <Text size="lg" color={color}>
-                  SafeTxGas
-                </Text>
-              }
-              value={
-                <Text size="lg" color={color}>
-                  {txParameters.safeTxGas}
-                </Text>
-              }
-            />
-          )}
+          {showSafeTxGas && <TxParameter name="SafeTxGas" value={txParameters.safeTxGas || '0'} color={color} />}
           <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
             Edit
           </StyledButtonLink>
