@@ -23,6 +23,7 @@ import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/mo
 import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getByteLength } from 'src/utils/getByteLength'
+import { md } from 'src/theme/variables'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -52,8 +53,8 @@ const StyledButtonLink = styled(ButtonLink)`
 `
 
 const StyledDivider = styled(Divider)`
-  margin-right: -16px;
-  margin-left: -16px;
+  margin-right: -${md};
+  margin-left: -${md};
 `
 
 type Props = {
