@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { Button } from '@gnosis.pm/safe-react-components'
@@ -8,9 +7,8 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import { getShortName } from 'src/config'
 import { currentSafe, currentSafeEthBalance } from 'src/logic/safe/store/selectors'
-import { extractSafeAddress, generatePrefixedAddressRoutes } from 'src/routes/routes'
+import { extractSafeAddress } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -50,9 +48,11 @@ const stopExecution = async (): Promise<void> => {
   fireEvent.click(executionCheckbox)
 }
 
-const createQueuedTx = async (address: string): Promise<void> => {
+const createQueuedTx = async (address: string, threshold = 1): Promise<void> => {
   await prepareTx(address)
-  await stopExecution()
+  if (threshold === 1) {
+    await stopExecution()
+  }
   await submitTx()
 }
 
@@ -61,12 +61,11 @@ const createExecutedTx = async (address: string): Promise<void> => {
   await submitTx()
 }
 
-const getStatusUrl = (address: string): string => {
-  return `https://rimeissner.dev/safe-status-check/#/${getShortName()}:${address}`
-}
+// const getStatusUrl = (address: string): string => {
+//   return `https://rimeissner.dev/safe-status-check/#/${getShortName()}:${address}`
+// }
 
 const DevTools = (): ReactElement => {
-  const history = useHistory()
   const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
   const safeAddress = extractSafeAddress()
   const nextTx = useSelector(nextTransaction)
@@ -81,18 +80,13 @@ const DevTools = (): ReactElement => {
     return hasFunds
   }
 
-  const { TRANSACTIONS_QUEUE, TRANSACTIONS_HISTORY } = generatePrefixedAddressRoutes({
-    shortName: getShortName(),
-    safeAddress,
-  })
-
   return (
     <>
       <List dense>
         <ListItem>
           <ListItemText primary="Developer Tools" secondary={`Threshold: ${threshold} / ${owners?.length || 0}`} />
         </ListItem>
-        <ListItem button>
+        {/* <ListItem button>
           <ListItemText onClick={() => history.push(TRANSACTIONS_QUEUE)}>Queue</ListItemText>
         </ListItem>
         <ListItem button>
@@ -100,24 +94,24 @@ const DevTools = (): ReactElement => {
         </ListItem>
         <ListItem button>
           <ListItemText onClick={() => window.open(getStatusUrl(safeAddress), '_blank')}>Safe Status</ListItemText>
-        </ListItem>
+        </ListItem> */}
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => createQueuedTx(safeAddress)}
+          onClick={() => createQueuedTx(safeAddress, threshold)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
         >
-          Queue Transaction
+          Queue
         </StyledButton>
         <StyledButton
           onClick={() => createExecutedTx(safeAddress)}
           size="md"
           variant="bordered"
-          disabled={!isGranted || !hasSufficientFunds() || !nextTx}
+          disabled={!isGranted || !hasSufficientFunds() || !nextTx || threshold > 1}
         >
-          Execute Transaction
+          Execute
         </StyledButton>
       </ButtonWrapper>
     </>
@@ -129,8 +123,7 @@ export default DevTools
 const StyledButton = styled(Button)`
   &.MuiButton-root {
     padding: 0 12px !important;
-    margin-top: 6px;
-    width: 100%;
+    min-width: 45% !important;
   }
 
   & .MuiButton-label {
@@ -139,5 +132,7 @@ const StyledButton = styled(Button)`
 `
 
 const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin: 0 12px;
 `

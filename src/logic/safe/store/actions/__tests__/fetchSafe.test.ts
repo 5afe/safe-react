@@ -10,10 +10,13 @@ import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { inMemoryPartialSafeInformation, localSafesInfo, remoteSafeInfoWithoutModules } from '../mocks/safeInformation'
 import * as gateway from '@gnosis.pm/safe-react-gateway-sdk'
 
-jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
-  __esModule: true,
-  getSafeInfo: jest.fn(),
-}))
+jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
+  const originalModule = jest.requireActual('@gnosis.pm/safe-react-gateway-sdk')
+  return {
+    ...originalModule,
+    getSafeInfo: jest.fn(),
+  }
+})
 
 jest.mock('src/utils/storage/index')
 

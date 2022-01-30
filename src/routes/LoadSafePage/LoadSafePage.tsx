@@ -30,13 +30,14 @@ import {
   FIELD_LOAD_IS_LOADING_SAFE_ADDRESS,
   FIELD_LOAD_SAFE_ADDRESS,
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
+  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
 import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
-import { getLoadSafeName } from './fields/utils'
+import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 
 function Load(): ReactElement {
@@ -54,6 +55,7 @@ function Load(): ReactElement {
       [FIELD_LOAD_SAFE_ADDRESS]: safeAddress,
       [FIELD_LOAD_IS_LOADING_SAFE_ADDRESS]: false,
       [FIELD_SAFE_OWNER_LIST]: [],
+      [FIELD_SAFE_OWNER_ENS_LIST]: {},
     }
     setInitialFormValues(initialValues)
   }, [safeAddress, safeRandomName])
@@ -63,11 +65,10 @@ function Load(): ReactElement {
 
     const ownerEntries = ownerList
       .map((owner) => {
-        const ownerFieldName = `owner-address-${owner.address}`
-        const ownerNameValue = values[ownerFieldName]
+        const ownerName = getOwnerName(values, owner.address)
         return {
           ...owner,
-          name: ownerNameValue,
+          name: ownerName,
         }
       })
       .filter((owner) => !!owner.name)

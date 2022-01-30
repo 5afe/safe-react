@@ -35,7 +35,7 @@ interface ProcessTransactionArgs {
     refundReceiver: string
   }
   userAddress: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
   thresholdReached: boolean
 }
 
@@ -48,7 +48,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     // Selectors
     const state = getState()
 
-    const { tx } = props
+    const { tx, approveAndExecute } = props
 
     const txProps = {
       navigateToTransactionsTab: false,
@@ -73,11 +73,13 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     }
 
     // Execute right away?
-    sender.isExecution =
-      props.approveAndExecute ||
+    sender.isFinalization =
+      approveAndExecute ||
       (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
-    const preApprovingOwner = props.approveAndExecute && !props.thresholdReached ? props.userAddress : undefined
+    sender.approveAndExecute = approveAndExecute
+
+    const preApprovingOwner = approveAndExecute && !props.thresholdReached ? props.userAddress : undefined
 
     sender.txArgs = {
       ...tx, // Merge previous tx with new data

@@ -27,7 +27,7 @@ import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isAwaitingExecution, isCancelTxDetails } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
-import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import useTxStatus from 'src/logic/hooks/useTxStatus'
 
 const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   if (isTokenTransferAsset(info)) {
@@ -119,7 +119,7 @@ export const TxCollapsed = ({
   const userAddress = useSelector(userAccountSelector)
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
-  const txStatus = useLocalTxStatus(transaction)
+  const txStatus = useTxStatus(transaction)
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
 
@@ -189,9 +189,7 @@ export const TxCollapsed = ({
           <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
-        (isAwaitingExecution(txStatus) || txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS) && (
-          <SmallDot color={status.color} />
-        )
+        isAwaitingExecution(txStatus) && <SmallDot color={status.color} />
       )}
       <Text size="md" color={status.color} className="col" strong>
         {status.text}
