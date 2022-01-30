@@ -6,7 +6,7 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import debounce from 'lodash/debounce'
+import throttle from 'lodash/throttle'
 
 import { currentSafe, currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -81,7 +81,7 @@ const DevTools = (): ReactElement => {
     return hasFunds
   }
 
-  const debouncedCreatedQueuedTx = useMemo(() => debounce(createQueuedTx, 1000), [])
+  const throttledCreatedQueuedTx = useMemo(() => throttle(createQueuedTx, 1000), [])
 
   return (
     <>
@@ -101,7 +101,7 @@ const DevTools = (): ReactElement => {
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => debouncedCreatedQueuedTx(safeAddress, threshold)}
+          onClick={() => throttledCreatedQueuedTx(safeAddress, threshold)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
