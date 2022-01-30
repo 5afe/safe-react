@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react'
@@ -6,13 +6,13 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import debounce from 'lodash/debounce'
 
 import { currentSafe, currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { nextTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { useDebounce } from 'src/logic/hooks/useDebounce'
 
 const TX_AMOUNT = '0.0001'
 
@@ -81,9 +81,7 @@ const DevTools = (): ReactElement => {
     return hasFunds
   }
 
-  const debouncedCreatedQueuedTx = useDebounce(() => {
-    createQueuedTx(safeAddress, threshold)
-  }, 1000)
+  const debouncedCreatedQueuedTx = useMemo(() => debounce(createQueuedTx, 1000), [])
 
   return (
     <>
@@ -103,7 +101,7 @@ const DevTools = (): ReactElement => {
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => debouncedCreatedQueuedTx()}
+          onClick={() => debouncedCreatedQueuedTx(safeAddress, threshold)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
