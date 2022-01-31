@@ -37,6 +37,7 @@ export const useStyles = makeStyles(
     selectedOwner: {
       padding: `${sm} ${lg}`,
       alignItems: 'center',
+      backgroundColor: '#ffe6ea',
     },
   }),
 )
