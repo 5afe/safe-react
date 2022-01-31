@@ -155,7 +155,14 @@ export const ReviewConfirm = ({
               Sending from
             </Paragraph>
           </Row>
-          <PrefixedEthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+          <PrefixedEthHashInfo
+            name={safeName}
+            hash={safeAddress}
+            strongName
+            showAvatar
+            showCopyBtn
+            explorerUrl={explorerUrl}
+          />
           <StyledBlock>
             <Text size="md">Balance:</Text>
             <Text size="md" strong>{`${ethBalance} ${nativeCurrency.symbol}`}</Text>

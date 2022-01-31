@@ -117,6 +117,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             <PrefixedEthHashInfo
               hash={tx.recipientAddress}
               name={tx.recipientName}
+              strongName
               showAvatar
               showCopyBtn
               explorerUrl={getExplorerInfo(tx.recipientAddress)}

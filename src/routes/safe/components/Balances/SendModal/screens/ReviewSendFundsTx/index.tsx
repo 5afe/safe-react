@@ -171,6 +171,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             <PrefixedEthHashInfo
               hash={tx.recipientAddress}
               name={tx.recipientName}
+              strongName
               showCopyBtn
               showAvatar
               explorerUrl={getExplorerInfo(tx.recipientAddress)}

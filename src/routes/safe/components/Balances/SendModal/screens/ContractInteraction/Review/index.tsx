@@ -111,6 +111,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           <PrefixedEthHashInfo
             hash={tx.contractAddress as string}
             name={addressName}
+            strongName
             showAvatar
             showCopyBtn
             explorerUrl={explorerUrl}

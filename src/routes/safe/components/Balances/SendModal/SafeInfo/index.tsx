@@ -42,6 +42,7 @@ const SafeInfo = ({ text }: SafeInfoProps): React.ReactElement => {
       <PrefixedEthHashInfo
         hash={safeAddress}
         name={safeName}
+        strongName
         explorerUrl={getExplorerInfo(safeAddress)}
         showAvatar
         showCopyBtn

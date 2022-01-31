@@ -90,6 +90,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
             <PrefixedEthHashInfo
               hash={tx.contractAddress as string}
               name={tx.contractName ?? ''}
+              strongName
               showAvatar
               showCopyBtn
               explorerUrl={getExplorerInfo(tx.contractAddress as string)}

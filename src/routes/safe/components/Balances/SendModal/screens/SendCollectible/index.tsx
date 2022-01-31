@@ -183,6 +183,7 @@ const SendCollectible = ({
                         <PrefixedEthHashInfo
                           hash={selectedEntry.address}
                           name={selectedEntry.name}
+                          strongName
                           showAvatar
                           showCopyBtn
                           explorerUrl={getExplorerInfo(selectedEntry.address)}
