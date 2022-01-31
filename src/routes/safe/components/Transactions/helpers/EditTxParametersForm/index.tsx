@@ -39,14 +39,9 @@ const SafeOptions = styled.div`
 `
 
 const EthereumOptions = styled.div`
-  display: flex;
-  /* justify-content: space-between; */
-  flex-wrap: wrap;
-  gap: 10px 20px;
-
-  div {
-    width: 216px !important;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -217,7 +212,7 @@ export const EditTxParametersForm = ({
                         name="ethMaxPrioFee"
                         defaultValue={ethMaxPrioFee}
                         type="number"
-                        placeholder="Max priority fee (GWEI)"
+                        placeholder={`${ethMaxPrioFee} (GWEI)`}
                         text="Max priority fee (GWEI)"
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
