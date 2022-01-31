@@ -365,6 +365,8 @@ export const ApproveTxModal = ({
                     <Bold className={classes.nonceNumber}>{nonce}</Bold>
                   </Paragraph>
 
+                  {oneConfirmationLeft && isExecution && !isCancelTx && <ExecuteCheckbox onChange={setShouldExecute} />}
+
                   {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                     <TxEstimatedFeesDetail
                       txParameters={txParameters}
@@ -387,8 +389,6 @@ export const ApproveTxModal = ({
                       isOffChainSignature={isOffChainSignature}
                     />
                   )}
-
-                  {oneConfirmationLeft && isExecution && !isCancelTx && <ExecuteCheckbox onChange={setShouldExecute} />}
                 </Row>
               </Block>
 

@@ -144,6 +144,8 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
+            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+
             {!isSpendingLimitTx && canTxExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
@@ -166,8 +168,6 @@ export const TxModalWrapper = ({
                 isOffChainSignature={isOffChainSignature}
               />
             )}
-
-            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
           </Container>
 
           {!isSpendingLimitTx && (

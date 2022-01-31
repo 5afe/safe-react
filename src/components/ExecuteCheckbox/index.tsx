@@ -8,6 +8,11 @@ import Row from 'src/components/layout/Row'
 import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info.svg'
 
+const StyledRow = styled(Row)`
+  align-items: center;
+  margin-bottom: ${sm};
+`
+
 const StyledFormControlLabel = styled(FormControlLabel)`
   margin-right: ${sm};
 
@@ -26,7 +31,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
     onChange(e.target.checked)
   }
   return (
-    <Row style={{ alignItems: 'center' }}>
+    <StyledRow>
       <StyledFormControlLabel
         control={<Checkbox defaultChecked color="secondary" onChange={handleChange} />}
         label="Execute transaction"
@@ -40,7 +45,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
           <Img alt="Info Tooltip" height={16} src={InfoIcon} />
         </span>
       </Tooltip>
-    </Row>
+    </StyledRow>
   )
 }
 
