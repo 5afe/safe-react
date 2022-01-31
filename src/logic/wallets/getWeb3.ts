@@ -147,8 +147,6 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
   return verifiedAddress === address ? name : ''
 }
 
-export const removeTld = (name: string): string => name.replace(/\.[^.]+$/, '')
-
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
 
 export const isTxPendingError = (err: Error): boolean => {
