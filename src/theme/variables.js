@@ -25,6 +25,7 @@ const black600 = '#111B22'
 
 module.exports = {
   background,
+  black300: '#B2BBC0',
   boldFont: 700,
   bolderFont: 500,
   border,
@@ -41,6 +42,7 @@ module.exports = {
   fontSizeHeadingMd: 20,
   fontSizeHeadingSm: 16,
   fontSizeHeadingXs: 13,
+  gray500: '#e2e3e3',
   headerHeight,
   largeFontSize: '16px',
   lg,
@@ -50,6 +52,7 @@ module.exports = {
   md,
   mediumFontSize: '14px',
   primary,
+  primary400: '#008C73',
   regularFont: 400,
   screenLg: 1200,
   screenMd: 992,
