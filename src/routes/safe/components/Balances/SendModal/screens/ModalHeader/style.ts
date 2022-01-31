@@ -1,4 +1,4 @@
-import { lg, md, sm, xs, secondaryText, border, smallFontSize } from 'src/theme/variables'
+import { lg, md, secondaryText } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -22,16 +22,6 @@ export const styles = createStyles({
   closeIcon: {
     height: '24px',
     width: '24px',
-  },
-  chainIndicator: {
-    fontSize: `${smallFontSize}`,
-    padding: `${xs} ${sm}`,
-    backgroundColor: `${border}`,
-    borderRadius: '4px',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    marginRight: '20px',
   },
   icon: {
     width: '20px',
