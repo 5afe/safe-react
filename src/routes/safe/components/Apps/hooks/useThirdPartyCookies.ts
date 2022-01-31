@@ -6,7 +6,6 @@ const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
   iframeElement.src = uri
   iframeElement.setAttribute('style', 'display:none')
   iframeElement.onload = onload
-
   return iframeElement
 }
 
@@ -35,6 +34,7 @@ const useThirdPartyCookies = (): { thirdPartyCookiesDisabled: boolean } => {
       iframeElement?.contentWindow?.postMessage({ test: 'cookie' }, '*')
     })
 
+    iframeRef.current = iframeElement
     document.body.appendChild(iframeElement)
   }, [messageHandler])
 
