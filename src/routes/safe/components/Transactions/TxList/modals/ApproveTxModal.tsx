@@ -37,6 +37,8 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
+import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
+import { getNativeCurrency } from 'src/config'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -227,6 +229,7 @@ export const ApproveTxModal = ({
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const nativeCurrency = getNativeCurrency()
   const willExecute = isExecution && shouldExecute
 
   const {
@@ -246,9 +249,9 @@ export const ApproveTxModal = ({
     id,
   } = useTxInfo(transaction)
   const {
+    gasCostFormatted,
     gasLimit,
     gasPriceFormatted,
-    gasCostFormatted,
     gasMaxPrioFeeFormatted,
     txEstimationExecutionStatus,
     isOffChainSignature,
@@ -331,10 +334,11 @@ export const ApproveTxModal = ({
     }
   }
 
+  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
+
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
-        isOffChainSignature={isOffChainSignature}
         isExecution={willExecute}
         parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}
@@ -363,11 +367,22 @@ export const ApproveTxModal = ({
 
                   {oneConfirmationLeft && isExecution && !isCancelTx && <ExecuteCheckbox onChange={setShouldExecute} />}
 
+                  {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+                    <TxEstimatedFeesDetail
+                      txParameters={txParameters}
+                      gasCost={gasCost}
+                      onEdit={toggleEditMode}
+                      isTransactionCreation={isCreation}
+                      isTransactionExecution={willExecute}
+                      isOffChainSignature={isOffChainSignature}
+                    />
+                  )}
+
                   {/* Tx Parameters */}
                   {(shouldExecute || !isOffChainSignature) && (
                     <TxParametersDetail
-                      txParameters={txParameters}
                       onEdit={toggleEditMode}
+                      txParameters={txParameters}
                       parametersStatus={getParametersStatus()}
                       isTransactionCreation={isCreation}
                       isTransactionExecution={willExecute}
@@ -377,9 +392,8 @@ export const ApproveTxModal = ({
                 </Row>
               </Block>
 
-              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+              {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
                 <ReviewInfoText
-                  gasCostFormatted={gasCostFormatted}
                   isCreation={isCreation}
                   isExecution={willExecute}
                   safeNonce={txParameters.safeNonce}

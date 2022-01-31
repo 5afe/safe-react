@@ -21,7 +21,7 @@ const ResetTimeInfo = ({ title, label, color }: ResetTimeInfoProps): ReactElemen
       </Row>
     ) : (
       <Row align="center">
-        <Text size="lg">One-time spending limit</Text>
+        <Text size="xl">One-time spending limit</Text>
       </Row>
     )}
   </>
