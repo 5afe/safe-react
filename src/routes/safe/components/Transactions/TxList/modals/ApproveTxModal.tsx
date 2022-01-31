@@ -234,6 +234,7 @@ export const ApproveTxModal = ({ onClose, isCancelTx = false, isOpen, transactio
         txTo={txInfo.to}
         txData={txInfo.data}
         txValue={txInfo.value}
+        safeTxGas={txInfo.safeTxGas}
         onSubmit={approveTx}
         onClose={onClose}
       >

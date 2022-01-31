@@ -31,6 +31,7 @@ type Props = {
   txType?: string
   txConfirmations?: List<Confirmation>
   txThreshold?: number
+  safeTxGas?: string
   onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
   onClose?: () => void
   onBack?: (...rest: any) => void
@@ -65,6 +66,7 @@ export const TxModalWrapper = ({
   txType,
   txConfirmations,
   txThreshold,
+  safeTxGas,
   onSubmit,
   onBack,
   onClose,
@@ -102,7 +104,7 @@ export const TxModalWrapper = ({
     txConfirmations,
     txAmount: txValue,
     preApprovingOwner,
-    safeTxGas: manualSafeTxGas,
+    safeTxGas: safeTxGas || manualSafeTxGas,
     manualGasPrice,
     manualMaxPrioFee,
     manualGasLimit,
