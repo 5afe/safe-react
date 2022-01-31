@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { fireEvent, screen, waitForElementToBeRemoved } from '@testing-library/react'
@@ -6,6 +6,7 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import throttle from 'lodash/throttle'
 
 import { currentSafe, currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -80,6 +81,8 @@ const DevTools = (): ReactElement => {
     return hasFunds
   }
 
+  const throttledCreatedQueuedTx = useMemo(() => throttle(createQueuedTx, 1000), [])
+
   return (
     <>
       <List dense>
@@ -98,7 +101,7 @@ const DevTools = (): ReactElement => {
       </List>
       <ButtonWrapper>
         <StyledButton
-          onClick={() => createQueuedTx(safeAddress, threshold)}
+          onClick={() => throttledCreatedQueuedTx(safeAddress, threshold)}
           size="md"
           variant="bordered"
           disabled={!isGranted || !hasSufficientFunds()}
