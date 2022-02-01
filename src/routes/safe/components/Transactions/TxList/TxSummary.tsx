@@ -77,7 +77,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
       <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />
       <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" hasExplorer={false} />
-      {created && <TxDataRow title="Created:" value={formatDateTime(created)} />}
+      <TxDataRow title="Created:" value={typeof created === 'number' ? formatDateTime(created) : null} />
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
 
       {/* Advanced TxData */}
