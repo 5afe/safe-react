@@ -1,191 +1,70 @@
-import { calculateCanTxExecute } from '../useCanTxExecute'
+import useCanTxExecute from '../useCanTxExecute'
+import * as redux from 'react-redux'
+
+const mockedRedux = redux as jest.Mocked<typeof redux> & { useSelector: any }
+
+jest.mock('react-redux', () => {
+  const original = jest.requireActual('react-redux')
+  return {
+    ...original,
+    useSelector: () => ({ threshold: 2 }),
+  }
+})
 
 describe('useCanTxExecute tests', () => {
-  describe('calculateCanTxExecute tests', () => {
-    beforeEach(() => {
-      threshold = 1
-      isExecution = false
-      currentSafeNonce = 8
-      recommendedNonce = 8
-      txConfirmations = 0
-      preApprovingOwner = ''
-      manualSafeNonce = recommendedNonce
-    })
-    // to be overriden as necessary
-    let threshold
-    let preApprovingOwner
-    let txConfirmations
-    let currentSafeNonce
-    let recommendedNonce
-    let isExecution
-    let manualSafeNonce
-    it(`should return true if isExecution`, () => {
-      // given
-      isExecution = true
+  it(`should return true if owner of a 1/1 Safe`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 1 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-        isExecution,
-      )
+    const result = useCanTxExecute('0x000', 0)
+    expect(result).toBe(true)
+  })
 
-      // then
-      expect(result).toBe(true)
-    })
-    it(`should return true if single owner and edited nonce is same as safeNonce`, () => {
-      // given
-      threshold = 1
-      currentSafeNonce = 8
-      recommendedNonce = 12
-      manualSafeNonce = 8
+  it(`should return false if not an owner and not enough sigs`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 1 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-        undefined,
-        manualSafeNonce,
-      )
+    const result = useCanTxExecute('', 0)
+    expect(result).toBe(false)
+  })
 
-      // then
-      expect(result).toBe(true)
-    })
-    it(`should return false if single owner and edited nonce is different than safeNonce`, () => {
-      // given
-      threshold = 1
-      currentSafeNonce = 8
-      recommendedNonce = 8
-      manualSafeNonce = 20
+  it(`should return true if 2/2 sigs`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 2 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-        undefined,
-        manualSafeNonce,
-      )
+    const result = useCanTxExecute('', 2)
+    expect(result).toBe(true)
+  })
 
-      // then
-      expect(result).toBe(false)
-    })
-    it(`should return true if single owner and recommendedNonce is same as safeNonce`, () => {
-      // given
-      threshold = 1
-      currentSafeNonce = 8
-      recommendedNonce = 8
+  it(`should return true if 1/2 sigs and an owner`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 2 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
+    const result = useCanTxExecute('0x000', 1)
+    expect(result).toBe(true)
+  })
 
-      // then
-      expect(result).toBe(true)
-    })
-    it(`should return false if single owner and recommendedNonce is greater than safeNonce and no edited nonce`, () => {
-      // given
-      threshold = 1
-      currentSafeNonce = 8
-      recommendedNonce = 11
-      manualSafeNonce = undefined
+  it(`should return false if 1/3 sigs and an owner`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 3 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-        undefined,
-        manualSafeNonce,
-      )
+    const result = useCanTxExecute('0x000', 1)
+    expect(result).toBe(false)
+  })
 
-      // then
-      expect(result).toBe(false)
-    })
-    it(`should return false if single owner and recommendedNonce is different than safeNonce`, () => {
-      // given
-      threshold = 1
-      currentSafeNonce = 8
-      recommendedNonce = 12
+  it(`should return false if 2/3 sigs and not an owner`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 3 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
+    const result = useCanTxExecute('', 2)
+    expect(result).toBe(false)
+  })
 
-      // then
-      expect(result).toBe(false)
-    })
-    it(`should return true if the safe threshold is reached for the transaction`, () => {
-      // given
-      threshold = 3
-      txConfirmations = 3
+  it(`should return true if 3/10 sigs and threshold 3 passed from an arg`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 10 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
+    const result = useCanTxExecute('', 3, 3)
+    expect(result).toBe(true)
+  })
 
-      // then
-      expect(result).toBe(true)
-    })
-    it(`should return false if the number of confirmations does not meet the threshold and there is no preApprovingOwner`, () => {
-      // given
-      threshold = 5
-      txConfirmations = 4
+  it(`should return false if 3/3 sigs and threshold 10 passed from an arg`, () => {
+    mockedRedux.useSelector = jest.fn(() => ({ threshold: 3 }))
 
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
-
-      // then
-      expect(result).toBe(false)
-    })
-    it(`should return true if the number of confirmations is one bellow the threshold but there is a preApprovingOwner`, () => {
-      // given
-      threshold = 5
-      preApprovingOwner = '0x29B1b813b6e84654Ca698ef5d7808E154364900B'
-      txConfirmations = 4
-
-      // when
-      const result = calculateCanTxExecute(
-        currentSafeNonce,
-        preApprovingOwner,
-        threshold,
-        txConfirmations,
-        recommendedNonce,
-      )
-
-      // then
-      expect(result).toBe(true)
-    })
+    const result = useCanTxExecute('', 3, 10)
+    expect(result).toBe(false)
   })
 })

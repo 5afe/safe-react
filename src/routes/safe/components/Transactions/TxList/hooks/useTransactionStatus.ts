@@ -2,7 +2,7 @@ import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import useTxStatus from 'src/logic/hooks/useTxStatus'
 
 import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -16,7 +16,7 @@ export type TransactionStatusProps = {
 export const useTransactionStatus = (transaction: Transaction): TransactionStatusProps => {
   const currentUser = useSelector(userAccountSelector)
   const [status, setStatus] = useState<TransactionStatusProps>({ color: 'primary', text: '' })
-  const txStatus = useLocalTxStatus(transaction)
+  const txStatus = useTxStatus(transaction)
   const { executionInfo } = transaction
 
   useEffect(() => {
@@ -39,7 +39,6 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
         setStatus({ color: 'rinkeby', text })
         break
       case LocalTransactionStatus.AWAITING_EXECUTION:
-      case LocalTransactionStatus.PENDING_FAILED:
         setStatus({ color: 'rinkeby', text: 'Needs execution' })
         break
       case LocalTransactionStatus.PENDING:

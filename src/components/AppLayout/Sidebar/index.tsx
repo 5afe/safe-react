@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import { lazy, useMemo } from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
@@ -66,41 +66,43 @@ const Sidebar = ({
   onToggleSafeList,
   onReceiveClick,
   onNewTransactionClick,
-}: Props): React.ReactElement => (
-  <>
-    <SafeHeader
-      address={safeAddress}
-      safeName={safeName}
-      granted={granted}
-      balance={balance}
-      onToggleSafeList={onToggleSafeList}
-      onReceiveClick={onReceiveClick}
-      onNewTransactionClick={onNewTransactionClick}
-    />
+}: Props): React.ReactElement => {
+  const devTools = useMemo(() => lazyLoad('./DevTools'), [])
+  const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
+  return (
+    <>
+      <SafeHeader
+        address={safeAddress}
+        safeName={safeName}
+        granted={granted}
+        balance={balance}
+        onToggleSafeList={onToggleSafeList}
+        onReceiveClick={onReceiveClick}
+        onNewTransactionClick={onNewTransactionClick}
+      />
 
-    {items.length ? (
-      <>
-        <StyledDivider />
-        <List items={items} />
-      </>
-    ) : null}
-    <HelpContainer>
-      {!IS_PRODUCTION && safeAddress && (
+      {items.length ? (
         <>
           <StyledDivider />
-          {lazyLoad('./DevTools')}
+          <List items={items} />
         </>
-      )}
+      ) : null}
+      <HelpContainer>
+        {!IS_PRODUCTION && safeAddress && (
+          <>
+            <StyledDivider />
+            {devTools}
+          </>
+        )}
+        {!IS_PRODUCTION && debugToggle}
+        <StyledDivider />
 
-      {!IS_PRODUCTION && lazyLoad('./DebugToggle')}
-
-      <StyledDivider />
-
-      <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-        <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
-      </HelpCenterLink>
-    </HelpContainer>
-  </>
-)
+        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+          <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
+        </HelpCenterLink>
+      </HelpContainer>
+    </>
+  )
+}
 
 export default Sidebar

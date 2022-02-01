@@ -14,7 +14,7 @@ import {
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 
-import { currentSafe, currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce, getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areSafeParamsEnabled } from 'src/routes/safe/components/Transactions/helpers/utils'
@@ -93,10 +93,9 @@ const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement |
 type Props = {
   txParameters: TxParameters
   compact?: boolean
+  parametersStatus: ParametersStatus
   onEdit: () => void
-  parametersStatus?: ParametersStatus
   isTransactionCreation: boolean
-  isTransactionExecution: boolean
   isOffChainSignature: boolean
 }
 
@@ -105,13 +104,8 @@ export const TxParametersDetail = ({
   txParameters,
   compact = true,
   parametersStatus,
-  isTransactionCreation,
-  isTransactionExecution,
-  isOffChainSignature,
 }: Props): ReactElement | null => {
   const { nonce } = useSelector(currentSafe)
-  const threshold = useSelector(currentSafeThreshold) || 1
-  const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
   const [isTxNonceOutOfOrder, setIsTxNonceOutOfOrder] = useState(false)
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
@@ -136,17 +130,14 @@ export const TxParametersDetail = ({
     }
   }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
-  const color = useMemo(
-    () => (areSafeParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'),
-    [parametersStatus, defaultParameterStatus],
-  )
-
-  if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
-    return null
-  }
+  const color = useMemo(() => (areSafeParamsEnabled(parametersStatus) ? 'text' : 'secondaryLight'), [parametersStatus])
 
   const onChangeExpand = () => {
     setIsAccordionExpanded(!isAccordionExpanded)
+  }
+
+  if (parametersStatus === 'DISABLED') {
+    return null
   }
 
   return (

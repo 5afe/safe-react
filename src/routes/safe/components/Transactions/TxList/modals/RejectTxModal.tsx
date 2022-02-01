@@ -129,7 +129,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   txParameters={txParameters}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
-                  isTransactionExecution={canTxExecute}
                   isOffChainSignature={isOffChainSignature}
                 />
               </Block>

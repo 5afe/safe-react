@@ -18,7 +18,7 @@ import {
 } from '../fields/createSafeFields'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const nameNewSafeStepLabel = 'Name'
 
@@ -45,10 +45,9 @@ function NameNewSafeStep(): ReactElement {
         owners.map(async ({ addressFieldName }) => {
           const address = formValues[addressFieldName]
           const ensName = await reverseENSLookup(address)
-          const ensDomain = removeTld(ensName)
           return {
             address,
-            name: ensDomain,
+            name: ensName,
           }
         }),
       )

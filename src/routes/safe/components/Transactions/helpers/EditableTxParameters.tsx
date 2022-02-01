@@ -30,7 +30,7 @@ export const EditableTxParameters = ({
   const [useManualValues, setUseManualValues] = useState(false)
   const defaultParameterStatus = isExecution ? 'ENABLED' : 'ETH_HIDDEN'
   const txParameters = useTransactionParameters({
-    parameterStatus: parametersStatus || defaultParameterStatus,
+    parametersStatus: parametersStatus || defaultParameterStatus,
     initialEthGasLimit: ethGasLimit,
     initialEthGasPrice: ethGasPrice,
     initialEthMaxPrioFee: ethMaxPrioFee,
