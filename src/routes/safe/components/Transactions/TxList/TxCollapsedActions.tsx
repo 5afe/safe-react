@@ -48,15 +48,6 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
 
   return (
     <>
-      {canCancel && (
-        <Tooltip title="Reject" placement="top">
-          <span>
-            <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={isPending}>
-              <Icon type="circleCross" color="error" size="sm" />
-            </IconButton>
-          </span>
-        </Tooltip>
-      )}
       <Tooltip title={getTitle()} placement="top">
         <span>
           <IconButton
@@ -71,6 +62,15 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
           </IconButton>
         </span>
       </Tooltip>
+      {canCancel && (
+        <Tooltip title="Reject" placement="top">
+          <span>
+            <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={isPending}>
+              <Icon type="circleCross" color="error" size="sm" />
+            </IconButton>
+          </span>
+        </Tooltip>
+      )}
     </>
   )
 }
