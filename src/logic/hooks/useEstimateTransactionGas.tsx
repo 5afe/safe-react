@@ -29,7 +29,7 @@ export enum EstimationStatus {
 }
 
 const DEFAULT_MAX_GAS_FEE = String(3.5e9) // 3.5 GWEI
-const DEFAULT_MAX_PRIO_FEE = String(2.5e9) // 2.5 GWEI
+export const DEFAULT_MAX_PRIO_FEE = String(2.5e9) // 2.5 GWEI
 
 export const checkIfTxIsApproveAndExecution = (
   threshold: number,
