@@ -185,7 +185,7 @@ export const TxModalWrapper = ({
           <Container>
             {showCheckbox && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
-            {!isSpendingLimitTx && canTxExecute && (
+            {!isSpendingLimitTx && doExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
                 gasCost={canTxExecute ? gasCost : ''}
