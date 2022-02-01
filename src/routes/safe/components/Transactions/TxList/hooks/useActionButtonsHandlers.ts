@@ -1,5 +1,5 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-import { MouseEvent as ReactMouseEvent, useCallback, useContext, useRef } from 'react'
+import { MouseEvent as ReactMouseEvent, useCallback, useContext, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -36,6 +36,14 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
   const txStatus = useTxStatus(transaction)
   const isPending = txStatus === LocalTransactionStatus.PENDING
+
+  useEffect(() => {
+    if (isPending) {
+      hoverContext.current.setPendingTx(transaction.id)
+    } else {
+      hoverContext.current.setPendingTx()
+    }
+  }, [isPending, transaction.id])
 
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {

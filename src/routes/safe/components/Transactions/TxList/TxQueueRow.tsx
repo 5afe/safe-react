@@ -13,17 +13,18 @@ type TxQueueRowProps = {
 }
 
 export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps): ReactElement => {
-  const { activeHover } = useContext(TxHoverContext)
+  const { activeHover, pendingTx } = useContext(TxHoverContext)
   const [tx, setTx] = useState<Transaction>(transaction)
+  const willBeReplaced = tx.txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
 
   useEffect(() => {
-    if (activeHover && activeHover !== transaction.id) {
+    if ((activeHover && activeHover !== transaction.id) || (pendingTx && pendingTx !== transaction.id)) {
       setTx((currTx) => ({ ...currTx, txStatus: LocalTransactionStatus.WILL_BE_REPLACED }))
       return
     }
 
     setTx(transaction)
-  }, [activeHover, transaction])
+  }, [activeHover, transaction, pendingTx])
 
   return (
     <NoPaddingAccordion
@@ -32,6 +33,7 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         unmountOnExit: true,
         appear: true,
       }}
+      className={willBeReplaced}
     >
       <StyledAccordionSummary>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} />
