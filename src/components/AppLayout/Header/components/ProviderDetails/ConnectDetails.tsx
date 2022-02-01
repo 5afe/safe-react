@@ -12,6 +12,7 @@ import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import onboard from 'src/logic/wallets/onboard'
 import { Skeleton } from '@material-ui/lab'
+import { getPairingUri } from 'src/logic/wallets/pairing/module'
 
 const styles = () => ({
   header: {
@@ -67,12 +68,12 @@ const ConnectDetails = ({ classes }): ReactElement => {
 
       <Row align="center" margin="lg">
         <Paragraph className={classes.header} noMargin>
-          Connect to Mobile Safe
+          Connect to Mobile
         </Paragraph>
       </Row>
 
       <Row className={classes.justifyCenter}>
-        {uri ? <QRCode value={uri} size={120} /> : <Skeleton variant="rect" width={120} height={120} />}
+        {uri ? <QRCode value={getPairingUri(uri)} size={120} /> : <Skeleton variant="rect" width={120} height={120} />}
       </Row>
 
       <Row>

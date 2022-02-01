@@ -1,13 +1,22 @@
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { IClientMeta, IRPCMap } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
+import UAParser from 'ua-parser-js'
 
 import { getRpcServiceUrl } from 'src/config'
 import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getChains } from 'src/config/cache/chains'
 
-export const PAIRING_MODULE_NAME = 'Mobile Safe'
+// Modified version of the built in WC module in Onboard v1.35.5
+// https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
+
+export const PAIRING_MODULE_NAME = 'Mobile'
+
+export const getPairingUri = (wcUri: string): string => {
+  const PAIRING_MODULE_URI_PREFIX = 'safe-'
+  return `${PAIRING_MODULE_URI_PREFIX}${wcUri}`
+}
 
 // @walletconnect/web3-provider uses `any` payloads. These are typed from v1.6.2 used by Onboard v1.35.5
 
@@ -22,8 +31,20 @@ type WCConnectPayload = {
 }
 type WCDisconnectPayload = { params: { message: string }[] }
 
-// Modified version of the built in WC module in Onboard v1.35.5
-// https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
+const parser = new UAParser()
+const browser = parser.getBrowser()
+const os = parser.getOS()
+
+const CLIENT_META: IClientMeta = {
+  name: PAIRING_MODULE_NAME,
+  description: JSON.stringify({
+    appVersion: APP_VERSION,
+    browser: `${browser.name} ${browser.version}`,
+    os: `${os.name} ${os.version}`,
+  }),
+  url: 'https://gnosis-safe.io/app',
+  icons: [],
+}
 
 const getPairingModule = (chainId: ChainId): WalletModule => {
   const WC_BRIDGE = 'https://safe-walletconnect.gnosis.io/'
@@ -47,19 +68,14 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
         bridge: WC_BRIDGE,
         storageId: STORAGE_ID,
         qrcode: false, // Don't show QR modal
-        clientMeta: {
-          name: PAIRING_MODULE_NAME,
-          description: APP_VERSION,
-          icons: [],
-          url: 'https://gnosis-safe.io/app',
-        },
+        clientMeta: CLIENT_META,
       })
 
       // Not sure if redundant, but just in case
       provider.autoRefreshOnNetworkChange = false
 
       provider.wc.on('display_uri', (_, { params }: WCDisplayUriPayload) => {
-        console.log(params[0])
+        console.log(getPairingUri(params[0]))
       })
 
       provider.wc.on('connect', (_, { params }: WCConnectPayload) => {
