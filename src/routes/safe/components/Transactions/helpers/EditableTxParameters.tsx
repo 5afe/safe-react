@@ -36,7 +36,7 @@ export const EditableTxParameters = ({
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
   const txParameters = useTransactionParameters({
-    parameterStatus: parametersStatus || defaultParameterStatus,
+    parametersStatus: parametersStatus || defaultParameterStatus,
     initialEthGasLimit: ethGasLimit,
     initialEthGasPrice: ethGasPrice,
     initialEthMaxPrioFee: ethMaxPrioFee,

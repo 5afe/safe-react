@@ -33,8 +33,12 @@ const getSupportedSigners = (isHW: boolean, safeVersion: string) => {
   return signers
 }
 
-const isKeystoneError = (err: Error): boolean => {
-  return err.message.startsWith('#ktek_error')
+const isKeystoneError = (err: unknown): boolean => {
+  if (err instanceof Error) {
+    return err.message?.startsWith('#ktek_error')
+  }
+
+  return false
 }
 
 export const tryOffChainSigning = async (
