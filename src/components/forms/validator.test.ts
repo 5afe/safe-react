@@ -64,7 +64,7 @@ describe('Forms > Validators', () => {
 
   describe('minValue validator', () => {
     const getMinValueErrMsg = (minValue: number, inclusive = true): string =>
-      `Should be greater than ${inclusive ? 'or equal to ' : ''}${minValue}`
+      `Must be greater than ${inclusive ? 'or equal to ' : ''}${minValue}`
 
     it('Returns undefined for a number greater than minimum', () => {
       const minimum = Math.random()
