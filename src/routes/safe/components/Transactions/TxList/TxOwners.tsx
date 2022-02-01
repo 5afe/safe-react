@@ -6,10 +6,10 @@ import StepContent from '@material-ui/core/StepContent'
 import StepLabel from '@material-ui/core/StepLabel'
 import Stepper from '@material-ui/core/Stepper'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
-import ControlPointIcon from '@material-ui/icons/ControlPoint'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 import RadioButtonUncheckedOutlinedIcon from '@material-ui/icons/RadioButtonUncheckedOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
+import CancelIcon from '@material-ui/icons/Cancel'
 
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { AddressInfo } from 'src/routes/safe/components/Transactions/TxList/AddressInfo'
@@ -19,7 +19,7 @@ import { black300, gray500, primary400, red400 } from 'src/theme/variables'
 // Icons
 
 // All icons from MUI share the same type
-const getStyledIcon = (icon: typeof ControlPointIcon): AnyStyledComponent => {
+const getStyledIcon = (icon: typeof AddCircleIcon): AnyStyledComponent => {
   return styled(icon)`
     height: 20px;
     width: 20px;
@@ -27,8 +27,8 @@ const getStyledIcon = (icon: typeof ControlPointIcon): AnyStyledComponent => {
   `
 }
 
-const TxCreationIcon = getStyledIcon(ControlPointIcon)
-const TxRejectionIcon = getStyledIcon(CancelOutlinedIcon)
+const TxCreationIcon = getStyledIcon(AddCircleIcon)
+const TxRejectionIcon = getStyledIcon(CancelIcon)
 const CheckIcon = getStyledIcon(CheckCircleIcon)
 
 const CircleIcon = styled(getStyledIcon(RadioButtonUncheckedOutlinedIcon))`
@@ -98,7 +98,7 @@ export const TxOwners = ({
   txDetails: ExpandedTxDetails
   isPending: boolean
 }): ReactElement | null => {
-  const [showConfirmations, setShowConfirmations] = useState<boolean>(false)
+  const [showConfirmations, setShowConfirmations] = useState<boolean>(true)
   const toggleHide = () => {
     setShowConfirmations((prev) => !prev)
   }
@@ -156,19 +156,17 @@ export const TxOwners = ({
         <StepLabel icon={isExecuted ? <CheckIcon /> : <CircleIcon />}>
           {isExecuted ? 'Executed' : isPending ? 'Executing' : 'Execution'}
         </StepLabel>
-        {!isPending && !isExecuted && (
-          <StyledStepContent>
-            {detailedExecutionInfo.executor ? (
-              <AddressInfo
-                address={detailedExecutionInfo.executor.value}
-                name={detailedExecutionInfo.executor?.name || undefined}
-                avatarUrl={detailedExecutionInfo.executor?.logoUri || undefined}
-                shortenHash={4}
-              />
-            ) : (
-              'Can be executed once the threshold is reached'
-            )}
-          </StyledStepContent>
+        {detailedExecutionInfo.executor ? (
+          <StepContent>
+            <AddressInfo
+              address={detailedExecutionInfo.executor.value}
+              name={detailedExecutionInfo.executor?.name || undefined}
+              avatarUrl={detailedExecutionInfo.executor?.logoUri || undefined}
+              shortenHash={4}
+            />
+          </StepContent>
+        ) : (
+          !isConfirmed && <StyledStepContent>Can be executed once the threshold is reached</StyledStepContent>
         )}
       </StyledStep>
     </StyledStepper>
