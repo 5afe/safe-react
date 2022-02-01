@@ -3,7 +3,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { getNativeCurrency } from 'src/config'
 import { TransactionFailText } from 'src/components/TransactionFailText'
 import { Text } from '@gnosis.pm/safe-react-components'
-import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -24,8 +23,7 @@ export const TransactionFees = ({
 }: TransactionFailTextProps): React.ReactElement | null => {
   const { currentVersion: safeVersion } = useSelector(currentSafe)
   const { smartContractWallet } = useSelector(providerSelector)
-  const canTxExecute = useCanTxExecute(isExecution)
-  const isOffChainSignature = checkIfOffChainSignatureIsPossible(canTxExecute, smartContractWallet, safeVersion)
+  const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
   const nativeCurrency = getNativeCurrency()
   let transactionAction
@@ -46,7 +44,7 @@ export const TransactionFees = ({
         <Paragraph size="lg" align="center">
           You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently
           connected wallet.{' '}
-          {!isOffChainSignature && (
+          {(!isOffChainSignature || isExecution) && (
             <>
               Make sure you have
               <Text size="lg" as="span" color="text" strong>

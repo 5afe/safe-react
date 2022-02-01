@@ -38,7 +38,7 @@ import {
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { removeTld, reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -89,9 +89,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 
   const getENSName = async (address: string): Promise<void> => {
     const ensName = await reverseENSLookup(address)
-    const ensDomain = removeTld(ensName)
     const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
-      [address]: ensDomain,
+      [address]: ensName,
     })
     createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
   }

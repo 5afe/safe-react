@@ -30,7 +30,7 @@ export type TxParameters = {
 }
 
 type Props = {
-  parameterStatus?: ParametersStatus
+  parametersStatus?: ParametersStatus
   initialSafeNonce?: string
   initialSafeTxGas?: string
   initialEthGasLimit?: string
@@ -43,7 +43,7 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
+  const isCancelTransaction = sameString(props?.parametersStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string

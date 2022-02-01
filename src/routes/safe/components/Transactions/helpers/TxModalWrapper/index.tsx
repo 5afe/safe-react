@@ -12,37 +12,66 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { isSpendingLimit, ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
+import { useSelector } from 'react-redux'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { List } from 'immutable'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type Props = {
   children: ReactNode
-  operation?: number
+  operation?: Operation
+  txNonce?: string
   txData: string
   txValue?: string
   txTo?: string
   txType?: string
+  txConfirmations?: List<Confirmation>
+  txThreshold?: number
+  safeTxGas?: string
   onSubmit: (txParams: TxParameters, delayExecution?: boolean) => void
+  onClose?: () => void
   onBack?: (...rest: any) => void
   submitText?: string
-  isConfirmDisabled?: boolean
+  isSubmitDisabled?: boolean
 }
 
 const Container = styled.div`
   padding: 0 ${lg} ${md};
 `
 
+/**
+ * Determines which fields are displayed in the TxEditableParameters
+ */
+const getParametersStatus = (isCreation: boolean, doExecute: boolean): ParametersStatus => {
+  return isCreation
+    ? doExecute
+      ? 'ENABLED'
+      : 'ETH_HIDDEN' // allow editing nonce when creating
+    : doExecute
+    ? 'SAFE_DISABLED'
+    : 'DISABLED' // when not creating, nonce cannot be edited
+}
+
 export const TxModalWrapper = ({
   children,
   operation,
+  txNonce,
   txData,
   txValue = '0',
   txTo,
   txType,
+  txConfirmations,
+  txThreshold,
+  safeTxGas,
   onSubmit,
   onBack,
+  onClose,
   submitText,
-  isConfirmDisabled,
+  isSubmitDisabled,
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -50,8 +79,14 @@ export const TxModalWrapper = ({
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [manualSafeNonce, setManualSafeNonce] = useState<number | undefined>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
+  const isOwner = useSelector(grantedSelector)
+  const userAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
+  const preApprovingOwner = isOwner ? userAddress : undefined
+  const confirmationsLen = Array.from(txConfirmations || []).length
+  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold)
+  const doExecute = executionApproved && canTxExecute
 
   const {
     gasCostFormatted,
@@ -66,8 +101,10 @@ export const TxModalWrapper = ({
     txData,
     txRecipient: txTo || safeAddress,
     txType,
+    txConfirmations,
     txAmount: txValue,
-    safeTxGas: manualSafeTxGas,
+    preApprovingOwner,
+    safeTxGas: safeTxGas || manualSafeTxGas,
     manualGasPrice,
     manualMaxPrioFee,
     manualGasLimit,
@@ -76,11 +113,9 @@ export const TxModalWrapper = ({
   })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
+  const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
 
-  const canTxExecute = useCanTxExecute(undefined, manualSafeNonce)
-  const doExecute = executionApproved && canTxExecute
-
-  const onClose = (txParameters: TxParameters) => {
+  const onEditClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
     const newGasPrice = txParameters.ethGasPrice
     const oldGasLimit = gasLimit
@@ -125,6 +160,8 @@ export const TxModalWrapper = ({
     onSubmit(txParameters, !doExecute)
   }
 
+  const parametersStatus = getParametersStatus(isCreation, doExecute)
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -133,14 +170,16 @@ export const TxModalWrapper = ({
       ethGasPrice={gasPriceFormatted}
       ethMaxPrioFee={gasMaxPrioFeeFormatted}
       safeTxGas={gasEstimation}
-      closeEditModalCallback={onClose}
+      safeNonce={txNonce}
+      parametersStatus={parametersStatus}
+      closeEditModalCallback={onEditClose}
     >
-      {(txParameters: TxParameters, toggleEditMode: () => unknown) => (
+      {(txParameters: TxParameters, toggleEditMode: () => void) => (
         <>
           {children}
 
           <Container>
-            {!isSpendingLimitTx && canTxExecute && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {showCheckbox && <ExecuteCheckbox onChange={setExecutionApproved} />}
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
@@ -151,6 +190,7 @@ export const TxModalWrapper = ({
                 isTransactionCreation={isCreation}
                 isTransactionExecution={doExecute}
                 isOffChainSignature={isOffChainSignature}
+                parametersStatus={parametersStatus}
               />
             )}
           </Container>
@@ -168,11 +208,11 @@ export const TxModalWrapper = ({
           {/* Footer */}
           <Modal.Footer withoutBorder={!isSpendingLimitTx && submitStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: onBack || onClose, text: 'Back' }}
+              cancelButtonProps={{ onClick: onBack || onClose, text: onBack ? 'Back' : 'Cancel' }}
               confirmButtonProps={{
                 onClick: () => onSubmitClick(txParameters),
                 status: submitStatus,
-                disabled: isConfirmDisabled,
+                disabled: isSubmitDisabled,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : submitText,
                 testId: 'submit-tx-btn',
               }}

@@ -76,6 +76,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         txData={txData}
         txTo={SPENDING_LIMIT_MODULE_ADDRESS}
         onSubmit={removeSelectedSpendingLimit}
+        onClose={onClose}
         submitText="Remove"
       >
         <ModalHeader onClose={onClose} title="Remove spending limit" />

@@ -88,7 +88,7 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
       title="Remove Module"
       open
     >
-      <TxModalWrapper txData={txData} onSubmit={removeSelectedModule} submitText="Remove">
+      <TxModalWrapper txData={txData} onSubmit={removeSelectedModule} submitText="Remove" onClose={onClose}>
         <ModalHeader onClose={onClose} title="Remove Module" />
         <Hairline />
         <Block>
