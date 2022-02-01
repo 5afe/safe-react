@@ -79,6 +79,7 @@ type StyledStepProps = {
 const StyledStep = styled(Step)<StyledStepProps>`
   .MuiStepLabel-label {
     font-weight: ${({ bold = false }) => (bold ? 'bold' : 'normal')};
+    font-size: 16px;
     color: ${({ state }) => getStepColor(state)};
   }
 
@@ -110,8 +111,8 @@ const shouldHideConfirmations = (detailedExecutionInfo: DetailedExecutionInfo | 
   const confirmationsNeeded = detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length
   const isConfirmed = confirmationsNeeded <= 0
 
-  // Threshold reached or > 3 confirmations
-  return isConfirmed || detailedExecutionInfo.confirmations.length <= 3
+  // Threshold reached or more than 3 confirmations
+  return isConfirmed || detailedExecutionInfo.confirmations.length > 3
 }
 
 export const TxOwners = ({
@@ -186,13 +187,14 @@ export const TxOwners = ({
             <StepContent>
               <AddressInfo
                 address={detailedExecutionInfo.executor.value}
-                name={detailedExecutionInfo.executor?.name || undefined}
-                avatarUrl={detailedExecutionInfo.executor?.logoUri || undefined}
+                name={detailedExecutionInfo.executor.name || undefined}
+                avatarUrl={detailedExecutionInfo.executor.logoUri || undefined}
                 shortenHash={4}
               />
             </StepContent>
           ) : (
-            !isConfirmed && <StyledStepContent>Can be executed once the threshold is reached</StyledStepContent>
+            !isConfirmed &&
+            !isPending && <StyledStepContent>Can be executed once the threshold is reached</StyledStepContent>
           )
         }
       </StyledStep>
