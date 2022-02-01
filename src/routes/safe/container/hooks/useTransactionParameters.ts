@@ -13,25 +13,29 @@ import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type TxParameters = {
-  safeNonce: string | undefined
-  setSafeNonce: (safeNonce: string | undefined) => void
-  safeTxGas: string | undefined
-  setSafeTxGas: (gas: string | undefined) => void
-  ethNonce: string | undefined
-  setEthNonce: (ethNonce: string | undefined) => void
-  ethGasLimit: string | undefined
-  setEthGasLimit: (ethGasLimit: string | undefined) => void
-  ethGasPrice: string | undefined
-  setEthGasPrice: (ethGasPrice: string | undefined) => void
-  ethGasPriceInGWei: string | undefined
+  safeNonce?: string
+  setSafeNonce: (safeNonce?: string) => void
+  safeTxGas?: string
+  setSafeTxGas: (gas?: string) => void
+  ethNonce?: string
+  setEthNonce: (ethNonce?: string) => void
+  ethGasLimit?: string
+  setEthGasLimit: (ethGasLimit?: string) => void
+  ethGasPrice?: string
+  setEthGasPrice: (ethGasPrice?: string) => void
+  ethMaxPrioFee?: string
+  setEthMaxPrioFee: (maxPrioFee?: string) => void
+  ethGasPriceInGWei?: string
+  ethMaxPrioFeeInGWei?: string
 }
 
 type Props = {
-  parameterStatus?: ParametersStatus
+  parametersStatus?: ParametersStatus
   initialSafeNonce?: string
   initialSafeTxGas?: string
   initialEthGasLimit?: string
   initialEthGasPrice?: string
+  initialEthMaxPrioFee?: string
 }
 
 /**
@@ -39,7 +43,7 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
+  const isCancelTransaction = sameString(props?.parametersStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
@@ -54,7 +58,9 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   const [ethNonce, setEthNonce] = useState<string | undefined>() // we delegate it to the wallet
   const [ethGasLimit, setEthGasLimit] = useState<string | undefined>(props?.initialEthGasLimit) // call execTx until it returns a number > 0
   const [ethGasPrice, setEthGasPrice] = useState<string | undefined>(props?.initialEthGasPrice) // get fast gas price
-  const [ethGasPriceInGWei, setEthGasPriceInGWei] = useState<string | undefined>() // get fast gas price
+  const [ethGasPriceInGWei, setEthGasPriceInGWei] = useState<string>() // get fast gas price
+  const [ethMaxPrioFee, setEthMaxPrioFee] = useState<string>() // get max prio fee
+  const [ethMaxPrioFeeInGWei, setEthMaxPrioFeeInGWei] = useState<string>() // get max prio fee in gwei
 
   // Get nonce for connected wallet
   useEffect(() => {
@@ -80,6 +86,19 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
     }
     setEthGasPriceInGWei(toWei(ethGasPrice, 'Gwei'))
   }, [ethGasPrice, isCancelTransaction])
+
+  // Get max prio fee
+  useEffect(() => {
+    if (!ethMaxPrioFee) {
+      setEthMaxPrioFee(undefined)
+      return
+    }
+    if (isCancelTransaction) {
+      setEthMaxPrioFee('0')
+      return
+    }
+    setEthMaxPrioFeeInGWei(toWei(ethMaxPrioFee, 'Gwei'))
+  }, [ethMaxPrioFee, isCancelTransaction])
 
   // Calc safe nonce
   useEffect(() => {
@@ -110,6 +129,9 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
     setEthGasLimit,
     ethGasPrice,
     setEthGasPrice,
+    ethMaxPrioFee,
+    setEthMaxPrioFee,
     ethGasPriceInGWei,
+    ethMaxPrioFeeInGWei,
   }
 }

@@ -151,3 +151,19 @@ const canLoadAppImage = (path: string, timeout = 10000) =>
       resolve(false)
     }
   })
+
+// Some apps still need chain name, as they didn't update to chainId based SDK versions
+// With naming changing in the config service some names aren't the expected ones
+// Ex: Ethereum -> MAINNET, Gnosis Chain -> XDAI
+export const getLegacyChainName = (chainName: string, chainId: string): string => {
+  let network = chainName
+  switch (chainId) {
+    case '1':
+      network = 'MAINNET'
+      break
+    case '100':
+      network = 'XDAI'
+  }
+
+  return network
+}

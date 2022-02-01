@@ -4,6 +4,7 @@ import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
 import { Title, Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
+import { fromWei } from 'web3-utils'
 
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
@@ -14,9 +15,17 @@ import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { minValue } from 'src/components/forms/validator'
 import { Modal } from 'src/components/Modal'
-
-import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
-import useSafeTxGas from '../useSafeTxGas'
+import {
+  ParametersStatus,
+  areSafeParamsEnabled,
+  areEthereumParamsVisible,
+  ethereumTxParametersTitle,
+} from 'src/routes/safe/components/Transactions/helpers/utils'
+import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
+import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
+import { extractSafeAddress } from 'src/routes/routes'
+import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
+import { DEFAULT_MAX_PRIO_FEE } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -32,14 +41,9 @@ const SafeOptions = styled.div`
 `
 
 const EthereumOptions = styled.div`
-  display: flex;
-  /* justify-content: space-between; */
-  flex-wrap: wrap;
-  gap: 10px 20px;
-
-  div {
-    width: 216px !important;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -65,12 +69,14 @@ interface Props {
   isExecution: boolean
 }
 
-const formValidation = (values) => {
-  const { ethGasLimit, ethGasPrice, ethNonce, safeNonce, safeTxGas } = values ?? {}
+const formValidation = (values: Record<keyof TxParameters, string>): Record<string, number | string | undefined> => {
+  const { ethGasLimit, ethGasPrice, ethMaxPrioFee, ethNonce, safeNonce, safeTxGas } = values ?? {}
 
   const ethGasLimitValidation = minValue(0, true)(ethGasLimit)
 
   const ethGasPriceValidation = minValue(0, true)(ethGasPrice)
+
+  const ethMaxPrioFeeValidation = minValue(0, true)(ethMaxPrioFee)
 
   const ethNonceValidation = minValue(0, true)(ethNonce)
 
@@ -81,6 +87,7 @@ const formValidation = (values) => {
   return {
     ethGasLimit: ethGasLimitValidation,
     ethGasPrice: ethGasPriceValidation,
+    ethMaxPrioFee: ethMaxPrioFeeValidation,
     ethNonce: ethNonceValidation,
     safeNonce: safeNonceValidation,
     safeTxGas: safeTxGasValidation,
@@ -94,8 +101,10 @@ export const EditTxParametersForm = ({
   isExecution,
 }: Props): ReactElement => {
   const classes = useStyles()
-  const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
+  const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
+  const safeAddress = extractSafeAddress()
+  const recommendedNonce = useGetRecommendedNonce(safeAddress)
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -122,11 +131,12 @@ export const EditTxParametersForm = ({
       <Block className={classes.container}>
         <GnoForm
           initialValues={{
-            safeNonce: safeNonce || 0,
+            safeNonce: safeNonce || recommendedNonce || '0',
             safeTxGas: safeTxGas || '',
             ethNonce: ethNonce || '',
             ethGasLimit: ethGasLimit || '',
             ethGasPrice: ethGasPrice || '',
+            ethMaxPrioFee: ethMaxPrioFee || '',
           }}
           onSubmit={onSubmit}
           validation={formValidation}
@@ -187,15 +197,29 @@ export const EditTxParametersForm = ({
                       component={TextField}
                       disabled={parametersStatus === 'CANCEL_TRANSACTION'}
                     />
-                    <Field
-                      name="ethGasPrice"
-                      defaultValue={ethGasPrice}
-                      type="number"
-                      placeholder="Gas price (GWEI)"
-                      text="Gas price (GWEI)"
-                      component={TextField}
-                      disabled={!areEthereumParamsVisible(parametersStatus)}
-                    />
+                    {((gasPriceText) => (
+                      <Field
+                        name="ethGasPrice"
+                        defaultValue={ethGasPrice}
+                        type="number"
+                        placeholder={gasPriceText}
+                        text={gasPriceText}
+                        component={TextField}
+                        disabled={!areEthereumParamsVisible(parametersStatus)}
+                      />
+                    ))(`${isMaxFeeParam() ? 'Max fee per gas' : 'Gas price'} (GWEI)`)}
+
+                    {isMaxFeeParam() && (
+                      <Field
+                        name="ethMaxPrioFee"
+                        defaultValue={ethMaxPrioFee}
+                        type="number"
+                        placeholder={`${fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei')} (GWEI)`}
+                        text="Max priority fee (GWEI)"
+                        component={TextField}
+                        disabled={!areEthereumParamsVisible(parametersStatus)}
+                      />
+                    )}
                   </EthereumOptions>
 
                   <StyledLink

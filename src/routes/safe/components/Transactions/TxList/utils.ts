@@ -203,4 +203,4 @@ export const isDeeplinkedTx = (): boolean => {
 
 export const isAwaitingExecution = (
   txStatus: typeof LocalTransactionStatus[keyof typeof LocalTransactionStatus],
-): boolean => [LocalTransactionStatus.AWAITING_EXECUTION, LocalTransactionStatus.PENDING_FAILED].includes(txStatus)
+): boolean => LocalTransactionStatus.AWAITING_EXECUTION === txStatus

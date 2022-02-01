@@ -85,7 +85,7 @@ const SafeListItem = ({
 
   useEffect(() => {
     if (isCurrentSafe && shouldScrollToSafe) {
-      safeRef?.current?.scrollIntoView({ behavior: 'smooth' })
+      safeRef?.current?.scrollIntoView({ block: 'center' })
     }
   }, [isCurrentSafe, shouldScrollToSafe])
 

@@ -3,8 +3,10 @@ import { TxParameters, useTransactionParameters } from 'src/routes/safe/containe
 import { EditTxParametersForm } from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 import { ParametersStatus } from './utils'
 import { useSelector } from 'react-redux'
+import { fromWei } from 'web3-utils'
 
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { DEFAULT_MAX_PRIO_FEE } from 'src/logic/hooks/useEstimateTransactionGas'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
@@ -13,6 +15,7 @@ type Props = {
   parametersStatus?: ParametersStatus
   ethGasLimit?: TxParameters['ethGasLimit']
   ethGasPrice?: TxParameters['ethGasPrice']
+  ethMaxPrioFee?: TxParameters['ethMaxPrioFee']
   safeNonce?: TxParameters['safeNonce']
   safeTxGas?: TxParameters['safeTxGas']
   closeEditModalCallback?: (txParameters: TxParameters) => void
@@ -25,6 +28,7 @@ export const EditableTxParameters = ({
   parametersStatus,
   ethGasLimit,
   ethGasPrice,
+  ethMaxPrioFee,
   safeNonce,
   safeTxGas,
   closeEditModalCallback,
@@ -34,22 +38,34 @@ export const EditableTxParameters = ({
   const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
   const txParameters = useTransactionParameters({
-    parameterStatus: parametersStatus || defaultParameterStatus,
+    parametersStatus: parametersStatus || defaultParameterStatus,
     initialEthGasLimit: ethGasLimit,
     initialEthGasPrice: ethGasPrice,
+    initialEthMaxPrioFee: ethMaxPrioFee,
     initialSafeNonce: safeNonce,
     initialSafeTxGas: safeTxGas,
   })
-  const { setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas, setEthNonce } = txParameters
+  const { setEthGasPrice, setEthGasLimit, setEthMaxPrioFee, setSafeNonce, setSafeTxGas, setEthNonce } = txParameters
 
   // Update TxParameters
   useEffect(() => {
     if (!useManualValues) {
       setEthGasLimit(ethGasLimit)
       setEthGasPrice(ethGasPrice)
+      setEthMaxPrioFee(ethMaxPrioFee)
       setSafeTxGas(safeTxGas)
     }
-  }, [ethGasLimit, setEthGasLimit, ethGasPrice, setEthGasPrice, useManualValues, safeTxGas, setSafeTxGas])
+  }, [
+    ethGasLimit,
+    setEthGasLimit,
+    ethGasPrice,
+    setEthGasPrice,
+    useManualValues,
+    safeTxGas,
+    setSafeTxGas,
+    setEthMaxPrioFee,
+    ethMaxPrioFee,
+  ])
 
   const toggleStatus = () => {
     toggleEditMode((prev) => !prev)
@@ -62,6 +78,7 @@ export const EditableTxParameters = ({
       setSafeTxGas(txParameters.safeTxGas)
       setEthGasLimit(txParameters.ethGasLimit)
       setEthGasPrice(txParameters.ethGasPrice)
+      setEthMaxPrioFee(txParameters.ethMaxPrioFee || fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'))
       setEthNonce(txParameters.ethNonce)
       closeEditModalCallback && closeEditModalCallback(txParameters)
     }
