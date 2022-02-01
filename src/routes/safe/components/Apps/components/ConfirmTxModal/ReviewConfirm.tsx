@@ -137,7 +137,7 @@ export const ReviewConfirm = ({
       txValue={txValue}
       operation={operation}
       onSubmit={confirmTransactions}
-      isConfirmDisabled={!isOwner}
+      isSubmitDisabled={!isOwner}
       onBack={onReject}
     >
       <div hidden={hidden}>
