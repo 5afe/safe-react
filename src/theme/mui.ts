@@ -160,12 +160,6 @@ const theme = createTheme({
         position: 'absolute',
         top: '5px',
         zIndex: 1, // for firefox
-
-        '&.Mui-error': {
-          paddingLeft: '0',
-          width: '100%',
-          textAlign: 'center',
-        },
       },
     },
     MuiInput: {
