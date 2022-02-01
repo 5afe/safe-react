@@ -1,5 +1,6 @@
 import { ReactElement } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import { Skeleton } from '@material-ui/lab'
 import { Card, Divider, Link } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import QRCode from 'qrcode.react'
@@ -11,8 +12,7 @@ import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import onboard from 'src/logic/wallets/onboard'
-import { Skeleton } from '@material-ui/lab'
-import { getPairingUri } from 'src/logic/wallets/pairing/module'
+import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 
 const styles = () => ({
   header: {

@@ -7,16 +7,12 @@ import { getRpcServiceUrl } from 'src/config'
 import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getChains } from 'src/config/cache/chains'
+import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 
 // Modified version of the built in WC module in Onboard v1.35.5
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
 
 export const PAIRING_MODULE_NAME = 'Mobile'
-
-export const getPairingUri = (wcUri: string): string => {
-  const PAIRING_MODULE_URI_PREFIX = 'safe-'
-  return `${PAIRING_MODULE_URI_PREFIX}${wcUri}`
-}
 
 // @walletconnect/web3-provider uses `any` payloads. These are typed from v1.6.2 used by Onboard v1.35.5
 
