@@ -56,7 +56,7 @@ export const minValue =
       return undefined
     }
 
-    return `Should be greater than ${inclusive ? 'or equal to ' : ''}${min}`
+    return `Must be greater than ${inclusive ? 'or equal to ' : ''}${min}`
   }
 
 export const maxValue =
