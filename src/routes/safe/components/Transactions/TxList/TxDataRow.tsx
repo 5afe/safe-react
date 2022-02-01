@@ -26,7 +26,7 @@ type TxDataRowType = {
   inlineType?: 'hash' | 'rawData' | 'address'
   hasExplorer?: boolean
   title: string
-  value?: string
+  value?: string | null
   isArray?: boolean
   method?: string
   paramType?: string
@@ -79,22 +79,25 @@ export const TxDataRow = ({
   isArray,
   method,
   paramType,
-}: TxDataRowType): ReactElement => (
-  <StyledGridRow>
-    <Text size="xl" as="span" color="placeHolder">
-      {title}
-    </Text>
-    {isArray && value && method && paramType && (
-      <ValueWrapper>
-        <Value method={method} type={paramType} value={value} />
-      </ValueWrapper>
-    )}
-    {generateInlineTypeValue(inlineType, value, hasExplorer)}
-    {!inlineType && !isArray && value && (
-      <Text size="xl" as="span">
-        {value}
+}: TxDataRowType): ReactElement | null => {
+  if (value == undefined) return null
+  return (
+    <StyledGridRow>
+      <Text size="xl" as="span" color="placeHolder">
+        {title}
       </Text>
-    )}
-    {children}
-  </StyledGridRow>
-)
+      {isArray && value && method && paramType && (
+        <ValueWrapper>
+          <Value method={method} type={paramType} value={value} />
+        </ValueWrapper>
+      )}
+      {generateInlineTypeValue(inlineType, value, hasExplorer)}
+      {!inlineType && !isArray && value && (
+        <Text size="xl" as="span">
+          {value}
+        </Text>
+      )}
+      {children}
+    </StyledGridRow>
+  )
+}
