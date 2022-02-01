@@ -54,6 +54,7 @@ module.exports = {
   primary,
   primary400: '#008C73',
   regularFont: 400,
+  red400: '#C31717',
   screenLg: 1200,
   screenMd: 992,
   screenMdMax: 1199,

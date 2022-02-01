@@ -14,7 +14,7 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { AddressInfo } from 'src/routes/safe/components/Transactions/TxList/AddressInfo'
 import { isCancelTxDetails } from 'src/routes/safe/components/Transactions/TxList/utils'
-import { black300, gray500, primary400 } from 'src/theme/variables'
+import { black300, gray500, primary400, red400 } from 'src/theme/variables'
 
 // Icons
 
@@ -57,7 +57,7 @@ const StyledStepConnector = styled(StepConnector)`
   }
 `
 
-type StepColor = 'green' | 'gray' | 'orange'
+type StepColor = 'green' | 'gray' | 'orange' | 'red'
 const getStepColor = (color: StepColor): string => {
   switch (color) {
     case 'green':
@@ -66,6 +66,8 @@ const getStepColor = (color: StepColor): string => {
       return black300
     case 'orange':
       return '#e8663d'
+    case 'red':
+      return red400
   }
 }
 
@@ -114,7 +116,7 @@ export const TxOwners = ({
   return (
     <StyledStepper orientation="vertical" nonLinear connector={<StyledStepConnector />}>
       {isCancelTxDetails(txInfo) ? (
-        <StyledStep bold color="green">
+        <StyledStep bold color="red">
           <StepLabel icon={<TxRejectionIcon />}>On-chain rejection created</StepLabel>
         </StyledStep>
       ) : (
@@ -146,7 +148,7 @@ export const TxOwners = ({
       {detailedExecutionInfo.confirmations.length > 0 && (
         <StyledStep color="green">
           <StepLabel icon={<DotIcon />} onClick={toggleHide} style={{ cursor: 'pointer' }}>
-            {showConfirmations ? 'Show all' : 'Hide all'}
+            {showConfirmations ? 'Hide all' : 'Show all'}
           </StepLabel>
         </StyledStep>
       )}
