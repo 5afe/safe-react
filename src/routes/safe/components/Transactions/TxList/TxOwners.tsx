@@ -10,11 +10,12 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import RadioButtonUncheckedOutlinedIcon from '@material-ui/icons/RadioButtonUncheckedOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
+import { DetailedExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { AddressInfo } from 'src/routes/safe/components/Transactions/TxList/AddressInfo'
 import { isCancelTxDetails } from 'src/routes/safe/components/Transactions/TxList/utils'
-import { black300, gray500, primary400, red400 } from 'src/theme/variables'
+import { black300, gray500, primary400, red400, orange500 } from 'src/theme/variables'
 
 // Icons
 
@@ -57,32 +58,32 @@ const StyledStepConnector = styled(StepConnector)`
   }
 `
 
-type StepColor = 'green' | 'gray' | 'orange' | 'red'
-const getStepColor = (color: StepColor): string => {
-  switch (color) {
-    case 'green':
+type StepState = 'confirmed' | 'active' | 'disabled' | 'error'
+const getStepColor = (state: StepState): string => {
+  switch (state) {
+    case 'confirmed':
       return primary400
-    case 'gray':
+    case 'active':
+      return orange500
+    case 'disabled':
       return black300
-    case 'orange':
-      return '#e8663d'
-    case 'red':
+    case 'error':
       return red400
   }
 }
 
 type StyledStepProps = {
   bold?: boolean
-  color: StepColor
+  state: StepState
 }
 const StyledStep = styled(Step)<StyledStepProps>`
   .MuiStepLabel-label {
     font-weight: ${({ bold = false }) => (bold ? 'bold' : 'normal')};
-    color: ${({ color }) => getStepColor(color)};
+    color: ${({ state }) => getStepColor(state)};
   }
 
   .MuiStepLabel-iconContainer {
-    color: ${({ color }) => getStepColor(color)};
+    color: ${({ state }) => getStepColor(state)};
     align-items: center;
   }
 `
@@ -90,6 +91,27 @@ const StyledStep = styled(Step)<StyledStepProps>`
 const StyledStepContent = styled(StepContent)`
   color: ${black300};
 `
+
+const ShowPointer = styled.span`
+  cursor: pointer;
+`
+
+const Confirmations = styled.span`
+  color: ${black300};
+  font-weight: normal;
+`
+
+const shouldHideConfirmations = (detailedExecutionInfo: DetailedExecutionInfo | null): boolean => {
+  if (!detailedExecutionInfo || !isMultiSigExecutionDetails(detailedExecutionInfo)) {
+    return true
+  }
+
+  const confirmationsNeeded = detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length
+  const isConfirmed = confirmationsNeeded <= 0
+
+  // Threshold reached or > 3 confirmations
+  return isConfirmed || detailedExecutionInfo.confirmations.length <= 3
+}
 
 export const TxOwners = ({
   txDetails,
@@ -100,14 +122,7 @@ export const TxOwners = ({
 }): ReactElement | null => {
   const { txInfo, detailedExecutionInfo } = txDetails
 
-  const [hideConfirmations, setHideConfirmations] = useState<boolean>(
-    detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
-      ? // Threshold reached
-        detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length <= 0 ||
-          // Less than 3 confirmations
-          detailedExecutionInfo.confirmations.length <= 3
-      : true,
-  )
+  const [hideConfirmations, setHideConfirmations] = useState<boolean>(shouldHideConfirmations(detailedExecutionInfo))
 
   const toggleHide = () => {
     setHideConfirmations((prev) => !prev)
@@ -124,25 +139,25 @@ export const TxOwners = ({
   return (
     <StyledStepper orientation="vertical" nonLinear connector={<StyledStepConnector />}>
       {isCancelTxDetails(txInfo) ? (
-        <StyledStep bold color="red">
+        <StyledStep bold state="error">
           <StepLabel icon={<TxRejectionIcon />}>On-chain rejection created</StepLabel>
         </StyledStep>
       ) : (
-        <StyledStep bold color="green">
+        <StyledStep bold state="confirmed">
           <StepLabel icon={<TxCreationIcon />}>Created</StepLabel>
         </StyledStep>
       )}
-      <StyledStep bold color={isConfirmed ? 'green' : 'orange'}>
+      <StyledStep bold state={isConfirmed ? 'confirmed' : 'active'}>
         <StepLabel icon={isConfirmed ? <CheckIcon /> : <CircleIcon />}>
           Confirmations{' '}
-          <span style={{ color: black300, fontWeight: 'normal' }}>
+          <Confirmations>
             ({`${detailedExecutionInfo.confirmations.length} of ${detailedExecutionInfo.confirmationsRequired}`})
-          </span>
+          </Confirmations>
         </StepLabel>
       </StyledStep>
       {!hideConfirmations &&
         detailedExecutionInfo.confirmations.map(({ signer }) => (
-          <StyledStep key={signer.value} bold color="green">
+          <StyledStep key={signer.value} bold state="confirmed">
             <StepLabel icon={<DotIcon />}>
               <AddressInfo
                 address={signer.value}
@@ -154,13 +169,13 @@ export const TxOwners = ({
           </StyledStep>
         ))}
       {detailedExecutionInfo.confirmations.length > 0 && (
-        <StyledStep color="green">
-          <StepLabel icon={<DotIcon />} onClick={toggleHide} style={{ cursor: 'pointer' }}>
-            {hideConfirmations ? 'Show all' : 'Hide all'}
+        <StyledStep state="confirmed">
+          <StepLabel icon={<DotIcon />} onClick={toggleHide}>
+            <ShowPointer>{hideConfirmations ? 'Show all' : 'Hide all'}</ShowPointer>
           </StepLabel>
         </StyledStep>
       )}
-      <StyledStep expanded bold color={isExecuted ? 'green' : 'gray'}>
+      <StyledStep expanded bold state={isExecuted ? 'confirmed' : 'disabled'}>
         <StepLabel icon={isExecuted ? <CheckIcon /> : <CircleIcon />}>
           {isExecuted ? 'Executed' : isPending ? 'Executing' : 'Execution'}
         </StepLabel>

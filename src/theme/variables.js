@@ -51,6 +51,7 @@ module.exports = {
   marginButtonImg,
   md,
   mediumFontSize: '14px',
+  orange500: '#e8663d',
   primary,
   primary400: '#008C73',
   regularFont: 400,
