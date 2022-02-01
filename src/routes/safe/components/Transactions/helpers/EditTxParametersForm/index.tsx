@@ -4,6 +4,7 @@ import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
 import { Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
+import { fromWei } from 'web3-utils'
 
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
@@ -25,6 +26,7 @@ import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import { extractSafeAddress } from 'src/routes/routes'
 import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
 import Paragraph from 'src/components/layout/Paragraph'
+import { DEFAULT_MAX_PRIO_FEE } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const StyledDivider = styled(Divider)`
   margin: 0;
@@ -40,14 +42,9 @@ const SafeOptions = styled.div`
 `
 
 const EthereumOptions = styled.div`
-  display: flex;
-  /* justify-content: space-between; */
-  flex-wrap: wrap;
-  gap: 10px 20px;
-
-  div {
-    width: 216px !important;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -218,7 +215,7 @@ export const EditTxParametersForm = ({
                         name="ethMaxPrioFee"
                         defaultValue={ethMaxPrioFee}
                         type="number"
-                        placeholder="Max priority fee (GWEI)"
+                        placeholder={`${fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei')} (GWEI)`}
                         text="Max priority fee (GWEI)"
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}

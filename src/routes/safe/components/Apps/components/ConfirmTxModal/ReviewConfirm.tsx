@@ -136,6 +136,7 @@ export const ReviewConfirm = ({
 
   return (
     <TxModalWrapper
+      txTo={txRecipient}
       txData={txData}
       txValue={txValue}
       operation={operation}
