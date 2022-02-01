@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useState, CSSProperties } from 'react'
 import styled, { AnyStyledComponent } from 'styled-components'
 import Step from '@material-ui/core/Step'
 import StepConnector from '@material-ui/core/StepConnector'
@@ -92,14 +92,15 @@ const StyledStepContent = styled(StepContent)`
   color: ${black300};
 `
 
-const ShowPointer = styled.span`
-  cursor: pointer;
-`
+// Simple memoized styles
+const pointerStyle: CSSProperties = {
+  cursor: 'pointer',
+}
 
-const Confirmations = styled.span`
-  color: ${black300};
-  font-weight: normal;
-`
+const confirmationsStyle: CSSProperties = {
+  color: black300,
+  fontWeight: 'normal',
+}
 
 const shouldHideConfirmations = (detailedExecutionInfo: DetailedExecutionInfo | null): boolean => {
   if (!detailedExecutionInfo || !isMultiSigExecutionDetails(detailedExecutionInfo)) {
@@ -150,9 +151,9 @@ export const TxOwners = ({
       <StyledStep bold state={isConfirmed ? 'confirmed' : 'active'}>
         <StepLabel icon={isConfirmed ? <CheckIcon /> : <CircleIcon />}>
           Confirmations{' '}
-          <Confirmations>
+          <span style={confirmationsStyle}>
             ({`${detailedExecutionInfo.confirmations.length} of ${detailedExecutionInfo.confirmationsRequired}`})
-          </Confirmations>
+          </span>
         </StepLabel>
       </StyledStep>
       {!hideConfirmations &&
@@ -171,7 +172,7 @@ export const TxOwners = ({
       {detailedExecutionInfo.confirmations.length > 0 && (
         <StyledStep state="confirmed">
           <StepLabel icon={<DotIcon />} onClick={toggleHide}>
-            <ShowPointer>{hideConfirmations ? 'Show all' : 'Hide all'}</ShowPointer>
+            <span style={pointerStyle}>{hideConfirmations ? 'Show all' : 'Hide all'}</span>
           </StepLabel>
         </StyledStep>
       )}
