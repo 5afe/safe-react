@@ -75,9 +75,9 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
         </>
       )}
 
-      {txHash && <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />}
-      {safeTxHash && <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" hasExplorer={false} />}
-      {created && <TxDataRow title="Created:" value={formatDateTime(created)} />}
+      <TxDataRow title="Transaction hash:" value={txHash} inlineType="hash" />
+      <TxDataRow title="SafeTxHash:" value={safeTxHash} inlineType="hash" hasExplorer={false} />
+      <TxDataRow title="Created:" value={typeof created === 'number' ? formatDateTime(created) : null} />
       <TxDataRow title="Executed:" value={executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE} />
 
       {/* Advanced TxData */}
@@ -93,11 +93,11 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
                 value={`${txData.operation} (${Operation[txData.operation].toLowerCase()})`}
               />
             )}
-            {safeTxGas && <TxDataRow title="safeTxGas:" value={safeTxGas} />}
-            {baseGas && <TxDataRow title="baseGas:" value={baseGas} />}
-            {gasPrice && <TxDataRow title="gasPrice:" value={gasPrice} />}
-            {gasToken && <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />}
-            {refundReceiver && <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />}
+            <TxDataRow title="safeTxGas:" value={safeTxGas} />
+            <TxDataRow title="baseGas:" value={baseGas} />
+            <TxDataRow title="gasPrice:" value={gasPrice} />
+            <TxDataRow title="gasToken:" value={gasToken} inlineType="hash" />
+            <TxDataRow title="refundReceiver:" value={refundReceiver} inlineType="hash" />
             {confirmations?.map(({ signature }, index) => (
               <TxDataRow
                 title={`Signature ${index + 1}:`}
@@ -106,7 +106,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
                 inlineType="rawData"
               />
             ))}
-            {txData?.hexData && <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />}
+            <TxDataRow title="Raw data:" value={txData.hexData} inlineType="rawData" />
           </CollapsibleSection>
         </>
       )}
