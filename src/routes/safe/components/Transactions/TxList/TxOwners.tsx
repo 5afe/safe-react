@@ -98,12 +98,20 @@ export const TxOwners = ({
   txDetails: ExpandedTxDetails
   isPending: boolean
 }): ReactElement | null => {
-  const [showConfirmations, setShowConfirmations] = useState<boolean>(true)
-  const toggleHide = () => {
-    setShowConfirmations((prev) => !prev)
-  }
-
   const { txInfo, detailedExecutionInfo } = txDetails
+
+  const [hideConfirmations, setHideConfirmations] = useState<boolean>(
+    detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
+      ? // Threshold reached
+        detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length <= 0 ||
+          // Less than 3 confirmations
+          detailedExecutionInfo.confirmations.length <= 3
+      : true,
+  )
+
+  const toggleHide = () => {
+    setHideConfirmations((prev) => !prev)
+  }
 
   if (!detailedExecutionInfo || !isMultiSigExecutionDetails(detailedExecutionInfo)) {
     return null
@@ -132,7 +140,7 @@ export const TxOwners = ({
           </span>
         </StepLabel>
       </StyledStep>
-      {showConfirmations &&
+      {!hideConfirmations &&
         detailedExecutionInfo.confirmations.map(({ signer }) => (
           <StyledStep key={signer.value} bold color="green">
             <StepLabel icon={<DotIcon />}>
@@ -148,7 +156,7 @@ export const TxOwners = ({
       {detailedExecutionInfo.confirmations.length > 0 && (
         <StyledStep color="green">
           <StepLabel icon={<DotIcon />} onClick={toggleHide} style={{ cursor: 'pointer' }}>
-            {showConfirmations ? 'Hide all' : 'Show all'}
+            {hideConfirmations ? 'Show all' : 'Hide all'}
           </StepLabel>
         </StyledStep>
       )}
@@ -156,18 +164,21 @@ export const TxOwners = ({
         <StepLabel icon={isExecuted ? <CheckIcon /> : <CircleIcon />}>
           {isExecuted ? 'Executed' : isPending ? 'Executing' : 'Execution'}
         </StepLabel>
-        {detailedExecutionInfo.executor ? (
-          <StepContent>
-            <AddressInfo
-              address={detailedExecutionInfo.executor.value}
-              name={detailedExecutionInfo.executor?.name || undefined}
-              avatarUrl={detailedExecutionInfo.executor?.logoUri || undefined}
-              shortenHash={4}
-            />
-          </StepContent>
-        ) : (
-          !isConfirmed && <StyledStepContent>Can be executed once the threshold is reached</StyledStepContent>
-        )}
+        {
+          // isExecuted
+          detailedExecutionInfo.executor ? (
+            <StepContent>
+              <AddressInfo
+                address={detailedExecutionInfo.executor.value}
+                name={detailedExecutionInfo.executor?.name || undefined}
+                avatarUrl={detailedExecutionInfo.executor?.logoUri || undefined}
+                shortenHash={4}
+              />
+            </StepContent>
+          ) : (
+            !isConfirmed && <StyledStepContent>Can be executed once the threshold is reached</StyledStepContent>
+          )
+        }
       </StyledStep>
     </StyledStepper>
   )
