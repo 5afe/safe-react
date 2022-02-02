@@ -105,6 +105,7 @@ const Routes = (): React.ReactElement => {
         render={() => {
           // Routes with a shortName prefix
           const validShortName = setChainIdFromUrl(pathname)
+          // Safe address is used as a key to re-render the entire SafeContainer
           const safeAddress = extractSafeAddress()
           return validShortName ? <SafeContainer key={safeAddress} /> : <Redirect to={WELCOME_ROUTE} />
         }}
