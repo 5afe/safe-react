@@ -9,7 +9,12 @@ const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
   return iframeElement
 }
 
-const useThirdPartyCookies = (): { thirdPartyCookiesDisabled: boolean } => {
+type ThirdPartyCookiesType = {
+  thirdPartyCookiesDisabled: boolean
+  setThirdPartyCookiesDisabled: (boolean) => void
+}
+
+const useThirdPartyCookies = (): ThirdPartyCookiesType => {
   const iframeRef = useRef<HTMLIFrameElement>()
   const [thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled] = useState<boolean>(false)
 
@@ -38,7 +43,7 @@ const useThirdPartyCookies = (): { thirdPartyCookiesDisabled: boolean } => {
     document.body.appendChild(iframeElement)
   }, [messageHandler])
 
-  return { thirdPartyCookiesDisabled }
+  return { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled }
 }
 
 export { useThirdPartyCookies }

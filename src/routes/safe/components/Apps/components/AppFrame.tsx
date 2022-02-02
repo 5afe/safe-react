@@ -33,6 +33,7 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
+import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -101,7 +102,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
-  const { thirdPartyCookiesDisabled } = useThirdPartyCookies()
+  const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -309,7 +310,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   return (
     <AppWrapper>
-      {thirdPartyCookiesDisabled && <p>Third party cookies disabled</p>}
+      {thirdPartyCookiesDisabled && (
+        <ThirdPartyCookiesWarning
+          onEdit={() => open('chrome://settings', '_blank')}
+          onClose={() => setThirdPartyCookiesDisabled(false)}
+        />
+      )}
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>

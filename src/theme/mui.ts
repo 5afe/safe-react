@@ -24,6 +24,7 @@ import {
   sm,
   smallFontSize,
   xs,
+  alertWarning,
 } from './variables'
 
 const palette = {
@@ -429,6 +430,29 @@ const theme = createTheme({
         '&$disabled': {
           color: primary,
         },
+      },
+    },
+    MuiAlert: {
+      root: {
+        color: fontColor,
+        height: '48px',
+        alignItems: 'center',
+      },
+      standardWarning: {
+        backgroundColor: alertWarning,
+      },
+      icon: {
+        '& > svg': {
+          width: md,
+          height: md,
+        },
+      },
+    },
+    MuiAlertTitle: {
+      root: {
+        color: fontColor,
+        fontSize: md,
+        margin: 0,
       },
     },
   },
