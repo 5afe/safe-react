@@ -8,7 +8,6 @@ export const DEFAULT_CHAIN_ID =
 export const PUBLIC_URL = process.env.PUBLIC_URL
 export const TX_SERVICE_VERSION = '1'
 export const INTERCOM_ID = IS_PRODUCTION ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
-export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || ''
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID ?? '852b763d-f28b-4463-80cb-846d7ec5806b'
 export const FORTMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY ?? 'pk_test_CAD437AA29BE0A40'
@@ -25,8 +24,9 @@ export const SPENDING_LIMIT_MODULE_ADDRESS =
   process.env.REACT_APP_SPENDING_LIMIT_MODULE_ADDRESS || '0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134'
 
 // Google Tag Manager
-export const GTM_AUTH_LIVE = process.env.REACT_APP_GTM_LIVE_AUTH || ''
-export const GTM_AUTH_LATEST = process.env.REACT_APP_GTM_LATEST_AUTH || ''
+export const GOOGLE_TAG_MANAGER_ID = process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID || ''
+export const GOOGLE_TAG_MANAGER_AUTH_LIVE = process.env.REACT_APP_GOOGLE_TAG_MANAGER_LIVE_AUTH || ''
+export const GOOGLE_TAG_MANAGER_AUTH_LATEST = process.env.REACT_APP_GOOGLE_TAG_MANAGER_LATEST_AUTH || ''
 
 // localStorage-related constants
 export const LS_NAMESPACE = 'SAFE'

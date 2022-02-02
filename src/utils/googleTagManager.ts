@@ -1,18 +1,22 @@
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
 
-import { GTM_AUTH_LIVE, GTM_AUTH_LATEST, IS_PRODUCTION } from 'src/utils/constants'
+import {
+  GOOGLE_TAG_MANAGER_ID,
+  GOOGLE_TAG_MANAGER_AUTH_LIVE,
+  GOOGLE_TAG_MANAGER_AUTH_LATEST,
+  IS_PRODUCTION,
+} from 'src/utils/constants'
 
 type GTMEnvironment = 'LIVE' | 'LATEST' | 'DEVELOPMENT'
 type GTMEnvironmentArgs = Required<Pick<TagManagerArgs, 'auth' | 'preview'>>
 
-const GTM_ID: TagManagerArgs['gtmId'] = 'GTM-TSZSBRK'
 const GTM_ENV_AUTH: Record<GTMEnvironment, GTMEnvironmentArgs> = {
   LIVE: {
-    auth: GTM_AUTH_LIVE,
+    auth: GOOGLE_TAG_MANAGER_AUTH_LIVE,
     preview: 'env-1',
   },
   LATEST: {
-    auth: GTM_AUTH_LATEST,
+    auth: GOOGLE_TAG_MANAGER_AUTH_LATEST,
     preview: 'env-2',
   },
   DEVELOPMENT: {
@@ -24,13 +28,13 @@ const GTM_ENV_AUTH: Record<GTMEnvironment, GTMEnvironmentArgs> = {
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
-  if (!GTM_ENVIRONMENT.auth) {
-    console.warn('Unable to initialise GTM. No `gtm_auth` found.')
+  if (!GOOGLE_TAG_MANAGER_ID || GTM_ENVIRONMENT.auth) {
+    console.warn('Unable to initialise Google Tag Manager. `id` or `gtm_auth` missing.')
     return
   }
 
   TagManager.initialize({
-    gtmId: GTM_ID,
+    gtmId: GOOGLE_TAG_MANAGER_ID,
     ...GTM_ENVIRONMENT,
   })
 }
