@@ -8,7 +8,7 @@ import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
 import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
@@ -17,11 +17,18 @@ import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
+import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 
-const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
+const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
+
+const saveLastUsedProvider = (name: string) => {
+  const expireInDays = (days: number) => 60 * 60 * 24 * days
+  const expiry = name === PAIRING_MODULE_NAME ? expireInDays(1) : expireInDays(365)
+  saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
+}
 
 export const loadLastUsedProvider = (): string | undefined => {
-  return loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
+  return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
 }
 
 const getNetworkName = (chainId: ChainId) => {
@@ -53,7 +60,7 @@ const getOnboard = (chainId: ChainId): API => {
 
         // Cache wallet for reconnection
         if (wallet.name) {
-          saveToStorage(LAST_USED_PROVIDER_KEY, wallet.name)
+          saveLastUsedProvider(wallet.name)
         }
 
         store.dispatch(

@@ -1,9 +1,10 @@
-import { WalletInitOptions, WalletModule } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions, WalletModule, WalletSelectModuleOptions } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
-import getPairingModule from '../pairing/module'
+import getPairingModule from 'src/logic/wallets/pairing/module'
+import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean
@@ -16,7 +17,6 @@ const wallets = (chainId: ChainId): Wallet[] => {
   const rpcUrl = getRpcServiceUrl(rpcUri)
 
   return [
-    { ...getPairingModule(chainId), desktop: true, walletName: WALLETS.DESKTOP_PAIRING },
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,
@@ -73,14 +73,14 @@ const wallets = (chainId: ChainId): Wallet[] => {
   ]
 }
 
-export const getSupportedWallets = (chainId: ChainId): WalletInitOptions[] => {
-  if (window.isDesktop) {
-    return wallets(chainId)
-      .filter(({ desktop }) => desktop)
-      .map(({ desktop, ...rest }) => rest)
-  }
-
-  return wallets(chainId)
+export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
+  const supportedWallets = wallets(chainId)
+    .filter(({ walletName, desktop }) => {
+      const isSupported = !getDisabledWallets().includes(walletName)
+      // Desktop vs. Web app wallet support
+      return window.isDesktop ? isSupported && desktop : isSupported
+    })
     .map(({ desktop, ...rest }) => rest)
-    .filter(({ walletName }) => !getDisabledWallets().includes(walletName))
+
+  return isPairingSupported() ? supportedWallets : [getPairingModule(chainId), ...supportedWallets]
 }
