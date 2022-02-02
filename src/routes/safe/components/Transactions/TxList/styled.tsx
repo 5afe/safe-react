@@ -424,6 +424,7 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-details-actions {
     align-items: flex-end;
+    padding-bottom: 24px;
     display: flex;
     gap: 8px;
     justify-content: center;
@@ -451,59 +452,6 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
         }
       }
     }
-  }
-`
-
-export const OwnerList = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding-left: 6px;
-
-  .legend {
-    left: 15px;
-    padding-bottom: 0.86em;
-    position: relative;
-    top: -3px;
-
-    .owner-info {
-      margin: 5px;
-    }
-
-    span::first-of-type {
-      color: #008c73;
-      font-weight: bold;
-    }
-  }
-
-  ul {
-    margin-top: 0;
-  }
-
-  .icon {
-    left: -7px;
-    position: absolute;
-    width: 16px;
-    z-index: 2;
-  }
-`
-
-export const OwnerListItem = styled.li`
-  display: flex;
-  position: relative;
-
-  &::before {
-    border-left: 2px ${({ theme }) => theme.colors.icon} solid;
-    border-radius: 1px;
-    content: '';
-    height: calc(100% - 16px);
-    top: 16px;
-    left: 0;
-    position: absolute;
-    z-index: 1;
-  }
-
-  &:last-child::before {
-    border-left: none;
   }
 `
 
