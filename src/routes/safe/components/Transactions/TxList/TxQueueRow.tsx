@@ -1,7 +1,11 @@
 import { AccordionDetails } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useContext, useEffect, useState } from 'react'
 
-import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isMultisigExecutionInfo,
+  LocalTransactionStatus,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'
@@ -9,7 +13,6 @@ import { TxQueueCollapsed } from './TxQueueCollapsed'
 import { useSelector } from 'react-redux'
 import { AppReduxState } from 'src/store'
 import { isTxPending, pendingTxByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
-import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type TxQueueRowProps = {
   isGrouped?: boolean
@@ -22,8 +25,8 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
   const willBeReplaced = tx.txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
   const isPending = useSelector((state: AppReduxState) => isTxPending(state, transaction.id))
   const pendingTx = useSelector(pendingTxByChain)
-  const pendingTxNonce = (pendingTx?.executionInfo as MultisigExecutionInfo)?.nonce
-  const nonce = (transaction.executionInfo as MultisigExecutionInfo)?.nonce
+  const pendingTxNonce = isMultisigExecutionInfo(pendingTx?.executionInfo) ? pendingTx?.executionInfo.nonce : undefined
+  const nonce = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo.nonce : undefined
 
   useEffect(() => {
     if ((activeHover && activeHover !== transaction.id) || (!isPending && nonce === pendingTxNonce)) {
