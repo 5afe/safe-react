@@ -5,6 +5,7 @@ import {
   GOOGLE_TAG_MANAGER_AUTH_LIVE,
   GOOGLE_TAG_MANAGER_AUTH_LATEST,
   IS_PRODUCTION,
+  GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH,
 } from 'src/utils/constants'
 
 type GTMEnvironment = 'LIVE' | 'LATEST' | 'DEVELOPMENT'
@@ -20,7 +21,7 @@ const GTM_ENV_AUTH: Record<GTMEnvironment, GTMEnvironmentArgs> = {
     preview: 'env-2',
   },
   DEVELOPMENT: {
-    auth: 'kUsn0oQ2nl5LbQdqhkYoDA',
+    auth: GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH,
     preview: 'env-3',
   },
 }
