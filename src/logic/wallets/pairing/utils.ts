@@ -5,7 +5,7 @@ import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 import { WALLETS } from 'src/config/chain.d'
 
 export const isPairingSupported = (): boolean => {
-  return getDisabledWallets().includes(WALLETS.DESKTOP_PAIRING)
+  return !getDisabledWallets().includes(WALLETS.DESKTOP_PAIRING)
 }
 
 export const isPairingModule = (wallet: Wallet): boolean => {

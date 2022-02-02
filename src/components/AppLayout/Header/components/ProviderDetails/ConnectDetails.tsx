@@ -12,7 +12,7 @@ import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import onboard from 'src/logic/wallets/onboard'
-import { getPairingUri } from 'src/logic/wallets/pairing/utils'
+import { getPairingUri, isPairingSupported } from 'src/logic/wallets/pairing/utils'
 
 const styles = () => ({
   header: {
@@ -43,27 +43,33 @@ const StyledDivider = styled(Divider)`
   margin-left: -20px;
 `
 
-const ConnectDetails = ({ classes }): ReactElement => {
+const ConnectDetails = ({ classes }): ReactElement => (
+  <StyledCard>
+    <Row align="center" margin="lg">
+      <Paragraph className={classes.header} noMargin>
+        Connect a Wallet
+      </Paragraph>
+    </Row>
+
+    <Row className={classes.justifyCenter} margin="lg">
+      <KeyRing center circleSize={60} dotRight={20} dotSize={20} dotTop={50} keySize={28} mode="error" />
+    </Row>
+
+    <Block className={classes.centerText}>
+      <ConnectButton data-testid="heading-connect-btn" />
+    </Block>
+
+    {isPairingSupported() && <PairingDetails classes={classes} />}
+  </StyledCard>
+)
+
+const PairingDetails = ({ classes }): ReactElement => {
   usePairing()
 
   const uri = onboard().getState().wallet.provider?.wc?.uri
 
   return (
-    <StyledCard>
-      <Row align="center" margin="lg">
-        <Paragraph className={classes.header} noMargin>
-          Connect a Wallet
-        </Paragraph>
-      </Row>
-
-      <Row className={classes.justifyCenter} margin="lg">
-        <KeyRing center circleSize={60} dotRight={20} dotSize={20} dotTop={50} keySize={28} mode="error" />
-      </Row>
-
-      <Block className={classes.centerText}>
-        <ConnectButton data-testid="heading-connect-btn" />
-      </Block>
-
+    <>
       <StyledDivider />
 
       <Row align="center" margin="lg">
@@ -96,7 +102,7 @@ const ConnectDetails = ({ classes }): ReactElement => {
           />
         </a>
       </Row>
-    </StyledCard>
+    </>
   )
 }
 
