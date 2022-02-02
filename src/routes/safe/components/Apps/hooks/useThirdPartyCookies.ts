@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
+const THIRD_PARTY_COOKIES_CHECK_URL = 'https://third-party-cookies-test.vercel.app'
+const SHOW_ALERT_TIMEOUT = 10000
+
 const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
   const iframeElement: HTMLIFrameElement = document.createElement('iframe')
 
@@ -35,13 +38,23 @@ const useThirdPartyCookies = (): ThirdPartyCookiesType => {
   useEffect(() => {
     window.addEventListener('message', messageHandler)
 
-    const iframeElement: HTMLIFrameElement = createIframe('https://third-party-cookies-test.vercel.app', () => {
+    const iframeElement: HTMLIFrameElement = createIframe(THIRD_PARTY_COOKIES_CHECK_URL, () => {
       iframeElement?.contentWindow?.postMessage({ test: 'cookie' }, '*')
     })
 
     iframeRef.current = iframeElement
     document.body.appendChild(iframeElement)
   }, [messageHandler])
+
+  useEffect(() => {
+    let id: ReturnType<typeof setTimeout>
+
+    if (thirdPartyCookiesDisabled) {
+      id = setTimeout(() => setThirdPartyCookiesDisabled(false), SHOW_ALERT_TIMEOUT)
+    }
+
+    return () => clearTimeout(id)
+  }, [thirdPartyCookiesDisabled])
 
   return { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled }
 }
