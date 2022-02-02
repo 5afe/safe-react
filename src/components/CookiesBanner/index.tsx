@@ -16,6 +16,7 @@ import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { CookieAttributes } from 'js-cookie'
+import { loadGoogleTagManager } from 'src/utils/googleTagManager'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -111,6 +112,10 @@ const CookiesBanner = (): ReactElement => {
   const showBanner = useSelector(cookieBannerOpen)
   const newAppUrl = getAppUrl()
   const isSafeAppView = newAppUrl !== null
+
+  useEffect(() => {
+    loadGoogleTagManager()
+  }, [])
 
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
