@@ -22,7 +22,7 @@ import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
 const saveLastUsedProvider = (name: string) => {
-  const expireInDays = (days: number) => 60 * 60 * 24 * days
+  const expireInDays = (days: number) => 60 * 60 * 24 * 1000 * days
   const expiry = name === PAIRING_MODULE_NAME ? expireInDays(1) : expireInDays(365)
   saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
 }
