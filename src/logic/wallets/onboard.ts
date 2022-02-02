@@ -16,7 +16,6 @@ import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProvide
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
-import getPairingModule from 'src/logic/wallets/pairing/module'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
@@ -90,7 +89,7 @@ const getOnboard = (chainId: ChainId): API => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: [getPairingModule(chainId), ...getSupportedWallets(chainId)],
+      wallets: getSupportedWallets(chainId),
     },
     walletCheck: [
       { checkName: 'derivationPath' },

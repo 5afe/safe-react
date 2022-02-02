@@ -1,7 +1,6 @@
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { IClientMeta, IRPCMap } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
-import UAParser from 'ua-parser-js'
 
 import { getRpcServiceUrl } from 'src/config'
 import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL } from 'src/utils/constants'
@@ -27,31 +26,36 @@ type WCConnectPayload = {
 }
 type WCDisconnectPayload = { params: { message: string }[] }
 
-const parser = new UAParser()
-const browser = parser.getBrowser()
-const os = parser.getOS()
+const getClientMeta = (): IClientMeta => {
+  const UAParser = require('ua-parser-js')
 
-const CLIENT_META: IClientMeta = {
-  name: PAIRING_MODULE_NAME,
-  description: JSON.stringify({
-    appVersion: APP_VERSION,
-    browser: `${browser.name} ${browser.version}`,
-    os: `${os.name} ${os.version}`,
-  }),
-  url: 'https://gnosis-safe.io/app',
-  icons: [],
+  const parser = new UAParser()
+  const browser = parser.getBrowser()
+  const os = parser.getOS()
+
+  const app = `Safe Web App ${APP_VERSION}`
+  const client = `${browser.name} ${browser.major} (${os.name} ${os.version})`
+
+  return {
+    name: PAIRING_MODULE_NAME,
+    description: [app, client].join(';'),
+    url: 'https://gnosis-safe.io/app',
+    icons: [],
+  }
 }
 
-const getPairingModule = (chainId: ChainId): WalletModule => {
-  const WC_BRIDGE = 'https://safe-walletconnect.gnosis.io/'
-  const STORAGE_ID = 'SAFE__pairingProvider'
-
-  const rpcMap: IRPCMap = getChains().reduce((map, { chainId, rpcUri }) => {
+const getRpcMap = (): IRPCMap => {
+  return getChains().reduce((map, { chainId, rpcUri }) => {
     return {
       ...map,
       [parseInt(chainId, 10)]: getRpcServiceUrl(rpcUri),
     }
   }, {})
+}
+
+const getPairingModule = (chainId: ChainId): WalletModule => {
+  const WC_BRIDGE = 'https://safe-walletconnect.gnosis.io/'
+  const STORAGE_ID = 'SAFE__pairingProvider'
 
   return {
     name: PAIRING_MODULE_NAME,
@@ -59,12 +63,12 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
     wallet: async ({ resetWalletState }) => {
       const provider = new WalletConnectProvider({
         infuraId: INFURA_TOKEN,
-        rpc: rpcMap,
+        rpc: getRpcMap(),
         chainId: parseInt(chainId, 10),
         bridge: WC_BRIDGE,
         storageId: STORAGE_ID,
         qrcode: false, // Don't show QR modal
-        clientMeta: CLIENT_META,
+        clientMeta: getClientMeta(),
       })
 
       // Not sure if redundant, but just in case

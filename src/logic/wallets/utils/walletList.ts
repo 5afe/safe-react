@@ -1,10 +1,11 @@
-import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions, WalletModule } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
+import getPairingModule from '../pairing/module'
 
-type Wallet = WalletInitOptions & {
+type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean
   walletName: WALLETS
 }
@@ -15,6 +16,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
   const rpcUrl = getRpcServiceUrl(rpcUri)
 
   return [
+    { ...getPairingModule(chainId), desktop: true, walletName: WALLETS.DESKTOP_PAIRING },
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,
