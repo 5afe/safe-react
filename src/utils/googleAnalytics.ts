@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import ReactGA, { EventArgs } from 'react-ga'
 import { useSelector } from 'react-redux'
-import { getChainInfo, _getChainId } from 'src/config'
+import { getChainInfo } from 'src/config'
 
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
-import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
-import { GOOGLE_ANALYTICS_ID, IS_PRODUCTION } from './constants'
+import { loadFromCookie } from 'src/logic/cookies/utils'
+import { IS_PRODUCTION } from './constants'
 import { capitalize } from './css'
 
 const USER_EVENT = 'User'
@@ -98,40 +98,7 @@ const trackAnalyticsPage: typeof ReactGA.pageview = (...args) => {
   return shouldUseGoogleAnalytics ? ReactGA.pageview(...args) : console.info('[GA] - Page:', ...args)
 }
 
-let analyticsLoaded = false
-export const loadGoogleAnalytics = (): void => {
-  if (analyticsLoaded) {
-    return
-  }
-
-  console.info(
-    shouldUseGoogleAnalytics
-      ? 'Loading Google Analytics...'
-      : 'Google Analytics will not load in the development environment, but instead log.',
-  )
-
-  const customDimensions: ReactGA.FieldsObject = {
-    anonymizeIp: true,
-    appName: `Gnosis Safe Web`,
-    appVersion: process.env.REACT_APP_APP_VERSION,
-    dimension1: _getChainId(),
-  }
-
-  const gaTrackingId = GOOGLE_ANALYTICS_ID
-
-  if (shouldUseGoogleAnalytics) {
-    if (!gaTrackingId) {
-      console.error('In order to use Google Analytics you need to add a tracking ID.')
-    } else {
-      ReactGA.initialize(gaTrackingId)
-      ReactGA.set(customDimensions)
-    }
-  } else {
-    console.info('[GA] - Custom dimensions:', customDimensions)
-  }
-
-  analyticsLoaded = true
-}
+const analyticsLoaded = false
 
 type UseAnalyticsResponse = {
   trackPage: (path: string) => void
@@ -178,11 +145,4 @@ export const useAnalytics = (): UseAnalyticsResponse => {
   )
 
   return { trackPage, trackEvent }
-}
-
-// we remove GA cookies manually as react-ga does not provides a utility for it.
-export const removeCookies = (): void => {
-  // Extracts the main domain, e.g. gnosis-safe.io
-  const subDomain = location.host.split('.').slice(-2).join('.')
-  COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
 }
