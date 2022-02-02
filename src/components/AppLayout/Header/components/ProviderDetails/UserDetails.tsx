@@ -128,9 +128,11 @@ export const UserDetails = ({
             <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
-        <Block className={classes.ens} justify="center">
-          {ensName}
-        </Block>
+        {ensName && (
+          <Block className={classes.ens} justify="center">
+            {ensName}
+          </Block>
+        )}
         <Block className={classes.user} justify="center">
           {userAddress ? (
             <PrefixedEthHashInfo
