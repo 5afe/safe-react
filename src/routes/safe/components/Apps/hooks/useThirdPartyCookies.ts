@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-const THIRD_PARTY_COOKIES_CHECK_URL = 'https://third-party-cookies-test.vercel.app'
+const THIRD_PARTY_COOKIES_CHECK_URL = 'https://third-party-cookies-test.vercel.app' //TODO: Change URL
 const SHOW_ALERT_TIMEOUT = 10000
 
 const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
@@ -9,12 +9,13 @@ const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
   iframeElement.src = uri
   iframeElement.setAttribute('style', 'display:none')
   iframeElement.onload = onload
+
   return iframeElement
 }
 
 type ThirdPartyCookiesType = {
   thirdPartyCookiesDisabled: boolean
-  setThirdPartyCookiesDisabled: (boolean) => void
+  setThirdPartyCookiesDisabled: (value: boolean) => void
 }
 
 const useThirdPartyCookies = (): ThirdPartyCookiesType => {
@@ -38,9 +39,9 @@ const useThirdPartyCookies = (): ThirdPartyCookiesType => {
   useEffect(() => {
     window.addEventListener('message', messageHandler)
 
-    const iframeElement: HTMLIFrameElement = createIframe(THIRD_PARTY_COOKIES_CHECK_URL, () => {
-      iframeElement?.contentWindow?.postMessage({ test: 'cookie' }, '*')
-    })
+    const iframeElement: HTMLIFrameElement = createIframe(THIRD_PARTY_COOKIES_CHECK_URL, () =>
+      iframeElement?.contentWindow?.postMessage({ test: 'cookie' }, '*'),
+    )
 
     iframeRef.current = iframeElement
     document.body.appendChild(iframeElement)
