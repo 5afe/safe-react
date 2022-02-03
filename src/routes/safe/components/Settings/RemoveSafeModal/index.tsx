@@ -31,10 +31,10 @@ function getNextAvailableSafe(currentChainId: string, currentSafeAddress: string
   const sameNetworkSafes = availableSafes.filter((safe) => safe.chainId === currentChainId)
 
   if (sameNetworkSafes.length > 0) {
-    return sameNetworkSafes.pop()
+    return sameNetworkSafes[0]
   }
 
-  return availableSafes.pop()
+  return availableSafes[0]
 }
 
 function getDestinationRoute(nextAvailableSafe: SafeRecordProps | undefined) {
