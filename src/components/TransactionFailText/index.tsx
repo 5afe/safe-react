@@ -26,11 +26,13 @@ const useStyles = makeStyles(styles)
 type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus
   isExecution: boolean
+  isCreation: boolean
 }
 
 export const TransactionFailText = ({
   txEstimationExecutionStatus,
   isExecution,
+  isCreation,
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
   const threshold = useSelector(currentSafeThreshold)
@@ -49,11 +51,11 @@ export const TransactionFailText = ({
         : `To save gas costs, avoid executing the transaction.`
   }
 
-  const error = isGranted
-    ? `This transaction will most likely fail. ${errorDesc}`
-    : isWrongChain
-    ? 'Your wallet is connected to the wrong chain.'
-    : "You are currently not an owner of this Safe and won't be able to submit this transaction."
+  const defaultMsg = `This transaction will most likely fail. ${errorDesc}`
+  const notOwnerMsg = `You are currently not an owner of this Safe and won't be able to submit this transaction.`
+  const wrongChainMsg = 'Your wallet is connected to the wrong chain.'
+
+  const error = isGranted ? defaultMsg : isWrongChain ? wrongChainMsg : isCreation ? notOwnerMsg : defaultMsg
 
   return (
     <Row align="center">

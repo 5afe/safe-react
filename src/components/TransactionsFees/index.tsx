@@ -56,7 +56,11 @@ export const TransactionFees = ({
           )}
         </Paragraph>
       )}
-      <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+      <TransactionFailText
+        txEstimationExecutionStatus={txEstimationExecutionStatus}
+        isExecution={isExecution}
+        isCreation={isCreation}
+      />
     </>
   )
 }
