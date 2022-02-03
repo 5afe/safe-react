@@ -312,7 +312,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     <AppWrapper>
       {thirdPartyCookiesDisabled && (
         <ThirdPartyCookiesWarning
-          onEdit={() => open('chrome://settings', '_blank')}
+          onHelp={() => open('chrome://settings', '_blank')}
           onClose={() => setThirdPartyCookiesDisabled(false)}
         />
       )}
