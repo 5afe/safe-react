@@ -7,7 +7,7 @@ import getPairingModule from 'src/logic/wallets/pairing/module'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
-  desktop: boolean
+  desktop: boolean // Whether wallet supports desktop app
   walletName: WALLETS
 }
 
@@ -77,10 +77,11 @@ export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions
   const supportedWallets = wallets(chainId)
     .filter(({ walletName, desktop }) => {
       const isSupported = !getDisabledWallets().includes(walletName)
+
       // Desktop vs. Web app wallet support
-      return window.isDesktop ? isSupported && desktop : isSupported
+      return isSupported && window.isDesktop ? desktop : true
     })
-    .map(({ desktop, ...rest }) => rest)
+    .map(({ desktop: _, ...rest }) => rest)
 
   return isPairingSupported() ? [getPairingModule(chainId), ...supportedWallets] : supportedWallets
 }

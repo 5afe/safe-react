@@ -13,19 +13,6 @@ import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 
 export const PAIRING_MODULE_NAME = 'Mobile'
 
-// @walletconnect/web3-provider uses `any` payloads. These are typed from v1.6.2 used by Onboard v1.35.5
-
-type WCDisplayUriPayload = { params: string[] }
-type WCConnectPayload = {
-  params: {
-    peerId: string
-    peerMeta: IClientMeta | null
-    chainId: number
-    accounts: string[]
-  }[]
-}
-type WCDisconnectPayload = { params: { message: string }[] }
-
 const getClientMeta = (): IClientMeta => {
   const UAParser = require('ua-parser-js')
 
@@ -74,16 +61,11 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
       // Not sure if redundant, but just in case
       provider.autoRefreshOnNetworkChange = false
 
-      provider.wc.on('display_uri', (_, { params }: WCDisplayUriPayload) => {
+      provider.wc.on('display_uri', (_, { params }: { params: string[] }) => {
         console.log(getPairingUri(params[0]))
       })
 
-      provider.wc.on('connect', (_, { params }: WCConnectPayload) => {
-        console.info('connect', params)
-      })
-
-      provider.wc.on('disconnect', (_, { params }: WCDisconnectPayload) => {
-        console.info('disconnect', params)
+      provider.wc.on('disconnect', () => {
         resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
       })
 
@@ -94,16 +76,11 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
         provider,
         interface: {
           name: PAIRING_MODULE_NAME,
-          // Trigger onboard 'connect' checkName
           connect: () => Promise.resolve(undefined),
           address: {
             onChange: (updater) => {
-              provider.send('eth_accounts').then(([account]: string[]) => {
-                if (account) {
-                  updater(account)
-                }
-              })
-              provider.on('accountsChanged', ([account]: string[]) => updater(account))
+              provider.send('eth_accounts').then((accounts: string[]) => updater(accounts[0]))
+              provider.on('accountsChanged', (accounts: string[]) => updater(accounts[0]))
             },
           },
           network: {
@@ -112,7 +89,7 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
               provider.on('chainChanged', updater)
             },
           },
-          // We do not use balance subscriptions, add one causes a memory leak
+          // We do not use balance subscriptions, adding one causes a memory leak
           balance: {},
           disconnect: async () => {
             if (provider.connected) {
