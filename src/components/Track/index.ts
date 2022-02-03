@@ -13,7 +13,7 @@ const Track = ({ children, [TRACK_ID_PROP]: trackId, [TRACK_PAYLOAD_PROP]: track
   return cloneElement(children, {
     ...children.props,
     [TRACK_ID_PROP]: trackId,
-    [TRACK_PAYLOAD_PROP]: trackPayload ? JSON.stringify(trackPayload) : undefined,
+    [TRACK_PAYLOAD_PROP]: JSON.stringify(trackPayload),
   })
 }
 
