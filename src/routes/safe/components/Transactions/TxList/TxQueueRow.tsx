@@ -27,9 +27,10 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
   const pendingTx = useSelector(pendingTxByChain)
   const pendingTxNonce = isMultisigExecutionInfo(pendingTx?.executionInfo) ? pendingTx?.executionInfo.nonce : undefined
   const nonce = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo.nonce : undefined
+  const isReplacementTxPending = !isPending && nonce && pendingTxNonce && nonce === pendingTxNonce
 
   useEffect(() => {
-    if ((activeHover && activeHover !== transaction.id) || (!isPending && nonce === pendingTxNonce)) {
+    if ((activeHover && activeHover !== transaction.id) || isReplacementTxPending) {
       setTx((currTx) => ({ ...currTx, txStatus: LocalTransactionStatus.WILL_BE_REPLACED }))
       return
     }
