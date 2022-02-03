@@ -1,6 +1,6 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useStyles } from './style'
 import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
@@ -23,6 +23,8 @@ import { extractSafeAddress } from 'src/routes/routes'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
 import { getNativeCurrency } from 'src/config'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 type Props = {
   isOpen: boolean
@@ -35,6 +37,9 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const safeAddress = extractSafeAddress()
   const classes = useStyles()
   const nativeCurrency = getNativeCurrency()
+  const isOwner = useSelector(grantedSelector)
+  const userAddress = useSelector(userAccountSelector)
+  const preApprovingOwner = isOwner ? userAddress : undefined
 
   const {
     txEstimationExecutionStatus,
@@ -47,7 +52,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     txData: EMPTY_DATA,
     txRecipient: safeAddress,
   })
-  const canTxExecute = useCanTxExecute()
+  const canTxExecute = useCanTxExecute(preApprovingOwner)
 
   const origin = gwTransaction.safeAppInfo
     ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
