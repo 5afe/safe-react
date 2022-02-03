@@ -95,10 +95,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const currentUser = useSelector(userAccountSelector)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
-  const noTxOwners =
-    !data?.detailedExecutionInfo ||
-    (isMultiSigExecutionDetails(data.detailedExecutionInfo) && !data.detailedExecutionInfo.confirmations.length) ||
-    isModuleExecutionInfo(data.detailedExecutionInfo)
+  const shouldShowStepper = data?.detailedExecutionInfo && isMultiSigExecutionDetails(data.detailedExecutionInfo)
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
@@ -171,8 +168,8 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   return (
     <TxDetailsContainer>
-      <div className={cn('tx-data', { 'no-owners': noTxOwners, 'no-data': noTxDataBlock })}>{txData()}</div>
-      {!noTxOwners && (
+      <div className={cn('tx-data', { 'no-owners': !shouldShowStepper, 'no-data': noTxDataBlock })}>{txData()}</div>
+      {shouldShowStepper && (
         <div>
           <div
             className={cn('tx-owners', {
