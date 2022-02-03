@@ -116,13 +116,7 @@ const TxSingularDetails = (): ReactElement => {
   }, [fetchedTx, chainId, dispatch])
 
   if (!liveTx && error) {
-    return (
-      <FetchError
-        text="Transaction not found"
-        buttonText="Go to Queue"
-        redirectRoute={SAFE_ROUTES.TRANSACTIONS_QUEUE}
-      />
-    )
+    return <FetchError text="Transaction not found" buttonText="Go to Queue" redirectRoute={SAFE_ROUTES.TRANSACTIONS} />
   }
 
   if (!liveTx) {
