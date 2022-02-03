@@ -1,19 +1,19 @@
 import { ReactElement, cloneElement } from 'react'
 
-const TRACK_ID_PROP = 'data-track-id'
-const TRACK_PAYLOAD_PROP = 'data-track-payload'
+const id = 'data-track-id'
+const payload = 'data-track-payload'
 
 type Props = {
   children: ReactElement
-  [TRACK_ID_PROP]: string
-  [TRACK_PAYLOAD_PROP]: unknown
+  [id]: string
+  [payload]: Record<string, string | number | boolean | null>
 }
 
-const Track = ({ children, [TRACK_ID_PROP]: trackId, [TRACK_PAYLOAD_PROP]: trackPayload }: Props): ReactElement => {
+const Track = ({ children, [id]: trackId, [payload]: trackPayload }: Props): ReactElement => {
   return cloneElement(children, {
     ...children.props,
-    [TRACK_ID_PROP]: trackId,
-    [TRACK_PAYLOAD_PROP]: JSON.stringify(trackPayload),
+    [id]: trackId,
+    ...(trackPayload !== undefined && { [payload]: JSON.stringify(trackPayload) }),
   })
 }
 
