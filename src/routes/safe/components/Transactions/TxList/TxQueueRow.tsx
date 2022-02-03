@@ -36,7 +36,7 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
     }
 
     setTx(transaction)
-  }, [activeHover, transaction, isPending, nonce, pendingTxNonce])
+  }, [activeHover, transaction, isReplacementTxPending])
 
   return (
     <NoPaddingAccordion
