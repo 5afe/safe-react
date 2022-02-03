@@ -21,7 +21,7 @@ body:
     attributes:
       label: Steps to reproduce
       description: Help us reproduce the issue
-      placeholder: * Go to ...
+      placeholder: "* Go to ..."
       value: "* Go to..."
     validations:
       required: true
