@@ -26,7 +26,6 @@ type RemoveSafeModalProps = {
 
 function getNextAvailableSafe(currentChainId: string, currentSafeAddress: string, localSafes: LocalSafes) {
   const availableSafes = Object.values(localSafes)
-    .filter((safes) => safes.length !== 0)
     .flat()
     .filter((safe) => safe.address !== currentSafeAddress)
   const sameNetworkSafes = availableSafes.filter((safe) => safe.chainId === currentChainId)
