@@ -1,66 +1,38 @@
-import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useStyles } from './style'
-import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
-import { ReviewInfoText } from 'src/components/ReviewInfoText'
+import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { ExpandedTxDetails, isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
-import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
-import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
-import { getNativeCurrency } from 'src/config'
-import { grantedSelector } from 'src/routes/safe/container/selector'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { Overwrite } from 'src/types/helpers'
+import { TxModalWrapper } from '../../helpers/TxModalWrapper'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
 type Props = {
   isOpen: boolean
   onClose: () => void
-  gwTransaction: Transaction
+  transaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
 }
 
-export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.ReactElement => {
+export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const classes = useStyles()
-  const nativeCurrency = getNativeCurrency()
-  const isOwner = useSelector(grantedSelector)
-  const userAddress = useSelector(userAccountSelector)
-  const preApprovingOwner = isOwner ? userAddress : undefined
+  const executionInfo = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo : undefined
 
-  const {
-    gasCostFormatted,
-    gasPriceFormatted,
-    gasMaxPrioFeeFormatted,
-    gasLimit,
-    gasEstimation,
-    txEstimationExecutionStatus,
-    isCreation,
-    isOffChainSignature,
-  } = useEstimateTransactionGas({
-    txData: EMPTY_DATA,
-    txRecipient: safeAddress,
-  })
-  const canTxExecute = useCanTxExecute(preApprovingOwner)
-
-  const origin = gwTransaction.safeAppInfo
-    ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
+  const origin = transaction.safeAppInfo
+    ? JSON.stringify({ name: transaction.safeAppInfo.name, url: transaction.safeAppInfo.url })
     : ''
 
-  const nonce = (gwTransaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
+  const nonce = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo.nonce : 0
 
   const sendReplacementTransaction = (txParameters: TxParameters) => {
     dispatch(
@@ -78,93 +50,32 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     onClose()
   }
 
-  const getParametersStatus = (): ParametersStatus => {
-    return 'CANCEL_TRANSACTION'
-  }
-
-  let confirmButtonStatus: ButtonStatus = ButtonStatus.READY
-  let confirmButtonText = 'Reject transaction'
-  if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-    confirmButtonStatus = ButtonStatus.LOADING
-    confirmButtonText = 'Estimating'
-  }
-
-  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
-
   return (
     <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
-      <EditableTxParameters
-        isExecution={canTxExecute}
-        ethGasLimit={gasLimit}
-        ethGasPrice={gasPriceFormatted}
-        ethMaxPrioFee={gasMaxPrioFeeFormatted}
-        safeTxGas={gasEstimation}
-        safeNonce={nonce.toString()}
-        parametersStatus={getParametersStatus()}
+      <TxModalWrapper
+        txNonce={nonce.toString()}
+        txThreshold={executionInfo?.confirmationsRequired}
+        txData={EMPTY_DATA}
+        onSubmit={sendReplacementTransaction}
+        onClose={onClose}
+        isRejectTx
       >
-        {(txParameters, toggleEditMode) => {
-          return (
-            <>
-              <ModalHeader onClose={onClose} title="Reject transaction" />
-              <Hairline />
-              <Block className={classes.container}>
-                <Row>
-                  <Paragraph>
-                    This action will reject this transaction. A separate transaction will be performed to submit the
-                    rejection.
-                  </Paragraph>
-                  <Paragraph color="medium" size="sm">
-                    Transaction nonce:
-                    <br />
-                    <Bold className={classes.nonceNumber}>{nonce}</Bold>
-                  </Paragraph>
-                </Row>
-
-                {txEstimationExecutionStatus !== EstimationStatus.LOADING && canTxExecute && (
-                  <TxEstimatedFeesDetail
-                    txParameters={txParameters}
-                    gasCost={gasCost}
-                    onEdit={toggleEditMode}
-                    isTransactionCreation={isCreation}
-                    isTransactionExecution={canTxExecute}
-                    isOffChainSignature={isOffChainSignature}
-                  />
-                )}
-
-                {/* Tx Parameters */}
-                <TxParametersDetail
-                  onEdit={toggleEditMode}
-                  txParameters={txParameters}
-                  parametersStatus={getParametersStatus()}
-                  isTransactionCreation={isCreation}
-                  isOffChainSignature={isOffChainSignature}
-                />
-              </Block>
-
-              {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
-                <ReviewInfoText
-                  isCreation={isCreation}
-                  isExecution={canTxExecute}
-                  safeNonce={txParameters.safeNonce}
-                  txEstimationExecutionStatus={txEstimationExecutionStatus}
-                />
-              )}
-              <GenericModal.Footer withoutBorder={confirmButtonStatus !== ButtonStatus.LOADING}>
-                <GenericModal.Footer.Buttons
-                  cancelButtonProps={{ onClick: onClose, text: 'Close' }}
-                  confirmButtonProps={{
-                    onClick: () => sendReplacementTransaction(txParameters),
-                    color: 'error',
-                    type: 'submit',
-                    status: confirmButtonStatus,
-                    text: confirmButtonText,
-                  }}
-                />
-              </GenericModal.Footer>
-            </>
-          )
-        }}
-      </EditableTxParameters>
+        <ModalHeader onClose={onClose} title="Reject transaction" />
+        <Hairline />
+        <Block className={classes.container}>
+          <Row>
+            <Paragraph>
+              This action will reject this transaction. A separate transaction will be performed to submit the
+              rejection.
+            </Paragraph>
+            <Paragraph color="medium" size="sm">
+              Transaction nonce:
+              <br />
+              <Bold className={classes.nonceNumber}>{nonce}</Bold>
+            </Paragraph>
+          </Row>
+        </Block>
+      </TxModalWrapper>
     </Modal>
   )
 }

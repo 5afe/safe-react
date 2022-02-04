@@ -39,6 +39,7 @@ type Props = {
   onBack?: (...rest: any) => void
   submitText?: string
   isSubmitDisabled?: boolean
+  isRejectTx?: boolean
 }
 
 const Container = styled.div`
@@ -48,8 +49,8 @@ const Container = styled.div`
 /**
  * Determines which fields are displayed in the TxEditableParameters
  */
-const getParametersStatus = (isCreation: boolean, doExecute: boolean): ParametersStatus => {
-  return isCreation
+const getParametersStatus = (isCreation: boolean, doExecute: boolean, isRejectTx = false): ParametersStatus => {
+  return isCreation && !isRejectTx
     ? doExecute
       ? 'ENABLED'
       : 'ETH_HIDDEN' // allow editing nonce when creating
@@ -74,6 +75,7 @@ export const TxModalWrapper = ({
   onClose,
   submitText,
   isSubmitDisabled,
+  isRejectTx,
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -163,7 +165,7 @@ export const TxModalWrapper = ({
     onSubmit(txParameters, !doExecute)
   }
 
-  const parametersStatus = getParametersStatus(isCreation, doExecute)
+  const parametersStatus = getParametersStatus(isCreation, doExecute, isRejectTx)
 
   const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
 
