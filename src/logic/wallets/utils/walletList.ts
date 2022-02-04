@@ -2,9 +2,10 @@ import { WalletInitOptions, WalletModule, WalletSelectModuleOptions } from 'bnc-
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
-import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
+import { FORTMATIC_KEY, INFURA_TOKEN, PORTIS_ID } from 'src/utils/constants'
 import getPairingModule from 'src/logic/wallets/pairing/module'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
+import { getChains } from 'src/config/cache/chains'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean // Whether wallet supports desktop app
@@ -21,8 +22,13 @@ const wallets = (chainId: ChainId): Wallet[] => {
     {
       walletName: WALLETS.WALLET_CONNECT,
       preferred: true,
-      // `infuraKey` is not mandatory if rpc is provided
-      rpc: { [chainId]: rpcUrl },
+      infuraKey: INFURA_TOKEN,
+      rpc: getChains().reduce((map, { chainId, rpcUri }) => {
+        return {
+          ...map,
+          [chainId]: getRpcServiceUrl(rpcUri),
+        }
+      }, {}),
       desktop: true,
       bridge: 'https://safe-walletconnect.gnosis.io/',
     },
@@ -73,13 +79,15 @@ const wallets = (chainId: ChainId): Wallet[] => {
   ]
 }
 
+export const isSupportedWallet = (name: WALLETS) => {
+  return !getDisabledWallets().includes(name)
+}
+
 export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
   const supportedWallets = wallets(chainId)
     .filter(({ walletName, desktop }) => {
-      const isSupported = !getDisabledWallets().includes(walletName)
-
       // Desktop vs. Web app wallet support
-      return isSupported && window.isDesktop ? desktop : true
+      return isSupportedWallet(walletName) && window.isDesktop ? desktop : true
     })
     .map(({ desktop: _, ...rest }) => rest)
 

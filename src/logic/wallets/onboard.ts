@@ -5,8 +5,8 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { _getChainId, getChainName } from 'src/config'
 import { getWeb3, setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
-import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
-import { ChainId, CHAIN_ID } from 'src/config/chain.d'
+import { getSupportedWallets, isSupportedWallet } from 'src/logic/wallets/utils/walletList'
+import { ChainId, CHAIN_ID, WALLETS } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
@@ -112,9 +112,10 @@ const getOnboard = (chainId: ChainId): API => {
 
 let currentOnboardInstance: API
 const onboard = (): API => {
-  const chainId = _getChainId()
-  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
-    currentOnboardInstance = getOnboard(chainId)
+  const walletName = currentOnboardInstance?.getState().wallet.name?.replaceAll(' ', '') as WALLETS
+
+  if (!currentOnboardInstance || (walletName && !isSupportedWallet(walletName))) {
+    currentOnboardInstance = getOnboard(_getChainId())
   }
 
   return currentOnboardInstance
@@ -126,6 +127,12 @@ export const checkWallet = async (): Promise<boolean> => {
     switchNetwork(onboard().getState().wallet, _getChainId()).catch((e) => e.log())
   }
 
-  await onboard().walletSelect()
-  return await onboard().walletCheck()
+  let isWalletConnected = false
+  try {
+    // Onboard requests `walletSelect()` be called first but we don't
+    // want to open the modal
+    isWalletConnected = await onboard().walletCheck()
+  } catch {}
+
+  return isWalletConnected
 }
