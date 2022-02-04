@@ -10,12 +10,16 @@ import AddCircleIcon from '@material-ui/icons/AddCircle'
 import RadioButtonUncheckedOutlinedIcon from '@material-ui/icons/RadioButtonUncheckedOutlined'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { DetailedExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { AddressEx, DetailedExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { useSelector } from 'react-redux'
 
 import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { AddressInfo } from 'src/routes/safe/components/Transactions/TxList/AddressInfo'
 import { isCancelTxDetails } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { black300, gray500, primary400, red400, orange500 } from 'src/theme/variables'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { addressBookName } from 'src/logic/addressBook/store/selectors'
 
 // Icons
 
@@ -115,6 +119,17 @@ const shouldHideConfirmations = (detailedExecutionInfo: DetailedExecutionInfo | 
   return isConfirmed || detailedExecutionInfo.confirmations.length > 3
 }
 
+const getConfirmationStep = (
+  { value, name, logoUri }: AddressEx,
+  key: string | undefined = undefined,
+): ReactElement => (
+  <StyledStep key={key} bold state="confirmed">
+    <StepLabel icon={<DotIcon />}>
+      <AddressInfo address={value} name={name || undefined} avatarUrl={logoUri || undefined} shortenHash={4} />
+    </StepLabel>
+  </StyledStep>
+)
+
 export const TxOwners = ({
   txDetails,
   isPending,
@@ -126,6 +141,10 @@ export const TxOwners = ({
 
   const [hideConfirmations, setHideConfirmations] = useState<boolean>(shouldHideConfirmations(detailedExecutionInfo))
 
+  const { threshold, address } = useSelector(currentSafe)
+  const chainId = useSelector(currentChainId)
+  const safeName = useSelector((state) => addressBookName(state, { address, chainId }))
+
   const toggleHide = () => {
     setHideConfirmations((prev) => !prev)
   }
@@ -135,9 +154,12 @@ export const TxOwners = ({
   }
 
   const confirmationsNeeded = detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length
-  const isConfirmed = confirmationsNeeded <= 0
+
+  const isImmediateExecution = isPending && threshold === 1
+  const isConfirmed = confirmationsNeeded <= 0 || isImmediateExecution
   const isExecuted = !!detailedExecutionInfo.executor
 
+  const numberOfConfirmations = isImmediateExecution ? 1 : detailedExecutionInfo.confirmations.length
   return (
     <StyledStepper orientation="vertical" nonLinear connector={<StyledStepConnector />}>
       {isCancelTxDetails(txInfo) ? (
@@ -153,23 +175,14 @@ export const TxOwners = ({
         <StepLabel icon={isConfirmed ? <CheckIcon /> : <CircleIcon />}>
           Confirmations{' '}
           <span style={confirmationsStyle}>
-            ({`${detailedExecutionInfo.confirmations.length} of ${detailedExecutionInfo.confirmationsRequired}`})
+            ({`${numberOfConfirmations} of ${detailedExecutionInfo.confirmationsRequired}`})
           </span>
         </StepLabel>
       </StyledStep>
       {!hideConfirmations &&
-        detailedExecutionInfo.confirmations.map(({ signer }) => (
-          <StyledStep key={signer.value} bold state="confirmed">
-            <StepLabel icon={<DotIcon />}>
-              <AddressInfo
-                address={signer.value}
-                name={signer?.name || undefined}
-                avatarUrl={signer?.logoUri || undefined}
-                shortenHash={4}
-              />
-            </StepLabel>
-          </StyledStep>
-        ))}
+        (isImmediateExecution
+          ? getConfirmationStep({ value: address, name: safeName, logoUri: null })
+          : detailedExecutionInfo.confirmations.map(({ signer }) => getConfirmationStep(signer, signer.value)))}
       {detailedExecutionInfo.confirmations.length > 0 && (
         <StyledStep state="confirmed">
           <StepLabel icon={<DotIcon />} onClick={toggleHide}>
