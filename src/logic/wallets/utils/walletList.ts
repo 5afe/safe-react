@@ -26,9 +26,9 @@ const wallets = (): Wallet[] => {
     },
     {
       walletName: WALLETS.TREZOR,
-      appUrl: 'gnosis-safe.io',
+      appUrl: 'multisig.boba.network',
       preferred: true,
-      email: 'safe@gnosis.io',
+      email: 'engineering@enya.ai',
       desktop: true,
       rpcUrl,
     },
@@ -43,13 +43,13 @@ const wallets = (): Wallet[] => {
       walletName: WALLETS.KEYSTONE,
       desktop: false,
       rpcUrl,
-      appName: 'Gnosis Safe',
+      appName: 'Boba Multisig',
     },
     { walletName: WALLETS.TRUST, preferred: true, desktop: false },
     {
       walletName: WALLETS.LATTICE,
       rpcUrl,
-      appName: 'Gnosis Safe',
+      appName: 'Boba Multisig',
       desktop: false,
     },
     {

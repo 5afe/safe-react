@@ -6,7 +6,7 @@ describe('<Welcome>', () => {
   it('Should render Welcome container', () => {
     render(<Welcome />)
 
-    expect(screen.getByText('Welcome to Gnosis Safe.')).toBeInTheDocument()
+    expect(screen.getByText('Welcome to Boba Multisig.')).toBeInTheDocument()
   })
 
   it('Create new Safe button should redirect to /open if a wallet is already selected', () => {

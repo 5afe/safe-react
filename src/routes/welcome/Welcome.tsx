@@ -13,10 +13,10 @@ function Welcome(): ReactElement {
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to Gnosis Safe.
+          Welcome to Boba Multisig.
         </Title>
         <Title size="xs">
-          Gnosis Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
+          Boba Multisig is the most trusted platform to manage digital assets. <br /> Here is how to get started:
         </Title>
         <CardsContainer>
           <StyledCard>

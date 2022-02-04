@@ -97,7 +97,7 @@ const Sidebar = ({
         {!IS_PRODUCTION && debugToggle}
         <StyledDivider />
 
-        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Boba Multisig">
           <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
         </HelpCenterLink>
       </HelpContainer>

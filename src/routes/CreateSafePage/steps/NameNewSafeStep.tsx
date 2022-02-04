@@ -74,8 +74,8 @@ function NameNewSafeStep(): ReactElement {
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
-          wallet a name. This name is only stored locally and will never be shared with Gnosis or any third parties. The
+          You are about to create a new Boba Multisig wallet with one or more owners. First, let&apos;s give your new
+          wallet a name. This name is only stored locally and will never be shared with Boba or any third parties. The
           new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
       </Block>
@@ -95,15 +95,15 @@ function NameNewSafeStep(): ReactElement {
       <Block margin="lg">
         <Paragraph color="primary" noMargin size="lg">
           By continuing you consent with the{' '}
-          <Link href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+          <Link href="https://www.enya.ai/utility/terms" rel="noopener noreferrer" target="_blank">
             terms of use
           </Link>{' '}
           and{' '}
-          <Link href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
+          <Link href="https://www.enya.ai/utility/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </Link>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          . Most importantly, you confirm that your funds are held securely in the Boba Multisig, a smart contract on
+          the Ethereum blockchain. These funds cannot be accessed by Boba at any point.
         </Paragraph>
       </Block>
     </BlockWithPadding>

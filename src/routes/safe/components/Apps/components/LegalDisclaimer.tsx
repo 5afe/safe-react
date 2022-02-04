@@ -17,7 +17,7 @@ const LegalDisclaimer = ({ onCancel, onConfirm }: OwnProps): JSX.Element => (
         <br />
         <Text size="md">
           I have read and understood the{' '}
-          <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+          <a href="https://www.enya.ai/utility/terms" rel="noopener noreferrer" target="_blank">
             Terms
           </a>{' '}
           and this Disclaimer, and agree to be bound by them.

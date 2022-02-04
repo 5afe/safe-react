@@ -1,4 +1,4 @@
-# Gnosis Safe
+# Boba Multisig
 
 ![license](https://img.shields.io/github/license/gnosis/safe-react)
 ![build](https://img.shields.io/github/workflow/status/gnosis/safe-react/Deploy%20to%20Mainnet%20network/main)

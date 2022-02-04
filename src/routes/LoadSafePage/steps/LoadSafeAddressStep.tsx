@@ -134,7 +134,7 @@ function LoadSafeAddressStep(): ReactElement {
     <Container data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to add an existing Gnosis Safe on <NetworkLabel />. First, choose a name and enter the Safe
+          You are about to add an existing Boba Multisig on <NetworkLabel />. First, choose a name and enter the Safe
           address. The name is only stored locally and will never be shared with Gnosis or any third parties.
         </Paragraph>
         <Paragraph color="primary" size="lg">
@@ -194,15 +194,15 @@ function LoadSafeAddressStep(): ReactElement {
       <Block margin="sm">
         <Paragraph color="primary" noMargin size="lg">
           By continuing you consent to the{' '}
-          <StyledLink href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+          <StyledLink href="https://www.enya.ai/utility/terms" rel="noopener noreferrer" target="_blank">
             terms of use
           </StyledLink>
           {' and '}
-          <StyledLink href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
+          <StyledLink href="https://www.enya.ai/utility/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </StyledLink>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          . Most importantly, you confirm that your funds are held securely in the Boba Multisig, a smart contract on
+          the Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
         </Paragraph>
       </Block>
     </Container>

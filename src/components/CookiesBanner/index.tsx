@@ -81,6 +81,7 @@ const useStyles = makeStyles({
     },
   },
   intercomImage: {
+    display: 'none',
     position: 'fixed',
     cursor: 'pointer',
     height: '80px',
@@ -228,7 +229,7 @@ const CookiesBanner = (): ReactElement => {
                 value={localNecessary}
               />
             </div>
-            <div className={classes.formItem}>
+            {/* <div className={classes.formItem}>
               <FormControlLabel
                 control={<Checkbox checked={localIntercom} />}
                 label="Customer support"
@@ -236,7 +237,7 @@ const CookiesBanner = (): ReactElement => {
                 onChange={() => setLocalIntercom((prev) => !prev)}
                 value={localIntercom}
               />
-            </div>
+            </div> */}
             <div className={classes.formItem}>
               <FormControlLabel
                 control={<Checkbox checked={localAnalytics} />}
