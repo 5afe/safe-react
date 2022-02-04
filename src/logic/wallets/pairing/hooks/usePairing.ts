@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 
 import onboard from 'src/logic/wallets/onboard'
 import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
-import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { isPairingConnected, isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 const usePairing = (): void => {
   useEffect(() => {
-    if (onboard().getState().wallet.provider?.connected) {
+    if (isPairingConnected()) {
       return
     }
 
@@ -17,7 +17,7 @@ const usePairing = (): void => {
 
     return () => {
       const { wallet } = onboard().getState()
-      if (isPairingModule(wallet) && !wallet.provider?.connected) {
+      if (isPairingModule(wallet) && !isPairingConnected()) {
         onboard().walletReset()
       }
     }

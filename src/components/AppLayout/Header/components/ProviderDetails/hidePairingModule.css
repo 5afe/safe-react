@@ -1,0 +1,4 @@
+/* Hides pairing module from Onboard wallet selection modal */
+.bn-onboard-modal-select-wallets li:first-of-type {
+  display: none;
+}

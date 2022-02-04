@@ -3,7 +3,7 @@ import { IClientMeta, IRPCMap } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl } from 'src/config'
-import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL } from 'src/utils/constants'
+import { APP_VERSION, INFURA_TOKEN } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getChains } from 'src/config/cache/chains'
 import { getPairingUri } from 'src/logic/wallets/pairing/utils'
@@ -46,7 +46,6 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
 
   return {
     name: PAIRING_MODULE_NAME,
-    iconSrc: `${PUBLIC_URL}/resources/safe.png`,
     wallet: async ({ resetWalletState }) => {
       const provider = new WalletConnectProvider({
         infuraId: INFURA_TOKEN,
@@ -101,6 +100,7 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
     },
     type: 'sdk',
     desktop: true,
+    // Must be preferred to position 1st in list (to hide via CSS)
     preferred: true,
   }
 }
