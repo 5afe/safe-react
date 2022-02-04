@@ -32,8 +32,8 @@ jobs:
           comment-id: ${{ steps.checkComment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            <img alt="GitMint NFT preview" width="400" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />
+            [<img alt="GitMint NFT preview" width="400" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }})
 
             Dear @${{ github.event.pull_request.user.login }},
-            Thank you for your contribution! Please, let us know your Ethereum address to receive this NFT on Gnosis Chain.
+            Thank you for your contribution! Please, let us know your Ethereum address to receive [this NFT on Gnosis Chain](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }}).
             Cheers!
