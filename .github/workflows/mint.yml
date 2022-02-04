@@ -1,7 +1,6 @@
 name: Mint PR NFT
 
-on:
-  pull_request:
+on: [ pull_request ]
 
 jobs:
   mint:
@@ -10,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call contract
-        uses: web3actions/tx
+        uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
         with:
           rpc-node: ${{ secrets.RPC_NODE}}
           wallet-key: ${{ secrets.WALLET_KEY }}
