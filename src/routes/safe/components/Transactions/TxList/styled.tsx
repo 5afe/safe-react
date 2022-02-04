@@ -92,7 +92,7 @@ export const StyledTransactions = styled.div`
 
     &:last-of-type {
       div {
-        row-gap: 0px;
+        row-gap: 0;
       }
     }
   }
@@ -144,10 +144,14 @@ const gridColumns = {
 }
 
 const willBeReplaced = css`
+  .will-be-replaced {
+    pointer-events: none;
+    filter: grayscale(1) opacity(0.8) !important;
+  }
   .will-be-replaced * {
+    pointer-events: none;
     color: gray !important;
     text-decoration: line-through !important;
-    filter: grayscale(1) opacity(0.8) !important;
   }
 `
 
@@ -431,7 +435,7 @@ export const OwnerList = styled.ul`
       margin: 5px;
     }
 
-    span::first-of-type {
+    span:first-of-type {
       color: #008c73;
       font-weight: bold;
     }
