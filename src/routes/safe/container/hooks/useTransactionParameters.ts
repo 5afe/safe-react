@@ -6,7 +6,6 @@ import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
-import { sameString } from 'src/utils/strings'
 import { extractSafeAddress } from 'src/routes/routes'
 import { AppReduxState } from 'src/store'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
@@ -43,7 +42,6 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const isCancelTransaction = sameString(props?.parametersStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
@@ -81,7 +79,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       return
     }
     setEthGasPriceInGWei(toWei(ethGasPrice, 'Gwei'))
-  }, [ethGasPrice, isCancelTransaction])
+  }, [ethGasPrice])
 
   // Get max prio fee
   useEffect(() => {
@@ -90,7 +88,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       return
     }
     setEthMaxPrioFeeInGWei(toWei(ethMaxPrioFee, 'Gwei'))
-  }, [ethMaxPrioFee, isCancelTransaction])
+  }, [ethMaxPrioFee])
 
   // Calc safe nonce
   useEffect(() => {
