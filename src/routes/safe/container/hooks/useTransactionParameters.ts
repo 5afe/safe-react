@@ -52,7 +52,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
   // SafeTxGas: for a new Tx call requiredTxGas, for an existing tx get it from the backend.
-  const [safeTxGas, setSafeTxGas] = useState<string | undefined>(isCancelTransaction ? '0' : props?.initialSafeTxGas)
+  const [safeTxGas, setSafeTxGas] = useState<string | undefined>(props?.initialSafeTxGas)
 
   // ETH Params
   const [ethNonce, setEthNonce] = useState<string | undefined>() // we delegate it to the wallet
@@ -80,10 +80,6 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       setEthGasPriceInGWei(undefined)
       return
     }
-    if (isCancelTransaction) {
-      setEthGasPrice('0')
-      return
-    }
     setEthGasPriceInGWei(toWei(ethGasPrice, 'Gwei'))
   }, [ethGasPrice, isCancelTransaction])
 
@@ -91,10 +87,6 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   useEffect(() => {
     if (!ethMaxPrioFee) {
       setEthMaxPrioFee(undefined)
-      return
-    }
-    if (isCancelTransaction) {
-      setEthMaxPrioFee('0')
       return
     }
     setEthMaxPrioFeeInGWei(toWei(ethMaxPrioFee, 'Gwei'))

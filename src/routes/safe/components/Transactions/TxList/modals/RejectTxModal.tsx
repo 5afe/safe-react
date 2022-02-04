@@ -42,12 +42,14 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const preApprovingOwner = isOwner ? userAddress : undefined
 
   const {
-    txEstimationExecutionStatus,
-    isOffChainSignature,
-    isCreation,
-    gasLimit,
-    gasPriceFormatted,
     gasCostFormatted,
+    gasPriceFormatted,
+    gasMaxPrioFeeFormatted,
+    gasLimit,
+    gasEstimation,
+    txEstimationExecutionStatus,
+    isCreation,
+    isOffChainSignature,
   } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
     txRecipient: safeAddress,
@@ -95,7 +97,8 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         isExecution={canTxExecute}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
-        safeTxGas={'0'}
+        ethMaxPrioFee={gasMaxPrioFeeFormatted}
+        safeTxGas={gasEstimation}
         safeNonce={nonce.toString()}
         parametersStatus={getParametersStatus()}
       >
