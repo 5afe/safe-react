@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 
 import { ExpandedTxDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTransactionByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { AppReduxState } from 'src/store'
 import { ApproveTxModal } from './modals/ApproveTxModal'
 import { RejectTxModal } from './modals/RejectTxModal'
@@ -12,7 +11,6 @@ import { Overwrite } from 'src/types/helpers'
 
 export const ActionModal = (): ReactElement | null => {
   const { selectedAction, selectAction } = useContext(TransactionActionStateContext)
-  const txParameters = useTransactionParameters()
 
   const transaction = useSelector((state: AppReduxState) =>
     getTransactionByAttribute(state, {
@@ -29,7 +27,13 @@ export const ActionModal = (): ReactElement | null => {
 
   switch (selectedAction.actionSelected) {
     case 'cancel':
-      return <RejectTxModal isOpen onClose={onClose} gwTransaction={transaction} />
+      return (
+        <RejectTxModal
+          isOpen
+          onClose={onClose}
+          transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
+        />
+      )
 
     case 'confirm':
     case 'execute':
@@ -38,7 +42,6 @@ export const ActionModal = (): ReactElement | null => {
           isOpen
           onClose={onClose}
           transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
-          txParameters={txParameters}
         />
       )
 
