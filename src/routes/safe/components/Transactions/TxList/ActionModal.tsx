@@ -21,31 +21,17 @@ export const ActionModal = (): ReactElement | null => {
 
   const onClose = () => selectAction({ actionSelected: 'none', transactionId: '' })
 
-  if (!transaction?.txDetails) {
+  if (!transaction?.txDetails || selectedAction.actionSelected === 'none') {
     return null
   }
 
-  switch (selectedAction.actionSelected) {
-    case 'cancel':
-      return (
-        <RejectTxModal
-          isOpen
-          onClose={onClose}
-          transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
-        />
-      )
+  const Modal = selectedAction.actionSelected === 'cancel' ? RejectTxModal : ApproveTxModal
 
-    case 'confirm':
-    case 'execute':
-      return (
-        <ApproveTxModal
-          isOpen
-          onClose={onClose}
-          transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
-        />
-      )
-
-    case 'none':
-      return null
-  }
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
+    />
+  )
 }

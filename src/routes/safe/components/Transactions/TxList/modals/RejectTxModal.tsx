@@ -1,5 +1,3 @@
-import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-
 import { useDispatch } from 'react-redux'
 import { useStyles } from './style'
 import Modal from 'src/components/Modal'
@@ -10,7 +8,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { ExpandedTxDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -28,13 +26,13 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const classes = useStyles()
-  const executionInfo = transaction.executionInfo as MultisigExecutionInfo
+  const executionInfo = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo : undefined
 
   const origin = transaction.safeAppInfo
     ? JSON.stringify({ name: transaction.safeAppInfo.name, url: transaction.safeAppInfo.url })
     : ''
 
-  const nonce = (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
+  const nonce = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo.nonce : 0
 
   const sendReplacementTransaction = (txParameters: TxParameters) => {
     dispatch(
@@ -56,7 +54,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
     <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <TxModalWrapper
         txNonce={nonce.toString()}
-        txThreshold={executionInfo.confirmationsRequired}
+        txThreshold={executionInfo?.confirmationsRequired}
         txData={EMPTY_DATA}
         onSubmit={sendReplacementTransaction}
         onClose={onClose}
