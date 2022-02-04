@@ -90,11 +90,7 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
           },
           // We do not use balance subscriptions, adding one causes a memory leak
           balance: {},
-          disconnect: async () => {
-            if (provider.connected) {
-              await provider.disconnect()
-            }
-          },
+          disconnect: async () => await provider.disconnect(),
         },
       }
     },
