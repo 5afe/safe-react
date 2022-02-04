@@ -196,7 +196,7 @@ export const EditTxParametersForm = ({
                       text="Gas limit"
                       type="number"
                       component={TextField}
-                      disabled={parametersStatus === 'CANCEL_TRANSACTION'}
+                      disabled={!areEthereumParamsVisible(parametersStatus)}
                     />
                     {((gasPriceText) => (
                       <Field
