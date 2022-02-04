@@ -57,7 +57,6 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
         clientMeta: getClientMeta(),
       })
 
-      // Not sure if redundant, but just in case
       provider.autoRefreshOnNetworkChange = false
 
       provider.wc.on('display_uri', (_, { params }: { params: string[] }) => {
@@ -75,7 +74,6 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
         provider,
         interface: {
           name: PAIRING_MODULE_NAME,
-          connect: () => Promise.resolve(undefined),
           address: {
             onChange: (updater) => {
               provider.send('eth_accounts').then((accounts: string[]) => updater(accounts[0]))
