@@ -1,0 +1,34 @@
+name: Mint PR NFT
+
+on:
+  pull_request:
+
+jobs:
+  mint:
+    environment: Manual
+    name: Mint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call contract
+        uses: web3actions/tx
+        with:
+          rpc-node: ${{ secrets.RPC_NODE}}
+          wallet-key: ${{ secrets.WALLET_KEY }}
+          contract: ${{ secrets.CONTRACT_ADDRESS }}
+          function: "mint(address _to, uint256 _value, string symbol)"
+          inputs: '[ "${{ github.event.issue.node_id }}", ${{ github.event.client_payload.pr_number }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.client_payload.pr_number }}" ]'
+          value: "0"
+      - name: Check if result was already commented
+        uses: peter-evans/find-comment@v1
+        id: checkComment
+        with:
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          body-includes: "![preview]"
+      - name: Set success comment
+        if: ${{ github.event.client_payload.status == 'success' }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          comment-id: ${{ steps.checkComment.outputs.comment-id }}
+          edit-mode: replace
+          body: "![preview](https://gitsvg.katspaugh.workers.dev/?url=https://github.com/gnosis/safe-react/pull/${{ github.event.client_payload.pr_number }})"
