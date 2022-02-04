@@ -15,7 +15,7 @@ jobs:
           wallet-key: ${{ secrets.WALLET_KEY }}
           contract: ${{ secrets.CONTRACT_ADDRESS }}
           function: "mint(address _to, uint256 _tokenId, string _uri)"
-          inputs: '[ "${{ secrets.WALLET_ADDRESS }}", 3${{ github.event.number }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" ]'
+          inputs: '[ "${{ secrets.WALLET_ADDRESS }}", ${{ github.event.number }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" ]'
           value: "0"
 
       - name: Check if result was already commented
@@ -23,7 +23,7 @@ jobs:
         id: checkComment
         with:
           issue-number: ${{ github.event.number }}
-          body-includes: "![NFT preview]"
+          body-includes: "GitMint NFT preview"
 
       - name: Set success comment
         uses: peter-evans/create-or-update-comment@v1
@@ -32,7 +32,7 @@ jobs:
           comment-id: ${{ steps.checkComment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            ![NFT preview](https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }})
+            <img alt="GitMint NFT preview" width="400" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />
 
             Dear @${{ github.event.pull_request.user.login }},
             Thank you for your contribution! Please, let us know your Ethereum address to receive this NFT on Gnosis Chain.
