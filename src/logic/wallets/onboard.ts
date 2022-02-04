@@ -17,13 +17,13 @@ import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
-import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
+import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
 const saveLastUsedProvider = (name: string) => {
   const expireInDays = (days: number) => 60 * 60 * 24 * 1000 * days
-  const expiry = name === PAIRING_MODULE_NAME ? expireInDays(1) : expireInDays(365)
+  const expiry = isPairingModule(name) ? expireInDays(1) : expireInDays(365)
   saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
 }
 
