@@ -14,20 +14,26 @@ jobs:
           rpc-node: ${{ secrets.RPC_NODE}}
           wallet-key: ${{ secrets.WALLET_KEY }}
           contract: ${{ secrets.CONTRACT_ADDRESS }}
-          function: "mint(address _to, uint256 _value, string symbol)"
-          inputs: '[ "${{ github.event.issue.node_id }}", ${{ github.event.client_payload.pr_number }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.client_payload.pr_number }}" ]'
+          function: "mint(address _to, uint256 _tokenId, string _uri)"
+          inputs: '[ "${{ secrets.WALLET_ADDRESS }}", 3${{ github.event.number }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" ]'
           value: "0"
+
       - name: Check if result was already commented
         uses: peter-evans/find-comment@v1
         id: checkComment
         with:
-          issue-number: ${{ github.event.client_payload.pr_number }}
-          body-includes: "![preview]"
+          issue-number: ${{ github.event.number }}
+          body-includes: "![NFT preview]"
+
       - name: Set success comment
-        if: ${{ github.event.client_payload.status == 'success' }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: ${{ github.event.client_payload.pr_number }}
+          issue-number: ${{ github.event.number }}
           comment-id: ${{ steps.checkComment.outputs.comment-id }}
           edit-mode: replace
-          body: "![preview](https://gitsvg.katspaugh.workers.dev/?url=https://github.com/gnosis/safe-react/pull/${{ github.event.client_payload.pr_number }})"
+          body: |
+            ![NFT preview](https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }})
+
+            Dear @${{ github.event.pull_request.user.login }},
+            Thank you for your contribution! Please, let us know your Ethereum address to receive this NFT on Gnosis Chain.
+            Cheers!
