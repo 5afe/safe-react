@@ -8,7 +8,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import onboard from 'src/logic/wallets/onboard'
-import { getPairingUri, isPairingConnected } from 'src/logic/wallets/pairing/utils'
+import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 
 // Hides first wallet in Onboard modal (pairing module)
 import 'src/components/AppLayout/Header/components/ProviderDetails/hidePairingModule.css'
@@ -34,11 +34,7 @@ const PairingDetails = ({ classes }): ReactElement => {
       </Row>
 
       <Row className={classes.justifyCenter}>
-        {isPairingConnected() ? (
-          <QRCode value={getPairingUri(uri)} size={120} />
-        ) : (
-          <Skeleton variant="rect" width={120} height={120} />
-        )}
+        {uri ? <QRCode value={getPairingUri(uri)} size={120} /> : <Skeleton variant="rect" width={120} height={120} />}
       </Row>
 
       <Row>
