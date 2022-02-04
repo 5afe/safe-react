@@ -1,5 +1,7 @@
-import { ReactElement } from 'react'
-import { Skeleton } from '@material-ui/lab'
+import { CSSProperties, ReactElement } from 'react'
+import Skeleton from '@material-ui/lab/Skeleton'
+import RefreshIcon from '@material-ui/icons/Refresh'
+import IconButton from '@material-ui/core/IconButton'
 import { Divider, Link } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import QRCode from 'qrcode.react'
@@ -8,7 +10,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import onboard from 'src/logic/wallets/onboard'
-import { getPairingUri } from 'src/logic/wallets/pairing/utils'
+import { getPairingUri, initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 // Hides first wallet in Onboard modal (pairing module)
 import 'src/components/AppLayout/Header/components/ProviderDetails/hidePairingModule.css'
@@ -18,10 +20,18 @@ const StyledDivider = styled(Divider)`
   margin-left: -20px;
 `
 
+const QR_DIMENSION = 120
+
+const qrRefresh: CSSProperties = {
+  width: QR_DIMENSION,
+  height: QR_DIMENSION,
+}
+
 const PairingDetails = ({ classes }): ReactElement => {
   usePairing()
 
   const uri = onboard().getState().wallet.provider?.wc?.uri
+  const isPairingLoaded = isPairingModule()
 
   return (
     <>
@@ -34,7 +44,15 @@ const PairingDetails = ({ classes }): ReactElement => {
       </Row>
 
       <Row className={classes.justifyCenter}>
-        {uri ? <QRCode value={getPairingUri(uri)} size={120} /> : <Skeleton variant="rect" width={120} height={120} />}
+        {uri ? (
+          <QRCode value={getPairingUri(uri)} size={QR_DIMENSION} />
+        ) : isPairingLoaded ? (
+          <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
+        ) : (
+          <IconButton disableRipple style={qrRefresh} onClick={initPairing}>
+            <RefreshIcon fontSize="large" />
+          </IconButton>
+        )}
       </Row>
 
       <Row>

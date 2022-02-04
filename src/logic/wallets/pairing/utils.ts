@@ -5,6 +5,11 @@ import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 import { WALLETS } from 'src/config/chain.d'
 import onboard from 'src/logic/wallets/onboard'
 
+export const initPairing = async (): Promise<void> => {
+  await onboard().walletSelect(PAIRING_MODULE_NAME)
+}
+
+// Is WC connected (may work for other providers)
 export const isPairingConnected = (): boolean => {
   return onboard().getState().wallet.provider?.connected
 }
@@ -13,7 +18,8 @@ export const isPairingSupported = (): boolean => {
   return !getDisabledWallets().includes(WALLETS.DESKTOP_PAIRING)
 }
 
-export const isPairingModule = (wallet: Wallet): boolean => {
+// Is pairing module initialised
+export const isPairingModule = (wallet: Wallet = onboard().getState().wallet): boolean => {
   return wallet.name === PAIRING_MODULE_NAME
 }
 
