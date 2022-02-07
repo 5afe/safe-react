@@ -116,7 +116,14 @@ const TxSingularDetails = (): ReactElement => {
   }, [fetchedTx, chainId, dispatch])
 
   if (!liveTx && error) {
-    return <FetchError text="Transaction not found" buttonText="Go to Queue" redirectRoute={SAFE_ROUTES.TRANSACTIONS} />
+    const safeParams = extractPrefixedSafeAddress()
+    return (
+      <FetchError
+        text="Transaction not found"
+        buttonText="See all transactions"
+        redirectRoute={generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, safeParams)}
+      />
+    )
   }
 
   if (!liveTx) {

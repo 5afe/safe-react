@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
-import { Title } from '@gnosis.pm/safe-react-components'
+import { Title, Link } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
 import Button from 'src/components/layout/Button'
 
 interface FetchErrorProps {
@@ -9,6 +8,10 @@ interface FetchErrorProps {
   buttonText: string
   redirectRoute: string
 }
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`
 
 const ErrorContainer = styled.div`
   width: 100%;
@@ -22,22 +25,17 @@ const ErrorContainer = styled.div`
 `
 
 const FetchError = ({ text, buttonText, redirectRoute }: FetchErrorProps): ReactElement => {
-  const history = useHistory()
-
-  const onClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    history.push(redirectRoute)
-  }
-
   return (
     <ErrorContainer>
       <img src="./resources/error.png" alt="Error" />
 
       <Title size="xs">{text}</Title>
 
-      <Button onClick={onClick} color="primary" size="medium" variant="contained">
-        {buttonText}
-      </Button>
+      <StyledLink href={redirectRoute}>
+        <Button color="primary" size="medium" variant="contained">
+          {buttonText}
+        </Button>
+      </StyledLink>
     </ErrorContainer>
   )
 }
