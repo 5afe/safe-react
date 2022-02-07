@@ -2,52 +2,49 @@ import { TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
 import { createSelector } from 'reselect'
 
 import { AppReduxState } from 'src/store'
-import {
-  isMultiSigExecutionDetails,
-  LocalTransactionStatus,
-  Transaction,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { LocalTransactionStatus, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { PendingTransactionsState, PENDING_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/pendingTransactions'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain'
+import { getTransactionByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
-export const allPendingTxs = (state: AppReduxState): PendingTransactionsState => {
+export const allPendingTxIds = (state: AppReduxState): PendingTransactionsState => {
   return state[PENDING_TRANSACTIONS_ID]
 }
 
-const pendingTxsByChain = createSelector(
-  allPendingTxs,
+export const pendingTxIdsByChain = createSelector(
+  allPendingTxIds,
   currentChainId,
   (statuses, chainId): PendingTransactionsState[ChainId] => {
     return statuses[chainId]
   },
 )
 
-export const isTxPending = createSelector(
-  pendingTxsByChain,
-  (_: AppReduxState, safeTxHash: string) => safeTxHash,
-  (pendingTxs: PendingTransactionsState[ChainId], safeTxHash: string): boolean => {
-    return pendingTxs ? !!pendingTxs?.[safeTxHash] : false
+export const pendingTxByChain = createSelector(
+  (state: AppReduxState) => state,
+  pendingTxIdsByChain,
+  (state: AppReduxState, pendingTxIds: PendingTransactionsState[ChainId]): Transaction | undefined => {
+    if (!pendingTxIds) {
+      return
+    }
+
+    const pendingTxId = Object.keys(pendingTxIds)[0]
+    return getTransactionByAttribute(state, { attributeValue: pendingTxId, attributeName: 'id' })
   },
 )
 
-// @FIXME: this is a dirty hack.
-// Ask backend to add safeTxHash in tx list items.
-export const getSafeTxHashFromId = (id: string): string => {
-  return id.split('_').pop() || ''
-}
+export const isTxPending = createSelector(
+  pendingTxIdsByChain,
+  (_: AppReduxState, id: string) => id,
+  (pendingTxs: PendingTransactionsState[ChainId], id: string): boolean => {
+    return pendingTxs ? !!pendingTxs?.[id] : false
+  },
+)
 
 export const selectTxStatus = createSelector(
-  pendingTxsByChain,
+  pendingTxIdsByChain,
   (_: AppReduxState, tx: Transaction) => tx,
   (pendingTxs: PendingTransactionsState[ChainId], tx: Transaction): TransactionStatus => {
-    const { detailedExecutionInfo } = tx.txDetails || {}
-
-    const safeTxHash =
-      detailedExecutionInfo && isMultiSigExecutionDetails(detailedExecutionInfo)
-        ? detailedExecutionInfo.safeTxHash
-        : getSafeTxHashFromId(tx.id)
-
-    return !!pendingTxs?.[safeTxHash] ? LocalTransactionStatus.PENDING : tx.txStatus
+    return !!pendingTxs?.[tx.id] ? LocalTransactionStatus.PENDING : tx.txStatus
   },
 )

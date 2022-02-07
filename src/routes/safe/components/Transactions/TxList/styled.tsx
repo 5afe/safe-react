@@ -96,6 +96,12 @@ export const StyledTransactions = styled.div`
     &:last-child {
       border-bottom: none;
     }
+
+    &:last-of-type {
+      div {
+        row-gap: 0;
+      }
+    }
   }
 `
 
@@ -145,10 +151,14 @@ const gridColumns = {
 }
 
 const willBeReplaced = css`
+  .will-be-replaced {
+    pointer-events: none;
+    filter: grayscale(1) opacity(0.8) !important;
+  }
   .will-be-replaced * {
+    pointer-events: none;
     color: gray !important;
     text-decoration: line-through !important;
-    filter: grayscale(1) opacity(0.8) !important;
   }
 `
 
