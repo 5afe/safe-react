@@ -1,11 +1,12 @@
 import { lazy, useMemo } from 'react'
 import styled from 'styled-components'
-import { Divider, IconText } from '@gnosis.pm/safe-react-components'
+import { Divider } from '@gnosis.pm/safe-react-components'
 
-import List, { ListItemType } from 'src/components/List'
+import List, { ListItemType, StyledListItem, StyledListItemText } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import ListIcon from 'src/components/List/ListIcon'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -15,18 +16,24 @@ const HelpContainer = styled.div`
   margin-top: auto;
 `
 
+const HelpList = styled.div`
+  margin: 24px 0;
+`
+
 const HelpCenterLink = styled.a`
-  height: 30px;
-  width: 166px;
-  padding: 6px 0 8px 16px;
-  margin: 14px 0px;
+  width: 100%;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  text-align: left;
+  align-items: center;
+  padding: 8px 16px;
+  justify-content: flex-start;
   text-decoration: none;
-  display: block;
+  border-radius: 8px;
 
   &:hover {
-    border-radius: 8px;
     background-color: ${({ theme }) => theme.colors.background};
-    box-sizing: content-box;
   }
   p {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
@@ -97,9 +104,17 @@ const Sidebar = ({
         {!IS_PRODUCTION && debugToggle}
         <StyledDivider />
 
-        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-          <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
-        </HelpCenterLink>
+        <HelpList>
+          <StyledListItem id="whats-new-button" button={true}>
+            <ListIcon type="addressBook" />
+            <StyledListItemText>Whats new</StyledListItemText>
+          </StyledListItem>
+
+          <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+            <ListIcon type="question" />
+            <StyledListItemText>Help Center</StyledListItemText>
+          </HelpCenterLink>
+        </HelpList>
       </HelpContainer>
     </>
   )

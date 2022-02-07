@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
 
-const StyledListItem = styled(ListItem)<ListItemProps>`
+export const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
     margin: 4px 0;
   }
@@ -54,7 +54,7 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 `
 
-const StyledListItemText = styled(ListItemText)`
+export const StyledListItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
     font-size: 0.76em;
