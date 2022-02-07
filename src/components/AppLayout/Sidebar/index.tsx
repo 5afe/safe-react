@@ -106,7 +106,7 @@ const Sidebar = ({
 
         <HelpList>
           <StyledListItem id="whats-new-button" button={true}>
-            <ListIcon type="addressBook" />
+            <ListIcon type="gift" />
             <StyledListItemText>Whats new</StyledListItemText>
           </StyledListItem>
 
