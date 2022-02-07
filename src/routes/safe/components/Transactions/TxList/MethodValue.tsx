@@ -10,7 +10,7 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const NestedWrapper = styled.div`
-  padding-left: 4px;
+  padding-left: 12px;
 `
 
 interface RenderValueProps {
@@ -20,7 +20,7 @@ interface RenderValueProps {
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
-  const getTextValue = (value: string) => <HexEncodedData limit={60} hexData={value} />
+  const getTextValue = (value: string, key?: string) => <HexEncodedData limit={60} hexData={value} key={key} />
 
   const getArrayValue = (parentId: string, value: string[] | string) => (
     <>
@@ -29,11 +29,11 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
         {(value as string[]).map((currentValue, index) => {
           const key = `${parentId}-value-${index}`
           return Array.isArray(currentValue) ? (
-            <Text key={key} size="xl">
+            <Text key={key} size="xl" as="span">
               {getArrayValue(key, currentValue)}
             </Text>
           ) : (
-            getTextValue(currentValue)
+            getTextValue(currentValue, key)
           )
         })}
       </NestedWrapper>
@@ -54,10 +54,16 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
       <>
         [
         <NestedWrapper>
-          {(props.value as string[]).map((address) => {
+          {(props.value as string[]).map((address, index) => {
             const explorerUrl = getExplorerInfo(address)
             return (
-              <PrefixedEthHashInfo key={address} textSize="xl" hash={address} showCopyBtn explorerUrl={explorerUrl} />
+              <PrefixedEthHashInfo
+                key={`${address}_${index}`}
+                textSize="xl"
+                hash={address}
+                showCopyBtn
+                explorerUrl={explorerUrl}
+              />
             )
           })}
         </NestedWrapper>

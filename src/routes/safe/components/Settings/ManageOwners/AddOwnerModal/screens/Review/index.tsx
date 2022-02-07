@@ -19,6 +19,8 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { Overline } from 'src/components/layout/Typography'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -68,7 +70,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Add new owner" subTitle="3 of 3" />
+      <ModalHeader onClose={onClose} title="Add new owner" subTitle={getStepTitle(3, 3)} />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>
@@ -121,9 +123,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               </Fragment>
             ))}
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
-                ADDING NEW OWNER &darr;
-              </Paragraph>
+              <Overline noMargin>ADDING NEW OWNER &darr;</Overline>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwner} data-testid="add-owner-review">

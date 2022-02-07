@@ -1,4 +1,7 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { lg, md, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -37,6 +40,10 @@ export const ActionAccordion = styled(Accordion)`
       border-top: none;
     }
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     &.Mui-expanded {
       &:last-child {
         border-bottom: none;
@@ -44,7 +51,7 @@ export const ActionAccordion = styled(Accordion)`
     }
 
     .MuiAccordionDetails-root {
-      padding: 16px;
+      padding: ${lg};
     }
   }
 `
@@ -134,7 +141,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 `
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '1fr',
   type: '3fr',
   info: '3fr',
   time: '2.5fr',
@@ -347,27 +354,67 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   ${willBeReplaced};
 
   background-color: ${({ theme }) => theme.colors.separator} !important;
-  column-gap: 2px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
-  row-gap: 2px;
+  gap: 2px;
+  grid-template-columns: 2fr 1fr;
   width: 100%;
 
   & > div {
-    background-color: ${({ theme }) => theme.colors.white};
+    display: grid;
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
     line-break: anywhere;
     overflow: hidden;
-    padding: 20px 24px;
     word-break: break-all;
+
+    & > div {
+      padding: 20px 24px;
+      background-color: ${({ theme }) => theme.colors.white};
+    }
   }
 
   .tx-summary {
+    background-color: ${({ theme }) => theme.colors.white};
+    // grows to the height of tx-owner column
+    flex-grow: 1;
+    position: relative;
+
+    &.no-data {
+      row-span: 2;
+    }
+  }
+
+  .tx-creation {
+    // to occupy the unexistant "owners" column
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .tx-share {
-    float: right;
+    position: absolute;
+    top: 20px;
+    right: 24px;
+  }
+
+  .tx-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+
+    & > div:last-of-type {
+      flex: 1;
+    }
+
+    &.no-owners {
+      grid-column: span 2;
+    }
+
+    &.no-data {
+      gap: 0;
+    }
   }
 
   .tx-details {
@@ -382,20 +429,18 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-owners {
     padding: 24px;
-    grid-column-start: 2;
-    grid-row-end: span ${({ ownerRows }) => ownerRows || 2};
-    grid-row-start: 1;
+    grid-row-end: span 2;
   }
 
   .tx-details-actions {
-    align-items: center;
+    align-items: flex-end;
+    padding-bottom: 24px;
     display: flex;
-    height: 60px;
+    gap: 8px;
     justify-content: center;
 
     button {
       color: ${({ theme }) => theme.colors.white};
-      margin: 0 8px;
 
       &:hover {
         color: ${({ theme }) => theme.colors.white};
@@ -420,64 +465,19 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   }
 `
 
-export const OwnerList = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding-left: 6px;
-
-  .legend {
-    left: 15px;
-    padding-bottom: 0.86em;
-    position: relative;
-    top: -3px;
-
-    .owner-info {
-      margin: 5px;
-    }
-
-    span:first-of-type {
-      color: #008c73;
-      font-weight: bold;
-    }
-  }
-
-  ul {
-    margin-top: 0;
-  }
-
-  .icon {
-    left: -7px;
-    position: absolute;
-    width: 16px;
-    z-index: 2;
-  }
-`
-
-export const OwnerListItem = styled.li`
-  display: flex;
-  position: relative;
-
-  &::before {
-    border-left: 2px ${({ theme }) => theme.colors.icon} solid;
-    border-radius: 1px;
-    content: '';
-    height: calc(100% - 16px);
-    top: 16px;
-    left: 0;
-    position: absolute;
-    z-index: 1;
-  }
-
-  &:last-child::before {
-    border-left: none;
-  }
-`
-
 export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
 
   span {
-    font-weight: normal;
+    font-weight: bold;
+  }
+`
+
+export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  display: inline-flex;
+
+  span {
+    font-weight: bold;
   }
 `
 
@@ -543,4 +543,31 @@ export const NoTransactions = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 60px;
+`
+export const StyledGridRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+  gap: ${md};
+  justify-content: flex-start;
+  max-width: 800px;
+
+  & > * {
+    flex-shrink: 0;
+  }
+`
+
+export const StyledTxInfoDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${sm};
+  margin-bottom: ${md};
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+`
+
+export const StyledDetailsTitle = styled(Text)<{ uppercase?: boolean }>`
+  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : null)};
+  letter-spacing: ${({ uppercase }) => (uppercase ? '1px' : null)};
 `
