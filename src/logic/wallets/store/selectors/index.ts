@@ -12,6 +12,11 @@ export const userAccountSelector = createSelector(providerSelector, (provider: P
   return account || ''
 })
 
+export const userEnsSelector = createSelector(providerSelector, (provider: ProviderState): string => {
+  const ensName = provider.get('ensDomain')
+  return ensName || ''
+})
+
 export const providerNameSelector = createSelector(providerSelector, (provider: ProviderState): string | undefined => {
   const name = provider.get('name')
   return name ? name.toLowerCase() : undefined
