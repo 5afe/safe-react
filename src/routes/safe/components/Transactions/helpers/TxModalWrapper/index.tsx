@@ -228,6 +228,7 @@ export const TxModalWrapper = ({
                 onClick: () => onSubmitClick(txParameters),
                 status: submitStatus,
                 disabled: isSubmitDisabled,
+                color: isRejectTx ? 'error' : undefined,
                 text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : submitText,
                 testId: 'submit-tx-btn',
               }}

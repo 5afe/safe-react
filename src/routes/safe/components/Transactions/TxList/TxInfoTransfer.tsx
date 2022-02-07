@@ -10,6 +10,16 @@ export const isTransferAssetInfo = (value?: AssetInfo): value is TokenTransferAs
   return value?.type === 'Transfer'
 }
 
+const makeTitle = (txDirection: string, amountWithSymbol: string, txStatus: TransactionStatus) => (
+  <Text size="xl" as="span">
+    {txDirection === TransferDirection.INCOMING ? 'Received' : isTxQueued(txStatus) ? 'Send' : 'Sent'}{' '}
+    <Text size="xl" as="span" strong>
+      {amountWithSymbol}
+    </Text>
+    {txDirection === TransferDirection.INCOMING ? ' from:' : ' to:'}
+  </Text>
+)
+
 type Details = {
   title: string | ReactElement
   address: string
@@ -26,26 +36,16 @@ export const TxInfoTransfer = ({
   const assetInfo = useAssetInfo(txInfo)
   const [details, setDetails] = useState<Details | undefined>()
 
-  const makeTitle = (txDirection: string, amountWithSymbol: string) => (
-    <Text size="xl" as="span">
-      {txDirection === TransferDirection.INCOMING ? 'Received' : isTxQueued(txStatus) ? 'Send' : 'Sent'}{' '}
-      <Text size="xl" as="span" strong>
-        {amountWithSymbol}
-      </Text>
-      {txDirection === TransferDirection.INCOMING ? ' from:' : ' to:'}
-    </Text>
-  )
-
   useEffect(() => {
     if (isTransferAssetInfo(assetInfo)) {
       const txDirection = txInfo.direction.toUpperCase()
       setDetails({
-        title: makeTitle(txDirection, assetInfo.amountWithSymbol),
+        title: makeTitle(txDirection, assetInfo.amountWithSymbol, txStatus),
         address: txDirection === TransferDirection.INCOMING ? txInfo.sender.value : txInfo.recipient.value,
         name: (txDirection === TransferDirection.INCOMING ? txInfo.sender.name : txInfo.recipient.name) || undefined,
       })
     }
-  }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender])
+  }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender, txStatus])
 
   return details ? <TxInfoDetails {...details} isTransferType txInfo={txInfo} /> : null
 }

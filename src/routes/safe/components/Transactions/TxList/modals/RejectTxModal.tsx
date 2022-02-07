@@ -34,7 +34,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
 
   const nonce = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo.nonce : 0
 
-  const sendReplacementTransaction = (txParameters: TxParameters) => {
+  const sendReplacementTransaction = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       createTransaction({
         safeAddress,
@@ -45,6 +45,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
+        delayExecution,
       }),
     )
     onClose()
@@ -59,6 +60,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
         onSubmit={sendReplacementTransaction}
         onClose={onClose}
         isRejectTx
+        submitText="Reject transaction"
       >
         <ModalHeader onClose={onClose} title="Reject transaction" />
         <Hairline />
