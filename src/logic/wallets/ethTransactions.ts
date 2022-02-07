@@ -17,7 +17,7 @@ const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> =>
   if (gasPrice.isNaN()) {
     throw new Error('Fetched gas price is NaN')
   }
-  return gasPrice.multipliedBy(gweiFactor).toString()
+  return gasPrice.toString()
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
