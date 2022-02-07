@@ -19,7 +19,7 @@ export const getMedianMaxPrioFee = async (): Promise<number> => {
 
   const web3 = getWeb3ReadOnly()
 
-  // [0] slow, [1] median, [3] fast reward percentiles ([4] pending)
+  // [0] slow, [1] average, [2] fast reward percentiles ([3] pending)
   const blocks = await web3.eth.getFeeHistory(HISTORICAL_BLOCKS, 'pending', [25, 50, 75])
 
   const baseFeePerGas = hexToNumber(blocks.baseFeePerGas[1])
