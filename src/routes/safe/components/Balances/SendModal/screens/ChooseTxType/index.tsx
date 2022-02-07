@@ -78,6 +78,7 @@ const ChooseTxType = ({
             <PrefixedEthHashInfo
               hash={recipientAddress}
               name={recipientName}
+              strongName
               showAvatar
               showCopyBtn
               explorerUrl={getExplorerInfo(recipientAddress)}

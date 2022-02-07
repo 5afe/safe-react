@@ -4,7 +4,6 @@ import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { toBN } from 'web3-utils'
-import { DecodedDataResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
@@ -22,9 +21,11 @@ import Hairline from 'src/components/layout/Hairline'
 import Divider from 'src/components/Divider'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
-import { ConfirmTxModalProps, DecodedTxDetail } from '.'
+import { ConfirmTxModalProps, DecodedTxDetailType } from '.'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
 
 const Container = styled.div`
   max-width: 480px;
@@ -32,7 +33,7 @@ const Container = styled.div`
 `
 
 const DecodeTxsWrapper = styled.div`
-  margin: 24px -24px;
+  margin: 0;
 `
 
 const StyledBlock = styled(Block)`
@@ -51,8 +52,6 @@ const StyledBlock = styled(Block)`
 
 type Props = ConfirmTxModalProps & {
   onReject: () => void
-  showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
-  hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
 
 const parseTxValue = (value: string | number): string => {
@@ -65,15 +64,13 @@ export const ReviewConfirm = ({
   safeAddress,
   ethBalance,
   safeName,
-  hidden,
   onUserConfirm,
   onClose,
   onReject,
   requestId,
-  showDecodedTxData,
 }: Props): ReactElement => {
   const isMultiSend = txs.length > 1
-  const [decodedData, setDecodedData] = useState<DecodedDataResponse | null>(null)
+  const [decodedData, setDecodedData] = useState<DecodedTxDetailType>()
   const dispatch = useDispatch()
   const nativeCurrency = getNativeCurrency()
   const explorerUrl = getExplorerInfo(safeAddress)
@@ -95,12 +92,18 @@ export const ReviewConfirm = ({
 
   // Decode tx data.
   useEffect(() => {
+    let isCurrent = true
     const decodeTxData = async () => {
       const res = await fetchTxDecoder(txData)
-      setDecodedData(res)
+      if (res && isCurrent) {
+        setDecodedData(res)
+      }
     }
 
     decodeTxData()
+    return () => {
+      isCurrent = false
+    }
   }, [txData])
 
   const handleUserConfirmation = (safeTxHash: string): void => {
@@ -141,14 +144,26 @@ export const ReviewConfirm = ({
       isSubmitDisabled={!isOwner}
       onBack={onReject}
     >
-      <div hidden={hidden}>
+      <div>
         <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={onReject} />
 
         <Hairline />
 
         <Container>
           {/* Safe */}
-          <PrefixedEthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+          <Row margin="xs">
+            <Paragraph color="disabled" noMargin size="lg">
+              Sending from
+            </Paragraph>
+          </Row>
+          <PrefixedEthHashInfo
+            name={safeName}
+            hash={safeAddress}
+            strongName
+            showAvatar
+            showCopyBtn
+            explorerUrl={explorerUrl}
+          />
           <StyledBlock>
             <Text size="md">Balance:</Text>
             <Text size="md" strong>{`${ethBalance} ${nativeCurrency.symbol}`}</Text>
@@ -163,11 +178,11 @@ export const ReviewConfirm = ({
             txValue={fromTokenUnit(txValue, nativeCurrency.decimals)}
           />
 
-          <DecodeTxsWrapper>
-            <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
-          </DecodeTxsWrapper>
-
-          {!isMultiSend && <Divider />}
+          {txs.length > 0 && (
+            <DecodeTxsWrapper>
+              <DecodeTxs txs={txs} decodedData={decodedData} />
+            </DecodeTxsWrapper>
+          )}
         </Container>
       </div>
     </TxModalWrapper>

@@ -20,6 +20,8 @@ import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { logError } from 'src/logic/exceptions/CodedException'
 import ErrorCodes from 'src/logic/exceptions/registry'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { Overline } from 'src/components/layout/Typography'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
@@ -80,7 +82,7 @@ export const ReviewRemoveOwnerModal = ({
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Remove owner" subTitle="3 of 3" />
+      <ModalHeader onClose={onClose} title="Remove owner" subTitle={getStepTitle(3, 3)} />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>
@@ -138,9 +140,7 @@ export const ReviewRemoveOwnerModal = ({
                 ),
             )}
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
-                REMOVING OWNER &darr;
-              </Paragraph>
+              <Overline noMargin>REMOVING OWNER &darr;</Overline>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwner} data-testid="remove-owner-review">

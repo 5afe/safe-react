@@ -4,9 +4,7 @@ import { sameString } from 'src/utils/strings'
 export type ParametersStatus = 'ENABLED' | 'DISABLED' | 'SAFE_DISABLED' | 'ETH_HIDDEN' | 'CANCEL_TRANSACTION'
 
 export const areEthereumParamsVisible = (parametersStatus: ParametersStatus): boolean => {
-  return (
-    parametersStatus === 'ENABLED' || (parametersStatus !== 'ETH_HIDDEN' && parametersStatus !== 'CANCEL_TRANSACTION')
-  )
+  return parametersStatus === 'ENABLED' || parametersStatus !== 'ETH_HIDDEN'
 }
 
 export const areSafeParamsEnabled = (parametersStatus: ParametersStatus): boolean => {
