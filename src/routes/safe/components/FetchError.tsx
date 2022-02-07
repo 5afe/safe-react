@@ -1,5 +1,6 @@
 import { ReactElement } from 'react'
-import { Title, Link } from '@gnosis.pm/safe-react-components'
+import { Link } from 'react-router-dom'
+import { Title } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import Button from 'src/components/layout/Button'
 
@@ -31,7 +32,7 @@ const FetchError = ({ text, buttonText, redirectRoute }: FetchErrorProps): React
 
       <Title size="xs">{text}</Title>
 
-      <StyledLink href={redirectRoute}>
+      <StyledLink to={redirectRoute}>
         <Button color="primary" size="medium" variant="contained">
           {buttonText}
         </Button>
