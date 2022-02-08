@@ -9,10 +9,15 @@ import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
+import { secondary } from 'src/theme/variables'
 
 export const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
     margin: 4px 0;
+  }
+
+  & .MuiListItemText-root span {
+    line-height: 1;
   }
 
   &.MuiListItem-button:hover {
@@ -29,6 +34,17 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
     .icon-color {
       fill: ${({ theme }) => theme.colors.primary};
     }
+  }
+
+  & .beamer_icon.active {
+    background-color: ${secondary};
+    top: auto;
+    bottom: 8px;
+    left: 31px;
+    width: 6px;
+    height: 6px;
+    border: white solid 1px;
+    text-indent: -9000px;
   }
 `
 
