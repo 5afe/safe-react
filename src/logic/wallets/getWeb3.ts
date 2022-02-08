@@ -14,6 +14,7 @@ import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -114,7 +115,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
     return ''
   }
 
-  return verifiedAddress === address ? name : ''
+  return verifiedAddress === checksumAddress(address) ? name : ''
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
