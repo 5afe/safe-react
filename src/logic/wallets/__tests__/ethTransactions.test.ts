@@ -1,13 +1,5 @@
 import { setMaxPrioFeePerGas, getFeesPerGas } from 'src/logic/wallets/ethTransactions'
 
-jest.mock('src/logic/wallets/getWeb3', () => {
-  const original = jest.requireActual('src/logic/wallets/getWeb3')
-  return {
-    ...original,
-    getWeb3ReadOnly: jest.fn(),
-  }
-})
-
 describe('setMaxPrioFeePerGas', () => {
   it('should return maxPriorityFeePerGas input if less than/equal to maxFeePerGas', () => {
     expect(setMaxPrioFeePerGas(10, 20)).toEqual(10)
@@ -20,9 +12,14 @@ describe('setMaxPrioFeePerGas', () => {
 
 describe('getFeeHistory', () => {
   const web3 = require('src/logic/wallets/getWeb3')
+  const web3Utils = require('web3-utils')
+
+  beforeEach(() => {
+    jest.restoreAllMocks()
+  })
 
   it('should return the default maxFeePerGas/maxPriorityFeeGas if getFeeHistory threw', async () => {
-    web3.getWeb3ReadOnly.mockImplementation(() => ({
+    jest.spyOn(web3, 'getWeb3ReadOnly').mockImplementationOnce(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
           throw new Error()
@@ -35,8 +32,18 @@ describe('getFeeHistory', () => {
       maxPriorityFeePerGas: 2.5e9,
     })
   })
+  it('should return the default maxFeePerGas/maxPriorityFeeGas if hexToNumber threw', async () => {
+    jest.spyOn(web3Utils, 'hexToNumber').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    expect(await getFeesPerGas()).toStrictEqual({
+      maxFeePerGas: 3.5e9,
+      maxPriorityFeePerGas: 2.5e9,
+    })
+  })
   it('should return the default maxFeePerGas/maxPriorityFeeGas if maxPriorityFeePerGas is not a number', async () => {
-    web3.getWeb3ReadOnly.mockImplementation(() => ({
+    jest.spyOn(web3, 'getWeb3ReadOnly').mockImplementationOnce(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
           return {
@@ -55,7 +62,7 @@ describe('getFeeHistory', () => {
     })
   })
   it('should return the default maxFeePerGas/maxPriorityFeeGas if baseFeePerGas is not a number', async () => {
-    web3.getWeb3ReadOnly.mockImplementation(() => ({
+    jest.spyOn(web3, 'getWeb3ReadOnly').mockImplementationOnce(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
           return {
@@ -74,7 +81,7 @@ describe('getFeeHistory', () => {
     })
   })
   it('should return maxFeePerGas (baseFeePerGas + maxPriorityFeePerGas)/maxPriorityFeePerGas if getFeeHistory returns a result and it was parsed correctly', async () => {
-    web3.getWeb3ReadOnly.mockImplementation(() => ({
+    jest.spyOn(web3, 'getWeb3ReadOnly').mockImplementationOnce(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
           return {
