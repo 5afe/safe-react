@@ -77,12 +77,12 @@ const getStepColor = (state: StepState): string => {
 }
 
 type StyledStepProps = {
-  bold?: boolean
+  $bold?: boolean
   state: StepState
 }
 const StyledStep = styled(Step)<StyledStepProps>`
   .MuiStepLabel-label {
-    font-weight: ${({ bold = false }) => (bold ? 'bold' : 'normal')};
+    font-weight: ${({ $bold = false }) => ($bold ? 'bold' : 'normal')};
     font-size: 16px;
     color: ${({ state }) => getStepColor(state)};
   }
@@ -123,7 +123,7 @@ const getConfirmationStep = (
   { value, name, logoUri }: AddressEx,
   key: string | undefined = undefined,
 ): ReactElement => (
-  <StyledStep key={key} bold state="confirmed">
+  <StyledStep key={key} $bold state="confirmed">
     <StepLabel icon={<DotIcon />}>
       <AddressInfo address={value} name={name || undefined} avatarUrl={logoUri || undefined} shortenHash={4} />
     </StepLabel>
@@ -163,15 +163,15 @@ export const TxOwners = ({
   return (
     <StyledStepper orientation="vertical" nonLinear connector={<StyledStepConnector />}>
       {isCancelTxDetails(txInfo) ? (
-        <StyledStep bold state="error">
+        <StyledStep $bold state="error">
           <StepLabel icon={<TxRejectionIcon />}>On-chain rejection created</StepLabel>
         </StyledStep>
       ) : (
-        <StyledStep bold state="confirmed">
+        <StyledStep $bold state="confirmed">
           <StepLabel icon={<TxCreationIcon />}>Created</StepLabel>
         </StyledStep>
       )}
-      <StyledStep bold state={isConfirmed ? 'confirmed' : 'active'}>
+      <StyledStep $bold state={isConfirmed ? 'confirmed' : 'active'}>
         <StepLabel icon={isConfirmed ? <CheckIcon /> : <CircleIcon />}>
           Confirmations{' '}
           <span style={confirmationsStyle}>
@@ -190,7 +190,7 @@ export const TxOwners = ({
           </StepLabel>
         </StyledStep>
       )}
-      <StyledStep expanded bold state={isExecuted ? 'confirmed' : 'disabled'}>
+      <StyledStep expanded $bold state={isExecuted ? 'confirmed' : 'disabled'}>
         <StepLabel icon={isExecuted ? <CheckIcon /> : <CircleIcon />}>
           {isExecuted ? 'Executed' : isPending ? 'Executing' : 'Execution'}
         </StepLabel>
