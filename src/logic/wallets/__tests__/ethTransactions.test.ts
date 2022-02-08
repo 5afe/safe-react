@@ -1,4 +1,4 @@
-import { clampMaxPrioFeePerGas, getFeesPerGas } from '../getFeeHistory'
+import { setMaxPrioFeePerGas, getFeesPerGas } from 'src/logic/wallets/ethTransactions'
 
 jest.mock('src/logic/wallets/getWeb3', () => {
   const original = jest.requireActual('src/logic/wallets/getWeb3')
@@ -8,33 +8,18 @@ jest.mock('src/logic/wallets/getWeb3', () => {
   }
 })
 
-describe('clampMaxPrioFeePerGas', () => {
-  it('should return the maxPriorityFeePerGas if it is less than maxFeePerGas', () => {
-    const maxPriorityFeePerGas = 2
-    const maxFeePerGas = 3
-
-    expect(clampMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)).toEqual(maxPriorityFeePerGas)
+describe('setMaxPrioFeePerGas', () => {
+  it('should return maxPriorityFeePerGas input if less than/equal to maxFeePerGas', () => {
+    expect(setMaxPrioFeePerGas(10, 20)).toEqual(10)
+    expect(setMaxPrioFeePerGas(20, 20)).toEqual(20)
   })
-
-  it('should clamp to 0.001 if the maxPriorityFeePerGas is more than maxFeePerGas and the maxFeePerGas is low', () => {
-    const maxPriorityFeePerGas = 1
-    const maxFeePerGas = 0.5
-
-    expect(clampMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)).toEqual(0.001)
-  })
-  it('should clamp to maxFeePerGas - 1 if the maxPriorityFeePerGas is more than maxFeePerGas and the maxFeePerGas is > 1', () => {
-    const maxFeePerGas = 3
-    const maxPriorityFeePerGas = 2
-
-    expect(clampMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)).toEqual(2)
+  it('should return maxFeePerGas input if maxPriorityFeePerGas is greater', () => {
+    expect(setMaxPrioFeePerGas(30, 20)).toEqual(20)
   })
 })
 
 describe('getFeeHistory', () => {
   const web3 = require('src/logic/wallets/getWeb3')
-
-  const web3Utils = require('web3-utils')
-  const originalHexToNumber = web3Utils.hexToNumber
 
   it('should return the default maxFeePerGas/maxPriorityFeeGas if getFeeHistory threw', async () => {
     web3.getWeb3ReadOnly.mockImplementation(() => ({
@@ -49,20 +34,6 @@ describe('getFeeHistory', () => {
       maxFeePerGas: 3.5e9,
       maxPriorityFeePerGas: 2.5e9,
     })
-  })
-  it('should return the default maxFeePerGas/maxPriorityFeeGas if hexToNumber threw', async () => {
-    web3Utils.hexToNumber = jest.fn().mockImplementation(
-      jest.fn(() => {
-        throw new Error()
-      }),
-    )
-
-    expect(await getFeesPerGas()).toStrictEqual({
-      maxFeePerGas: 3.5e9,
-      maxPriorityFeePerGas: 2.5e9,
-    })
-
-    web3Utils.hexToNumber = originalHexToNumber
   })
   it('should return the default maxFeePerGas/maxPriorityFeeGas if maxPriorityFeePerGas is not a number', async () => {
     web3.getWeb3ReadOnly.mockImplementation(() => ({

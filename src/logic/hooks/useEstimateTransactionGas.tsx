@@ -13,7 +13,7 @@ import {
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { calculateGasPrice, setMaxPrioFeePerGas, getFeesPerGas } from 'src/logic/wallets/ethTransactions'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
@@ -21,7 +21,6 @@ import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from './useCanTxExecute'
-import { getFeesPerGas, clampMaxPrioFeePerGas } from '../safe/utils/getFeeHistory'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -156,7 +155,7 @@ export const useEstimateTransactionGas = ({
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
       const { maxPriorityFeePerGas, maxFeePerGas } = await getFeesPerGas()
-      const clampedMaxPrioFeePerGas = clampMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)
+      const clampedMaxPrioFeePerGas = setMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)
 
       if (isOffChainSignature && !isCreation) {
         setGasEstimation(
@@ -219,7 +218,7 @@ export const useEstimateTransactionGas = ({
         const gasMaxPrioFee = isMaxFeeParam()
           ? manualMaxPrioFee
             ? toWei(manualMaxPrioFee, 'gwei')
-            : clampMaxPrioFeePerGas(maxPriorityFeePerGas, parseInt(gasPrice)).toString()
+            : setMaxPrioFeePerGas(maxPriorityFeePerGas, parseInt(gasPrice)).toString()
           : '0'
         const gasMaxPrioFeeFormatted = fromWei(gasMaxPrioFee.toString(), 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
