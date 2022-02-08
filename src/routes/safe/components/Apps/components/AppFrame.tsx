@@ -310,12 +310,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   return (
     <AppWrapper>
-      {thirdPartyCookiesDisabled && (
-        <ThirdPartyCookiesWarning
-          onHelp={() => open('chrome://settings', '_blank')}
-          onClose={() => setThirdPartyCookiesDisabled(false)}
-        />
-      )}
+      {thirdPartyCookiesDisabled && <ThirdPartyCookiesWarning onClose={() => setThirdPartyCookiesDisabled(false)} />}
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
