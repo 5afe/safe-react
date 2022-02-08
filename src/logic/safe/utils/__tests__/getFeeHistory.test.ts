@@ -1,4 +1,4 @@
-import { clampMaxPrioFeePerGas, getMaxPriorityFeePerGas } from '../getFeeHistory'
+import { clampMaxPrioFeePerGas, getFeesPerGas } from '../getFeeHistory'
 
 jest.mock('src/logic/wallets/getWeb3', () => {
   const original = jest.requireActual('src/logic/wallets/getWeb3')
@@ -36,7 +36,7 @@ describe('getFeeHistory', () => {
   const web3Utils = require('web3-utils')
   const originalHexToNumber = web3Utils.hexToNumber
 
-  it('should return the default maxPriorityFeeGas if getFeeHistory threw', async () => {
+  it('should return the default maxFeePerGas/maxPriorityFeeGas if getFeeHistory threw', async () => {
     web3.getWeb3ReadOnly.mockImplementation(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
@@ -45,36 +45,26 @@ describe('getFeeHistory', () => {
       },
     }))
 
-    expect(await getMaxPriorityFeePerGas()).toEqual(2.5e9)
+    expect(await getFeesPerGas()).toStrictEqual({
+      maxFeePerGas: 3.5e9,
+      maxPriorityFeePerGas: 2.5e9,
+    })
   })
-  it('should return the default maxPriorityFeeGas if hexToNumber threw', async () => {
+  it('should return the default maxFeePerGas/maxPriorityFeeGas if hexToNumber threw', async () => {
     web3Utils.hexToNumber = jest.fn().mockImplementation(
       jest.fn(() => {
         throw new Error()
       }),
     )
 
-    expect(await getMaxPriorityFeePerGas()).toEqual(2.5e9)
+    expect(await getFeesPerGas()).toStrictEqual({
+      maxFeePerGas: 3.5e9,
+      maxPriorityFeePerGas: 2.5e9,
+    })
 
     web3Utils.hexToNumber = originalHexToNumber
   })
-  it('should return the default maxPriorityFeeGas if baseFeePerGas is not a number', async () => {
-    web3.getWeb3ReadOnly.mockImplementation(() => ({
-      eth: {
-        getFeeHistory: jest.fn(() => {
-          return {
-            baseFeePerGas: ['not a hex value'],
-            gasUsedRatio: [0.39920479014424254],
-            oldestBlock: '0x9a9e7a',
-            reward: [['0x9502f900']],
-          }
-        }),
-      },
-    }))
-
-    expect(await getMaxPriorityFeePerGas()).toEqual(2.5e9)
-  })
-  it('should return the default maxPriorityFeeGas if maxPriorityFeePerGas is not a number', async () => {
+  it('should return the default maxFeePerGas/maxPriorityFeeGas if maxPriorityFeePerGas is not a number', async () => {
     web3.getWeb3ReadOnly.mockImplementation(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
@@ -88,9 +78,12 @@ describe('getFeeHistory', () => {
       },
     }))
 
-    expect(await getMaxPriorityFeePerGas()).toEqual(2.5e9)
+    expect(await getFeesPerGas()).toStrictEqual({
+      maxFeePerGas: 3.5e9,
+      maxPriorityFeePerGas: 2.5e9,
+    })
   })
-  it('should return maxPriorityFeeGas if getFeeHistory returns a result and it was parsed correctly', async () => {
+  it('should return the default maxFeePerGas/maxPriorityFeeGas if baseFeePerGas is not a number', async () => {
     web3.getWeb3ReadOnly.mockImplementation(() => ({
       eth: {
         getFeeHistory: jest.fn(() => {
@@ -104,6 +97,28 @@ describe('getFeeHistory', () => {
       },
     }))
 
-    expect(await getMaxPriorityFeePerGas()).toEqual(686769166)
+    expect(await getFeesPerGas()).toStrictEqual({
+      maxFeePerGas: 3.5e9,
+      maxPriorityFeePerGas: 2.5e9,
+    })
+  })
+  it('should return maxFeePerGas (baseFeePerGas + maxPriorityFeePerGas)/maxPriorityFeePerGas if getFeeHistory returns a result and it was parsed correctly', async () => {
+    web3.getWeb3ReadOnly.mockImplementation(() => ({
+      eth: {
+        getFeeHistory: jest.fn(() => {
+          return {
+            baseFeePerGas: ['0x28ef440e'],
+            gasUsedRatio: [0.39920479014424254],
+            oldestBlock: '0x9a9e7a',
+            reward: [['0x28ef440e']],
+          }
+        }),
+      },
+    }))
+
+    expect(await getFeesPerGas()).toStrictEqual({
+      maxFeePerGas: 1373538332,
+      maxPriorityFeePerGas: 686769166,
+    })
   })
 })

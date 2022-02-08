@@ -21,9 +21,7 @@ import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from './useCanTxExecute'
-import { getMaxPriorityFeePerGas, clampMaxPrioFeePerGas } from '../safe/utils/getFeeHistory'
-
-const DEFAULT_MAX_GAS_FEE = 3.5e9 // 3.5 GWEI
+import { getFeesPerGas, clampMaxPrioFeePerGas } from '../safe/utils/getFeeHistory'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -157,15 +155,15 @@ export const useEstimateTransactionGas = ({
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(canTxExecute, smartContractWallet, safeVersion)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
-      const maxPriorityFeePerGas = await getMaxPriorityFeePerGas()
-      const clampedMaxPrioFeePerGas = clampMaxPrioFeePerGas(maxPriorityFeePerGas, DEFAULT_MAX_GAS_FEE)
+      const { maxPriorityFeePerGas, maxFeePerGas } = await getFeesPerGas()
+      const clampedMaxPrioFeePerGas = clampMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)
 
       if (isOffChainSignature && !isCreation) {
         setGasEstimation(
           getDefaultGasEstimation({
             txEstimationExecutionStatus: EstimationStatus.SUCCESS,
-            gasPrice: fromWei(DEFAULT_MAX_GAS_FEE.toString(), 'gwei'),
-            gasPriceFormatted: DEFAULT_MAX_GAS_FEE.toString(),
+            gasPrice: fromWei(maxFeePerGas.toString(), 'gwei'),
+            gasPriceFormatted: maxFeePerGas.toString(),
             gasMaxPrioFee: fromWei(clampedMaxPrioFeePerGas.toString(), 'gwei'),
             gasMaxPrioFeeFormatted: clampedMaxPrioFeePerGas.toString(),
             isCreation,
@@ -272,8 +270,8 @@ export const useEstimateTransactionGas = ({
         setGasEstimation(
           getDefaultGasEstimation({
             txEstimationExecutionStatus: EstimationStatus.FAILURE,
-            gasPrice: DEFAULT_MAX_GAS_FEE.toString(),
-            gasPriceFormatted: fromWei(DEFAULT_MAX_GAS_FEE.toString(), 'gwei'),
+            gasPrice: maxFeePerGas.toString(),
+            gasPriceFormatted: fromWei(maxFeePerGas.toString(), 'gwei'),
             gasMaxPrioFee: clampedMaxPrioFeePerGas.toString(),
             gasMaxPrioFeeFormatted: fromWei(clampedMaxPrioFeePerGas.toString(), 'gwei'),
           }),
