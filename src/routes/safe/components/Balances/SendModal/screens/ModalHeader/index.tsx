@@ -14,11 +14,11 @@ import { smallFontSize, xs, sm, border, primary } from 'src/theme/variables'
 
 const useStyles = makeStyles(styles)
 
-const ChainIndicatorWrapper = styled(Row)<{ chainTheme: Theme }>`
+const ChainIndicatorWrapper = styled(Row)<{ $chainTheme: Theme }>`
   font-size: ${smallFontSize};
   padding: ${xs} ${sm};
-  background-color: ${(props) => props.chainTheme.backgroundColor ?? border};
-  color: ${(props) => props.chainTheme.textColor ?? primary};
+  background-color: ${({ $chainTheme }) => $chainTheme.backgroundColor ?? border};
+  color: ${({ $chainTheme }) => $chainTheme.textColor ?? primary};
   border-radius: 4px;
   align-items: center;
   white-space: nowrap;
@@ -47,7 +47,7 @@ export const ModalHeader = ({ onClose, subTitle, title, iconUrl }: HeaderProps):
       <Paragraph className={classes.annotation} size="sm">
         {subTitle}
       </Paragraph>
-      <ChainIndicatorWrapper chainTheme={theme}>
+      <ChainIndicatorWrapper $chainTheme={theme}>
         {connectedNetwork.chainId && <ChainIndicator chainId={connectedNetwork.chainId} hideCircle />}
       </ChainIndicatorWrapper>
       <IconButton disableRipple onClick={onClose}>
