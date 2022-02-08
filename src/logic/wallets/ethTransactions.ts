@@ -12,7 +12,12 @@ const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> =>
   const { uri, gasParameter, gweiFactor } = gasPriceOracle
   const { data: response } = await axios.get(uri)
   const data = response.data || response.result || response // Sometimes the data comes with a data parameter
-  return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
+
+  const gasPrice = new BigNumber(data[gasParameter]).multipliedBy(gweiFactor)
+  if (gasPrice.isNaN()) {
+    throw new Error('Fetched gas price is NaN')
+  }
+  return gasPrice.toString()
 }
 
 export const calculateGasPrice = async (): Promise<string> => {

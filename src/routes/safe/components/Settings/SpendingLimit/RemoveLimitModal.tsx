@@ -13,10 +13,11 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { getResetTimeOptions } from './FormFields/ResetTime'
-import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
+import { AddressInfo, ResetTimeInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -83,20 +84,19 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         <Hairline />
 
         <Modal.Body>
-          <Col margin="lg">
-            <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} />
-          </Col>
-          <Col margin="lg">
+          <Col align="center" margin="md">
             {tokenInfo && (
-              <TokenInfo
-                amount={fromTokenUnit(spendingLimit.spent.amount, tokenInfo.decimals)}
-                title="Amount"
+              <TransferAmount
                 token={tokenInfo}
+                text={`${fromTokenUnit(spendingLimit.spent.amount, tokenInfo.decimals)} ${tokenInfo.symbol}`}
               />
             )}
           </Col>
-          <Col margin="lg">
-            <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+          <Col margin="md">
+            <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} color="placeHolder" />
+          </Col>
+          <Col>
+            <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
           </Col>
         </Modal.Body>
       </TxModalWrapper>

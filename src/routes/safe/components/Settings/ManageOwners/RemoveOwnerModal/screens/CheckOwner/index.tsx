@@ -12,6 +12,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
@@ -26,7 +27,7 @@ export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): React
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 3" title="Remove owner" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 3)} title="Remove owner" />
       <Hairline />
       <Block className={classes.formContainer}>
         <Row margin="md">

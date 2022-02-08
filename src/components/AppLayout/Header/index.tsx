@@ -12,6 +12,7 @@ import {
   loadedSelector,
   providerNameSelector,
   userAccountSelector,
+  userEnsSelector,
 } from 'src/logic/wallets/store/selectors'
 import { removeProvider } from 'src/logic/wallets/store/actions'
 import onboard from 'src/logic/wallets/onboard'
@@ -21,6 +22,7 @@ const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
   const chainId = useSelector(currentChainId)
   const userAddress = useSelector(userAccountSelector)
+  const ensName = useSelector(userEnsSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
   const dispatch = useDispatch()
@@ -65,6 +67,7 @@ const HeaderComponent = (): React.ReactElement => {
         openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
+        ensName={ensName}
       />
     )
   }

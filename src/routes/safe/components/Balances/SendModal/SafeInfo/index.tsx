@@ -7,6 +7,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Bold from 'src/components/layout/Bold'
 import { border, xs } from 'src/theme/variables'
 import Block from 'src/components/layout/Block'
+import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 const StyledBlock = styled(Block)`
@@ -21,15 +22,27 @@ const StyledBlock = styled(Block)`
   border-radius: 3px;
 `
 
-const SafeInfo = (): React.ReactElement => {
+type SafeInfoProps = {
+  text?: string
+}
+
+const SafeInfo = ({ text }: SafeInfoProps): React.ReactElement => {
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const nativeCurrency = getNativeCurrency()
 
   return (
     <>
+      {text && (
+        <Row margin="sm">
+          <Paragraph color="black400" noMargin size="lg">
+            {text}
+          </Paragraph>
+        </Row>
+      )}
       <PrefixedEthHashInfo
         hash={safeAddress}
         name={safeName}
+        strongName
         explorerUrl={getExplorerInfo(safeAddress)}
         showAvatar
         showCopyBtn
