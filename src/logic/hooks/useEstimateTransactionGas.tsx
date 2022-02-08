@@ -155,7 +155,7 @@ export const useEstimateTransactionGas = ({
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
 
       const { maxPriorityFeePerGas, maxFeePerGas } = await getFeesPerGas()
-      const clampedMaxPrioFeePerGas = setMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)
+      const maxPrioFeePerGas = setMaxPrioFeePerGas(maxPriorityFeePerGas, maxFeePerGas)
 
       if (isOffChainSignature && !isCreation) {
         setGasEstimation(
@@ -163,8 +163,8 @@ export const useEstimateTransactionGas = ({
             txEstimationExecutionStatus: EstimationStatus.SUCCESS,
             gasPrice: fromWei(maxFeePerGas.toString(), 'gwei'),
             gasPriceFormatted: maxFeePerGas.toString(),
-            gasMaxPrioFee: fromWei(clampedMaxPrioFeePerGas.toString(), 'gwei'),
-            gasMaxPrioFeeFormatted: clampedMaxPrioFeePerGas.toString(),
+            gasMaxPrioFee: fromWei(maxPrioFeePerGas.toString(), 'gwei'),
+            gasMaxPrioFeeFormatted: maxPrioFeePerGas.toString(),
             isCreation,
             isOffChainSignature,
           }),
@@ -271,8 +271,8 @@ export const useEstimateTransactionGas = ({
             txEstimationExecutionStatus: EstimationStatus.FAILURE,
             gasPrice: maxFeePerGas.toString(),
             gasPriceFormatted: fromWei(maxFeePerGas.toString(), 'gwei'),
-            gasMaxPrioFee: clampedMaxPrioFeePerGas.toString(),
-            gasMaxPrioFeeFormatted: fromWei(clampedMaxPrioFeePerGas.toString(), 'gwei'),
+            gasMaxPrioFee: maxPrioFeePerGas.toString(),
+            gasMaxPrioFeeFormatted: fromWei(maxPrioFeePerGas.toString(), 'gwei'),
           }),
         )
       }
