@@ -37,11 +37,9 @@ export const checkIfTxIsApproveAndExecution = (
   txType?: string,
   preApprovingOwner?: string,
 ): boolean => {
-  if (preApprovingOwner) {
-    return txConfirmations + 1 === threshold || isSpendingLimit(txType)
-  }
-
-  return threshold === 1
+  if (txConfirmations === threshold) return false
+  if (!preApprovingOwner) return false
+  return txConfirmations + 1 === threshold || isSpendingLimit(txType)
 }
 
 export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>

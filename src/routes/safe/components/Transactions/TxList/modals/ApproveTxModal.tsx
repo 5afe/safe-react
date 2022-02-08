@@ -31,20 +31,12 @@ import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
 
-export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
-const getModalTitleAndDescription = (
-  thresholdReached: boolean,
-  isCancelTx: boolean,
-): { title: string; description: string } => {
+const getModalTitleAndDescription = (thresholdReached: boolean): { title: string; description: string } => {
   const modalInfo = {
     title: 'Execute transaction rejection',
     description: 'This action will execute this transaction.',
-  }
-
-  if (isCancelTx) {
-    return modalInfo
   }
 
   if (thresholdReached) {
@@ -191,20 +183,18 @@ const useTxInfo = (transaction: Props['transaction']) => {
 
 type Props = {
   onClose: () => void
-  isCancelTx?: boolean
   isOpen: boolean
   transaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
-  txParameters: TxParameters
 }
 
-export const ApproveTxModal = ({ onClose, isCancelTx = false, isOpen, transaction }: Props): React.ReactElement => {
+export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
   const executionInfo = transaction.executionInfo as MultisigExecutionInfo
   const thresholdReached = !!(executionInfo && isThresholdReached(executionInfo))
-  const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
+  const { description, title } = getModalTitleAndDescription(thresholdReached)
 
   const txInfo = useTxInfo(transaction)
   const { confirmations } = txInfo

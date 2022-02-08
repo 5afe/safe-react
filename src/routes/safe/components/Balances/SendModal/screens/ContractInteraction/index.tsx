@@ -21,6 +21,7 @@ import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
 import { ModalHeader } from '../ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -93,7 +94,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Contract interaction" />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}
@@ -120,7 +121,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
-                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+                <Paragraph color="disabled" noMargin size="lg">
                   <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
                   Use custom data (hex encoded)
                 </Paragraph>

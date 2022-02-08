@@ -9,7 +9,7 @@ import {
 } from 'src/logic/safe/store/actions/pendingTransactions'
 import { PENDING_TRANSACTIONS_ID, PendingTransactionPayload } from 'src/logic/safe/store/reducer/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { allPendingTxs } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { allPendingTxIds } from 'src/logic/safe/store/selectors/pendingTransactions'
 
 // Share updated statuses between tabs/windows
 // Test env and Safari don't support BroadcastChannel
@@ -57,7 +57,7 @@ export const pendingTransactionsMiddleware =
         }
 
         const state = getState()
-        session.setItem(PENDING_TRANSACTIONS_ID, allPendingTxs(state))
+        session.setItem(PENDING_TRANSACTIONS_ID, allPendingTxIds(state))
         break
       }
       default:

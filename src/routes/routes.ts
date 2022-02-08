@@ -95,14 +95,6 @@ export const extractPrefixedSafeAddress = (
   }
 }
 
-export const hasPrefixedSafeAddressInUrl = (): boolean => {
-  const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    // Routes that have addresses in URL
-    path: [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE],
-  })
-  return !!match?.params?.[SAFE_ADDRESS_SLUG]
-}
-
 export const extractShortChainName = (): ShortName => extractPrefixedSafeAddress().shortName
 export const extractSafeAddress = (): string => extractPrefixedSafeAddress().safeAddress
 

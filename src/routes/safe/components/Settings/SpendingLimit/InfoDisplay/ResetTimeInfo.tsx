@@ -1,4 +1,5 @@
 import { IconText, Text } from '@gnosis.pm/safe-react-components'
+import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement } from 'react'
 
 import Row from 'src/components/layout/Row'
@@ -6,11 +7,12 @@ import Row from 'src/components/layout/Row'
 interface ResetTimeInfoProps {
   title?: string
   label?: string
+  color?: ThemeColors
 }
 
-const ResetTimeInfo = ({ title, label }: ResetTimeInfoProps): ReactElement => (
+const ResetTimeInfo = ({ title, label, color }: ResetTimeInfoProps): ReactElement => (
   <>
-    <Text size="xl" strong>
+    <Text size="xl" color={color}>
       {title}
     </Text>
     {label ? (
@@ -18,8 +20,8 @@ const ResetTimeInfo = ({ title, label }: ResetTimeInfoProps): ReactElement => (
         <IconText iconSize="md" iconType="fuelIndicator" text={label} textSize="lg" />
       </Row>
     ) : (
-      <Row align="center" margin="md">
-        <Text size="lg">One-time spending limit</Text>
+      <Row align="center">
+        <Text size="xl">One-time spending limit</Text>
       </Row>
     )}
   </>

@@ -7,13 +7,12 @@ import { _getChainId } from 'src/config'
 
 export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
 
-type SafeTxHash = string
-export type PendingTransactionsState = Record<ChainId, Record<SafeTxHash, boolean>>
+export type PendingTransactionsState = Record<ChainId, Record<string, boolean>>
 
 const initialPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID) || {}
 
 export type PendingTransactionPayload = {
-  safeTxHash: string
+  id: string
   isBroadcast?: boolean
 }
 
@@ -24,11 +23,11 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       action: Action<PendingTransactionPayload>,
     ) => {
       const chainId = _getChainId()
-      const { safeTxHash } = action.payload
+      const { id } = action.payload
 
       return {
         ...state,
-        [chainId]: { ...state[chainId], [safeTxHash]: true },
+        [chainId]: { ...state[chainId], [id]: true },
       }
     },
     [PENDING_TRANSACTIONS_ACTIONS.REMOVE]: (
@@ -36,10 +35,10 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       action: Action<PendingTransactionPayload>,
     ) => {
       const chainId = _getChainId()
-      const { safeTxHash } = action.payload
+      const { id } = action.payload
 
-      // Omit safeTxHash from the pending transactions on current chain
-      const { [safeTxHash]: _, ...newChainState } = state[chainId] || {}
+      // Omit id from the pending transactions on current chain
+      const { [id]: _, ...newChainState } = state[chainId] || {}
 
       return {
         ...state,

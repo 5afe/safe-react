@@ -1,6 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 import { sm } from 'src/theme/variables'
-import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
 import Img from 'src/components/layout/Img'
@@ -24,22 +23,14 @@ const styles = createStyles({
 const useStyles = makeStyles(styles)
 
 type TransactionFailTextProps = {
-  txEstimationExecutionStatus: EstimationStatus
   isExecution: boolean
 }
 
-export const TransactionFailText = ({
-  txEstimationExecutionStatus,
-  isExecution,
-}: TransactionFailTextProps): React.ReactElement | null => {
+export const TransactionFailText = ({ isExecution }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
   const threshold = useSelector(currentSafeThreshold)
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const isGranted = useSelector(grantedSelector)
-
-  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE) {
-    return null
-  }
 
   let errorDesc = 'To save gas costs, avoid creating the transaction.'
   if (isExecution) {
