@@ -80,8 +80,6 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       approveAndExecute ||
       (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
-    sender.approveAndExecute = approveAndExecute
-
     const preApprovingOwner = approveAndExecute && !props.thresholdReached ? props.userAddress : undefined
 
     sender.txArgs = {

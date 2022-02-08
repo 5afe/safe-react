@@ -102,7 +102,6 @@ export class TxSender {
   dispatch: Dispatch
   safeInstance: GnosisSafe
   safeVersion: string
-  approveAndExecute: boolean
   txId: string
 
   // On transaction completion (either confirming or executing)
