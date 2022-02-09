@@ -89,7 +89,7 @@ export const TxModalWrapper = ({
   const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
   const confirmationsLen = Array.from(txConfirmations || []).length
-  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold)
+  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce)
   const doExecute = executionApproved && canTxExecute
   const nativeCurrency = getNativeCurrency()
 
