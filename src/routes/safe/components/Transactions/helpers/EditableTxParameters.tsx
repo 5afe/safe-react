@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react'
 import { TxParameters, useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EditTxParametersForm } from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 import { ParametersStatus } from './utils'
-import { fromWei } from 'web3-utils'
-
-import { DEFAULT_MAX_PRIO_FEE } from 'src/logic/hooks/useEstimateTransactionGas'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
@@ -73,7 +70,7 @@ export const EditableTxParameters = ({
       setSafeTxGas(txParameters.safeTxGas)
       setEthGasLimit(txParameters.ethGasLimit)
       setEthGasPrice(txParameters.ethGasPrice)
-      setEthMaxPrioFee(txParameters.ethMaxPrioFee || fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei'))
+      setEthMaxPrioFee(txParameters.ethMaxPrioFee)
       setEthNonce(txParameters.ethNonce)
       closeEditModalCallback && closeEditModalCallback(txParameters)
     }
