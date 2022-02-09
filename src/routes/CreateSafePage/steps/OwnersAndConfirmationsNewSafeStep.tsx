@@ -89,10 +89,14 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 
   const getENSName = async (address: string): Promise<void> => {
     const ensName = await reverseENSLookup(address)
-    const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
-      [address]: ensName,
-    })
-    createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
+    createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, { ...ownersWithENSName, [address]: ensName })
+  }
+
+  const handleScan = async (address: string, closeQrModal: () => void, addressFieldName: string): Promise<void> => {
+    const scannedAddress = address.startsWith('ethereum:') ? address.replace('ethereum:', '') : address
+    await getENSName(scannedAddress)
+    createSafeForm.change(addressFieldName, scannedAddress)
+    closeQrModal()
   }
 
   return (
@@ -134,12 +138,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
             const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
-            const handleScan = async (address: string, closeQrModal: () => void): Promise<void> => {
-              await getENSName(address)
-              createSafeForm.change(addressFieldName, address)
-              closeQrModal()
-            }
-
             return (
               <Fragment key={addressFieldName}>
                 <Col xs={3}>
@@ -156,11 +154,12 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 <Col xs={7}>
                   <AddressInput
                     fieldMutator={async (address) => {
-                      await getENSName(address)
                       createSafeForm.change(addressFieldName, address)
                       const addressName = addressBook[address]?.name
                       if (addressName) {
                         createSafeForm.change(nameFieldName, addressName)
+                      } else {
+                        await getENSName(address)
                       }
                     }}
                     inputAdornment={
@@ -179,7 +178,10 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                   />
                 </Col>
                 <OwnersIconsContainer xs={1} center="xs" middle="xs">
-                  <ScanQRWrapper handleScan={handleScan} testId={`${addressFieldName}-scan-QR`} />
+                  <ScanQRWrapper
+                    handleScan={(...args) => handleScan(...args, addressFieldName)}
+                    testId={`${addressFieldName}-scan-QR`}
+                  />
                 </OwnersIconsContainer>
                 {showDeleteIcon && (
                   <OwnersIconsContainer xs={1} center="xs" middle="xs">

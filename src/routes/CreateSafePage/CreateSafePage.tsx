@@ -37,6 +37,7 @@ import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafe
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
+import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -76,9 +77,18 @@ function CreateSafePage(): ReactElement {
   const [initialFormValues, setInitialFormValues] = useState<CreateSafeFormValues>()
 
   useEffect(() => {
+    let isCurrent = true
     if (provider && userWalletAddress) {
-      const initialValuesFromUrl = getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
-      setInitialFormValues(initialValuesFromUrl)
+      const getInitValues = async () => {
+        const initialValuesFromUrl = await getInitialValues(userWalletAddress, addressBook, location, safeRandomName)
+        if (isCurrent) {
+          setInitialFormValues(initialValuesFromUrl)
+        }
+      }
+      getInitValues()
+    }
+    return () => {
+      isCurrent = false
     }
   }, [provider, userWalletAddress, addressBook, location, safeRandomName])
 
@@ -89,6 +99,8 @@ function CreateSafePage(): ReactElement {
       </LoaderContainer>
     )
   }
+
+  const isInitializing = !provider || !initialFormValues
 
   return !!safePendingToBeCreated ? (
     <SafeCreationProcess />
@@ -105,7 +117,7 @@ function CreateSafePage(): ReactElement {
           <StepFormElement
             label={selectWalletAndNetworkStepLabel}
             nextButtonLabel="Continue"
-            disableNextButton={!provider}
+            disableNextButton={isInitializing}
           >
             <SelectWalletAndNetworkStep />
           </StepFormElement>
@@ -133,7 +145,7 @@ export default CreateSafePage
 const DEFAULT_THRESHOLD_VALUE = 1
 
 // initial values can be present in the URL because the Old MultiSig migration
-function getInitialValues(userAddress, addressBook, location, suggestedSafeName): CreateSafeFormValues {
+async function getInitialValues(userAddress, addressBook, location, suggestedSafeName): Promise<CreateSafeFormValues> {
   const query = queryString.parse(location.search, { arrayFormat: 'comma' })
   const { name, owneraddresses, ownernames, threshold } = query
 
@@ -159,7 +171,15 @@ function getInitialValues(userAddress, addressBook, location, suggestedSafeName)
       nameFieldName: `owner-name-${index}`,
       addressFieldName: `owner-address-${index}`,
     })),
-    [FIELD_SAFE_OWNER_ENS_LIST]: {},
+    [FIELD_SAFE_OWNER_ENS_LIST]: (
+      await Promise.all(
+        owners.map(async (address) => {
+          return { [address]: await reverseENSLookup(address) }
+        }),
+      )
+    ).reduce((acc, owner) => {
+      return { ...acc, ...owner }
+    }, {}),
     // we set owners address values as owner-address-${index} format in the form state
     ...owners.reduce(
       (ownerAddressFields, ownerAddress, index) => ({
