@@ -140,7 +140,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
             const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
             const isRepeated = (value: string) => {
-              const prevOwners = owners.slice(0, i)
+              const prevOwners = owners.filter((_: typeof owners[number], index: number) => index !== i)
               const repeated = prevOwners.some((owner: typeof owners[number]) => {
                 return sameString(createSafeFormValues[owner.addressFieldName], value)
               })
