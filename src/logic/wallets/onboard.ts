@@ -112,6 +112,8 @@ const getOnboard = (chainId: ChainId): API => {
 
 let currentOnboardInstance: API
 const onboard = (): API => {
+  // The `walletName` used in Onboard's `WalletSelectModuleOptions['wallets']` differs from the
+  // wallet name stored in its state
   const walletName = currentOnboardInstance?.getState().wallet.name?.replaceAll(' ', '') as WALLETS
 
   if (!currentOnboardInstance || (walletName && !isSupportedWallet(walletName))) {

@@ -80,7 +80,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
 }
 
 export const isSupportedWallet = (name: WALLETS) => {
-  return !getDisabledWallets().includes(name)
+  return !getDisabledWallets().some((walletName) => walletName.toLowerCase() === name.toLowerCase())
 }
 
 export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
