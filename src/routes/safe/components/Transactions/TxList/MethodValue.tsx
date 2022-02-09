@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import {
   isAddress,
   isArrayParameter,
+  isNestedArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { HexEncodedData } from './HexEncodedData'
 import { getExplorerInfo } from 'src/config'
@@ -49,6 +50,33 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
+  if (isNestedArrayParameter(type)) {
+    return (
+      <>
+        [
+        <NestedWrapper>
+          [
+          <NestedWrapper>
+            {(props.value as string[]).flat().map((address, index) => {
+              const explorerUrl = getExplorerInfo(address)
+              return (
+                <PrefixedEthHashInfo
+                  key={`${address}_${index}`}
+                  textSize="xl"
+                  hash={address}
+                  showCopyBtn
+                  explorerUrl={explorerUrl}
+                />
+              )
+            })}
+          </NestedWrapper>
+          ]
+        </NestedWrapper>
+        ]
+      </>
+    )
+  }
+
   if (isArrayParameter(type) && isAddress(type)) {
     return (
       <>
