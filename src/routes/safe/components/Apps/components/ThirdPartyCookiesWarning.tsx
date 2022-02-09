@@ -14,10 +14,10 @@ export const ThirdPartyCookiesWarning = ({ onClose }: Props): React.ReactElement
   return (
     <MuiAlert severity="warning" onClose={onClose}>
       <MuiAlertTitle>
-        Third party cookies disabled. Safe apps may not work properly under this circumstances. You can find the
-        information about this problem in{' '}
+        Third party cookies are disabled. Safe Apps may therefore not work properly. You can find out more information
+        about this{' '}
         <Link href={HELP_LINK} size="xl" target="_blank">
-          Help Article
+          here
         </Link>
       </MuiAlertTitle>
     </MuiAlert>

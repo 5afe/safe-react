@@ -9,11 +9,13 @@
 
   <body>
     <script>
+      const COOKIE_NAME = 'testcookie'
       const checkCookiesEnable = () => {
         let isCookieEnabled = window.navigator.cookieEnabled ? true : false
-        if (typeof window.navigator.cookieEnabled == 'undefined' && !isCookieEnabled) {
-          document.cookie = 'testcookie'
-          isCookieEnabled = document.cookie.indexOf('testcookie') != -1 ? true : false
+
+        if (window.navigator.cookieEnabled === undefined && !isCookieEnabled) {
+          document.cookie = COOKIE_NAME
+          isCookieEnabled = document.cookie.indexOf(COOKIE_NAME) != -1 ? true : false
         }
 
         return isCookieEnabled
