@@ -26,7 +26,12 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
-import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  ExpandedTxDetails,
+  isMultiSigExecutionDetails,
+  isMultisigExecutionInfo,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -195,17 +200,15 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
   const safeAddress = extractSafeAddress()
   const txInfo = useTxInfo(transaction)
 
-  const executionInfo = transaction.executionInfo as MultisigExecutionInfo
-  const { confirmationsSubmitted, confirmationsRequired } = executionInfo
+  const { executionInfo } = transaction
+  const { confirmationsSubmitted = 0, confirmationsRequired = 0 } = isMultisigExecutionInfo(executionInfo)
+    ? executionInfo
+    : {}
   const thresholdReached = confirmationsSubmitted >= confirmationsRequired
   const { description, title } = getModalTitleAndDescription(thresholdReached)
 
   let preApprovingOwner: string | undefined = undefined
-  if (
-    !thresholdReached &&
-    isOwner &&
-    executionInfo.confirmationsSubmitted === executionInfo.confirmationsRequired - 1
-  ) {
+  if (!thresholdReached && isOwner && confirmationsSubmitted === confirmationsRequired - 1) {
     preApprovingOwner = userAddress
   }
 
@@ -230,7 +233,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
         operation={txInfo.operation}
         txNonce={txInfo.nonce.toString()}
         txConfirmations={txInfo.confirmations}
-        txThreshold={executionInfo.confirmationsRequired}
+        txThreshold={confirmationsRequired}
         txTo={txInfo.to}
         txData={txInfo.data}
         txValue={txInfo.value}
