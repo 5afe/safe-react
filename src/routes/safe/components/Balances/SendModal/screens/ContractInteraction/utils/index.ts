@@ -66,7 +66,6 @@ export const isInt = (type: string): boolean => type.indexOf('int') === 0
 export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
-export const isNestedArrayParameter = (parameter: string): boolean => /(\[\d*]\[\d*])+$/.test(parameter)
 export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
   try {
     const arrayResult = JSON.parse(parameter)
