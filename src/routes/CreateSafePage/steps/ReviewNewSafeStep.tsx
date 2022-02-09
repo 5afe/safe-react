@@ -64,7 +64,7 @@ function ReviewNewSafeStep(): ReactElement | null {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_LIMIT, gasLimit)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_PRICE, gasPrice)
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
-  }, [gasLimit, gasPrice, createSafeForm])
+  }, [gasLimit, gasPrice, createSafeForm, gasMaxPrioFee])
 
   return (
     <Row data-testid={'create-safe-review-step'}>
