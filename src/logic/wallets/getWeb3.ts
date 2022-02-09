@@ -115,7 +115,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
     return ''
   }
 
-  return verifiedAddress === checksumAddress(address) ? name : ''
+  return checksumAddress(verifiedAddress) === checksumAddress(address) ? name : ''
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
