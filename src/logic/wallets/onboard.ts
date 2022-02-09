@@ -62,6 +62,7 @@ const getOnboard = (chainId: ChainId): API => {
           }),
         )
       },
+      // Non-checksummed address
       address: (address) => {
         store.dispatch(updateProviderAccount(address))
 

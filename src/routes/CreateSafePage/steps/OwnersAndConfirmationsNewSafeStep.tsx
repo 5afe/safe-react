@@ -39,6 +39,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { sameString } from 'src/utils/strings'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -132,11 +133,19 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
       <Hairline />
       <Block margin="md" padding="md">
         <RowHeader>
-          {owners.map(({ nameFieldName, addressFieldName }) => {
+          {owners.map(({ nameFieldName, addressFieldName }, i: number) => {
             const hasOwnerAddressError = formErrors[addressFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
             const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
+
+            const isRepeated = (value: string) => {
+              const prevOwners = owners.filter((_: typeof owners[number], index: number) => index !== i)
+              const repeated = prevOwners.some((owner: typeof owners[number]) => {
+                return sameString(createSafeFormValues[owner.addressFieldName], value)
+              })
+              return repeated ? ADDRESS_REPEATED_ERROR : undefined
+            }
 
             return (
               <Fragment key={addressFieldName}>
@@ -175,6 +184,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     placeholder="Owner Address*"
                     text="Owner Address"
                     testId={addressFieldName}
+                    validators={[isRepeated]}
                   />
                 </Col>
                 <OwnersIconsContainer xs={1} center="xs" middle="xs">
@@ -214,7 +224,12 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 component={SelectField}
                 data-testid="threshold-selector-input"
                 name={FIELD_NEW_SAFE_THRESHOLD}
-                validate={composeValidators(required, minValue(1))}
+                validate={(val) => {
+                  const isValidThreshold = () => {
+                    return !!threshold && threshold <= owners.length ? undefined : THRESHOLD_ERROR
+                  }
+                  return composeValidators(required, minValue(1), isValidThreshold)(val)
+                }}
               >
                 {owners.map((_, option) => (
                   <MenuItem
@@ -238,34 +253,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 }
 
 export default OwnersAndConfirmationsNewSafeStep
-
-export const ownersAndConfirmationsNewSafeStepValidations = (values: {
-  [FIELD_SAFE_OWNERS_LIST]: Array<Record<string, string>>
-  [FIELD_NEW_SAFE_THRESHOLD]: number
-}): Record<string, string> => {
-  const errors = {}
-
-  const owners = values[FIELD_SAFE_OWNERS_LIST]
-  const threshold = values[FIELD_NEW_SAFE_THRESHOLD]
-  const addresses = owners.map(({ addressFieldName }) => values[addressFieldName])
-
-  // we check repeated addresses
-  owners.forEach(({ addressFieldName }, index) => {
-    const address = values[addressFieldName]
-    const previousOwners = addresses.slice(0, index)
-    const isRepeated = previousOwners.includes(address)
-    if (isRepeated) {
-      errors[addressFieldName] = ADDRESS_REPEATED_ERROR
-    }
-  })
-
-  const isValidThreshold = !!threshold && threshold <= owners.length
-  if (!isValidThreshold) {
-    errors[FIELD_NEW_SAFE_THRESHOLD] = THRESHOLD_ERROR
-  }
-
-  return errors
-}
 
 const BlockWithPadding = styled(Block)`
   padding: ${lg};

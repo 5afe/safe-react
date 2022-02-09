@@ -30,7 +30,6 @@ import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
 import { providerNameSelector, shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
-  ownersAndConfirmationsNewSafeStepValidations,
 } from './steps/OwnersAndConfirmationsNewSafeStep'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafeStep'
@@ -124,11 +123,7 @@ function CreateSafePage(): ReactElement {
           <StepFormElement label={nameNewSafeStepLabel} nextButtonLabel="Continue">
             <NameNewSafeStep />
           </StepFormElement>
-          <StepFormElement
-            label={ownersAndConfirmationsNewSafeStepLabel}
-            nextButtonLabel="Continue"
-            validate={ownersAndConfirmationsNewSafeStepValidations}
-          >
+          <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
           <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
