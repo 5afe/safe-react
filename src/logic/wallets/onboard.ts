@@ -16,7 +16,6 @@ import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProvide
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
 import closeSnackbar from '../notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
-import { checksumAddress } from 'src/utils/checksumAddress'
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
 
@@ -63,17 +62,16 @@ const getOnboard = (chainId: ChainId): API => {
           }),
         )
       },
+      // Non-checksummed address
       address: (address) => {
-        const checksummedAddress = checksumAddress(address)
+        store.dispatch(updateProviderAccount(address))
 
-        store.dispatch(updateProviderAccount(checksummedAddress))
-
-        if (checksummedAddress) {
-          prevAddress = checksummedAddress
+        if (address) {
+          prevAddress = address
         }
 
         // Wallet disconnected
-        if (!checksummedAddress && prevAddress) {
+        if (!address && prevAddress) {
           resetWeb3()
           removeFromStorage(LAST_USED_PROVIDER_KEY)
         }

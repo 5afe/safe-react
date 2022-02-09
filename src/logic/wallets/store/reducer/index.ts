@@ -2,6 +2,7 @@ import { Action, handleActions } from 'redux-actions'
 
 import { ChainId } from 'src/config/chain.d'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type ProvidersState = {
   name: string
@@ -51,7 +52,7 @@ const providerReducer = handleActions<ProvidersState, ProviderPayloads>(
     [PROVIDER_ACTIONS.NETWORK]: (state: ProvidersState, { payload }: Action<ProviderNetworkPayload>) =>
       providerFactory({ ...state, network: payload }),
     [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) =>
-      providerFactory({ ...state, account: payload, available: !!payload }),
+      providerFactory({ ...state, account: checksumAddress(payload), available: !!payload }),
     [PROVIDER_ACTIONS.ENS]: (state: ProvidersState, { payload }: Action<ProviderEnsPayload>) =>
       providerFactory({ ...state, ensDomain: payload }),
   },
