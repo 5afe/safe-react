@@ -89,11 +89,13 @@ export const ReviewInfoText = ({
             You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently
             connected wallet.
           </Paragraph>
-          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-            <TransactionFailText isExecution={isExecution} />
-          )}
         </>
       )}
+      <TransactionFailText
+        estimationStatus={txEstimationExecutionStatus}
+        isExecution={isExecution}
+        isCreation={isCreation}
+      />
     </ReviewInfoTextWrapper>
   )
 }
