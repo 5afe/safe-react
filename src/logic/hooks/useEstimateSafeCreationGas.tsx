@@ -36,7 +36,7 @@ const estimateGas = async (
   ])
 
   const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, estimatedGasCosts)
+  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, parseInt(gasPrice, 10))
   const nativeCurrency = getNativeCurrency()
   const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
   const gasCostFormatted = formatAmount(gasCost)
