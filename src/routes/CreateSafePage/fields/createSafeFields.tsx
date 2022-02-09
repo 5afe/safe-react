@@ -7,6 +7,7 @@ export const FIELD_MAX_OWNER_NUMBER = 'maxOwnerNumber'
 export const FIELD_NEW_SAFE_PROXY_SALT = 'safeCreationSalt'
 export const FIELD_NEW_SAFE_GAS_LIMIT = 'gasLimit'
 export const FIELD_NEW_SAFE_GAS_PRICE = 'gasPrice'
+export const FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE = 'gasMaxPrioFee'
 export const FIELD_NEW_SAFE_CREATION_TX_HASH = 'safeCreationTxHash'
 
 export type OwnerFieldItem = {
@@ -24,6 +25,7 @@ export type CreateSafeFormValues = {
   [FIELD_NEW_SAFE_PROXY_SALT]: number
   [FIELD_NEW_SAFE_GAS_LIMIT]: number
   [FIELD_NEW_SAFE_GAS_PRICE]: string
+  [FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE]: number
   [FIELD_NEW_SAFE_CREATION_TX_HASH]?: string
 }
 
