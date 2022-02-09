@@ -22,7 +22,6 @@ import { processTransaction } from 'src/logic/safe/store/actions/processTransact
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { isThresholdReached } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -30,6 +29,7 @@ import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
@@ -190,21 +190,31 @@ type Props = {
 export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
+  const isOwner = useSelector(grantedSelector)
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
+  const txInfo = useTxInfo(transaction)
+
   const executionInfo = transaction.executionInfo as MultisigExecutionInfo
-  const thresholdReached = !!(executionInfo && isThresholdReached(executionInfo))
+  const { confirmationsSubmitted, confirmationsRequired } = executionInfo
+  const thresholdReached = confirmationsSubmitted >= confirmationsRequired
   const { description, title } = getModalTitleAndDescription(thresholdReached)
 
-  const txInfo = useTxInfo(transaction)
-  const { confirmations } = txInfo
+  let preApprovingOwner: string | undefined = undefined
+  if (
+    !thresholdReached &&
+    isOwner &&
+    executionInfo.confirmationsSubmitted === executionInfo.confirmationsRequired - 1
+  ) {
+    preApprovingOwner = userAddress
+  }
 
   const approveTx = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       processTransaction({
         safeAddress,
         tx: txInfo,
-        userAddress,
+        preApprovingOwner,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: !delayExecution,
         ethParameters: txParameters,
@@ -219,7 +229,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
       <TxModalWrapper
         operation={txInfo.operation}
         txNonce={txInfo.nonce.toString()}
-        txConfirmations={confirmations}
+        txConfirmations={txInfo.confirmations}
         txThreshold={executionInfo.confirmationsRequired}
         txTo={txInfo.to}
         txData={txInfo.data}

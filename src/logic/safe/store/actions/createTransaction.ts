@@ -17,7 +17,7 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNonce, canExecuteCreatedTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
@@ -290,8 +290,7 @@ export const createTransaction = (
 
     // Execute right away?
     sender.isFinalization =
-      !props.delayExecution &&
-      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
+      !props.delayExecution && (await canExecuteCreatedTx(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
     // Prepare a TxArgs object
     sender.txArgs = {
