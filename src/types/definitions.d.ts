@@ -11,6 +11,8 @@ declare global {
       autoRefreshOnNetworkChange: boolean
       isMetaMask: boolean
     }
+    beamer_config?: Record<string, any>
+    Beamer?: Record<string, any>
   }
 }
 declare module '@openzeppelin/contracts/build/contracts/ERC721'

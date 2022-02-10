@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { BEAMER_ID } from './constants'
 
 export const loadBeamer = async (): Promise<void> => {
@@ -27,14 +25,15 @@ export const loadBeamer = async (): Promise<void> => {
   x?.parentNode?.insertBefore(s, x)
 
   s.onload = () => {
-    ;(window as any).Beamer.init()
+    if (!window.Beamer) return
+    window.Beamer.init()
   }
 }
 
 export const closeBeamer = (): void => {
   if (!window.Beamer) return
-  ;(window as any).Beamer.destroy()
-  ;(window as any).Beamer.update({
+  window.Beamer.destroy()
+  window.Beamer.update({
     selector: undefined,
   })
 }
