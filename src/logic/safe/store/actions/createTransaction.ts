@@ -17,7 +17,7 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNonce, canExecuteCreatedTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
@@ -102,25 +102,17 @@ export class TxSender {
   dispatch: Dispatch
   safeInstance: GnosisSafe
   safeVersion: string
-  approveAndExecute: boolean
   txId: string
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization, approveAndExecute = false } = this
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization } = this
 
+    // Propose the tx to the backend
+    // 1) If signing
+    // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
-
-    const isOffChainSigning = !isFinalization && signature
-    const isOnChainSigning = isFinalization && !signature
-
-    // If 1/? threshold and owner chooses to execute created tx immediately
-    const isImmediateExecution = isOnChainSigning && !approveAndExecute
-
-    // Propose the tx to the backend if an owner and
-    // 1) It's a confirmation w/o exection
-    // 2) It's a creation + execution w/o pre-approved signatures
-    if (isOffChainSigning || isImmediateExecution) {
+    if (!isFinalization || !this.txId) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
@@ -129,8 +121,8 @@ export class TxSender {
       }
     }
 
-    // If 1/? threshold and owner chooses to execute created tx immediately
-    // we retrieve txId of newly created tx from proposal response
+    // If threshold reached except for last sig, and owner chooses to execute the created tx immediately
+    // we retrieve txId of newly created tx from the proposal response
     if (isFinalization && txDetails) {
       dispatch(addPendingTransaction({ id: txDetails.txId }))
     }
@@ -298,8 +290,7 @@ export const createTransaction = (
 
     // Execute right away?
     sender.isFinalization =
-      !props.delayExecution &&
-      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
+      !props.delayExecution && (await canExecuteCreatedTx(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
     // Prepare a TxArgs object
     sender.txArgs = {
