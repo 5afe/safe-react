@@ -1936,10 +1936,9 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.8.0.tgz#856c15517274f924539ea4df40fffe6f009249a7"
   integrity sha512-xK2ZZXxCEGOw+6UZAeUmvqE/4C/XTpYmv1a8KzKUgSOxcGkHsIDqcjdKjqif7gOdnwHl4+XXJUtDQEuSLT4Scg==
 
-"@gnosis.pm/safe-react-components@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.9.0.tgz#c5169cab41cde96c9a375005f380cd37bd909fe0"
-  integrity sha512-+SAJEuK4Zf1eBCtMpe1uQlJBN73zttIQwevEch7PDUBhJysc/oyEHuhmhpZpMYryoFgVVGYz7FZtwv2NxmUsJQ==
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components#add-gift-icon":
+  version "0.9.8"
+  resolved "https://github.com/gnosis/safe-react-components#5ab9ede99eda445155aeddaee348beba96824a3d"
   dependencies:
     react-media "^1.10.0"
     web3-utils "^1.6.0"

@@ -1,12 +1,16 @@
-import { lazy, useMemo } from 'react'
+import { lazy, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 import { Divider } from '@gnosis.pm/safe-react-components'
+import { useDispatch } from 'react-redux'
 
 import List, { ListItemType, StyledListItem, StyledListItemText } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import ListIcon from 'src/components/List/ListIcon'
+import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
+import { loadFromCookie } from 'src/logic/cookies/utils'
+import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -74,6 +78,7 @@ const Sidebar = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const dispatch = useRef(useDispatch())
   const devTools = useMemo(() => lazyLoad('./DevTools'), [])
   const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
   return (
@@ -105,7 +110,20 @@ const Sidebar = ({
         <StyledDivider />
 
         <HelpList>
-          <StyledListItem id="whats-new-button" button={true}>
+          <StyledListItem
+            id="whats-new-button"
+            button={true}
+            onClick={async () => {
+              const cookiesState = await loadFromCookie(COOKIES_KEY)
+              if (!cookiesState) {
+                dispatch.current(openCookieBanner({ cookieBannerOpen: true }))
+              } else {
+                const { acceptedIntercom } = cookiesState
+                if (!acceptedIntercom)
+                  dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))
+              }
+            }}
+          >
             <ListIcon type="gift" />
             <StyledListItemText>Whats new</StyledListItemText>
           </StyledListItem>

@@ -16,6 +16,7 @@ import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { CookieAttributes } from 'js-cookie'
+import { closeBeamer, loadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -115,6 +116,7 @@ const CookiesBanner = (): ReactElement => {
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
       loadIntercom()
+      loadBeamer()
     }
   }, [showIntercom, isSafeAppView])
 
@@ -192,6 +194,7 @@ const CookiesBanner = (): ReactElement => {
 
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
+      closeBeamer()
     }
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
