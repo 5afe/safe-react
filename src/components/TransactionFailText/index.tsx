@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const styles = createStyles({
   executionWarningRow: {
@@ -24,13 +25,23 @@ const useStyles = makeStyles(styles)
 
 type TransactionFailTextProps = {
   isExecution: boolean
+  isCreation: boolean
+  estimationStatus: EstimationStatus
 }
 
-export const TransactionFailText = ({ isExecution }: TransactionFailTextProps): React.ReactElement | null => {
+export const TransactionFailText = ({
+  isExecution,
+  isCreation,
+  estimationStatus,
+}: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
   const threshold = useSelector(currentSafeThreshold)
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const isGranted = useSelector(grantedSelector)
+
+  if (estimationStatus !== EstimationStatus.FAILURE && !(isCreation && !isGranted)) {
+    return null
+  }
 
   let errorDesc = 'To save gas costs, avoid creating the transaction.'
   if (isExecution) {
@@ -40,11 +51,11 @@ export const TransactionFailText = ({ isExecution }: TransactionFailTextProps): 
         : `To save gas costs, avoid executing the transaction.`
   }
 
-  const error = isGranted
-    ? `This transaction will most likely fail. ${errorDesc}`
-    : isWrongChain
-    ? 'Your wallet is connected to the wrong chain.'
-    : "You are currently not an owner of this Safe and won't be able to submit this transaction."
+  const defaultMsg = `This transaction will most likely fail. ${errorDesc}`
+  const notOwnerMsg = `You are currently not an owner of this Safe and won't be able to submit this transaction.`
+  const wrongChainMsg = 'Your wallet is connected to the wrong chain.'
+
+  const error = isGranted ? defaultMsg : isWrongChain ? wrongChainMsg : isCreation ? notOwnerMsg : defaultMsg
 
   return (
     <Row align="center">
