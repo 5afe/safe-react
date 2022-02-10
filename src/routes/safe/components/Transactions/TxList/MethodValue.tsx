@@ -50,27 +50,26 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
-  const getKey = (key = '0', index) => `${key}-${index}`
-
   if (isArrayParameter(type) && isAddress(type)) {
     return (
       <>
         [
         <NestedWrapper>
           {(props.value as string[]).map((address, index) => {
+            const key = `${props.key || props.method}-${index}`
             if (Array.isArray(address)) {
               const newProps = {
                 type,
                 ...props,
                 value: address,
-                key: `${props.method}-${getKey(props.key, index)}`,
+                key,
               }
               return <Value {...newProps} />
             }
             const explorerUrl = getExplorerInfo(address)
             return (
               <PrefixedEthHashInfo
-                key={`${address}_${index}`}
+                key={`${address}_${key}`}
                 textSize="xl"
                 hash={address}
                 showCopyBtn
