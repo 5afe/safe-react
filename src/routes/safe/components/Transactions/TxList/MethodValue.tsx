@@ -50,6 +50,8 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
+  const getKey = (key = '0', index) => `${key}-${index}`
+
   if (isArrayParameter(type) && isAddress(type)) {
     return (
       <>
@@ -57,7 +59,12 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
         <NestedWrapper>
           {(props.value as string[]).map((address, index) => {
             if (Array.isArray(address)) {
-              const newProps = { type, ...props, value: address, key: `${props.method}-value-${index}` }
+              const newProps = {
+                type,
+                ...props,
+                value: address,
+                key: `${props.method}-${getKey(props.key, index)}`,
+              }
               return <Value {...newProps} />
             }
             const explorerUrl = getExplorerInfo(address)
