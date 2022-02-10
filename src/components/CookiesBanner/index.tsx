@@ -108,6 +108,7 @@ const CookiesBanner = (): ReactElement => {
   const [localAnalytics, setLocalAnalytics] = useState(false)
   const [localIntercom, setLocalIntercom] = useState(false)
   const { getAppUrl } = useSafeAppUrl()
+  const beamerScriptRef = useRef<HTMLScriptElement>()
 
   const showBanner = useSelector(cookieBannerOpen)
   const newAppUrl = getAppUrl()
@@ -116,7 +117,7 @@ const CookiesBanner = (): ReactElement => {
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
       loadIntercom()
-      loadBeamer()
+      loadBeamer(beamerScriptRef)
     }
   }, [showIntercom, isSafeAppView])
 
@@ -194,7 +195,7 @@ const CookiesBanner = (): ReactElement => {
 
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
-      closeBeamer()
+      closeBeamer(beamerScriptRef)
     }
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }

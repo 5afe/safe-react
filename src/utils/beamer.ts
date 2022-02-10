@@ -1,6 +1,9 @@
 import { BEAMER_ID } from './constants'
+import { MutableRefObject } from 'react'
 
-export const loadBeamer = async (): Promise<void> => {
+const BEAMER_URL = 'https://app.getbeamer.com/js/beamer-embed.js'
+
+export const loadBeamer = async (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): Promise<void> => {
   const APP_ID = BEAMER_ID
   if (!APP_ID) {
     console.error('[Beamer] - In order to use Beamer you need to add an appID')
@@ -15,25 +18,24 @@ export const loadBeamer = async (): Promise<void> => {
     bounce: false,
   }
 
-  const beamerURL = 'https://app.getbeamer.com/js/beamer-embed.js'
-
-  const s = document.createElement('script')
-  s.type = 'text/javascript'
-  s.defer = true
-  s.src = beamerURL
+  scriptRef.current = document.createElement('script')
+  scriptRef.current.type = 'text/javascript'
+  scriptRef.current.defer = true
+  scriptRef.current.src = BEAMER_URL
   const x = document.getElementsByTagName('script')[0]
-  x?.parentNode?.insertBefore(s, x)
+  x?.parentNode?.insertBefore(scriptRef.current, x)
 
-  s.onload = () => {
+  scriptRef.current.onload = () => {
     if (!window.Beamer) return
     window.Beamer.init()
   }
 }
 
-export const closeBeamer = (): void => {
-  if (!window.Beamer) return
+export const closeBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
+  if (!window.Beamer || !scriptRef.current) return
   window.Beamer.destroy()
   window.Beamer.update({
     selector: undefined,
   })
+  scriptRef.current.remove()
 }
