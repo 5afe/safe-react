@@ -50,6 +50,9 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
 
     const { tx, approveAndExecute } = props
 
+    // Set specific transaction being finalised
+    sender.txId = tx.id
+
     const txProps = {
       navigateToTransactionsTab: false,
       notifiedTransaction: props.notifiedTransaction,

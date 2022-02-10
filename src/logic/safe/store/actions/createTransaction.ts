@@ -110,6 +110,7 @@ export class TxSender {
   safeInstance: GnosisSafe
   safeVersion: string
   approveAndExecute: boolean
+  txId: string
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
@@ -135,6 +136,12 @@ export class TxSender {
       }
     }
 
+    // If 1/? threshold and owner chooses to execute created tx immediately
+    // we retrieve txId of newly created tx from proposal response
+    if (isFinalization && txDetails) {
+      dispatch(addPendingTransaction({ id: txDetails.txId }))
+    }
+
     notifications.closePending()
 
     // This is used to communicate the safeTxHash to a Safe App caller
@@ -149,7 +156,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch, notifications, safeInstance } = this
+    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId } = this
 
     logError(Errors._803, err.message)
 
@@ -157,8 +164,9 @@ export class TxSender {
 
     notifications.closePending()
 
-    if (isFinalization && safeTxHash) {
-      dispatch(removePendingTransaction({ safeTxHash }))
+    // Existing transaction was being finalised (txId exists)
+    if (isFinalization && txId) {
+      dispatch(removePendingTransaction({ id: txId }))
     }
 
     const executeDataUsedSignatures = safeInstance.methods
@@ -192,14 +200,18 @@ export class TxSender {
   }
 
   async sendTx(): Promise<string> {
-    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch } = this
+    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch, txId } = this
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
     const promiEvent = tx.send(sendParams)
+
     // When signing on-chain don't mark as pending as it is never removed
     if (isFinalization) {
-      dispatch(addPendingTransaction({ safeTxHash }))
+      // Finalising existing transaction (txId exists)
+      if (txId) {
+        dispatch(addPendingTransaction({ id: txId }))
+      }
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 

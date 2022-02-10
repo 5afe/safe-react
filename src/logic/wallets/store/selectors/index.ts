@@ -11,8 +11,12 @@ export const userAccountSelector = createSelector(providerSelector, ({ account }
   return account
 })
 
+export const userEnsSelector = createSelector(providerSelector, ({ ensDomain }: ProvidersState): string => {
+  return ensDomain
+})
+
 export const providerNameSelector = createSelector(providerSelector, ({ name }: ProvidersState): string | undefined => {
-  return name?.toLowerCase()
+  return name
 })
 
 export const networkSelector = createSelector(providerSelector, ({ network }: ProvidersState): ChainId => {

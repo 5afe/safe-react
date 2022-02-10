@@ -78,7 +78,7 @@ export const fetchSafe =
 
     // If the network has changed while the safe was being loaded,
     // ignore the result
-    if (remoteSafeInfo?.chainId !== chainId) {
+    if (remoteSafeInfo && remoteSafeInfo?.chainId !== chainId) {
       return
     }
 
@@ -102,7 +102,7 @@ export const fetchSafe =
       }
     }
 
-    const owners = buildSafeOwners(remoteSafeInfo?.owners)
+    const owners = buildSafeOwners(remoteSafeInfo?.owners || [])
 
     return dispatch(updateSafe({ address, ...safeInfo, owners }))
   }

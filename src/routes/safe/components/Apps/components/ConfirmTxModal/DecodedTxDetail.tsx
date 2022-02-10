@@ -4,28 +4,26 @@ import { DecodedDataParameterValue, DecodedDataResponse } from '@gnosis.pm/safe-
 
 import { getNativeCurrency } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { md, lg } from 'src/theme/variables'
-import ModalTitle from 'src/components/ModalTitle'
-import Hairline from 'src/components/layout/Hairline'
 import { BasicTxInfo, getParameterElement } from 'src/components/DecodeTxs'
+import { DecodedTxDetailType } from 'src/routes/safe/components/Apps/components/ConfirmTxModal/index'
 
 const Container = styled.div`
-  max-width: 480px;
-  padding: ${md} ${lg};
   word-break: break-word;
+
+  & > div:last-child {
+    margin: 0;
+  }
 `
 
-function isDataDecodedParameterValue(arg: any): arg is DecodedDataParameterValue {
-  return arg.operation !== undefined
+export function isDataDecodedParameterValue(arg: DecodedTxDetailType): arg is DecodedDataParameterValue {
+  return arg ? arg.hasOwnProperty('operation') : false
 }
 
 type Props = {
-  hideDecodedTxData: () => void
-  onClose: () => void
   decodedTxData: DecodedDataParameterValue | DecodedDataResponse
 }
 
-export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
+export const DecodedTxDetail = ({ decodedTxData: tx }: Props): ReactElement => {
   const nativeCurrency = getNativeCurrency()
   let body
   // If we are dealing with a multiSend
@@ -45,17 +43,5 @@ export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx 
     body = <>{tx.parameters.map((p, index) => getParameterElement(p, index))}</>
   }
 
-  return (
-    <>
-      <ModalTitle
-        title={(tx as DecodedDataParameterValue).dataDecoded?.method || (tx as DecodedDataResponse).method}
-        onClose={onClose}
-        goBack={hideDecodedTxData}
-      />
-
-      <Hairline />
-
-      <Container>{body}</Container>
-    </>
-  )
+  return <Container>{body}</Container>
 }

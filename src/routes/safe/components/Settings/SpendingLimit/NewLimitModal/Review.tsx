@@ -23,7 +23,7 @@ import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadable
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
-import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import { AddressInfo, ResetTimeInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import Hairline from 'src/components/layout/Hairline'
@@ -32,6 +32,8 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -243,27 +245,26 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       submitText="Submit"
       isSubmitDisabled={existentSpendingLimit === undefined}
     >
-      <ModalHeader onClose={onClose} title="New spending limit" subTitle="2 of 2" />
+      <ModalHeader onClose={onClose} title="New spending limit" subTitle={getStepTitle(2, 2)} />
       <Hairline />
 
       <Modal.Body>
-        <Col margin="lg">
-          <AddressInfo address={values.beneficiary} title="Beneficiary" />
-        </Col>
-        <Col margin="lg">
-          <TokenInfo
-            amount={fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)}
-            title="Amount"
+        <Col align="center" margin="md">
+          <TransferAmount
             token={txToken}
+            text={`${fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)} ${txToken.symbol}`}
           />
           {existentSpendingLimit && (
-            <Text size="lg" color="error">
+            <Text size="lg" color="error" center>
               Previous Amount: {existentSpendingLimit.amount}
             </Text>
           )}
         </Col>
-        <Col margin="lg">
-          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+        <Col margin="md">
+          <AddressInfo address={values.beneficiary} title="Beneficiary" color="placeHolder" />
+        </Col>
+        <Col margin="md">
+          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
           {existentSpendingLimit && (
             <Row align="center" margin="md">
               <Text size="lg" color="error">
@@ -274,7 +275,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         </Col>
 
         {existentSpendingLimit && (
-          <Col margin="md">
+          <Col>
             <Text size="xl" color="error" center strong>
               You are about to replace an existent spending limit
             </Text>

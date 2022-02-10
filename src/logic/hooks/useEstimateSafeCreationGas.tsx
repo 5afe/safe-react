@@ -4,7 +4,7 @@ import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
-import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { calculateGasPrice, getFeesPerGas, setMaxPrioFeePerGas } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from '../wallets/store/selectors'
 import { getNativeCurrency } from 'src/config'
 
@@ -19,6 +19,8 @@ type SafeCreationEstimationResult = {
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasLimit: number // Minimum gas requited to execute the Tx
   gasPrice: string
+  gasMaxPrioFee: number
+  gasMaxPrioFeeFormatted: string
 }
 
 const estimateGas = async (
@@ -27,11 +29,14 @@ const estimateGas = async (
   safeCreationSalt: number,
   addresses: string[],
 ): Promise<SafeCreationEstimationResult> => {
-  const [gasEstimation, gasPrice] = await Promise.all([
+  const [gasEstimation, gasPrice, feesPerGas] = await Promise.all([
     estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt),
     calculateGasPrice(),
+    getFeesPerGas(),
   ])
+
   const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
+  const maxPrioFeePerGas = setMaxPrioFeePerGas(feesPerGas.maxPriorityFeePerGas, parseInt(gasPrice, 10))
   const nativeCurrency = getNativeCurrency()
   const gasCost = fromTokenUnit(estimatedGasCosts, nativeCurrency.decimals)
   const gasCostFormatted = formatAmount(gasCost)
@@ -41,6 +46,8 @@ const estimateGas = async (
     gasEstimation,
     gasCostFormatted,
     gasLimit: gasEstimation,
+    gasMaxPrioFee: maxPrioFeePerGas,
+    gasMaxPrioFeeFormatted: formatAmount(maxPrioFeePerGas.toString()),
   }
 }
 
@@ -54,6 +61,8 @@ export const useEstimateSafeCreationGas = ({
     gasCostFormatted: '< 0.001',
     gasLimit: 0,
     gasPrice: '0',
+    gasMaxPrioFee: 0,
+    gasMaxPrioFeeFormatted: '0',
   })
   const userAccount = useSelector(userAccountSelector)
   // Serialize the addresses array so that it doesn't trigger the effect due to the dependencies

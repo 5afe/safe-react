@@ -9,7 +9,6 @@ import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -20,7 +19,6 @@ import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchToken
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
@@ -33,6 +31,8 @@ import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -86,7 +86,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const nativeCurrency = getNativeCurrency()
-  const tokens: any = useSelector(extendedSafeTokensSelector)
+  const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, getNativeCurrencyAddress()), [txToken])
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
@@ -144,18 +144,25 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       onBack={onPrev}
     >
       {/* Header */}
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send funds" />
 
       <Hairline />
 
       <Block className={classes.container}>
+        {/* Amount */}
+        {txToken && (
+          <Row align="center" margin="md">
+            <TransferAmount token={txToken} text={`${tx.amount} ${txToken.symbol}`} />
+          </Row>
+        )}
+
         {/* SafeInfo */}
-        <SafeInfo />
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
 
         {/* Recipient */}
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Recipient
           </Paragraph>
         </Row>
@@ -164,29 +171,12 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             <PrefixedEthHashInfo
               hash={tx.recipientAddress}
               name={tx.recipientName}
+              strongName
               showCopyBtn
               showAvatar
               explorerUrl={getExplorerInfo(tx.recipientAddress)}
             />
           </Col>
-        </Row>
-
-        {/* Amount */}
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Amount
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Img alt={txToken?.name} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
-          <Paragraph
-            className={classes.amount}
-            noMargin
-            size="md"
-            data-testid={`amount-${txToken?.symbol}-review-step`}
-          >
-            {tx.amount} {txToken?.symbol}
-          </Paragraph>
         </Row>
       </Block>
     </TxModalWrapper>

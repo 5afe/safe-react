@@ -37,6 +37,11 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   const txStatus = useTxStatus(transaction)
   const isAwaitingEx = isAwaitingExecution(txStatus)
 
+  const onExecuteOrConfirm = (event) => {
+    handleOnMouseLeave()
+    handleConfirmButtonClick(event)
+  }
+
   const getTitle = () => {
     if (isAwaitingEx) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
@@ -53,7 +58,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
           <IconButton
             size="small"
             type="button"
-            onClick={handleConfirmButtonClick}
+            onClick={onExecuteOrConfirm}
             disabled={disabledActions}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
