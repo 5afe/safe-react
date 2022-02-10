@@ -25,9 +25,16 @@ export const loadBeamer = async (): Promise<void> => {
   s.src = beamerURL
   const x = document.getElementsByTagName('script')[0]
   x?.parentNode?.insertBefore(s, x)
+
+  s.onload = () => {
+    ;(window as any).Beamer.init()
+  }
 }
 
 export const closeBeamer = (): void => {
   if (!window.Beamer) return
   ;(window as any).Beamer.destroy()
+  ;(window as any).Beamer.update({
+    selector: undefined,
+  })
 }
