@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import { AnyAction } from 'redux'
+import { AnyAction, Dispatch } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -7,11 +7,11 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { getTxSender, RequiredTxProps, TxSender } from './createTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { TxArgs } from '../models/types/transaction'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
+import { DispatchReturn } from 'src/logic/safe/store/actions/types'
+import { RequiredTxProps, TxSender, getTxSender } from './txSender'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean

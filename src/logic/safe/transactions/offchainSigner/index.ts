@@ -1,6 +1,6 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
+import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/txSender'
 import { getEIP712Signer, SigningTxArgs } from './EIP712Signer'
 import { ethSigner, EthSignerArgs } from './ethSigner'
 
