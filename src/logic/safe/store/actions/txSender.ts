@@ -103,12 +103,10 @@ export const getTxSender = async (
       signature = undefined,
       isFinalization,
       safeTxHash,
-      txId,
     }: {
       txArgs: TxArgs
       signature?: string
       isFinalization: boolean
-      txId?: string
       safeTxHash: string
     },
     confirmCallback?: ConfirmEventHandler,
@@ -117,7 +115,7 @@ export const getTxSender = async (
     // 1) If signing
     // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
-    if (txArgs && (!isFinalization || !txId)) {
+    if (!isFinalization || !txId) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
       } catch (err) {
@@ -191,7 +189,7 @@ export const getTxSender = async (
         promiEvent.once('error', reject)
       })
 
-      onComplete({ ...txDetails, txId }, confirmCallback)
+      onComplete(txDetails, confirmCallback)
     } catch (err) {
       logError(Errors._803, err.message)
 
