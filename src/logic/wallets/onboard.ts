@@ -43,10 +43,6 @@ const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
     networkId: parseInt(chainId, 10),
     networkName: getNetworkName(chainId),
-    // Prevent unnecessary, legacy `eth_getBlockByNumber` polling in WC provider:
-    // 'Disabling' it via  high interval does not seem to cause an averse effect
-    // https://github.com/WalletConnect/walletconnect-monorepo/issues/357#issuecomment-789663540
-    blockPollingInterval: 60_000 * 60,
     subscriptions: {
       wallet: async (wallet) => {
         if (wallet.provider) {
