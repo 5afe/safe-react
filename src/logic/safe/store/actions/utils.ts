@@ -17,7 +17,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 
-export const shouldExecuteTransaction = async (
+export const canExecuteCreatedTx = async (
   safeInstance: GnosisSafe,
   nonce: string,
   lastTx: Transaction | null,
