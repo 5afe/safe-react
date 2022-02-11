@@ -9,7 +9,7 @@ import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { RequiredTxProps, TxSender } from './createTransaction'
+import { getTxSender, RequiredTxProps, TxSender } from './createTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { TxArgs } from '../models/types/transaction'
 
@@ -64,7 +64,7 @@ const getProcessTxProps = ({
 
 const getProcessTxArgs = async (
   { tx, approveAndExecute, preApprovingOwner }: ProcessTransactionArgs,
-  { safeInstance, from }: TxSender,
+  { safeInstance, from }: Omit<TxSender, 'submitTx'>,
 ): Promise<TxArgs> => {
   const { gasPrice = '0', confirmations, value, data = EMPTY_DATA } = tx
   return {
@@ -88,23 +88,20 @@ const isFinalization = ({
 
 export const processTransaction = (props: ProcessTransactionArgs): ProcessTransactionAction => {
   return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
-    const sender = new TxSender()
-
-    sender.txId = props.tx.id
-
     const state = getState()
+    const txProps = getProcessTxProps(props)
 
     try {
-      await sender.prepare(dispatch, state, getProcessTxProps(props))
+      const { submitTx, ...sender } = await getTxSender(dispatch, state, txProps, props.tx.id)
+
+      submitTx({
+        txArgs: await getProcessTxArgs(props, sender),
+        isFinalization: isFinalization(props),
+        safeTxHash: props.tx.safeTxHash,
+      })
     } catch (err) {
       logError(Errors._815, err.message)
       return
     }
-
-    sender.isFinalization = isFinalization(props)
-    sender.txArgs = await getProcessTxArgs(props, sender)
-    sender.safeTxHash = props.tx.safeTxHash
-
-    sender.submitTx(state)
   }
 }
