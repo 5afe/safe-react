@@ -9,8 +9,9 @@ import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { TxSender } from './createTransaction'
+import { RequiredTxProps, TxSender } from './createTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { TxArgs } from '../models/types/transaction'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -39,56 +40,70 @@ interface ProcessTransactionArgs {
 
 type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
+const getProcessTxProps = ({
+  notifiedTransaction,
+  safeAddress,
+  ethParameters,
+  tx,
+}: ProcessTransactionArgs): RequiredTxProps => {
+  const { operation, origin, to, data = EMPTY_DATA, nonce, value, safeTxGas } = tx
+  return {
+    navigateToTransactionsTab: false,
+    notifiedTransaction: notifiedTransaction,
+    operation,
+    origin,
+    safeAddress,
+    to,
+    txData: data,
+    txNonce: nonce,
+    valueInWei: value,
+    safeTxGas: safeTxGas,
+    ethParameters,
+  }
+}
+
+const getProcessTxArgs = async (
+  { tx, approveAndExecute, preApprovingOwner }: ProcessTransactionArgs,
+  { safeInstance, from }: TxSender,
+): Promise<TxArgs> => {
+  const { gasPrice = '0', confirmations, value, data = EMPTY_DATA } = tx
+  return {
+    ...tx, // Merge previous tx with new data
+    safeInstance,
+    valueInWei: value,
+    data,
+    gasPrice,
+    sender: from,
+    sigs: generateSignaturesFromTxConfirmations(confirmations, approveAndExecute ? preApprovingOwner : undefined),
+  }
+}
+
+const isFinalization = ({
+  approveAndExecute,
+  thresholdReached,
+  preApprovingOwner,
+}: ProcessTransactionArgs): boolean => {
+  return approveAndExecute && Boolean(thresholdReached || preApprovingOwner)
+}
+
 export const processTransaction = (props: ProcessTransactionArgs): ProcessTransactionAction => {
   return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
     const sender = new TxSender()
 
-    // Selectors
+    sender.txId = props.tx.id
+
     const state = getState()
 
-    const { tx, approveAndExecute } = props
-
-    // Set specific transaction being finalised
-    sender.txId = tx.id
-
-    const txProps = {
-      navigateToTransactionsTab: false,
-      notifiedTransaction: props.notifiedTransaction,
-      operation: tx.operation,
-      origin: tx.origin,
-      safeAddress: props.safeAddress,
-      to: tx.to,
-      txData: tx.data ?? EMPTY_DATA,
-      txNonce: tx.nonce,
-      valueInWei: tx.value,
-      safeTxGas: tx.safeTxGas,
-      ethParameters: props.ethParameters,
-    }
-
-    // Populate instance vars
     try {
-      await sender.prepare(dispatch, state, txProps)
+      await sender.prepare(dispatch, state, getProcessTxProps(props))
     } catch (err) {
       logError(Errors._815, err.message)
       return
     }
 
-    sender.isFinalization = approveAndExecute && !!(props.thresholdReached || props.preApprovingOwner)
-
-    sender.txArgs = {
-      ...tx, // Merge previous tx with new data
-      safeInstance: sender.safeInstance,
-      valueInWei: tx.value,
-      data: txProps.txData,
-      gasPrice: tx.gasPrice || '0',
-      sender: sender.from,
-      sigs: generateSignaturesFromTxConfirmations(
-        tx.confirmations,
-        approveAndExecute ? props.preApprovingOwner : undefined,
-      ),
-    }
-
-    sender.safeTxHash = tx.safeTxHash
+    sender.isFinalization = isFinalization(props)
+    sender.txArgs = await getProcessTxArgs(props, sender)
+    sender.safeTxHash = props.tx.safeTxHash
 
     sender.submitTx(state)
   }
