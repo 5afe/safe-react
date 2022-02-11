@@ -5,7 +5,7 @@ import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 import getPairingModule from 'src/logic/wallets/pairing/module'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import patchedWalletConnect from 'src/logic/wallets/patchedWalletConnect'
+import getPatchedWCModule from 'src/logic/wallets/walletConnect/module'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean // Whether wallet supports desktop app
@@ -19,8 +19,6 @@ const wallets = (chainId: ChainId): Wallet[] => {
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    // A patched version of WalletConnect is spliced in at this index
-    // { preferred: true, desktop: true }
     {
       walletName: WALLETS.TREZOR,
       appUrl: 'gnosis-safe.io',
@@ -75,26 +73,20 @@ export const isSupportedWallet = (name: WALLETS) => {
   })
 }
 
-export const getPlatformSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
-  const supportedWallets = wallets(chainId)
+export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
+  const supportedWallets: WalletSelectModuleOptions['wallets'] = wallets(chainId)
     .filter(({ walletName, desktop }) => {
       // Desktop vs. Web app wallet support
       return isSupportedWallet(walletName) && window.isDesktop ? desktop : true
     })
     .map(({ desktop: _, ...rest }) => rest)
 
-  // Pairing must be 1st in list (to hide via CSS)
-  return isPairingSupported() ? [getPairingModule(chainId), ...supportedWallets] : supportedWallets
-}
-
-export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
-  const wallets: WalletSelectModuleOptions['wallets'] = getPlatformSupportedWallets(chainId)
-
-  if (!getDisabledWallets().includes(WALLETS.WALLET_CONNECT)) {
-    const wc = patchedWalletConnect(chainId)
+  if (isSupportedWallet(WALLETS.WALLET_CONNECT)) {
+    const wc = getPatchedWCModule(chainId)
     // Inset patched WC module at index 1
-    wallets?.splice(1, 0, wc)
+    supportedWallets?.splice(1, 0, wc)
   }
 
-  return wallets
+  // Pairing must be 1st in list (to hide via CSS)
+  return isPairingSupported() ? [getPairingModule(chainId), ...supportedWallets] : supportedWallets
 }

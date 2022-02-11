@@ -1,22 +1,7 @@
-import WalletConnectProvider from '@walletconnect/web3-provider'
-import { IRPCMap } from '@walletconnect/types'
 import { WalletModule, Helpers } from 'bnc-onboard/dist/src/interfaces'
 
-import { getRpcServiceUrl } from 'src/config'
-import { getChains } from 'src/config/cache/chains'
-import { INFURA_TOKEN } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
-
-// TODO: When desktop pairing is merged, import these into there
-export const WC_BRIDGE = 'https://safe-walletconnect.gnosis.io/'
-
-// Modified version of the built in WC module in Onboard v1.35.5, including:
-// https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
-
-// - No `balance` subscription as `eth_getBalance` is otherwise constantly requested
-//   but we do not request the balance from anywhere and is therefore not needed
-// - A high polling interval to prevent unnecessary `eth_getBlockByNumber` polling
-//   https://github.com/WalletConnect/walletconnect-monorepo/issues/357#issuecomment-789663540
+import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
 
 const walletConnectIcon = `
   <svg 
@@ -30,39 +15,27 @@ const walletConnectIcon = `
   </svg>
 `
 
-export const getRpcMap = (): IRPCMap => {
-  return getChains().reduce((map, { chainId, rpcUri }) => {
-    return {
-      ...map,
-      [parseInt(chainId, 10)]: getRpcServiceUrl(rpcUri),
-    }
-  }, {})
-}
+// Modified version of the built in WC module in Onboard v1.35.5, including:
+// https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
 
-const patchedWalletConnect = (chainId: ChainId): WalletModule => {
+const getPatchedWCModule = (chainId: ChainId): WalletModule => {
+  const MODULE_NAME = 'WalletConnect'
+
   return {
-    name: 'WalletConnect',
+    name: MODULE_NAME,
     svg: walletConnectIcon,
     wallet: async ({ resetWalletState }: Helpers) => {
-      const provider = new WalletConnectProvider({
-        infuraId: INFURA_TOKEN,
-        rpc: getRpcMap(),
-        chainId: parseInt(chainId, 10),
-        bridge: WC_BRIDGE,
-        // Prevent `eth_getBlockByNumber` polling every 4 seconds
-        pollingInterval: 60_000 * 60, // 1 hour
-      })
-
-      provider.autoRefreshOnNetworkChange = false
+      const provider = getWalletConnectProvider(chainId)
 
       provider.wc.on('disconnect', () => {
-        resetWalletState({ disconnected: true, walletName: 'WalletConnect' })
+        resetWalletState({ disconnected: true, walletName: MODULE_NAME })
       })
 
       return {
         provider,
         interface: {
-          name: 'WalletConnect',
+          ...getWCWalletInterface(provider),
+          name: MODULE_NAME,
           connect: () =>
             new Promise((resolve, reject) => {
               provider
@@ -74,24 +47,6 @@ const patchedWalletConnect = (chainId: ChainId): WalletModule => {
                   }),
                 )
             }),
-          address: {
-            onChange: (func) => {
-              provider.send('eth_accounts').then((accounts: string[]) => accounts[0] && func(accounts[0]))
-              provider.on('accountsChanged', (accounts: string[]) => func(accounts[0]))
-            },
-          },
-          network: {
-            onChange: (func) => {
-              provider.send('eth_chainId').then(func)
-              provider.on('chainChanged', func)
-            },
-          },
-          // Prevent continuous `eth_getBalance` requests
-          balance: {},
-          disconnect: () => {
-            provider.wc.killSession()
-            provider.stop()
-          },
         },
       }
     },
@@ -102,4 +57,4 @@ const patchedWalletConnect = (chainId: ChainId): WalletModule => {
   }
 }
 
-export default patchedWalletConnect
+export default getPatchedWCModule
