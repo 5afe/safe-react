@@ -2,7 +2,7 @@ import { IClientMeta } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
-import { APP_VERSION } from 'src/utils/constants'
+import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
@@ -24,15 +24,16 @@ const getClientMeta = (): IClientMeta => {
   }
 
   const app = `Safe Web App ${APP_VERSION}`
+  const favicon = `${location.origin}/${PUBLIC_URL}/favicon.ico`
 
   return {
     name: PAIRING_MODULE_NAME,
     description: [app, client].join(';'),
     url: 'https://gnosis-safe.io/app',
-    icons: [],
+    icons: [favicon],
   }
 }
-
+console.log(`${location.origin}/${PUBLIC_URL}/favicon.ico`)
 // Note: this shares a lot of similarities with the patchedWalletConnect module
 const getPairingModule = (chainId: ChainId): WalletModule => {
   const STORAGE_ID = 'SAFE__pairingProvider'
