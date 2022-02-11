@@ -10,5 +10,6 @@ import bsc from './bsc'
 export default {
   local,
   mainnet,
+  alfajores,
   xdai,
 }
