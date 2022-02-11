@@ -24,7 +24,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(false)
   })
 
-  it('It should return false given a manifest without description', async () => {
+  it('It should not return false given a manifest without description', async () => {
     const manifest = {
       name: 'test',
       description: '',
@@ -32,7 +32,7 @@ describe('SafeApp manifest', () => {
     }
 
     const result = isAppManifestValid(manifest as SafeApp)
-    expect(result).toBe(false)
+    expect(result).not.toBe(false)
   })
 
   it('It should return false given a manifest with error', async () => {

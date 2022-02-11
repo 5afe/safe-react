@@ -51,7 +51,7 @@ const rinkeby: NetworkConfig = {
     id: ETHEREUM_NETWORK.RINKEBY,
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
-    label: 'Rinkeby',
+    label: 'Alfajores',
     isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
