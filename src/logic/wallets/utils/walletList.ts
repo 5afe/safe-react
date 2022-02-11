@@ -1,8 +1,9 @@
-import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions, WalletSelectModuleOptions } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
+import patchedWalletConnect from '../patchedWalletConnect'
 
 type Wallet = WalletInitOptions & {
   desktop: boolean
@@ -16,14 +17,8 @@ const wallets = (chainId: ChainId): Wallet[] => {
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    {
-      walletName: WALLETS.WALLET_CONNECT,
-      preferred: true,
-      // `infuraKey` is not mandatory if rpc is provided
-      rpc: { [chainId]: rpcUrl },
-      desktop: true,
-      bridge: 'https://safe-walletconnect.gnosis.io/',
-    },
+    // A patched version of WalletConnect is spliced in at this index
+    // { preferred: true, desktop: true }
     {
       walletName: WALLETS.TREZOR,
       appUrl: 'gnosis-safe.io',
@@ -71,7 +66,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
   ]
 }
 
-export const getSupportedWallets = (chainId: ChainId): WalletInitOptions[] => {
+const getPlatformSupportedWallets = (chainId: ChainId): WalletInitOptions[] => {
   if (window.isDesktop) {
     return wallets(chainId)
       .filter(({ desktop }) => desktop)
@@ -81,4 +76,16 @@ export const getSupportedWallets = (chainId: ChainId): WalletInitOptions[] => {
   return wallets(chainId)
     .map(({ desktop, ...rest }) => rest)
     .filter(({ walletName }) => !getDisabledWallets().includes(walletName))
+}
+
+export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
+  const wallets: WalletSelectModuleOptions['wallets'] = getPlatformSupportedWallets(chainId)
+
+  if (!getDisabledWallets().includes(WALLETS.WALLET_CONNECT)) {
+    const wc = patchedWalletConnect(chainId)
+    // Inset patched WC module at index 1
+    wallets.splice(1, 0, wc)
+  }
+
+  return wallets
 }
