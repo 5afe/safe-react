@@ -3,7 +3,6 @@ import {
   mustBeInteger,
   mustBeFloat,
   maxValue,
-  mustBeUrl,
   minValue,
   mustBeEthereumAddress,
   mustBeAddressHash,
@@ -89,18 +88,6 @@ describe('Forms > Validators', () => {
 
     it('Returns an error message for a non-number string', () => {
       expect(minValue(1)('imnotanumber')).toEqual(getMinValueErrMsg(1))
-    })
-  })
-
-  describe('mustBeUrl validator', () => {
-    const MUST_BE_URL_ERR_MSG = 'Please, provide a valid url'
-
-    it('Returns undefined for a valid url', () => {
-      expect(mustBeUrl('https://gnosis-safe.io')).toBeUndefined()
-    })
-
-    it('Returns an error message for an valid url', () => {
-      expect(mustBeUrl('gnosis-safe')).toEqual(MUST_BE_URL_ERR_MSG)
     })
   })
 

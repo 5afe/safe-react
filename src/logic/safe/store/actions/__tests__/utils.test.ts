@@ -1,7 +1,7 @@
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { ChainId } from 'src/config/chain.d'
-import { buildSafeOwners, extractRemoteSafeInfo, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { buildSafeOwners, extractRemoteSafeInfo, canExecuteCreatedTx } from 'src/logic/safe/store/actions/utils'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getMockedSafeInstance, getMockedStoredTServiceModel } from 'src/test/utils/safeHelper'
 import { LocalTransactionStatus } from '../../models/types/gateway.d'
@@ -14,7 +14,7 @@ import {
 
 const lastTxFromStore = getMockedStoredTServiceModel()
 
-describe('shouldExecuteTransaction', () => {
+describe('canExecuteCreatedTx', () => {
   it('It should return false if given a safe with a threshold > 1', async () => {
     // given
     const nonce = '0'
@@ -22,7 +22,7 @@ describe('shouldExecuteTransaction', () => {
     const safeInstance = getMockedSafeInstance({ threshold })
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStore)
+    const result = await canExecuteCreatedTx(safeInstance, nonce, lastTxFromStore)
 
     // then
     expect(result).toBe(false)
@@ -35,7 +35,7 @@ describe('shouldExecuteTransaction', () => {
     const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.SUCCESS }
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
+    const result = await canExecuteCreatedTx(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(true)
@@ -48,7 +48,7 @@ describe('shouldExecuteTransaction', () => {
     const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.SUCCESS }
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
+    const result = await canExecuteCreatedTx(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(true)
@@ -61,7 +61,7 @@ describe('shouldExecuteTransaction', () => {
     const lastTxFromStoreExecuted = { ...lastTxFromStore, txStatus: LocalTransactionStatus.FAILED }
 
     // when
-    const result = await shouldExecuteTransaction(safeInstance, nonce, lastTxFromStoreExecuted)
+    const result = await canExecuteCreatedTx(safeInstance, nonce, lastTxFromStoreExecuted)
 
     // then
     expect(result).toBe(false)
