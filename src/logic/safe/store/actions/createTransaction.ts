@@ -117,13 +117,13 @@ export const createTransaction = (
 
       const txArgs = await getCreationTxArgs(txProps, sender)
 
-      const txDetails = {
+      const submissionDetails = {
         txArgs,
         isFinalization: await isImmediateExecution(props, sender, state),
         safeTxHash: generateSafeTxHash(txProps.safeAddress, sender.safeVersion, txArgs),
       }
 
-      submitTx(txDetails, confirmCallback, errorCallback)
+      submitTx(submissionDetails, confirmCallback, errorCallback)
     } catch (err) {
       logError(Errors._815, err.message)
     }

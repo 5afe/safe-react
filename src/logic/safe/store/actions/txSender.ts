@@ -46,23 +46,21 @@ export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 export type RequiredTxProps = CreateTransactionArgs &
   Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin'>>
 
+type SubmitTxProps = {
+  isFinalization: boolean
+  txArgs: TxArgs
+  safeTxHash: string
+}
+
 export type TxSender = {
   safeInstance: GnosisSafe
   nonce: string
   safeVersion: string
   from: string
   submitTx: (
-    {
-      isFinalization,
-      txArgs,
-      safeTxHash,
-    }: {
-      isFinalization: boolean
-      txArgs: TxArgs
-      safeTxHash: string
-    },
-    confirmCallback?: ConfirmEventHandler | undefined,
-    errorCallback?: ErrorEventHandler | undefined,
+    { isFinalization, txArgs, safeTxHash }: SubmitTxProps,
+    confirmCallback?: ConfirmEventHandler,
+    errorCallback?: ErrorEventHandler,
   ) => Promise<void>
 }
 
@@ -82,7 +80,18 @@ const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
 export const getTxSender = async (
   dispatch: Dispatch,
   state: AppReduxState,
-  txProps: RequiredTxProps,
+  {
+    notifiedTransaction,
+    origin,
+    txNonce,
+    safeAddress,
+    navigateToTransactionsTab,
+    ethParameters,
+    to,
+    valueInWei,
+    txData,
+    operation,
+  }: RequiredTxProps,
   txId: string | undefined = undefined,
 ): Promise<TxSender> => {
   // Wallet connection
@@ -91,10 +100,10 @@ export const getTxSender = async (
     throw Error('No wallet connection')
   }
 
-  const notifications = createTxNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
+  const notifications = createTxNotifications(notifiedTransaction, origin, dispatch)
   const safeVersion = currentSafeCurrentVersion(state)
-  const safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, safeVersion)
-  const nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, safeVersion))
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+  const nonce = txNonce?.toString() || (await getNonce(safeAddress, safeVersion))
   const { hardwareWallet, account: from, smartContractWallet } = providerSelector(state)
 
   const onComplete = async (
@@ -136,19 +145,19 @@ export const getTxSender = async (
     confirmCallback?.(safeTxHash)
 
     // Go to a tx deep-link
-    if (txDetails && txProps.navigateToTransactionsTab) {
-      navigateToTx(txProps.safeAddress, txDetails)
+    if (txDetails && navigateToTransactionsTab) {
+      navigateToTx(safeAddress, txDetails)
     }
 
-    dispatch(fetchTransactions(_getChainId(), txProps.safeAddress))
+    dispatch(fetchTransactions(_getChainId(), safeAddress))
   }
 
   const submitTx = async (
-    txDetails: { isFinalization: boolean; txArgs: TxArgs; safeTxHash: string },
+    submissionDetails: SubmitTxProps,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<void> => {
-    const { isFinalization, txArgs, safeTxHash } = txDetails
+    const { isFinalization, txArgs, safeTxHash } = submissionDetails
 
     const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
     // Off-chain signature
@@ -156,12 +165,12 @@ export const getTxSender = async (
       try {
         const signature = await tryOffChainSigning(
           safeTxHash,
-          { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
+          { ...txArgs, sender: String(txArgs.sender), safeAddress },
           hardwareWallet,
           safeVersion,
         )
 
-        onComplete({ ...txDetails, signature }, confirmCallback)
+        onComplete({ ...submissionDetails, signature }, confirmCallback)
       } catch (err) {
         // User likely rejected transaction
         logError(Errors._814, err.message)
@@ -170,7 +179,7 @@ export const getTxSender = async (
     }
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-    const sendParams = createSendParams(from, txProps.ethParameters || {})
+    const sendParams = createSendParams(from, ethParameters || {})
     const promiEvent = tx.send(sendParams)
 
     // When signing on-chain don't mark as pending as it is never removed
@@ -189,7 +198,7 @@ export const getTxSender = async (
         promiEvent.once('error', reject)
       })
 
-      onComplete(txDetails, confirmCallback)
+      onComplete(submissionDetails, confirmCallback)
     } catch (err) {
       logError(Errors._803, err.message)
 
@@ -203,18 +212,7 @@ export const getTxSender = async (
       }
 
       const executeDataUsedSignatures = safeInstance.methods
-        .execTransaction(
-          txProps.to,
-          txProps.valueInWei,
-          txProps.txData,
-          txProps.operation,
-          0,
-          0,
-          0,
-          ZERO_ADDRESS,
-          ZERO_ADDRESS,
-          txArgs.sigs,
-        )
+        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, txArgs.sigs)
         .encodeABI()
       const contractErrorMessage = await fetchOnchainError(executeDataUsedSignatures, safeInstance, from)
 

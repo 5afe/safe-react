@@ -49,7 +49,7 @@ const getProcessTxProps = ({
   const { operation, origin, to, data = EMPTY_DATA, nonce, value, safeTxGas } = tx
   return {
     navigateToTransactionsTab: false,
-    notifiedTransaction: notifiedTransaction,
+    notifiedTransaction,
     operation,
     origin,
     safeAddress,
@@ -57,7 +57,7 @@ const getProcessTxProps = ({
     txData: data,
     txNonce: nonce,
     valueInWei: value,
-    safeTxGas: safeTxGas,
+    safeTxGas,
     ethParameters,
   }
 }
@@ -101,7 +101,6 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       })
     } catch (err) {
       logError(Errors._815, err.message)
-      return
     }
   }
 }
