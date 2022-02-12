@@ -106,71 +106,54 @@ export const getTxSender = async (
   const nonce = txNonce?.toString() || (await getNonce(safeAddress, safeVersion))
   const { hardwareWallet, account: from, smartContractWallet } = providerSelector(state)
 
-  const onComplete = async (
-    {
-      txArgs,
-      signature = undefined,
-      isFinalization,
-      safeTxHash,
-    }: {
-      txArgs: TxArgs
-      signature?: string
-      isFinalization: boolean
-      safeTxHash: string
-    },
-    confirmCallback?: ConfirmEventHandler,
-  ): Promise<void> => {
-    // Propose the tx to the backend
-    // 1) If signing
-    // 2) If creating a new tx (no txId yet)
-    let txDetails: TransactionDetails | null = null
-    if (!isFinalization || !txId) {
-      try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
-      } catch (err) {
-        logError(Errors._816, err.message)
-        return
-      }
-    }
-
-    // If threshold reached except for last sig, and owner chooses to execute the created tx immediately
-    // we retrieve txId of newly created tx from the proposal response
-    if (isFinalization && txDetails) {
-      dispatch(addPendingTransaction({ id: txDetails.txId }))
-    }
-
-    notifications.closePending()
-
-    // This is used to communicate the safeTxHash to a Safe App caller
-    confirmCallback?.(safeTxHash)
-
-    // Go to a tx deep-link
-    if (txDetails && navigateToTransactionsTab) {
-      navigateToTx(safeAddress, txDetails)
-    }
-
-    dispatch(fetchTransactions(_getChainId(), safeAddress))
-  }
-
   const submitTx = async (
-    submissionDetails: SubmitTxProps,
+    { isFinalization, txArgs, safeTxHash }: SubmitTxProps,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<void> => {
-    const { isFinalization, txArgs, safeTxHash } = submissionDetails
+    const onComplete = async (
+      signature: string | undefined = undefined,
+      confirmCallback?: ConfirmEventHandler,
+    ): Promise<void> => {
+      // Propose the tx to the backend
+      // 1) If signing
+      // 2) If creating a new tx (no txId yet)
+      let txDetails: TransactionDetails | null = null
+      if (!isFinalization || !txId) {
+        try {
+          txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+        } catch (err) {
+          logError(Errors._816, err.message)
+          return
+        }
+      }
+
+      // If threshold reached except for last sig, and owner chooses to execute the created tx immediately
+      // we retrieve txId of newly created tx from the proposal response
+      if (isFinalization && txDetails) {
+        dispatch(addPendingTransaction({ id: txDetails.txId }))
+      }
+
+      notifications.closePending()
+
+      // This is used to communicate the safeTxHash to a Safe App caller
+      confirmCallback?.(safeTxHash)
+
+      // Go to a tx deep-link
+      if (txDetails && navigateToTransactionsTab) {
+        navigateToTx(safeAddress, txDetails)
+      }
+
+      dispatch(fetchTransactions(_getChainId(), safeAddress))
+    }
 
     const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
     // Off-chain signature
     if (!isFinalization && canSignOffChain) {
       try {
-        const signature = await tryOffChainSigning(
-          safeTxHash,
-          { ...txArgs, sender: String(txArgs.sender), safeAddress },
-          hardwareWallet,
-          safeVersion,
-        )
+        const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 
-        onComplete({ ...submissionDetails, signature }, confirmCallback)
+        onComplete(signature, confirmCallback)
       } catch (err) {
         // User likely rejected transaction
         logError(Errors._814, err.message)
@@ -198,7 +181,7 @@ export const getTxSender = async (
         promiEvent.once('error', reject)
       })
 
-      onComplete(submissionDetails, confirmCallback)
+      onComplete(undefined, confirmCallback)
     } catch (err) {
       logError(Errors._803, err.message)
 
