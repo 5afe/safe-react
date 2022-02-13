@@ -6,6 +6,7 @@ import { createTxNotifications } from 'src/logic/notifications'
 import {
   getApprovalTransaction,
   getExecutionTransaction,
+  isMetamaskRejection,
   saveTxToHistory,
   tryOffChainSigning,
 } from 'src/logic/safe/transactions'
@@ -41,8 +42,6 @@ import {
 } from 'src/logic/safe/store/actions/createTransaction'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe'
 
-export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
-
 export type RequiredTxProps = CreateTransactionArgs &
   Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin'>>
 
@@ -51,6 +50,8 @@ type SubmitTxProps = {
   txArgs: TxArgs
   safeTxHash: string
 }
+
+type TxHash = string | undefined
 
 export type TxSender = {
   safeInstance: GnosisSafe
@@ -61,7 +62,7 @@ export type TxSender = {
     { isFinalization, txArgs, safeTxHash }: SubmitTxProps,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
-  ) => Promise<void>
+  ) => Promise<TxHash>
 }
 
 const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
@@ -103,14 +104,14 @@ export const getTxSender = async (
   const notifications = createTxNotifications(notifiedTransaction, origin, dispatch)
   const safeVersion = currentSafeCurrentVersion(state)
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-  const nonce = txNonce?.toString() || (await getNonce(safeAddress, safeVersion))
+  const nonce = txNonce?.toString() || (await getNonce(safeAddress, safeInstance))
   const { hardwareWallet, account: from, smartContractWallet } = providerSelector(state)
 
   const submitTx = async (
     { isFinalization, txArgs, safeTxHash }: SubmitTxProps,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
-  ): Promise<void> => {
+  ): Promise<TxHash> => {
     const onComplete = async (
       signature: string | undefined = undefined,
       confirmCallback?: ConfirmEventHandler,
@@ -161,10 +162,6 @@ export const getTxSender = async (
       return
     }
 
-    const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-    const sendParams = createSendParams(from, ethParameters || {})
-    const promiEvent = tx.send(sendParams)
-
     // When signing on-chain don't mark as pending as it is never removed
     if (isFinalization) {
       // Finalising existing transaction (txId exists)
@@ -174,16 +171,26 @@ export const getTxSender = async (
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
+    const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+    const sendParams = createSendParams(from, ethParameters || {})
+
+    let txHash: TxHash
+
     // On-chain signature or execution
     try {
-      new Promise((resolve, reject) => {
-        promiEvent.once('transactionHash', resolve) // this happens much faster than receipt
-        promiEvent.once('error', reject)
-      })
+      await tx
+        .send(sendParams)
+        .once('transactionHash', (hash) => {
+          txHash = hash
+        })
+        .on('error', (err) => {
+          throw err
+        })
+        .then(({ transactionHash }) => transactionHash)
 
       onComplete(undefined, confirmCallback)
     } catch (err) {
-      logError(Errors._803, err.message)
+      logError(isFinalization ? Errors._804 : Errors._803, err.message)
 
       errorCallback?.()
 
@@ -194,13 +201,20 @@ export const getTxSender = async (
         dispatch(removePendingTransaction({ id: txId }))
       }
 
-      const executeDataUsedSignatures = safeInstance.methods
-        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, txArgs.sigs)
-        .encodeABI()
-      const contractErrorMessage = await fetchOnchainError(executeDataUsedSignatures, safeInstance, from)
+      if (!isMetamaskRejection(err)) {
+        const executedData = txHash
+          ? safeInstance.methods.approveHash(txHash).encodeABI()
+          : safeInstance.methods
+              .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, txArgs.sigs)
+              .encodeABI()
 
-      notifications.showOnError(err, contractErrorMessage)
+        const contractErrorMessage = await fetchOnchainError(executedData, safeInstance, from)
+
+        notifications.showOnError(err, contractErrorMessage)
+      }
     }
+
+    return txHash
   }
 
   return {

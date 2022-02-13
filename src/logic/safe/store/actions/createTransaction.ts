@@ -108,7 +108,7 @@ export const createTransaction = (
   confirmCallback?: ConfirmEventHandler,
   errorCallback?: ErrorEventHandler,
 ): CreateTransactionAction => {
-  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void | string> => {
     const state = getState()
     const txProps = getCreationTxProps(props)
 
@@ -123,7 +123,9 @@ export const createTransaction = (
         safeTxHash: generateSafeTxHash(txProps.safeAddress, sender.safeVersion, txArgs),
       }
 
-      submitTx(submissionDetails, confirmCallback, errorCallback)
+      const txHash = submitTx(submissionDetails, confirmCallback, errorCallback)
+
+      return txHash
     } catch (err) {
       logError(Errors._815, err.message)
     }

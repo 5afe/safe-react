@@ -87,18 +87,20 @@ const isFinalization = ({
 }
 
 export const processTransaction = (props: ProcessTransactionArgs): ProcessTransactionAction => {
-  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void | string> => {
     const state = getState()
     const txProps = getProcessTxProps(props)
 
     try {
       const { submitTx, ...sender } = await getTxSender(dispatch, state, txProps, props.tx.id)
 
-      submitTx({
+      const txHash = submitTx({
         txArgs: await getProcessTxArgs(props, sender),
         isFinalization: isFinalization(props),
         safeTxHash: props.tx.safeTxHash,
       })
+
+      return txHash
     } catch (err) {
       logError(Errors._815, err.message)
     }

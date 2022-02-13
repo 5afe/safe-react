@@ -1,6 +1,5 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/txSender'
 import { getEIP712Signer, SigningTxArgs } from './EIP712Signer'
 import { ethSigner, EthSignerArgs } from './ethSigner'
 
@@ -41,6 +40,11 @@ const isKeystoneError = (err: unknown): boolean => {
   return false
 }
 
+export const isMetamaskRejection = (err: Error & { code: number }): boolean => {
+  const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
+  return err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE
+}
+
 export const tryOffChainSigning = async (
   safeTxHash: string,
   txArgs: Omit<SigningTxArgs & EthSignerArgs, 'safeVersion' | 'safeTxHash'>,
@@ -56,10 +60,7 @@ export const tryOffChainSigning = async (
 
       break
     } catch (err) {
-      if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
-        throw err
-      }
-      if (isKeystoneError(err)) {
+      if (isMetamaskRejection(err) || isKeystoneError(err)) {
         throw err
       }
     }
