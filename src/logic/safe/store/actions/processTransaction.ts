@@ -94,11 +94,15 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     try {
       const { submitTx, ...sender } = await getTxSender(dispatch, state, txProps, props.tx.id)
 
-      const txHash = submitTx({
-        txArgs: await getProcessTxArgs(props, sender),
+      const txArgs = await getProcessTxArgs(props, sender)
+
+      const submissionDetails = {
+        txArgs,
         isFinalization: isFinalization(props),
         safeTxHash: props.tx.safeTxHash,
-      })
+      }
+
+      const txHash = submitTx(submissionDetails)
 
       return txHash
     } catch (err) {
