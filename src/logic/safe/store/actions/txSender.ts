@@ -112,10 +112,7 @@ export const getTxSender = async (
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<TxHash> => {
-    const onComplete = async (
-      signature: string | undefined = undefined,
-      confirmCallback?: ConfirmEventHandler,
-    ): Promise<void> => {
+    const onComplete = async (signature: string | undefined = undefined): Promise<void> => {
       // Propose the tx to the backend
       // 1) If signing
       // 2) If creating a new tx (no txId yet)
@@ -131,8 +128,13 @@ export const getTxSender = async (
 
       // If threshold reached except for last sig, and owner chooses to execute the created tx immediately
       // we retrieve txId of newly created tx from the proposal response
-      if (isFinalization && txDetails) {
-        dispatch(addPendingTransaction({ id: txDetails.txId }))
+      if (txDetails && !txId) {
+        txId = txDetails.txId
+      }
+
+      // Set either: already existing transaction or newly proposed, immediately executing tx as pending
+      if (isFinalization && txId) {
+        dispatch(addPendingTransaction({ id: txId }))
       }
 
       notifications.closePending()
@@ -154,7 +156,7 @@ export const getTxSender = async (
       try {
         const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 
-        onComplete(signature, confirmCallback)
+        onComplete(signature)
       } catch (err) {
         // User likely rejected transaction
         logError(Errors._814, err.message)
@@ -162,12 +164,8 @@ export const getTxSender = async (
       return
     }
 
-    // When signing on-chain don't mark as pending as it is never removed
+    // Optimise notifications
     if (isFinalization) {
-      // Finalising existing transaction (txId exists)
-      if (txId) {
-        dispatch(addPendingTransaction({ id: txId }))
-      }
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
@@ -178,17 +176,11 @@ export const getTxSender = async (
 
     // On-chain signature or execution
     try {
-      await tx
-        .send(sendParams)
-        .once('transactionHash', (hash) => {
-          txHash = hash
-        })
-        .on('error', (err) => {
-          throw err
-        })
-        .then(({ transactionHash }) => transactionHash)
-
-      onComplete(undefined, confirmCallback)
+      await tx.send(sendParams).once('transactionHash', (hash) => {
+        // Quicker than receipt
+        txHash = hash
+        onComplete()
+      })
     } catch (err) {
       logError(isFinalization ? Errors._804 : Errors._803, err.message)
 
