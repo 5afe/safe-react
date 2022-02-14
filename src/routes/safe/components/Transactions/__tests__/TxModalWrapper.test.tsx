@@ -1,16 +1,13 @@
-import {
-  checkIfTxIsApproveAndExecution,
-  checkIfTxIsCreation,
-} from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { isApproveAndExecute, isTxCreation } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
-describe('checkIfTxIsCreation', () => {
+describe('isTxCreation', () => {
   it(`should return true if there are no confirmations for the transaction and the transaction is not spendingLimit`, () => {
     // given
     const transactionConfirmations = 0
     const transactionType = ''
 
     // when
-    const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
+    const result = isTxCreation(transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(true)
@@ -21,7 +18,7 @@ describe('checkIfTxIsCreation', () => {
     const transactionType = 'spendingLimit'
 
     // when
-    const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
+    const result = isTxCreation(transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(false)
@@ -32,14 +29,14 @@ describe('checkIfTxIsCreation', () => {
     const transactionType = ''
 
     // when
-    const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
+    const result = isTxCreation(transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(false)
   })
 })
 
-describe('checkIfTxIsApproveAndExecution', () => {
+describe('isApproveAndExecute', () => {
   const mockedEthAccount = '0x29B1b813b6e84654Ca698ef5d7808E154364900B'
   it(`should return true if there is only one confirmation left to reach the safe threshold and there is a preApproving account`, () => {
     // given
@@ -49,12 +46,7 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const preApprovingOwner = mockedEthAccount
 
     // when
-    const result = checkIfTxIsApproveAndExecution(
-      safeThreshold,
-      transactionConfirmations,
-      transactionType,
-      preApprovingOwner,
-    )
+    const result = isApproveAndExecute(safeThreshold, transactionConfirmations, transactionType, preApprovingOwner)
 
     // then
     expect(result).toBe(true)
@@ -66,7 +58,7 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const transactionType = ''
 
     // when
-    const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
+    const result = isApproveAndExecute(safeThreshold, transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(false)
@@ -79,12 +71,7 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const preApprovingOwner = mockedEthAccount
 
     // when
-    const result = checkIfTxIsApproveAndExecution(
-      safeThreshold,
-      transactionConfirmations,
-      transactionType,
-      preApprovingOwner,
-    )
+    const result = isApproveAndExecute(safeThreshold, transactionConfirmations, transactionType, preApprovingOwner)
 
     // then
     expect(result).toBe(true)
@@ -97,12 +84,7 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const preApprovingOwner = mockedEthAccount
 
     // when
-    const result = checkIfTxIsApproveAndExecution(
-      safeThreshold,
-      transactionConfirmations,
-      transactionType,
-      preApprovingOwner,
-    )
+    const result = isApproveAndExecute(safeThreshold, transactionConfirmations, transactionType, preApprovingOwner)
 
     // then
     expect(result).toBe(true)
@@ -114,7 +96,7 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const safeThreshold = 3
 
     // when
-    const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
+    const result = isApproveAndExecute(safeThreshold, transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(false)

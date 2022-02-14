@@ -48,7 +48,7 @@ type Props = {
 const Container = styled.div`
   padding: 0 ${lg} ${md};
 `
-export const checkIfTxIsApproveAndExecution = (
+export const isApproveAndExecute = (
   threshold: number,
   txConfirmations: number,
   txType?: string,
@@ -59,7 +59,7 @@ export const checkIfTxIsApproveAndExecution = (
   return txConfirmations + 1 === threshold || isSpendingLimit(txType)
 }
 
-export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
+export const isTxCreation = (txConfirmations: number, txType?: string): boolean =>
   txConfirmations === 0 && !isSpendingLimit(txType)
 
 /**
@@ -109,15 +109,10 @@ export const TxModalWrapper = ({
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
   const { smartContractWallet } = useSelector(providerSelector)
-  const isCreation = checkIfTxIsCreation(confirmationsLen, txType)
+  const isCreation = isTxCreation(confirmationsLen, txType)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, smartContractWallet, safeVersion)
 
-  const approvalAndExecution = checkIfTxIsApproveAndExecution(
-    Number(threshold),
-    confirmationsLen,
-    txType,
-    preApprovingOwner,
-  )
+  const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
 
   const safeTxGasEstimation = useEstimateSafeTxGas({
     isCreation,

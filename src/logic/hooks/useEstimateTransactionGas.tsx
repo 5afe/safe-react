@@ -149,11 +149,11 @@ export const useEstimateTransactionGas = ({
       try {
         const { maxPriorityFeePerGas } = await getFeesPerGas()
         const ethGasLimitEstimation = await estimateGasForTransactionExecution(txParameters)
-        const transactionCallSuccess = await checkTransactionExecution({
+        const didTxCallSucceed = await checkTransactionExecution({
           ...txParameters,
           gasLimit: manualGasLimit || ethGasLimitEstimation.toString(),
         })
-        const txEstimationExecutionStatus = transactionCallSuccess ? EstimationStatus.SUCCESS : EstimationStatus.FAILURE
+        const txEstimationExecutionStatus = didTxCallSucceed ? EstimationStatus.SUCCESS : EstimationStatus.FAILURE
 
         const gasPrice = manualGasPrice ? toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = fromWei(gasPrice, 'gwei')
