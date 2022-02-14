@@ -86,12 +86,15 @@ export const calculateTotalGasCost = (
   gasPrice: string,
   gasMaxPrioFee: string,
   decimals: number,
-): [string, string] => {
+): { gasCost: string; gasCostFormatted: string } => {
   const totalPricePerGas = parseInt(gasPrice, 10) + parseInt(gasMaxPrioFee || '0', 10)
   const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas
   const gasCost = fromTokenUnit(estimatedGasCosts, decimals)
-  const formattedGasCost = formatAmount(gasCost)
-  return [gasCost, formattedGasCost]
+  const gasCostFormatted = formatAmount(gasCost)
+  return {
+    gasCost,
+    gasCostFormatted,
+  }
 }
 
 export const useEstimateTransactionGas = ({
@@ -121,7 +124,7 @@ export const useEstimateTransactionGas = ({
   const { account: from } = useSelector(providerSelector)
 
   useEffect(() => {
-    if (!isExecution || !txData.length) {
+    if (!isExecution || !txData) {
       setGasEstimation((prev) => ({ ...prev, txEstimationExecutionStatus: EstimationStatus.SUCCESS }))
       return
     }
@@ -161,7 +164,7 @@ export const useEstimateTransactionGas = ({
           : '0'
         const gasMaxPrioFeeFormatted = fromWei(gasMaxPrioFee.toString(), 'gwei')
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
-        const [gasCost, gasCostFormatted] = calculateTotalGasCost(
+        const { gasCost, gasCostFormatted } = calculateTotalGasCost(
           gasLimit,
           gasPrice,
           gasMaxPrioFee,

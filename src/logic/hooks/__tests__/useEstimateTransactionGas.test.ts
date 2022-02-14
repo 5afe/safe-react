@@ -86,21 +86,21 @@ describe('useEstimateTransactionGas', () => {
 
 describe('calculateTotalGasCost', () => {
   it('calculates total gas cost for pre-EIP-1559 txns', () => {
-    const [gasCost, gasCostFormatted] = calculateTotalGasCost('53160', '264000000000', '0', 18)
+    const { gasCost, gasCostFormatted } = calculateTotalGasCost('53160', '264000000000', '0', 18)
 
     expect(gasCost).toBe('0.01403424')
     expect(gasCostFormatted).toBe('0.01403')
   })
 
   it('calculates total gas cost for EIP-1559 txns', () => {
-    const [gasCost, gasCostFormatted] = calculateTotalGasCost('53160', '264000000000', '2500000000', 18)
+    const { gasCost, gasCostFormatted } = calculateTotalGasCost('53160', '264000000000', '2500000000', 18)
 
     expect(gasCost).toBe('0.01416714')
     expect(gasCostFormatted).toBe('0.01417')
   })
 
   it('calculates total gas cost with a non-default max prio fee', () => {
-    const [gasCost, gasCostFormatted] = calculateTotalGasCost('53160', '264000000000', '1000000000000', 18)
+    const { gasCost, gasCostFormatted } = calculateTotalGasCost('53160', '264000000000', '1000000000000', 18)
 
     expect(gasCost).toBe('0.06719424')
     expect(gasCostFormatted).toBe('0.06719')
