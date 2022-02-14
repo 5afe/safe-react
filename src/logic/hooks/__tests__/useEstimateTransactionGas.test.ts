@@ -1,124 +1,86 @@
 import {
-  checkIfTxIsApproveAndExecution,
-  checkIfTxIsCreation,
   calculateTotalGasCost,
+  EstimationStatus,
+  getDefaultGasEstimation,
+  useEstimateTransactionGas,
 } from 'src/logic/hooks/useEstimateTransactionGas'
+import { renderHook } from '@testing-library/react-hooks'
+import { DEFAULT_MAX_GAS_FEE, DEFAULT_MAX_PRIO_FEE } from 'src/logic/wallets/ethTransactions'
+import { fromWei } from 'web3-utils'
+import * as ethTransactions from 'src/logic/wallets/ethTransactions'
+import * as gas from 'src/logic/safe/transactions/gas'
+import { waitFor } from 'src/utils/test-utils'
 
-describe('checkIfTxIsCreation', () => {
-  it(`should return true if there are no confirmations for the transaction and the transaction is not spendingLimit`, () => {
-    // given
-    const transactionConfirmations = 0
-    const transactionType = ''
-
-    // when
-    const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
-
-    // then
-    expect(result).toBe(true)
-  })
-  it(`should return false if there are no confirmations for the transaction and the transaction is spendingLimit`, () => {
-    // given
-    const transactionConfirmations = 0
-    const transactionType = 'spendingLimit'
-
-    // when
-    const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
-
-    // then
-    expect(result).toBe(false)
-  })
-  it(`should return false if there are confirmations for the transaction`, () => {
-    // given
-    const transactionConfirmations = 2
-    const transactionType = ''
-
-    // when
-    const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
-
-    // then
-    expect(result).toBe(false)
-  })
+jest.mock('react-redux', () => {
+  const original = jest.requireActual('react-redux')
+  return {
+    ...original,
+    useSelector: jest.fn,
+  }
 })
 
-describe('checkIfTxIsApproveAndExecution', () => {
-  const mockedEthAccount = '0x29B1b813b6e84654Ca698ef5d7808E154364900B'
-  it(`should return true if there is only one confirmation left to reach the safe threshold and there is a preApproving account`, () => {
-    // given
-    const transactionConfirmations = 2
-    const safeThreshold = 3
-    const transactionType = ''
-    const preApprovingOwner = mockedEthAccount
+describe('useEstimateTransactionGas', () => {
+  let mockParams
+  let initialState
+  let failureState
 
-    // when
-    const result = checkIfTxIsApproveAndExecution(
-      safeThreshold,
-      transactionConfirmations,
-      transactionType,
-      preApprovingOwner,
-    )
-
-    // then
-    expect(result).toBe(true)
+  beforeAll(() => {
+    mockParams = {
+      txData: '',
+      txRecipient: '',
+      txAmount: '',
+      safeTxGas: '',
+      operation: 1,
+      isExecution: false,
+      approvalAndExecution: false,
+    }
+    initialState = getDefaultGasEstimation({
+      txEstimationExecutionStatus: EstimationStatus.LOADING,
+      gasPrice: '0',
+      gasPriceFormatted: '0',
+      gasMaxPrioFee: '0',
+      gasMaxPrioFeeFormatted: '0',
+    })
+    failureState = getDefaultGasEstimation({
+      txEstimationExecutionStatus: EstimationStatus.FAILURE,
+      gasPrice: DEFAULT_MAX_GAS_FEE.toString(),
+      gasPriceFormatted: fromWei(DEFAULT_MAX_GAS_FEE.toString(), 'gwei'),
+      gasMaxPrioFee: DEFAULT_MAX_PRIO_FEE.toString(),
+      gasMaxPrioFeeFormatted: fromWei(DEFAULT_MAX_PRIO_FEE.toString(), 'gwei'),
+    })
   })
-  it(`should return false if there is only one confirmation left to reach the safe threshold and but there is no preApproving account`, () => {
-    // given
-    const transactionConfirmations = 2
-    const safeThreshold = 3
-    const transactionType = ''
+  it('returns initial estimation and successful loading state if tx is not execution', () => {
+    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
 
-    // when
-    const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
-
-    // then
-    expect(result).toBe(false)
+    expect(result.current).toStrictEqual({ ...initialState, txEstimationExecutionStatus: EstimationStatus.SUCCESS })
   })
-  it(`should return true if the transaction is spendingLimit and there is a preApproving account`, () => {
-    // given
-    const transactionConfirmations = 0
-    const transactionType = 'spendingLimit'
-    const safeThreshold = 3
-    const preApprovingOwner = mockedEthAccount
 
-    // when
-    const result = checkIfTxIsApproveAndExecution(
-      safeThreshold,
-      transactionConfirmations,
-      transactionType,
-      preApprovingOwner,
-    )
+  it('returns initial estimation and successful loading state if there is no txData', () => {
+    const { result } = renderHook(() => useEstimateTransactionGas({ ...mockParams, isExecution: true }))
 
-    // then
-    expect(result).toBe(true)
+    expect(result.current).toStrictEqual({ ...initialState, txEstimationExecutionStatus: EstimationStatus.SUCCESS })
   })
-  it(`should return false if the transaction is spendingLimit and there is no preApproving account`, () => {
-    // given
-    const transactionConfirmations = 0
-    const transactionType = 'spendingLimit'
-    const safeThreshold = 3
-    const preApprovingOwner = mockedEthAccount
 
-    // when
-    const result = checkIfTxIsApproveAndExecution(
-      safeThreshold,
-      transactionConfirmations,
-      transactionType,
-      preApprovingOwner,
-    )
+  it('estimates gas price, max priority fee and gas limit', async () => {
+    const gasPriceEstimationSpy = jest.spyOn(ethTransactions, 'calculateGasPrice').mockImplementation(jest.fn())
+    const prioFeeEstimationSpy = jest.spyOn(ethTransactions, 'getFeesPerGas').mockImplementation(() => {
+      return Promise.resolve({
+        maxPriorityFeePerGas: 0,
+        maxFeePerGas: 0,
+      })
+    })
+    const gasLimitEstimationSpy = jest.spyOn(gas, 'estimateGasForTransactionExecution').mockImplementation(() => {
+      return Promise.resolve(0)
+    })
+    jest.spyOn(gas, 'checkTransactionExecution').mockImplementation(jest.fn())
 
-    // then
-    expect(result).toBe(true)
-  })
-  it(`should return false if the are missing more than one confirmations to reach the safe threshold and the transaction is not spendingLimit`, () => {
-    // given
-    const transactionConfirmations = 0
-    const transactionType = ''
-    const safeThreshold = 3
+    renderHook(() => useEstimateTransactionGas({ ...mockParams, isExecution: true, txData: 'mockdata' }))
 
-    // when
-    const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
-
-    // then
-    expect(result).toBe(false)
+    await waitFor(() => {
+      expect(gasPriceEstimationSpy).toHaveBeenCalledTimes(1)
+      expect(prioFeeEstimationSpy).toHaveBeenCalledTimes(1)
+      expect(gasLimitEstimationSpy).toHaveBeenCalledTimes(1)
+    })
   })
 })
 

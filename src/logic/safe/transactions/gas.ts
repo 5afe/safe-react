@@ -62,6 +62,7 @@ type TransactionEstimationProps = {
   approvalAndExecution?: boolean
 }
 
+// TODO: Delete as it is not used anymore
 export const estimateTransactionGasLimit = async ({
   txData,
   safeAddress,
@@ -128,7 +129,7 @@ type TransactionExecutionEstimationProps = {
   approvalAndExecution?: boolean
 }
 
-const estimateGasForTransactionExecution = async ({
+export const estimateGasForTransactionExecution = async ({
   safeAddress,
   safeVersion,
   txRecipient,
