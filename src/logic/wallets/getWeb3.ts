@@ -79,13 +79,13 @@ export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
 const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
 
-export const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
+export const isSmartContractWallet = async (account: string): Promise<boolean> => {
   if (!account) {
     return false
   }
   let contractCode = ''
   try {
-    contractCode = await web3Provider.eth.getCode(account)
+    contractCode = await getWeb3ReadOnly().eth.getCode(account)
   } catch (e) {
     // ignore
   }
@@ -96,7 +96,7 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
   const account = (await getAccountFrom(web3Instance)) || ''
   const ensDomain = account ? await reverseENSLookup(account) : ''
   const network = await getChainIdFrom(web3Instance)
-  const smartContractWallet = await isSmartContractWallet(web3Instance, account)
+  const smartContractWallet = await isSmartContractWallet(account)
   const hardwareWallet = isHardwareWallet(providerName)
   const available = Boolean(account)
 
