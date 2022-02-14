@@ -33,8 +33,6 @@ function getNextAvailableSafe(currentChainId: string, currentSafeAddress: string
   if (sameNetworkSafes.length > 0) {
     return sameNetworkSafes[0]
   }
-
-  return availableSafes[0]
 }
 
 function getDestinationRoute(nextAvailableSafe: SafeRecordProps | undefined) {
