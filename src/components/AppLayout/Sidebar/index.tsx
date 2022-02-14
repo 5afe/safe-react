@@ -83,7 +83,7 @@ const Sidebar = ({
   const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
 
   const handleClick = async () => {
-    const cookiesState = await loadFromCookie(COOKIES_KEY)
+    const cookiesState = await loadFromCookie<Record<string, boolean>>(COOKIES_KEY)
     if (!cookiesState) {
       dispatch(openCookieBanner({ cookieBannerOpen: true }))
       return
