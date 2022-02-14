@@ -3,6 +3,10 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 const THIRD_PARTY_COOKIES_CHECK_URL = 'https://third-party-cookies-test.vercel.app' //TODO: Change URL
 const SHOW_ALERT_TIMEOUT = 10000
 
+const isSafari = (): boolean => {
+  return navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1
+}
+
 const createIframe = (uri: string, onload: () => void): HTMLIFrameElement => {
   const iframeElement: HTMLIFrameElement = document.createElement('iframe')
 
@@ -37,6 +41,10 @@ const useThirdPartyCookies = (): ThirdPartyCookiesType => {
   }, [])
 
   useEffect(() => {
+    if (isSafari()) {
+      return
+    }
+
     window.addEventListener('message', messageHandler)
 
     const iframeElement: HTMLIFrameElement = createIframe(THIRD_PARTY_COOKIES_CHECK_URL, () =>
