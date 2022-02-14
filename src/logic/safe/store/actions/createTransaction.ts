@@ -66,7 +66,7 @@ const getSafeTxGas = async (
   return safeTxGas
 }
 
-const getCreationTxArgs = async (
+const getTxCreationArgs = async (
   txProps: RequiredTxProps,
   { safeInstance, nonce, safeVersion, from }: Omit<TxSender, 'submitTx'>,
 ): Promise<TxArgs> => {
@@ -115,7 +115,7 @@ export const createTransaction = (
     try {
       const { submitTx, ...sender } = await getTxSender(dispatch, state, txProps)
 
-      const txArgs = await getCreationTxArgs(txProps, sender)
+      const txArgs = await getTxCreationArgs(txProps, sender)
 
       const submissionDetails = {
         txArgs,

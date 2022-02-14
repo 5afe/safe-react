@@ -112,6 +112,7 @@ export const getTxSender = async (
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<TxHash> => {
+    // Success logic for on-chain transactions/off-chain signing
     const onComplete = async (signature: string | undefined = undefined): Promise<void> => {
       // Propose the tx to the backend
       // 1) If signing
@@ -150,9 +151,7 @@ export const getTxSender = async (
       dispatch(fetchTransactions(_getChainId(), safeAddress))
     }
 
-    const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
-    // Off-chain signature
-    if (!isFinalization && canSignOffChain) {
+    const signOffChain = async (): Promise<void> => {
       try {
         const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 
@@ -161,27 +160,10 @@ export const getTxSender = async (
         // User likely rejected transaction
         logError(Errors._814, err.message)
       }
-      return
     }
 
-    // Optimise notifications
-    if (isFinalization) {
-      aboutToExecuteTx.setNonce(txArgs.nonce)
-    }
-
-    const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-    const sendParams = createSendParams(from, ethParameters || {})
-
-    let txHash: TxHash
-
-    // On-chain signature or execution
-    try {
-      await tx.send(sendParams).once('transactionHash', (hash) => {
-        // Quicker than receipt
-        txHash = hash
-        onComplete()
-      })
-    } catch (err) {
+    // Error handling logic for on-chain transactions (off-chain errors simply log)
+    const onSendError = async (err: Error & { code: number }, txHash: TxHash): Promise<void> => {
       logError(isFinalization ? Errors._804 : Errors._803, err.message)
 
       errorCallback?.()
@@ -206,7 +188,42 @@ export const getTxSender = async (
       }
     }
 
-    return txHash
+    const sendTx = async (): Promise<TxHash> => {
+      // Optimise notifications
+      if (isFinalization) {
+        aboutToExecuteTx.setNonce(txArgs.nonce)
+      }
+
+      // On-chain signature or execution
+      const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+      const sendParams = createSendParams(from, ethParameters || {})
+
+      const promiEvent = tx.send(sendParams)
+
+      let txHash: TxHash
+
+      try {
+        txHash = await new Promise((resolve, reject) => {
+          promiEvent.once('transactionHash', resolve) // this happens much faster than receipt
+          promiEvent.on('error', reject)
+        })
+
+        onComplete()
+      } catch (err) {
+        onSendError(err, txHash)
+      }
+
+      return txHash
+    }
+
+    const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+    if (!isFinalization && canSignOffChain) {
+      signOffChain()
+      return
+    }
+
+    // Return txHash
+    return sendTx()
   }
 
   return {
