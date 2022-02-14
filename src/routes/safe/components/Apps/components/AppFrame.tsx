@@ -1,4 +1,4 @@
-import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
+import { ReactElement, useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { Loader, Card, Title } from '@gnosis.pm/safe-react-components'
 import {
@@ -10,13 +10,12 @@ import {
   SignMessageParams,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { HttpProvider } from 'web3-core'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl, _getChainId } from 'src/config'
+import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -32,7 +31,6 @@ import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
-import { ChainId } from 'src/config/chain'
 import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 
 const AppWrapper = styled.div`
@@ -80,16 +78,6 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
-const safeAppWeb3Providers: Record<ChainId, HttpProvider> = {}
-export const getSafeAppWeb3Provider = (): HttpProvider => {
-  const chainId = _getChainId()
-  if (!safeAppWeb3Providers[chainId]) {
-    safeAppWeb3Providers[chainId] = new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), web3HttpProviderOptions)
-  }
-
-  return safeAppWeb3Providers[chainId]
-}
-
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
@@ -108,6 +96,11 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
+
+  const safeAppWeb3Provider = useMemo(
+    () => new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), web3HttpProviderOptions),
+    [chainId],
+  )
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -212,7 +205,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       try {
         const response = new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
-          getSafeAppWeb3Provider().send(
+          safeAppWeb3Provider.send(
             {
               jsonrpc: '2.0',
               method: params.call,
@@ -265,6 +258,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     chainId,
     chainName,
     shortName,
+    safeAppWeb3Provider,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
