@@ -9,7 +9,7 @@ let intercomLoaded = false
 export const isIntercomLoaded = (): boolean => intercomLoaded
 
 const getIntercomUserId = async () => {
-  const cookiesState = await loadFromCookie<Record<string, string>>(COOKIES_KEY_INTERCOM)
+  const cookiesState = await loadFromCookie<string>(COOKIES_KEY_INTERCOM)
   if (!cookiesState) {
     const userId = crypto.randomBytes(32).toString('hex')
     const newCookieState = { userId }

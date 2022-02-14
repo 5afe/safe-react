@@ -150,7 +150,7 @@ export const useAnalytics = (): UseAnalyticsResponse => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie<Record<string, boolean>>(COOKIES_KEY)
+      const cookiesState = await loadFromCookie<boolean>(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics } = cookiesState
         setAnalyticsAllowed(acceptedAnalytics)
