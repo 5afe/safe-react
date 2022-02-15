@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { getChainInfo, _getChainId } from 'src/config'
 
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 import { GOOGLE_ANALYTICS_ID, IS_PRODUCTION } from './constants'
 import { capitalize } from './css'
@@ -150,7 +150,7 @@ export const useAnalytics = (): UseAnalyticsResponse => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie<boolean>(COOKIES_KEY)
+      const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
       if (cookiesState) {
         const { acceptedAnalytics } = cookiesState
         setAnalyticsAllowed(acceptedAnalytics)

@@ -10,7 +10,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import ListIcon from 'src/components/List/ListIcon'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { loadFromCookie } from 'src/logic/cookies/utils'
-import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -83,7 +83,7 @@ const Sidebar = ({
   const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
 
   const handleClick = async () => {
-    const cookiesState = await loadFromCookie<boolean>(COOKIES_KEY)
+    const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
     if (!cookiesState) {
       dispatch(openCookieBanner({ cookieBannerOpen: true }))
       return
@@ -122,7 +122,7 @@ const Sidebar = ({
         <StyledDivider />
 
         <HelpList>
-          <StyledListItem id="whats-new-button" button={true} onClick={handleClick}>
+          <StyledListItem id="whats-new-button" button onClick={handleClick}>
             <ListIcon type="gift" />
             <StyledListItemText>Whats new</StyledListItemText>
           </StyledListItem>

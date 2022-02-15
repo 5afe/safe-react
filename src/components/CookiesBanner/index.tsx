@@ -5,7 +5,7 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
-import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
@@ -129,7 +129,7 @@ const CookiesBanner = (): ReactElement => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie<boolean>(COOKIES_KEY)
+      const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
       if (!cookiesState) {
         dispatch.current(openCookieBanner({ cookieBannerOpen: true }))
       } else {
@@ -143,7 +143,7 @@ const CookiesBanner = (): ReactElement => {
           const cookieConfig: CookieAttributes = {
             expires: acceptedAnalytics ? 365 : 7,
           }
-          await saveCookie(COOKIES_KEY, newState, cookieConfig)
+          await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
           setLocalIntercom(newState.acceptedIntercom)
           setShowIntercom(newState.acceptedIntercom)
         } else {
@@ -170,7 +170,7 @@ const CookiesBanner = (): ReactElement => {
     const cookieConfig: CookieAttributes = {
       expires: 365,
     }
-    await saveCookie(COOKIES_KEY, newState, cookieConfig)
+    await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
@@ -185,7 +185,7 @@ const CookiesBanner = (): ReactElement => {
     const cookieConfig: CookieAttributes = {
       expires: localAnalytics ? 365 : 7,
     }
-    await saveCookie(COOKIES_KEY, newState, cookieConfig)
+    await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(localAnalytics)
     setShowIntercom(localIntercom)
 

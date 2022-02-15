@@ -53,6 +53,10 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
     margin: 4px 0;
   }
 
+  & .MuiListItemText-root span {
+    line-height: 1;
+  }
+
   &.MuiListItem-button:hover {
     border-radius: 8px;
   }

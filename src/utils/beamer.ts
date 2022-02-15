@@ -4,13 +4,12 @@ import { BeamerConfig } from 'src/types/Beamer'
 
 const BEAMER_URL = 'https://app.getbeamer.com/js/beamer-embed.js'
 
-const APP_ID = BEAMER_ID
 const baseConfig: BeamerConfig = {
-  product_id: APP_ID,
+  product_id: BEAMER_ID,
 }
 
 export const loadBeamer = async (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): Promise<void> => {
-  if (!APP_ID) {
+  if (!BEAMER_ID) {
     console.error('[Beamer] - In order to use Beamer you need to add an appID')
     return
   }
@@ -27,21 +26,14 @@ export const loadBeamer = async (scriptRef: MutableRefObject<HTMLScriptElement |
   scriptRef.current.type = 'text/javascript'
   scriptRef.current.defer = true
   scriptRef.current.src = BEAMER_URL
-  const x = document.getElementsByTagName('script')[0]
-  x?.parentNode?.insertBefore(scriptRef.current, x)
+  const firstScript = document.getElementsByTagName('script')[0]
+  firstScript?.parentNode?.insertBefore(scriptRef.current, firstScript)
 
-  scriptRef.current.onload = () => {
-    if (!window.Beamer) return
-    window.Beamer.init()
-  }
+  scriptRef.current.addEventListener('load', () => window.Beamer?.init(), { once: true })
 }
 
 export const closeBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
   if (!window.Beamer || !scriptRef.current) return
   window.Beamer.destroy()
-  window.Beamer.update({
-    ...baseConfig,
-    selector: undefined,
-  })
   scriptRef.current.remove()
 }
