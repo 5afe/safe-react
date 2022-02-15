@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTxQueued, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
@@ -32,7 +32,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         setType({
           icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
-          text: isSendTx ? 'Send' : 'Receive',
+          text: isSendTx ? (isTxQueued(tx.txStatus) ? 'Send' : 'Sent') : 'Received',
         })
         break
       }

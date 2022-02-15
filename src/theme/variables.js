@@ -15,12 +15,18 @@ const secondaryTextOrSvg = '#B2B5B2'
 const secondaryBackground = '#f0efee'
 const sm = '8px'
 const warningColor = '#ffc05f'
+const alertWarningColor = '#FBE5C5'
 const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
 
+const grey500 = '#E2E3E3'
+const black400 = '#566976'
+const black600 = '#111B22'
+
 module.exports = {
   background,
+  black300: '#B2BBC0',
   boldFont: 700,
   bolderFont: 500,
   border,
@@ -37,6 +43,7 @@ module.exports = {
   fontSizeHeadingMd: 20,
   fontSizeHeadingSm: 16,
   fontSizeHeadingXs: 13,
+  gray500: '#e2e3e3',
   headerHeight,
   largeFontSize: '16px',
   lg,
@@ -45,8 +52,11 @@ module.exports = {
   marginButtonImg,
   md,
   mediumFontSize: '14px',
+  orange500: '#e8663d',
   primary,
+  primary400: '#008C73',
   regularFont: 400,
+  red400: '#C31717',
   screenLg: 1200,
   screenMd: 992,
   screenMdMax: 1199,
@@ -61,8 +71,12 @@ module.exports = {
   sm,
   smallFontSize: '12px',
   warning: warningColor,
+  alertWarning: alertWarningColor,
   xl,
   xs,
   xxl,
   xxlFontSize: '32px',
+  grey500,
+  black400,
+  black600,
 }

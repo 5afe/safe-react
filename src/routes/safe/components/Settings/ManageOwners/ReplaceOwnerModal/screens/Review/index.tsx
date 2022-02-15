@@ -19,6 +19,8 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { Overline } from 'src/components/layout/Typography'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -79,7 +81,7 @@ export const ReviewReplaceOwnerModal = ({
 
   return (
     <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
-      <ModalHeader onClose={onClose} title="Replace owner" subTitle="2 of 2" />
+      <ModalHeader onClose={onClose} title="Replace owner" subTitle={getStepTitle(2, 2)} />
       <Hairline />
       <Block margin="md">
         <Row className={classes.root}>
@@ -135,9 +137,7 @@ export const ReviewReplaceOwnerModal = ({
                 ),
             )}
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
-                REMOVING OWNER &darr;
-              </Paragraph>
+              <Overline noMargin>REMOVING OWNER &darr;</Overline>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwnerRemoved} data-testid="remove-owner-review">
@@ -152,9 +152,7 @@ export const ReviewReplaceOwnerModal = ({
               </Col>
             </Row>
             <Row align="center" className={classes.info}>
-              <Paragraph color="primary" noMargin size="md" weight="bolder">
-                ADDING NEW OWNER &darr;
-              </Paragraph>
+              <Overline noMargin>ADDING NEW OWNER &darr;</Overline>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwnerAdded} data-testid="add-owner-review">

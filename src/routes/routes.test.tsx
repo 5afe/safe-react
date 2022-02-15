@@ -2,7 +2,6 @@ import {
   generateSafeRoute,
   generatePrefixedAddressRoutes,
   getPrefixedSafeAddressSlug,
-  hasPrefixedSafeAddressInUrl,
   SAFE_ROUTES,
   WELCOME_ROUTE,
   extractPrefixedSafeAddress,
@@ -13,7 +12,6 @@ import {
 import { Route, Switch } from 'react-router'
 import { render } from 'src/utils/test-utils'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import Root from 'src/components/Root'
 
 const validSafeAddress = '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f'
 
@@ -93,26 +91,6 @@ describe('extractPrefixedSafeAddress', () => {
       shortName,
       safeAddress: ZERO_ADDRESS,
     })
-  })
-})
-
-describe('hasPrefixedSafeAddressInUrl', () => {
-  it('returns true if the chain-specific address exists in the URL', () => {
-    history.push(`/eth:${validSafeAddress}`)
-
-    expect(hasPrefixedSafeAddressInUrl()).toBe(true)
-  })
-
-  it('returns false if the chain-specific address in the URL is malformed', () => {
-    history.push(`/n0TaR3aLSHORTname:4xIOHAS89asasd`)
-
-    expect(hasPrefixedSafeAddressInUrl()).toBe(false)
-  })
-
-  it("returns false if the chain-specific address does't exist in the URL", () => {
-    history.push(WELCOME_ROUTE)
-
-    expect(hasPrefixedSafeAddressInUrl()).toBe(false)
   })
 })
 
