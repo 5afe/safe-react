@@ -4,7 +4,6 @@ import { ThunkAction } from 'redux-thunk'
 
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
-import { SafeTxGasEstimationProps, estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -37,31 +36,6 @@ export interface CreateTransactionArgs {
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
-const getSafeTxGas = async (
-  safeAddress: string,
-  safeVersion: string,
-  txData: string,
-  to: string,
-  valueInWei: string,
-  operation: Operation,
-): Promise<string> => {
-  const estimationProps: SafeTxGasEstimationProps = {
-    safeAddress,
-    txData,
-    txRecipient: to,
-    txAmount: valueInWei,
-    operation,
-  }
-
-  let safeTxGas = '0'
-  try {
-    safeTxGas = await estimateSafeTxGas(estimationProps, safeVersion)
-  } catch (err) {
-    logError(Errors._617, err.message)
-  }
-  return safeTxGas
-}
-
 // Assign defaults to txArgs
 const getTxCreationTxArgs = async (
   {
@@ -69,11 +43,10 @@ const getTxCreationTxArgs = async (
     valueInWei,
     txData = EMPTY_DATA,
     operation = Operation.CALL,
-    safeTxGas,
+    safeTxGas = '0',
     txNonce,
     safeAddress,
   }: CreateTransactionArgs,
-  safeVersion: string,
   safeInstance: GnosisSafe,
   from: string,
 ): Promise<TxArgs> => {
@@ -86,7 +59,7 @@ const getTxCreationTxArgs = async (
     operation,
     refundReceiver: ZERO_ADDRESS,
     safeInstance,
-    safeTxGas: safeTxGas ?? (await getSafeTxGas(safeAddress, safeVersion, txData, to, valueInWei, operation)),
+    safeTxGas,
     sender: from,
     sigs: getPreValidatedSignatures(from),
     to,
@@ -116,20 +89,22 @@ export const createTransaction = (
     const provider = providerSelector(state)
     const safeVersion = currentSafeCurrentVersion(state)
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-    const txArgs = await getTxCreationTxArgs(props, safeVersion, safeInstance, provider.account)
 
     try {
+      const txArgs = await getTxCreationTxArgs(props, safeInstance, provider.account)
+      const isExecuting = delayExecution
+        ? false
+        : await isImmediateExecution(safeInstance, txArgs.nonce.toString(), state)
+
       const txSender = new TxSender(
         {
           props,
           origin,
           dispatch,
-          isFinalization: delayExecution
-            ? false
-            : await isImmediateExecution(safeInstance, txArgs.nonce.toString(), state),
+          isExecuting,
           provider,
           safeVersion,
-          txArgs: await getTxCreationTxArgs(props, safeVersion, safeInstance, provider.account),
+          txArgs,
           safeTxHash: generateSafeTxHash(safeAddress, safeVersion, txArgs),
           safeInstance,
           navigateToDeeplink,

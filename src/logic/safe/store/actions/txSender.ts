@@ -5,7 +5,7 @@ import {
   getApprovalTransaction,
   getExecutionTransaction,
   isMetamaskRejection,
-  saveTxToHistory,
+  proposeTx,
   tryOffChainSigning,
 } from 'src/logic/safe/transactions'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
@@ -54,7 +54,7 @@ type SenderArgs = {
   props: CreateTransactionArgs | ProcessTransactionArgs
   origin: string | null
   dispatch: Dispatch
-  isFinalization: boolean
+  isExecuting: boolean
   provider: ProviderState
   safeVersion: string
   txArgs: TxArgs
@@ -72,7 +72,7 @@ type TxHash = string | undefined
 export class TxSender {
   origin: string | null
   dispatch: Dispatch
-  isFinalization: boolean
+  isExecuting: boolean
   provider: ProviderState
   safeVersion: string
   txArgs: TxArgs
@@ -93,7 +93,7 @@ export class TxSender {
       props,
       origin,
       dispatch,
-      isFinalization,
+      isExecuting,
       provider,
       safeVersion,
       txArgs,
@@ -107,7 +107,7 @@ export class TxSender {
   ) {
     this.origin = origin
     this.dispatch = dispatch
-    this.isFinalization = isFinalization
+    this.isExecuting = isExecuting
     this.provider = provider
     this.safeVersion = safeVersion
     this.txArgs = txArgs
@@ -126,14 +126,10 @@ export class TxSender {
   }
 
   async submitTx(): Promise<TxHash> {
-    const { isFinalization, provider, safeVersion } = this
+    const { isExecuting, provider, safeVersion } = this
 
-    const canSignOffChain = checkIfOffChainSignatureIsPossible(
-      isFinalization,
-      provider.smartContractWallet,
-      safeVersion,
-    )
-    if (!isFinalization && canSignOffChain) {
+    const canSignOffChain = checkIfOffChainSignatureIsPossible(isExecuting, provider.smartContractWallet, safeVersion)
+    if (!isExecuting && canSignOffChain) {
       this.signOffChain()
       return
     }
@@ -161,15 +157,15 @@ export class TxSender {
   }
 
   private async sendTx(): Promise<TxHash> {
-    const { isFinalization, txArgs, safeInstance, safeTxHash, from, ethParameters } = this
+    const { isExecuting, txArgs, safeInstance, safeTxHash, from, ethParameters } = this
 
     // Optimise notifications
-    if (isFinalization) {
+    if (isExecuting) {
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
     // On-chain signature or execution
-    const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+    const tx = isExecuting ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
     const sendParams = createSendParams(from, ethParameters || {})
 
     let txHash: TxHash
@@ -191,7 +187,7 @@ export class TxSender {
 
   private async onComplete(signature: string | undefined = undefined): Promise<void> {
     const {
-      isFinalization,
+      isExecuting,
       txId,
       txArgs,
       dispatch,
@@ -203,12 +199,10 @@ export class TxSender {
     } = this
 
     // Propose the tx to the backend
-    // 1) If signing
-    // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
-    if (!isFinalization || !txId) {
+    if (!isExecuting) {
       try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+        txDetails = await proposeTx({ ...txArgs, signature, origin })
       } catch (err) {
         logError(Errors._816, err.message)
         return
@@ -217,7 +211,7 @@ export class TxSender {
 
     // Set either: already existing transaction or newly proposed, immediately executing tx as pending
     const id = txId || txDetails?.txId
-    if (isFinalization && id) {
+    if (isExecuting && id) {
       dispatch(addPendingTransaction({ id }))
     }
 
@@ -236,16 +230,16 @@ export class TxSender {
 
   // Error handling logic for on-chain transactions (off-chain errors simply log)
   private async onSendError(err: Error & { code: number }, txHash: TxHash): Promise<void> {
-    const { isFinalization, errorCallback, notifications, txId, dispatch, txArgs, safeInstance, from } = this
+    const { isExecuting, errorCallback, notifications, txId, dispatch, txArgs, safeInstance, from } = this
 
-    logError(isFinalization ? Errors._804 : Errors._803, err.message)
+    logError(isExecuting ? Errors._804 : Errors._803, err.message)
 
     errorCallback?.()
 
     notifications.closePending()
 
     // Existing transaction was being finalised (txId exists)
-    if (isFinalization && txId) {
+    if (isExecuting && txId) {
       dispatch(removePendingTransaction({ id: txId }))
     }
 

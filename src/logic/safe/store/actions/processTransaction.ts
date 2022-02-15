@@ -89,22 +89,22 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
     const provider = providerSelector(state)
     const safeVersion = currentSafeCurrentVersion(state)
     const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-    const txArgs = await getProcessTxArgs(props, safeInstance, provider.account)
+    const txArgs = getProcessTxArgs(props, safeInstance, provider.account)
+
+    const txSender = new TxSender({
+      props,
+      origin,
+      dispatch,
+      isExecuting: approveAndExecute && Boolean(thresholdReached || preApprovingOwner),
+      provider,
+      safeVersion,
+      txArgs,
+      safeTxHash: tx.safeTxHash,
+      safeInstance,
+      txId: tx.id,
+    })
 
     try {
-      const txSender = new TxSender({
-        props,
-        origin,
-        dispatch,
-        isFinalization: approveAndExecute && Boolean(thresholdReached || preApprovingOwner),
-        provider,
-        safeVersion,
-        txArgs,
-        safeTxHash: tx.safeTxHash,
-        safeInstance,
-        txId: tx.id,
-      })
-
       // Return txHash
       return txSender.submitTx()
     } catch (err) {

@@ -52,7 +52,7 @@ const calculateBodyFrom = async ({
 
 type SaveTxToHistoryTypes = TxArgs & { origin?: string | null; signature?: string }
 
-export const saveTxToHistory = async ({
+export const proposeTx = async ({
   baseGas,
   data,
   gasPrice,
