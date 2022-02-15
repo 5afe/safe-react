@@ -88,8 +88,13 @@ const Sidebar = ({
       dispatch(openCookieBanner({ cookieBannerOpen: true }))
       return
     }
-    if (!cookiesState.acceptedIntercom) {
-      dispatch(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))
+    if (!cookiesState.acceptedAnalytics) {
+      dispatch(
+        openCookieBanner({
+          cookieBannerOpen: true,
+          cookiesAlertMessageProps: { clickedLabel: "What's New", cookieType: 'analytics cookies' },
+        }),
+      )
     }
   }
 

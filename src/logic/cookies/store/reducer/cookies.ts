@@ -6,13 +6,19 @@ export const COOKIES_REDUCER_ID = 'cookies'
 
 type CookieState = Map<string, any>
 
-export type OpenCookieBannerPayload = { cookieBannerOpen: boolean; intercomAlertDisplayed?: boolean }
+export type OpenCookieBannerPayload = {
+  cookieBannerOpen: boolean
+  cookiesAlertMessageProps?: {
+    clickedLabel: string
+    cookieType: string
+  }
+}
 
 const cookiesReducer = handleActions<CookieState, OpenCookieBannerPayload>(
   {
     [OPEN_COOKIE_BANNER]: (state, action) => {
-      const { intercomAlertDisplayed = false, cookieBannerOpen } = action.payload
-      return state.set('cookieBannerOpen', { intercomAlertDisplayed, cookieBannerOpen })
+      const { cookieBannerOpen, cookiesAlertMessageProps } = action.payload
+      return state.set('cookieBannerOpen', { cookieBannerOpen, cookiesAlertMessageProps })
     },
   },
   Map(),

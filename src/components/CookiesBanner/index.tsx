@@ -94,7 +94,10 @@ const useStyles = makeStyles({
 } as any)
 
 interface CookiesBannerFormProps {
-  alertMessage: boolean
+  cookiesAlertMessageProps: {
+    clickedLabel: string
+    cookieType: string
+  }
 }
 
 const CookiesBanner = (): ReactElement => {
@@ -117,7 +120,6 @@ const CookiesBanner = (): ReactElement => {
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
       loadIntercom()
-      loadBeamer(beamerScriptRef)
     }
   }, [showIntercom, isSafeAppView])
 
@@ -155,6 +157,10 @@ const CookiesBanner = (): ReactElement => {
 
         if (acceptedAnalytics && !isDesktop) {
           loadGoogleAnalytics()
+
+          // For use in non-webapps (Mobile and Desktop)
+          // https://www.getbeamer.com/help/how-to-install-beamer-using-our-api
+          loadBeamer(beamerScriptRef)
         }
       }
     }
@@ -173,7 +179,7 @@ const CookiesBanner = (): ReactElement => {
     await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
-    dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
+    dispatch.current(openCookieBanner({ cookieBannerOpen: false, cookiesAlertMessageProps: undefined }))
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -191,24 +197,24 @@ const CookiesBanner = (): ReactElement => {
 
     if (!localAnalytics) {
       removeCookies()
+      closeBeamer(beamerScriptRef)
     }
 
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
-      closeBeamer(beamerScriptRef)
     }
-    dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
+    dispatch.current(openCookieBanner({ cookieBannerOpen: false, cookiesAlertMessageProps: undefined }))
   }
 
   const CookiesBannerForm = (props: CookiesBannerFormProps) => {
-    const { alertMessage } = props
+    const { cookiesAlertMessageProps } = props
     return (
       <div data-testid="cookies-banner-form" className={classes.container}>
         <div className={classes.content}>
-          {alertMessage && (
+          {cookiesAlertMessageProps && (
             <div className={classes.intercomAlert}>
               <img src={AlertRedIcon} />
-              You attempted to open the customer support chat. Please accept the customer support cookie.
+              {`You attempted to open the ${cookiesAlertMessageProps.clickedLabel}. Please accept the ${cookiesAlertMessageProps.cookieType}.`}
             </div>
           )}
           <p className={classes.text}>
@@ -284,11 +290,21 @@ const CookiesBanner = (): ReactElement => {
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
-          onClick={() => dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
+          onClick={() =>
+            dispatch.current(
+              openCookieBanner({
+                cookieBannerOpen: true,
+                cookiesAlertMessageProps: {
+                  clickedLabel: 'customer support chat',
+                  cookieType: 'customer support cookie',
+                },
+              }),
+            )
+          }
         />
       )}
       {!isDesktop && showBanner?.cookieBannerOpen && (
-        <CookiesBannerForm alertMessage={showBanner?.intercomAlertDisplayed} />
+        <CookiesBannerForm cookiesAlertMessageProps={showBanner.cookiesAlertMessageProps} />
       )}
     </>
   )
