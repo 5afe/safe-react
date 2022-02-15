@@ -44,7 +44,7 @@ type UseEstimateTransactionGasProps = {
   approvalAndExecution: boolean
 }
 
-export type TransactionGasEstimationResult = {
+type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)
   gasCostFormatted: string // Cost of gas in format '< | > 100'
