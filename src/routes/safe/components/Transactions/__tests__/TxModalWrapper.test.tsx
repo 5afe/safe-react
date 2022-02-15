@@ -1,13 +1,13 @@
-import { isApproveAndExecute, isTxCreation } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { isApproveAndExecute, isMultisigCreation } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
-describe('isTxCreation', () => {
+describe('isMultisigCreation', () => {
   it(`should return true if there are no confirmations for the transaction and the transaction is not spendingLimit`, () => {
     // given
     const transactionConfirmations = 0
     const transactionType = ''
 
     // when
-    const result = isTxCreation(transactionConfirmations, transactionType)
+    const result = isMultisigCreation(transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(true)
@@ -18,7 +18,7 @@ describe('isTxCreation', () => {
     const transactionType = 'spendingLimit'
 
     // when
-    const result = isTxCreation(transactionConfirmations, transactionType)
+    const result = isMultisigCreation(transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(false)
@@ -29,7 +29,7 @@ describe('isTxCreation', () => {
     const transactionType = ''
 
     // when
-    const result = isTxCreation(transactionConfirmations, transactionType)
+    const result = isMultisigCreation(transactionConfirmations, transactionType)
 
     // then
     expect(result).toBe(false)

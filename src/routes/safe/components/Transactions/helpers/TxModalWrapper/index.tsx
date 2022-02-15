@@ -59,7 +59,7 @@ export const isApproveAndExecute = (
   return txConfirmations + 1 === threshold || isSpendingLimit(txType)
 }
 
-export const isTxCreation = (txConfirmations: number, txType?: string): boolean =>
+export const isMultisigCreation = (txConfirmations: number, txType?: string): boolean =>
   txConfirmations === 0 && !isSpendingLimit(txType)
 
 /**
@@ -109,7 +109,7 @@ export const TxModalWrapper = ({
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
   const { smartContractWallet } = useSelector(providerSelector)
-  const isCreation = isTxCreation(confirmationsLen, txType)
+  const isCreation = isMultisigCreation(confirmationsLen, txType)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, smartContractWallet, safeVersion)
 
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
