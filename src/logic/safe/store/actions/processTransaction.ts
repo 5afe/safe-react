@@ -45,11 +45,11 @@ export interface ProcessTransactionArgs {
 type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
 // Assign defaults to txArgs
-const getProcessTxArgs = async (
+const getProcessTxArgs = (
   { approveAndExecute, preApprovingOwner, tx }: ProcessTransactionArgs,
   safeInstance: GnosisSafe,
   from: string,
-): Promise<TxArgs> => {
+): TxArgs => {
   const {
     gasPrice = '0',
     data = EMPTY_DATA,
