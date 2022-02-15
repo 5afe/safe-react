@@ -15,7 +15,7 @@ import { GnosisSafe } from 'src/types/contracts/gnosis_safe'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeCurrentVersion } from '../selectors'
-import { TxSender } from './txSender'
+import { TxSender } from './TransactionSender'
 
 export interface ProcessTransactionArgs {
   approveAndExecute: boolean

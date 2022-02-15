@@ -17,7 +17,7 @@ import { GnosisSafe } from 'src/types/contracts/gnosis_safe'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeCurrentVersion } from '../selectors'
-import { ConfirmEventHandler, ErrorEventHandler, TxSender } from './txSender'
+import { ConfirmEventHandler, ErrorEventHandler, TxSender } from './TransactionSender'
 
 export interface CreateTransactionArgs {
   navigateToDeeplink?: boolean
