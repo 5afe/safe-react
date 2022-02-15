@@ -98,11 +98,7 @@ const isImmediateExecution = async (
   safeInstance: GnosisSafe,
   nonce: string,
   state: AppReduxState,
-  delayExecution: CreateTransactionArgs['delayExecution'],
 ): Promise<boolean> => {
-  if (delayExecution) {
-    return false
-  }
   const lastTx = getLastTransaction(state)
   return canExecuteCreatedTx(safeInstance, nonce, lastTx)
 }
@@ -128,7 +124,9 @@ export const createTransaction = (
           props,
           origin,
           dispatch,
-          isFinalization: await isImmediateExecution(safeInstance, txArgs.nonce.toString(), state, delayExecution),
+          isFinalization: delayExecution
+            ? false
+            : await isImmediateExecution(safeInstance, txArgs.nonce.toString(), state),
           provider,
           safeVersion,
           txArgs: await getTxCreationTxArgs(props, safeVersion, safeInstance, provider.account),
