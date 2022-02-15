@@ -3,7 +3,10 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const PREFIX = 'v1_MAINNET__'
 
-export const loadFromCookie = async (key: string, withoutPrefix = false): Promise<undefined | Record<string, any>> => {
+export const loadFromCookie = async <T extends Record<string, any>>(
+  key: string,
+  withoutPrefix = false,
+): Promise<T | undefined> => {
   const prefix = withoutPrefix ? '' : PREFIX
   try {
     const stringifiedValue = await Cookies.get(`${prefix}${key}`)
@@ -18,9 +21,9 @@ export const loadFromCookie = async (key: string, withoutPrefix = false): Promis
   }
 }
 
-export const saveCookie = async (
+export const saveCookie = async <T extends Record<string, any>>(
   key: string,
-  value: Record<string, any>,
+  value: T,
   options: CookieAttributes,
   withoutPrefix = false,
 ): Promise<void> => {

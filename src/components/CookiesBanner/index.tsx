@@ -5,7 +5,7 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
-import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
@@ -16,6 +16,7 @@ import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { CookieAttributes } from 'js-cookie'
+import { closeBeamer, loadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -107,6 +108,7 @@ const CookiesBanner = (): ReactElement => {
   const [localAnalytics, setLocalAnalytics] = useState(false)
   const [localIntercom, setLocalIntercom] = useState(false)
   const { getAppUrl } = useSafeAppUrl()
+  const beamerScriptRef = useRef<HTMLScriptElement>()
 
   const showBanner = useSelector(cookieBannerOpen)
   const newAppUrl = getAppUrl()
@@ -115,6 +117,7 @@ const CookiesBanner = (): ReactElement => {
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
       loadIntercom()
+      loadBeamer(beamerScriptRef)
     }
   }, [showIntercom, isSafeAppView])
 
@@ -126,7 +129,7 @@ const CookiesBanner = (): ReactElement => {
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie(COOKIES_KEY)
+      const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
       if (!cookiesState) {
         dispatch.current(openCookieBanner({ cookieBannerOpen: true }))
       } else {
@@ -140,7 +143,7 @@ const CookiesBanner = (): ReactElement => {
           const cookieConfig: CookieAttributes = {
             expires: acceptedAnalytics ? 365 : 7,
           }
-          await saveCookie(COOKIES_KEY, newState, cookieConfig)
+          await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
           setLocalIntercom(newState.acceptedIntercom)
           setShowIntercom(newState.acceptedIntercom)
         } else {
@@ -167,7 +170,7 @@ const CookiesBanner = (): ReactElement => {
     const cookieConfig: CookieAttributes = {
       expires: 365,
     }
-    await saveCookie(COOKIES_KEY, newState, cookieConfig)
+    await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
@@ -182,7 +185,7 @@ const CookiesBanner = (): ReactElement => {
     const cookieConfig: CookieAttributes = {
       expires: localAnalytics ? 365 : 7,
     }
-    await saveCookie(COOKIES_KEY, newState, cookieConfig)
+    await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(localAnalytics)
     setShowIntercom(localIntercom)
 
@@ -192,6 +195,7 @@ const CookiesBanner = (): ReactElement => {
 
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
+      closeBeamer(beamerScriptRef)
     }
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
