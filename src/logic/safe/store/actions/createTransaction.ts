@@ -104,7 +104,7 @@ const isImmediateExecution = async (
     return false
   }
   const lastTx = getLastTransaction(state)
-  return await canExecuteCreatedTx(safeInstance, nonce, lastTx)
+  return canExecuteCreatedTx(safeInstance, nonce, lastTx)
 }
 
 export const createTransaction = (
