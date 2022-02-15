@@ -99,7 +99,7 @@ export const ReviewMessage = ({
           txData,
           operation: Operation.DELEGATE,
           origin: app.id,
-          navigateToTransactionsTab: false,
+          navigateToDeeplink: false,
           txNonce: txParameters.safeNonce,
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,

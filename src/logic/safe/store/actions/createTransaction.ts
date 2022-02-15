@@ -12,12 +12,16 @@ import { AppReduxState } from 'src/store'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Dispatch, DispatchReturn } from 'src/logic/safe/store/actions/types'
-import { canExecuteCreatedTx } from 'src/logic/safe/store/actions/utils'
+import { canExecuteCreatedTx, getNonce } from 'src/logic/safe/store/actions/utils'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { RequiredTxProps, TxSender, getTxSender } from './txSender'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { providerSelector } from 'src/logic/wallets/store/selectors'
+import { currentSafeCurrentVersion } from '../selectors'
+import { ConfirmEventHandler, ErrorEventHandler, TxSender } from './TxSender'
 
 export interface CreateTransactionArgs {
-  navigateToTransactionsTab?: boolean
+  navigateToDeeplink?: boolean
   notifiedTransaction: string
   operation?: number
   origin?: string | null
@@ -31,23 +35,15 @@ export interface CreateTransactionArgs {
   delayExecution?: boolean
 }
 
-export type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
-export type ConfirmEventHandler = (safeTxHash: string) => void
-export type ErrorEventHandler = () => void
-
-const getCreationTxProps = ({
-  txData = EMPTY_DATA,
-  operation = Operation.CALL,
-  navigateToTransactionsTab = true,
-  origin = null,
-  ...rest
-}: CreateTransactionArgs): RequiredTxProps => {
-  return { txData, operation, navigateToTransactionsTab, origin, ...rest }
-}
+type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
 const getSafeTxGas = async (
-  { safeAddress, txData, to, valueInWei, operation }: RequiredTxProps,
+  safeAddress: string,
   safeVersion: string,
+  txData: string,
+  to: string,
+  valueInWei: string,
+  operation: Operation,
 ): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
     safeAddress,
@@ -66,35 +62,43 @@ const getSafeTxGas = async (
   return safeTxGas
 }
 
-const getTxCreationArgs = async (
-  txProps: RequiredTxProps,
-  { safeInstance, nonce, safeVersion, from }: Omit<TxSender, 'submitTx'>,
-): Promise<TxArgs> => {
-  const { to, valueInWei, txData, operation, safeTxGas } = txProps
-  return {
-    safeInstance,
+// Assign defaults to txArgs
+const getTxCreationTxArgs = async (
+  {
     to,
     valueInWei,
-    data: txData,
-    operation,
-    nonce: Number.parseInt(nonce),
-    safeTxGas: safeTxGas ?? (await getSafeTxGas(txProps, safeVersion)),
+    txData = EMPTY_DATA,
+    operation = Operation.CALL,
+    safeTxGas,
+    txNonce,
+    safeAddress,
+  }: CreateTransactionArgs,
+  safeVersion: string,
+  safeInstance: GnosisSafe,
+  from: string,
+): Promise<TxArgs> => {
+  return {
     baseGas: '0',
+    data: txData,
     gasPrice: '0',
     gasToken: ZERO_ADDRESS,
+    nonce: parseInt(txNonce?.toString() || (await getNonce(safeAddress, safeInstance)), 10),
+    operation,
     refundReceiver: ZERO_ADDRESS,
+    safeInstance,
+    safeTxGas: safeTxGas ?? (await getSafeTxGas(safeAddress, safeVersion, txData, to, valueInWei, operation)),
     sender: from,
-    // We're making a new tx, so there are no other signatures
-    // Just pass our own address for an unsigned execution
-    // Contract will compare the sender address to this
     sigs: getPreValidatedSignatures(from),
+    to,
+    valueInWei,
   }
 }
 
 const isImmediateExecution = async (
-  { delayExecution }: CreateTransactionArgs,
-  { safeInstance, nonce }: Omit<TxSender, 'submitTx'>,
+  safeInstance: GnosisSafe,
+  nonce: string,
   state: AppReduxState,
+  delayExecution: CreateTransactionArgs['delayExecution'],
 ): Promise<boolean> => {
   if (delayExecution) {
     return false
@@ -109,23 +113,35 @@ export const createTransaction = (
   errorCallback?: ErrorEventHandler,
 ): CreateTransactionAction => {
   return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void | string> => {
+    const { origin = null, navigateToDeeplink = true, safeAddress, delayExecution } = props
+
     const state = getState()
-    const txProps = getCreationTxProps(props)
+
+    const provider = providerSelector(state)
+    const safeVersion = currentSafeCurrentVersion(state)
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+    const txArgs = await getTxCreationTxArgs(props, safeVersion, safeInstance, provider.account)
 
     try {
-      const { submitTx, ...sender } = await getTxSender(dispatch, state, txProps)
+      const txSender = new TxSender(
+        {
+          props,
+          origin,
+          dispatch,
+          isFinalization: await isImmediateExecution(safeInstance, txArgs.nonce.toString(), state, delayExecution),
+          provider,
+          safeVersion,
+          txArgs: await getTxCreationTxArgs(props, safeVersion, safeInstance, provider.account),
+          safeTxHash: generateSafeTxHash(safeAddress, safeVersion, txArgs),
+          safeInstance,
+          navigateToDeeplink,
+        },
+        confirmCallback,
+        errorCallback,
+      )
 
-      const txArgs = await getTxCreationArgs(txProps, sender)
-
-      const submissionDetails = {
-        txArgs,
-        isFinalization: await isImmediateExecution(props, sender, state),
-        safeTxHash: generateSafeTxHash(txProps.safeAddress, sender.safeVersion, txArgs),
-      }
-
-      const txHash = submitTx(submissionDetails, confirmCallback, errorCallback)
-
-      return txHash
+      // Return txHash
+      return txSender.submitTx()
     } catch (err) {
       logError(Errors._815, err.message)
     }

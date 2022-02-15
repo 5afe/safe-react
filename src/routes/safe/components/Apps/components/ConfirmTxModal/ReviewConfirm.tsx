@@ -121,7 +121,7 @@ export const ReviewConfirm = ({
           txData,
           operation,
           origin: app.id,
-          navigateToTransactionsTab: false,
+          navigateToDeeplink: false,
           txNonce: txParameters.safeNonce,
           safeTxGas: txParameters.safeTxGas,
           ethParameters: txParameters,
