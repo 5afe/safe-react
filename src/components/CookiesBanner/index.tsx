@@ -5,7 +5,7 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
-import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType, warningProps } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
@@ -294,10 +294,7 @@ const CookiesBanner = (): ReactElement => {
             dispatch.current(
               openCookieBanner({
                 cookieBannerOpen: true,
-                cookiesAlertMessageProps: {
-                  clickedLabel: 'customer support chat',
-                  cookieType: 'customer support cookie',
-                },
+                cookiesAlertMessageProps: warningProps.customerSupport,
               }),
             )
           }
