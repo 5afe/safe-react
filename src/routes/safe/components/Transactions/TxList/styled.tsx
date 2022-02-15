@@ -96,12 +96,6 @@ export const StyledTransactions = styled.div`
     &:last-child {
       border-bottom: none;
     }
-
-    &:last-of-type {
-      div {
-        row-gap: 0;
-      }
-    }
   }
 `
 
