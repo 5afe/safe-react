@@ -97,9 +97,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
 
+  const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
-    () => new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), web3HttpProviderOptions),
-    [chainId],
+    () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),
+    [safeAppsRpc],
   )
 
   useEffect(() => {
