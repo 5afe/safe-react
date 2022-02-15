@@ -6,12 +6,10 @@ import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 
 import { useSelector } from 'react-redux'
-import { currentSafeCurrentVersion, currentSafeThreshold } from 'src/logic/safe/store/selectors'
+import { currentSafeThreshold, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
-import { hasFeature } from 'src/logic/safe/utils/safeVersion'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const styles = createStyles({
   executionWarningRow: {
@@ -40,7 +38,7 @@ export const TransactionFailText = ({
   const threshold = useSelector(currentSafeThreshold)
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const isGranted = useSelector(grantedSelector)
-  const safeVersion = useSelector(currentSafeCurrentVersion)
+  const { needsUpdate } = useSelector(currentSafeWithNames)
 
   if (estimationStatus !== EstimationStatus.FAILURE && !(isCreation && !isGranted)) {
     return null
@@ -62,7 +60,7 @@ export const TransactionFailText = ({
   let error = isGranted ? defaultMsg : isWrongChain ? wrongChainMsg : isCreation ? notOwnerMsg : defaultMsg
 
   // For legacy Safes, esp. on Gnosis Chain
-  if (estimationStatus === EstimationStatus.FAILURE && !hasFeature(FEATURES.SAFE_TX_GAS_OPTIONAL, safeVersion)) {
+  if (estimationStatus === EstimationStatus.FAILURE && needsUpdate) {
     error = updateSafeMessage
   }
 
