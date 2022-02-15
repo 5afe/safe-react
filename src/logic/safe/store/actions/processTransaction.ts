@@ -93,7 +93,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
 
     const txSender = new TxSender({
       props,
-      origin,
+      origin: null,
       dispatch,
       isExecuting: approveAndExecute && Boolean(thresholdReached || preApprovingOwner),
       provider,
