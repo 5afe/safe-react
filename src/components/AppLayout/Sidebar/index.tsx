@@ -10,7 +10,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import ListIcon from 'src/components/List/ListIcon'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { loadFromCookie } from 'src/logic/cookies/utils'
-import { COOKIES_KEY, BannerCookiesType, warningProps } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS } from 'src/logic/cookies/model/cookie'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -92,7 +92,7 @@ const Sidebar = ({
       dispatch(
         openCookieBanner({
           cookieBannerOpen: true,
-          cookiesAlertMessageProps: warningProps.whatsNew,
+          key: COOKIE_IDS.BEAMER,
         }),
       )
     }

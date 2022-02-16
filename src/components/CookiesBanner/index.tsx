@@ -5,9 +5,9 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
-import { COOKIES_KEY, BannerCookiesType, warningProps } from 'src/logic/cookies/model/cookie'
-import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
-import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
+import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS, COOKIE_ALERTS } from 'src/logic/cookies/model/cookie'
+import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
+import { cookieBannerState } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
@@ -93,16 +93,9 @@ const useStyles = makeStyles({
   },
 } as any)
 
-interface CookiesBannerFormProps {
-  cookiesAlertMessageProps: {
-    clickedLabel: string
-    cookieType: string
-  }
-}
-
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
-  const dispatch = useRef(useDispatch())
+  const dispatch = useDispatch()
   const intercomLoaded = isIntercomLoaded()
 
   const [showAnalytics, setShowAnalytics] = useState(false)
@@ -113,7 +106,7 @@ const CookiesBanner = (): ReactElement => {
   const { getAppUrl } = useSafeAppUrl()
   const beamerScriptRef = useRef<HTMLScriptElement>()
 
-  const showBanner = useSelector(cookieBannerOpen)
+  const { key, cookieBannerOpen } = useSelector(cookieBannerState)
   const newAppUrl = getAppUrl()
   const isSafeAppView = newAppUrl !== null
 
@@ -133,7 +126,7 @@ const CookiesBanner = (): ReactElement => {
     async function fetchCookiesFromStorage() {
       const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
       if (!cookiesState) {
-        dispatch.current(openCookieBanner({ cookieBannerOpen: true }))
+        dispatch(openCookieBanner({ cookieBannerOpen: true }))
       } else {
         const { acceptedIntercom, acceptedAnalytics, acceptedNecessary } = cookiesState
         if (acceptedIntercom === undefined) {
@@ -165,7 +158,7 @@ const CookiesBanner = (): ReactElement => {
       }
     }
     fetchCookiesFromStorage()
-  }, [showAnalytics, showIntercom])
+  }, [dispatch, showAnalytics, showIntercom])
 
   const acceptCookiesHandler = async () => {
     const newState = {
@@ -179,7 +172,7 @@ const CookiesBanner = (): ReactElement => {
     await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
-    dispatch.current(openCookieBanner({ cookieBannerOpen: false, cookiesAlertMessageProps: undefined }))
+    dispatch(closeCookieBanner())
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -203,18 +196,17 @@ const CookiesBanner = (): ReactElement => {
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
     }
-    dispatch.current(openCookieBanner({ cookieBannerOpen: false, cookiesAlertMessageProps: undefined }))
+    dispatch(closeCookieBanner())
   }
 
-  const CookiesBannerForm = (props: CookiesBannerFormProps) => {
-    const { cookiesAlertMessageProps } = props
+  const CookiesBannerForm = () => {
     return (
       <div data-testid="cookies-banner-form" className={classes.container}>
         <div className={classes.content}>
-          {cookiesAlertMessageProps && (
+          {key && (
             <div className={classes.intercomAlert}>
               <img src={AlertRedIcon} />
-              {`You attempted to open the ${cookiesAlertMessageProps.clickedLabel}. Please accept the ${cookiesAlertMessageProps.cookieType}.`}
+              {COOKIE_ALERTS[key]}
             </div>
           )}
           <p className={classes.text}>
@@ -291,18 +283,16 @@ const CookiesBanner = (): ReactElement => {
           className={classes.intercomImage}
           src={IntercomIcon}
           onClick={() =>
-            dispatch.current(
+            dispatch(
               openCookieBanner({
                 cookieBannerOpen: true,
-                cookiesAlertMessageProps: warningProps.customerSupport,
+                key: COOKIE_IDS.INTERCOM,
               }),
             )
           }
         />
       )}
-      {!isDesktop && showBanner?.cookieBannerOpen && (
-        <CookiesBannerForm cookiesAlertMessageProps={showBanner.cookiesAlertMessageProps} />
-      )}
+      {!isDesktop && cookieBannerOpen && <CookiesBannerForm />}
     </>
   )
 }
