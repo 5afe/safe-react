@@ -43,16 +43,15 @@ export const TransactionFailText = ({
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
-  const isGranted = useSelector(grantedSelector)
+  const isOwner = useSelector(grantedSelector)
 
-  if ((estimationStatus !== EstimationStatus.FAILURE || !isExecution) && !(isCreation && !isGranted)) {
-    return null
-  }
+  const showError = (isExecution && estimationStatus === EstimationStatus.FAILURE) || (isCreation && !isOwner)
+  if (!showError) return null
 
   const errorDesc = isCreation ? ErrorMessage.creation : ErrorMessage.execution
   const defaultMsg = `${ErrorMessage.general} ${errorDesc}`
 
-  const error = isWrongChain ? ErrorMessage.wrongChain : isCreation && !isGranted ? ErrorMessage.notOwner : defaultMsg
+  const error = isWrongChain ? ErrorMessage.wrongChain : isCreation && !isOwner ? ErrorMessage.notOwner : defaultMsg
 
   return (
     <Row align="center">
