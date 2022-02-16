@@ -1,4 +1,5 @@
 import { ReactElement, cloneElement, Fragment } from 'react'
+import { getChainInfo } from 'src/config'
 
 type Props = {
   children: ReactElement
@@ -11,10 +12,18 @@ const Track = ({ children, id, payload }: Props): ReactElement => {
     throw new Error('Fragments cannot be tracked.')
   }
 
+  const { chainName, chainId } = getChainInfo()
+
+  const dataTrackPayload = {
+    chainName,
+    chainId,
+    ...(payload !== undefined && payload),
+  }
+
   return cloneElement(children, {
     ...children.props,
     'data-track-id': id,
-    ...(payload !== undefined && { 'data-track-payload': JSON.stringify(payload) }),
+    'data-track-payload': JSON.stringify(dataTrackPayload),
   })
 }
 
