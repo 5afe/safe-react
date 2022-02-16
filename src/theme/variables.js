@@ -1,4 +1,3 @@
-const background = '#f7f5f5'
 const border = '#e8e7e6'
 const connectedColor = '#008C73'
 const disabled = '#5D6D74'
@@ -21,7 +20,7 @@ const xs = '4px'
 const xxl = '40px'
 
 module.exports = {
-  background,
+  background: '#E5E5E5',
   black300: '#B2BBC0',
   black400: '#566976',
   black600: '#111B22',
