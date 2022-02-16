@@ -8,7 +8,6 @@ import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -16,12 +15,13 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -71,13 +71,16 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
 
   return (
     <TxModalWrapper txData={txData} txValue={txValue} txTo={txRecipient} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Contract interaction" />
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo />
+        <Row align="center" margin="md">
+          <TransferAmount token={getEthAsToken('0')} text={`${tx.value || 0} ${nativeCurrency.symbol}`} />
+        </Row>
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Recipient
           </Paragraph>
         </Row>
@@ -87,6 +90,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
             <PrefixedEthHashInfo
               hash={tx.contractAddress as string}
               name={tx.contractName ?? ''}
+              strongName
               showAvatar
               showCopyBtn
               explorerUrl={getExplorerInfo(tx.contractAddress as string)}
@@ -94,23 +98,11 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Value
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
-          <Paragraph className={classes.value} noMargin size="md">
-            {tx.value || 0}
-            {' ' + nativeCurrency.symbol}
-          </Paragraph>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Data (hex encoded)
           </Paragraph>
         </Row>
-        <Row align="center" margin="md">
+        <Row align="center">
           <Col className={classes.outerData}>
             <Row className={classes.data} size="md">
               {tx.data}

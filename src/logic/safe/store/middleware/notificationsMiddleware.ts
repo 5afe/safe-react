@@ -23,7 +23,7 @@ import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { history, extractSafeAddress, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 import { getShortName } from 'src/config'
-import { getSafeTxHashFromId, isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -106,10 +106,7 @@ const notificationsMiddleware =
           const safesMap = safesAsMap(state)
           const currentSafe = safesMap.get(safeAddress)
 
-          const hasPendingTx = transactions.some((tx) => {
-            const safeTxHash = getSafeTxHashFromId(tx.id)
-            return isTxPending(state, safeTxHash)
-          })
+          const hasPendingTx = transactions.some(({ id }) => isTxPending(state, id))
 
           if (
             hasPendingTx ||

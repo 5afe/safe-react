@@ -9,6 +9,7 @@ import {
   CopyToClipboardBtn,
   ExplorerButton,
 } from '@gnosis.pm/safe-react-components'
+import { useRouteMatch } from 'react-router-dom'
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
@@ -17,7 +18,7 @@ import { border, fontColor } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
-import { extractShortChainName } from 'src/routes/routes'
+import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -129,7 +130,9 @@ const SafeHeader = ({
   const copyChainPrefix = useSelector(copyShortNameSelector)
   const shortName = extractShortChainName()
 
-  if (!address) {
+  const hasSafeOpen = useRouteMatch(ADDRESSED_ROUTE)
+
+  if (!address || !hasSafeOpen) {
     return (
       <Container>
         <IdenticonContainer>

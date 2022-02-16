@@ -15,10 +15,10 @@ import {
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
+  extractSafeAddress,
 } from './routes'
 import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
-import { useAddressedRouteKey } from './safe/container/hooks/useAddressedRouteKey'
 import { setChainIdFromUrl } from 'src/utils/history'
 import { useGTMPageTracking } from 'src/utils/googleTagManager'
 
@@ -29,10 +29,8 @@ const SafeContainer = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
   const location = useLocation()
+  const { pathname } = location
   const defaultSafe = useSelector(lastViewedSafe)
-
-  // Component key that changes when addressed route slug changes
-  const { key } = useAddressedRouteKey()
 
   // Google Tag Manager page tracking
   useGTMPageTracking()
@@ -106,8 +104,10 @@ const Routes = (): React.ReactElement => {
         path={ADDRESSED_ROUTE}
         render={() => {
           // Routes with a shortName prefix
-          const validShortName = setChainIdFromUrl(location.pathname)
-          return validShortName ? <SafeContainer key={key} /> : <Redirect to={WELCOME_ROUTE} />
+          const validShortName = setChainIdFromUrl(pathname)
+          // Safe address is used as a key to re-render the entire SafeContainer
+          const safeAddress = extractSafeAddress()
+          return validShortName ? <SafeContainer key={safeAddress} /> : <Redirect to={WELCOME_ROUTE} />
         }}
       />
       <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />

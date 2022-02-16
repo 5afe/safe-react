@@ -5,7 +5,7 @@ import { ADD_HISTORY_TRANSACTIONS } from 'src/logic/safe/store/actions/transacti
 import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { getSafeTxHashFromId, isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 
 export const gatewayTransactionsMiddleware =
@@ -22,10 +22,10 @@ export const gatewayTransactionsMiddleware =
             continue
           }
 
-          const safeTxHash = getSafeTxHashFromId(value.transaction.id)
+          const { id } = value.transaction
 
-          if (isTxPending(store.getState(), safeTxHash)) {
-            store.dispatch(removePendingTransaction({ safeTxHash }))
+          if (isTxPending(store.getState(), id)) {
+            store.dispatch(removePendingTransaction({ id }))
           }
         }
 

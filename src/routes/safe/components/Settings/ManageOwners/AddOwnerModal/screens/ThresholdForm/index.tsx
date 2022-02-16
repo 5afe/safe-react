@@ -17,6 +17,7 @@ import Row from 'src/components/layout/Row'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
 
@@ -48,7 +49,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
 
   return (
     <>
-      <ModalHeader onClose={onClose} title="Add new owner" subTitle="2 of 3" />
+      <ModalHeader onClose={onClose} title="Add new owner" subTitle={getStepTitle(2, 3)} />
       <Hairline />
       <GnoForm initialValues={{ threshold: initialValues.threshold || threshold.toString() }} onSubmit={handleSubmit}>
         {() => (

@@ -29,6 +29,7 @@ enum ErrorCodes {
   _615 = '615: Failed to retrieve last transaction from server',
   _616 = '616: Failed to retrieve recommended nonce',
   _617 = '617: Error fetching safeTxGas',
+  _618 = '618: Error fetching fee history',
   _700 = '700: Failed to read from local/session storage',
   _701 = '701: Failed to write to local/session storage',
   _702 = '702: Failed to remove from local/session storage',

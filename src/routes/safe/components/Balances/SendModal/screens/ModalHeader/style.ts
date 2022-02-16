@@ -10,27 +10,18 @@ export const styles = createStyles({
     flexWrap: 'nowrap',
   },
   annotation: {
-    letterSpacing: '-1px',
     color: secondaryText,
     marginRight: 'auto',
-    marginLeft: '20px',
+    marginLeft: '8px',
     whiteSpace: 'nowrap',
     flex: 1,
   },
   headingText: {
-    fontSize: lg,
     whiteSpace: 'nowrap',
   },
   closeIcon: {
-    height: '35px',
-    width: '35px',
-  },
-  chainIndicator: {
-    padding: `0 ${md}`,
-    height: '20px',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
+    height: '24px',
+    width: '24px',
   },
   icon: {
     width: '20px',
