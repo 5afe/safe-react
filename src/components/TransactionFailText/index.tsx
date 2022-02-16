@@ -10,7 +10,7 @@ import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
-enum ErroMessage {
+enum ErrorMessage {
   general = 'This transaction will most likely fail.',
   creation = 'To save gas costs, avoid creating the transaction.',
   execution = 'To save gas costs, reject this transaction.',
@@ -49,10 +49,10 @@ export const TransactionFailText = ({
     return null
   }
 
-  const errorDesc = isCreation ? ErroMessage.creation : ErroMessage.execution
-  const defaultMsg = `${ErroMessage.general} ${errorDesc}`
+  const errorDesc = isCreation ? ErrorMessage.creation : ErrorMessage.execution
+  const defaultMsg = `${ErrorMessage.general} ${errorDesc}`
 
-  const error = isWrongChain ? ErroMessage.wrongChain : isCreation && !isGranted ? ErroMessage.notOwner : defaultMsg
+  const error = isWrongChain ? ErrorMessage.wrongChain : isCreation && !isGranted ? ErrorMessage.notOwner : defaultMsg
 
   return (
     <Row align="center">
@@ -65,4 +65,4 @@ export const TransactionFailText = ({
 }
 
 // For tests
-export const _ErrorMessage = ErroMessage
+export const _ErrorMessage = ErrorMessage
