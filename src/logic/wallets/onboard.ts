@@ -1,5 +1,5 @@
 import Onboard from 'bnc-onboard'
-import { API, Wallet } from 'bnc-onboard/dist/src/interfaces'
+import { API, Wallet, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { store } from 'src/store'
 import { _getChainId, getChainName } from 'src/config'
 import { setWeb3 } from './getWeb3'
@@ -12,7 +12,7 @@ const NETWORK_NAMES: Record<ChainId, string> = {
   [CHAIN_ID.ETHEREUM]: 'mainnet',
 }
 
-const getOnboardConfiguration = () => {
+const getOnboardConfiguration = (): Initialization => {
   let lastUsedAddress = ''
   let providerName: string | null = null
   let lastNetworkId = ''
@@ -22,6 +22,8 @@ const getOnboardConfiguration = () => {
     // Is it mandatory for Ledger to work to send network name in lowercase
     // @FIXME: Move to CGW
     networkName: NETWORK_NAMES[_getChainId()] || getChainName().toLowerCase(),
+    // Prevent `eth_getBlockByNumber` polling every 4 seconds
+    blockPollingInterval: 60_000 * 60, // 1 hour
     subscriptions: {
       wallet: (wallet: Wallet) => {
         if (wallet.provider) {
