@@ -20,13 +20,11 @@ const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
 
-const grey500 = '#E2E3E3'
-const black400 = '#566976'
-const black600 = '#111B22'
-
 module.exports = {
   background,
   black300: '#B2BBC0',
+  black400: '#566976',
+  black600: '#111B22',
   boldFont: 700,
   bolderFont: 500,
   border,
@@ -43,7 +41,8 @@ module.exports = {
   fontSizeHeadingMd: 20,
   fontSizeHeadingSm: 16,
   fontSizeHeadingXs: 13,
-  gray500: '#e2e3e3',
+  grey400: '#EEEFF0',
+  gray500: '#E2E3E3',
   headerHeight,
   largeFontSize: '16px',
   lg,
@@ -54,6 +53,8 @@ module.exports = {
   mediumFontSize: '14px',
   orange500: '#e8663d',
   primary,
+  primary200: '#EFFAF8',
+  primary300: '#92C9BE',
   primary400: '#008C73',
   regularFont: 400,
   red400: '#C31717',
@@ -76,7 +77,4 @@ module.exports = {
   xs,
   xxl,
   xxlFontSize: '32px',
-  grey500,
-  black400,
-  black600,
 }

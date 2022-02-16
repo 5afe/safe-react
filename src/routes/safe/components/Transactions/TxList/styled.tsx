@@ -1,7 +1,7 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { lg, md, sm } from 'src/theme/variables'
+import { grey400, lg, md, primary200, primary300, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -25,12 +25,8 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
 export const NoPaddingAccordion = styled(Accordion).attrs((props) =>
   isDeeplinkedTx() ? { expanded: true, ...props } : props,
 )`
-  &.MuiAccordion-root {
-    background-color: transparent;
-
-    .MuiAccordionDetails-root {
-      padding: 0;
-    }
+  &.MuiAccordion-root .MuiAccordionDetails-root {
+    padding: 0;
   }
 `
 
@@ -82,19 +78,24 @@ export const SubTitle = styled(Text)`
 `
 
 export const StyledTransactions = styled.div`
-  background-color: ${({ theme }) => theme.colors.white};
-  border-radius: 8px;
-  box-shadow: #00000026 0 4px 12px 0;
   overflow: hidden;
   width: 100%;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+
   & > .MuiAccordion-root {
-    &:first-child {
-      border-top: none;
+    border: 2px solid ${grey400};
+    border-radius: 8px;
+
+    & .MuiAccordionSummary-root.Mui-expanded,
+    & .MuiAccordionSummary-root:hover {
+      background-color: ${primary200};
     }
 
-    &:last-child {
-      border-bottom: none;
+    &.Mui-expanded {
+      border: 2px solid ${primary300};
     }
   }
 `
