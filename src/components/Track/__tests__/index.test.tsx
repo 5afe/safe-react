@@ -25,7 +25,8 @@ describe('Track', () => {
     const child = screen.queryByText('test child2')
 
     expect(child).toHaveAttribute('data-track-id', 'test')
-    expect(child).toHaveAttribute('data-track-payload', '{"chainName":"Rinkeby","chainId":"4","test":true}')
+    expect(child).toHaveAttribute('data-track-chain', '{"chainName":"Rinkeby","chainId":"4"}')
+    expect(child).toHaveAttribute('data-track-payload', '{"test":true}')
   })
 
   it('does not add the payload if it is undefined', () => {

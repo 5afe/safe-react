@@ -14,16 +14,11 @@ const Track = ({ children, id, payload }: Props): ReactElement => {
 
   const { chainName, chainId } = getChainInfo()
 
-  const dataTrackPayload = {
-    chainName,
-    chainId,
-    ...(payload !== undefined && payload),
-  }
-
   return cloneElement(children, {
     ...children.props,
     'data-track-id': id,
-    'data-track-payload': JSON.stringify(dataTrackPayload),
+    'data-track-chain': JSON.stringify({ chainName, chainId }),
+    ...(payload !== undefined && { 'data-track-payload': JSON.stringify(payload) }),
   })
 }
 
