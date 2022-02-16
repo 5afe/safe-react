@@ -12,12 +12,12 @@ const Track = ({ children, id, payload }: Props): ReactElement => {
     throw new Error('Fragments cannot be tracked.')
   }
 
-  const { chainName, chainId } = getChainInfo()
+  const { chainId, shortName } = getChainInfo()
 
   return cloneElement(children, {
     ...children.props,
     'data-track-id': id,
-    'data-track-chain': JSON.stringify({ chainName, chainId }),
+    'data-track-chain': JSON.stringify({ chainId, shortName }),
     ...(payload !== undefined && { 'data-track-payload': JSON.stringify(payload) }),
   })
 }
