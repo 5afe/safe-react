@@ -45,7 +45,8 @@ export const TransactionFailText = ({
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const isOwner = useSelector(grantedSelector)
 
-  const showError = (isExecution && estimationStatus === EstimationStatus.FAILURE) || (isCreation && !isOwner)
+  const showError =
+    isWrongChain || (isExecution && estimationStatus === EstimationStatus.FAILURE) || (isCreation && !isOwner)
   if (!showError) return null
 
   const errorDesc = isCreation ? ErrorMessage.creation : ErrorMessage.execution
