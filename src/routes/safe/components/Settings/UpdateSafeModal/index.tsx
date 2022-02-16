@@ -111,7 +111,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
                   target="_blank"
                   to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}
                 >
-                  latest Gnosis Safe contracts changelog
+                  latest Celo Safe contracts changelog
                 </Link>
               </Block>
               <Paragraph>

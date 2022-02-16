@@ -76,19 +76,20 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
     <Block>
       {/* Title */}
       <Title size="md" strong>
-        Welcome to Gnosis Safe.
+        Welcome to Celo Safe.
       </Title>
 
       {/* Subtitle */}
       <Title size="xs">
         {isOldMultisigMigration ? (
           <>
-            We will replicate the owner structure from your existing Gnosis MultiSig to let you test the new interface.
-            As soon as you feel comfortable, start moving funds to your new Safe.
+            We will replicate the owner structure from your existing Celo Safe MultiSig to let you test the new
+            interface. As soon as you feel comfortable, start moving funds to your new Safe.
           </>
         ) : (
           <>
-            Gnosis Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:{' '}
+            Celo Safe is a platform to manage digital assets on the Celo blockchain based on Gnosis Safe. <br /> Here is
+            how to get started:{' '}
           </>
         )}
       </Title>
@@ -106,7 +107,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
               </StyledTitle>
             </TitleWrapper>
             <Text size="xl">
-              Gnosis Safe supports a wide range of wallets that you can choose to interact with your Safe.
+              Celo Safe supports a wide range of wallets that you can choose to interact with your Safe.
             </Text>
             <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
               <LinkSRC
