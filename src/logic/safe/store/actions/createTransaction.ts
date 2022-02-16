@@ -189,7 +189,6 @@ export class TxSender {
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
-    const promiEvent = tx.send(sendParams)
 
     // When signing on-chain don't mark as pending as it is never removed
     if (isFinalization) {
@@ -200,10 +199,12 @@ export class TxSender {
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
-    return new Promise((resolve, reject) => {
-      promiEvent.once('transactionHash', resolve) // this happens much faster than receipt
-      promiEvent.once('error', reject)
-    })
+    return await tx
+      .send(sendParams)
+      .on('error', (err) => {
+        throw err
+      })
+      .then(({ transactionHash }) => transactionHash)
   }
 
   async submitTx(
@@ -231,6 +232,7 @@ export class TxSender {
       await this.sendTx()
       this.onComplete(undefined, confirmCallback)
     } catch (err) {
+      console.log('onErr', err)
       this.onError(err, errorCallback)
     }
   }
