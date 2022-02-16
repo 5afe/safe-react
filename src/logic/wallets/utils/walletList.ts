@@ -74,7 +74,8 @@ const wallets = (): Wallet[] => {
 export const getSupportedWallets = (): WalletInitOptions[] => {
   if (window.isDesktop) {
     return wallets()
-      .filter((wallet) => wallet.desktop)
+      .filter(({ desktop }) => desktop)
+      .filter(({ walletName }) => !getDisabledWallets().includes(walletName))
       .map(({ desktop, ...rest }) => rest)
   }
 

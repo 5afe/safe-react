@@ -2150,10 +2150,15 @@
     "@gnosis.pm/safe-deployments" "^1.4.0"
     ethereumjs-util "^7.1.3"
 
-"@gnosis.pm/safe-deployments@^1.4.0", "@gnosis.pm/safe-deployments@^1.5.0":
+"@gnosis.pm/safe-deployments@^1.4.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.5.0.tgz#5e01ccc2e2d78bf91ecb4453a64d1cac3a5ba2d6"
   integrity sha512-IDU7I+IQr1zUU94/uD8shDVI+/nUA1unQUg8jtbTG0YGcmm49Lu8G01rqtWt2mhLxZWzFsgbLWGnU+/BzUqk7g==
+
+"@gnosis.pm/safe-deployments@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.8.0.tgz#856c15517274f924539ea4df40fffe6f009249a7"
+  integrity sha512-xK2ZZXxCEGOw+6UZAeUmvqE/4C/XTpYmv1a8KzKUgSOxcGkHsIDqcjdKjqif7gOdnwHl4+XXJUtDQEuSLT4Scg==
 
 "@gnosis.pm/safe-react-components@^0.9.0":
   version "0.9.0"
@@ -2163,10 +2168,10 @@
     react-media "^1.10.0"
     web3-utils "^1.6.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@2.7.5":
-  version "2.7.5"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.7.5.tgz#5640fc8c3972397ea1135f1e552d0c3333acb8fa"
-  integrity sha512-kY2aOLqfm9fxZbeMa8JkyKr7S3RYdxL/B0n2rU2fRAoPULleq+a6wZ2Y+zHC+XrHpjsNi6QIA183apP+XcRYIQ==
+"@gnosis.pm/safe-react-gateway-sdk@2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.8.1.tgz#3ed166fb49fa19837c9ce8d9ba4f29a14755e9c4"
+  integrity sha512-J6gJT6sbXvEPqhrWepEEgwYseo4UVUU3wNS9GNIpGMuh0zi7ZU0Gld+yXqSAoZWtS3hCntg7lyuM8W31AEjQLQ==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
