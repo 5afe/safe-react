@@ -25,6 +25,7 @@ describe('Track', () => {
     const child = screen.queryByText('test child2')
 
     expect(child).toHaveAttribute('data-track-id', 'test')
+    expect(child).toHaveAttribute('data-track-chain', '{"chainId":"4","shortName":"rin"}')
     expect(child).toHaveAttribute('data-track-payload', '{"test":true}')
   })
 
