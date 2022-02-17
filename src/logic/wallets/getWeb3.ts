@@ -7,14 +7,15 @@ import { namehash } from '@ethersproject/hash'
 import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { sameAddress, ZERO_ADDRESS } from './ethAddresses'
+import { ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
-import { ProviderProps } from './store/model/provider'
 import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { CHAIN_ID, ChainId } from 'src/config/chain.d'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -67,17 +68,9 @@ export const resetWeb3 = (): void => {
   web3 = web3ReadOnly[_getChainId()]
 }
 
-export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
-  const accounts = await web3Provider.eth.getAccounts()
-  return accounts && accounts.length > 0 ? accounts[0] : null
-}
-
 export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
   return web3Provider.eth.getChainId()
 }
-
-const isHardwareWallet = (walletName: string) =>
-  sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
 
 export const isSmartContractWallet = async (account: string): Promise<boolean> => {
   if (!account) {
@@ -91,27 +84,6 @@ export const isSmartContractWallet = async (account: string): Promise<boolean> =
   }
   return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
-
-export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
-  const account = (await getAccountFrom(web3Instance)) || ''
-  const ensDomain = account ? await reverseENSLookup(account) : ''
-  const network = await getChainIdFrom(web3Instance)
-  const smartContractWallet = await isSmartContractWallet(account)
-  const hardwareWallet = isHardwareWallet(providerName)
-  const available = Boolean(account)
-
-  return {
-    name: providerName,
-    available,
-    loaded: true,
-    account,
-    ensDomain,
-    network: network.toString() as ChainId,
-    smartContractWallet,
-    hardwareWallet,
-  }
-}
-
 export const getAddressFromDomain = (name: string): Promise<string> => {
   if (isValidCryptoDomainName(name)) {
     return getAddressFromUnstoppableDomain(name)
@@ -120,7 +92,7 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 }
 
 export const reverseENSLookup = async (address: string): Promise<string> => {
-  if (!address || !hasFeature(FEATURES.DOMAIN_LOOKUP)) {
+  if (!address || !hasFeature(FEATURES.DOMAIN_LOOKUP) || !isValidAddress(address)) {
     return ''
   }
 
@@ -144,7 +116,7 @@ export const reverseENSLookup = async (address: string): Promise<string> => {
     return ''
   }
 
-  return verifiedAddress === address ? name : ''
+  return checksumAddress(verifiedAddress) === checksumAddress(address) ? name : ''
 }
 
 export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
