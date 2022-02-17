@@ -199,12 +199,7 @@ export class TxSender {
       aboutToExecuteTx.setNonce(txArgs.nonce)
     }
 
-    return await tx
-      .send(sendParams)
-      .on('error', (err) => {
-        throw err
-      })
-      .then(({ transactionHash }) => transactionHash)
+    return await tx.send(sendParams).then(({ transactionHash }) => transactionHash)
   }
 
   async submitTx(
@@ -232,7 +227,6 @@ export class TxSender {
       await this.sendTx()
       this.onComplete(undefined, confirmCallback)
     } catch (err) {
-      console.log('onErr', err)
       this.onError(err, errorCallback)
     }
   }
