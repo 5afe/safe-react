@@ -41,7 +41,7 @@ const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> =>
 const requestAdd = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
   const { chainName, nativeCurrency } = getChainInfo()
 
-  await wallet.provider.request({
+  await wallet.provider?.request({
     method: 'wallet_addEthereumChain',
     params: [
       {
