@@ -4,7 +4,7 @@ import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
   txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
-  safeUrl: 'https://gnosis-safe.io/app',
+  safeUrl: 'https://safe.celo.org',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -17,8 +17,8 @@ const baseConfig: EnvironmentSettings = {
       gweiFactor: '1e8',
     },
   ],
-  safeAppsRpcServiceUrl: 'https://mainnet.infura.io:443/v3',
-  rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
+  safeAppsRpcServiceUrl: 'https://forno.celo.org',
+  rpcServiceUrl: 'https://forno.celo.org',
   networkExplorerName: 'Blockscout',
   networkExplorerUrl: 'https://explorer.celo.org',
   networkExplorerApiUrl: 'https://explorer.celo.org/api',

@@ -8,8 +8,8 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
-  txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
+  clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
+  txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
   safeUrl: 'https://rinkeby.gnosis-safe.io/app',
   gasPriceOracles: [
     {
@@ -23,8 +23,8 @@ const baseConfig: EnvironmentSettings = {
       gweiFactor: '1e8',
     },
   ],
-  rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
-  safeAppsRpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
+  rpcServiceUrl: 'https://baklava-forno.celo-testnet.org',
+  safeAppsRpcServiceUrl: 'https://baklava-forno.celo-testnet.org',
   networkExplorerName: 'Celo Baklava Explorer',
   networkExplorerUrl: 'https://baklava-blockscout.celo-testnet.org/',
   networkExplorerApiUrl: 'https://baklava-blockscout.celo-testnet.org/api',

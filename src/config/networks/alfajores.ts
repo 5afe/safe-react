@@ -8,8 +8,8 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
-  txServiceUrl: 'https://safe-transaction.alfajores.staging.gnosisdev.com/api/v1',
+  clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
+  txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
   safeUrl: 'https://alfajores.gnosis-safe.io/app',
   gasPriceOracles: [
     {
@@ -23,8 +23,8 @@ const baseConfig: EnvironmentSettings = {
       gweiFactor: '1e8',
     },
   ],
-  rpcServiceUrl: 'https://alfajores.infura.io:443/v3',
-  safeAppsRpcServiceUrl: 'https://alfajores.infura.io:443/v3',
+  rpcServiceUrl: 'https://alfajores-forno.celo-testnet.org',
+  safeAppsRpcServiceUrl: 'https://alfajores-forno.celo-testnet.org',
   networkExplorerName: 'Celo Explorer',
   networkExplorerUrl: 'https://alfajores-blockscout.celo-testnet.org/',
   networkExplorerApiUrl: 'https://alfajores-blockscout.celo-testnet.org/api',
