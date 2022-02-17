@@ -88,7 +88,7 @@ const Sidebar = ({
       dispatch(openCookieBanner({ cookieBannerOpen: true }))
       return
     }
-    if (!cookiesState.acceptedAnalytics) {
+    if (!cookiesState.acceptedSupportAndUpdates) {
       dispatch(
         openCookieBanner({
           cookieBannerOpen: true,
@@ -129,7 +129,7 @@ const Sidebar = ({
         <HelpList>
           <StyledListItem id="whats-new-button" button onClick={handleClick}>
             <ListIcon type="gift" />
-            <StyledListItemText>Whats new</StyledListItemText>
+            <StyledListItemText>What&apos;s new</StyledListItemText>
           </StyledListItem>
 
           <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">

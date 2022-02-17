@@ -102,7 +102,7 @@ const CookiesBanner = (): ReactElement => {
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
-  const [localIntercom, setLocalIntercom] = useState(false)
+  const [localSupportAndUpdates, setLocalSupportAndUpdates] = useState(false)
   const { getAppUrl } = useSafeAppUrl()
   const beamerScriptRef = useRef<HTMLScriptElement>()
 
@@ -113,6 +113,10 @@ const CookiesBanner = (): ReactElement => {
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
       loadIntercom()
+
+      // For use in non-webapps (Mobile and Desktop)
+      // https://www.getbeamer.com/help/how-to-install-beamer-using-our-api
+      loadBeamer(beamerScriptRef)
     }
   }, [showIntercom, isSafeAppView])
 
@@ -128,32 +132,28 @@ const CookiesBanner = (): ReactElement => {
       if (!cookiesState) {
         dispatch(openCookieBanner({ cookieBannerOpen: true }))
       } else {
-        const { acceptedIntercom, acceptedAnalytics, acceptedNecessary } = cookiesState
-        if (acceptedIntercom === undefined) {
+        const { acceptedSupportAndUpdates, acceptedAnalytics, acceptedNecessary } = cookiesState
+        if (acceptedSupportAndUpdates === undefined) {
           const newState = {
             acceptedNecessary,
             acceptedAnalytics,
-            acceptedIntercom: acceptedAnalytics,
+            acceptedSupportAndUpdates: acceptedAnalytics,
           }
           const cookieConfig: CookieAttributes = {
             expires: acceptedAnalytics ? 365 : 7,
           }
           await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
-          setLocalIntercom(newState.acceptedIntercom)
-          setShowIntercom(newState.acceptedIntercom)
+          setLocalSupportAndUpdates(newState.acceptedSupportAndUpdates)
+          setShowIntercom(newState.acceptedSupportAndUpdates)
         } else {
-          setLocalIntercom(acceptedIntercom)
-          setShowIntercom(acceptedIntercom)
+          setLocalSupportAndUpdates(acceptedSupportAndUpdates)
+          setShowIntercom(acceptedSupportAndUpdates)
         }
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
 
         if (acceptedAnalytics && !isDesktop) {
           loadGoogleAnalytics()
-
-          // For use in non-webapps (Mobile and Desktop)
-          // https://www.getbeamer.com/help/how-to-install-beamer-using-our-api
-          loadBeamer(beamerScriptRef)
         }
       }
     }
@@ -164,7 +164,7 @@ const CookiesBanner = (): ReactElement => {
     const newState = {
       acceptedNecessary: true,
       acceptedAnalytics: !isDesktop,
-      acceptedIntercom: true,
+      acceptedSupportAndUpdates: true,
     }
     const cookieConfig: CookieAttributes = {
       expires: 365,
@@ -179,22 +179,24 @@ const CookiesBanner = (): ReactElement => {
     const newState = {
       acceptedNecessary: true,
       acceptedAnalytics: localAnalytics,
-      acceptedIntercom: localIntercom,
+      acceptedSupportAndUpdates: localSupportAndUpdates,
     }
     const cookieConfig: CookieAttributes = {
       expires: localAnalytics ? 365 : 7,
     }
     await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(localAnalytics)
-    setShowIntercom(localIntercom)
+    setShowIntercom(localSupportAndUpdates)
 
     if (!localAnalytics) {
       removeCookies()
-      closeBeamer(beamerScriptRef)
     }
 
-    if (!localIntercom && isIntercomLoaded()) {
-      closeIntercom()
+    if (!localSupportAndUpdates) {
+      closeBeamer(beamerScriptRef)
+      if (isIntercomLoaded()) {
+        closeIntercom()
+      }
     }
     dispatch(closeCookieBanner())
   }
@@ -232,11 +234,11 @@ const CookiesBanner = (): ReactElement => {
             </div>
             <div className={classes.formItem}>
               <FormControlLabel
-                control={<Checkbox checked={localIntercom} />}
-                label="Customer support"
-                name="Customer support"
-                onChange={() => setLocalIntercom((prev) => !prev)}
-                value={localIntercom}
+                control={<Checkbox checked={localSupportAndUpdates} />}
+                label="Community support & updates"
+                name="Community support & updates"
+                onChange={() => setLocalSupportAndUpdates((prev) => !prev)}
+                value={localSupportAndUpdates}
               />
             </div>
             <div className={classes.formItem}>
