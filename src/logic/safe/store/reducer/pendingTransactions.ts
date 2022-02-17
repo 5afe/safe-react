@@ -7,7 +7,7 @@ import { _getChainId } from 'src/config'
 
 export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
 
-export type PendingTransactionsState = Record<ChainId, Record<string, string | boolean>>
+export type PendingTransactionsState = Record<ChainId, Record<string, string>>
 
 const initialPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID) || {}
 
@@ -17,7 +17,7 @@ export type RemovePendingTransactionPayload = {
 }
 
 export type AddPendingTransactionPayload = RemovePendingTransactionPayload & {
-  txHash: string | boolean
+  txHash: string
 }
 
 export type PendingTransactionPayloads = AddPendingTransactionPayload | RemovePendingTransactionPayload
