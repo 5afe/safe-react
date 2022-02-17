@@ -13,8 +13,8 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import {
   FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
-  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNERS_LIST,
+  FIELD_SAFE_OWNER_ENS_LIST,
 } from '../fields/createSafeFields'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
