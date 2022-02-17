@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { render, screen } from 'src/utils/test-utils'
 import { ReviewInfoText } from './index'
