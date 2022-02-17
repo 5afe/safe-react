@@ -25,12 +25,12 @@ const baseConfig: EnvironmentSettings = {
   ],
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
   safeAppsRpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
-  networkExplorerName: 'Celo Explorer',
-  networkExplorerUrl: 'https://alfajores-blockscout.celo-testnet.org/',
-  networkExplorerApiUrl: 'https://alfajores-blockscout.celo-testnet.org/api',
+  networkExplorerName: 'Celo Baklava Explorer',
+  networkExplorerUrl: 'https://baklava-blockscout.celo-testnet.org/',
+  networkExplorerApiUrl: 'https://baklava-blockscout.celo-testnet.org/api',
 }
 
-const rinkeby: NetworkConfig = {
+const baklava: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
@@ -38,24 +38,24 @@ const rinkeby: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeUrl: 'https://safe-team-rinkeby.staging.gnosisdev.com/app/',
+      safeUrl: 'https://safe-team-baklava.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
       clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
-      txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1',
+      txServiceUrl: 'https://safe-transaction.baklava.gnosis.io/api/v1',
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.ALFAJORES,
-    backgroundColor: '#FEF2D6',
-    textColor: '#111214',
-    label: 'Alfajores',
+    id: ETHEREUM_NETWORK.BAKLAVA,
+    backgroundColor: '#F8F9F9',
+    textColor: '#3488EC',
+    label: 'Baklava',
     isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
-      name: 'Celo (Alfajores)',
+      name: 'Celo',
       symbol: 'CELO',
       decimals: 18,
       logoUri: EtherLogo,
@@ -64,4 +64,4 @@ const rinkeby: NetworkConfig = {
   disabledWallets: [WALLETS.FORTMATIC],
 }
 
-export default rinkeby
+export default baklava

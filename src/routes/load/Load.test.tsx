@@ -67,7 +67,7 @@ describe('<Load>', () => {
         const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
         fireEvent.change(safeAddressInputNode, { target: { value: validSafeAddress } })
         expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), networkId, validSafeAddress)
-        // FIXME: should only call 1 time to the getSafeInfo endpoint see https://github.com/gnosis/safe-react/issues/2668
+        // FIXME: should only call 1 time to the getSafeInfo endpoint see https://github.com/celo-org/safe-react/issues/2668
         // expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(1)
       })
     })

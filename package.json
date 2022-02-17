@@ -2,18 +2,17 @@
   "name": "safe-react",
   "version": "3.14.1",
   "description": "Allowing crypto users manage funds in a safer way",
-  "website": "https://github.com/gnosis/safe-react#readme",
+  "website": "https://github.com/celo-org/safe-react#readme",
   "bugs": {
-    "url": "https://github.com/gnosis/safe-react/issues"
+    "url": "https://github.com/celo-org/safe-react/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gnosis/safe-react.git"
+    "url": "https://github.com/celo-org/safe-react.git"
   },
   "license": "MIT",
   "author": {
-    "name": "Gnosis Team",
-    "email": "safe@gnosis.io"
+    "name": "cLabs"
   },
   "main": "public/electron.js",
   "scripts": {
@@ -84,7 +83,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "gnosis",
+        "owner": "celo-org",
         "repo": "safe-react"
       }
     ],
@@ -127,7 +126,7 @@
       "publish": [
         {
           "provider": "github",
-          "owner": "gnosis",
+          "owner": "celo-org",
           "repo": "safe-react"
         }
       ]

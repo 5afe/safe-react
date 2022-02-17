@@ -45,7 +45,7 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
       <Block margin="lg">
         <Paragraph color="primary" noMargin size="lg">
           You are about to create a new Safe with one or more owners. First, let&apos;s give your new Safe a name. This
-          name is only stored locally and will never be shared with Gnosis or any third parties.
+          name is only stored locally and will never be shared with Celo or any third parties.
         </Paragraph>
       </Block>
       <Block className={classes.root} margin="sm">

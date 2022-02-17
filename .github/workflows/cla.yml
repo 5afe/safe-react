@@ -19,7 +19,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-cla-document: 'https://github.com/gnosis/safe-react/blob/main/GNOSISCLA.md'
+          path-to-cla-document: 'https://github.com/celo-org/safe-react/blob/main/GNOSISCLA.md'
           branch: 'cla-signatures'
           allowlist: lukasschor,mikheevm,rmeissner,germartinez,davidalbela,Uxio0,dasanra,francovenica,tschubotz,luarx,giacomolicari,gnosis-info,bot*,katspaugh,DaniSomoza,iamacook
           empty-commit-flag: false

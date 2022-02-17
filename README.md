@@ -4,26 +4,23 @@ The most trusted platform to store digital assets on Ethereum. More info at [gno
 
 For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
 
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
+For support requests, please open up a [bug issue](https://github.com/celo-org/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
 
 ## Related repos
 
-- [safe-react-e2e-tests](https://github.com/gnosis/safe-react-e2e-tests)
-- [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
-- [safe-react-components](https://github.com/gnosis/safe-react-components)
+- [safe-react-e2e-tests](https://github.com/celo-org/safe-react-e2e-tests)
+- [safe-react-gateway-sdk](https://github.com/celo-org/safe-react-gateway-sdk)
+- [safe-react-components](https://github.com/celo-org/safe-react-components)
 
 ## Production deployments
 
 This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
 
-Besides the Ethereum Mainnet, the following networks are supported:
+Besides the Celo Mainnet, the following networks are supported:
 
-- [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
-- [xDai](https://xdai.gnosis-safe.io/app/)
-- [Polygon](https://polygon.gnosis-safe.io/app/)
-- [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
-- [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
-- [Volta Testnet](https://volta.gnosis-safe.io/app/)
+- [Alfajores Testnet](https://rinkeby.gnosis-safe.io/app/)
+- [Baklava Testnet](https://rinkeby.gnosis-safe.io/app/)
+
 
 ## Getting Started
 
@@ -58,7 +55,7 @@ Install dependencies for the project:
 yarn install
 ```
 
-To use the Rinkeby services:
+To use the Alfajores services:
 
 ```
 yarn start
@@ -78,7 +75,7 @@ docker-compose build && docker-compose up
 
 ### Building
 
-For Rinkeby:
+For Alfajores:
 
 ```
 yarn build

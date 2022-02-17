@@ -1,6 +1,5 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
@@ -43,8 +42,8 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.MAINNET,
-    backgroundColor: '#E8E7E6',
-    textColor: '#001428',
+    backgroundColor: '#FBCC5C',
+    textColor: '#111214',
     label: 'Celo Mainnet',
     isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L1,

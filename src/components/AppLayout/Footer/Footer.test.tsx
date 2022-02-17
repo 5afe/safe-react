@@ -107,7 +107,7 @@ describe('<Footer>', () => {
     const safeReactVersionNode = screen.getByText('v1.1.1')
 
     expect(safeReactVersionNode).toBeInTheDocument()
-    expect(safeReactVersionNode).toHaveAttribute('href', 'https://github.com/gnosis/safe-react/releases')
+    expect(safeReactVersionNode).toHaveAttribute('href', 'https://github.com/celo-org/safe-react/releases')
     expect(safeReactVersionNode).toHaveAttribute('target', '_blank')
   })
 
@@ -119,7 +119,7 @@ describe('<Footer>', () => {
     const safeReactVersionNode = screen.getByText('Versions')
 
     expect(safeReactVersionNode).toBeInTheDocument()
-    expect(safeReactVersionNode).toHaveAttribute('href', 'https://github.com/gnosis/safe-react/releases')
+    expect(safeReactVersionNode).toHaveAttribute('href', 'https://github.com/celo-org/safe-react/releases')
     expect(safeReactVersionNode).toHaveAttribute('target', '_blank')
   })
 })

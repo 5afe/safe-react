@@ -16,8 +16,8 @@ export const AddCustomApp = (): React.ReactElement => (
 export const LoadedApp = (): React.ReactElement => (
   <AppCard
     iconUrl="https://cryptologos.cc/logos/versions/gnosis-gno-gno-logo-circle.svg?v=007"
-    name="Gnosis"
-    description="Celo Safe app"
+    name="Celo Safe"
+    description="Celo Safe App UI"
     onClick={console.log}
   />
 )
