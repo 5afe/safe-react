@@ -30,7 +30,7 @@ describe('<ReviewInfoText>', () => {
     expect(screen.getByText(/will need to be created and executed before this transaction/)).toBeInTheDocument()
   })
 
-  it('renders ReviewInfoText with safeNonce in the future', () => {
+  it('renders ReviewInfoText with already used safeNonce', () => {
     render(<ReviewInfoText {...initialData} safeNonce="6" />)
 
     expect(screen.getByText(/6/)).toBeInTheDocument()
