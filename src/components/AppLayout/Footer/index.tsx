@@ -54,28 +54,24 @@ const Footer = (): React.ReactElement => {
 
   return (
     <footer className={classes.footer}>
-      <span className={classes.item}>©{date.getFullYear()} Gnosis</span>
+      <span className={classes.item}>©{date.getFullYear()} cLabs</span>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/terms">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://clabs.co/terms">
         Terms
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/privacy">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://clabs.co/privacy">
         Privacy
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/licenses">
+      <Link
+        className={cn(classes.item, classes.link)}
+        target="_blank"
+        to="https://github.com/celo-org/safe-react/blob/dev/LICENSE.md"
+      >
         Licenses
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/imprint">
-        Imprint
-      </Link>
-      <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/cookie">
-        Cookie Policy
-      </Link>
-      <span className={classes.sep}>-</span>
       <GnoButtonLink className={cn(classes.item, classes.link, classes.buttonLink)} onClick={openCookiesHandler}>
         Preferences
       </GnoButtonLink>
@@ -83,7 +79,7 @@ const Footer = (): React.ReactElement => {
       <Link
         className={cn(classes.item, classes.link)}
         target="_blank"
-        to="https://github.com/gnosis/safe-react/releases"
+        to="https://github.com/celo-org/safe-react/releases"
       >
         {appVersion}
       </Link>
