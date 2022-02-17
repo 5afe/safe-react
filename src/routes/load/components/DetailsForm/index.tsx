@@ -144,11 +144,11 @@ const DetailsForm = ({ errors, form, safeName }: DetailsFormProps): ReactElement
       <Block margin="sm">
         <Paragraph className={classes.links} color="primary" noMargin size="md">
           By continuing you consent to the{' '}
-          <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
+          <a href="https://clabs.co/terms" rel="noopener noreferrer" target="_blank">
             terms of use
           </a>{' '}
           and{' '}
-          <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
+          <a href="https://clabs.co/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
           .
