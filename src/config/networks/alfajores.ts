@@ -49,7 +49,7 @@ const alfajores: NetworkConfig = {
   network: {
     id: ETHEREUM_NETWORK.ALFAJORES,
     backgroundColor: '#FEF2D6',
-    textColor: '#111214',
+    textColor: '#D8A11F',
     label: 'Alfajores',
     isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L1,

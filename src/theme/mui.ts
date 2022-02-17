@@ -29,6 +29,7 @@ import {
 const palette = {
   primary: {
     main: primary,
+    contrastText: '#FFF',
   },
   secondary: {
     main: secondary,
@@ -56,6 +57,7 @@ const theme = createTheme({
         lineHeight: '1',
         fontSize: largeFontSize,
         fontWeight: regularFont,
+        fontFamily: secondaryFontFamily,
       },
       root: {
         fontFamily: secondaryFontFamily,
@@ -68,6 +70,7 @@ const theme = createTheme({
         borderRadius: sm,
       },
       contained: {
+        fontFamily: secondaryFontFamily,
         boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
       },
       containedPrimary: {

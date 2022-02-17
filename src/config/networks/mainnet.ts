@@ -42,8 +42,8 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.MAINNET,
-    backgroundColor: '#FBCC5C',
-    textColor: '#111214',
+    backgroundColor: '#F8F9F9',
+    textColor: '#1AB775',
     label: 'Celo Mainnet',
     isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L1,
