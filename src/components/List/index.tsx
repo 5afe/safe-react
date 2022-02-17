@@ -37,7 +37,7 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 
   & .beamer_icon.active {
-    background-color: ${secondary};
+    background-color: ${secondary} !important;
     top: auto;
     bottom: 8px;
     left: 31px;
