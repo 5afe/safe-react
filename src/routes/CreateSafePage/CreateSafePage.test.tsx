@@ -519,7 +519,7 @@ describe('<CreateSafePage>', () => {
       const defaultOwnerInput = screen.getByTestId('owner-address-1')
       fireEvent.change(defaultOwnerInput, { target: { value: '0x680cde08860141F9D223cE4E620B10Cd6741037E' } })
 
-      const errorText = 'Address already introduced'
+      const errorText = 'Address already added'
 
       expect(screen.getByText(errorText)).toBeInTheDocument()
     })
