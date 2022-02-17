@@ -1,46 +1,13 @@
 import { ReactElement } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Text } from '@gnosis.pm/safe-react-components'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import { lg } from 'src/theme/variables'
-import { extractSafeAddress } from 'src/routes/routes'
 import { TransactionFailText } from '../TransactionFailText'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import useRecommendedNonce from 'src/logic/hooks/useRecommendedNonce'
-
-const WarningMessage = ({ safeTxNonceParam }: { safeTxNonceParam: string }): ReactElement | null => {
-  const safeTxNonce = parseInt(safeTxNonceParam, 10)
-  const safeAddress = extractSafeAddress()
-  const recommendedNonce = useRecommendedNonce(safeAddress)
-
-  const isTxNonceOutOfOrder = () => {
-    // safeNonce can be undefined while waiting for the request.
-    if (isNaN(safeTxNonce)) return false
-    if (safeTxNonce === recommendedNonce) return false
-    return true
-  }
-
-  if (!isTxNonceOutOfOrder()) return null
-
-  const transactionsToGo = safeTxNonce - recommendedNonce
-
-  return (
-    <Paragraph size="md" align="center" color="disabled" noMargin>
-      {transactionsToGo < 0 ? (
-        `Nonce ${safeTxNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
-      ) : (
-        <>
-          <Text size="lg" as="span" color="text" strong>
-            {transactionsToGo}
-          </Text>
-          {` transaction${transactionsToGo > 1 ? 's' : ''} will need to be created and executed before this transaction,
-      are you sure you want to do this?`}
-        </>
-      )}
-    </Paragraph>
-  )
-}
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 
 const ReviewInfoTextWrapper = styled.div`
   padding: 0 ${lg};
@@ -61,11 +28,45 @@ export const ReviewInfoText = ({
   testId,
   txEstimationExecutionStatus,
 }: ReviewInfoTextProps): ReactElement => {
-  const warning = <WarningMessage safeTxNonceParam={safeNonce} />
+  const safeTxNonce = parseInt(safeNonce, 10)
+  const { address: safeAddress } = useSelector(currentSafeWithNames)
+  const recommendedNonce = useRecommendedNonce(safeAddress)
+
+  const isTxNonceOutOfOrder = () => {
+    // safeNonce can be undefined while waiting for the request.
+    if (isNaN(safeTxNonce)) return false
+    if (safeTxNonce === recommendedNonce) return false
+    return true
+  }
+
+  const getWarning = (): ReactElement | null => {
+    if (!isTxNonceOutOfOrder()) return null
+
+    const transactionsToGo = safeTxNonce - recommendedNonce
+
+    return (
+      <Paragraph size="md" align="center" color="disabled" noMargin>
+        {transactionsToGo > 0 ? (
+          /* tx in the future */ <>
+            <b>{transactionsToGo}</b>
+            {` transaction${transactionsToGo > 1 ? 's' : ''}`}
+            will need to be created and executed before this transaction, are you sure you want to do this?
+          </>
+        ) : (
+          /* tx in the past */ <>
+            Nonce
+            <b> {safeTxNonce} </b>
+            has already been used. Your transaction will fail. Please use nonce
+            <b> {recommendedNonce}</b>.
+          </>
+        )}
+      </Paragraph>
+    )
+  }
 
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
-      {warning || (
+      {getWarning() || (
         <>
           <Paragraph size="md" align="center" color="disabled" noMargin>
             You&apos;re about to {isCreation ? 'create' : isExecution ? 'execute' : 'approve'} a transaction and will
