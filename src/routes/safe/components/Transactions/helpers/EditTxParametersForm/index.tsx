@@ -12,7 +12,7 @@ import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { minValue } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue } from 'src/components/forms/validator'
 import { Modal } from 'src/components/Modal'
 import {
   ParametersStatus,
@@ -75,7 +75,7 @@ const formValidation = (values: Record<keyof TxParameters, string>): Record<stri
 
   const ethGasPriceValidation = minValue(0, true)(ethGasPrice)
 
-  const ethMaxPrioFeeValidation = minValue(0, true)(ethMaxPrioFee)
+  const ethMaxPrioFeeValidation = composeValidators(minValue(0, true), maxValue(ethGasPrice))(ethMaxPrioFee)
 
   const ethNonceValidation = minValue(0, true)(ethNonce)
 

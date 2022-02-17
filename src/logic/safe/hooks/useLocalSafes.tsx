@@ -7,7 +7,7 @@ import { ChainId } from 'src/config/chain.d'
 import { SafeRecordProps } from '../store/models/safe'
 import { getLocalNetworkSafesById } from '../utils'
 
-type LocalSafes = Record<ChainId, SafeRecordProps[]>
+export type LocalSafes = Record<ChainId, SafeRecordProps[]>
 
 const getEmptyLocalSafes = (): LocalSafes => {
   return getChains().reduce((safes, { chainId }) => ({ ...safes, [chainId]: [] }), {} as LocalSafes)
