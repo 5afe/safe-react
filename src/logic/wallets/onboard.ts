@@ -3,7 +3,7 @@ import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
-import { getWeb3, setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
+import { setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets, isSupportedWallet } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID, WALLETS } from 'src/config/chain.d'
@@ -67,7 +67,7 @@ const getOnboard = (chainId: ChainId): API => {
           updateProviderWallet({
             name: wallet.name || '',
             hardwareWallet: wallet.type === 'hardware',
-            smartContractWallet: await isSmartContractWallet(getWeb3(), onboard().getState().address),
+            smartContractWallet: await isSmartContractWallet(onboard().getState().address),
           }),
         )
       },

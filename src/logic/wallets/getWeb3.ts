@@ -72,13 +72,13 @@ export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
   return web3Provider.eth.getChainId()
 }
 
-export const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
+export const isSmartContractWallet = async (account: string): Promise<boolean> => {
   if (!account) {
     return false
   }
   let contractCode = ''
   try {
-    contractCode = await web3Provider.eth.getCode(account)
+    contractCode = await getWeb3ReadOnly().eth.getCode(account)
   } catch (e) {
     // ignore
   }
@@ -92,7 +92,7 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 }
 
 export const reverseENSLookup = async (address: string): Promise<string> => {
-  if (!hasFeature(FEATURES.DOMAIN_LOOKUP) || !isValidAddress(address)) {
+  if (!address || !hasFeature(FEATURES.DOMAIN_LOOKUP) || !isValidAddress(address)) {
     return ''
   }
 
