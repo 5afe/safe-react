@@ -30,22 +30,15 @@ export type NetworkSettings = {
 }
 ```
 
-- Currently supported Ethereum compatible networks:
+- Currently supported Celo networks:
 
 ```typescript
 export enum ETHEREUM_NETWORK {
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  BSC = 56,
-  XDAI = 100,
-  ENERGY_WEB_CHAIN = 246,
-  VOLTA = 73799,
-  UNKNOWN = 0,
-  LOCAL = 4447,
+  UNKNOWN = '0',
+  MAINNET = '42220', // Meaning Celo Mainnet
+  LOCAL = '4447',
+  ALFAJORES = '44787',
+  BAKLAVA = '62320',
 }
 ```
 
@@ -156,13 +149,13 @@ export type GasPriceOracle = {
 
 ### Enviroment variables:
 
-- **REACT_APP_NETWORK**: name of the used network (ex: xDai, mainnet, rinkeby)
+- **REACT_APP_NETWORK**: name of the used network (ex: alfajores, mainnet, baklava)
 - **REACT_APP_GOOGLE_ANALYTICS**: Used for enabling google analytics
 - **REACT_APP_PORTIS_ID**: Portis ID for enabling it on given network
 - **REACT_APP_FORTMATIC_KEY**: Formatic yey for given network
 
 ---
-## How to add a network 
+## How to add a network
 
 1) In case that it is not already supported, add the network on the **ETHEREUM_NETWORK** enum in [`src/config/networks/network.d.ts`](/src/config/networks/network.d.ts)
 
@@ -266,44 +259,8 @@ export enum ETHEREUM_NETWORK {
 }
 ```
 
-2) **Network file** [xdai](/src/config/networks/xdai.ts)
+2) **Network file** [alfajores](/src/config/networks/alfajores.ts)
 
-```typescript
-import { ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
-
-const xDai: NetworkConfig = {
-  environment: {
-    production: {
-     txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
-     safeAppsUrl: 'https://safe-apps-xdai.staging.gnosisdev.com',
-     gasPrice: 1e9,
-     rpcServiceUrl: 'https://dai.poa.network/',
-     networkExplorerName: 'Blockscout',
-     networkExplorerUrl: 'https://blockscout.com/poa/xdai',
-     networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
-    },
-  },
-  network: {
-    id: ETHEREUM_NETWORK.XDAI,
-    backgroundColor: '#48A8A6',
-    textColor: '#ffffff',
-    label: 'xDai',
-    isTestNet: false,
-    nativeCoin: {
-      address: '0x0000000000000000000000000000000000000000',
-      name: 'xDai',
-      symbol: 'xDai',
-      decimals: 18,
-      logoUri: xDaiLogo,
-    },
-  },
-  disabledWallets:[
-    WALLETS.TREZOR,
-    WALLETS.LEDGER
-  ]
-}
-
-export default xDai
 ```
 
 ## Configuration example (Mainnet) - gas price retrieven by oracle

@@ -9,8 +9,8 @@ import {
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
-  txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
-  safeUrl: 'https://rinkeby.gnosis-safe.io/app',
+  txServiceUrl: 'https://safe-transaction.alfajores.staging.gnosisdev.com/api/v1',
+  safeUrl: 'https://alfajores.gnosis-safe.io/app',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -23,14 +23,14 @@ const baseConfig: EnvironmentSettings = {
       gweiFactor: '1e8',
     },
   ],
-  rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
-  safeAppsRpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
+  rpcServiceUrl: 'https://alfajores.infura.io:443/v3',
+  safeAppsRpcServiceUrl: 'https://alfajores.infura.io:443/v3',
   networkExplorerName: 'Celo Explorer',
   networkExplorerUrl: 'https://alfajores-blockscout.celo-testnet.org/',
   networkExplorerApiUrl: 'https://alfajores-blockscout.celo-testnet.org/api',
 }
 
-const rinkeby: NetworkConfig = {
+const alfajores: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
@@ -38,12 +38,12 @@ const rinkeby: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeUrl: 'https://safe-team-rinkeby.staging.gnosisdev.com/app/',
+      safeUrl: 'https://safe-team-alfajores.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
       clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
-      txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1',
+      txServiceUrl: 'https://safe-transaction.alfajores.gnosis.io/api/v1',
     },
   },
   network: {
@@ -64,4 +64,4 @@ const rinkeby: NetworkConfig = {
   disabledWallets: [WALLETS.FORTMATIC],
 }
 
-export default rinkeby
+export default alfajores

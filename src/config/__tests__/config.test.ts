@@ -1,7 +1,7 @@
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { default as networks } from 'src/config/networks'
 
-const { mainnet, xdai } = networks
+const { mainnet, alfajores } = networks
 
 describe('Config Services', () => {
   beforeEach(() => {
@@ -86,15 +86,15 @@ describe('Config Services', () => {
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
   })
 
-  it(`should load 'xdai.production' network config`, () => {
+  it(`should load 'alfajores.production' network config`, () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
-      NETWORK: 'XDAI',
+      NETWORK: 'ALFAJORES',
       APP_ENV: 'production',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
+    const TX_SERVICE_URL = alfajores.environment.production.txServiceUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
@@ -102,14 +102,14 @@ describe('Config Services', () => {
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
   })
 
-  it(`should default to 'xdai.dev' network config if no environment is found`, () => {
+  it(`should default to 'alfajores.dev' network config if no environment is found`, () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
-      NETWORK: 'XDAI',
+      NETWORK: 'ALFAJORES',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
+    const TX_SERVICE_URL = alfajores.environment.dev?.txServiceUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()

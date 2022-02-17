@@ -14,7 +14,7 @@ describe('<Footer>', () => {
   it('Should show footer links', () => {
     render(<Footer />)
 
-    const gnosisCopyrightNode = screen.getByText(/©\d{4} Gnosis/)
+    const gnosisCopyrightNode = screen.getByText(/©\d{4} cLabs/)
 
     expect(gnosisCopyrightNode).toBeInTheDocument()
 
@@ -27,12 +27,6 @@ describe('<Footer>', () => {
     const LicensesLinkNode = screen.getByText('Licenses')
     expect(LicensesLinkNode).toBeInTheDocument()
 
-    const imprintLinkNode = screen.getByText('Imprint')
-    expect(imprintLinkNode).toBeInTheDocument()
-
-    const cookiePolicyLinkNode = screen.getByText('Cookie Policy')
-    expect(cookiePolicyLinkNode).toBeInTheDocument()
-
     const preferencesLinkNode = screen.getByText('Preferences')
     expect(preferencesLinkNode).toBeInTheDocument()
   })
@@ -42,7 +36,7 @@ describe('<Footer>', () => {
 
     const termsLinkNode = screen.getByText('Terms')
 
-    expect(termsLinkNode).toHaveAttribute('href', 'https://gnosis-safe.io/terms')
+    expect(termsLinkNode).toHaveAttribute('href', 'https://clabs.co/terms')
     expect(termsLinkNode).toHaveAttribute('target', '_blank')
   })
 
@@ -51,7 +45,7 @@ describe('<Footer>', () => {
 
     const privacyLinkNode = screen.getByText('Privacy')
 
-    expect(privacyLinkNode).toHaveAttribute('href', 'https://gnosis-safe.io/privacy')
+    expect(privacyLinkNode).toHaveAttribute('href', 'https://clabs.co/privacy')
     expect(privacyLinkNode).toHaveAttribute('target', '_blank')
   })
 
@@ -60,26 +54,8 @@ describe('<Footer>', () => {
 
     const LicensesLinkNode = screen.getByText('Licenses')
 
-    expect(LicensesLinkNode).toHaveAttribute('href', 'https://gnosis-safe.io/licenses')
+    expect(LicensesLinkNode).toHaveAttribute('href', 'https://github.com/celo-org/safe-react/blob/dev/LICENSE.md')
     expect(LicensesLinkNode).toHaveAttribute('target', '_blank')
-  })
-
-  it('Should redirect to Imprint page in a new tab', () => {
-    render(<Footer />)
-
-    const imprintLinkNode = screen.getByText('Imprint')
-
-    expect(imprintLinkNode).toHaveAttribute('href', 'https://gnosis-safe.io/imprint')
-    expect(imprintLinkNode).toHaveAttribute('target', '_blank')
-  })
-
-  it('Should redirect to Cookie Policy page in a new tab', () => {
-    render(<Footer />)
-
-    const cookiePolicyLinkNode = screen.getByText('Cookie Policy')
-
-    expect(cookiePolicyLinkNode).toHaveAttribute('href', 'https://gnosis-safe.io/cookie')
-    expect(cookiePolicyLinkNode).toHaveAttribute('target', '_blank')
   })
 
   it('Should show preference cookies banner form when clicks on Preferences Link', () => {
