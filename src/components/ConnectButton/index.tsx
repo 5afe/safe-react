@@ -92,7 +92,7 @@ export const onConnectButtonClick = async (): Promise<void> => {
 }
 
 const ConnectButton = (props: { 'data-testid': string }): ReactElement => (
-  <Button color="secondary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
+  <Button color="primary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
     Connect
   </Button>
 )

@@ -77,7 +77,7 @@ const configuration = (): NetworkSpecificConfiguration => {
 
   // lookup the config file based on the network specified in the NETWORK variable
   const configFile = networks[getNetworkName().toLowerCase()]
-  console.log('running', getNetworkName().toLowerCase())
+
   // defaults to 'production' as it's the only environment that is required for the network configs
   const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
 
