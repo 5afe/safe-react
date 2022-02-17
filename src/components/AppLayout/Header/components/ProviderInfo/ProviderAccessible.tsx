@@ -13,7 +13,7 @@ import { getNetworkLabel } from 'src/config'
 
 const useStyles = makeStyles({
   network: {
-    fontFamily: 'Averta, sans-serif',
+    fontFamily: 'Inter, sans-serif',
   },
   networkLabel: {
     '& div': {

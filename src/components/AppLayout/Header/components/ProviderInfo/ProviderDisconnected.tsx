@@ -1,5 +1,4 @@
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -8,7 +7,7 @@ import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const styles = () => ({
   network: {
-    fontFamily: 'Averta, sans-serif',
+    fontFamily: 'Inter, sans-serif',
   },
   account: {
     alignItems: 'start',

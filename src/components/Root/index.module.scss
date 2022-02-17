@@ -7,21 +7,21 @@ body {
 }
 
 @font-face {
-  font-family: "Averta";
+  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local("Averta-Regular"),
-    url(../../assets/fonts/Averta-normal.woff2) format("woff2");
+  src: local("InterRegular"),
+    url(../../assets/fonts/InterRegular.ttf) format("ttf");
 }
 
 @font-face {
-  font-family: "Averta";
+  font-family: "Inter";
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: local("Averta-Extrabold"),
-    url(../../assets/fonts/Averta-ExtraBold.woff2) format("woff2");
+  src: local("InterExtrabold"),
+    url(../../assets/fonts/InterExtraBold.ttf) format("ttf");
 }
 
 body {
@@ -30,7 +30,7 @@ body {
   background-color: $background;
   bottom: 0;
   color: $fontColor;
-  font-family: "Averta", monospace;
+  font-family: "Inter", monospace;
   font-size: $mediumFontSize;
   left: 0;
   margin: 0;
