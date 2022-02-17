@@ -120,7 +120,7 @@ export const getAddressFromDomain = (name: string): Promise<string> => {
 }
 
 export const reverseENSLookup = async (address: string): Promise<string> => {
-  if (!hasFeature(FEATURES.DOMAIN_LOOKUP)) {
+  if (!address || !hasFeature(FEATURES.DOMAIN_LOOKUP)) {
     return ''
   }
 

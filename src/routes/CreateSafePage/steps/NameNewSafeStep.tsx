@@ -42,14 +42,16 @@ function NameNewSafeStep(): ReactElement {
       const formValues = createNewSafeForm.getState().values
       const owners = formValues[FIELD_SAFE_OWNERS_LIST]
       const ownersWithENSName = await Promise.all(
-        owners.map(async ({ addressFieldName }) => {
-          const address = formValues[addressFieldName]
-          const ensName = await reverseENSLookup(address)
-          return {
-            address,
-            name: ensName,
-          }
-        }),
+        owners
+          .filter(({ addressFieldName }) => !!formValues[addressFieldName])
+          .map(async ({ addressFieldName }) => {
+            const address = formValues[addressFieldName]
+            const ensName = await reverseENSLookup(address)
+            return {
+              address,
+              name: ensName,
+            }
+          }),
       )
 
       const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {
