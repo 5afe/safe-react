@@ -5,9 +5,9 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
-import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
-import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
-import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
+import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS, COOKIE_ALERTS } from 'src/logic/cookies/model/cookie'
+import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
+import { cookieBannerState } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
@@ -93,30 +93,29 @@ const useStyles = makeStyles({
   },
 } as any)
 
-interface CookiesBannerFormProps {
-  alertMessage: boolean
-}
-
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
-  const dispatch = useRef(useDispatch())
+  const dispatch = useDispatch()
   const intercomLoaded = isIntercomLoaded()
 
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
-  const [localIntercom, setLocalIntercom] = useState(false)
+  const [localSupportAndUpdates, setLocalSupportAndUpdates] = useState(false)
   const { getAppUrl } = useSafeAppUrl()
   const beamerScriptRef = useRef<HTMLScriptElement>()
 
-  const showBanner = useSelector(cookieBannerOpen)
+  const { key, cookieBannerOpen } = useSelector(cookieBannerState)
   const newAppUrl = getAppUrl()
   const isSafeAppView = newAppUrl !== null
 
   useEffect(() => {
     if (showIntercom && !isSafeAppView) {
       loadIntercom()
+
+      // For use in non-webapps (Mobile and Desktop)
+      // https://www.getbeamer.com/help/how-to-install-beamer-using-our-api
       loadBeamer(beamerScriptRef)
     }
   }, [showIntercom, isSafeAppView])
@@ -131,24 +130,24 @@ const CookiesBanner = (): ReactElement => {
     async function fetchCookiesFromStorage() {
       const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
       if (!cookiesState) {
-        dispatch.current(openCookieBanner({ cookieBannerOpen: true }))
+        dispatch(openCookieBanner({ cookieBannerOpen: true }))
       } else {
-        const { acceptedIntercom, acceptedAnalytics, acceptedNecessary } = cookiesState
-        if (acceptedIntercom === undefined) {
+        const { acceptedSupportAndUpdates, acceptedAnalytics, acceptedNecessary } = cookiesState
+        if (acceptedSupportAndUpdates === undefined) {
           const newState = {
             acceptedNecessary,
             acceptedAnalytics,
-            acceptedIntercom: acceptedAnalytics,
+            acceptedSupportAndUpdates: acceptedAnalytics,
           }
           const cookieConfig: CookieAttributes = {
             expires: acceptedAnalytics ? 365 : 7,
           }
           await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
-          setLocalIntercom(newState.acceptedIntercom)
-          setShowIntercom(newState.acceptedIntercom)
+          setLocalSupportAndUpdates(newState.acceptedSupportAndUpdates)
+          setShowIntercom(newState.acceptedSupportAndUpdates)
         } else {
-          setLocalIntercom(acceptedIntercom)
-          setShowIntercom(acceptedIntercom)
+          setLocalSupportAndUpdates(acceptedSupportAndUpdates)
+          setShowIntercom(acceptedSupportAndUpdates)
         }
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
@@ -159,13 +158,13 @@ const CookiesBanner = (): ReactElement => {
       }
     }
     fetchCookiesFromStorage()
-  }, [showAnalytics, showIntercom])
+  }, [dispatch, showAnalytics, showIntercom])
 
   const acceptCookiesHandler = async () => {
     const newState = {
       acceptedNecessary: true,
       acceptedAnalytics: !isDesktop,
-      acceptedIntercom: true,
+      acceptedSupportAndUpdates: true,
     }
     const cookieConfig: CookieAttributes = {
       expires: 365,
@@ -173,42 +172,43 @@ const CookiesBanner = (): ReactElement => {
     await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
-    dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
+    dispatch(closeCookieBanner())
   }
 
   const closeCookiesBannerHandler = async () => {
     const newState = {
       acceptedNecessary: true,
       acceptedAnalytics: localAnalytics,
-      acceptedIntercom: localIntercom,
+      acceptedSupportAndUpdates: localSupportAndUpdates,
     }
     const cookieConfig: CookieAttributes = {
       expires: localAnalytics ? 365 : 7,
     }
     await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
     setShowAnalytics(localAnalytics)
-    setShowIntercom(localIntercom)
+    setShowIntercom(localSupportAndUpdates)
 
     if (!localAnalytics) {
       removeCookies()
     }
 
-    if (!localIntercom && isIntercomLoaded()) {
-      closeIntercom()
+    if (!localSupportAndUpdates) {
       closeBeamer(beamerScriptRef)
+      if (isIntercomLoaded()) {
+        closeIntercom()
+      }
     }
-    dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
+    dispatch(closeCookieBanner())
   }
 
-  const CookiesBannerForm = (props: CookiesBannerFormProps) => {
-    const { alertMessage } = props
+  const CookiesBannerForm = () => {
     return (
       <div data-testid="cookies-banner-form" className={classes.container}>
         <div className={classes.content}>
-          {alertMessage && (
+          {key && (
             <div className={classes.intercomAlert}>
               <img src={AlertRedIcon} />
-              You attempted to open the customer support chat. Please accept the customer support cookie.
+              {COOKIE_ALERTS[key]}
             </div>
           )}
           <p className={classes.text}>
@@ -234,11 +234,11 @@ const CookiesBanner = (): ReactElement => {
             </div>
             <div className={classes.formItem}>
               <FormControlLabel
-                control={<Checkbox checked={localIntercom} />}
-                label="Customer support"
-                name="Customer support"
-                onChange={() => setLocalIntercom((prev) => !prev)}
-                value={localIntercom}
+                control={<Checkbox checked={localSupportAndUpdates} />}
+                label="Community support & updates"
+                name="Community support & updates"
+                onChange={() => setLocalSupportAndUpdates((prev) => !prev)}
+                value={localSupportAndUpdates}
               />
             </div>
             <div className={classes.formItem}>
@@ -284,12 +284,17 @@ const CookiesBanner = (): ReactElement => {
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
-          onClick={() => dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
+          onClick={() =>
+            dispatch(
+              openCookieBanner({
+                cookieBannerOpen: true,
+                key: COOKIE_IDS.INTERCOM,
+              }),
+            )
+          }
         />
       )}
-      {!isDesktop && showBanner?.cookieBannerOpen && (
-        <CookiesBannerForm alertMessage={showBanner?.intercomAlertDisplayed} />
-      )}
+      {!isDesktop && cookieBannerOpen && <CookiesBannerForm />}
     </>
   )
 }

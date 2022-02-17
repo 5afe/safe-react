@@ -10,7 +10,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import ListIcon from 'src/components/List/ListIcon'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { loadFromCookie } from 'src/logic/cookies/utils'
-import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
+import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS } from 'src/logic/cookies/model/cookie'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -88,8 +88,13 @@ const Sidebar = ({
       dispatch(openCookieBanner({ cookieBannerOpen: true }))
       return
     }
-    if (!cookiesState.acceptedIntercom) {
-      dispatch(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))
+    if (!cookiesState.acceptedSupportAndUpdates) {
+      dispatch(
+        openCookieBanner({
+          cookieBannerOpen: true,
+          key: COOKIE_IDS.BEAMER,
+        }),
+      )
     }
   }
 
@@ -124,7 +129,7 @@ const Sidebar = ({
         <HelpList>
           <StyledListItem id="whats-new-button" button onClick={handleClick}>
             <ListIcon type="gift" />
-            <StyledListItemText>Whats new</StyledListItemText>
+            <StyledListItemText>What&apos;s new</StyledListItemText>
           </StyledListItem>
 
           <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
