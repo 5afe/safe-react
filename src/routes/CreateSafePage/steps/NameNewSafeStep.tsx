@@ -13,8 +13,8 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import {
   FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
-  FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNERS_LIST,
+  FIELD_SAFE_OWNER_ENS_LIST,
 } from '../fields/createSafeFields'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
@@ -42,14 +42,16 @@ function NameNewSafeStep(): ReactElement {
       const formValues = createNewSafeForm.getState().values
       const owners = formValues[FIELD_SAFE_OWNERS_LIST]
       const ownersWithENSName = await Promise.all(
-        owners.map(async ({ addressFieldName }) => {
-          const address = formValues[addressFieldName]
-          const ensName = await reverseENSLookup(address)
-          return {
-            address,
-            name: ensName,
-          }
-        }),
+        owners
+          .filter(({ addressFieldName }) => !!formValues[addressFieldName])
+          .map(async ({ addressFieldName }) => {
+            const address = formValues[addressFieldName]
+            const ensName = await reverseENSLookup(address)
+            return {
+              address,
+              name: ensName,
+            }
+          }),
       )
 
       const ownersWithENSNameRecord = ownersWithENSName.reduce<Record<string, string>>((acc, { address, name }) => {

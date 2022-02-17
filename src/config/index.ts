@@ -69,8 +69,7 @@ const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN: string): 
   return needsToken ? `${value}${TOKEN}` : value
 }
 
-export const getRpcServiceUrl = (): string => {
-  const { rpcUri } = getChainInfo()
+export const getRpcServiceUrl = (rpcUri = getChainInfo().rpcUri): string => {
   return formatRpcServiceUrl(rpcUri, INFURA_TOKEN)
 }
 
