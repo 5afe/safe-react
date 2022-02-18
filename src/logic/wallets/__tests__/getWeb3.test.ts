@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { isTxPendingError, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
+import { isTxPendingError, isSmartContractWallet, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 describe('src/logic/wallets/getWeb3', () => {
   describe('isTxPendingError', () => {
@@ -14,51 +14,44 @@ describe('src/logic/wallets/getWeb3', () => {
     })
   })
 
+  jest.mock('src/logic/wallets/getWeb3', () => ({
+    getWeb3ReadOnly: jest.fn(),
+  }))
+
   describe('isSmartContractWallet', () => {
+    const web3ReadOnly = getWeb3ReadOnly()
     const address = '0x66fb75feC6b40119e023564dF954c8794Cd876F0'
 
     it('checks if an address is a contract', async () => {
-      const web3Provider = {
-        eth: {
-          getCode: jest.fn(() => Promise.resolve('Solidity code')),
-        },
-      } as unknown as Web3
-      const result = await isSmartContractWallet(web3Provider, address)
-      expect(web3Provider.eth.getCode).toHaveBeenCalledWith(address)
+      web3ReadOnly.eth.getCode = jest.fn(() => Promise.resolve('Solidity code'))
+
+      const result = await isSmartContractWallet(address)
+      expect(web3ReadOnly.eth.getCode).toHaveBeenCalledWith(address)
       expect(result).toBe(true)
     })
 
     it('returns false for EoA addresses', async () => {
-      const web3Provider = {
-        eth: {
-          getCode: jest.fn(() => Promise.resolve('0x00000000000000000000')),
-        },
-      } as unknown as Web3
-      const result = await isSmartContractWallet(web3Provider, address)
-      expect(web3Provider.eth.getCode).toHaveBeenCalledWith(address)
+      web3ReadOnly.eth.getCode = jest.fn(() => Promise.resolve('0x00000000000000000000'))
+
+      const result = await isSmartContractWallet(address)
+      expect(web3ReadOnly.eth.getCode).toHaveBeenCalledWith(address)
       expect(result).toBe(false)
     })
 
     it('returns false for empty addresses', async () => {
-      const web3Provider = {
-        eth: {
-          getCode: jest.fn(() => Promise.resolve('Solidity code')),
-        },
-      } as unknown as Web3
+      web3ReadOnly.eth.getCode = jest.fn(() => Promise.resolve('Solidity code'))
+
       const emptyAddress = ''
-      const result = await isSmartContractWallet(web3Provider, emptyAddress)
-      expect(web3Provider.eth.getCode).not.toHaveBeenCalled()
+      const result = await isSmartContractWallet(emptyAddress)
+      expect(web3ReadOnly.eth.getCode).not.toHaveBeenCalled()
       expect(result).toBe(false)
     })
 
     it('returns false if contract code cannot be fetched', async () => {
-      const web3Provider = {
-        eth: {
-          getCode: jest.fn(() => Promise.reject('No code')),
-        },
-      } as unknown as Web3
-      const result = await isSmartContractWallet(web3Provider, address)
-      expect(web3Provider.eth.getCode).toHaveBeenCalledWith(address)
+      web3ReadOnly.eth.getCode = jest.fn(() => Promise.reject('No code'))
+
+      const result = await isSmartContractWallet(address)
+      expect(web3ReadOnly.eth.getCode).toHaveBeenCalledWith(address)
       expect(result).toBe(false)
     })
   })

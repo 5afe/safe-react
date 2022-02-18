@@ -15,6 +15,7 @@ const secondaryTextOrSvg = '#B2B5B2'
 const secondaryBackground = '#f0efee'
 const sm = '8px'
 const warningColor = '#ffc05f'
+const alertWarningColor = '#FBE5C5'
 const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
@@ -70,6 +71,7 @@ module.exports = {
   sm,
   smallFontSize: '12px',
   warning: warningColor,
+  alertWarning: alertWarningColor,
   xl,
   xs,
   xxl,
