@@ -91,6 +91,7 @@ export const TxModalWrapper = ({
   const confirmationsLen = Array.from(txConfirmations || []).length
   const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce)
   const doExecute = executionApproved && canTxExecute
+  const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
   const nativeCurrency = getNativeCurrency()
 
   const {
@@ -118,7 +119,6 @@ export const TxModalWrapper = ({
   })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
-  const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
 
   const onEditClose = (txParameters: TxParameters) => {
     const oldGasPrice = gasPriceFormatted
@@ -185,7 +185,7 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {showCheckbox && <ExecuteCheckbox onChange={setExecutionApproved} />}
+            {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
 
             {!isSpendingLimitTx && doExecute && (
               <TxEstimatedFeesDetail
