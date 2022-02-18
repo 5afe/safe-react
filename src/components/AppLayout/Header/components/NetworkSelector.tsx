@@ -17,7 +17,7 @@ import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
+import { NetworkInfo } from 'src/config/networks/network'
 
 const styles = {
   root: {
@@ -106,7 +106,8 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
               <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                 <List className={classes.network} component="div">
                   {networks
-                    .filter((network) => network.id !== ETHEREUM_NETWORK.ALFAJORES)
+                    // TODO Remove when alfajores is supported
+                    .filter((network) => network.id !== '44787')
                     .map((network) => (
                       <Fragment key={network.id}>
                         <StyledLink href={network.safeUrl}>
