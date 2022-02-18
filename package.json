@@ -33,7 +33,7 @@
     "prettier": "prettier './src/**/*.{js,jsx,ts,tsx}'",
     "start": "next dev",
     "start:docker": "docker-compose build && docker-compose up",
-    "test": "REACT_APP_ENV=test next test --env=jsdom",
+    "test": "REACT_APP_ENV=test jest -c ./jest.config.js",
     "test:coverage": "REACT_APP_ENV=test yarn test --coverage --watchAll=false",
     "test:ci": "REACT_APP_ENV=test yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand --outputFile=jest.results.json",
     "update-mocks": "./scripts/update-mocks.sh",
@@ -54,14 +54,6 @@
     "scripts/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
-    ]
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.{.test.*}",
-      "!src/**/test/**/*",
-      "!src/**/assets/**"
     ]
   },
   "productName": "Safe",

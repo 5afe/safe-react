@@ -1,10 +1,17 @@
 import crypto from 'crypto'
+import Web3 from 'web3'
 import '@testing-library/jest-dom/extend-expect'
 import * as sdkGatewayEndpoints from '@gnosis.pm/safe-react-gateway-sdk'
 import { mockGetSafeInfoResponse } from './logic/safe/utils/mocks/getSafeMock'
 import { mockGetChainsConfigResponse } from './logic/safe/utils/mocks/getChainsConfigMock'
 import { mockTokenCurrenciesBalancesResponse } from 'src/logic/safe/utils/mocks/mockTokenCurrenciesBalancesResponse'
 import { loadChains } from 'src/config/cache/chains'
+
+const window = global.window || {}
+window.web3 = {}
+window.web3.currentProvider = new Web3.providers.HttpProvider('http://localhost:8545')
+
+global.window = window
 
 function mockedGetRandomValues(buf) {
   if (!(buf instanceof Uint8Array)) {
