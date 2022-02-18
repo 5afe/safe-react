@@ -28,16 +28,12 @@ const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
-      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
-      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
-      txServiceUrl: 'https://safe-transaction.mainnet.gnosis.io/api/v1',
     },
   },
   network: {

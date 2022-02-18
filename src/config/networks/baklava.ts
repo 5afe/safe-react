@@ -10,7 +10,7 @@ import {
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
   txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
-  safeUrl: 'https://rinkeby.gnosis-safe.io/app',
+  safeUrl: 'https://baklava.safe.celo.org',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -34,16 +34,12 @@ const baklava: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
-      safeUrl: 'https://safe-team.dev.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
-      safeUrl: 'https://safe-team-baklava.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
-      txServiceUrl: 'https://safe-transaction.baklava.gnosis.io/api/v1',
     },
   },
   network: {
