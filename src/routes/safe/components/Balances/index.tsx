@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'src/router'
 
 import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'

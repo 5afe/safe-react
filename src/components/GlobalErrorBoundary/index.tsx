@@ -66,7 +66,7 @@ export const handleChunkError = (error: Error): boolean => {
 
   const now = new Date().getTime()
 
-  const hasJustReloaded = lastReload + MIN_RELOAD_TIME > now
+  const hasJustReloaded = (lastReload || -Infinity) + MIN_RELOAD_TIME > now
 
   if (hasJustReloaded) return false
 

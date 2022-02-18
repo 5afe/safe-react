@@ -42,7 +42,7 @@ const ExecuteCheckbox = ({ onChange }: ExecuteCheckboxProps): ReactElement => {
         title="If you want to sign the transaction now but manually execute it later, click on the checkbox."
       >
         <span>
-          <Img alt="Info Tooltip" height={16} src={InfoIcon} />
+          <Img alt="Info Tooltip" height={16} src={InfoIcon.src} />
         </span>
       </Tooltip>
     </StyledRow>

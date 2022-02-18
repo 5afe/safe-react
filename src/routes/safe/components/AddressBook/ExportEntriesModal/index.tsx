@@ -100,7 +100,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
       <Modal.Body withoutPadding>
         <ImageContainer>
           <BodyImage>
-            <Img alt="Export" height={92} src={error ? ErrorSvg : loading ? LoadingSvg : SuccessSvg} />
+            <Img alt="Export" height={92} src={error ? ErrorSvg.src : loading ? LoadingSvg.src : SuccessSvg.src} />
           </BodyImage>
         </ImageContainer>
         <InfoContainer>

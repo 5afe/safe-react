@@ -22,7 +22,7 @@ export const HistoryTransactions = (): ReactElement => {
   if (count === 0 || !transactions.length) {
     return (
       <NoTransactions>
-        <Img alt="No Transactions yet" src={NoTransactionsImage} />
+        <Img alt="No Transactions yet" src={NoTransactionsImage.src} />
         <Title size="xs">History transactions will appear here </Title>
       </NoTransactions>
     )

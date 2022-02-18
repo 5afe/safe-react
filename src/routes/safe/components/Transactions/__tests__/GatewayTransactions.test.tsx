@@ -1,13 +1,14 @@
 import { screen, fireEvent } from '@testing-library/react'
-import Router, { match } from 'react-router-dom'
+import { match } from 'react-router'
 
+import Router from 'src/router'
 import { render } from 'src/utils/test-utils'
 import GatewayTransactions from '../TxList'
 import { SAFE_ROUTES, history } from 'src/routes/routes'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('src/router', () => ({
+  ...jest.requireActual('src/router'),
   useRouteMatch: jest.fn(),
 }))
 

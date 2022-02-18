@@ -1,0 +1,14 @@
+/* Onboard.js custom styles */
+
+.bn-onboard-custom.bn-onboard-modal {
+  font-family: 'Averta';
+  z-index: 2001;
+}
+
+.torusIframe {
+  z-index: 9999;
+}
+
+.ReactModal__Overlay {
+  z-index: 2002 !important;
+}

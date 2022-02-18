@@ -18,59 +18,59 @@ import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
 const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } } = {
   [WALLET_PROVIDER.METAMASK]: {
-    src: metamaskIcon,
+    src: metamaskIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.WALLETCONNECT]: {
-    src: walletConnectIcon,
+    src: walletConnectIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.TREZOR]: {
-    src: trezorIcon,
+    src: trezorIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.LEDGER]: {
-    src: ledgerIcon,
+    src: ledgerIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.TRUST]: {
-    src: trustIcon,
+    src: trustIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.LATTICE]: {
-    src: latticeIcon,
+    src: latticeIcon.src,
     height: 41,
   },
   [WALLET_PROVIDER.KEYSTONE]: {
-    src: keystoneIcon,
+    src: keystoneIcon.src,
     height: 41,
   },
   [WALLET_PROVIDER.FORTMATIC]: {
-    src: fortmaticIcon,
+    src: fortmaticIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.PORTIS]: {
-    src: portisIcon,
+    src: portisIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.AUTHEREUM]: {
-    src: authereumIcon,
+    src: authereumIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.TORUS]: {
-    src: torusIcon,
+    src: torusIcon.src,
     height: 30,
   },
   [WALLET_PROVIDER.OPERA]: {
-    src: operaIcon,
+    src: operaIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.COINBASE_WALLET]: {
-    src: coinbaseIcon,
+    src: coinbaseIcon.src,
     height: 25,
   },
   [WALLET_PROVIDER.SQUARELINK]: {
-    src: squarelinkIcon,
+    src: squarelinkIcon.src,
     height: 25,
   },
 }

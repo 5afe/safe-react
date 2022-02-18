@@ -15,7 +15,6 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
 import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
-
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
@@ -97,7 +96,7 @@ const ChooseTxType = ({
             variant="contained"
             testId="modal-send-funds-btn"
           >
-            <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
+            <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token.src} />
             Send funds
           </Button>
           {erc721Enabled && (
@@ -113,7 +112,7 @@ const ChooseTxType = ({
               <Img
                 alt="Send collectible"
                 className={classNames(classes.leftIcon, classes.iconSmall)}
-                src={Collectible}
+                src={Collectible.src}
               />
               Send collectible
             </Button>
@@ -131,7 +130,7 @@ const ChooseTxType = ({
               <Img
                 alt="Contract Interaction"
                 className={classNames(classes.leftIcon, classes.iconSmall)}
-                src={ContractInteractionIcon}
+                src={ContractInteractionIcon.src}
               />
               Contract interaction
             </Button>

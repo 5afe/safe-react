@@ -44,7 +44,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
     id: Math.random().toString(),
     url,
     name: 'unknown',
-    iconUrl: appsIconSvg,
+    iconUrl: appsIconSvg.src,
     description: '',
     fetchStatus: FETCH_STATUS.LOADING,
     chainIds: [],

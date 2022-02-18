@@ -16,7 +16,7 @@ export type TxTypeProps = {
 }
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
-  const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
+  const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon.src, text: 'Contract interaction' })
   const safeAddress = extractSafeAddress()
   const toAddress = getTxTo(tx)
   const knownAddressBookAddress = useKnownAddress(toAddress)
@@ -31,24 +31,24 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         const isSendTx = tx.txInfo.direction === 'OUTGOING'
 
         setType({
-          icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
+          icon: isSendTx ? OutgoingTxIcon.src : IncomingTxIcon.src,
           text: isSendTx ? (isTxQueued(tx.txStatus) ? 'Send' : 'Sent') : 'Received',
         })
         break
       }
       case 'SettingsChange': {
-        setType({ icon: SettingsTxIcon, text: tx.txInfo.dataDecoded.method })
+        setType({ icon: SettingsTxIcon.src, text: tx.txInfo.dataDecoded.method })
         break
       }
       case 'Custom': {
         // TODO: is this the only way to identify a 'module' transaction?
         if (!tx.executionInfo) {
-          setType({ icon: SettingsTxIcon, text: 'Module' })
+          setType({ icon: SettingsTxIcon.src, text: 'Module' })
           break
         }
 
         if (tx.txInfo.isCancellation) {
-          setType({ icon: CircleCrossRed, text: 'On-chain rejection' })
+          setType({ icon: CircleCrossRed.src, text: 'On-chain rejection' })
           break
         }
 
@@ -60,8 +60,8 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         setType({
           icon: knownAddressBookAddress.isInAddressBook
             ? CustomTxIcon
-            : knownAddressBookAddress.logoUri || toAddress?.logoUri || CustomTxIcon,
-          fallbackIcon: knownAddressBookAddress.isInAddressBook ? undefined : CustomTxIcon,
+            : knownAddressBookAddress.logoUri || toAddress?.logoUri || CustomTxIcon.src,
+          fallbackIcon: knownAddressBookAddress.isInAddressBook ? undefined : CustomTxIcon.src,
           text: knownAddressBookAddress.name || toAddress?.name || 'Contract interaction',
         })
         break

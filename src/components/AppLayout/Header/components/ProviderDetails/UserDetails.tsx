@@ -152,7 +152,7 @@ export const UserDetails = ({
           Wallet
         </Paragraph>
         <Spacer />
-        <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
+        <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon.src} />
         <Paragraph align="right" className={`${classes.labels} ${classes.capitalize}`} noMargin weight="bolder">
           {provider}
         </Paragraph>

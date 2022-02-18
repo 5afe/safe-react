@@ -57,7 +57,7 @@ export const TransactionFailText = ({
   return (
     <Row align="center">
       <Paragraph color="error" className={classes.executionWarningRow}>
-        <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
+        <Img alt="Info Tooltip" height={16} src={InfoIcon.src} className={classes.warningIcon} />
         {error}
       </Paragraph>
     </Row>

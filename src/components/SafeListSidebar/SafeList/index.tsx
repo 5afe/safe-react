@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Fragment, ReactElement } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
-import { Link } from 'react-router-dom'
+import { Link } from 'src/router'
 import uniqBy from 'lodash/uniqBy'
 
 import Collapse from 'src/components/Collapse'

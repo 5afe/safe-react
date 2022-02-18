@@ -128,7 +128,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
                 <ListItemText primary={currencyName} />
                 {currencyName === selectedCurrency ? (
                   <ListItemIcon className={classes.iconRight}>
-                    <img alt="checked" src={CheckIcon} />
+                    <img alt="checked" src={CheckIcon.src} />
                   </ListItemIcon>
                 ) : null}
               </MenuItem>

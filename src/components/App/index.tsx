@@ -79,10 +79,10 @@ const App: React.FC = ({ children }) => {
           variantInfo: classes.info,
         }}
         iconVariant={{
-          error: <Img alt="Error" src={ErrorIcon} />,
-          info: <Img alt="Info" src={InfoIcon} />,
-          success: <Img alt="Success" src={CheckIcon} />,
-          warning: <Img alt="Warning" src={AlertIcon} />,
+          error: <Img alt="Error" src={ErrorIcon.src} />,
+          info: <Img alt="Info" src={InfoIcon.src} />,
+          success: <Img alt="Success" src={CheckIcon.src} />,
+          warning: <Img alt="Warning" src={AlertIcon.src} />,
         }}
         maxSnack={5}
       >

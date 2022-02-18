@@ -1,5 +1,5 @@
 import React from 'react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'src/router'
 import { Provider } from 'react-redux'
 import { addDecorator } from '@storybook/react'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'

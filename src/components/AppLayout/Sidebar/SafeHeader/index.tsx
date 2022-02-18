@@ -9,7 +9,7 @@ import {
   CopyToClipboardBtn,
   ExplorerButton,
 } from '@gnosis.pm/safe-react-components'
-import { useRouteMatch } from 'react-router-dom'
+import { useRouteMatch } from 'src/router'
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'

@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'src/router'
 import { useCallback } from 'react'
 
 type AppUrlReturnType = {

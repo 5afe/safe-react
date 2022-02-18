@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind'
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'src/router'
 
 import styles from './index.module.scss'
 

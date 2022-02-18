@@ -25,7 +25,7 @@ export const QueueTransactions = (): ReactElement => {
   if (count === 0 || !transactions) {
     return (
       <NoTransactions>
-        <Img alt="No Transactions yet" src={NoTransactionsImage} />
+        <Img alt="No Transactions yet" src={NoTransactionsImage.src} />
         <Title size="xs">Queue transactions will appear here </Title>
       </NoTransactions>
     )

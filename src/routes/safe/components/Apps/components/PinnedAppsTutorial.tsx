@@ -25,7 +25,7 @@ const StyledBookmarkIcon = styled(BookmarkBorder)`
 
 const PinnedAppsTutorial = (): React.ReactElement => (
   <NoAppsFoundTextContainer>
-    <Img alt="Info" src={InfoIcon} />
+    <Img alt="Info" src={InfoIcon.src} />
     <Text size="xl">
       Simply hover over an app and click on the
       <StyledBookmarkIcon />

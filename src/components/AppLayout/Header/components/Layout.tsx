@@ -3,7 +3,7 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import { Link } from 'react-router-dom'
+import { Link } from 'src/router'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
@@ -100,7 +100,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link to={WELCOME_ROUTE}>
-          <Img alt="Gnosis Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
+          <Img alt="Gnosis Safe" height={36} src={SafeLogo.src} testId="heading-gnosis-logo" id="safe-logo" />
         </Link>
       </Col>
 

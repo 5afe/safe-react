@@ -1,7 +1,7 @@
 import Badge from '@material-ui/core/Badge'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'src/router'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 
 import ListMui from '@material-ui/core/List'

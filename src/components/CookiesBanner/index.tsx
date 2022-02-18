@@ -203,7 +203,7 @@ const CookiesBanner = (): ReactElement => {
         <div className={classes.content}>
           {alertMessage && (
             <div className={classes.intercomAlert}>
-              <img src={AlertRedIcon} />
+              <img src={AlertRedIcon.src} />
               You attempted to open the customer support chat. Please accept the customer support cookie.
             </div>
           )}
@@ -279,7 +279,7 @@ const CookiesBanner = (): ReactElement => {
       {!isDesktop && !showIntercom && !isSafeAppView && (
         <img
           className={classes.intercomImage}
-          src={IntercomIcon}
+          src={IntercomIcon.src}
           onClick={() => dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
         />
       )}

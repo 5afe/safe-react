@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'src/router'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'

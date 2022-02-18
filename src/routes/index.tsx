@@ -1,7 +1,7 @@
 import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'src/router'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'

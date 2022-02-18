@@ -141,7 +141,7 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
                       <ListItemText primary={name} />
                       <ListItemIcon className={classes.iconRight}>
                         {signatureHash === (selectedMethod as Record<string, string>).signatureHash ? (
-                          <img alt="checked" src={CheckIcon} />
+                          <img alt="checked" src={CheckIcon.src} />
                         ) : (
                           <span />
                         )}

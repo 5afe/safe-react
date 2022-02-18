@@ -2,7 +2,7 @@ import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/sa
 import { makeStyles } from '@material-ui/core/styles'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'src/router'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { styles } from './style'

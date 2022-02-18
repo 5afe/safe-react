@@ -1,6 +1,6 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import { useState, ReactElement, useCallback, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'src/router'
 import styled from 'styled-components'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'

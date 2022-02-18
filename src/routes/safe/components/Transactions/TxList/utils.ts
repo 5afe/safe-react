@@ -9,7 +9,7 @@ import {
   Erc721Transfer,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
-import { matchPath } from 'react-router-dom'
+import { matchPath } from 'src/router'
 import { getNativeCurrency } from 'src/config'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 

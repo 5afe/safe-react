@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { MuiThemeProvider, Theme as MuiTheme } from '@material-ui/core/styles'
-import { Router } from 'react-router'
+import { Router } from 'src/router'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { Store } from 'redux'

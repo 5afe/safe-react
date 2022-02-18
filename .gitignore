@@ -17,3 +17,6 @@ tsconfig.tsbuildinfo
 public/**/*.js
 jest.results.json
 *.#*
+# next.js
+.next/
+out

@@ -123,7 +123,7 @@ export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
             </Button>
           </StyledCard>
 
-          <StyledImg src={Phone} alt="Phone" />
+          <StyledImg src={Phone.src} alt="Phone" />
           <StyledButton size="md" variant="outlined" color="primary" onClick={onClose}>
             <StyledCloseIcon size="md" type="cross" />
           </StyledButton>

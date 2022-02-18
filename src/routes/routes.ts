@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history'
-import { generatePath, matchPath } from 'react-router-dom'
+import { generatePath, matchPath } from 'src/router'
 
 import { getChains } from 'src/config/cache/chains'
 import { ChainId, ShortName } from 'src/config/chain.d'

@@ -1,6 +1,6 @@
 import { CopyToClipboardBtn } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
-import { generatePath } from 'react-router-dom'
+import { generatePath } from 'src/router'
 
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { PUBLIC_URL } from 'src/utils/constants'

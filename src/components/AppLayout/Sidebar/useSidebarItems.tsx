@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { useRouteMatch } from 'react-router-dom'
+import { useRouteMatch } from 'src/router'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { getShortName } from 'src/config'

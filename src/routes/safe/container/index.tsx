@@ -1,7 +1,7 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
 import { useState, lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'src/router'
 
 import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'

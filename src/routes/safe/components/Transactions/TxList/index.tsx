@@ -1,7 +1,7 @@
 import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { ReactElement, useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'src/router'
 
 import Col from 'src/components/layout/Col'
 import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'

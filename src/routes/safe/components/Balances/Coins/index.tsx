@@ -63,7 +63,7 @@ const CurrencyTooltip = (props: CurrencyTooltipProps): React.ReactElement | null
     return (
       <Tooltip placement="top" title="Value may be zero due to missing token price information">
         <span>
-          <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
+          <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon.src} />
         </span>
       </Tooltip>
     )

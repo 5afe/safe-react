@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'src/router'
 import { Title } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import Button from 'src/components/layout/Button'

@@ -26,7 +26,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
-import { generatePath } from 'react-router-dom'
+import { generatePath } from 'src/router'
 import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
 import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
 import { removePendingTransaction, addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'

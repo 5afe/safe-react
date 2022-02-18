@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link } from 'src/router'
 import Bookmark from '@material-ui/icons/Bookmark'
 import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
@@ -93,7 +93,7 @@ const StyledLink = styled(Link)`
 
 const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
   error.currentTarget.onerror = null
-  error.currentTarget.src = appsIconSvg
+  error.currentTarget.src = appsIconSvg.src
 }
 
 const isAppLoading = (app: SafeApp) => FETCH_STATUS.LOADING === app.fetchStatus
@@ -173,7 +173,7 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: 
 const AddCustomAppCard = ({ onClick }: { onClick: () => void }): React.ReactElement => (
   <AppContainer layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClick}>
     <StyledAppCard>
-      <IconImg alt="PlayStation gamepad symbols" src={AddAppIcon} onError={setAppImageFallback} size="lg" />
+      <IconImg alt="PlayStation gamepad symbols" src={AddAppIcon.src} onError={setAppImageFallback} size="lg" />
       <Button size="md" color="primary" variant="contained" onClick={onClick}>
         Add custom app
       </Button>

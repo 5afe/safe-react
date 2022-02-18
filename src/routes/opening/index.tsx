@@ -87,14 +87,14 @@ export const SafeDeployment = ({
 
   const getImage = () => {
     if (error) {
-      return VaultErrorSvg
+      return VaultErrorSvg.src
     }
 
     if (stepIndex <= 4) {
       return VaultLoading
     }
 
-    return SuccessSvg
+    return SuccessSvg.src
   }
 
   useEffect(() => {

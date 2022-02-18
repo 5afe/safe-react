@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import * as Sentry from '@sentry/react'
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect, useState } from 'react'
@@ -11,14 +12,14 @@ import { history } from 'src/routes/routes'
 import theme from 'src/theme/mui'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import Providers from '../Providers'
-import './index.module.scss'
-import './OnboardCustom.module.scss'
-import './KeystoneCustom.module.scss'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
 import { setChainId } from 'src/logic/config/utils'
 import { _getChainId } from 'src/config'
+import { disableMMAutoRefreshWarning } from 'src/utils/mm_warnings'
+
+disableMMAutoRefreshWarning()
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -26,7 +27,7 @@ const removePreloader = () => {
   document.getElementById('safe-preloader-animation')?.remove()
 }
 
-const RootConsumer = (): React.ReactElement | null => {
+const RootConsumer = ({ children }: { children: ReactNode }): React.ReactElement | null => {
   const [hasChains, setHasChains] = useState<boolean>(false)
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -66,18 +67,19 @@ const RootConsumer = (): React.ReactElement | null => {
           <Loader size="md" />
         </LoadingContainer>,
       )}
+      {children}
     </App>
   )
 }
 
 // Chains loader requires error boundary, which requires Providers
 // and Legacy redirection should be outside of Providers
-const Root = (): React.ReactElement => (
+const Root = ({ children }: { children: ReactNode }): React.ReactElement => (
   <>
     <LegacyRouteRedirection history={history} />
     <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
       <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
-        <RootConsumer />
+        <RootConsumer>{children}</RootConsumer>
       </Sentry.ErrorBoundary>
     </Providers>
   </>

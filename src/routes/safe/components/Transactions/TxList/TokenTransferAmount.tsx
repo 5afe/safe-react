@@ -34,7 +34,7 @@ export const TokenTransferAmount = ({ assetInfo }: TokenTransferAmountProps): Re
         height={26}
         onError={(error) => {
           error.currentTarget.onerror = null
-          error.currentTarget.src = assetInfo.tokenType === TokenType.ERC721 ? NFTIcon : TokenPlaceholder
+          error.currentTarget.src = assetInfo.tokenType === TokenType.ERC721 ? NFTIcon.src : TokenPlaceholder.src
         }}
         src={assetInfo.logoUri}
       />

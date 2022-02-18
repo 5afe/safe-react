@@ -1,5 +1,5 @@
 import { ReactElement, useRef, Fragment, useCallback } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'src/router'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'

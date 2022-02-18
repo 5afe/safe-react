@@ -31,7 +31,7 @@ const StepsLine = styled.div`
 export const NewLimitSteps = (): ReactElement => (
   <StepWrapper>
     <Step>
-      <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
+      <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary.src} />
 
       <Text size="lg" color="placeHolder" strong center>
         Select Beneficiary
@@ -49,7 +49,7 @@ export const NewLimitSteps = (): ReactElement => (
     <StepsLine />
 
     <Step>
-      <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount} />
+      <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount.src} />
 
       <Text size="lg" color="placeHolder" strong center>
         Select asset and amount
@@ -63,7 +63,7 @@ export const NewLimitSteps = (): ReactElement => (
     <StepsLine />
 
     <Step>
-      <Img alt="Select time" title="Time" height={96} src={Time} />
+      <Img alt="Select time" title="Time" height={96} src={Time.src} />
 
       <Text size="lg" color="placeHolder" strong center>
         Select time

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { matchPath, useLocation } from 'react-router-dom'
+import { matchPath, useLocation } from 'src/router'
 
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { isDeeplinkedTx } from 'src/routes/safe/components/Transactions/TxList/utils'

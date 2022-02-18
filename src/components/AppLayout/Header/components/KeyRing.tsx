@@ -86,7 +86,7 @@ export const KeyRing = ({
             alt="Status connection"
             className={isWarning ? classes.warning : undefined}
             height={keySize}
-            src={img}
+            src={img.src}
             width={isWarning ? keySize + 2 : keySize}
           />
         </Block>
