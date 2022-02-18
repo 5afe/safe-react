@@ -60,10 +60,10 @@ type QueueTransactionProps = {
 }
 
 const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
-  const [nrChildrenExpanded, setHasChildrenExpanded] = useState(0)
+  const [nrChildrenExpanded, setNrChildrenExpanded] = useState(0)
 
-  const handleClickExpand = (expand: number) => {
-    setHasChildrenExpanded((val) => val + expand)
+  const handleChildExpand = (expand: number) => {
+    setNrChildrenExpanded((val) => val + expand)
   }
 
   if (transactions.length === 1) {
@@ -78,7 +78,7 @@ const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): React
           {transactions.map((transaction, index) => (
             <Fragment key={`${nonce}-${transaction.id}`}>
               <TreeView firstElement={!index} />
-              <TxQueueRow isGrouped transaction={transaction} handleExpand={handleClickExpand} />
+              <TxQueueRow isGrouped transaction={transaction} onChildExpand={handleChildExpand} />
             </Fragment>
           ))}
         </GroupedTransactions>

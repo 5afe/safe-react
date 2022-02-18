@@ -89,6 +89,10 @@ export const StyledTransactions = styled.div`
     border: 2px solid ${grey400};
     border-radius: 8px;
 
+    &:first-child {
+      border: 2px solid ${grey400};
+    }
+
     & .MuiAccordionSummary-root.Mui-expanded,
     & .MuiAccordionSummary-root:hover {
       background-color: ${primary200};
@@ -267,10 +271,6 @@ export const GroupedTransactions = styled(StyledTransaction)`
     border: 0;
     grid-column-end: span 6;
     grid-column-start: 2;
-
-    &:first-child {
-      border: 0;
-    }
 
     &.Mui-expanded {
       justify-self: center;

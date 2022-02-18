@@ -20,7 +20,7 @@ const xs = '4px'
 const xxl = '40px'
 
 module.exports = {
-  background: '#E5E5E5',
+  background: '#F6F7F8',
   black300: '#B2BBC0',
   black400: '#566976',
   black600: '#111B22',
