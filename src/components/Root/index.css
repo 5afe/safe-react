@@ -5,21 +5,19 @@ body {
 }
 
 @font-face {
-  font-family: "Averta";
+  font-family: 'Averta';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local("Averta-Regular"),
-    url(../../assets/fonts/Averta-normal.woff2) format("woff2");
+  src: local('Averta-Regular'), url(../../assets/fonts/Averta-normal.woff2) format('woff2');
 }
 
 @font-face {
-  font-family: "Averta";
+  font-family: 'Averta';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: local("Averta-Extrabold"),
-    url(../../assets/fonts/Averta-ExtraBold.woff2) format("woff2");
+  src: local('Averta-Extrabold'), url(../../assets/fonts/Averta-ExtraBold.woff2) format('woff2');
 }
 
 body {
@@ -28,7 +26,7 @@ body {
   background-color: $background;
   bottom: 0;
   color: $fontColor;
-  font-family: "Averta", monospace;
+  font-family: 'Averta', monospace;
   font-size: $mediumFontSize;
   left: 0;
   margin: 0;
@@ -44,16 +42,16 @@ body > div:first-child {
   min-height: 100%;
 }
 
-html[class="darkMode"],
-html[class="darkMode"] iframe,
-html[class="darkMode"] div[style*="background-image"],
-html[class="darkMode"] svg[color],
-html[class="darkMode"] img:not([id="safe-logo"]),
-html[class="darkMode"] [class*="networkLabel"] {
+html[class='darkMode'],
+html[class='darkMode'] iframe,
+html[class='darkMode'] div[style*='background-image'],
+html[class='darkMode'] svg[color],
+html[class='darkMode'] img:not([id='safe-logo']),
+html[class='darkMode'] [class*='networkLabel'] {
   filter: invert(0.9) hue-rotate(180deg);
 }
 
-html[class="darkMode"] [class*="networkLabel"] {
+html[class='darkMode'] [class*='networkLabel'] {
   outline: 1px solid #333;
 }
 

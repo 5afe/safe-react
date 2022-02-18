@@ -27,33 +27,38 @@ const Root = dynamic(
   },
   {
     ssr: false,
-    loading: () => <img className="safe-preloader-animation" src={`${PUBLIC_URL}/resources/safe.png`} />
-  }
+    loading: () => <img className="safe-preloader-animation" src={`${PUBLIC_URL}/resources/safe.png`} />,
+  },
 )
 
 function SafeReactApp({ Component, pageProps }: AppProps) {
-  return <>
-    <Head>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+  return (
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Gnosis Safe</title>
+        <title>Gnosis Safe</title>
 
-      <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="shortcut icon" href="favicon.ico" />
 
-      <base href={`${PUBLIC_URL}/`} />
+        <base href={`${PUBLIC_URL}/`} />
 
-      <meta property="og:title" content="Gnosis Safe" />
-      <meta property="og:description" content="Gnosis Safe is the most trusted platform to manage digital assets on Ethereum" />
-      <meta property="og:image" content={`${PUBLIC_URL}/resources/og-image.png`} />
-      <meta name="twitter:card" content="summxay_large_image" />
-      <meta name="twitter:image" content={`${PUBLIC_URL}/resources/og-image.png`} />
-    </Head>
+        <meta property="og:title" content="Gnosis Safe" />
+        <meta
+          property="og:description"
+          content="Gnosis Safe is the most trusted platform to manage digital assets on Ethereum"
+        />
+        <meta property="og:image" content={`${PUBLIC_URL}/resources/og-image.png`} />
+        <meta name="twitter:card" content="summxay_large_image" />
+        <meta name="twitter:image" content={`${PUBLIC_URL}/resources/og-image.png`} />
+      </Head>
 
-    <Root>
-      <Component {...pageProps} />
-    </Root>
-  </>
+      <Root>
+        <Component {...pageProps} />
+      </Root>
+    </>
+  )
 }
 
 export default SafeReactApp

@@ -6,6 +6,7 @@ module.exports = {
     'prettier', // Add prettier rules to eslint
     'plugin:prettier/recommended', // Plugin to use prettier rules with eslint
     'plugin:react/jsx-runtime', // Add runtime rules for React 17
+    'plugin:@next/next/recommended'
   ],
   plugins: ['react-hooks'],
   parserOptions: {
@@ -25,6 +26,8 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+    '@next/next/no-img-element': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   settings: {
     react: {

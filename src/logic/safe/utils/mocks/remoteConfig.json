@@ -51,9 +51,7 @@
           "gweiFactor": "100000000.000000000"
         }
       ],
-      "disabledWallets": [
-        "lattice"
-      ],
+      "disabledWallets": ["lattice"],
       "features": [
         "CONTRACT_INTERACTION",
         "DOMAIN_LOOKUP",
@@ -119,13 +117,7 @@
         "trust",
         "walletLink"
       ],
-      "features": [
-        "CONTRACT_INTERACTION",
-        "EIP1559",
-        "ERC721",
-        "SAFE_APPS",
-        "SAFE_TX_GAS_OPTIONAL"
-      ]
+      "features": ["CONTRACT_INTERACTION", "EIP1559", "ERC721", "SAFE_APPS", "SAFE_TX_GAS_OPTIONAL"]
     },
     {
       "transactionService": "https://safe-transaction.rinkeby.staging.gnosisdev.com",
@@ -170,10 +162,7 @@
           "gweiFactor": "1000000000.000000000"
         }
       ],
-      "disabledWallets": [
-        "fortmatic",
-        "lattice"
-      ],
+      "disabledWallets": ["fortmatic", "lattice"],
       "features": [
         "CONTRACT_INTERACTION",
         "DOMAIN_LOOKUP",

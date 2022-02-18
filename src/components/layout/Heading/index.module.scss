@@ -1,8 +1,8 @@
-@import "src/theme/variables.scss";
+@import 'src/theme/variables.scss';
 
 .heading {
   font-weight: normal;
-  line-height: normal;  
+  line-height: normal;
   margin: 0;
 }
 
@@ -47,15 +47,15 @@
 }
 
 .marginSm {
-    margin: 0 0 $sm 0;
+  margin: 0 0 $sm 0;
 }
 
 .marginMd {
-    margin: 0 0 $md 0;
+  margin: 0 0 $md 0;
 }
 
 .marginLg {
-    margin: 0 0 $lg 0;
+  margin: 0 0 $lg 0;
 }
 
 .marginXl {
