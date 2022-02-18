@@ -17,7 +17,7 @@ import { screenSm, sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { NetworkInfo } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK, NetworkInfo } from 'src/config/networks/network'
 
 const styles = {
   root: {
@@ -105,17 +105,19 @@ const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorP
             <>
               <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                 <List className={classes.network} component="div">
-                  {networks.map((network) => (
-                    <Fragment key={network.id}>
-                      <StyledLink href={network.safeUrl}>
-                        <NetworkLabel networkInfo={network} />
-                        {sameString(networkName, network.label?.toLowerCase()) && (
-                          <Icon type="check" size="md" color="primary" />
-                        )}
-                      </StyledLink>
-                      <StyledDivider />
-                    </Fragment>
-                  ))}
+                  {networks
+                    .filter((network) => network.id !== ETHEREUM_NETWORK.ALFAJORES)
+                    .map((network) => (
+                      <Fragment key={network.id}>
+                        <StyledLink href={network.safeUrl}>
+                          <NetworkLabel networkInfo={network} />
+                          {sameString(networkName, network.label?.toLowerCase()) && (
+                            <Icon type="check" size="md" color="primary" />
+                          )}
+                        </StyledLink>
+                        <StyledDivider />
+                      </Fragment>
+                    ))}
                 </List>
               </ClickAwayListener>
             </>
