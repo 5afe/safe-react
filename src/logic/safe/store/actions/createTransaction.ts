@@ -92,7 +92,7 @@ export class TxSender {
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization, txHash } = this
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization } = this
 
     // Propose the tx to the backend
     // 1) If signing
@@ -108,8 +108,8 @@ export class TxSender {
     }
 
     const id = txDetails?.txId || this.txId
-    if (isFinalization && id && txHash) {
-      dispatch(addPendingTransaction({ id, txHash }))
+    if (isFinalization && id && this.txHash) {
+      dispatch(addPendingTransaction({ id, txHash: this.txHash }))
     }
 
     notifications.closePending()
