@@ -88,7 +88,7 @@ export class TxSender {
   txId: string
 
   // On transaction completion (either confirming or executing)
-  async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
+  async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler, txHash?: string): Promise<void> {
     const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization } = this
 
     // Propose the tx to the backend
@@ -97,17 +97,16 @@ export class TxSender {
     let txDetails: TransactionDetails | null = null
     if (!isFinalization || !this.txId) {
       try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+        txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
       } catch (err) {
         logError(Errors._816, err.message)
         return
       }
     }
 
-    // If threshold reached except for last sig, and owner chooses to execute the created tx immediately
-    // we retrieve txId of newly created tx from the proposal response
-    if (isFinalization && txDetails) {
-      dispatch(addPendingTransaction({ id: txDetails.txId }))
+    const id = txDetails?.txId || this.txId
+    if (isFinalization && id && txHash) {
+      dispatch(addPendingTransaction({ id, txHash }))
     }
 
     notifications.closePending()
@@ -167,26 +166,21 @@ export class TxSender {
     )
   }
 
-  async sendTx(): Promise<string> {
-    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch, txId } = this
+  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<string> {
+    const { txArgs, isFinalization, from, safeTxHash, txProps } = this
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
-    const promiEvent = tx.send(sendParams)
 
-    // When signing on-chain don't mark as pending as it is never removed
-    if (isFinalization) {
-      // Finalising existing transaction (txId exists)
-      if (txId) {
-        dispatch(addPendingTransaction({ id: txId }))
-      }
-      aboutToExecuteTx.setNonce(txArgs.nonce)
-    }
-
-    return new Promise((resolve, reject) => {
-      promiEvent.once('transactionHash', resolve) // this happens much faster than receipt
-      promiEvent.once('error', reject)
-    })
+    return await tx
+      .send(sendParams)
+      .once('transactionHash', (txHash) => {
+        if (isFinalization) {
+          aboutToExecuteTx.setNonce(txArgs.nonce)
+        }
+        this.onComplete(undefined, confirmCallback, txHash)
+      })
+      .then(({ transactionHash }) => transactionHash)
   }
 
   async submitTx(
@@ -211,8 +205,7 @@ export class TxSender {
 
     // On-chain signature or execution
     try {
-      await this.sendTx()
-      this.onComplete(undefined, confirmCallback)
+      await this.sendTx(confirmCallback)
     } catch (err) {
       this.onError(err, errorCallback)
     }
