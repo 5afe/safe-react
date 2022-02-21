@@ -27,7 +27,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { generatePath } from 'react-router-dom'
-import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
+import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
 import { removePendingTransaction, addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { _getChainId } from 'src/config'
@@ -104,9 +104,12 @@ export class TxSender {
   safeVersion: string
   txId: string
 
+  // Assigned upon `transactionHash` promiEvent
+  txHash: undefined | string
+
   // On transaction completion (either confirming or executing)
-  async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler, txHash?: string): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization } = this
+  async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization, txHash } = this
 
     // Propose the tx to the backend
     // 1) If signing
@@ -140,7 +143,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId } = this
+    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
 
     logError(Errors._803, err.message)
 
@@ -153,23 +156,42 @@ export class TxSender {
       dispatch(removePendingTransaction({ id: txId }))
     }
 
-    const executeDataUsedSignatures = safeInstance.methods
-      .execTransaction(
-        txProps.to,
-        txProps.valueInWei,
-        txProps.txData,
-        txProps.operation,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        txArgs.sigs,
-      )
-      .encodeABI()
-    const contractErrorMessage = await fetchOnchainError(executeDataUsedSignatures, safeInstance, from)
+    // Don't display error when rejecting transaction via MetaMask
+    if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+      return
+    }
 
-    notifications.showOnError(err, contractErrorMessage)
+    const executeData = isFinalization
+      ? safeInstance.methods
+          .execTransaction(
+            txProps.to,
+            txProps.valueInWei,
+            txProps.txData,
+            txProps.operation,
+            0,
+            0,
+            0,
+            ZERO_ADDRESS,
+            ZERO_ADDRESS,
+            txArgs.sigs,
+          )
+          .encodeABI()
+      : txHash && safeInstance.methods.approveHash(txHash).encodeABI()
+
+    if (!executeData) {
+      return
+    }
+
+    const contractErrorMessage = await getContractErrorMessage({
+      safeInstance,
+      from,
+      data: executeData,
+    })
+
+    if (contractErrorMessage) {
+      logError(Errors._803, contractErrorMessage)
+      notifications.showOnError(err, contractErrorMessage)
+    }
   }
 
   async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
@@ -191,11 +213,13 @@ export class TxSender {
 
     return await tx
       .send(sendParams)
-      .once('transactionHash', (txHash) => {
+      .once('transactionHash', (hash) => {
+        this.txHash = hash
+
         if (isFinalization) {
           aboutToExecuteTx.setNonce(txArgs.nonce)
         }
-        this.onComplete(undefined, confirmCallback, txHash)
+        this.onComplete(undefined, confirmCallback)
       })
       .then(({ transactionHash }) => transactionHash)
   }
@@ -204,7 +228,7 @@ export class TxSender {
     state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
-  ): Promise<void> {
+  ): Promise<string | undefined> {
     const { isFinalization, safeVersion } = this
     const { hardwareWallet, smartContractWallet } = providerSelector(state)
     const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
@@ -226,6 +250,9 @@ export class TxSender {
     } catch (err) {
       this.onError(err, errorCallback)
     }
+
+    // Return txHash to check if transaction was successful
+    return this.txHash
   }
 
   async prepare(dispatch: Dispatch, state: AppReduxState, txProps: RequiredTxProps): Promise<void> {
