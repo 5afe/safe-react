@@ -201,10 +201,16 @@ export class TxSender {
     if (!isFinalization && canSignOffChain) {
       try {
         const signature = await this.onlyConfirm(hardwareWallet)
-        this.onComplete(signature, confirmCallback)
+
+        if (signature) {
+          this.onComplete(signature, confirmCallback)
+        } else {
+          throw Error('No signature received')
+        }
       } catch (err) {
         // User likely rejected transaction
         logError(Errors._814, err.message)
+        this.onError(err, errorCallback)
       }
       return
     }
