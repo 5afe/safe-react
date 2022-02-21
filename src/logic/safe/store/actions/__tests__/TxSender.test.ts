@@ -83,6 +83,15 @@ const mockTxProps = {
   txNonce: '0',
 }
 
+const mockPromiEvent = {
+  once: jest.fn((type, handler) => handler('mocktxhash')) as any,
+  on: jest.fn(),
+  then: jest.fn(),
+  catch: jest.fn(),
+  finally: jest.fn(),
+  [Symbol.toStringTag]: '',
+}
+
 describe('TxSender', () => {
   let tryOffChainSigningSpy, saveTxToHistorySpy, addPendingTransactionSpy, navigateToTxSpy, fetchTransactionsSpy
 
@@ -183,16 +192,18 @@ describe('TxSender', () => {
       arguments: [],
       call: jest.fn(),
       send: jest.fn(() => ({
-        once: jest.fn((type, handler) => handler()) as any,
-        on: jest.fn(),
-        then: jest.fn(),
-        catch: jest.fn((type, handler) => handler()) as any,
-        finally: jest.fn(),
-        [Symbol.toStringTag]: '',
-      })),
+        ...mockPromiEvent,
+        once: jest.fn((type, handler) => {
+          handler('mocktxhash')
+          return mockPromiEvent
+        }),
+      })) as any,
       estimateGas: jest.fn(),
       encodeABI: jest.fn(),
     }))
+    saveTxToHistorySpy = jest
+      .spyOn(txHistory, 'saveTxToHistory')
+      .mockImplementation(() => Promise.resolve({ ...mockTransactionDetails, txId: 'mockId' } as any))
 
     const sender = new TxSender()
 
@@ -237,13 +248,12 @@ describe('TxSender', () => {
       arguments: [],
       call: jest.fn(),
       send: jest.fn(() => ({
-        once: jest.fn((type, handler) => handler()) as any,
-        on: jest.fn(),
-        then: jest.fn(),
-        catch: jest.fn((type, handler) => handler()) as any,
-        finally: jest.fn(),
-        [Symbol.toStringTag]: '',
-      })),
+        ...mockPromiEvent,
+        once: jest.fn((type, handler) => {
+          handler('mocktxhash')
+          return mockPromiEvent
+        }),
+      })) as any,
       estimateGas: jest.fn(),
       encodeABI: jest.fn(),
     }))
