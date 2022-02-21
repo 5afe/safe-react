@@ -1,6 +1,9 @@
 name: Mint PR NFT
 
-on: [ pull_request ]
+on:
+  pull_request:
+    branches:
+      - dev
 
 jobs:
   mint:
@@ -8,7 +11,18 @@ jobs:
     name: Mint
     runs-on: ubuntu-latest
     steps:
-      - name: Call contract
+      - name: Check if already minted
+        uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
+        with:
+          rpc-node: ${{ secrets.RPC_NODE}}
+          wallet-key: ${{ secrets.WALLET_KEY }}
+          contract: ${{ secrets.CONTRACT_ADDRESS }}
+          function: "tokenURI(uint256 _tokenId)"
+          inputs: '[ ${{ github.event.number }} ]'
+          value: "0"
+
+      - name: Mint
+        if: ${{ failure() }}
         uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
         with:
           rpc-node: ${{ secrets.RPC_NODE}}
@@ -32,7 +46,7 @@ jobs:
           comment-id: ${{ steps.checkComment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            [<img alt="GitMint NFT preview" width="400" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }})
+            [<img alt="GitMint NFT preview" width="200" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }})
 
             Dear @${{ github.event.pull_request.user.login }},
             Thank you for your contribution! Please, let us know your Ethereum address to receive [this NFT on Gnosis Chain](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }}).
