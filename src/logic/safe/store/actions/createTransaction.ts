@@ -3,6 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
+import { isSmartContractWallet, WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -189,20 +190,34 @@ export class TxSender {
     })
   }
 
+  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+    const { isFinalization, safeVersion } = this
+    const { account, name, smartContractWallet } = providerSelector(state)
+    let isSmart = smartContractWallet
+
+    // WalletConnect itself isn't a smart contract but the connected account can be
+    if (!isSmart && name.toUpperCase() === WALLET_PROVIDER.WALLETCONNECT) {
+      isSmart = await isSmartContractWallet(account) // never throws
+    }
+
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
+  }
+
   async submitTx(
     state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<void> {
-    const { isFinalization, safeVersion } = this
-    const { hardwareWallet, smartContractWallet } = providerSelector(state)
-    const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+    const isOffchain = await this.canSignOffchain(state)
+
     // Off-chain signature
-    if (!isFinalization && canSignOffChain) {
+    if (!this.isFinalization && isOffchain) {
       try {
+        const { hardwareWallet } = providerSelector(state)
         const signature = await this.onlyConfirm(hardwareWallet)
 
-        if (signature) {
+        // WC + Safe receives "NaN" as a string instead of a sig
+        if (signature && signature !== 'NaN') {
           this.onComplete(signature, confirmCallback)
         } else {
           throw Error('No signature received')
