@@ -94,7 +94,9 @@ describe('TxSender', () => {
     jest.spyOn(walletSelectors, 'providerSelector')
     jest.spyOn(safeContracts, 'getGnosisSafeInstanceAt')
     jest.spyOn(notificationBuilder, 'createTxNotifications')
-    tryOffChainSigningSpy = jest.spyOn(offChainSigner, 'tryOffChainSigning')
+    tryOffChainSigningSpy = jest
+      .spyOn(offChainSigner, 'tryOffChainSigning')
+      .mockImplementation(() => Promise.resolve('mocksignature'))
     saveTxToHistorySpy = jest
       .spyOn(txHistory, 'saveTxToHistory')
       .mockImplementation(() => Promise.resolve(mockTransactionDetails as any))
