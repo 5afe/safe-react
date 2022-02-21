@@ -27,7 +27,7 @@ const qrRefresh: CSSProperties = {
   height: QR_DIMENSION,
 }
 
-const PairingDetails = ({ classes }): ReactElement => {
+const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
   usePairing()
 
   const uri = onboard().getState().wallet.provider?.wc?.uri

@@ -26,14 +26,16 @@ const getClientMeta = (): IClientMeta => {
   const app = `Safe Web App ${APP_VERSION}`
   const favicon = `${location.origin}/${PUBLIC_URL}/favicon.ico`
 
+  console.log('Meta desc', [app, client].join(';'))
+
   return {
-    name: PAIRING_MODULE_NAME,
+    name: app,
     description: [app, client].join(';'),
     url: 'https://gnosis-safe.io/app',
     icons: [favicon],
   }
 }
-console.log(`${location.origin}/${PUBLIC_URL}/favicon.ico`)
+
 // Note: this shares a lot of similarities with the patchedWalletConnect module
 const getPairingModule = (chainId: ChainId): WalletModule => {
   const STORAGE_ID = 'SAFE__pairingProvider'
@@ -47,13 +49,23 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
         clientMeta: getClientMeta(),
       })
 
-      provider.wc.on('disconnect', () => {
-        resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
-      })
+      let disconnected = false
+      const onDisconnect = () => {
+        if (!disconnected) {
+          disconnected = true
+          resetWalletState({ disconnected, walletName: PAIRING_MODULE_NAME })
+        }
+      }
+
+      provider.wc.on('disconnect', onDisconnect)
 
       provider.wc.on('display_uri', (_, { params }: { params: string[] }) => {
-        console.log(getPairingUri(params[0]))
+        if (!disconnected) {
+          console.log(getPairingUri(params[0]))
+        }
       })
+
+      window.addEventListener('unload', onDisconnect, { once: true })
 
       // Establish WC connection
       provider.enable()
