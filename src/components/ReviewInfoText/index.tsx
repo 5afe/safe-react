@@ -49,15 +49,15 @@ export const ReviewInfoText = ({
         {transactionsToGo > 0 ? (
           /* tx in the future */ <>
             <b>{transactionsToGo}</b>
-            {` transaction${transactionsToGo > 1 ? 's' : ''}`}
-            will need to be created and executed before this transaction, are you sure you want to do this?
+            &nbsp;{`transaction${transactionsToGo > 1 ? 's' : ''}`}&nbsp;will need to be created and executed before
+            this transaction, are you sure you want to do this?
           </>
         ) : (
           /* tx in the past */ <>
-            Nonce
-            <b> {safeTxNonce} </b>
-            has already been used. Your transaction will fail. Please use nonce
-            <b> {recommendedNonce}</b>.
+            Nonce&nbsp;
+            <b>{safeTxNonce}</b>
+            &nbsp;is below the latest transaction&apos;s nonce. Your transaction might fail. Please use nonce&nbsp;
+            <b>{recommendedNonce}</b>.
           </>
         )}
       </Paragraph>

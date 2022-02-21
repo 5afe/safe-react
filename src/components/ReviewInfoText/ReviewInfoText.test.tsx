@@ -23,6 +23,14 @@ describe('<ReviewInfoText>', () => {
   })
 
   it('renders ReviewInfoText with safeNonce in the future', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="10" />)
+
+    expect(screen.getByText(/1/)).toBeInTheDocument()
+    expect(screen.getByText(/transaction/)).toBeInTheDocument()
+    expect(screen.getByText(/will need to be created and executed before this transaction/)).toBeInTheDocument()
+  })
+
+  it('renders ReviewInfoText with safeNonce in the future', () => {
     render(<ReviewInfoText {...initialData} safeNonce="11" />)
 
     expect(screen.getByText(/2/)).toBeInTheDocument()
@@ -35,7 +43,7 @@ describe('<ReviewInfoText>', () => {
 
     expect(screen.getByText(/6/)).toBeInTheDocument()
     expect(screen.getByText(/9/)).toBeInTheDocument()
-    expect(screen.getByText(/has already been used./)).toBeInTheDocument()
-    expect(screen.getByText(/Your transaction will fail./)).toBeInTheDocument()
+    expect(screen.getByText(/is below the latest transaction's nonce./)).toBeInTheDocument()
+    expect(screen.getByText(/Your transaction might fail./)).toBeInTheDocument()
   })
 })
