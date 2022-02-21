@@ -32,19 +32,11 @@ jobs:
           inputs: '[ "${{ secrets.WALLET_ADDRESS }}", ${{ github.event.number }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" ]'
           value: "0"
 
-      - name: Check if result was already commented
-        uses: peter-evans/find-comment@v1
-        id: checkComment
-        with:
-          issue-number: ${{ github.event.number }}
-          body-includes: "GitMint NFT preview"
-
       - name: Set success comment
+        if: ${{ success() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.number }}
-          comment-id: ${{ steps.checkComment.outputs.comment-id }}
-          edit-mode: replace
           body: |
             [<img alt="GitMint NFT preview" width="200" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }})
 
