@@ -17,18 +17,14 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getNonce, canExecuteCreatedTx } from 'src/logic/safe/store/actions/utils'
+import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
-import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
-import { generatePath } from 'react-router-dom'
 import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
-import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
 import { removePendingTransaction, addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { _getChainId } from 'src/config'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
@@ -59,19 +55,6 @@ type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
-
-const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
-  if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
-    return
-  }
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
-  const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
-    [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
-  })
-
-  history.push(txRoute)
-}
 
 const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
