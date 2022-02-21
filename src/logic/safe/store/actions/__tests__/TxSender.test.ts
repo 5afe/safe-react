@@ -15,6 +15,7 @@ import * as pendingTransactions from 'src/logic/safe/store/actions/pendingTransa
 import * as fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import * as send from 'src/logic/safe/transactions/send'
+import * as getWeb3 from 'src/logic/wallets/getWeb3'
 import { waitFor } from '@testing-library/react'
 import { addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { LocalTransactionStatus } from 'src/logic/safe/store/models/types/gateway.d'
@@ -94,6 +95,7 @@ describe('TxSender', () => {
     jest.spyOn(walletSelectors, 'providerSelector')
     jest.spyOn(safeContracts, 'getGnosisSafeInstanceAt')
     jest.spyOn(notificationBuilder, 'createTxNotifications')
+    jest.spyOn(getWeb3, 'isSmartContractWallet')
     tryOffChainSigningSpy = jest
       .spyOn(offChainSigner, 'tryOffChainSigning')
       .mockImplementation(() => Promise.resolve('mocksignature'))
