@@ -114,7 +114,7 @@ export class TxSender {
     let txDetails: TransactionDetails | null = null
     if (!isFinalization || !this.txId) {
       try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+        txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
       } catch (err) {
         logError(Errors._816, err.message)
         return
