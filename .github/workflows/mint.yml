@@ -22,6 +22,7 @@ jobs:
           value: "0"
 
       - name: Mint
+        id: mint
         if: ${{ failure() }}
         uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
         with:
@@ -33,7 +34,7 @@ jobs:
           value: "0"
 
       - name: Set success comment
-        if: ${{ success() }}
+        if: steps.mint.outcome == 'success'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.number }}
@@ -41,5 +42,5 @@ jobs:
             [<img alt="GitMint NFT preview" width="200" src="https://gitsvg.katspaugh.workers.dev/?svg=1&url=https://github.com/gnosis/safe-react/pull/${{ github.event.number }}" />](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }})
 
             Dear @${{ github.event.pull_request.user.login }},
-            Thank you for your contribution! Please, let us know your Ethereum address to receive [this NFT on Gnosis Chain](https://blockscout.com/xdai/mainnet/token/${{ secrets.CONTRACT_ADDRESS }}/instance/${{ github.event.number }}).
-            Cheers!
+            Thank you for your contribution! Please, let us know your Ethereum address to receive [this NFT on Gnosis Chain](https://epor.io/tokens/${{ secrets.CONTRACT_ADDRESS }}/${{ github.event.number }}?network=xDai).
+            Cheers! 🏆
