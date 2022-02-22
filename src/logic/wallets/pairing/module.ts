@@ -2,7 +2,7 @@ import { IClientMeta } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
-import { APP_VERSION } from 'src/utils/constants'
+import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
@@ -10,7 +10,7 @@ import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallet
 // Modified version of the built in WC module in Onboard v1.35.5
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
 
-export const PAIRING_MODULE_NAME = 'Mobile'
+export const PAIRING_MODULE_NAME = 'Safe Mobile'
 
 let client = ''
 const getClientMeta = (): IClientMeta => {
@@ -24,7 +24,7 @@ const getClientMeta = (): IClientMeta => {
   }
 
   const app = `Safe Web v${APP_VERSION}`
-  const logo = 'https://gnosis-safe.io/app/favicon.ico'
+  const logo = `${location.origin}${PUBLIC_URL}/resources/logo.svg`
 
   return {
     name: app,
