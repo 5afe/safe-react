@@ -149,8 +149,13 @@ const gridColumns = {
 const willBeReplaced = css`
   .will-be-replaced {
     pointer-events: none;
+  }
+
+  .will-be-replaced.tx-details-actions button,
+  .will-be-replaced img {
     filter: grayscale(1) opacity(0.8) !important;
   }
+
   .will-be-replaced * {
     pointer-events: none;
     color: gray !important;
