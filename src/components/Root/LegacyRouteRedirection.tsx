@@ -1,4 +1,4 @@
-import { matchPath, Router, Redirect } from 'react-router-dom'
+import { matchPath, Router, Redirect } from 'react-router'
 import { ReactElement } from 'react'
 import { IS_PRODUCTION, PUBLIC_URL } from 'src/utils/constants'
 import { History } from 'history'

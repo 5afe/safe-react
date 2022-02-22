@@ -1,6 +1,6 @@
 import { Text, Icon, Button } from '@gnosis.pm/safe-react-components'
 import { useEffect, useRef, ReactElement } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router'
 import ListItem from '@material-ui/core/ListItem/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction'
 import styled from 'styled-components'

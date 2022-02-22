@@ -47,7 +47,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router'
 import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledButton = styled(Button)`

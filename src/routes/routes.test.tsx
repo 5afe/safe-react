@@ -9,7 +9,7 @@ import {
   history,
   LOAD_SPECIFIC_SAFE_ROUTE,
 } from './routes'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router'
 import { render } from 'src/utils/test-utils'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
