@@ -20,7 +20,7 @@ const getClientMeta = (): IClientMeta => {
     const browser = parser.getBrowser()
     const os = parser.getOS()
 
-    client = `${browser.name} ${browser.version};${os.name} ${os.version}`
+    client = `${browser.name} ${browser.major} (${os.name})`
   }
 
   const app = `Safe Web v${APP_VERSION}`
@@ -28,7 +28,7 @@ const getClientMeta = (): IClientMeta => {
 
   return {
     name: app,
-    description: client,
+    description: `${app};${client}`,
     url: 'https://gnosis-safe.io/app',
     icons: [logo],
   }
