@@ -28,7 +28,7 @@ const getClientMeta = (): IClientMeta => {
 
   return {
     name: app,
-    description: `${app};${client}`,
+    description: `${client};${app}`,
     url: 'https://gnosis-safe.io/app',
     icons: [logo],
   }
