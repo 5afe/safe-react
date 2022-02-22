@@ -123,6 +123,10 @@ export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: b
     }
   }
 
+  .disclaimer-container {
+    background-color: ${({ theme, expanded }) => (expanded ? `${primary200}` : theme.colors.inputField)};
+  }
+
   &:hover {
     background-color: ${primary200};
 
