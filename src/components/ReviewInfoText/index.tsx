@@ -40,6 +40,7 @@ export const ReviewInfoText = ({
   }
 
   const getWarning = (): ReactElement | null => {
+    if (!isCreation) return null
     if (!isTxNonceOutOfOrder()) return null
 
     const transactionsToGo = safeTxNonce - recommendedNonce
