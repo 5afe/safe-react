@@ -2,7 +2,7 @@ import { IClientMeta } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
-import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
+import { APP_VERSION } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
@@ -20,25 +20,24 @@ const getClientMeta = (): IClientMeta => {
     const browser = parser.getBrowser()
     const os = parser.getOS()
 
-    client = `${browser.name} ${browser.major} (${os.name} ${os.version})`
+    client = `${browser.name} ${browser.version};${os.name} ${os.version}`
   }
 
-  const app = `Safe Web App ${APP_VERSION}`
-  const favicon = `${location.origin}/${PUBLIC_URL}/favicon.ico`
-
-  console.log('Meta desc', [app, client].join(';'))
+  const app = `Safe Web v${APP_VERSION}`
+  const logo = 'https://gnosis-safe.io/app/resources/safe.png'
 
   return {
     name: app,
-    description: [app, client].join(';'),
+    description: client,
     url: 'https://gnosis-safe.io/app',
-    icons: [favicon],
+    icons: [logo],
   }
 }
 
 // Note: this shares a lot of similarities with the patchedWalletConnect module
 const getPairingModule = (chainId: ChainId): WalletModule => {
   const STORAGE_ID = 'SAFE__pairingProvider'
+  const clientMeta = getClientMeta()
 
   return {
     name: PAIRING_MODULE_NAME,
@@ -46,8 +45,12 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
       const provider = getWalletConnectProvider(chainId, {
         storageId: STORAGE_ID,
         qrcode: false, // Don't show QR modal
-        clientMeta: getClientMeta(),
+        clientMeta,
       })
+
+      // WalletConnect overrides the clientMeta, so we need to set it back
+      ;(provider.wc as any).clientMeta = clientMeta
+      ;(provider.wc as any)._clientMeta = clientMeta
 
       let disconnected = false
       const onDisconnect = () => {
