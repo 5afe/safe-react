@@ -25,6 +25,7 @@ import {
   smallFontSize,
   xs,
   alertWarning,
+  black300,
 } from './variables'
 
 const palette = {
@@ -150,17 +151,9 @@ const theme = createTheme({
         fontFamily: secondaryFontFamily,
       },
     },
-    MuiFormHelperText: {
+    MuiFormControl: {
       root: {
-        color: secondary,
-        fontFamily: secondaryFontFamily,
-        fontSize: '12px',
-        marginTop: '0px',
-        order: '0',
-        padding: `0 0 0 ${md}`,
-        position: 'absolute',
-        top: '5px',
-        zIndex: 1, // for firefox
+        flex: 1,
       },
     },
     MuiInput: {
@@ -224,6 +217,55 @@ const theme = createTheme({
       },
       formControl: {
         marginTop: '0 !important',
+      },
+    },
+    MuiInputLabel: {
+      outlined: {
+        color: primary,
+        '&$focused': {
+          color: secondary,
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      root: {
+        borderRadius: xs,
+        color: primary,
+        fontFamily: secondaryFontFamily,
+        fontSize: largeFontSize,
+        '&:$disabled': {
+          color: '#0000ff',
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: black300,
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: secondary,
+          borderWidth: '1px',
+        },
+      },
+      input: {
+        color: primary,
+        display: 'flex',
+        height: 'auto',
+        letterSpacing: '0.5px',
+        padding: md,
+        lineHeight: '1.5',
+        textOverflow: 'ellipsis',
+        '&::-webkit-input-placeholder': {
+          color: disabled,
+        },
+      },
+      label: {
+        color: error,
+      },
+      formControl: {
+        marginTop: '0 !important',
+      },
+    },
+    MuiSelect: {
+      outlined: {
+        padding: '0 !important',
       },
     },
     MuiFilledInput: {
