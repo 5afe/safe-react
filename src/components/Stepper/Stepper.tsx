@@ -12,6 +12,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { boldFont, lg, sm } from 'src/theme/variables'
 import { StepperProvider, useStepper } from './stepperContext'
+import Track from 'src/components/Track'
 
 type StepperProps = {
   children: ReactElement[]
@@ -19,6 +20,7 @@ type StepperProps = {
   disableNextButton?: boolean
   nextButtonType?: string
   testId?: string
+  trackingId?: string
 }
 
 function StepperComponent(): ReactElement {
@@ -34,12 +36,14 @@ function StepperComponent(): ReactElement {
     nextButtonType,
 
     testId,
+    trackingId,
   } = useStepper()
 
   return (
     <StepperMUI data-testid={testId} activeStep={currentStep} orientation="vertical">
       {steps.map(function Step(step, index) {
         const isFirstStep = index === 0
+        const isLastStep = index === steps.length - 1
         const isStepLabelClickable = currentStep > index
         const classes = useStyles({ isStepLabelClickable })
 
@@ -56,6 +60,28 @@ function StepperComponent(): ReactElement {
 
         const nextButtonLabel = customNextButtonLabel || 'Next'
 
+        const trackingPayload = { step: currentStep }
+
+        const backButton = (
+          <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
+            {backButtonLabel}
+          </Button>
+        )
+
+        const nextButton = (
+          <Button
+            onClick={onClickNextStep}
+            color="primary"
+            type={nextButtonType || 'button'}
+            disabled={disableNextButton || step.props.disableNextButton}
+            size="small"
+            className={classes.nextButton}
+            variant="contained"
+          >
+            {nextButtonLabel}
+          </Button>
+        )
+
         return (
           <StepMUI key={step.props.label}>
             <StepLabel onClick={onClickLabel} className={classes.stepLabel}>
@@ -67,20 +93,21 @@ function StepperComponent(): ReactElement {
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
-                    <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
-                      {backButtonLabel}
-                    </Button>
-                    <Button
-                      onClick={onClickNextStep}
-                      color="primary"
-                      type={nextButtonType || 'button'}
-                      disabled={disableNextButton || step.props.disableNextButton}
-                      size="small"
-                      className={classes.nextButton}
-                      variant="contained"
-                    >
-                      {nextButtonLabel}
-                    </Button>
+                    {trackingId ? (
+                      <>
+                        <Track id={trackingId} desc={isFirstStep ? 'Cancel' : 'Back'} payload={trackingPayload}>
+                          {backButton}
+                        </Track>
+                        <Track id={trackingId} desc={isLastStep ? 'Finish' : 'Next'} payload={trackingPayload}>
+                          {nextButton}
+                        </Track>
+                      </>
+                    ) : (
+                      <>
+                        {backButton}
+                        {nextButton}
+                      </>
+                    )}
                   </Col>
                 </Row>
               </Paper>

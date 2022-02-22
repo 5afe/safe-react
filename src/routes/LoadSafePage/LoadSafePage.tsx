@@ -39,6 +39,7 @@ import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { LOAD_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -123,6 +124,7 @@ function Load(): ReactElement {
           testId="load-safe-form"
           onSubmit={onSubmitLoadSafe}
           key={safeAddress}
+          trackingId={LOAD_SAFE_TRACKING_ID}
         >
           {safeAddress && shortName ? null : (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">

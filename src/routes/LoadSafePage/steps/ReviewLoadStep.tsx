@@ -22,11 +22,18 @@ import {
 import { getLoadSafeName, getOwnerName } from '../fields/utils'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { LOAD_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { useStepper } from 'src/components/Stepper/stepperContext'
+import { trackEvent } from 'src/utils/googleTagManager'
+import useMountedEffect from 'src/logic/hooks/useMountedEffect'
 
 export const reviewLoadStepLabel = 'Review'
 
 function ReviewLoadStep(): ReactElement {
+  const { currentStep } = useStepper()
+
   const loadSafeForm = useForm()
+  const isSubmitting = loadSafeForm.getState().submitting
   const userAddress = useSelector(userAccountSelector)
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
@@ -35,6 +42,19 @@ function ReviewLoadStep(): ReactElement {
   const safeAddress = formValues[FIELD_LOAD_SAFE_ADDRESS] || ''
   const threshold = formValues[FIELD_SAFE_THRESHOLD]
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
+
+  useMountedEffect(() => {
+    // Buttons (where we track navigation) are outside of the Stepper context
+    // we must therefore manually track submission as has form-specific payload
+    trackEvent({
+      ...LOAD_SAFE_TRACKING_EVENTS.LOAD,
+      payload: {
+        step: currentStep,
+        owners: ownerList.length,
+        ...(threshold && { threshold }),
+      },
+    })
+  }, [isSubmitting])
 
   const ownerListWithNames = ownerList.map((owner) => {
     const ownerName = getOwnerName(formValues, owner.address)

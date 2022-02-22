@@ -4,10 +4,18 @@ import { getChainInfo } from 'src/config'
 type Props = {
   children: ReactElement
   id: string
+  desc: string
   payload?: Record<string, string | number | boolean | null>
 }
 
-const Track = ({ children, id, payload }: Props): ReactElement => {
+const TRACK_PROPS = {
+  ID: 'data-track-id',
+  DESC: 'data-track-desc',
+  CHAIN: 'data-track-chain',
+  PAYLOAD: 'data-track-payload',
+}
+
+const Track = ({ children, id, desc, payload }: Props): typeof children => {
   if (children.type === Fragment) {
     throw new Error('Fragments cannot be tracked.')
   }
@@ -16,9 +24,10 @@ const Track = ({ children, id, payload }: Props): ReactElement => {
 
   return cloneElement(children, {
     ...children.props,
-    'data-track-id': id,
-    'data-track-chain': JSON.stringify({ chainId, shortName }),
-    ...(payload !== undefined && { 'data-track-payload': JSON.stringify(payload) }),
+    [TRACK_PROPS.ID]: id,
+    [TRACK_PROPS.DESC]: desc,
+    [TRACK_PROPS.CHAIN]: JSON.stringify({ chainId, shortName }),
+    ...(payload !== undefined && { [TRACK_PROPS.PAYLOAD]: JSON.stringify(payload) }),
   })
 }
 

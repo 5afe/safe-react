@@ -7,6 +7,8 @@ import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
 import Link from 'src/components/layout/Link'
 import { LOAD_SAFE_ROUTE, OPEN_SAFE_ROUTE } from 'src/routes/routes'
+import Track from 'src/components/Track'
+import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 function Welcome(): ReactElement {
   return (
@@ -29,11 +31,13 @@ function Welcome(): ReactElement {
                 <Text size="xl">Create a new Safe that is controlled by one or multiple owners.</Text>
                 <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
               </CardDescriptionContainer>
-              <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
-                <Text size="xl" color="white">
-                  + Create new Safe
-                </Text>
-              </Button>
+              <Track {...CREATE_SAFE_TRACKING_EVENTS.WELCOME}>
+                <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+                  <Text size="xl" color="white">
+                    + Create new Safe
+                  </Text>
+                </Button>
+              </Track>
             </CardContentContainer>
             <Divider orientation="vertical" flexItem />
             <CardContentContainer>

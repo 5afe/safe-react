@@ -31,10 +31,13 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import Track from 'src/components/Track'
+import { LOAD_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
 function LoadSafeAddressStep(): ReactElement {
+  const [shouldTrackSafeName, setShouldTrackSafeName] = useState<boolean>(true)
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
   const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const [threshold, setThreshold] = useState<number>()
@@ -156,7 +159,17 @@ function LoadSafeAddressStep(): ReactElement {
       <FieldContainer>
         <Col xs={11}>
           <Field
-            component={TextField}
+            component={(props) => {
+              const field = <TextField {...props} />
+
+              if (shouldTrackSafeName && !props.meta.pristine) {
+                // Only track the name entry once
+                setShouldTrackSafeName(false)
+                return <Track {...LOAD_SAFE_TRACKING_EVENTS.NAME}>{field}</Track>
+              }
+
+              return field
+            }}
             name={FIELD_LOAD_CUSTOM_SAFE_NAME}
             placeholder={safeName}
             text="Safe name"

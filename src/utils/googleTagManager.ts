@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { ComponentProps, useEffect } from 'react'
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
 import { Location } from 'history'
@@ -12,6 +12,7 @@ import {
   IS_PRODUCTION,
   GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH,
 } from 'src/utils/constants'
+import Track from 'src/components/Track'
 
 const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
@@ -94,4 +95,12 @@ export const useGTMPageTracking = (): void => {
       unsubscribe()
     }
   }, [])
+}
+
+export const trackEvent = (event: Omit<ComponentProps<typeof Track>, 'children'>): void => {
+  TagManager.dataLayer({
+    dataLayer: {
+      ...event,
+    },
+  })
 }
