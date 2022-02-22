@@ -51,7 +51,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
           target="_blank"
           rel="noopener noreferrer"
           data-testid="safe-create-explorer-link"
-          title="More info about this in Etherscan"
+          title="More info about this in Celo Explorer"
         >
           <Text size="xl" as="span" color="primary">
             {explorerDomain}

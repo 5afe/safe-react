@@ -1,29 +1,20 @@
-# Gnosis Safe
+# Celo Safe
 
-The most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
+A fork of the most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
 
 For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
 
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
-
-## Related repos
-
-- [safe-react-e2e-tests](https://github.com/gnosis/safe-react-e2e-tests)
-- [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
-- [safe-react-components](https://github.com/gnosis/safe-react-components)
+For support requests, please open up a [bug issue](https://github.com/celo-org/safe-react/issues/new?template=bug-report.md)
 
 ## Production deployments
 
-This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
+This repository contains the code for the frontend code hosted at https://safe.celo.org
 
-Besides the Ethereum Mainnet, the following networks are supported:
+Besides the Celo Mainnet, the following networks are supported:
 
-- [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
-- [xDai](https://xdai.gnosis-safe.io/app/)
-- [Polygon](https://polygon.gnosis-safe.io/app/)
-- [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
-- [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
-- [Volta Testnet](https://volta.gnosis-safe.io/app/)
+- [Alfajores Testnet](https://safe.celo.org)
+- [Baklava Testnet](https://safe.celo.org)
+
 
 ## Getting Started
 
@@ -42,14 +33,6 @@ The app grabs environment variables from the `.env` file. Copy our template to y
 cp .env.example .env
 ```
 
-To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
-
-```
-REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-```
-
-Once done, you'll need to restart the app if it's already running.
-
 ### Installing and running
 
 Install dependencies for the project:
@@ -58,7 +41,7 @@ Install dependencies for the project:
 yarn install
 ```
 
-To use the Rinkeby services:
+To use the Alfajores services:
 
 ```
 yarn start
@@ -78,7 +61,7 @@ docker-compose build && docker-compose up
 
 ### Building
 
-For Rinkeby:
+For Alfajores:
 
 ```
 yarn build
@@ -113,7 +96,7 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-react-beta.vercel.app).
 
 ### Production
 

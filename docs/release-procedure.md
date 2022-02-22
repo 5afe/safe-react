@@ -19,5 +19,5 @@ git tag v3.7.0
 git push --tags
 ```
 * Devops are notified on Slack to deploy the tag to production
-* A [GitHub release](https://github.com/gnosis/safe-react/releases) is created
+* A [GitHub release](https://github.com/celo-org/safe-react/releases) is created
 * `main` is back-merged into the `dev` branch

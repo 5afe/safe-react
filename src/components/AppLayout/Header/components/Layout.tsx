@@ -3,7 +3,6 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
@@ -16,7 +15,7 @@ import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
-import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
+import SafeLogo from '../assets/celo-safe.svg'
 import { getNetworks } from 'src/config'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
@@ -74,7 +73,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link to="/">
-          <Img alt="Gnosis Team Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
+          <Img alt="Celo Safe" height={48} src={SafeLogo} testId="heading-gnosis-logo" />
         </Link>
       </Col>
       <Spacer />

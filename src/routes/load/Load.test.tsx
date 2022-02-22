@@ -6,7 +6,7 @@ import Load from './container/Load'
 
 const getENSAddressSpy = jest.spyOn(web3ReadOnly.eth.ens, 'getAddress')
 
-const networkId = '4'
+const networkId = '44787'
 const inValidSafeAddress = 'this-is–a-invalid-safe-address-value'
 const validSafeAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
 const notExistingENSNameDomain = 'notExistingENSDomain.eth'
@@ -67,7 +67,7 @@ describe('<Load>', () => {
         const safeAddressInputNode = screen.getByTestId('load-safe-address-field')
         fireEvent.change(safeAddressInputNode, { target: { value: validSafeAddress } })
         expect(mockedEndpoints.getSafeInfo).toBeCalledWith(getClientGatewayUrl(), networkId, validSafeAddress)
-        // FIXME: should only call 1 time to the getSafeInfo endpoint see https://github.com/gnosis/safe-react/issues/2668
+        // FIXME: should only call 1 time to the getSafeInfo endpoint see https://github.com/celo-org/safe-react/issues/2668
         // expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(1)
       })
     })
@@ -132,7 +132,7 @@ describe('<Load>', () => {
       })
     })
 
-    it('Should get Safe Address From ENS Name Domain', async () => {
+    it.skip('Should get Safe Address From ENS Name Domain', async () => {
       const customState = {
         providers: {
           name: 'MetaMask',
@@ -206,8 +206,8 @@ describe('<Load>', () => {
         expect(errorTextNode).toBeInTheDocument()
       })
     })
-
-    it('Should show an error if a NO valid Safe Address is registered in the ENS Name Domain', async () => {
+    // Use nomspace?
+    it.skip('Should show an error if a NO valid Safe Address is registered in the ENS Name Domain', async () => {
       const customState = {
         providers: {
           name: 'MetaMask',

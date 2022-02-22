@@ -15,8 +15,26 @@ import './index.module.scss'
 import './OnboardCustom.module.scss'
 import './KeystoneCustom.module.scss'
 
+type StyledThemeType = typeof styledTheme
+
+const ourStyledTheme: StyledThemeType = {
+  ...styledTheme,
+  colors: {
+    ...styledTheme.colors,
+    primary: theme.palette.primary.main,
+    primaryLight: theme.palette.secondary.light,
+    primaryHover: theme.palette.secondary.dark,
+    secondary: theme.palette.secondary.main,
+    secondaryLight: theme.palette.secondary.light,
+    secondaryHover: theme.palette.secondary.dark,
+    error: theme.palette.error.main,
+    background: theme.palette.background.default,
+    warning: theme.palette.warning.main,
+  },
+}
+
 const Root = (): React.ReactElement => (
-  <Providers store={store} history={history} styledTheme={styledTheme} muiTheme={theme}>
+  <Providers store={store} history={history} styledTheme={ourStyledTheme} muiTheme={theme}>
     <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
       <App>
         {wrapInSuspense(

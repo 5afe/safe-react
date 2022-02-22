@@ -23,7 +23,7 @@ export const remoteSafeInfoWithModules = {
   ],
   implementation: {
     value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
-    name: 'Gnosis Safe: Mastercopy 1.3.0',
+    name: 'Celo Safe: Mastercopy 1.3.0',
     logoUrl:
       'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },

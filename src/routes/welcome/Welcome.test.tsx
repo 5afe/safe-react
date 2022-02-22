@@ -6,7 +6,7 @@ describe('<Welcome>', () => {
   it('Should render Welcome container', () => {
     render(<Welcome />)
 
-    expect(screen.getByText('Welcome to Gnosis Safe.')).toBeInTheDocument()
+    expect(screen.getByText('Welcome to Celo Safe.')).toBeInTheDocument()
   })
 
   it('Connect wallet button should not be disabled if no wallet is selected', () => {

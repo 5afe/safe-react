@@ -1,10 +1,16 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import {
+  EnvironmentSettings,
+  ETHEREUM_LAYER,
+  ETHEREUM_NETWORK,
+  NetworkConfig,
+  WALLETS,
+} from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
   txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
-  safeUrl: 'https://safe.celo.org',
+  safeUrl: 'https://baklava.safe.celo.org',
   gasPriceOracles: [
     {
       url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
@@ -17,14 +23,14 @@ const baseConfig: EnvironmentSettings = {
       gweiFactor: '1e8',
     },
   ],
-  safeAppsRpcServiceUrl: 'https://forno.celo.org',
-  rpcServiceUrl: 'https://forno.celo.org',
-  networkExplorerName: 'Blockscout',
-  networkExplorerUrl: 'https://explorer.celo.org',
-  networkExplorerApiUrl: 'https://explorer.celo.org/api',
+  rpcServiceUrl: 'https://baklava-forno.celo-testnet.org',
+  safeAppsRpcServiceUrl: 'https://baklava-forno.celo-testnet.org',
+  networkExplorerName: 'Celo Baklava Explorer',
+  networkExplorerUrl: 'https://baklava-blockscout.celo-testnet.org/',
+  networkExplorerApiUrl: 'https://baklava-blockscout.celo-testnet.org/api',
 }
 
-const mainnet: NetworkConfig = {
+const baklava: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
@@ -37,11 +43,11 @@ const mainnet: NetworkConfig = {
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.MAINNET,
+    id: ETHEREUM_NETWORK.BAKLAVA,
     backgroundColor: '#F8F9F9',
-    textColor: '#1AB775',
-    label: 'Celo Mainnet',
-    isTestNet: false,
+    textColor: '#3488EC',
+    label: 'Baklava',
+    isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
@@ -51,6 +57,7 @@ const mainnet: NetworkConfig = {
       logoUri: EtherLogo,
     },
   },
+  disabledWallets: [WALLETS.FORTMATIC],
 }
 
-export default mainnet
+export default baklava

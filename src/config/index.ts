@@ -39,9 +39,7 @@ export const getNetworkLabel = (id: ETHEREUM_NETWORK): string => {
   return cfg ? cfg.network.label : ''
 }
 
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
-  getNetworkId(),
-)
+export const usesInfuraRPC = false
 
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
@@ -79,6 +77,7 @@ const configuration = (): NetworkSpecificConfiguration => {
 
   // lookup the config file based on the network specified in the NETWORK variable
   const configFile = networks[getNetworkName().toLowerCase()]
+
   // defaults to 'production' as it's the only environment that is required for the network configs
   const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
 
