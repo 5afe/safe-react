@@ -24,7 +24,7 @@ const getClientMeta = (): IClientMeta => {
   }
 
   const app = `Safe Web v${APP_VERSION}`
-  const logo = 'https://gnosis-safe.io/app/resources/safe.png'
+  const logo = 'https://gnosis-safe.io/app/favicon.ico'
 
   return {
     name: app,
