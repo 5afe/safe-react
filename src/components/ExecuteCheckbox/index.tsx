@@ -23,7 +23,7 @@ const StyledFormControlLabel = styled(FormControlLabel)`
 `
 
 interface ExecuteCheckboxProps {
-  checked?: boolean
+  checked: boolean
   onChange: (val: boolean) => unknown
 }
 
@@ -34,7 +34,7 @@ const ExecuteCheckbox = ({ checked, onChange }: ExecuteCheckboxProps): ReactElem
   return (
     <StyledRow>
       <StyledFormControlLabel
-        control={<Checkbox defaultChecked checked={checked} color="secondary" onChange={handleChange} />}
+        control={<Checkbox checked={checked} color="secondary" onChange={handleChange} />}
         label="Execute transaction"
         data-testid="execute-checkbox"
       />

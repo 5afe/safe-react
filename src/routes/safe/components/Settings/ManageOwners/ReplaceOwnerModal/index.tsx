@@ -43,7 +43,7 @@ export const sendReplaceOwner = async (
   )
   const txData = safeTx.data.data
 
-  const txHash = await dispatch(
+  await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
@@ -56,11 +56,6 @@ export const sendReplaceOwner = async (
       delayExecution,
     }),
   )
-
-  if (txHash) {
-    // update the AB
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...newOwner, chainId: _getChainId() })))
-  }
 }
 
 type ReplaceOwnerProps = {
