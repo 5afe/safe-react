@@ -32,6 +32,7 @@ const SelectInput = ({
         onChange={onChange}
         renderValue={renderValue}
         value={value}
+        variant="outlined"
         {...rest}
       />
       {showError && <FormHelperText>{meta.error || meta.submitError}</FormHelperText>}

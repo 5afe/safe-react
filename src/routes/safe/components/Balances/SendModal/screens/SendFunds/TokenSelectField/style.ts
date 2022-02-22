@@ -1,12 +1,12 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 
-import { sm } from 'src/theme/variables'
+import { sm, md } from 'src/theme/variables'
 
 export const useSelectedTokenStyles = makeStyles(
   createStyles({
     container: {
       minHeight: '55px',
-      padding: 0,
+      padding: `0 ${md}`,
       width: '100%',
     },
     tokenData: {
