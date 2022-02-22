@@ -27,16 +27,13 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
-import { trackEvent } from 'src/utils/googleTagManager'
-import useMountedEffect from 'src/logic/hooks/useMountedEffect'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
   const provider = useSelector(providerNameSelector)
 
-  const { setCurrentStep, currentStep } = useStepper()
+  const { setCurrentStep } = useStepper()
 
   useEffect(() => {
     if (!provider) {
@@ -45,7 +42,6 @@ function ReviewNewSafeStep(): ReactElement | null {
   }, [provider, setCurrentStep])
 
   const createSafeForm = useForm()
-  const isSubmitting = createSafeForm.getState().submitting
   const createSafeFormValues = createSafeForm.getState().values
 
   const defaultSafeValue = createSafeFormValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]
@@ -56,19 +52,6 @@ function ReviewNewSafeStep(): ReactElement | null {
   const numberOfOwners = owners.length
   const safeCreationSalt = createSafeFormValues[FIELD_NEW_SAFE_PROXY_SALT]
   const ownerAddresses = owners.map(({ addressFieldName }) => createSafeFormValues[addressFieldName])
-
-  useMountedEffect(() => {
-    // Buttons (where we track navigation) are outside of the Stepper context
-    // we must therefore manually track submission as has form-specific payload
-    trackEvent({
-      ...CREATE_SAFE_TRACKING_EVENTS.CREATE,
-      payload: {
-        step: currentStep,
-        owners: numberOfOwners,
-        threshold,
-      },
-    })
-  }, [isSubmitting])
 
   const { gasCostFormatted, gasLimit, gasPrice, gasMaxPrioFee } = useEstimateSafeCreationGas({
     addresses: ownerAddresses,

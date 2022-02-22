@@ -37,7 +37,8 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
-import { CREATE_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
+import { CREATE_SAFE_TRACKING_EVENTS, CREATE_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -70,6 +71,14 @@ function CreateSafePage(): ReactElement {
   const safeRandomName = useMnemonicSafeName()
 
   const showSafeCreationProcess = (newSafeFormValues: CreateSafeFormValues): void => {
+    trackEvent({
+      ...CREATE_SAFE_TRACKING_EVENTS.CREATE,
+      payload: {
+        owners: newSafeFormValues[FIELD_SAFE_OWNERS_LIST].length,
+        threshold: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
+      },
+    })
+
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
     setSafePendingToBeCreated(newSafeFormValues)
   }

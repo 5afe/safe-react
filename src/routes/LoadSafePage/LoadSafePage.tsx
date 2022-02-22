@@ -32,6 +32,7 @@ import {
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
+  FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
@@ -39,7 +40,8 @@ import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { LOAD_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
+import { LOAD_SAFE_TRACKING_EVENTS, LOAD_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -88,6 +90,15 @@ function Load(): ReactElement {
     if (!isValidAddress(address)) {
       return
     }
+
+    const threshold = values[FIELD_SAFE_THRESHOLD]
+    trackEvent({
+      ...LOAD_SAFE_TRACKING_EVENTS.LOAD,
+      payload: {
+        owners: values[FIELD_SAFE_OWNER_LIST].length,
+        ...(threshold && { threshold }),
+      },
+    })
 
     updateAddressBook(values)
 

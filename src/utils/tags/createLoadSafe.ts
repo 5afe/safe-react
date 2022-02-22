@@ -6,26 +6,34 @@ type TrackingEvents = Record<string, Omit<ComponentProps<typeof Track>, 'childre
 
 export const CREATE_SAFE_TRACKING_ID = 'safe-creation'
 export const CREATE_SAFE_TRACKING_EVENTS: TrackingEvents = {
+  WELCOME: {
+    id: CREATE_SAFE_TRACKING_ID,
+    desc: 'Start Safe creation',
+  },
   NAME: {
     id: CREATE_SAFE_TRACKING_ID,
-    desc: 'Set name',
+    desc: 'Set new Safe name',
   },
   // Manual tracking events:
   CREATE: {
     id: CREATE_SAFE_TRACKING_ID,
-    desc: 'Create',
+    desc: 'Create Safe',
   },
 }
 
 export const LOAD_SAFE_TRACKING_ID = 'safe-load'
 export const LOAD_SAFE_TRACKING_EVENTS: TrackingEvents = {
+  WELCOME: {
+    id: LOAD_SAFE_TRACKING_ID,
+    desc: 'Load existing Safe',
+  },
   NAME: {
     id: LOAD_SAFE_TRACKING_ID,
-    desc: 'Set name',
+    desc: 'Set existing Safe name',
   },
   // Manual tracking events:
-  CREATE: {
+  LOAD: {
     id: LOAD_SAFE_TRACKING_ID,
-    desc: 'Load',
+    desc: 'Load Safe',
   },
 }

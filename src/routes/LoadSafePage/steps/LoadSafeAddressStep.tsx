@@ -31,13 +31,12 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
-import Track from 'src/components/Track'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { LOAD_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
 function LoadSafeAddressStep(): ReactElement {
-  const [shouldTrackSafeName, setShouldTrackSafeName] = useState<boolean>(true)
   const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
   const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const [threshold, setThreshold] = useState<number>()
@@ -132,6 +131,18 @@ function LoadSafeAddressStep(): ReactElement {
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
   const safeName = getLoadSafeName(formValues, addressBook)
+  const hasCustomSafeName = !!formValues[FIELD_LOAD_CUSTOM_SAFE_NAME]
+
+  useEffect(() => {
+    // On unmount, e.g. go back/next
+    return () => {
+      if (hasCustomSafeName) {
+        trackEvent({
+          ...LOAD_SAFE_TRACKING_EVENTS.NAME,
+        })
+      }
+    }
+  }, [hasCustomSafeName])
 
   return (
     <Container data-testid={'load-safe-address-step'}>
@@ -159,17 +170,7 @@ function LoadSafeAddressStep(): ReactElement {
       <FieldContainer>
         <Col xs={11}>
           <Field
-            component={(props) => {
-              const field = <TextField {...props} />
-
-              if (shouldTrackSafeName && !props.meta.pristine) {
-                // Only track the name entry once
-                setShouldTrackSafeName(false)
-                return <Track {...LOAD_SAFE_TRACKING_EVENTS.NAME}>{field}</Track>
-              }
-
-              return field
-            }}
+            component={TextField}
             name={FIELD_LOAD_CUSTOM_SAFE_NAME}
             placeholder={safeName}
             text="Safe name"

@@ -27,7 +27,7 @@ describe('Track', () => {
     expect(child).toHaveAttribute('data-track-id', 'test')
     expect(child).toHaveAttribute('data-track-desc', 'test')
     expect(child).toHaveAttribute('data-track-chain', '{"chainId":"4","shortName":"rin"}')
-    expect(child).toHaveAttribute('data-track-payload', '{"test":true}')
+    expect(child).toHaveAttribute('data-track-payload', '{"test":"true"}')
   })
 
   it('does not add the payload if it is undefined', () => {

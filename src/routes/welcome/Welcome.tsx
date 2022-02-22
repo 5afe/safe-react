@@ -8,7 +8,7 @@ import Block from 'src/components/layout/Block'
 import Link from 'src/components/layout/Link'
 import { LOAD_SAFE_ROUTE, OPEN_SAFE_ROUTE } from 'src/routes/routes'
 import Track from 'src/components/Track'
-import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { CREATE_SAFE_TRACKING_EVENTS, LOAD_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 function Welcome(): ReactElement {
   return (
@@ -51,19 +51,21 @@ function Welcome(): ReactElement {
                   Safe address.
                 </Text>
               </CardDescriptionContainer>
-              <Button
-                variant="bordered"
-                iconType="safe"
-                iconSize="sm"
-                size="lg"
-                color="secondary"
-                component={Link}
-                to={LOAD_SAFE_ROUTE}
-              >
-                <StyledButtonLabel size="xl" color="secondary">
-                  Add existing Safe
-                </StyledButtonLabel>
-              </Button>
+              <Track {...LOAD_SAFE_TRACKING_EVENTS.WELCOME}>
+                <Button
+                  variant="bordered"
+                  iconType="safe"
+                  iconSize="sm"
+                  size="lg"
+                  color="secondary"
+                  component={Link}
+                  to={LOAD_SAFE_ROUTE}
+                >
+                  <StyledButtonLabel size="xl" color="secondary">
+                    Add existing Safe
+                  </StyledButtonLabel>
+                </Button>
+              </Track>
             </CardContentContainer>
           </StyledCard>
         </CardsContainer>

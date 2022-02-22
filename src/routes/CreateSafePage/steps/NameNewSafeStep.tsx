@@ -19,13 +19,12 @@ import {
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
-import Track from 'src/components/Track'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 export const nameNewSafeStepLabel = 'Name'
 
 function NameNewSafeStep(): ReactElement {
-  const [shouldTrackSafeName, setShouldTrackSafeName] = useState<boolean>(true)
   const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
   const provider = useSelector(providerNameSelector)
 
@@ -39,6 +38,18 @@ function NameNewSafeStep(): ReactElement {
 
   const createNewSafeForm = useForm()
   const formValues = createNewSafeForm.getState().values
+  const hasCustomSafeName = !!formValues[FIELD_CREATE_CUSTOM_SAFE_NAME]
+
+  useEffect(() => {
+    // On unmount, e.g. go back/next
+    return () => {
+      if (hasCustomSafeName) {
+        trackEvent({
+          ...CREATE_SAFE_TRACKING_EVENTS.NAME,
+        })
+      }
+    }
+  }, [hasCustomSafeName])
 
   useEffect(() => {
     const getInitialOwnerENSNames = async () => {
@@ -88,17 +99,7 @@ function NameNewSafeStep(): ReactElement {
       <FieldContainer margin="lg">
         <Col xs={11}>
           <Field
-            component={(props) => {
-              const field = <TextField {...props} />
-
-              if (shouldTrackSafeName && !props.meta.pristine) {
-                // Only track the name entry once
-                setShouldTrackSafeName(false)
-                return <Track {...CREATE_SAFE_TRACKING_EVENTS.NAME}>{field}</Track>
-              }
-
-              return field
-            }}
+            component={TextField}
             name={FIELD_CREATE_CUSTOM_SAFE_NAME}
             placeholder={formValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]}
             text="Safe name"
