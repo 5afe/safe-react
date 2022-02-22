@@ -109,7 +109,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: b
   background-color: ${({ theme }) => theme.colors.white}};
 
   border: 2px solid ${({ expanded }) => (expanded ? `${primary300}` : `${grey400}`)};
-  width: calc(100% - 4px);
+  box-sizing: border-box;
   border-radius: 8px;
 
   .MuiAccordion-root,
