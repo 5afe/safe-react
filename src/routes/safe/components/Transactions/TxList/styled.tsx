@@ -1,7 +1,7 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { lg, md, sm } from 'src/theme/variables'
+import { grey400, lg, md, primary200, primary300, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -25,12 +25,8 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
 export const NoPaddingAccordion = styled(Accordion).attrs((props) =>
   isDeeplinkedTx() ? { expanded: true, ...props } : props,
 )`
-  &.MuiAccordion-root {
-    background-color: transparent;
-
-    .MuiAccordionDetails-root {
-      padding: 0;
-    }
+  &.MuiAccordion-root .MuiAccordionDetails-root {
+    padding: 0;
   }
 `
 
@@ -82,32 +78,39 @@ export const SubTitle = styled(Text)`
 `
 
 export const StyledTransactions = styled.div`
-  background-color: ${({ theme }) => theme.colors.white};
-  border-radius: 8px;
-  box-shadow: #00000026 0 4px 12px 0;
   overflow: hidden;
   width: 100%;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+
   & > .MuiAccordion-root {
+    border: 2px solid ${grey400};
+    border-radius: 8px;
+
     &:first-child {
-      border-top: none;
+      border: 2px solid ${grey400};
     }
 
-    &:last-child {
-      border-bottom: none;
+    & .MuiAccordionSummary-root.Mui-expanded,
+    & .MuiAccordionSummary-root:hover {
+      background-color: ${primary200};
+    }
+
+    &.Mui-expanded {
+      border: 2px solid ${primary300};
     }
   }
 `
 
-export const GroupedTransactionsCard = styled(StyledTransactions)`
+export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: boolean }>`
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: transparent;
-  border-radius: 0;
-  box-shadow: none;
+  background-color: ${({ theme }) => theme.colors.white}};
 
-  &:not(:last-child) {
-    border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-  }
+  border: 2px solid ${({ expanded }) => (expanded ? `${primary300}` : `${grey400}`)};
+  box-sizing: border-box;
+  border-radius: 8px;
 
   .MuiAccordion-root,
   .MuiAccordionSummary-root,
@@ -121,12 +124,11 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${primary200};
 
-    .MuiAccordionDetails-root {
-      div[class^='tx-'] {
-        background-color: ${({ theme }) => theme.colors.background};
-      }
+    .tx-data > div,
+    .tx-data ~ div > div {
+      background-color: ${primary200};
     }
 
     .disclaimer-container {
@@ -270,10 +272,6 @@ export const GroupedTransactions = styled(StyledTransaction)`
     grid-column-end: span 6;
     grid-column-start: 2;
 
-    &:first-child {
-      border: 0;
-    }
-
     &.Mui-expanded {
       justify-self: center;
       width: calc(100% - 32px);
@@ -314,7 +312,7 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
+export const TxDetailsContainer = styled.div`
   ${willBeReplaced};
 
   background-color: ${({ theme }) => theme.colors.separator} !important;
