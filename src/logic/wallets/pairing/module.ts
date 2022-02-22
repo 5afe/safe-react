@@ -24,7 +24,7 @@ const getClientMeta = (): IClientMeta => {
   }
 
   const app = `Safe Web v${APP_VERSION}`
-  const logo = `${location.origin}${PUBLIC_URL}/resources/logo.svg`
+  const logo = `${location.origin}${PUBLIC_URL}/resources/logo_120x120.png`
 
   return {
     name: app,
