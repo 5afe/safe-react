@@ -5,26 +5,26 @@ import { useSelector } from 'react-redux'
 import Paragraph from 'src/components/layout/Paragraph'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { lg, sm } from 'src/theme/variables'
-import { TransactionFees } from '../TransactionsFees'
+import { lg } from 'src/theme/variables'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { extractSafeAddress } from 'src/routes/routes'
-import { ComponentProps, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { TransactionFailText } from '../TransactionFailText'
+import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
-type CustomReviewInfoTextProps = {
+const ReviewInfoTextWrapper = styled.div`
+  padding: 0 ${lg};
+`
+
+type ReviewInfoTextProps = {
+  txEstimationExecutionStatus: EstimationStatus
+  isExecution: boolean
+  isCreation: boolean
   safeNonce?: string
   testId?: string
 }
 
-type ReviewInfoTextProps = ComponentProps<typeof TransactionFees> & CustomReviewInfoTextProps
-
-const ReviewInfoTextWrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: ${sm} ${lg};
-`
-
 export const ReviewInfoText = ({
-  gasCostFormatted,
   isCreation,
   isExecution,
   safeNonce: txParamsSafeNonce = '',
@@ -37,6 +37,7 @@ export const ReviewInfoText = ({
   const storeNextNonce = `${lastTxNonce && lastTxNonce + 1}`
   const safeAddress = extractSafeAddress()
   const [recommendedNonce, setRecommendedNonce] = useState<string>(storeNextNonce)
+  const transactionAction = isCreation ? 'create' : isExecution ? 'execute' : 'approve'
 
   useEffect(() => {
     const fetchRecommendedNonce = async () => {
@@ -62,7 +63,7 @@ export const ReviewInfoText = ({
 
     const transactionsToGo = safeNonceNumber - nonce
     return (
-      <Paragraph size="lg" align="center">
+      <Paragraph size="md" align="center" color="disabled" noMargin>
         {transactionsToGo < 0 ? (
           `Nonce ${txParamsSafeNonce} has already been used. Your transaction will fail. Please use nonce ${recommendedNonce}.`
         ) : (
@@ -83,13 +84,18 @@ export const ReviewInfoText = ({
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
       {warningMessage() || (
-        <TransactionFees
-          gasCostFormatted={gasCostFormatted}
-          isCreation={isCreation}
-          isExecution={isExecution}
-          txEstimationExecutionStatus={txEstimationExecutionStatus}
-        />
+        <>
+          <Paragraph size="md" align="center" color="disabled" noMargin>
+            You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently
+            connected wallet.
+          </Paragraph>
+        </>
       )}
+      <TransactionFailText
+        estimationStatus={txEstimationExecutionStatus}
+        isExecution={isExecution}
+        isCreation={isCreation}
+      />
     </ReviewInfoTextWrapper>
   )
 }

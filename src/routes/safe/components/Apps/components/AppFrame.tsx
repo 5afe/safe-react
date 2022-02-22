@@ -1,4 +1,4 @@
-import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
+import { ReactElement, useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { Loader, Card, Title } from '@gnosis.pm/safe-react-components'
 import {
@@ -10,7 +10,6 @@ import {
   SignMessageParams,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
@@ -32,6 +31,9 @@ import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
+import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
+import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
+import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -78,10 +80,6 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
-const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), {
-  timeout: 10_000,
-})
-
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
@@ -100,6 +98,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
+  const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
+
+  const safeAppsRpc = getSafeAppsRpcServiceUrl()
+  const safeAppWeb3Provider = useMemo(
+    () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),
+    [safeAppsRpc],
+  )
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -257,6 +262,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     chainId,
     chainName,
     shortName,
+    safeAppWeb3Provider,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
@@ -307,6 +313,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   return (
     <AppWrapper>
+      {thirdPartyCookiesDisabled && <ThirdPartyCookiesWarning onClose={() => setThirdPartyCookiesDisabled(false)} />}
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>

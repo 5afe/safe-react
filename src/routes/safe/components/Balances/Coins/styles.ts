@@ -1,4 +1,4 @@
-import { sm } from 'src/theme/variables'
+import { background, sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -12,7 +12,7 @@ export const styles = createStyles({
   },
   hide: {
     '&:hover': {
-      backgroundColor: '#f7f5f5',
+      backgroundColor: `${background}`,
     },
     '&:hover $actions': {
       visibility: 'initial',

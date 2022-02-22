@@ -61,9 +61,13 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
         </span>
       </Tooltip>
       {canCancel && (
-        <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
-          Reject
-        </Button>
+        <Tooltip title="Reject" placement="top">
+          <span>
+            <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
+              Reject
+            </Button>
+          </span>
+        </Tooltip>
       )}
     </>
   )

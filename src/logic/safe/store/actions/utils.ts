@@ -1,5 +1,7 @@
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
+import { generatePath } from 'react-router-dom'
+import { SafeInfo, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
@@ -7,17 +9,26 @@ import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain.d'
-import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import {
   Transaction,
   isMultisigExecutionInfo,
   LocalTransactionStatus,
+  isMultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
+import {
+  extractShortChainName,
+  getPrefixedSafeAddressSlug,
+  history,
+  SAFE_ADDRESS_SLUG,
+  SAFE_ROUTES,
+  TRANSACTION_ID_SLUG,
+} from 'src/routes/routes'
 
-export const shouldExecuteTransaction = async (
+export const canExecuteCreatedTx = async (
   safeInstance: GnosisSafe,
   nonce: string,
   lastTx: Transaction | null,
@@ -119,4 +130,17 @@ export const getNonce = async (safeAddress: string, safeVersion: string): Promis
     nextNonce = await safeInstance.methods.nonce().call()
   }
   return nextNonce
+}
+
+export const navigateToTx = (safeAddress: string, txDetails: TransactionDetails): void => {
+  if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
+    return
+  }
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
+  const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
+    [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
+    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
+  })
+
+  history.push(txRoute)
 }

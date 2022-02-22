@@ -9,7 +9,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { networkSelector, userEnsSelector } from 'src/logic/wallets/store/selectors'
 import { getChainById } from 'src/config'
 
 const useStyles = makeStyles({
@@ -42,12 +42,6 @@ const useStyles = makeStyles({
       display: 'block',
     },
   },
-  providerContainer: {
-    display: 'flex',
-    flex: 1,
-    alignItems: 'center',
-    width: '100px',
-  },
   account: {
     alignItems: 'start',
     display: 'flex',
@@ -72,6 +66,7 @@ interface ProviderInfoProps {
 const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
   const currentNetwork = useSelector(networkSelector)
+  const ensName = useSelector(userEnsSelector)
   const chain = getChainById(currentNetwork)
   const addressColor = connected ? 'text' : 'warning'
   return (
@@ -90,16 +85,22 @@ const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): 
           {provider}
           {chain?.chainName && ` @ ${chain.chainName}`}
         </Paragraph>
-        <div className={classes.providerContainer}>
+        <div>
           {connected ? (
-            <PrefixedEthHashInfo
-              hash={userAddress}
-              shortenHash={4}
-              showAvatar
-              avatarSize="xs"
-              textColor={addressColor}
-              textSize="sm"
-            />
+            ensName ? (
+              <Text strong size="sm">
+                {ensName}
+              </Text>
+            ) : (
+              <PrefixedEthHashInfo
+                hash={userAddress}
+                shortenHash={4}
+                showAvatar
+                avatarSize="xs"
+                textColor={addressColor}
+                textSize="sm"
+              />
+            )
           ) : (
             <Text size="md" color={addressColor}>
               Connection Error

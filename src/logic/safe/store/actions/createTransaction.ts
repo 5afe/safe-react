@@ -3,6 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
+import { isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -17,24 +18,20 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { extractShortChainName, history, SAFE_ROUTES } from 'src/routes/routes'
-import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, TRANSACTION_ID_SLUG } from 'src/routes/routes'
-import { generatePath } from 'react-router-dom'
-import { fetchOnchainError } from 'src/logic/contracts/safeContractErrors'
-import { isMultiSigExecutionDetails } from '../models/types/gateway.d'
 import { removePendingTransaction, addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { _getChainId } from 'src/config'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { getLastTransaction } from '../selectors/gatewayTransactions'
-import { TxArgs } from '../models/types/transaction'
+import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
+import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -59,19 +56,6 @@ type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
-
-const navigateToTx = (safeAddress: string, txDetails: TransactionDetails) => {
-  if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
-    return
-  }
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
-  const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
-    [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
-  })
-
-  history.push(txRoute)
-}
 
 const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
@@ -102,37 +86,31 @@ export class TxSender {
   dispatch: Dispatch
   safeInstance: GnosisSafe
   safeVersion: string
-  approveAndExecute: boolean
   txId: string
+
+  // Assigned upon `transactionHash` promiEvent
+  txHash: undefined | string
 
   // On transaction completion (either confirming or executing)
   async onComplete(signature?: string, confirmCallback?: ConfirmEventHandler): Promise<void> {
-    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization, approveAndExecute = false } = this
+    const { txArgs, safeTxHash, txProps, dispatch, notifications, isFinalization } = this
 
+    // Propose the tx to the backend
+    // 1) If signing
+    // 2) If creating a new tx (no txId yet)
     let txDetails: TransactionDetails | null = null
-
-    const isOffChainSigning = !isFinalization && signature
-    const isOnChainSigning = isFinalization && !signature
-
-    // If 1/? threshold and owner chooses to execute created tx immediately
-    const isImmediateExecution = isOnChainSigning && !approveAndExecute
-
-    // Propose the tx to the backend if an owner and
-    // 1) It's a confirmation w/o exection
-    // 2) It's a creation + execution w/o pre-approved signatures
-    if (isOffChainSigning || isImmediateExecution) {
+    if (!isFinalization || !this.txId) {
       try {
-        txDetails = await saveTxToHistory({ ...txArgs, signature, origin })
+        txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
       } catch (err) {
         logError(Errors._816, err.message)
         return
       }
     }
 
-    // If 1/? threshold and owner chooses to execute created tx immediately
-    // we retrieve txId of newly created tx from proposal response
-    if (isFinalization && txDetails) {
-      dispatch(addPendingTransaction({ id: txDetails.txId }))
+    const id = txDetails?.txId || this.txId
+    if (isFinalization && id && this.txHash) {
+      dispatch(addPendingTransaction({ id, txHash: this.txHash }))
     }
 
     notifications.closePending()
@@ -149,7 +127,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId } = this
+    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
 
     logError(Errors._803, err.message)
 
@@ -162,23 +140,42 @@ export class TxSender {
       dispatch(removePendingTransaction({ id: txId }))
     }
 
-    const executeDataUsedSignatures = safeInstance.methods
-      .execTransaction(
-        txProps.to,
-        txProps.valueInWei,
-        txProps.txData,
-        txProps.operation,
-        0,
-        0,
-        0,
-        ZERO_ADDRESS,
-        ZERO_ADDRESS,
-        txArgs.sigs,
-      )
-      .encodeABI()
-    const contractErrorMessage = await fetchOnchainError(executeDataUsedSignatures, safeInstance, from)
+    // Don't display error when rejecting transaction via MetaMask
+    if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+      return
+    }
 
-    notifications.showOnError(err, contractErrorMessage)
+    const executeData = isFinalization
+      ? safeInstance.methods
+          .execTransaction(
+            txProps.to,
+            txProps.valueInWei,
+            txProps.txData,
+            txProps.operation,
+            0,
+            0,
+            0,
+            ZERO_ADDRESS,
+            ZERO_ADDRESS,
+            txArgs.sigs,
+          )
+          .encodeABI()
+      : txHash && safeInstance.methods.approveHash(txHash).encodeABI()
+
+    if (!executeData) {
+      return
+    }
+
+    const contractErrorMessage = await getContractErrorMessage({
+      safeInstance,
+      from,
+      data: executeData,
+    })
+
+    if (contractErrorMessage) {
+      logError(Errors._803, contractErrorMessage)
+      notifications.showOnError(err, contractErrorMessage)
+    }
   }
 
   async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
@@ -192,55 +189,74 @@ export class TxSender {
     )
   }
 
-  async sendTx(): Promise<string> {
-    const { txArgs, isFinalization, from, safeTxHash, txProps, dispatch, txId } = this
+  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<string> {
+    const { txArgs, isFinalization, from, safeTxHash, txProps } = this
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
-    const promiEvent = tx.send(sendParams)
 
-    // When signing on-chain don't mark as pending as it is never removed
-    if (isFinalization) {
-      // Finalising existing transaction (txId exists)
-      if (txId) {
-        dispatch(addPendingTransaction({ id: txId }))
-      }
-      aboutToExecuteTx.setNonce(txArgs.nonce)
+    return await tx
+      .send(sendParams)
+      .once('transactionHash', (hash) => {
+        this.txHash = hash
+
+        if (isFinalization) {
+          aboutToExecuteTx.setNonce(txArgs.nonce)
+        }
+        this.onComplete(undefined, confirmCallback)
+      })
+      .then(({ transactionHash }) => transactionHash)
+  }
+
+  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+    const { isFinalization, safeVersion } = this
+    const { account, smartContractWallet } = providerSelector(state)
+    let isSmart = smartContractWallet
+
+    // WalletConnect/Mobile App aren't smart contracts per se but the connected account can be
+    if (!isSmart) {
+      isSmart = await isSmartContractWallet(account) // never throws
     }
 
-    return new Promise((resolve, reject) => {
-      promiEvent.once('transactionHash', resolve) // this happens much faster than receipt
-      promiEvent.once('error', reject)
-    })
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
   }
 
   async submitTx(
     state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
-  ): Promise<void> {
-    const { isFinalization, safeVersion } = this
-    const { hardwareWallet, smartContractWallet } = providerSelector(state)
-    const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+  ): Promise<string | undefined> {
+    const isOffchain = await this.canSignOffchain(state)
+
     // Off-chain signature
-    if (!isFinalization && canSignOffChain) {
+    if (!this.isFinalization && isOffchain) {
       try {
+        const { hardwareWallet } = providerSelector(state)
         const signature = await this.onlyConfirm(hardwareWallet)
-        this.onComplete(signature, confirmCallback)
+
+        // WC + Safe receives "NaN" as a string instead of a sig
+        if (signature && signature !== 'NaN') {
+          this.onComplete(signature, confirmCallback)
+        } else {
+          throw Error('No signature received')
+        }
       } catch (err) {
         // User likely rejected transaction
         logError(Errors._814, err.message)
+        this.onError(err, errorCallback)
       }
       return
     }
 
     // On-chain signature or execution
     try {
-      await this.sendTx()
-      this.onComplete(undefined, confirmCallback)
+      await this.sendTx(confirmCallback)
     } catch (err) {
       this.onError(err, errorCallback)
     }
+
+    // Return txHash to check if transaction was successful
+    return this.txHash
   }
 
   async prepare(dispatch: Dispatch, state: AppReduxState, txProps: RequiredTxProps): Promise<void> {
@@ -298,8 +314,7 @@ export const createTransaction = (
 
     // Execute right away?
     sender.isFinalization =
-      !props.delayExecution &&
-      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
+      !props.delayExecution && (await canExecuteCreatedTx(sender.safeInstance, sender.nonce, getLastTransaction(state)))
 
     // Prepare a TxArgs object
     sender.txArgs = {

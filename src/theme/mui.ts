@@ -2,6 +2,8 @@ import { createTheme } from '@material-ui/core/styles'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 
 import {
+  alertWarning,
+  background,
   boldFont,
   bolderFont,
   border,
@@ -431,6 +433,29 @@ const theme = createTheme({
         },
       },
     },
+    MuiAlert: {
+      root: {
+        color: fontColor,
+        height: '48px',
+        alignItems: 'center',
+      },
+      standardWarning: {
+        backgroundColor: alertWarning,
+      },
+      icon: {
+        '& > svg': {
+          width: md,
+          height: md,
+        },
+      },
+    },
+    MuiAlertTitle: {
+      root: {
+        color: fontColor,
+        fontSize: md,
+        margin: 0,
+      },
+    },
   },
   palette,
 } as any)
@@ -468,7 +493,7 @@ export const DropdownListTheme = {
       },
       button: {
         '&:hover': {
-          backgroundColor: '#f7f5f5',
+          backgroundColor: `${background}`,
         },
       },
     },

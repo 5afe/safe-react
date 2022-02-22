@@ -6,7 +6,6 @@ import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
-import { sameString } from 'src/utils/strings'
 import { extractSafeAddress } from 'src/routes/routes'
 import { AppReduxState } from 'src/store'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
@@ -43,7 +42,6 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const isCancelTransaction = sameString(props?.parametersStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
@@ -52,7 +50,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
   // SafeTxGas: for a new Tx call requiredTxGas, for an existing tx get it from the backend.
-  const [safeTxGas, setSafeTxGas] = useState<string | undefined>(isCancelTransaction ? '0' : props?.initialSafeTxGas)
+  const [safeTxGas, setSafeTxGas] = useState<string | undefined>(props?.initialSafeTxGas)
 
   // ETH Params
   const [ethNonce, setEthNonce] = useState<string | undefined>() // we delegate it to the wallet
@@ -80,12 +78,8 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       setEthGasPriceInGWei(undefined)
       return
     }
-    if (isCancelTransaction) {
-      setEthGasPrice('0')
-      return
-    }
     setEthGasPriceInGWei(toWei(ethGasPrice, 'Gwei'))
-  }, [ethGasPrice, isCancelTransaction])
+  }, [ethGasPrice])
 
   // Get max prio fee
   useEffect(() => {
@@ -93,12 +87,8 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       setEthMaxPrioFee(undefined)
       return
     }
-    if (isCancelTransaction) {
-      setEthMaxPrioFee('0')
-      return
-    }
     setEthMaxPrioFeeInGWei(toWei(ethMaxPrioFee, 'Gwei'))
-  }, [ethMaxPrioFee, isCancelTransaction])
+  }, [ethMaxPrioFee])
 
   // Calc safe nonce
   useEffect(() => {

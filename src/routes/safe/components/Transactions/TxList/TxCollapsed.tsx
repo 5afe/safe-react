@@ -24,7 +24,7 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-import { getTxTo, isAwaitingExecution, isCancelTxDetails } from './utils'
+import { getTxTo, isAwaitingExecution } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
@@ -123,9 +123,6 @@ export const TxCollapsed = ({
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
 
-  const onChainRejection =
-    isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
-
   const txCollapsedNonce = (
     <div className={'tx-nonce' + willBeReplaced}>
       <Text size="xl">{nonce}</Text>
@@ -133,7 +130,7 @@ export const TxCollapsed = ({
   )
 
   const txCollapsedType = (
-    <div className={'tx-type' + willBeReplaced + onChainRejection}>
+    <div className={'tx-type' + willBeReplaced}>
       <CustomIconText
         address={toAddress?.value || '0x'}
         iconUrl={type.icon || toInfo?.logoUri || undefined}

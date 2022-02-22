@@ -1,4 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
+import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -13,15 +14,16 @@ interface AddressInfoProps {
   title?: string
   name?: string
   logoUri?: string
+  color?: ThemeColors
 }
 
-const AddressInfo = ({ address, title, name, logoUri }: AddressInfoProps): ReactElement => {
+const AddressInfo = ({ address, title, name, logoUri, color }: AddressInfoProps): ReactElement => {
   const addessBookName = useSelector((state) => addressBookEntryName(state, { address }))
 
   return (
     <>
       {title && (
-        <Text size="xl" strong>
+        <Text size="xl" color={color}>
           {title}
         </Text>
       )}

@@ -8,7 +8,7 @@ import {
   MessageFormatter,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { trackError, Errors } from 'src/logic/exceptions/CodedException'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { SafeApp } from './types'
 
 type MessageHandler = (
@@ -35,6 +35,10 @@ class AppCommunicator {
   }
 
   private isValidMessage = (msg: SDKMessageEvent): boolean => {
+    if (msg.data.hasOwnProperty('isCookieEnabled')) {
+      return true
+    }
+
     // @ts-expect-error .parent doesn't exist on some possible types
     const sentFromIframe = msg.source.parent === window.parent
     const knownMethod = Object.values(Methods).includes(msg.data.method)
@@ -71,7 +75,7 @@ class AppCommunicator {
         }
       } catch (err) {
         this.send(err.message, msg.data.id, true)
-        trackError(Errors._901, err.message, {
+        logError(Errors._901, err.message, {
           contexts: {
             safeApp: this.app,
             request: msg.data,

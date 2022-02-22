@@ -34,17 +34,6 @@ export const mustBeInteger = (value: string): ValidatorReturnType =>
 export const mustBeFloat = (value: string): ValidatorReturnType =>
   value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined
 
-const regexQuery =
-  /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
-const url = new RegExp(regexQuery)
-export const mustBeUrl = (value: string): ValidatorReturnType => {
-  if (url.test(value)) {
-    return undefined
-  }
-
-  return 'Please, provide a valid url'
-}
-
 export const minValue =
   (min: number | string, inclusive = true) =>
   (value: string): ValidatorReturnType => {
@@ -135,7 +124,7 @@ export const minMaxDecimalsLength =
     return minMaxLengthErrMsg ? `Should be ${minLen} to ${maxLen} decimals` : undefined
   }
 
-export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
+export const ADDRESS_REPEATED_ERROR = 'Address already added'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
 export const THRESHOLD_ERROR = 'You cannot set more confirmations than owners'
 

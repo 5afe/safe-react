@@ -7,7 +7,6 @@ import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -15,7 +14,6 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import {
@@ -26,6 +24,8 @@ import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -96,11 +96,14 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       onSubmit={submitTx}
       onBack={onPrev}
     >
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Contract interaction" />
       <Hairline />
       <Block className={classes.formContainer}>
+        <Row align="center" margin="md">
+          <TransferAmount token={getEthAsToken('0')} text={`${tx.value || 0} ${nativeCurrency.symbol}`} />
+        </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Contract Address
           </Paragraph>
         </Row>
@@ -108,36 +111,19 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           <PrefixedEthHashInfo
             hash={tx.contractAddress as string}
             name={addressName}
+            strongName
             showAvatar
             showCopyBtn
             explorerUrl={explorerUrl}
           />
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Value
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Col xs={1}>
-            <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
-          </Col>
-          <Col layout="column" xs={11}>
-            <Block justify="left">
-              <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
-                {tx.value || 0}
-                {' ' + nativeCurrency.symbol}
-              </Paragraph>
-            </Block>
-          </Col>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Method
           </Paragraph>
         </Row>
-        <Row align="center" margin="md">
-          <Paragraph className={classes.value} size="md" style={{ margin: 0 }}>
+        <Row align="center" margin="lg">
+          <Paragraph className={classes.value} size="lg" style={{ margin: 0 }}>
             {tx.selectedMethod?.name}
           </Paragraph>
         </Row>
@@ -148,12 +134,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           return (
             <Fragment key={key}>
               <Row margin="xs">
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                <Paragraph color="disabled" noMargin size="lg">
                   {name} ({type})
                 </Paragraph>
               </Row>
               <Row align="center" margin="md">
-                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
+                <Paragraph className={classes.value} noMargin size="lg" style={{ margin: 0 }}>
                   {value}
                 </Paragraph>
               </Row>
@@ -161,13 +147,13 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           )
         })}
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Data (hex encoded)
           </Paragraph>
         </Row>
-        <Row align="center" margin="md">
+        <Row align="center">
           <Col className={classes.outerData}>
-            <Row className={classes.data} size="md">
+            <Row className={classes.data} size="lg">
               {tx.data}
             </Row>
           </Col>

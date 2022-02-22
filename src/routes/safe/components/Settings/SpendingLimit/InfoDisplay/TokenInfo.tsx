@@ -1,4 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
+import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -20,11 +21,12 @@ interface TokenInfoProps {
   amount: string
   title?: string
   token: Token
+  color?: ThemeColors
 }
 
-const TokenInfo = ({ amount, title, token }: TokenInfoProps): ReactElement => (
+const TokenInfo = ({ amount, title, token, color }: TokenInfoProps): ReactElement => (
   <>
-    <Text size="xl" strong>
+    <Text size="xl" color={color}>
       {title}
     </Text>
     <StyledImageName>
