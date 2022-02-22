@@ -3,12 +3,6 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import { lg } from 'src/theme/variables'
 
-// Neded for solving a fix in Windows browsers
-const overflowStyle = {
-  overflow: 'hidden',
-  width: '100%',
-}
-
 const styles = () =>
   createStyles({
     root: {
@@ -91,8 +85,8 @@ const TextField = (props: Props): React.ReactElement => {
       name={name}
       onChange={onChange}
       rows={rows}
-      style={overflowStyle}
       value={value}
+      variant="outlined"
       {...rest}
     />
   )

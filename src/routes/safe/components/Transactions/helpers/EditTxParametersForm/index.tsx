@@ -42,7 +42,7 @@ const SafeOptions = styled.div`
 const EthereumOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 10px 20px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -54,11 +54,9 @@ const StyledLink = styled(Link)`
   }
 `
 const StyledText = styled(Text)`
-  margin: 0 0 4px 0;
+  margin: 0 0 16px 0;
 `
-const StyledTextMt = styled(Text)`
-  margin: 16px 0 4px 0;
-`
+
 const useStyles = makeStyles(styles)
 
 interface Props {
@@ -151,7 +149,7 @@ export const EditTxParametersForm = ({
                   name="safeNonce"
                   defaultValue={safeNonce}
                   placeholder="Safe nonce"
-                  text="Safe nonce"
+                  label="Safe nonce"
                   type="number"
                   min="0"
                   component={TextField}
@@ -162,7 +160,7 @@ export const EditTxParametersForm = ({
                     name="safeTxGas"
                     defaultValue={safeTxGas}
                     placeholder="SafeTxGas"
-                    text="SafeTxGas"
+                    label="SafeTxGas"
                     type="number"
                     min="0"
                     component={TextField}
@@ -173,16 +171,16 @@ export const EditTxParametersForm = ({
 
               {areEthereumParamsVisible(parametersStatus) && (
                 <>
-                  <StyledTextMt size="xl" strong>
+                  <StyledText size="xl" strong>
                     {ethereumTxParametersTitle(isExecution)}
-                  </StyledTextMt>
+                  </StyledText>
 
                   <EthereumOptions>
                     <Field
                       name="ethNonce"
                       defaultValue={ethNonce}
                       placeholder="Nonce"
-                      text="Nonce"
+                      label="Nonce"
                       type="number"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
@@ -191,7 +189,7 @@ export const EditTxParametersForm = ({
                       name="ethGasLimit"
                       defaultValue={ethGasLimit}
                       placeholder="Gas limit"
-                      text="Gas limit"
+                      label="Gas limit"
                       type="number"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
@@ -202,7 +200,7 @@ export const EditTxParametersForm = ({
                         defaultValue={ethGasPrice}
                         type="number"
                         placeholder={gasPriceText}
-                        text={gasPriceText}
+                        label={gasPriceText}
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
                       />
@@ -214,7 +212,7 @@ export const EditTxParametersForm = ({
                         defaultValue={ethMaxPrioFee}
                         type="number"
                         placeholder="Max priority fee"
-                        text="Max priority fee (GWEI)"
+                        label="Max priority fee (GWEI)"
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
                       />
