@@ -3,6 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
+import { isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -207,22 +208,42 @@ export class TxSender {
       .then(({ transactionHash }) => transactionHash)
   }
 
+  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+    const { isFinalization, safeVersion } = this
+    const { account, smartContractWallet } = providerSelector(state)
+    let isSmart = smartContractWallet
+
+    // WalletConnect/Mobile App aren't smart contracts per se but the connected account can be
+    if (!isSmart) {
+      isSmart = await isSmartContractWallet(account) // never throws
+    }
+
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
+  }
+
   async submitTx(
     state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
-    const { isFinalization, safeVersion } = this
-    const { hardwareWallet, smartContractWallet } = providerSelector(state)
-    const canSignOffChain = checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+    const isOffchain = await this.canSignOffchain(state)
+
     // Off-chain signature
-    if (!isFinalization && canSignOffChain) {
+    if (!this.isFinalization && isOffchain) {
       try {
+        const { hardwareWallet } = providerSelector(state)
         const signature = await this.onlyConfirm(hardwareWallet)
-        this.onComplete(signature, confirmCallback)
+
+        // WC + Safe receives "NaN" as a string instead of a sig
+        if (signature && signature !== 'NaN') {
+          this.onComplete(signature, confirmCallback)
+        } else {
+          throw Error('No signature received')
+        }
       } catch (err) {
         // User likely rejected transaction
         logError(Errors._814, err.message)
+        this.onError(err, errorCallback)
       }
       return
     }
