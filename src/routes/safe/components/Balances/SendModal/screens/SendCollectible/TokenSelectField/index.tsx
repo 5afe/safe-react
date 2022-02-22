@@ -3,7 +3,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { selectStyles, selectedTokenStyles } from './style'
+import { selectStyles, selectedTokenStyles } from '../style'
 
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
@@ -68,6 +68,7 @@ const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): Reac
       disabled={!assetsAddresses.length}
       initialValue={initialValue}
       name="assetAddress"
+      displayEmpty
       renderValue={(assetAddress) => <SelectedToken assetAddress={assetAddress} assets={assets} />}
       validate={required}
     >

@@ -3,7 +3,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { selectStyles, selectedTokenStyles } from './style'
+import { selectStyles, selectedTokenStyles } from '../style'
 
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
@@ -65,6 +65,7 @@ export const CollectibleSelectField = ({ initialValue, tokens }: CollectibleSele
       disabled={!tokens.length}
       initialValue={initialValue}
       name="nftTokenId"
+      displayEmpty
       renderValue={(nftTokenId) => <SelectedCollectible tokenId={nftTokenId} tokens={tokens} />}
       validate={required}
     >

@@ -256,12 +256,6 @@ const theme = createTheme({
           color: disabled,
         },
       },
-      label: {
-        color: error,
-      },
-      formControl: {
-        marginTop: '0 !important',
-      },
     },
     MuiSelect: {
       outlined: {
