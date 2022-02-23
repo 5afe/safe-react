@@ -115,7 +115,7 @@ let currentOnboardInstance: API
 const onboard = (): API => {
   // The `walletName` used in Onboard's `WalletSelectModuleOptions['wallets']` differs from the
   // wallet name stored in its state
-  const walletName = currentOnboardInstance?.getState().wallet.name?.replace(/-/g, '') as WALLETS
+  const walletName = currentOnboardInstance?.getState()?.wallet?.name?.replace(/-/g, '') as WALLETS
 
   if (!currentOnboardInstance || (walletName && !isSupportedWallet(walletName))) {
     currentOnboardInstance = getOnboard(_getChainId())
@@ -126,8 +126,10 @@ const onboard = (): API => {
 export default onboard
 
 export const checkWallet = async (): Promise<boolean> => {
-  if (shouldSwitchNetwork()) {
-    switchNetwork(onboard().getState().wallet, _getChainId()).catch((e) => e.log())
+  const wallet = onboard().getState().wallet
+
+  if (shouldSwitchNetwork(wallet)) {
+    switchNetwork(wallet, _getChainId()).catch((e) => e.log())
   }
 
   let isWalletConnected = false

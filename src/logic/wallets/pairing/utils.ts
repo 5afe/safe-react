@@ -19,7 +19,7 @@ export const isPairingSupported = (): boolean => {
 }
 
 // Is pairing module initialised
-export const isPairingModule = (name: Wallet['name'] = onboard().getState().wallet.name): boolean => {
+export const isPairingModule = (name: Wallet['name'] = onboard().getState().wallet?.name): boolean => {
   return name === PAIRING_MODULE_NAME
 }
 

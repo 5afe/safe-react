@@ -82,11 +82,11 @@ export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<v
   }
 }
 
-export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
-  const desiredNetwork = parseInt(_getChainId(), 10)
-
+export const shouldSwitchNetwork = (wallet: Wallet): boolean => {
   // The current network can be stored under one of two keys
-  const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].includes(desiredNetwork)
+  const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].some(
+    (chainId) => chainId && chainId.toString() !== _getChainId(),
+  )
 
   return isCurrentNetwork
 }
