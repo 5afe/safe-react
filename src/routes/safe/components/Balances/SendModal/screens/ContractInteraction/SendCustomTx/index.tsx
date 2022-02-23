@@ -115,7 +115,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                       }}
                       name="value"
                       placeholder="Value*"
-                      text="Value*"
+                      label="Value*"
                       type="text"
                       validate={composeValidators(mustBeFloat, maxValue(ethBalance || '0'), minValue(0))}
                     />

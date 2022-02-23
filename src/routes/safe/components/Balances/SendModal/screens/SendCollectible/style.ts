@@ -17,8 +17,8 @@ export const styles = createStyles({
 
 export const selectedTokenStyles = createStyles({
   container: {
-    minHeight: '55px',
-    padding: `0 ${md}`,
+    background: 'none !important',
+    padding: '0',
     width: '100%',
   },
   tokenData: {

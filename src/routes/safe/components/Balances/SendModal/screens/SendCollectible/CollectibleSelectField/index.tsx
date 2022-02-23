@@ -27,7 +27,7 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): Rea
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
-    <MenuItem className={classes.container}>
+    <MenuItem className={classes.container} disableRipple>
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>

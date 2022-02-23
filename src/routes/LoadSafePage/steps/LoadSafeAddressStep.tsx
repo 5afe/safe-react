@@ -159,7 +159,7 @@ function LoadSafeAddressStep(): ReactElement {
             component={TextField}
             name={FIELD_LOAD_CUSTOM_SAFE_NAME}
             placeholder={safeName}
-            text="Safe name"
+            label="Safe name"
             type="text"
             testId="load-safe-name-field"
           />

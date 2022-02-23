@@ -61,7 +61,7 @@ export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.React
             }}
             name="value"
             placeholder="Value"
-            text="Value"
+            label="Value"
             type="text"
             validate={!disabled && composeValidators(mustBeFloat, maxValue(ethBalance))}
           />

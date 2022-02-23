@@ -52,7 +52,7 @@ function LoadSafeOwnersStep(): ReactElement {
                     initialValue={name}
                     name={ownerFieldName}
                     placeholder={ownerName}
-                    text="Owner Name"
+                    label="Owner Name"
                     type="text"
                     validate={minMaxLength(0, 50)}
                     testId={`load-safe-owner-name-${index}`}

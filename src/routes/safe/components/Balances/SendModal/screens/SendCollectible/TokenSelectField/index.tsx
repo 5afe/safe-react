@@ -28,7 +28,7 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.Reac
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
-    <MenuItem className={classes.container}>
+    <MenuItem className={classes.container} disableRipple>
       {asset && asset.numberOfTokens ? (
         <>
           <ListItemIcon>

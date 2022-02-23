@@ -267,7 +267,9 @@ const theme = createTheme({
     },
     MuiSelect: {
       outlined: {
-        padding: '0 !important',
+        padding: '8px 16px',
+        minHeight: '56px !important',
+        boxSizing: 'border-box',
       },
     },
     MuiFilledInput: {
