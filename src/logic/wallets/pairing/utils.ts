@@ -15,7 +15,7 @@ export const isPairingConnected = (): boolean => {
 }
 
 export const isPairingSupported = (): boolean => {
-  return !getDisabledWallets().includes(WALLETS.MOBILE_SAFE)
+  return !getDisabledWallets().includes(WALLETS.SAFE_MOBILE)
 }
 
 // Is pairing module initialised
