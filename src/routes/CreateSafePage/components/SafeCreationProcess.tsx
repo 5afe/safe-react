@@ -292,7 +292,7 @@ function SafeCreationProcess(): ReactElement {
           }
           footer={
             <ButtonContainer>
-              <Track {...CREATE_SAFE_TRACKING_EVENTS.NAVIGATE_TO}>
+              <Track {...CREATE_SAFE_TRACKING_EVENTS.GO_TO_SAFE}>
                 <Button
                   testId="safe-created-button"
                   onClick={onClickModalButton}

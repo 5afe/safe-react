@@ -67,7 +67,6 @@ export enum GTM_DATA_LAYER_VARS {
   DESC = 'data-track-desc',
   CHAIN = 'data-track-chain',
   PAYLOAD = 'data-track-payload',
-  GTM_DATA_LAYER_VARS = 'GTM_DATA_LAYER_VARS',
 }
 
 export const loadGoogleTagManager = (): void => {
