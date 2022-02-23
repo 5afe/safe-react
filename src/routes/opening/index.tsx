@@ -103,7 +103,7 @@ export const SafeDeployment = ({
     }
   }, [provider])
 
-  // creating safe from from submission
+  // creating safe from form submission
   useEffect(() => {
     if (submittedPromise === undefined) {
       return
