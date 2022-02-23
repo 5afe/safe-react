@@ -100,6 +100,8 @@ function SafeCreationProcess(): ReactElement {
       return
     }
 
+    if (!userAddressAccount) return
+
     setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
 
     setCreationTxPromise(
