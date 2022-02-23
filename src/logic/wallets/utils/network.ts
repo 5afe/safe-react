@@ -83,15 +83,20 @@ export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<v
 }
 
 export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
-  const desiredNetwork = _getChainId()
-  const currentNetwork = wallet?.provider?.networkVersion
-  return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
+  const desiredNetwork = parseInt(_getChainId(), 10)
+
+  // The current network can be stored under one of two keys
+  const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].includes(desiredNetwork)
+
+  return isCurrentNetwork
 }
 
 export const switchWalletChain = async (): Promise<void> => {
   const { wallet } = onboard().getState()
+  const desiredNetwork = _getChainId()
+
   try {
-    await switchNetwork(wallet, _getChainId())
+    await switchNetwork(wallet, desiredNetwork)
   } catch (e) {
     e.log()
     // Fallback to the onboard popup if switching isn't supported
@@ -99,4 +104,6 @@ export const switchWalletChain = async (): Promise<void> => {
     await onboard().walletSelect()
     await onboard().walletCheck()
   }
+
+  onboard().config({ networkId: parseInt(desiredNetwork, 10) })
 }
