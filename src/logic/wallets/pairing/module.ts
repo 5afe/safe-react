@@ -53,9 +53,7 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
       ;(provider.wc as any)._clientMeta = clientMeta
 
       const onDisconnect = () => {
-        if (provider.connected) {
-          resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
-        }
+        resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
       }
 
       provider.wc.on('disconnect', onDisconnect)
