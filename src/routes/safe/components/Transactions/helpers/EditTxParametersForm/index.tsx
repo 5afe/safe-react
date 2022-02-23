@@ -42,7 +42,7 @@ const SafeOptions = styled.div`
 const EthereumOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 20px;
+  gap: 20px 12px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -55,6 +55,10 @@ const StyledLink = styled(Link)`
 `
 const StyledText = styled(Text)`
   margin: 0 0 16px 0;
+`
+
+const StyledTextMt = styled(Text)`
+  margin: 16px 0;
 `
 
 const useStyles = makeStyles(styles)
@@ -171,9 +175,9 @@ export const EditTxParametersForm = ({
 
               {areEthereumParamsVisible(parametersStatus) && (
                 <>
-                  <StyledText size="xl" strong>
+                  <StyledTextMt size="xl" strong>
                     {ethereumTxParametersTitle(isExecution)}
-                  </StyledText>
+                  </StyledTextMt>
 
                   <EthereumOptions>
                     <Field

@@ -222,8 +222,8 @@ const theme = createTheme({
     MuiInputLabel: {
       outlined: {
         color: primary,
-        '&$focused': {
-          color: secondary,
+        '&$error': {
+          color: error,
         },
       },
     },
@@ -238,10 +238,18 @@ const theme = createTheme({
         },
         '& .MuiOutlinedInput-notchedOutline': {
           borderColor: black300,
+          transition: 'borderColor 0.2s ease-in-out 0s',
+          borderWidth: '1px',
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: secondary,
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: secondary,
+          borderColor: black300,
           borderWidth: '1px',
+        },
+        '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+          borderColor: error,
         },
       },
       input: {

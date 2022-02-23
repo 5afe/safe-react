@@ -4,9 +4,6 @@ export const useTextFieldLabelStyle = makeStyles(
   createStyles({
     root: {
       overflow: 'hidden',
-      borderRadius: 4,
-      fontSize: '15px',
-      width: '500px',
     },
   }),
 )

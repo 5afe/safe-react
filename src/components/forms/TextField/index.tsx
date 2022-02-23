@@ -78,7 +78,7 @@ const TextField = (props: Props): React.ReactElement => {
   return (
     <MuiTextField
       error={hasError && showError}
-      helperText={hasError && showError ? errorMessage : helperText || ' '}
+      helperText={hasError && showError ? errorMessage : helperText || ''}
       inputProps={inputProps} // blank in order to force to have helper text
       InputProps={inputRootProps}
       multiline={multiline}
