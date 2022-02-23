@@ -4,7 +4,7 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import queryString from 'query-string'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import { Loader } from '@gnosis.pm/safe-react-components'
 
 import Page from 'src/components/layout/Page'

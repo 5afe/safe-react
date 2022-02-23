@@ -2,6 +2,8 @@ import { createTheme } from '@material-ui/core/styles'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 
 import {
+  alertWarning,
+  background,
   boldFont,
   bolderFont,
   border,
@@ -24,7 +26,6 @@ import {
   sm,
   smallFontSize,
   xs,
-  alertWarning,
   black300,
 } from './variables'
 
@@ -538,7 +539,7 @@ export const DropdownListTheme = {
       },
       button: {
         '&:hover': {
-          backgroundColor: '#f7f5f5',
+          backgroundColor: `${background}`,
         },
       },
     },

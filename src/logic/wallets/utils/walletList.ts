@@ -1,12 +1,14 @@
-import { WalletInitOptions, WalletSelectModuleOptions } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions, WalletModule, WalletSelectModuleOptions } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
-import patchedWalletConnect from '../patchedWalletConnect'
+import getPairingModule from 'src/logic/wallets/pairing/module'
+import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
+import getPatchedWCModule from 'src/logic/wallets/walletConnect/module'
 
-type Wallet = WalletInitOptions & {
-  desktop: boolean
+type Wallet = (WalletInitOptions | WalletModule) & {
+  desktop: boolean // Whether wallet supports desktop app
   walletName: WALLETS
 }
 
@@ -66,26 +68,27 @@ const wallets = (chainId: ChainId): Wallet[] => {
   ]
 }
 
-const getPlatformSupportedWallets = (chainId: ChainId): WalletInitOptions[] => {
-  if (window.isDesktop) {
-    return wallets(chainId)
-      .filter(({ desktop }) => desktop)
-      .map(({ desktop, ...rest }) => rest)
-  }
-
-  return wallets(chainId)
-    .map(({ desktop, ...rest }) => rest)
-    .filter(({ walletName }) => !getDisabledWallets().includes(walletName))
+export const isSupportedWallet = (name: WALLETS): boolean => {
+  return !getDisabledWallets().some((walletName) => {
+    // walletName is config wallet name, name is the wallet module name and differ
+    return walletName.replace(/\s/g, '').toLowerCase() === name.replace(/\s/g, '').toLowerCase()
+  })
 }
 
 export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
-  const wallets: WalletSelectModuleOptions['wallets'] = getPlatformSupportedWallets(chainId)
+  const supportedWallets: WalletSelectModuleOptions['wallets'] = wallets(chainId)
+    .filter(({ walletName, desktop }) => {
+      // Desktop vs. Web app wallet support
+      return isSupportedWallet(walletName) && window.isDesktop ? desktop : true
+    })
+    .map(({ desktop: _, ...rest }) => rest)
 
-  if (!getDisabledWallets().includes(WALLETS.WALLET_CONNECT)) {
-    const wc = patchedWalletConnect(chainId)
+  if (isSupportedWallet(WALLETS.WALLET_CONNECT)) {
+    const wc = getPatchedWCModule(chainId)
     // Inset patched WC module at index 1
-    wallets.splice(1, 0, wc)
+    supportedWallets?.splice(1, 0, wc)
   }
 
-  return wallets
+  // Pairing must be 1st in list (to hide via CSS)
+  return isPairingSupported() ? [getPairingModule(chainId), ...supportedWallets] : supportedWallets
 }

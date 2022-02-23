@@ -40,7 +40,7 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): Rea
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
+        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light" noMargin>
           Select a token*
         </Paragraph>
       )}

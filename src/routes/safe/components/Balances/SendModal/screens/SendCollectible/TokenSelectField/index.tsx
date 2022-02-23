@@ -41,7 +41,7 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.Reac
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
+        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light" noMargin>
           Select an asset*
         </Paragraph>
       )}

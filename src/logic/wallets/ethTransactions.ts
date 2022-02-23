@@ -11,8 +11,8 @@ import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedExce
 
 export const EMPTY_DATA = '0x'
 
-const DEFAULT_MAX_GAS_FEE = 3.5e9 // 3.5 GWEI
-const DEFAULT_MAX_PRIO_FEE = 2.5e9 // 2.5 GWEI
+export const DEFAULT_MAX_GAS_FEE = 3.5e9 // 3.5 GWEI
+export const DEFAULT_MAX_PRIO_FEE = 2.5e9 // 2.5 GWEI
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { uri, gasParameter, gweiFactor } = gasPriceOracle
