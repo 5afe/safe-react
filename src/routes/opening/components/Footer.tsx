@@ -6,6 +6,8 @@ import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import Button from 'src/components/layout/Button'
 import { getHashedExplorerUrl } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
+import Track from 'src/components/Track'
+import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 const StyledText = styled(Text)`
   display: inline-flex;
@@ -70,21 +72,23 @@ export const ContinueFooter = ({
 }): ReactElement => (
   <FooterContainer>
     <Hairline />
-    <Button
-      color="primary"
-      disabled={continueButtonDisabled}
-      onClick={onContinue}
-      variant="contained"
-      data-testid="continue-btn"
-    >
-      {continueButtonDisabled ? (
-        <>
-          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your Safe</LoaderText>
-        </>
-      ) : (
-        <>Get started</>
-      )}
-    </Button>
+    <Track {...CREATE_SAFE_TRACKING_EVENTS.GET_STARTED}>
+      <Button
+        color="primary"
+        disabled={continueButtonDisabled}
+        onClick={onContinue}
+        variant="contained"
+        data-testid="continue-btn"
+      >
+        {continueButtonDisabled ? (
+          <>
+            <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your Safe</LoaderText>
+          </>
+        ) : (
+          <>Get started</>
+        )}
+      </Button>
+    </Track>
   </FooterContainer>
 )
 

@@ -133,7 +133,7 @@ export const getTrackDataLayer = ({ id, desc, payload }: TrackDataProps): DataLa
   return dataLayer
 }
 
-export const trackEvent = (event: Omit<ComponentProps<typeof Track>, 'children'>): void => {
+export const trackEventGTM = (event: Omit<ComponentProps<typeof Track>, 'children'>): void => {
   TagManager.dataLayer({
     dataLayer: {
       event: GTM_EVENTS.TRACK,

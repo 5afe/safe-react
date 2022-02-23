@@ -19,6 +19,18 @@ export const CREATE_SAFE_TRACKING_EVENTS: TrackingEvents = {
     id: CREATE_SAFE_TRACKING_ID,
     desc: 'Create Safe',
   },
+  CONFIRM: {
+    id: CREATE_SAFE_TRACKING_ID,
+    desc: 'Confirm Safe creation',
+  },
+  GET_STARTED: {
+    id: CREATE_SAFE_TRACKING_ID,
+    desc: 'Loading created Safe',
+  },
+  NAVIGATE_TO: {
+    id: CREATE_SAFE_TRACKING_ID,
+    desc: 'Navigate to created Safe',
+  },
 }
 
 export const LOAD_SAFE_TRACKING_ID = 'safe-load'

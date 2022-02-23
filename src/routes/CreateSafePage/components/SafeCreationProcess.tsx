@@ -39,6 +39,9 @@ import { getExplorerInfo, getShortName } from 'src/config'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEventGTM } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import Track from 'src/components/Track'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -125,6 +128,10 @@ function SafeCreationProcess(): ReactElement {
             saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
               [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
               ...safeCreationFormValues,
+            })
+
+            trackEventGTM({
+              ...CREATE_SAFE_TRACKING_EVENTS.CONFIRM,
             })
 
             // Monitor the latest block to find a potential speed-up tx
@@ -285,16 +292,18 @@ function SafeCreationProcess(): ReactElement {
           }
           footer={
             <ButtonContainer>
-              <Button
-                testId="safe-created-button"
-                onClick={onClickModalButton}
-                color="primary"
-                type={'button'}
-                size="small"
-                variant="contained"
-              >
-                Continue
-              </Button>
+              <Track {...CREATE_SAFE_TRACKING_EVENTS.NAVIGATE_TO}>
+                <Button
+                  testId="safe-created-button"
+                  onClick={onClickModalButton}
+                  color="primary"
+                  type={'button'}
+                  size="small"
+                  variant="contained"
+                >
+                  Continue
+                </Button>
+              </Track>
             </ButtonContainer>
           }
         />
