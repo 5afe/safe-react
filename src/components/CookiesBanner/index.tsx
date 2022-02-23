@@ -51,7 +51,7 @@ const useStyles = makeStyles({
     rowGap: '15px',
     margin: '0 auto',
     [`@media (min-width: ${screenSm}px)`]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+      gridTemplateColumns: '1fr 1fr 1fr 1fr',
       paddingBottom: '0',
       rowGap: '5px',
     },
