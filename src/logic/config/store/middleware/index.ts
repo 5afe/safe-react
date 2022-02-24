@@ -22,8 +22,6 @@ export const configMiddleware =
         dispatch(clearCurrentSession())
         dispatch(loadSafesFromStorage())
         dispatch(loadCurrentSessionFromStorage())
-
-        onboard().config({ networkId: parseInt(action.payload, 10) })
         break
       }
       default:
