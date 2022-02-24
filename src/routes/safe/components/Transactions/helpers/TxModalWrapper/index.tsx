@@ -91,7 +91,7 @@ export const TxModalWrapper = ({
   onClose,
   submitText,
   isSubmitDisabled,
-  isRejectTx,
+  isRejectTx = false,
 }: Props): React.ReactElement => {
   const [manualSafeTxGas, setManualSafeTxGas] = useState<string>('0')
   const [manualGasPrice, setManualGasPrice] = useState<string>()
@@ -229,6 +229,7 @@ export const TxModalWrapper = ({
             <ReviewInfoText
               isCreation={isCreation}
               isExecution={doExecute}
+              isRejection={isRejectTx}
               safeNonce={txParameters.safeNonce}
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
