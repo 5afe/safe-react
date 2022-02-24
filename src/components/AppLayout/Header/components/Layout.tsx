@@ -1,5 +1,4 @@
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
@@ -68,25 +67,22 @@ const styles = () => ({
 })
 
 const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
+  if (!open) {
+    return null
+  }
   return (
     <Popper
       anchorEl={anchorEl}
       className={classes.popper}
-      open={open}
+      open
       placement="bottom"
       popperOptions={{ positionFixed: true }}
     >
-      {({ TransitionProps }) => (
-        <Grow {...TransitionProps}>
-          <>
-            <ClickAwayListener mouseEvent="onClick" onClickAway={onClose} touchEvent={false}>
-              <List className={classes.root} component="div">
-                {providerDetails}
-              </List>
-            </ClickAwayListener>
-          </>
-        </Grow>
-      )}
+      <ClickAwayListener mouseEvent="onClick" onClickAway={onClose} touchEvent={false}>
+        <List className={classes.root} component="div">
+          {providerDetails}
+        </List>
+      </ClickAwayListener>
     </Popper>
   )
 }
