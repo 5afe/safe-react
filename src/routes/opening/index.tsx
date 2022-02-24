@@ -197,9 +197,9 @@ export const SafeDeployment = ({
         const web3 = getWeb3()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
-        let safeAddress
+        let safeAddress = ''
 
-        if (receipt.events) {
+        if (receipt?.events) {
           safeAddress = receipt.events.ProxyCreation.returnValues.proxy
         } else {
           // If the node doesn't return the events we try to fetch it from logs
