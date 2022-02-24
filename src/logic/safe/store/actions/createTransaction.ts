@@ -140,7 +140,7 @@ export class TxSender {
       dispatch(removePendingTransaction({ id: txId }))
     }
 
-    // Don't display error when rejecting transaction via MetaMask
+    // Display a notification when user rejects the tx
     if (isWalletRejection(err)) {
       // show snackbar
       notifications.showOnRejection(err)
