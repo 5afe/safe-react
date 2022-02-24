@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import { FeeHistoryResult } from 'web3-eth'
 import { hexToNumber } from 'web3-utils'
 
-import { getSDKWeb3ReadOnly, getWeb3, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getSDKWeb3ReadOnly, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
 
@@ -98,7 +98,7 @@ export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<n
 }
 
 export const getUserNonce = async (userAddress: string): Promise<number> => {
-  const web3 = getWeb3()
+  const web3 = getWeb3ReadOnly()
   try {
     return await web3.eth.getTransactionCount(userAddress, 'pending')
   } catch (error) {
