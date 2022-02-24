@@ -6,7 +6,7 @@ const isKeystoneError = (err: unknown): boolean => {
 }
 
 const isWCRejection = (err: Error): boolean => {
-  return /User rejected/.test(err.message)
+  return /User rejected/.test(err?.message)
 }
 
 const isMMRejection = (err: Error & { code?: number }): boolean => {
