@@ -33,6 +33,7 @@ import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -55,8 +56,6 @@ type RequiredTxProps = CreateTransactionArgs &
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
-
-export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
@@ -142,7 +141,9 @@ export class TxSender {
     }
 
     // Don't display error when rejecting transaction via MetaMask
-    if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+    if (isWalletRejection(err)) {
+      // show snackbar
+      notifications.showOnRejection(err)
       return
     }
 

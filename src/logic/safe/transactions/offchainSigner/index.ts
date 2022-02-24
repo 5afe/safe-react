@@ -1,7 +1,7 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 import { getEIP712Signer, SigningTxArgs } from './EIP712Signer'
 import { ethSigner, EthSignerArgs } from './ethSigner'
 
@@ -38,14 +38,6 @@ const getSupportedSigners = (isHW: boolean, safeVersion: string): SupportedSigne
   return signers
 }
 
-const isKeystoneError = (err: unknown): boolean => {
-  if (err instanceof Error) {
-    return err.message?.startsWith('#ktek_error')
-  }
-
-  return false
-}
-
 export const tryOffChainSigning = async (
   safeTxHash: string,
   txArgs: Omit<SigningTxArgs & EthSignerArgs, 'safeVersion' | 'safeTxHash'>,
@@ -61,12 +53,11 @@ export const tryOffChainSigning = async (
 
       break
     } catch (err) {
-      if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+      if (isWalletRejection(err)) {
+        // user rejected, exit
         throw err
       }
-      if (isKeystoneError(err)) {
-        throw err
-      }
+      // continue to the next signing method
     }
   }
 
