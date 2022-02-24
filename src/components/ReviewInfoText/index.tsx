@@ -17,6 +17,7 @@ type ReviewInfoTextProps = {
   txEstimationExecutionStatus: EstimationStatus
   isExecution: boolean
   isCreation: boolean
+  isRejection: boolean
   safeNonce?: string
   testId?: string
 }
@@ -24,6 +25,7 @@ type ReviewInfoTextProps = {
 export const ReviewInfoText = ({
   isCreation,
   isExecution,
+  isRejection,
   safeNonce = '',
   testId,
   txEstimationExecutionStatus,
@@ -40,7 +42,7 @@ export const ReviewInfoText = ({
   }
 
   const getWarning = (): ReactElement | null => {
-    if (!isCreation) return null
+    if (!isCreation || isRejection) return null
     if (!isTxNonceOutOfOrder()) return null
 
     const transactionsToGo = safeTxNonce - recommendedNonce
@@ -70,8 +72,9 @@ export const ReviewInfoText = ({
       {getWarning() || (
         <>
           <Paragraph size="md" align="center" color="disabled" noMargin>
-            You&apos;re about to {isCreation ? 'create' : isExecution ? 'execute' : 'approve'} a transaction and will
-            have to confirm it with your currently connected wallet.
+            You&apos;re about to {isCreation ? 'create' : isExecution ? 'execute' : 'approve'} a{' '}
+            {isRejection ? 'rejection ' : ''}transaction and will have to confirm it with your currently connected
+            wallet.
           </Paragraph>
         </>
       )}
