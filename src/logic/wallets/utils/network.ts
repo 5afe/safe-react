@@ -20,7 +20,9 @@ const WALLET_ERRORS = {
 const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
   // Note: This could support WC too
   if (isPairingModule(wallet.name)) {
-    wallet.provider.wc.updateSession({ chainId: parseInt(chainId, 10), accounts: wallet.provider.wc.accounts })
+    if (wallet.provider) {
+      wallet.provider.wc.updateSession({ chainId: parseInt(chainId, 10), accounts: wallet.provider.wc.accounts })
+    }
   } else {
     await wallet.provider.request({
       method: 'wallet_switchEthereumChain',

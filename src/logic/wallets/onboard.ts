@@ -67,13 +67,17 @@ const getOnboard = (chainId: ChainId): API => {
           updateProviderWallet({
             name: wallet.name || '',
             hardwareWallet: wallet.type === 'hardware',
-            smartContractWallet: await isSmartContractWallet(onboard().getState().address),
           }),
         )
       },
       // Non-checksummed address
-      address: (address) => {
-        store.dispatch(updateProviderAccount(address))
+      address: async (address) => {
+        store.dispatch(
+          updateProviderAccount({
+            account: address || '',
+            smartContractWallet: address ? await isSmartContractWallet(address) : false,
+          }),
+        )
 
         if (address) {
           prevAddress = address

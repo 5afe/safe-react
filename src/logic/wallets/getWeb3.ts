@@ -75,9 +75,6 @@ export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
 }
 
 export const isSmartContractWallet = async (account: string): Promise<boolean> => {
-  if (!account) {
-    return false
-  }
   let contractCode = ''
   try {
     contractCode = await getWeb3ReadOnly().eth.getCode(account)

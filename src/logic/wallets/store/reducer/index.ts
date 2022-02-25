@@ -15,9 +15,9 @@ export type ProvidersState = {
   loaded: boolean
 }
 
-export type ProviderWalletPayload = Pick<ProvidersState, 'name' | 'hardwareWallet' | 'smartContractWallet'>
+export type ProviderWalletPayload = Pick<ProvidersState, 'name' | 'hardwareWallet'>
 export type ProviderNetworkPayload = ProvidersState['network']
-export type ProviderAccountPayload = ProvidersState['account']
+export type ProviderAccountPayload = Pick<ProvidersState, 'account' | 'smartContractWallet'>
 export type ProviderEnsPayload = ProvidersState['ensDomain']
 
 export type ProviderPayloads =
@@ -51,8 +51,15 @@ const providerReducer = handleActions<ProvidersState, ProviderPayloads>(
       providerFactory({ ...state, ...payload }),
     [PROVIDER_ACTIONS.NETWORK]: (state: ProvidersState, { payload }: Action<ProviderNetworkPayload>) =>
       providerFactory({ ...state, network: payload }),
-    [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) =>
-      providerFactory({ ...state, account: checksumAddress(payload), available: !!payload }),
+    [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) => {
+      const { account, smartContractWallet } = payload
+      return providerFactory({
+        ...state,
+        account: account ? checksumAddress(account) : '',
+        available: !!account,
+        smartContractWallet,
+      })
+    },
     [PROVIDER_ACTIONS.ENS]: (state: ProvidersState, { payload }: Action<ProviderEnsPayload>) =>
       providerFactory({ ...state, ensDomain: payload }),
   },
