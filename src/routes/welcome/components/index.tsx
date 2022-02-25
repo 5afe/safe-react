@@ -88,8 +88,11 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
           </>
         ) : (
           <>
-            Celo Safe is a platform to manage digital assets on the Celo blockchain based on Gnosis Safe. <br /> Here is
-            how to get started:{' '}
+            Celo Safe is a platform to manage digital assets on the Celo blockchain forked from{' '}
+            <a target="_blank" href="https://gnosis.io/safe/" rel="noreferrer">
+              Gnosis Safe.
+            </a>{' '}
+            <br /> Here is how to get started:{' '}
           </>
         )}
       </Title>

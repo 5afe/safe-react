@@ -73,7 +73,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link to="/">
-          <Img alt="Celo Safe" height={48} src={SafeLogo} testId="heading-gnosis-logo" />
+          <Img alt="Celo Safe" height={62} src={SafeLogo} testId="heading-gnosis-logo" />
         </Link>
       </Col>
       <Spacer />
