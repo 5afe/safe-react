@@ -4,7 +4,6 @@ import UAParser from 'ua-parser-js'
 
 import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
-import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
 
 // Modified version of the built in WC module in Onboard v1.35.5
@@ -57,10 +56,6 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
       }
 
       provider.wc.on('disconnect', onDisconnect)
-
-      provider.wc.on('display_uri', (_, { params }: { params: string[] }) => {
-        console.log(getPairingUri(params[0]))
-      })
 
       window.addEventListener('unload', onDisconnect, { once: true })
 
