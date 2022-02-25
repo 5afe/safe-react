@@ -1,11 +1,16 @@
-import { ethers } from 'ethers'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import Web3 from 'web3'
+import { ethers } from 'ethers'
+
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+
 const { utils } = ethers
 
 const MAGIC_VALUE = '0x1626ba7e'
 const MAGIC_VALUE_BYTES = '0x20c13b0b'
+
+const isMagicValue = (val: string): boolean => val.toLowerCase() === MAGIC_VALUE
+const isMagicValueBytes = (val: string): boolean => val.toLowerCase() === MAGIC_VALUE_BYTES
 
 export const isValid1271Signature = async (
   signerAddress: string,
@@ -20,12 +25,9 @@ export const isValid1271Signature = async (
     throw new Error('Signature must be a hex string')
   }
 
-  const web3 = getWeb3()
-  if (!web3) {
-    throw new Error('Not connected to wallet')
-  }
+  const web3 = getWeb3ReadOnly()
 
-  let msgBytes: null | Uint8Array = null
+  let msgBytes: string | ethers.utils.Bytes
 
   // Set msgBytes as Buffer type
   if (Buffer.isBuffer(message)) {
@@ -44,7 +46,7 @@ export const isValid1271Signature = async (
   msgBytes = ethers.utils.arrayify(msgBytes)
   const bytecode = await web3.eth.getCode(signerAddress)
 
-  if (!bytecode || bytecode === '0x' || bytecode === '0x0' || bytecode === '0x00') {
+  if (!bytecode || [EMPTY_DATA, '0x0', '0x00'].includes(bytecode)) {
     const sigBytes = ethers.utils.arrayify(signature)
     const msgSigner = utils.verifyMessage(msgBytes, sigBytes)
     return msgSigner.toLowerCase() === signerAddress.toLowerCase()
@@ -62,7 +64,7 @@ export const isValid1271Signature = async (
 
 const check1271Signature = async (
   signerAddress: string,
-  msgBytes: Uint8Array,
+  msgBytes: string | ethers.utils.Bytes,
   signature: string,
   web3: Web3,
 ): Promise<boolean> => {
@@ -101,7 +103,7 @@ const check1271Signature = async (
         data: isValidSignatureData,
       })
     ).slice(0, 10)
-    if (returnValue.toLowerCase() === MAGIC_VALUE) {
+    if (isMagicValue(returnValue)) {
       return true
     }
   } catch (err) {}
@@ -116,7 +118,7 @@ const check1271Signature = async (
           data: isValidSignatureData,
         })
       ).slice(0, 10)
-      if (returnValue.toLowerCase() === MAGIC_VALUE) {
+      if (isMagicValue(returnValue)) {
         return true
       }
     } catch (err) {}
@@ -132,7 +134,7 @@ const check1271Signature = async (
         data: isValidSignatureData,
       })
     ).slice(0, 10)
-    if (returnValue.toLowerCase() === MAGIC_VALUE) {
+    if (isMagicValue(returnValue)) {
       return true
     }
   } catch (err) {}
@@ -142,7 +144,7 @@ const check1271Signature = async (
 
 const check1271SignatureBytes = async (
   signerAddress: string,
-  msgBytes: Uint8Array,
+  msgBytes: string | ethers.utils.Bytes,
   signature: string,
   web3: Web3,
 ): Promise<boolean> => {
@@ -179,7 +181,9 @@ const check1271SignatureBytes = async (
         data: isValidSignatureData,
       })
     ).slice(0, 10)
-    if (returnValue.toLowerCase() === MAGIC_VALUE_BYTES) return true
+    if (isMagicValueBytes(returnValue)) {
+      return true
+    }
   } catch (err) {}
 
   return false
