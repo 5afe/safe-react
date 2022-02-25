@@ -61,8 +61,8 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
           <Link href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">Gnosis Safe app</Link> to sign
           transactions with your mobile device.
           <br />
-          {/* @TODO: Link */}
-          <Link href="#">Learn more</Link> about this feature.
+          <Link href="https://help.gnosis-safe.io/en/articles/5584901-desktop-pairing">Learn more</Link> about this
+          feature.
         </Paragraph>
       </Row>
 
