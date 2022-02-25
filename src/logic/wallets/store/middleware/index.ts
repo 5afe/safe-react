@@ -33,7 +33,7 @@ const providerMiddleware =
       hasAccount = !!payload
 
       // Check if wallet is smart contract
-      const smartContractWallet = payload && typeof payload === 'string' ? await isSmartContractWallet(payload) : false
+      const smartContractWallet = typeof payload === 'string' ? await isSmartContractWallet(payload) : false
       store.dispatch(updateProviderSmartContract(smartContractWallet))
     } else if (type === PROVIDER_ACTIONS.NETWORK) {
       hasNetwork = !!payload
