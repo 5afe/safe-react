@@ -26,8 +26,6 @@ jest.mock('bnc-onboard', () => () => ({
       provider: {
         name: 'MetaMask',
         account: '0x123',
-        hardwareWallet: false,
-        smartContractWallet: false,
         network: '4',
         available: true,
         loaded: true,
@@ -123,8 +121,6 @@ describe('TxSender', () => {
     jest.spyOn(walletSelectors, 'providerSelector').mockImplementation(() => ({
       name: 'MetaMask',
       account: '0x123',
-      hardwareWallet: false,
-      smartContractWallet: false,
       network: '4',
       available: true,
       loaded: true,

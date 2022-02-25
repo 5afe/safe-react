@@ -17,7 +17,7 @@ import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 's
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { providerSelector } from 'src/logic/wallets/store/selectors'
+import { providerSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
@@ -179,8 +179,10 @@ export class TxSender {
     }
   }
 
-  async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
+  async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
+
+    const hardwareWallet = onboard().getState()?.wallet?.type === 'hardware' || false
 
     return await tryOffChainSigning(
       safeTxHash,
@@ -211,14 +213,8 @@ export class TxSender {
 
   async canSignOffchain(state: AppReduxState): Promise<boolean> {
     const { isFinalization, safeVersion } = this
-    const { account, smartContractWallet } = providerSelector(state)
-    let isSmart = smartContractWallet
 
-    // WalletConnect/Mobile App aren't smart contracts per se but the connected account can be
-    if (!isSmart) {
-      isSmart = await isSmartContractWallet(account) // never throws
-    }
-
+    const isSmart = await isSmartContractWallet(userAccountSelector(state))
     return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
   }
 
@@ -232,8 +228,7 @@ export class TxSender {
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
       try {
-        const { hardwareWallet } = providerSelector(state)
-        const signature = await this.onlyConfirm(hardwareWallet)
+        const signature = await this.onlyConfirm()
 
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
