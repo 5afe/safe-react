@@ -67,7 +67,6 @@ const getOnboard = (chainId: ChainId): API => {
       },
       // Non-checksummed address
       address: (address) => {
-        // isSmartContract is checked when address changes (in middleware)
         store.dispatch(updateProviderAccount(address || ''))
 
         if (address) {

@@ -24,7 +24,7 @@ const providerMiddleware =
 
     // Onboard sends provider details via separate subscriptions: wallet, account, network
     // Payloads from all three need to be combined to be `loaded` and `available`
-    if (type === PROVIDER_ACTIONS.NAME) {
+    if (type === PROVIDER_ACTIONS.WALLET_NAME) {
       hasName = !!payload
     } else if (type === PROVIDER_ACTIONS.ACCOUNT) {
       hasAccount = !!payload

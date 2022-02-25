@@ -35,26 +35,37 @@ const initialProviderState: ProvidersState = {
 
 export const PROVIDER_REDUCER_ID = 'providers'
 
+const providerFactory = (provider: ProvidersState) => {
+  const { name, account, network } = provider
+  return {
+    ...provider,
+    available: !!account,
+    loaded: !!account && !!name && !!network,
+  }
+}
+
 const providerReducer = handleActions<ProvidersState, ProviderPayloads>(
   {
-    [PROVIDER_ACTIONS.NAME]: (state: ProvidersState, { payload }: Action<ProviderNamePayload>) => ({
-      ...state,
-      name: payload,
-      loaded: !!payload,
-    }),
-    [PROVIDER_ACTIONS.NETWORK]: (state: ProvidersState, { payload }: Action<ProviderNetworkPayload>) => ({
-      ...state,
-      network: payload,
-    }),
-    [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) => ({
-      ...state,
-      account: payload ? checksumAddress(payload) : '',
-      available: !!payload,
-    }),
-    [PROVIDER_ACTIONS.ENS]: (state: ProvidersState, { payload }: Action<ProviderEnsPayload>) => ({
-      ...state,
-      ensDomain: payload,
-    }),
+    [PROVIDER_ACTIONS.WALLET_NAME]: (state: ProvidersState, { payload }: Action<ProviderNamePayload>) =>
+      providerFactory({
+        ...state,
+        name: payload,
+      }),
+    [PROVIDER_ACTIONS.NETWORK]: (state: ProvidersState, { payload }: Action<ProviderNetworkPayload>) =>
+      providerFactory({
+        ...state,
+        network: payload,
+      }),
+    [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) =>
+      providerFactory({
+        ...state,
+        account: payload ? checksumAddress(payload) : '',
+      }),
+    [PROVIDER_ACTIONS.ENS]: (state: ProvidersState, { payload }: Action<ProviderEnsPayload>) =>
+      providerFactory({
+        ...state,
+        ensDomain: payload,
+      }),
   },
   initialProviderState,
 )

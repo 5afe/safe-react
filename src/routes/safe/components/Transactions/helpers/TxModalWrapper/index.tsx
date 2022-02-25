@@ -111,8 +111,7 @@ export const TxModalWrapper = ({
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
   const isCreation = isMultisigCreation(confirmationsLen, txType)
-  const userAccount = useSelector(userAccountSelector)
-  const isSmart = useIsSmartContract(userAccount)
+  const isSmart = useIsSmartContract(userAddress)
 
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmart, safeVersion)
 
