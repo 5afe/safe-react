@@ -13,11 +13,16 @@ const useAsyncValue = <T>(
   useEffect(() => {
     let isCurrent = true
 
+    setAsyncVal(undefined)
+    setErr(undefined)
+
     asyncCall(...deps)
       .then((val: T) => {
         if (isCurrent) setAsyncVal(val)
       })
-      .catch(setErr)
+      .catch((err) => {
+        if (isCurrent) setErr(err)
+      })
 
     return () => {
       isCurrent = false
