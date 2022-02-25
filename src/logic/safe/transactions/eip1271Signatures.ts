@@ -7,7 +7,11 @@ const { utils } = ethers
 const MAGIC_VALUE = '0x1626ba7e'
 const MAGIC_VALUE_BYTES = '0x20c13b0b'
 
-export const isValid1271Signature = async (signerAddress: string, message: string, signature = EMPTY_DATA) => {
+export const isValid1271Signature = async (
+  signerAddress: string,
+  message: string,
+  signature = EMPTY_DATA,
+): Promise<boolean> => {
   if (!utils.getAddress(signerAddress)) {
     throw new Error('Invalid signer address')
   }
@@ -56,7 +60,12 @@ export const isValid1271Signature = async (signerAddress: string, message: strin
   }
 }
 
-const check1271Signature = async (signerAddress: string, msgBytes: Uint8Array, signature: string, web3: Web3) => {
+const check1271Signature = async (
+  signerAddress: string,
+  msgBytes: Uint8Array,
+  signature: string,
+  web3: Web3,
+): Promise<boolean> => {
   const fragment = ethers.utils.FunctionFragment.from({
     constant: true,
     inputs: [
@@ -131,7 +140,12 @@ const check1271Signature = async (signerAddress: string, msgBytes: Uint8Array, s
   return false
 }
 
-const check1271SignatureBytes = async (signerAddress: string, msgBytes: Uint8Array, signature: string, web3: Web3) => {
+const check1271SignatureBytes = async (
+  signerAddress: string,
+  msgBytes: Uint8Array,
+  signature: string,
+  web3: Web3,
+): Promise<boolean> => {
   const fragment = ethers.utils.FunctionFragment.from({
     constant: true,
     inputs: [
