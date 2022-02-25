@@ -94,14 +94,10 @@ function SafeCreationProcess(): ReactElement {
 
   const createNewSafe = useCallback(() => {
     const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
-
     if (!safeCreationFormValues) {
       goToWelcomePage()
       return
     }
-
-    if (!userAddressAccount) return
-
     setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
 
     setCreationTxPromise(
@@ -151,19 +147,11 @@ function SafeCreationProcess(): ReactElement {
   }, [userAddressAccount])
 
   useEffect(() => {
-    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
-    if (!safeCreationFormValues) {
-      goToWelcomePage()
-      return
-    }
-
-    const safeCreationTxHash = safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
-    if (safeCreationTxHash) {
-      setSafeCreationTxHash(safeCreationTxHash)
-    } else {
+    // set safeCreationTxHash when loading userAddressAccount
+    if (userAddressAccount) {
       createNewSafe()
     }
-  }, [createNewSafe])
+  }, [userAddressAccount, createNewSafe])
 
   const onSafeCreated = async (newSafeAddress: string): Promise<void> => {
     const createSafeFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)

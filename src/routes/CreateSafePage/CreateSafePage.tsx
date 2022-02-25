@@ -46,7 +46,8 @@ function CreateSafePage(): ReactElement {
   const provider = !!providerName && !isWrongNetwork
 
   useEffect(() => {
-    const checkIfSafeIsPendingToBeCreated = async (): Promise<void> => {
+    // If there is a pending Safe creation in Local Storage then enter the SafeCreationProcess
+    const loadPendingCreateSafe = async (): Promise<void> => {
       setIsLoading(true)
 
       // Removing the await completely is breaking the tests for a mysterious reason
@@ -60,7 +61,7 @@ function CreateSafePage(): ReactElement {
       }
       setIsLoading(false)
     }
-    checkIfSafeIsPendingToBeCreated()
+    loadPendingCreateSafe()
   }, [provider])
 
   const userWalletAddress = useSelector(userAccountSelector)
@@ -68,6 +69,7 @@ function CreateSafePage(): ReactElement {
   const location = useLocation()
   const safeRandomName = useMnemonicSafeName()
 
+  // TODO: rename to be more explicit
   const showSafeCreationProcess = (newSafeFormValues: CreateSafeFormValues): void => {
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
     setSafePendingToBeCreated(newSafeFormValues)
