@@ -179,7 +179,7 @@ export class TxSender {
     }
   }
 
-  async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
+  async getOffChainSignature(hardwareWallet: boolean): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
 
     return await tryOffChainSigning(
@@ -223,19 +223,21 @@ export class TxSender {
   ): Promise<string | undefined> {
     // Confirmation (on-/off-chain signing)
     if (!this.isFinalization) {
+      let signature: undefined | string = undefined
+      let isValidSignature = false
+
       const canSignOffChain = this.canSignOffchain(state)
-      const { hardwareWallet } = providerSelector(state)
 
       try {
-        const offChainSignature = await this.onlyConfirm(hardwareWallet)
-
-        const isValidSignature = canSignOffChain
-          ? !!offChainSignature
-          : await isValid1271Signature(this.txArgs.sender, this.safeTxHash)
+        if (canSignOffChain) {
+          const { hardwareWallet } = providerSelector(state)
+          signature = await this.getOffChainSignature(hardwareWallet)
+          isValidSignature = !!signature
+        } else {
+          isValidSignature = await isValid1271Signature(this.txArgs.sender, this.safeTxHash)
+        }
 
         if (isValidSignature) {
-          // There is no returned signature when confirming a EIP-1271 signature
-          const signature = canSignOffChain ? offChainSignature : undefined
           this.onComplete(signature, confirmCallback)
         } else {
           throw Error('Invalid signature')
