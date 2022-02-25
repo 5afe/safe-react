@@ -11,7 +11,7 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { getWeb3, getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
@@ -193,19 +193,30 @@ export const SafeDeployment = ({
     let interval
 
     const awaitUntilSafeIsDeployed = async (safeCreationTxHash: string) => {
+      if (!safeCreationTxHash || !waitingSafeDeployed) {
+        return
+      }
+
+      let receipt
+      let safeAddress = ''
+
       try {
-        const web3 = getWeb3()
-        const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
+        const web3 = getWeb3ReadOnly()
 
-        let safeAddress = ''
+        // run until receive receipt !== null
+        receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
-        if (receipt?.events) {
+        // The receipt is not available for pending transactions and returns null.
+        while (!receipt) {
+          receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
+        }
+
+        if (receipt.events) {
           safeAddress = receipt.events.ProxyCreation.returnValues.proxy
         } else {
           // If the node doesn't return the events we try to fetch it from logs
           safeAddress = getNewSafeAddressFromLogs(receipt?.logs || [])
         }
-
         setCreatedSafeAddress(safeAddress)
 
         interval = setInterval(async () => {
@@ -223,14 +234,7 @@ export const SafeDeployment = ({
         onError(error)
       }
     }
-
-    if (!waitingSafeDeployed) {
-      return
-    }
-
-    if (typeof safeCreationTxHash === 'string') {
-      awaitUntilSafeIsDeployed(safeCreationTxHash)
-    }
+    awaitUntilSafeIsDeployed(safeCreationTxHash)
 
     return () => {
       clearInterval(interval)
