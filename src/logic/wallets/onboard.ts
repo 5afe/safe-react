@@ -3,7 +3,7 @@ import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
-import { setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
+import { setWeb3, resetWeb3 } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
@@ -71,13 +71,9 @@ const getOnboard = (chainId: ChainId): API => {
         )
       },
       // Non-checksummed address
-      address: async (address) => {
-        store.dispatch(
-          updateProviderAccount({
-            account: address || '',
-            smartContractWallet: address ? await isSmartContractWallet(address) : false,
-          }),
-        )
+      address: (address) => {
+        // isSmartContract is checked when address changes (in middleware)
+        store.dispatch(updateProviderAccount(address || ''))
 
         if (address) {
           prevAddress = address
