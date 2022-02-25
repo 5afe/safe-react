@@ -4,7 +4,6 @@ import { ThunkAction } from 'redux-thunk'
 
 import onboard, { checkWallet } from 'src/logic/wallets/onboard'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -211,15 +210,9 @@ export class TxSender {
 
   async canSignOffchain(state: AppReduxState): Promise<boolean> {
     const { isFinalization, safeVersion } = this
-    const { account, smartContractWallet } = providerSelector(state)
-    let isSmart = smartContractWallet
+    const { smartContractWallet } = providerSelector(state)
 
-    // WalletConnect/Mobile App aren't smart contracts per se but the connected account can be
-    if (!isSmart) {
-      isSmart = await isSmartContractWallet(account) // never throws
-    }
-
-    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
+    return checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
   }
 
   async submitTx(
