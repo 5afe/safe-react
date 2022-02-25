@@ -5,8 +5,8 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { _getChainId, getChainName } from 'src/config'
 import { setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
-import { getSupportedWallets, isSupportedWallet } from 'src/logic/wallets/utils/walletList'
-import { ChainId, CHAIN_ID, WALLETS } from 'src/config/chain.d'
+import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
+import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
@@ -113,12 +113,9 @@ const getOnboard = (chainId: ChainId): API => {
 
 let currentOnboardInstance: API
 const onboard = (): API => {
-  // The `walletName` used in Onboard's `WalletSelectModuleOptions['wallets']` differs from the
-  // wallet name stored in its state
-  const walletName = currentOnboardInstance?.getState()?.wallet?.name?.replace(/-/g, '') as WALLETS
-
-  if (!currentOnboardInstance || (walletName && !isSupportedWallet(walletName))) {
-    currentOnboardInstance = getOnboard(_getChainId())
+  const chainId = _getChainId()
+  if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
+    currentOnboardInstance = getOnboard(chainId)
   }
 
   return currentOnboardInstance
