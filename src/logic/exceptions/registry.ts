@@ -47,7 +47,7 @@ enum ErrorCodes {
   _811 = '811: Error calculating ERC721 transfer data for adding a Safe owner',
   _812 = '812: Error calculating ERC721 transfer data for removing a Safe owner',
   _813 = '813: Error calculating ERC721 transfer data for replacing a Safe owner',
-  _814 = '814: Error performing an off-chain tx signature',
+  _814 = '814: Error performing an tx signature',
   _815 = '815: Error preparing transaction sender',
   _816 = '816: Error saving transaction to history',
   _817 = '817: Unable to decode contract error message',

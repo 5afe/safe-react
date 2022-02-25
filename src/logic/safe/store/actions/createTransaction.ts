@@ -32,6 +32,7 @@ import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { isValid1271Signature } from 'src/logic/safe/transactions/eip1271Signatures'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -208,7 +209,7 @@ export class TxSender {
       .then(({ transactionHash }) => transactionHash)
   }
 
-  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+  canSignOffchain(state: AppReduxState): boolean {
     const { isFinalization, safeVersion } = this
     const { smartContractWallet } = providerSelector(state)
 
@@ -220,19 +221,24 @@ export class TxSender {
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
-    const isOffchain = await this.canSignOffchain(state)
+    // Confirmation (on-/off-chain signing)
+    if (!this.isFinalization) {
+      const canSignOffChain = this.canSignOffchain(state)
+      const { hardwareWallet } = providerSelector(state)
 
-    // Off-chain signature
-    if (!this.isFinalization && isOffchain) {
       try {
-        const { hardwareWallet } = providerSelector(state)
-        const signature = await this.onlyConfirm(hardwareWallet)
+        const offChainSignature = await this.onlyConfirm(hardwareWallet)
 
-        // WC + Safe receives "NaN" as a string instead of a sig
-        if (signature && signature !== 'NaN') {
+        const isValidSignature = canSignOffChain
+          ? !!offChainSignature
+          : await isValid1271Signature(this.txArgs.sender, this.safeTxHash)
+
+        if (isValidSignature) {
+          // There is no returned signature when confirming a EIP-1271 signature
+          const signature = canSignOffChain ? offChainSignature : undefined
           this.onComplete(signature, confirmCallback)
         } else {
-          throw Error('No signature received')
+          throw Error('Invalid signature')
         }
       } catch (err) {
         // User likely rejected transaction
