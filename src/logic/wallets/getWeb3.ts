@@ -74,17 +74,36 @@ export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
   return web3Provider.eth.getChainId()
 }
 
+let isSmartContractWalletCache: Record<ChainId, Record<string, boolean>> = {}
 export const isSmartContractWallet = async (account: string): Promise<boolean> => {
   if (!account) {
     return false
   }
+
+  const chainId = _getChainId()
+
+  if (isSmartContractWalletCache?.[chainId]?.[account] !== undefined) {
+    return isSmartContractWalletCache[chainId][account]
+  }
+
   let contractCode = ''
   try {
     contractCode = await getWeb3ReadOnly().eth.getCode(account)
   } catch (e) {
     // ignore
   }
-  return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+
+  const isSmartContract = !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+
+  isSmartContractWalletCache = {
+    ...isSmartContractWalletCache,
+    [chainId]: {
+      ...(isSmartContractWalletCache?.[chainId] ?? {}),
+      [account]: isSmartContract,
+    },
+  }
+
+  return isSmartContract
 }
 export const getAddressFromDomain = (name: string): Promise<string> => {
   if (isValidCryptoDomainName(name)) {
