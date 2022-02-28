@@ -3,7 +3,7 @@ import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import { getDisabledWallets } from 'src/config'
 import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 import { WALLETS } from 'src/config/chain.d'
-import onboard from 'src/logic/wallets/onboard'
+import onboard, { getOnboardInstance } from 'src/logic/wallets/onboard'
 
 export const initPairing = async (): Promise<void> => {
   await onboard().walletSelect(PAIRING_MODULE_NAME)
@@ -23,7 +23,8 @@ export const isPairingModule = (name: Wallet['name'] = onboard().getState().wall
   return name === PAIRING_MODULE_NAME
 }
 
-export const getPairingUri = (wcUri: string): string => {
+export const getPairingUri = (): string | undefined => {
+  const wcUri = getOnboardInstance().getState().wallet.provider?.wc?.uri
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
-  return `${PAIRING_MODULE_URI_PREFIX}${wcUri}`
+  return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : undefined
 }
