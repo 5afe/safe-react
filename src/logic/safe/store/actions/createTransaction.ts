@@ -128,8 +128,6 @@ export class TxSender {
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
     const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
 
-    logError(Errors._803, err.message)
-
     errorCallback?.()
 
     notifications.closePending()
@@ -236,7 +234,6 @@ export class TxSender {
           throw Error('No signature received')
         }
       } catch (err) {
-        // User likely rejected transaction
         logError(Errors._814, err.message)
         this.onError(err, errorCallback)
       }
@@ -247,6 +244,7 @@ export class TxSender {
     try {
       await this.sendTx(confirmCallback)
     } catch (err) {
+      logError(Errors._803, err.message)
       this.onError(err, errorCallback)
     }
 
