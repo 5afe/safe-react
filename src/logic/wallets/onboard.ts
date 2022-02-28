@@ -112,9 +112,6 @@ const getOnboard = (chainId: ChainId): API => {
 }
 
 let currentOnboardInstance: API
-export const getOnboardInstance = (): API => {
-  return currentOnboardInstance
-}
 const onboard = (): API => {
   const chainId = _getChainId()
   if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
