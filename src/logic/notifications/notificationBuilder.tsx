@@ -271,6 +271,7 @@ export const createTxNotifications = (
 ): {
   closePending: () => void
   showOnError: (err: Error & { code: number }, contractErrorMessage?: string) => void
+  showOnRejection: (err: Error & { code: number }, contractErrorMessage?: string) => void
 } => {
   // Notifications
   // Each tx gets a slot in the global snackbar queue
@@ -281,6 +282,10 @@ export const createTxNotifications = (
 
   return {
     closePending: () => dispatch(closeSnackbarAction({ key: beforeExecutionKey })),
+
+    showOnRejection: (err: Error & { code?: number }) => {
+      dispatch(enqueueSnackbar({ key: err.code, ...notificationSlot.afterRejection }))
+    },
 
     showOnError: (err: Error & { code: number }, customErrorMessage?: string) => {
       const msg = isTxPendingError(err)
