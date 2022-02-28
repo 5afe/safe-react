@@ -32,6 +32,7 @@ import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -54,8 +55,6 @@ type RequiredTxProps = CreateTransactionArgs &
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
-
-export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 const getSafeTxGas = async (txProps: RequiredTxProps, safeVersion: string): Promise<string> => {
   const estimationProps: SafeTxGasEstimationProps = {
@@ -129,8 +128,6 @@ export class TxSender {
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
     const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
 
-    logError(Errors._803, err.message)
-
     errorCallback?.()
 
     notifications.closePending()
@@ -140,8 +137,10 @@ export class TxSender {
       dispatch(removePendingTransaction({ id: txId }))
     }
 
-    // Don't display error when rejecting transaction via MetaMask
-    if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+    // Display a notification when user rejects the tx
+    if (isWalletRejection(err)) {
+      // show snackbar
+      notifications.showOnRejection(err)
       return
     }
 
@@ -235,7 +234,6 @@ export class TxSender {
           throw Error('No signature received')
         }
       } catch (err) {
-        // User likely rejected transaction
         logError(Errors._814, err.message)
         this.onError(err, errorCallback)
       }
@@ -246,6 +244,7 @@ export class TxSender {
     try {
       await this.sendTx(confirmCallback)
     } catch (err) {
+      logError(Errors._803, err.message)
       this.onError(err, errorCallback)
     }
 
