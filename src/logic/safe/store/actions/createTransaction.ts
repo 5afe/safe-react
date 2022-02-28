@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import onboard, { checkWallet } from 'src/logic/wallets/onboard'
-import { getWeb3, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
+import { getWeb3, isHardwareWallet, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -180,12 +180,10 @@ export class TxSender {
   async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
 
-    const hardwareWallet = onboard().getState()?.wallet?.type === 'hardware' || false
-
     return await tryOffChainSigning(
       safeTxHash,
       { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
-      hardwareWallet,
+      isHardwareWallet(),
       safeVersion,
     )
   }

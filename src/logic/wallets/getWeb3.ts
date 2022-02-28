@@ -16,6 +16,7 @@ import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import onboard from './onboard'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -74,6 +75,17 @@ export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
   return web3Provider.eth.getChainId()
 }
 
+export const isHardwareWallet = (): boolean => {
+  const { wallet } = onboard().getState()
+
+  const isSupportedHardwareWallet = [WALLET_PROVIDER.LEDGER, WALLET_PROVIDER.TREZOR].includes(
+    wallet?.name?.toUpperCase() as WALLET_PROVIDER,
+  )
+  const isHardwareWalletType = wallet?.type === 'hardware'
+
+  return isSupportedHardwareWallet || isHardwareWalletType
+}
+
 let isSmartContractWalletCache: Record<ChainId, Record<string, boolean>> = {}
 export const isSmartContractWallet = async (account: string): Promise<boolean> => {
   if (!account) {
@@ -105,6 +117,7 @@ export const isSmartContractWallet = async (account: string): Promise<boolean> =
 
   return isSmartContract
 }
+
 export const getAddressFromDomain = (name: string): Promise<string> => {
   if (isValidCryptoDomainName(name)) {
     return getAddressFromUnstoppableDomain(name)
