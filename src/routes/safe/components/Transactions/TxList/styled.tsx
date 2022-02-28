@@ -123,6 +123,10 @@ export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: b
     }
   }
 
+  .disclaimer-container {
+    background-color: ${({ theme, expanded }) => (expanded ? `${primary200}` : theme.colors.inputField)};
+  }
+
   &:hover {
     background-color: ${primary200};
 
@@ -132,7 +136,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: b
     }
 
     .disclaimer-container {
-      background-color: ${({ theme }) => theme.colors.inputField};
+      background-color: transparent;
     }
   }
 `
@@ -149,8 +153,13 @@ const gridColumns = {
 const willBeReplaced = css`
   .will-be-replaced {
     pointer-events: none;
+  }
+
+  .will-be-replaced.tx-details-actions button,
+  .will-be-replaced img {
     filter: grayscale(1) opacity(0.8) !important;
   }
+
   .will-be-replaced * {
     pointer-events: none;
     color: gray !important;
@@ -296,7 +305,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 `
 
 export const DisclaimerContainer = styled(StyledTransaction)`
-  background-color: ${({ theme }) => theme.colors.inputField} !important;
+  background-color: ${({ theme }) => theme.colors.inputField};
   border-radius: 4px;
   margin: 12px 8px 0 12px;
   padding: 8px 12px;
