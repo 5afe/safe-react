@@ -1,7 +1,7 @@
 import * as web3 from 'src/logic/wallets/getWeb3'
-import { _setChainId } from 'src/config'
+import * as config from 'src/config'
+import * as onboard from 'src/logic/wallets/onboard'
 import { isTxPendingError, isSmartContractWallet, isHardwareWallet } from 'src/logic/wallets/getWeb3'
-import { CHAIN_ID } from 'src/config/chain.d'
 
 describe('src/logic/wallets/getWeb3', () => {
   describe('isTxPendingError', () => {
@@ -17,6 +17,9 @@ describe('src/logic/wallets/getWeb3', () => {
   })
 
   describe('isSmartContractWallet', () => {
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
     const web3ReadOnly = web3.getWeb3ReadOnly()
     // Address has to change in each test because of memoization cache in memory
 
@@ -60,17 +63,23 @@ describe('src/logic/wallets/getWeb3', () => {
       await isSmartContractWallet('0x0000000000000000000000000000000000000004')
       expect(web3ReadOnly.eth.getCode).toHaveBeenCalledTimes(2)
     })
-    it.skip('should only call the RPC if the chain changes', async () => {
-      web3ReadOnly.eth.getCode = jest.fn(() => Promise.resolve('Solidity code'))
+    it('should only call the RPC if the chain changes', async () => {
+      jest
+        .spyOn(config, '_getChainId')
+        .mockImplementationOnce(() => '4')
+        .mockImplementationOnce(() => '5')
+
+      const getCodeMock = jest.fn(() => Promise.resolve('Solidity code'))
+      jest.spyOn(web3.getWeb3ReadOnly().eth, 'getCode').mockImplementation(getCodeMock)
 
       await isSmartContractWallet('0x0000000000000000000000000000000000000005')
-      expect(web3ReadOnly).toHaveBeenCalledTimes(1)
-      _setChainId(CHAIN_ID.VOLTA)
+      expect(getCodeMock).toHaveBeenCalledTimes(1)
+
       await isSmartContractWallet('0x0000000000000000000000000000000000000005')
-      expect(web3ReadOnly).toHaveBeenCalledTimes(1)
+      expect(getCodeMock).toHaveBeenCalledTimes(2)
     })
 
-    it.skip("should not call the RPC again if the address/chain doesn't change", async () => {
+    it("should not call the RPC again if the address/chain doesn't change", async () => {
       web3ReadOnly.eth.getCode = jest.fn(() => Promise.resolve('Solidity code'))
 
       await isSmartContractWallet('0x0000000000000000000000000000000000000006')
@@ -82,33 +91,42 @@ describe('src/logic/wallets/getWeb3', () => {
     })
   })
 
-  describe.skip('isHardwareWallet', () => {
+  describe('isHardwareWallet', () => {
     it('should return true if the connected wallet is a supported hardware wallet', () => {
-      jest.mock('bnc-onboard', () => () => ({
-        getState: () => ({ appNetworkId: 4, wallet: { type: 'Ledger' } }),
-      }))
+      jest
+        .spyOn(onboard, 'default')
+        .mockImplementation(
+          () => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { name: 'Ledger' } })) } as any),
+        )
 
       expect(isHardwareWallet()).toBe(true)
     })
 
-    jest.mock('bnc-onboard', () => () => ({
-      getState: () => ({ appNetworkId: 4, wallet: { type: 'hardware' } }),
-    }))
     it('should return true if the connected wallet is of hardware type', () => {
+      jest
+        .spyOn(onboard, 'default')
+        .mockImplementation(
+          () => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { type: 'hardware' } })) } as any),
+        )
+
       expect(isHardwareWallet()).toBe(true)
     })
 
-    jest.mock('bnc-onboard', () => () => ({
-      getState: () => ({ appNetworkId: 4, wallet: { name: 'MetaMask' } }),
-    }))
     it('should return false if the connect wallet is not a non-hardware supported wallet', () => {
+      jest
+        .spyOn(onboard, 'default')
+        .mockImplementation(
+          () => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { name: 'MetaMask' } })) } as any),
+        )
+
       expect(isHardwareWallet()).toBe(false)
     })
 
-    jest.mock('bnc-onboard', () => () => ({
-      getState: () => ({ appNetworkId: 4, wallet: { type: 'sdk' } }),
-    }))
     it('should return false if the connect wallet is not of hardware type', () => {
+      jest
+        .spyOn(onboard, 'default')
+        .mockImplementation(() => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { type: 'sdk' } })) } as any))
+
       expect(isHardwareWallet()).toBe(false)
     })
   })
