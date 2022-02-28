@@ -9,7 +9,6 @@ import QRCode from 'qrcode.react'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
-import { getOnboardInstance } from 'src/logic/wallets/onboard'
 import { getPairingUri, initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 // Hides first wallet in Onboard modal (pairing module)
@@ -28,9 +27,9 @@ const qrRefresh: CSSProperties = {
 }
 
 const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
-  const onboardUri = getOnboardInstance().getState().wallet.provider?.wc?.uri
+  const onboardUri = getPairingUri()
   const isPairingLoaded = isPairingModule()
-  const [uri, setUri] = useState<string>('')
+  const [uri, setUri] = useState<string>()
   usePairing()
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
 
       <Row className={classes.justifyCenter}>
         {uri ? (
-          <QRCode value={getPairingUri(uri)} size={QR_DIMENSION} />
+          <QRCode value={uri} size={QR_DIMENSION} />
         ) : isPairingLoaded ? (
           <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
         ) : (
