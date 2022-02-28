@@ -101,25 +101,27 @@ export const BasicTxInfo = ({
 export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
   let valueElement
 
-  if (parameter.type === 'address') {
-    valueElement = (
-      <PrefixedEthHashInfo
-        hash={parameter.value}
-        showAvatar
-        textSize="lg"
-        showCopyBtn
-        explorerUrl={getExplorerInfo(parameter.value)}
-      />
-    )
-  }
-
-  if (parameter.type === 'bytes') {
-    valueElement = (
-      <FlexWrapper margin={5}>
-        <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
-        <CopyToClipboardBtn textToCopy={parameter.value} />
-      </FlexWrapper>
-    )
+  if (!Array.isArray(parameter.value)) {
+    switch (parameter.type) {
+      case 'address':
+        valueElement = (
+          <PrefixedEthHashInfo
+            hash={parameter.value}
+            showAvatar
+            textSize="lg"
+            showCopyBtn
+            explorerUrl={getExplorerInfo(parameter.value)}
+          />
+        )
+        break
+      case 'bytes':
+        valueElement = (
+          <FlexWrapper margin={5}>
+            <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
+            <CopyToClipboardBtn textToCopy={parameter.value} />
+          </FlexWrapper>
+        )
+    }
   }
 
   if (!valueElement) {
