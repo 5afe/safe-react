@@ -68,7 +68,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
   ]
 }
 
-export const isSupportedWallet = (name: WALLETS): boolean => {
+export const isSupportedWallet = (name: WALLETS | string): boolean => {
   return !getDisabledWallets().some((walletName) => {
     // walletName is config wallet name, name is the wallet module name and differ
     return walletName.replace(/\s/g, '').toLowerCase() === name.replace(/\s/g, '').toLowerCase()
