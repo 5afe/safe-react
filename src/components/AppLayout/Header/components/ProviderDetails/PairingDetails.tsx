@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement } from 'react'
+import { CSSProperties, ReactElement, useEffect, useState } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import IconButton from '@material-ui/core/IconButton'
@@ -9,7 +9,7 @@ import QRCode from 'qrcode.react'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
-import onboard from 'src/logic/wallets/onboard'
+import { getOnboardInstance } from 'src/logic/wallets/onboard'
 import { getPairingUri, initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 // Hides first wallet in Onboard modal (pairing module)
@@ -28,10 +28,14 @@ const qrRefresh: CSSProperties = {
 }
 
 const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
+  const onboardUri = getOnboardInstance().getState().wallet.provider?.wc?.uri
+  const isPairingLoaded = isPairingModule()
+  const [uri, setUri] = useState<string>('')
   usePairing()
 
-  const uri = onboard().getState().wallet.provider?.wc?.uri
-  const isPairingLoaded = isPairingModule()
+  useEffect(() => {
+    setUri(onboardUri)
+  }, [onboardUri])
 
   return (
     <>
