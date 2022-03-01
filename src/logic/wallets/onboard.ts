@@ -3,24 +3,32 @@ import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
-import { setWeb3, isSmartContractWallet, resetWeb3 } from 'src/logic/wallets/getWeb3'
-import transactionDataCheck from './transactionDataCheck'
-import { getSupportedWallets } from './utils/walletList'
+import { setWeb3, resetWeb3 } from 'src/logic/wallets/getWeb3'
+import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
+import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
 import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
-import closeSnackbar from '../notifications/store/actions/closeSnackbar'
+import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
+import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
+import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 
-const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
+const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
+
+const saveLastUsedProvider = (name: string) => {
+  const expireInDays = (days: number) => 60 * 60 * 24 * 1000 * days
+  const expiry = isPairingModule(name) ? expireInDays(1) : expireInDays(365)
+  saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
+}
 
 export const loadLastUsedProvider = (): string | undefined => {
-  return loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
+  return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
 }
 
 const getNetworkName = (chainId: ChainId) => {
@@ -50,21 +58,22 @@ const getOnboard = (chainId: ChainId): API => {
           instantiateSafeContracts()
         }
 
+        // Cache wallet for reconnection
         if (wallet.name) {
-          saveToStorage(LAST_USED_PROVIDER_KEY, wallet.name)
+          saveLastUsedProvider(wallet.name)
         }
 
         store.dispatch(
           updateProviderWallet({
             name: wallet.name || '',
             hardwareWallet: wallet.type === 'hardware',
-            smartContractWallet: await isSmartContractWallet(onboard().getState().address),
           }),
         )
       },
       // Non-checksummed address
       address: (address) => {
-        store.dispatch(updateProviderAccount(address))
+        // isSmartContract is checked when address changes (in middleware)
+        store.dispatch(updateProviderAccount(address || ''))
 
         if (address) {
           prevAddress = address
@@ -103,7 +112,7 @@ const getOnboard = (chainId: ChainId): API => {
 }
 
 let currentOnboardInstance: API
-export const onboard = (): API => {
+const onboard = (): API => {
   const chainId = _getChainId()
   if (!currentOnboardInstance || currentOnboardInstance.getState().appNetworkId.toString() !== chainId) {
     currentOnboardInstance = getOnboard(chainId)
@@ -111,5 +120,21 @@ export const onboard = (): API => {
 
   return currentOnboardInstance
 }
-
 export default onboard
+
+export const checkWallet = async (): Promise<boolean> => {
+  const wallet = onboard().getState().wallet
+
+  if (shouldSwitchNetwork(wallet)) {
+    switchNetwork(wallet, _getChainId()).catch((e) => e.log())
+  }
+
+  let isWalletConnected = false
+  try {
+    // Onboard requests `walletSelect()` be called first but we don't
+    // want to open the modal
+    isWalletConnected = await onboard().walletCheck()
+  } catch {}
+
+  return isWalletConnected
+}

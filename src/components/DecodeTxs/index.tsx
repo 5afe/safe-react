@@ -113,7 +113,7 @@ export const getParameterElement = (parameter: DecodedDataBasicParameter, index:
     )
   }
 
-  if (parameter.type.startsWith('bytes')) {
+  if (parameter.type === 'bytes') {
     valueElement = (
       <FlexWrapper margin={5}>
         <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
