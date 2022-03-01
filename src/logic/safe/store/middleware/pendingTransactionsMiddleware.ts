@@ -7,7 +7,7 @@ import {
   addPendingTransaction,
   removePendingTransaction,
 } from 'src/logic/safe/store/actions/pendingTransactions'
-import { PENDING_TRANSACTIONS_ID, PendingTransactionPayload } from 'src/logic/safe/store/reducer/pendingTransactions'
+import { PENDING_TRANSACTIONS_ID, PendingTransactionPayloads } from 'src/logic/safe/store/reducer/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { allPendingTxIds } from 'src/logic/safe/store/selectors/pendingTransactions'
 
@@ -46,7 +46,7 @@ if (channel) {
 export const pendingTransactionsMiddleware =
   ({ getState }: typeof reduxStore) =>
   (next: Dispatch) =>
-  async (action: Action<PendingTransactionPayload>): Promise<Action<PendingTransactionPayload>> => {
+  async (action: Action<PendingTransactionPayloads>): Promise<Action<PendingTransactionPayloads>> => {
     const handledAction = next(action)
 
     switch (action.type) {

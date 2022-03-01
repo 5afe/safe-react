@@ -17,9 +17,10 @@ import { isTxPending, pendingTxByChain } from 'src/logic/safe/store/selectors/pe
 type TxQueueRowProps = {
   isGrouped?: boolean
   transaction: Transaction
+  onChildExpand?: (isExpanded: number) => void
 }
 
-export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps): ReactElement => {
+export const TxQueueRow = ({ isGrouped = false, transaction, onChildExpand }: TxQueueRowProps): ReactElement => {
   const { activeHover } = useContext(TxHoverContext)
   const [tx, setTx] = useState<Transaction>(transaction)
   const willBeReplaced = tx.txStatus === LocalTransactionStatus.WILL_BE_REPLACED ? ' will-be-replaced' : ''
@@ -46,6 +47,7 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         appear: true,
       }}
       className={willBeReplaced}
+      onChange={(_, expanded) => onChildExpand?.(expanded ? 1 : -1)}
     >
       <StyledAccordionSummary>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} />

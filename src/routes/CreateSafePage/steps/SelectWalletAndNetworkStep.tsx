@@ -16,7 +16,7 @@ import { setChainId } from 'src/logic/config/utils'
 import { lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Paragraph from 'src/components/layout/Paragraph'
-import { providerNameSelector, shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { availableSelector, shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
 import WalletSwitch from 'src/components/WalletSwitch'
 import { getChains } from 'src/config/cache/chains'
@@ -25,7 +25,7 @@ export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 
 function SelectWalletAndNetworkStep(): ReactElement {
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
-  const isWalletConnected = !!useSelector(providerNameSelector)
+  const isWalletConnected = !!useSelector(availableSelector)
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
 
   function openNetworkSelectorPopup() {
