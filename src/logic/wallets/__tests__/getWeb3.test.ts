@@ -93,19 +93,19 @@ describe('src/logic/wallets/getWeb3', () => {
 
   describe('isHardwareWallet', () => {
     it('should return true if the connected wallet is a supported hardware wallet', () => {
-      expect(isHardwareWallet({ wallet: { name: 'Ledger' } } as any as Wallet)).toBe(true)
+      expect(isHardwareWallet({ name: 'Ledger' } as Wallet)).toBe(true)
     })
 
     it('should return true if the connected wallet is of hardware type', () => {
-      expect(isHardwareWallet({ wallet: { type: 'hardware' } } as any as Wallet)).toBe(true)
+      expect(isHardwareWallet({ type: 'hardware' } as Wallet)).toBe(true)
     })
 
     it('should return false if the connect wallet is not a non-hardware supported wallet', () => {
-      expect(isHardwareWallet({ wallet: { name: 'MetaMask' } } as any as Wallet)).toBe(false)
+      expect(isHardwareWallet({ name: 'MetaMask' } as Wallet)).toBe(false)
     })
 
     it('should return false if the connect wallet is not of hardware type', () => {
-      expect(isHardwareWallet({ wallet: { type: 'sdk' } } as any as Wallet)).toBe(false)
+      expect(isHardwareWallet({ type: 'sdk' } as Wallet)).toBe(false)
     })
   })
 })
