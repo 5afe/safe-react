@@ -68,7 +68,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
   ]
 }
 
-export const isSupportedWallet = (name: WALLETS): boolean => {
+export const isSupportedWallet = (name: WALLETS | string): boolean => {
   return !getDisabledWallets().some((walletName) => {
     // walletName is config wallet name, name is the wallet module name and differ
     return walletName.replace(/\s/g, '').toLowerCase() === name.replace(/\s/g, '').toLowerCase()
@@ -78,8 +78,11 @@ export const isSupportedWallet = (name: WALLETS): boolean => {
 export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
   const supportedWallets: WalletSelectModuleOptions['wallets'] = wallets(chainId)
     .filter(({ walletName, desktop }) => {
+      if (!isSupportedWallet(walletName)) {
+        return false
+      }
       // Desktop vs. Web app wallet support
-      return isSupportedWallet(walletName) && window.isDesktop ? desktop : true
+      return window.isDesktop ? desktop : true
     })
     .map(({ desktop: _, ...rest }) => rest)
 
