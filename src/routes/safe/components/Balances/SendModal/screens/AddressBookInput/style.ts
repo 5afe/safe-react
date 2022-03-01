@@ -10,10 +10,6 @@ export const useTextFieldLabelStyle = makeStyles(
 
 export const useTextFieldInputStyle = makeStyles(
   createStyles({
-    root: {
-      fontSize: '16px',
-      padding: '0 !important',
-    },
     input: {
       padding: '16px !important',
     },

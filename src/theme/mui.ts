@@ -154,7 +154,7 @@ const theme = createTheme({
     },
     MuiFormControl: {
       root: {
-        flex: 1,
+        width: '100%',
       },
     },
     MuiInput: {
@@ -228,8 +228,19 @@ const theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+      inputRoot: {
+        padding: '0 !important',
+      },
+      root: {
+        input: {
+          padding: '16px',
+        },
+      },
+    },
     MuiOutlinedInput: {
       root: {
+        padding: 0,
         borderRadius: xs,
         color: primary,
         fontFamily: secondaryFontFamily,
@@ -264,6 +275,9 @@ const theme = createTheme({
         '&::-webkit-input-placeholder': {
           color: disabled,
         },
+      },
+      adornedEnd: {
+        paddingRight: md,
       },
     },
     MuiSelect: {
