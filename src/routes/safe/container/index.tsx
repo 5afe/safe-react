@@ -12,7 +12,6 @@ import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import SafeLoadError from '../components/SafeLoadError'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
-import { useWatchPendingTxs } from 'src/logic/safe/hooks/useWatchPendingTxs'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -37,7 +36,6 @@ const Container = (): React.ReactElement => {
   const addressFromUrl = extractSafeAddress()
   useLoadSafe(addressFromUrl) // load initially
   useSafeScheduledUpdates(addressFromUrl) // load every X seconds
-  useWatchPendingTxs() // watch any pending txs loaded from sessionStorage
 
   useEffect(() => {
     if (isSafeLoaded) {
