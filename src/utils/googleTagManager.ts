@@ -137,7 +137,7 @@ export const trackEventGTM = (event: Omit<ComponentProps<typeof Track>, 'childre
   TagManager.dataLayer({
     dataLayer: {
       event: GTM_EVENTS.TRACK,
-      ...getTrackDataLayer(event),
+      'data-layer-track': getTrackDataLayer(event),
     },
   })
 }
