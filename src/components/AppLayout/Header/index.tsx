@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import Layout from './components/Layout'
@@ -16,6 +16,7 @@ import {
 } from 'src/logic/wallets/store/selectors'
 import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
 import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -56,11 +57,7 @@ const HeaderComponent = (): React.ReactElement => {
 
   const getProviderDetailsBased = () => {
     if (!loaded) {
-      return (
-        <Suspense fallback={null}>
-          <ConnectDetails />
-        </Suspense>
-      )
+      return wrapInSuspense(<ConnectDetails />)
     }
 
     return (

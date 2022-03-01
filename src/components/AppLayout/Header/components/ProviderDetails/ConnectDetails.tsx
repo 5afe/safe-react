@@ -9,6 +9,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
+// We need lazy import because the component imports static css that should only be applied if the component is rendered
 const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
 
 const styles = () => ({
