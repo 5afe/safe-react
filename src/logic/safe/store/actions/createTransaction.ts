@@ -179,11 +179,12 @@ export class TxSender {
 
   async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
+    const { wallet } = onboard().getState()
 
     return await tryOffChainSigning(
       safeTxHash,
       { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
-      isHardwareWallet(),
+      isHardwareWallet(wallet),
       safeVersion,
     )
   }

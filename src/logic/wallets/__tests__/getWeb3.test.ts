@@ -1,7 +1,7 @@
 import * as web3 from 'src/logic/wallets/getWeb3'
 import * as config from 'src/config'
-import * as onboard from 'src/logic/wallets/onboard'
 import { isTxPendingError, isSmartContractWallet, isHardwareWallet } from 'src/logic/wallets/getWeb3'
+import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
 describe('src/logic/wallets/getWeb3', () => {
   describe('isTxPendingError', () => {
@@ -93,41 +93,19 @@ describe('src/logic/wallets/getWeb3', () => {
 
   describe('isHardwareWallet', () => {
     it('should return true if the connected wallet is a supported hardware wallet', () => {
-      jest
-        .spyOn(onboard, 'default')
-        .mockImplementation(
-          () => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { name: 'Ledger' } })) } as any),
-        )
-
-      expect(isHardwareWallet()).toBe(true)
+      expect(isHardwareWallet({ wallet: { name: 'Ledger' } } as any as Wallet)).toBe(true)
     })
 
     it('should return true if the connected wallet is of hardware type', () => {
-      jest
-        .spyOn(onboard, 'default')
-        .mockImplementation(
-          () => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { type: 'hardware' } })) } as any),
-        )
-
-      expect(isHardwareWallet()).toBe(true)
+      expect(isHardwareWallet({ wallet: { type: 'hardware' } } as any as Wallet)).toBe(true)
     })
 
     it('should return false if the connect wallet is not a non-hardware supported wallet', () => {
-      jest
-        .spyOn(onboard, 'default')
-        .mockImplementation(
-          () => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { name: 'MetaMask' } })) } as any),
-        )
-
-      expect(isHardwareWallet()).toBe(false)
+      expect(isHardwareWallet({ wallet: { name: 'MetaMask' } } as any as Wallet)).toBe(false)
     })
 
     it('should return false if the connect wallet is not of hardware type', () => {
-      jest
-        .spyOn(onboard, 'default')
-        .mockImplementation(() => ({ getState: jest.fn(() => ({ appNetworkId: 4, wallet: { type: 'sdk' } })) } as any))
-
-      expect(isHardwareWallet()).toBe(false)
+      expect(isHardwareWallet({ wallet: { type: 'sdk' } } as any as Wallet)).toBe(false)
     })
   })
 })
