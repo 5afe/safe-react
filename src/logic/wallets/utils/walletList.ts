@@ -78,8 +78,11 @@ export const isSupportedWallet = (name: WALLETS | string): boolean => {
 export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
   const supportedWallets: WalletSelectModuleOptions['wallets'] = wallets(chainId)
     .filter(({ walletName, desktop }) => {
+      if (!isSupportedWallet(walletName)) {
+        return false
+      }
       // Desktop vs. Web app wallet support
-      return isSupportedWallet(walletName) && window.isDesktop ? desktop : true
+      return window.isDesktop ? desktop : true
     })
     .map(({ desktop: _, ...rest }) => rest)
 
