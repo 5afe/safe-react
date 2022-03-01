@@ -35,3 +35,11 @@ export const saveToStorage = <T = unknown>(key: string, value: T): void => {
 export const removeFromStorage = (key: string): void => {
   storage.removeItem(`${getStoragePrefix()}${key}`)
 }
+
+export const saveToStorageWithExpiry = <T = unknown>(key: string, value: T, expiry: number): void => {
+  storage.setWithExpiry<T>(key, value, expiry)
+}
+
+export const loadFromStorageWithExpiry = <T = unknown>(key: string): T | undefined => {
+  return storage.getWithExpiry<T>(key)
+}

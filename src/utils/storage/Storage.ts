@@ -3,6 +3,11 @@ import { LS_NAMESPACE, LS_SEPARATOR } from '../constants'
 
 type BrowserStorage = typeof localStorage | typeof sessionStorage
 
+type ItemWithExpiry<T> = {
+  value: T
+  expiry: number
+}
+
 const DEFAULT_PREFIX = `${LS_NAMESPACE}${LS_SEPARATOR}`
 
 class Storage {
@@ -52,6 +57,27 @@ class Storage {
     } catch (err) {
       logError(Errors._702, `key ${key} – ${err.message}`)
     }
+  }
+
+  public setWithExpiry = <T>(key: string, item: T, expiry: number): void => {
+    this.setItem<ItemWithExpiry<T>>(key, {
+      value: item,
+      expiry: new Date().getTime() + expiry,
+    })
+  }
+
+  public getWithExpiry = <T>(key: string): T | undefined => {
+    const item = this.getItem<ItemWithExpiry<T>>(key)
+    if (!item) {
+      return
+    }
+
+    if (new Date().getTime() > item.expiry) {
+      this.removeItem(key)
+      return
+    }
+
+    return item.value
   }
 }
 

@@ -1,6 +1,7 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
+import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 import { getEIP712Signer, SigningTxArgs } from './EIP712Signer'
 import { ethSigner, EthSignerArgs } from './ethSigner'
 
@@ -19,26 +20,22 @@ export const SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES = '>=1.0.0'
 
 // hardware wallets support eth_sign only
 // eth_sign is only supported by safes >= 1.1.0
-const getSupportedSigners = (isHW: boolean, safeVersion: string) => {
+type SupportedSigners = typeof SIGNERS[keyof typeof SIGNERS][]
+const getSupportedSigners = (isHW: boolean, safeVersion: string): SupportedSigners => {
+  // v1 of desktop pairing only supports eth_sign
+  if (isPairingModule()) {
+    return [SIGNERS.ETH_SIGN]
+  }
+
   const safeSupportsEthSigner = semverSatisfies(safeVersion, '>=1.1.0')
 
-  const signers: typeof SIGNERS[keyof typeof SIGNERS][] = isHW
-    ? []
-    : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712]
+  const signers: SupportedSigners = isHW ? [] : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712]
 
   if (safeSupportsEthSigner) {
     signers.push(SIGNERS.ETH_SIGN)
   }
 
   return signers
-}
-
-const isKeystoneError = (err: unknown): boolean => {
-  if (err instanceof Error) {
-    return err.message?.startsWith('#ktek_error')
-  }
-
-  return false
 }
 
 export const tryOffChainSigning = async (
@@ -56,12 +53,11 @@ export const tryOffChainSigning = async (
 
       break
     } catch (err) {
-      if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+      if (isWalletRejection(err)) {
+        // user rejected, exit
         throw err
       }
-      if (isKeystoneError(err)) {
-        throw err
-      }
+      // continue to the next signing method
     }
   }
 

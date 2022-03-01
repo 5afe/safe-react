@@ -13,7 +13,7 @@ export const decodeMessage = (message: string): string => {
   return code ? `${code}: ${CONTRACT_ERRORS[code]}` : message
 }
 
-const getContractErrorMessage = async ({
+export const getContractErrorMessage = async ({
   safeInstance,
   from,
   data,
@@ -21,7 +21,7 @@ const getContractErrorMessage = async ({
   safeInstance: GnosisSafe
   from: string
   data: string
-}): Promise<string | null> => {
+}): Promise<string | undefined> => {
   const web3 = getWeb3()
 
   try {
@@ -38,24 +38,5 @@ const getContractErrorMessage = async ({
     return decodeMessage(contractOutput)
   } catch (err) {
     logError(Errors._817, err.message)
-    return null
   }
-}
-
-export const fetchOnchainError = async (
-  data: string,
-  safeInstance: GnosisSafe,
-  from: string,
-): Promise<string | null> => {
-  const contractErrorMessage = await getContractErrorMessage({
-    safeInstance,
-    from,
-    data,
-  })
-
-  if (contractErrorMessage) {
-    logError(Errors._803, contractErrorMessage)
-  }
-
-  return contractErrorMessage
 }

@@ -103,7 +103,7 @@ export const SafeDeployment = ({
     }
   }, [provider])
 
-  // creating safe from from submission
+  // creating safe from form submission
   useEffect(() => {
     if (submittedPromise === undefined) {
       return
@@ -139,16 +139,16 @@ export const SafeDeployment = ({
       return
     }
 
-    const isTxMined = async (txHash) => {
+    const isTxMined = async (txHash: string) => {
       const web3 = getWeb3()
 
       const txResult = await web3.eth.getTransaction(txHash)
-      if (txResult.blockNumber === null) {
+      if (txResult?.blockNumber == null) {
         return false
       }
 
       const receipt = await web3.eth.getTransactionReceipt(txHash)
-      if (!receipt.status) {
+      if (!receipt?.status) {
         throw Error('TX status reverted')
       }
 
@@ -197,19 +197,24 @@ export const SafeDeployment = ({
         const web3 = getWeb3()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
-        let safeAddress
+        let safeAddress = ''
 
-        if (receipt.events) {
+        if (receipt?.events) {
           safeAddress = receipt.events.ProxyCreation.returnValues.proxy
         } else {
           // If the node doesn't return the events we try to fetch it from logs
-          safeAddress = getNewSafeAddressFromLogs(receipt.logs)
+          safeAddress = getNewSafeAddressFromLogs(receipt?.logs || [])
         }
 
         setCreatedSafeAddress(safeAddress)
 
         interval = setInterval(async () => {
-          const code = await web3.eth.getCode(safeAddress)
+          let code = EMPTY_DATA
+          try {
+            code = await web3.eth.getCode(safeAddress)
+          } catch (err) {
+            console.log(err)
+          }
           if (code !== EMPTY_DATA) {
             setStepIndex(5)
           }
