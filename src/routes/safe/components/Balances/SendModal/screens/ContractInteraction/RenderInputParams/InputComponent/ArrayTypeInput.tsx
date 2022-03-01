@@ -2,7 +2,7 @@ import { TextAreaField } from 'src/components/forms/TextAreaField'
 import {
   isAddress,
   isBoolean,
-  isByte,
+  isBytes,
   isInt,
   isUint,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
@@ -36,7 +36,7 @@ const typePlaceholder = (text: string, type: string): string => {
     return `${text} E.g.: [1000, -212, 1232, -1]`
   }
 
-  if (isByte(type)) {
+  if (isBytes(type)) {
     return `${text} E.g.: ["0xc00000000000000000000000000000000000", "0xc00000000000000000000000000000000001"]`
   }
 
