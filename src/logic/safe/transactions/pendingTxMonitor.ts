@@ -63,7 +63,7 @@ const monitorAllTxs = async (): Promise<void> => {
     const sessionBlockNumber = await web3.eth.getBlockNumber()
     await Promise.all(
       pendingTxs.map(([txId, txHash]) => {
-        return monitorTx(sessionBlockNumber, txId, txHash)
+        return PendingTxMonitor.monitorTx(sessionBlockNumber, txId, txHash)
       }),
     )
   } catch {
