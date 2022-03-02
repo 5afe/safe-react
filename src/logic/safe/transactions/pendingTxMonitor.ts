@@ -7,21 +7,25 @@ import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
 
+// Progressively after 10s, 20s, 40s, 80s, 160s, 320s
+const INITIAL_TIMEOUT = 10_000
+const TIMEOUT_MULTIPLIER = 2
 const MAX_ATTEMPTS = 6
 
-let currentAttempt = 0
+const hasReachedMaxAttempts = (currentAttempt: number): boolean => currentAttempt >= MAX_ATTEMPTS
 
-const hasReachedMaxAttempts = (): boolean => currentAttempt >= MAX_ATTEMPTS
-
-export const isPendingTxMined = async (sessionBlockNumber: number, txId: string, txHash: string): Promise<void> => {
+export const isPendingTxMined = async (
+  sessionBlockNumber: number,
+  txId: string,
+  txHash: string,
+  hasReachedMaxAttempts: boolean,
+): Promise<void> => {
   const MAX_WAITING_BLOCK = sessionBlockNumber + 50
-
-  currentAttempt++
 
   const web3 = getWeb3()
 
   if (
-    hasReachedMaxAttempts() ||
+    hasReachedMaxAttempts ||
     // Transaction was successfully mined
     (await web3.eth.getTransaction(txHash)) ||
     // Transaction was not mined within max block amount
@@ -36,8 +40,6 @@ export const isPendingTxMined = async (sessionBlockNumber: number, txId: string,
 }
 
 export const pendingTxsMonitor = async (): Promise<void> => {
-  const START_DELAY = 10_000
-
   const state = store.getState()
 
   const pendingTxsOnChain = pendingTxIdsByChain(state)
@@ -50,20 +52,32 @@ export const pendingTxsMonitor = async (): Promise<void> => {
 
   const web3 = getWeb3()
 
+  let sessionBlockNumber: number
   try {
-    const sessionBlockNumber = await web3.eth.getBlockNumber()
-
-    // Exponentially watch each pending transaction for (un-)successful mine within 50 blocks
-    await Promise.all(
-      pendingTxs.map(([txId, txHash]) => {
-        backOff(() => isPendingTxMined(sessionBlockNumber, txId, txHash), {
-          startingDelay: START_DELAY,
-          numOfAttempts: MAX_ATTEMPTS,
-          retry: () => !hasReachedMaxAttempts(),
-        })
-      }),
-    )
+    sessionBlockNumber = await web3.eth.getBlockNumber()
   } catch {
-    // Ignore
+    // Don't continue if there was an error retrieving current block number
+    return
+  }
+
+  for (const [txId, txHash] of pendingTxs) {
+    let currentAttempt = 0
+
+    try {
+      await backOff(
+        () => {
+          currentAttempt++
+          return isPendingTxMined(sessionBlockNumber, txId, txHash, hasReachedMaxAttempts(currentAttempt))
+        },
+        {
+          startingDelay: INITIAL_TIMEOUT,
+          timeMultiple: TIMEOUT_MULTIPLIER,
+          numOfAttempts: MAX_ATTEMPTS,
+          retry: () => !hasReachedMaxAttempts(currentAttempt),
+        },
+      )
+    } catch {
+      // Ignore
+    }
   }
 }

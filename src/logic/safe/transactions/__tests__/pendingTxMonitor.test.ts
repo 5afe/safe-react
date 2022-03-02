@@ -9,6 +9,14 @@ describe('isPendingTxMined', () => {
     jest.restoreAllMocks()
   })
 
+  it('removes the pending tx when max attempts are reached', async () => {
+    const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(jest.fn)
+
+    await isPendingTxMined(0, '', '', true)
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(2)
+  })
+
   it('removes the pending tx with the tx receipt', async () => {
     jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() =>
       Promise.resolve({
@@ -28,7 +36,7 @@ describe('isPendingTxMined', () => {
 
     const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(jest.fn)
 
-    await isPendingTxMined(0, '', '')
+    await isPendingTxMined(0, '', '', false)
 
     expect(dispatchSpy).toHaveBeenCalledTimes(2)
   })
@@ -38,7 +46,7 @@ describe('isPendingTxMined', () => {
 
     const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
-    await isPendingTxMined(0, '', '')
+    await isPendingTxMined(0, '', '', false)
 
     expect(dispatchSpy).toHaveBeenCalledTimes(2)
   })
@@ -46,7 +54,7 @@ describe('isPendingTxMined', () => {
     jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
     jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-    expect(async () => await isPendingTxMined(0, '', '')).rejects.toThrow()
+    expect(async () => await isPendingTxMined(0, '', '', false)).rejects.toThrow()
   })
 })
 
@@ -111,9 +119,8 @@ describe('pendingTxsMonitor', () => {
     jest.useFakeTimers('modern')
     pendingTxsMonitor()
     jest.runAllTimers()
-    await Promise.resolve()
 
-    expect(isPendingSpy).toBeCalledTimes(6)
+    expect(isPendingSpy).toHaveBeenCalledTimes(6)
   })
   it.skip('checks each pending tx', async () => {
     jest.spyOn(store.store, 'getState').mockImplementation(() => ({
@@ -138,7 +145,6 @@ describe('pendingTxsMonitor', () => {
     jest.useFakeTimers('modern')
     pendingTxsMonitor()
     jest.runAllTimers()
-    await Promise.resolve()
 
     expect(isPendingSpy.mock.calls).toEqual([
       [0, 'fakeTxId', 'fakeTxHash'],
