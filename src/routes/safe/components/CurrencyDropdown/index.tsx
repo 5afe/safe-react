@@ -45,7 +45,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
     setAnchorEl(null)
   }
 
-  const handleCurrencyChange = async (newCurrencySelectedName: string): Promise<void> => {
+  const onCurrentCurrencyChangedHandler = async (newCurrencySelectedName: string): Promise<void> => {
     handleClose()
     await dispatch(fetchSafeTokens(address, newCurrencySelectedName))
     dispatch(setSelectedCurrency({ selectedCurrency: newCurrencySelectedName }))
@@ -103,7 +103,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
               <MenuItem
                 className={classes.listItem}
                 key={currencyName}
-                onClick={() => handleCurrencyChange(currencyName)}
+                onClick={() => onCurrentCurrencyChangedHandler(currencyName)}
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
