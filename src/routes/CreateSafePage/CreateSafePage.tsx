@@ -37,6 +37,8 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { CREATE_SAFE_TRACKING_EVENTS, CREATE_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
+import { trackEventGTM } from 'src/utils/googleTagManager'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -69,6 +71,14 @@ function CreateSafePage(): ReactElement {
   const safeRandomName = useMnemonicSafeName()
 
   const showSafeCreationProcess = (newSafeFormValues: CreateSafeFormValues): void => {
+    trackEventGTM({
+      ...CREATE_SAFE_TRACKING_EVENTS.CREATE,
+      payload: {
+        owners: newSafeFormValues[FIELD_SAFE_OWNERS_LIST].length,
+        threshold: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
+      },
+    })
+
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
     setSafePendingToBeCreated(newSafeFormValues)
   }
@@ -112,7 +122,12 @@ function CreateSafePage(): ReactElement {
           </BackIcon>
           <Heading tag="h2">Create new Safe</Heading>
         </Row>
-        <StepperForm initialValues={initialFormValues} onSubmit={showSafeCreationProcess} testId={'create-safe-form'}>
+        <StepperForm
+          initialValues={initialFormValues}
+          onSubmit={showSafeCreationProcess}
+          testId={'create-safe-form'}
+          trackingId={CREATE_SAFE_TRACKING_ID}
+        >
           <StepFormElement
             label={selectWalletAndNetworkStepLabel}
             nextButtonLabel="Continue"

@@ -32,6 +32,7 @@ import {
   FIELD_LOAD_SUGGESTED_SAFE_NAME,
   FIELD_SAFE_OWNER_ENS_LIST,
   FIELD_SAFE_OWNER_LIST,
+  FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
 } from './fields/loadFields'
 import { extractPrefixedSafeAddress, generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES } from '../routes'
@@ -39,6 +40,8 @@ import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { LOAD_SAFE_TRACKING_EVENTS, LOAD_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
+import { trackEventGTM } from 'src/utils/googleTagManager'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -88,6 +91,15 @@ function Load(): ReactElement {
       return
     }
 
+    const threshold = values[FIELD_SAFE_THRESHOLD]
+    trackEventGTM({
+      ...LOAD_SAFE_TRACKING_EVENTS.LOAD,
+      payload: {
+        owners: values[FIELD_SAFE_OWNER_LIST].length,
+        ...(threshold && { threshold }),
+      },
+    })
+
     updateAddressBook(values)
 
     const checksummedAddress = checksumAddress(address || '')
@@ -123,6 +135,7 @@ function Load(): ReactElement {
           testId="load-safe-form"
           onSubmit={onSubmitLoadSafe}
           key={safeAddress}
+          trackingId={LOAD_SAFE_TRACKING_ID}
         >
           {safeAddress && shortName ? null : (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">

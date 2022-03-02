@@ -19,6 +19,8 @@ import {
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { trackEventGTM } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
 
 export const nameNewSafeStepLabel = 'Name'
 
@@ -36,6 +38,18 @@ function NameNewSafeStep(): ReactElement {
 
   const createNewSafeForm = useForm()
   const formValues = createNewSafeForm.getState().values
+  const hasCustomSafeName = !!formValues[FIELD_CREATE_CUSTOM_SAFE_NAME]
+
+  useEffect(() => {
+    // On unmount, e.g. go back/next
+    return () => {
+      if (hasCustomSafeName) {
+        trackEventGTM({
+          ...CREATE_SAFE_TRACKING_EVENTS.NAME,
+        })
+      }
+    }
+  }, [hasCustomSafeName])
 
   useEffect(() => {
     const getInitialOwnerENSNames = async () => {
