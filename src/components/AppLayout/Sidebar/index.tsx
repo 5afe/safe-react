@@ -6,6 +6,8 @@ import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import Track from 'src/components/Track'
+import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/safeOverview'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -97,9 +99,11 @@ const Sidebar = ({
         {!IS_PRODUCTION && debugToggle}
         <StyledDivider />
 
-        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-          <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
-        </HelpCenterLink>
+        <Track {...SAFE_OVERVIEW_TRACKING_EVENTS.HELP_CENTER}>
+          <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+            <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
+          </HelpCenterLink>
+        </Track>
       </HelpContainer>
     </>
   )

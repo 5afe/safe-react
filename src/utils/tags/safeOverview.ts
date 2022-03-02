@@ -26,6 +26,10 @@ export const SAFE_OVERVIEW_TRACKING_EVENTS: TrackingEvents = {
     id: SAFE_OVERVIEW_TRACKING_ID,
     desc: 'Open currency menu',
   },
+  CHANGE_CURRENCY: {
+    id: SAFE_OVERVIEW_TRACKING_ID,
+    desc: 'Change currency',
+  },
   OPEN_INTERCOM: {
     id: SAFE_OVERVIEW_TRACKING_ID,
     desc: 'Open Intercom',
