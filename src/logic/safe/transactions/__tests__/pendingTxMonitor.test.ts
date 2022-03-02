@@ -2,22 +2,14 @@ import * as store from 'src/store'
 import * as web3 from 'src/logic/wallets/getWeb3'
 import * as pendingMonitor from 'src/logic/safe/transactions/pendingTxMonitor'
 
-const { isPendingTxMined, pendingTxsMonitor } = pendingMonitor
+const { _isPendingTxMined, monitorPendingTx, monitorAllPendingTxs: pendingTxsMonitor } = pendingMonitor
 
-describe('isPendingTxMined', () => {
+describe('_isPendingTxMined', () => {
   beforeEach(() => {
     jest.restoreAllMocks()
   })
 
-  it('removes the pending tx when max attempts are reached', async () => {
-    const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(jest.fn)
-
-    await isPendingTxMined(0, '', '', true)
-
-    expect(dispatchSpy).toHaveBeenCalledTimes(2)
-  })
-
-  it('removes the pending tx with the tx receipt', async () => {
+  it("doesn't throw if a transaction receipt exists", async () => {
     jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() =>
       Promise.resolve({
         hash: '',
@@ -34,27 +26,58 @@ describe('isPendingTxMined', () => {
       }),
     )
 
-    const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(jest.fn)
-
-    await isPendingTxMined(0, '', '', false)
-
-    expect(dispatchSpy).toHaveBeenCalledTimes(2)
+    expect(async () => await _isPendingTxMined(0, 'fakeTxHash')).not.toThrow()
   })
-  it('removes the pending tx if the transaction is not mined within 50 blocks', async () => {
-    jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
-    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(123))
-
-    const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
-
-    await isPendingTxMined(0, '', '', false)
-
-    expect(dispatchSpy).toHaveBeenCalledTimes(2)
-  })
-  it('throws if there is no tx receipt or is is not mined within 50 blocks', async () => {
+  it("doesn't throw if the transaction was mined within 50 blocks", async () => {
     jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
     jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-    expect(async () => await isPendingTxMined(0, '', '', false)).rejects.toThrow()
+    expect(async () => await _isPendingTxMined(0, 'fakeTxHash')).not.toThrow()
+  })
+  it("throws if there if no transaction receipt exists and it wasn't mined within 50 blocks", async () => {
+    jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
+    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(50))
+
+    expect(async () => await _isPendingTxMined(0, 'fakeTxHash')).rejects.toThrow()
+  })
+})
+
+describe('monitorPendingTx', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  it.skip('repeatedly checks for the tx', async () => {
+    const isPendingSpy = jest.spyOn(pendingMonitor, '_isPendingTxMined').mockImplementation(() => Promise.reject())
+
+    await monitorPendingTx(0, 'fakeTxId', 'fakeTxHash', {
+      numOfAttempts: 5,
+      startingDelay: 0,
+      timeMultiple: 0,
+      maxDelay: 0,
+    })
+
+    expect(isPendingSpy).toHaveBeenCalledTimes(5)
+  })
+
+  it('clears the pending transaction if it was mined', async () => {
+    jest.spyOn(pendingMonitor, '_isPendingTxMined').mockImplementation(() => Promise.resolve())
+
+    const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+    await monitorPendingTx(0, 'fakeTxId', 'fakeTxHash', { numOfAttempts: 1, startingDelay: 0, timeMultiple: 0 })
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(2)
+  })
+
+  it('clears the pending transaction it the tx was not mined within 50 blocks', async () => {
+    jest.spyOn(pendingMonitor, '_isPendingTxMined').mockImplementation(() => Promise.reject())
+
+    const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+    await monitorPendingTx(0, 'fakeTxId', 'fakeTxHash', { numOfAttempts: 1, startingDelay: 0, timeMultiple: 0 })
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(2)
   })
 })
 
@@ -77,7 +100,7 @@ describe('pendingTxsMonitor', () => {
 
     expect(getWeb3Spy).not.toHaveBeenCalled()
   })
-  it('breaks if no block number is retrieved', async () => {
+  it('breaks if no block number returns', async () => {
     jest.spyOn(store.store, 'getState').mockImplementation(() => ({
       pendingTransactions: {
         '4': { fakeTxId: 'fakeTxHash' },
@@ -89,7 +112,7 @@ describe('pendingTxsMonitor', () => {
 
     jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.reject())
 
-    const isPendingSpy = jest.spyOn(pendingMonitor, 'isPendingTxMined').mockImplementation(jest.fn())
+    const isPendingSpy = jest.spyOn(pendingMonitor, '_isPendingTxMined').mockImplementation(jest.fn())
 
     try {
       await pendingTxsMonitor()
@@ -100,28 +123,7 @@ describe('pendingTxsMonitor', () => {
       expect(isPendingSpy).not.toHaveBeenCalled()
     }
   })
-  it.skip('repeatedly checks for the tx', async () => {
-    jest.spyOn(store.store, 'getState').mockImplementation(() => ({
-      pendingTransactions: {
-        '4': {
-          fakeTxId: 'fakeTxHash',
-        },
-      },
-      config: {
-        chainId: '4',
-      },
-    }))
 
-    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
-
-    const isPendingSpy = jest.spyOn(pendingMonitor, 'isPendingTxMined').mockImplementation(() => Promise.reject())
-
-    jest.useFakeTimers('modern')
-    pendingTxsMonitor()
-    jest.runAllTimers()
-
-    expect(isPendingSpy).toHaveBeenCalledTimes(6)
-  })
   it.skip('checks each pending tx', async () => {
     jest.spyOn(store.store, 'getState').mockImplementation(() => ({
       pendingTransactions: {
@@ -138,15 +140,11 @@ describe('pendingTxsMonitor', () => {
 
     jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-    const isPendingSpy = jest
-      .spyOn(pendingMonitor, 'isPendingTxMined')
-      .mockImplementation(jest.fn(() => Promise.resolve()))
+    const monitorPendingSpy = jest.spyOn(pendingMonitor, 'monitorPendingTx').mockImplementation(() => Promise.resolve())
 
-    jest.useFakeTimers('modern')
-    pendingTxsMonitor()
-    jest.runAllTimers()
+    await pendingTxsMonitor()
 
-    expect(isPendingSpy.mock.calls).toEqual([
+    expect(monitorPendingSpy.mock.calls).toEqual([
       [0, 'fakeTxId', 'fakeTxHash'],
       [0, 'fakeTxId2', 'fakeTxHash2'],
       [0, 'fakeTxId2', 'fakeTxHash2'],

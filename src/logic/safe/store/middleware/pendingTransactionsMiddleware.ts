@@ -10,7 +10,7 @@ import {
 import { PENDING_TRANSACTIONS_ID, PendingTransactionPayloads } from 'src/logic/safe/store/reducer/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { allPendingTxIds } from 'src/logic/safe/store/selectors/pendingTransactions'
-import { pendingTxsMonitor } from '../../transactions/pendingTxMonitor'
+import { monitorAllPendingTxs } from '../../transactions/pendingTxMonitor'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 
 // Share updated statuses between tabs/windows
@@ -64,7 +64,7 @@ export const pendingTransactionsMiddleware =
       }
 
       case PROVIDER_ACTIONS.WALLET: {
-        pendingTxsMonitor()
+        monitorAllPendingTxs()
         break
       }
       default:
