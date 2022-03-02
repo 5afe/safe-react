@@ -27,6 +27,7 @@ import {
   smallFontSize,
   xs,
   black300,
+  black400,
 } from './variables'
 
 const palette = {
@@ -222,7 +223,6 @@ const theme = createTheme({
     },
     MuiInputLabel: {
       outlined: {
-        color: primary,
         '&$error': {
           color: error,
         },
@@ -257,7 +257,7 @@ const theme = createTheme({
           borderColor: secondary,
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: black300,
+          borderColor: black400,
           borderWidth: '1px',
         },
         '&.Mui-error .MuiOutlinedInput-notchedOutline': {
@@ -285,6 +285,8 @@ const theme = createTheme({
         padding: '8px 16px',
         minHeight: '56px !important',
         boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
       },
     },
     MuiFilledInput: {
@@ -483,6 +485,13 @@ const theme = createTheme({
       colorSecondary: {
         '&$disabled': {
           color: alpha(secondary, 0.5),
+        },
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        '&$focused': {
+          color: black400,
         },
       },
     },
