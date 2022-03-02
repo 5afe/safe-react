@@ -20,7 +20,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
 import Track from 'src/components/Track'
-import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/safeOverview'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 

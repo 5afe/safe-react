@@ -18,7 +18,7 @@ import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
-import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/safeOverview'
 import Track from 'src/components/Track'
 
 const styles = () => ({

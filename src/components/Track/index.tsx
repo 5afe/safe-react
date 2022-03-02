@@ -1,6 +1,8 @@
-import { ReactElement, Fragment } from 'react'
+import { ReactElement, Fragment, ComponentProps } from 'react'
 
 import { getTrackDataLayer } from 'src/utils/googleTagManager'
+
+export type TrackingEvents = Record<string, Omit<ComponentProps<typeof Track>, 'children'>>
 
 type Props = {
   children: ReactElement
