@@ -100,8 +100,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     options: { variant: ERROR, persist: true, autoHideDuration: shortDuration },
   },
   TX_PENDING_FAILED_MSG: {
-    message:
-      'Transaction wasn’t mined, please make sure your transaction was properly sent. Be aware that it might still be mined',
+    message: 'Transaction wasn’t mined, please make sure it was properly sent. Be aware that it might still be mined.',
     options: { variant: ERROR, persist: true, autoHideDuration: shortDuration },
   },
   TX_WAITING_MSG: {

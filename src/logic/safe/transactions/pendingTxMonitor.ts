@@ -2,18 +2,31 @@ import { backOff } from 'exponential-backoff'
 
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
 
+const MAX_ATTEMPTS = 6
+
+let currentAttempt = 0
+
+const hasReachedMaxAttempts = (): boolean => currentAttempt >= MAX_ATTEMPTS
+
 export const isPendingTxMined = async (sessionBlockNumber: number, txId: string, txHash: string): Promise<void> => {
   const MAX_WAITING_BLOCK = sessionBlockNumber + 50
 
-  const web3 = getWeb3ReadOnly()
-  const tx = await web3.eth.getTransaction(txHash)
+  currentAttempt++
 
-  if (tx || (await web3.eth.getBlockNumber()) >= MAX_WAITING_BLOCK) {
+  const web3 = getWeb3()
+
+  if (
+    hasReachedMaxAttempts() ||
+    // Transaction was successfully mined
+    (await web3.eth.getTransaction(txHash)) ||
+    // Transaction was not mined within max block amount
+    (await web3.eth.getBlockNumber()) >= MAX_WAITING_BLOCK
+  ) {
     store.dispatch(removePendingTransaction({ id: txId }))
     store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
   } else {
@@ -23,33 +36,34 @@ export const isPendingTxMined = async (sessionBlockNumber: number, txId: string,
 }
 
 export const pendingTxsMonitor = async (): Promise<void> => {
+  const START_DELAY = 10_000
+
   const state = store.getState()
 
   const pendingTxsOnChain = pendingTxIdsByChain(state)
-  const pendingTxIds = Object.keys(pendingTxsOnChain || {})
+  const pendingTxs = Object.entries(pendingTxsOnChain || {})
 
   // Don't check pending transactions if there are none
-  if (pendingTxIds.length === 0) {
+  if (pendingTxs.length === 0) {
     return
   }
 
-  const web3 = getWeb3ReadOnly()
+  const web3 = getWeb3()
 
-  // Get current block on chain
-  let sessionBlockNumber: number
   try {
-    sessionBlockNumber = await web3.eth.getBlockNumber()
-  } catch {
-    return
-  }
+    const sessionBlockNumber = await web3.eth.getBlockNumber()
 
-  // Exponentially watch each pending transaction for (un-)successful mine within 50 blocks
-  for (const txId in pendingTxsOnChain) {
-    try {
-      await backOff(() => isPendingTxMined(sessionBlockNumber, txId, pendingTxsOnChain[txId]), {
-        startingDelay: 10_000,
-        numOfAttempts: 6,
-      })
-    } catch {}
+    // Exponentially watch each pending transaction for (un-)successful mine within 50 blocks
+    await Promise.all(
+      pendingTxs.map(([txId, txHash]) => {
+        backOff(() => isPendingTxMined(sessionBlockNumber, txId, txHash), {
+          startingDelay: START_DELAY,
+          numOfAttempts: MAX_ATTEMPTS,
+          retry: () => !hasReachedMaxAttempts(),
+        })
+      }),
+    )
+  } catch {
+    // Ignore
   }
 }

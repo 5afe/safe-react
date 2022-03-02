@@ -10,7 +10,7 @@ describe('isPendingTxMined', () => {
   })
 
   it('removes the pending tx with the tx receipt', async () => {
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getTransaction').mockImplementation(() =>
+    jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() =>
       Promise.resolve({
         hash: '',
         nonce: 0,
@@ -33,8 +33,8 @@ describe('isPendingTxMined', () => {
     expect(dispatchSpy).toHaveBeenCalledTimes(2)
   })
   it('removes the pending tx if the transaction is not mined within 50 blocks', async () => {
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(123))
+    jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
+    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(123))
 
     const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
@@ -43,8 +43,8 @@ describe('isPendingTxMined', () => {
     expect(dispatchSpy).toHaveBeenCalledTimes(2)
   })
   it('throws if there is no tx receipt or is is not mined within 50 blocks', async () => {
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
+    jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
+    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
     expect(async () => await isPendingTxMined(0, '', '')).rejects.toThrow()
   })
@@ -63,7 +63,7 @@ describe('pendingTxsMonitor', () => {
       },
     }))
 
-    const getWeb3Spy = jest.spyOn(web3, 'getWeb3ReadOnly')
+    const getWeb3Spy = jest.spyOn(web3, 'getWeb3')
 
     await pendingTxsMonitor()
 
@@ -79,7 +79,7 @@ describe('pendingTxsMonitor', () => {
       },
     }))
 
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getBlockNumber').mockImplementation(() => Promise.reject())
+    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.reject())
 
     const isPendingSpy = jest.spyOn(pendingMonitor, 'isPendingTxMined').mockImplementation(jest.fn())
 
@@ -104,7 +104,7 @@ describe('pendingTxsMonitor', () => {
       },
     }))
 
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
+    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
     const isPendingSpy = jest.spyOn(pendingMonitor, 'isPendingTxMined').mockImplementation(() => Promise.reject())
 
@@ -129,7 +129,7 @@ describe('pendingTxsMonitor', () => {
       },
     }))
 
-    jest.spyOn(web3.getWeb3ReadOnly().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
+    jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
     const isPendingSpy = jest
       .spyOn(pendingMonitor, 'isPendingTxMined')
