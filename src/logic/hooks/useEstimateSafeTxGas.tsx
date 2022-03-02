@@ -45,7 +45,7 @@ export const useEstimateSafeTxGas = ({
       }
     }
     estimateSafeTxGasCall()
-  }, [isCreation, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
+  }, [isCreation, isRejectTx, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
 
   return safeTxGasEstimation
 }
