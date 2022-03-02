@@ -8,15 +8,15 @@ import Link from 'src/components/layout/Link'
 import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS, COOKIE_ALERTS } from 'src/logic/cookies/model/cookie'
 import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
-import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
+import { loadFromCookie, removeCookies, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
+import { GA_COOKIE_LIST, loadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { CookieAttributes } from 'js-cookie'
-import { closeBeamer, loadBeamer } from 'src/utils/beamer'
+import { BEAMER_COOKIE_LIST, closeBeamer, loadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -189,11 +189,12 @@ const CookiesBanner = (): ReactElement => {
     setShowIntercom(localSupportAndUpdates)
 
     if (!localAnalytics) {
-      removeCookies()
+      removeCookies(GA_COOKIE_LIST)
     }
 
     if (!localSupportAndUpdates) {
       closeBeamer(beamerScriptRef)
+      removeCookies(BEAMER_COOKIE_LIST)
       if (isIntercomLoaded()) {
         closeIntercom()
       }
