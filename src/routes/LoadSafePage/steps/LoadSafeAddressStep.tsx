@@ -15,7 +15,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { isChecksumAddress } from 'src/utils/checksumAddress'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { lg, secondary } from 'src/theme/variables'
+import { lg, secondary, md } from 'src/theme/variables'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import {
@@ -256,7 +256,7 @@ const Container = styled(Block)`
 const FieldContainer = styled(Block)`
   display: flex;
   max-width: 480px;
-  margin-top: 12px;
+  margin-top: ${md};
 `
 
 const CheckIconAddressAdornment = styled(CheckCircle)`
