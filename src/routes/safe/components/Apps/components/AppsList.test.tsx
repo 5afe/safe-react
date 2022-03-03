@@ -14,8 +14,6 @@ jest.mock('src/routes/routes', () => {
   }
 })
 
-const spyTrackEventGA = jest.fn()
-
 beforeEach(() => {
   // Includes an id that doesn't exist in the remote apps to check that there's no error
   saveToStorage(appUtils.PINNED_SAFE_APP_IDS, ['14', '24', '228'])
@@ -235,8 +233,6 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
     })
 
-    expect(spyTrackEventGA).not.toHaveBeenCalled()
-
     const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
     const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
     act(() => {
@@ -246,11 +242,6 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
-      expect(spyTrackEventGA).toHaveBeenCalledWith({
-        action: 'Pin',
-        category: 'Safe App',
-        label: 'Compound',
-      })
     })
 
     const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')
@@ -260,11 +251,6 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
 
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
-      expect(spyTrackEventGA).toHaveBeenCalledWith({
-        action: 'Unpin',
-        category: 'Safe App',
-        label: 'Compound',
-      })
     })
   })
 
