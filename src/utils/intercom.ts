@@ -8,15 +8,15 @@ let intercomLoaded = false
 
 export const isIntercomLoaded = (): boolean => intercomLoaded
 
-const getIntercomUserId = async () => {
-  const cookiesState = await loadFromCookie<IntercomCookieType>(COOKIES_KEY_INTERCOM)
+const getIntercomUserId = () => {
+  const cookiesState = loadFromCookie<IntercomCookieType>(COOKIES_KEY_INTERCOM)
   if (!cookiesState) {
     const userId = crypto.randomBytes(32).toString('hex')
     const newCookieState = { userId }
     const cookieConfig: CookieAttributes = {
       expires: 365,
     }
-    await saveCookie<IntercomCookieType>(COOKIES_KEY_INTERCOM, newCookieState, cookieConfig)
+    saveCookie<IntercomCookieType>(COOKIES_KEY_INTERCOM, newCookieState, cookieConfig)
     return userId
   }
   const { userId } = cookiesState
@@ -24,7 +24,7 @@ const getIntercomUserId = async () => {
 }
 
 // eslint-disable-next-line consistent-return
-export const loadIntercom = async (): Promise<void> => {
+export const loadIntercom = (): void => {
   const APP_ID = INTERCOM_ID
   if (!APP_ID) {
     console.error('[Intercom] - In order to use Intercom you need to add an appID')
@@ -38,7 +38,7 @@ export const loadIntercom = async (): Promise<void> => {
   const x = d.getElementsByTagName('script')[0]
   x?.parentNode?.insertBefore(s, x)
 
-  const intercomUserId = await getIntercomUserId()
+  const intercomUserId = getIntercomUserId()
 
   s.onload = () => {
     ;(window as any).Intercom('boot', {

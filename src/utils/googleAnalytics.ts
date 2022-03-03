@@ -5,7 +5,7 @@ import { getChainInfo, _getChainId } from 'src/config'
 
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
-import { Cookie, loadFromCookie } from 'src/logic/cookies/utils'
+import { Cookie, loadFromCookie, removeCookies } from 'src/logic/cookies/utils'
 import { GOOGLE_ANALYTICS_ID, IS_PRODUCTION } from './constants'
 import { capitalize } from './css'
 
@@ -73,7 +73,7 @@ export const SETTINGS_EVENTS: Record<string, EventArgs> = {
   OWNERS: { ...SAFE_EVENTS.SETTINGS, label: 'Owners' },
 }
 
-export const GA_COOKIE_LIST: Cookie[] = [
+const GA_COOKIE_LIST: Cookie[] = [
   { name: '_ga', path: '/' },
   { name: '_gat', path: '/' },
   { name: '_gid', path: '/' },
@@ -133,6 +133,10 @@ export const loadGoogleAnalytics = (): void => {
   analyticsLoaded = true
 }
 
+export const unloadGoogleAnalytics = (): void => {
+  removeCookies(GA_COOKIE_LIST)
+}
+
 type UseAnalyticsResponse = {
   trackPage: (path: string) => void
   trackEvent: (event: EventArgs) => void
@@ -149,14 +153,11 @@ export const useAnalytics = (): UseAnalyticsResponse => {
   }, [chainId, analyticsAllowed])
 
   useEffect(() => {
-    async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
-      if (cookiesState) {
-        const { acceptedAnalytics } = cookiesState
-        setAnalyticsAllowed(acceptedAnalytics)
-      }
+    const cookiesState = loadFromCookie<BannerCookiesType>(COOKIES_KEY)
+    if (cookiesState) {
+      const { acceptedAnalytics } = cookiesState
+      setAnalyticsAllowed(acceptedAnalytics)
     }
-    fetchCookiesFromStorage()
   }, [])
 
   const trackPage = useCallback(

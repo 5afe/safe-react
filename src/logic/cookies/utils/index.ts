@@ -8,13 +8,10 @@ export type Cookie = {
 
 const PREFIX = 'v1_MAINNET__'
 
-export const loadFromCookie = async <T extends Record<string, any>>(
-  key: string,
-  withoutPrefix = false,
-): Promise<T | undefined> => {
+export const loadFromCookie = <T extends Record<string, any>>(key: string, withoutPrefix = false): T | undefined => {
   const prefix = withoutPrefix ? '' : PREFIX
   try {
-    const stringifiedValue = await Cookies.get(`${prefix}${key}`)
+    const stringifiedValue = Cookies.get(`${prefix}${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
       return undefined
     }
@@ -26,16 +23,16 @@ export const loadFromCookie = async <T extends Record<string, any>>(
   }
 }
 
-export const saveCookie = async <T extends Record<string, any>>(
+export const saveCookie = <T extends Record<string, any>>(
   key: string,
   value: T,
   options: CookieAttributes,
   withoutPrefix = false,
-): Promise<void> => {
+): void => {
   const prefix = withoutPrefix ? '' : PREFIX
   try {
     const stringifiedValue = JSON.stringify(value)
-    await Cookies.set(`${prefix}${key}`, stringifiedValue, options)
+    Cookies.set(`${prefix}${key}`, stringifiedValue, options)
   } catch (err) {
     logError(Errors._701, `cookie ${key} – ${err.message}`)
   }

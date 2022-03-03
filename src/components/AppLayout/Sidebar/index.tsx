@@ -68,6 +68,8 @@ const lazyLoad = (path: string): React.ReactElement => {
   return wrapInSuspense(<Component />)
 }
 
+const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
+
 const Sidebar = ({
   items,
   balance,
@@ -81,8 +83,8 @@ const Sidebar = ({
   const debugToggle = useMemo(() => (IS_PRODUCTION ? null : lazyLoad('./DebugToggle')), [])
   const dispatch = useDispatch()
 
-  const handleClick = async () => {
-    const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
+  const handleClick = (): void => {
+    const cookiesState = loadFromCookie<BannerCookiesType>(COOKIES_KEY)
     if (!cookiesState) {
       dispatch(openCookieBanner({ cookieBannerOpen: true }))
       return
@@ -122,10 +124,12 @@ const Sidebar = ({
         <StyledDivider />
 
         <HelpList>
-          <StyledListItem id="whats-new-button" button onClick={handleClick}>
-            <ListIcon type="gift" />
-            <StyledListItemText>What&apos;s new</StyledListItemText>
-          </StyledListItem>
+          {!isDesktop && (
+            <StyledListItem id="whats-new-button" button onClick={handleClick}>
+              <ListIcon type="gift" />
+              <StyledListItemText>What&apos;s new</StyledListItemText>
+            </StyledListItem>
+          )}
 
           <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
             <ListIcon type="question" />
