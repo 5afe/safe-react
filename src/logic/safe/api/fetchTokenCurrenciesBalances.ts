@@ -42,7 +42,7 @@ const exchangeRate = 1
 async function toItems(address: string, selectedCurrency: string, excludeSpamTokens: boolean) {
   const [tokens, prices] = await Promise.all([fetchTokens(address), fetchPrices()])
 
-  const filteredTokens = excludeSpamTokens ? tokens.filter((token) => /doge/i.test(token.name)) : tokens
+  const filteredTokens = excludeSpamTokens ? tokens.filter((token) => !/doge/i.test(token.name)) : tokens
 
   return filteredTokens.map((token) => {
     const usdConversion = token.symbol === 'cUSD' ? 1 : prices[token.symbol.toUpperCase()] || 0
