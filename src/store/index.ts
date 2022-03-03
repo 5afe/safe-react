@@ -10,7 +10,7 @@ import {
   nftAssetReducer,
   nftTokensReducer,
 } from 'src/logic/collectibles/store/reducer/collectibles'
-import cookiesReducer, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
+import cookiesReducer, { CookieState, COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
 import currentSessionReducer, {
   CurrentSessionState,
   CURRENT_SESSION_REDUCER_ID,
@@ -112,7 +112,7 @@ export type AppReduxState = CombinedState<{
   [PENDING_TRANSACTIONS_ID]: PendingTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_REDUCER_ID]: CurrencyValuesState
-  [COOKIES_REDUCER_ID]: Map<string, any>
+  [COOKIES_REDUCER_ID]: CookieState
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
   [CONFIG_REDUCER_ID]: ConfigState
