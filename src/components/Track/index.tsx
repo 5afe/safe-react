@@ -1,6 +1,8 @@
-import { ReactElement, cloneElement, Fragment } from 'react'
+import { ReactElement, Fragment, ComponentProps } from 'react'
 
 import { getTrackDataLayer } from 'src/utils/googleTagManager'
+
+export type TrackingEvents = Record<string, Omit<ComponentProps<typeof Track>, 'children'>>
 
 type Props = {
   children: ReactElement
@@ -14,10 +16,7 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
     throw new Error('Fragments cannot be tracked.')
   }
 
-  return cloneElement(children, {
-    ...children.props,
-    ...getTrackDataLayer(trackData),
-  })
+  return <div {...getTrackDataLayer(trackData)}>{children}</div>
 }
 
 export default Track

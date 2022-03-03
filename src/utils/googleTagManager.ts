@@ -1,4 +1,4 @@
-import { ComponentProps, useEffect } from 'react'
+import { useEffect } from 'react'
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
 import { Location } from 'history'
@@ -12,7 +12,6 @@ import {
   IS_PRODUCTION,
   GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH,
 } from 'src/utils/constants'
-import Track from 'src/components/Track'
 import { getChainInfo } from 'src/config'
 
 const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
@@ -62,6 +61,10 @@ enum GTM_EVENTS {
 export enum GTM_DATA_LAYER_VARS {
   // Tracked with 'pageview'
   PAGE = 'page',
+  TRACK = 'data-layer-track',
+}
+
+enum GTM_DATA_TRACK_VARS {
   // Following are tracked alongside 'data-track-event'
   ID = 'data-track-id',
   DESC = 'data-track-desc',
@@ -113,30 +116,30 @@ type TrackDataProps = {
 }
 
 type DataLayerPayload = {
-  [GTM_DATA_LAYER_VARS.ID]: string
-  [GTM_DATA_LAYER_VARS.DESC]: string
-  [GTM_DATA_LAYER_VARS.CHAIN]: string
-  [GTM_DATA_LAYER_VARS.PAYLOAD]?: string
+  [GTM_DATA_TRACK_VARS.ID]: string
+  [GTM_DATA_TRACK_VARS.DESC]: string
+  [GTM_DATA_TRACK_VARS.CHAIN]: string
+  [GTM_DATA_TRACK_VARS.PAYLOAD]?: string
 }
 
 export const getTrackDataLayer = ({ id, desc, payload }: TrackDataProps): DataLayerPayload => {
   const { chainId, shortName } = getChainInfo()
 
   const dataLayer = {
-    [GTM_DATA_LAYER_VARS.ID]: id,
-    [GTM_DATA_LAYER_VARS.DESC]: desc,
-    [GTM_DATA_LAYER_VARS.CHAIN]: JSON.stringify({ chainId, shortName }),
-    ...(payload && { [GTM_DATA_LAYER_VARS.PAYLOAD]: JSON.stringify(payload) }),
+    [GTM_DATA_TRACK_VARS.ID]: id,
+    [GTM_DATA_TRACK_VARS.DESC]: desc,
+    [GTM_DATA_TRACK_VARS.CHAIN]: JSON.stringify({ chainId, shortName }),
+    ...(payload && { [GTM_DATA_TRACK_VARS.PAYLOAD]: JSON.stringify(payload) }),
   }
 
   return dataLayer
 }
 
-export const trackEventGTM = (event: Omit<ComponentProps<typeof Track>, 'children'>): void => {
+export const trackEventGTM = (event: TrackDataProps): void => {
   TagManager.dataLayer({
     dataLayer: {
       event: GTM_EVENTS.TRACK,
-      ...getTrackDataLayer(event),
+      [GTM_DATA_LAYER_VARS.TRACK]: getTrackDataLayer(event),
     },
   })
 }

@@ -137,9 +137,7 @@ function LoadSafeAddressStep(): ReactElement {
     // On unmount, e.g. go back/next
     return () => {
       if (hasCustomSafeName) {
-        trackEventGTM({
-          ...LOAD_SAFE_TRACKING_EVENTS.NAME,
-        })
+        trackEventGTM(LOAD_SAFE_TRACKING_EVENTS.NAME)
       }
     }
   }, [hasCustomSafeName])

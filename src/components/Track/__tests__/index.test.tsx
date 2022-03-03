@@ -15,14 +15,14 @@ describe('Track', () => {
     expect(child).toBeInTheDocument()
   })
 
-  it('adds the id and stringified payload to child', () => {
+  it('wraps the child with a div that contains id and stringified payload', () => {
     render(
       <Track id="test" desc="test" payload={{ test: true }}>
         <span>test child2</span>
       </Track>,
     )
 
-    const child = screen.queryByText('test child2')
+    const child = screen.queryByText('test child2')?.closest('div')
 
     expect(child).toHaveAttribute('data-track-id', 'test')
     expect(child).toHaveAttribute('data-track-desc', 'test')
