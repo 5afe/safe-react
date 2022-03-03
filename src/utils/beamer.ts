@@ -1,16 +1,16 @@
 import { BEAMER_ID } from './constants'
-import { MutableRefObject } from 'react'
 import { BeamerConfig } from 'src/types/Beamer'
-import { Cookie, removeCookies } from 'src/logic/cookies/utils'
+import { removeCookies } from 'src/logic/cookies/utils'
 import local from './storage/local'
 
-export const BEAMER_COOKIE_LIST: Cookie[] = [
-  { name: `_BEAMER_LAST_POST_SHOWN_${BEAMER_ID}`, path: '/' },
-  { name: `_BEAMER_DATE_${BEAMER_ID}`, path: '/' },
-  { name: `_BEAMER_FIRST_VISIT_${BEAMER_ID}`, path: '/' },
-  { name: `_BEAMER_USER_ID_${BEAMER_ID}`, path: '/' },
-  { name: `_BEAMER_FILTER_BY_URL_${BEAMER_ID}`, path: '/' },
-  { name: `_BEAMER_LAST_UPDATE_${BEAMER_ID}`, path: '/' },
+const BEAMER_COOKIES = [
+  '_BEAMER_LAST_POST_SHOWN_',
+  '_BEAMER_DATE_',
+  '_BEAMER_FIRST_VISIT_',
+  '_BEAMER_USER_ID_',
+  '_BEAMER_FILTER_BY_URL_',
+  '_BEAMER_LAST_UPDATE_',
+  '_BEAMER_BOOSTED_ANNOUNCEMENT_DATE_',
 ]
 
 export const BEAMER_LS_RE = /^_BEAMER_/
@@ -21,7 +21,10 @@ const baseConfig: BeamerConfig = {
   product_id: BEAMER_ID,
 }
 
-export const loadBeamer = async (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): Promise<void> => {
+// Beamer script tag singleton
+let scriptRef: HTMLScriptElement | null = null
+
+export const loadBeamer = async (): Promise<void> => {
   if (!BEAMER_ID) {
     console.error('[Beamer] - In order to use Beamer you need to add an appID')
     return
@@ -35,27 +38,28 @@ export const loadBeamer = async (scriptRef: MutableRefObject<HTMLScriptElement |
     bounce: false,
   }
 
-  scriptRef.current = document.createElement('script')
-  scriptRef.current.type = 'text/javascript'
-  scriptRef.current.defer = true
-  scriptRef.current.src = BEAMER_URL
+  scriptRef = document.createElement('script')
+  scriptRef.type = 'text/javascript'
+  scriptRef.defer = true
+  scriptRef.src = BEAMER_URL
   const firstScript = document.getElementsByTagName('script')[0]
-  firstScript?.parentNode?.insertBefore(scriptRef.current, firstScript)
+  firstScript?.parentNode?.insertBefore(scriptRef, firstScript)
 
-  scriptRef.current.addEventListener('load', () => window.Beamer?.init(), { once: true })
+  scriptRef.addEventListener('load', () => window.Beamer?.init(), { once: true })
 }
 
-const closeBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
-  if (!window.Beamer || !scriptRef.current) return
+const closeBeamer = (): void => {
+  if (!window.Beamer || !scriptRef) return
   window.Beamer.destroy()
-  scriptRef.current.remove()
+  scriptRef.remove()
+  scriptRef = null
 }
 
-export const unloadBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
-  closeBeamer(scriptRef)
+export const unloadBeamer = (): void => {
+  closeBeamer()
 
   setTimeout(() => {
     local.removeMatching(BEAMER_LS_RE)
-    removeCookies(BEAMER_COOKIE_LIST)
+    removeCookies(BEAMER_COOKIES.map((prefix) => ({ path: '/', name: `${prefix}${BEAMER_ID}` })))
   }, 100)
 }

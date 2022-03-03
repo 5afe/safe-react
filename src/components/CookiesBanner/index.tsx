@@ -1,16 +1,16 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
-import { Fragment, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
+import { Fragment, ReactElement, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS, COOKIE_ALERTS } from 'src/logic/cookies/model/cookie'
 import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
-import { loadFromCookie, removeCookies, saveCookie } from 'src/logic/cookies/utils'
+import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { GA_COOKIE_LIST, loadGoogleAnalytics } from 'src/utils/googleAnalytics'
+import { loadGoogleAnalytics, unloadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
@@ -201,8 +201,6 @@ const CookiesBanner = isDesktop
       const [localSupportAndUpdates, setLocalSupportAndUpdates] = useState(false)
       const [localAnalytics, setLocalAnalytics] = useState(false)
 
-      const beamerScriptRef = useRef<HTMLScriptElement>()
-
       const { cookieBannerOpen } = useSelector(cookieBannerState)
       const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
 
@@ -269,7 +267,7 @@ const CookiesBanner = isDesktop
 
       // Load or unload analytics depending on user choice
       useEffect(() => {
-        localAnalytics ? loadGoogleAnalytics() : removeCookies(GA_COOKIE_LIST)
+        localAnalytics ? loadGoogleAnalytics() : unloadGoogleAnalytics()
       }, [localAnalytics])
 
       // Toggle Intercom
@@ -286,7 +284,7 @@ const CookiesBanner = isDesktop
 
       // Toggle Beamer
       useEffect(() => {
-        localSupportAndUpdates ? loadBeamer(beamerScriptRef) : unloadBeamer(beamerScriptRef)
+        localSupportAndUpdates ? loadBeamer() : unloadBeamer()
       }, [localSupportAndUpdates])
 
       return (
