@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
@@ -11,7 +11,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
 import { styles } from './style'
@@ -27,12 +26,6 @@ const ThresholdSettings = (): React.ReactElement => {
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
   }
-
-  const { trackEvent } = useAnalytics()
-
-  useEffect(() => {
-    trackEvent(SETTINGS_EVENTS.OWNERS)
-  }, [trackEvent])
 
   return (
     <>

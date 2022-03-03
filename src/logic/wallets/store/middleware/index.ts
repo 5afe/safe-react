@@ -4,7 +4,6 @@ import { Action } from 'redux-actions'
 import { store as reduxStore } from 'src/store'
 import { enhanceSnackbarForAction, NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { trackAnalyticsEvent, WALLET_EVENTS } from 'src/utils/googleAnalytics'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ProviderPayloads } from 'src/logic/wallets/store/reducer'
 import { providerSelector } from '../selectors'
@@ -46,7 +45,7 @@ const providerMiddleware =
     }
 
     const state = store.getState()
-    const { available, loaded, name, network } = providerSelector(state)
+    const { available, loaded, network } = providerSelector(state)
 
     // @TODO: `loaded` flag that is/was always set to true - should be moved to wallet connection catch
     // Wallet, account and network did not successfully load
@@ -59,12 +58,6 @@ const providerMiddleware =
     if (available) {
       // Only track when wallet connects to same chain as chain displayed in UI
       if (currentChainId(state) === network) {
-        const event = {
-          ...WALLET_EVENTS.CONNECT_WALLET,
-          label: name,
-        }
-
-        trackAnalyticsEvent(event)
       }
     } else {
       store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))

@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactElement } from 'react'
+import { useState, ReactElement } from 'react'
 import { Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
@@ -24,7 +24,6 @@ import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
@@ -39,7 +38,6 @@ type Props = {
 }
 
 const ManageOwners = ({ granted, owners }: Props): ReactElement => {
-  const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
   const [selectedOwner, setSelectedOwner] = useState<OwnerData | undefined>()
@@ -67,10 +65,6 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
     }))
     setSelectedOwner(undefined)
   }
-
-  useEffect(() => {
-    trackEvent(SETTINGS_EVENTS.OWNERS)
-  }, [trackEvent])
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)

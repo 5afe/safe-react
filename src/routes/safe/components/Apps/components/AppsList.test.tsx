@@ -5,7 +5,6 @@ import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import * as googleAnalytics from 'src/utils/googleAnalytics'
 
 jest.mock('src/routes/routes', () => {
   const original = jest.requireActual('src/routes/routes')
@@ -27,11 +26,6 @@ beforeEach(() => {
       url: 'https://apps.gnosis-safe.io/drain-safe',
     },
   ])
-
-  jest.spyOn(googleAnalytics, 'useAnalytics').mockImplementation(() => ({
-    trackPage: jest.fn(),
-    trackEvent: spyTrackEventGA,
-  }))
 
   jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValueOnce(
     Promise.resolve({
