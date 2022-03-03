@@ -2,7 +2,52 @@ import { _getChainId } from 'src/config'
 import { CHAIN_ID } from 'src/config/chain.d'
 
 import { setChainId } from 'src/logic/config/utils'
-import { createSendParams, isMaxFeeParam } from '../gas'
+import { createSendParams, estimateSafeTxGas, isMaxFeeParam } from '../gas'
+import * as safeVersion from 'src/logic/safe/utils/safeVersion'
+import * as safeTxGasEstimation from 'src/logic/safe/api/fetchSafeTxGasEstimation'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+
+describe('estimateSafeTxGas', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+  it('returns 0 if safeTxGas is optional for current save version', async () => {
+    jest.spyOn(safeVersion, 'hasFeature').mockImplementation(() => true)
+    const mockParams = {
+      safeAddress: ZERO_ADDRESS,
+      txData: '',
+      txRecipient: '',
+      txAmount: '0',
+      operation: 0,
+    }
+    const result = await estimateSafeTxGas(mockParams, 'mockSaveVersion')
+
+    expect(result).toBe('0')
+  })
+
+  it('fetches safeTxGas estimation if safeTxGas is required for current save version', async () => {
+    jest.spyOn(safeVersion, 'hasFeature').mockImplementation(() => false)
+    const spy = jest.spyOn(safeTxGasEstimation, 'fetchSafeTxGasEstimation').mockImplementation(() => {
+      return Promise.resolve({
+        currentNonce: 1,
+        recommendedNonce: 2,
+        safeTxGas: '1',
+      })
+    })
+
+    const mockParams = {
+      safeAddress: ZERO_ADDRESS,
+      txData: '',
+      txRecipient: '',
+      txAmount: '0',
+      operation: 0,
+    }
+    const result = await estimateSafeTxGas(mockParams, 'mockSaveVersion')
+
+    expect(result).toBe('1')
+    expect(spy).toHaveBeenCalledTimes(1)
+  })
+})
 
 describe('Get gas param', () => {
   let initialNetworkId = CHAIN_ID.RINKEBY

@@ -78,9 +78,8 @@ const Sidebar = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const debugToggle = useMemo(() => (IS_PRODUCTION ? null : lazyLoad('./DebugToggle')), [])
   const dispatch = useDispatch()
-  const devTools = useMemo(() => lazyLoad('./DevTools'), [])
-  const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
 
   const handleClick = async () => {
     const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
@@ -116,14 +115,10 @@ const Sidebar = ({
           <List items={items} />
         </>
       ) : null}
+
       <HelpContainer>
-        {!IS_PRODUCTION && safeAddress && (
-          <>
-            <StyledDivider />
-            {devTools}
-          </>
-        )}
-        {!IS_PRODUCTION && debugToggle}
+        {debugToggle}
+
         <StyledDivider />
 
         <HelpList>

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
@@ -14,9 +14,9 @@ import {
   userAccountSelector,
   userEnsSelector,
 } from 'src/logic/wallets/store/selectors'
-import { removeProvider } from 'src/logic/wallets/store/actions'
-import onboard from 'src/logic/wallets/onboard'
-import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
+import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
+import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -25,12 +25,12 @@ const HeaderComponent = (): React.ReactElement => {
   const ensName = useSelector(userEnsSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
-  const dispatch = useDispatch()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
       const lastUsedProvider = loadLastUsedProvider()
-      if (lastUsedProvider) {
+      const isProviderEnabled = lastUsedProvider && isSupportedWallet(lastUsedProvider)
+      if (isProviderEnabled) {
         await onboard().walletSelect(lastUsedProvider)
       }
     }
@@ -44,7 +44,7 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const onDisconnect = () => {
-    dispatch(removeProvider())
+    onboard().walletReset()
   }
 
   const getProviderInfoBased = () => {
@@ -57,7 +57,7 @@ const HeaderComponent = (): React.ReactElement => {
 
   const getProviderDetailsBased = () => {
     if (!loaded) {
-      return <ConnectDetails />
+      return wrapInSuspense(<ConnectDetails />)
     }
 
     return (

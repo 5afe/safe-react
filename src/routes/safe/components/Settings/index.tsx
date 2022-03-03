@@ -2,7 +2,7 @@ import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/sa
 import { makeStyles } from '@material-ui/core/styles'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { styles } from './style'
@@ -118,6 +118,7 @@ const Settings = (): React.ReactElement => {
               <Route path={SAFE_ROUTES.SETTINGS_POLICIES} exact render={() => <ThresholdSettings />} />
               <Route path={SAFE_ROUTES.SETTINGS_SPENDING_LIMIT} exact render={() => <SpendingLimitSettings />} />
               <Route path={SAFE_ROUTES.SETTINGS_ADVANCED} exact render={() => <Advanced />} />
+              <Redirect to={SAFE_ROUTES.SETTINGS_DETAILS} />
             </Switch>
           </Block>
         </Col>
