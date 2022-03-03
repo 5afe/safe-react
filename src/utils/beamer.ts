@@ -1,7 +1,8 @@
 import { BEAMER_ID } from './constants'
 import { MutableRefObject } from 'react'
 import { BeamerConfig } from 'src/types/Beamer'
-import { Cookie } from 'src/logic/cookies/utils'
+import { Cookie, removeCookies } from 'src/logic/cookies/utils'
+import local from './storage/local'
 
 export const BEAMER_COOKIE_LIST: Cookie[] = [
   { name: `_BEAMER_LAST_POST_SHOWN_${BEAMER_ID}`, path: '/' },
@@ -11,6 +12,8 @@ export const BEAMER_COOKIE_LIST: Cookie[] = [
   { name: `_BEAMER_FILTER_BY_URL_${BEAMER_ID}`, path: '/' },
   { name: `_BEAMER_LAST_UPDATE_${BEAMER_ID}`, path: '/' },
 ]
+
+export const BEAMER_LS_RE = /^_BEAMER_/
 
 const BEAMER_URL = 'https://app.getbeamer.com/js/beamer-embed.js'
 
@@ -42,8 +45,17 @@ export const loadBeamer = async (scriptRef: MutableRefObject<HTMLScriptElement |
   scriptRef.current.addEventListener('load', () => window.Beamer?.init(), { once: true })
 }
 
-export const closeBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
+const closeBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
   if (!window.Beamer || !scriptRef.current) return
   window.Beamer.destroy()
   scriptRef.current.remove()
+}
+
+export const unloadBeamer = (scriptRef: MutableRefObject<HTMLScriptElement | undefined>): void => {
+  closeBeamer(scriptRef)
+
+  setTimeout(() => {
+    local.removeMatching(BEAMER_LS_RE)
+    removeCookies(BEAMER_COOKIE_LIST)
+  }, 100)
 }

@@ -149,14 +149,11 @@ export const useAnalytics = (): UseAnalyticsResponse => {
   }, [chainId, analyticsAllowed])
 
   useEffect(() => {
-    async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
-      if (cookiesState) {
-        const { acceptedAnalytics } = cookiesState
-        setAnalyticsAllowed(acceptedAnalytics)
-      }
+    const cookiesState = loadFromCookie<BannerCookiesType>(COOKIES_KEY)
+    if (cookiesState) {
+      const { acceptedAnalytics } = cookiesState
+      setAnalyticsAllowed(acceptedAnalytics)
     }
-    fetchCookiesFromStorage()
   }, [])
 
   const trackPage = useCallback(

@@ -1,7 +1,7 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { Fragment, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
@@ -15,8 +15,7 @@ import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/interco
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
-import { CookieAttributes } from 'js-cookie'
-import { BEAMER_COOKIE_LIST, closeBeamer, loadBeamer } from 'src/utils/beamer'
+import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -81,223 +80,231 @@ const useStyles = makeStyles({
       marginRight: '5px',
     },
   },
-  intercomImage: {
-    position: 'fixed',
-    cursor: 'pointer',
-    height: '80px',
-    width: '80px',
-    bottom: '8px',
-    right: '10px',
-    zIndex: '1000',
-    boxShadow: '1px 2px 10px 0 var(rgba(40, 54, 61, 0.18))',
-  },
 } as any)
 
-const CookiesBanner = (): ReactElement => {
+const CookiesBannerForm = (props: {
+  onSubmit: (formNecessary: boolean, formSupportAndUpdates: boolean, formAnalytics: boolean) => void
+  cookiesNecessary: boolean
+  cookiesAnalytics: boolean
+  cookiesSupportAndUpdates: boolean
+}): ReactElement => {
+  const [formNecessary, setFormNecessary] = useState(props.cookiesNecessary)
+  const [formSupportAndUpdates, setFormSupportAndUpdates] = useState(props.cookiesSupportAndUpdates)
+  const [formAnalytics, setFormAnalytics] = useState(props.cookiesAnalytics)
+  const { key } = useSelector(cookieBannerState)
   const classes = useStyles()
-  const dispatch = useDispatch()
-  const intercomLoaded = isIntercomLoaded()
 
-  const [showAnalytics, setShowAnalytics] = useState(false)
-  const [showIntercom, setShowIntercom] = useState(false)
-  const [localNecessary, setLocalNecessary] = useState(true)
-  const [localAnalytics, setLocalAnalytics] = useState(false)
-  const [localSupportAndUpdates, setLocalSupportAndUpdates] = useState(false)
-  const { getAppUrl } = useSafeAppUrl()
-  const beamerScriptRef = useRef<HTMLScriptElement>()
-
-  const { key, cookieBannerOpen } = useSelector(cookieBannerState)
-  const newAppUrl = getAppUrl()
-  const isSafeAppView = newAppUrl !== null
-
-  useEffect(() => {
-    if (showIntercom && !isSafeAppView) {
-      loadIntercom()
-
-      // For use in non-webapps (Mobile and Desktop)
-      // https://www.getbeamer.com/help/how-to-install-beamer-using-our-api
-      loadBeamer(beamerScriptRef)
-    }
-  }, [showIntercom, isSafeAppView])
-
-  useEffect(() => {
-    if (intercomLoaded && isSafeAppView) {
-      closeIntercom()
-    }
-  }, [isSafeAppView, intercomLoaded])
-
-  useEffect(() => {
-    async function fetchCookiesFromStorage() {
-      const cookiesState = await loadFromCookie<BannerCookiesType>(COOKIES_KEY)
-      if (!cookiesState) {
-        dispatch(openCookieBanner({ cookieBannerOpen: true }))
-      } else {
-        const { acceptedSupportAndUpdates, acceptedAnalytics, acceptedNecessary } = cookiesState
-        if (acceptedSupportAndUpdates === undefined) {
-          const newState = {
-            acceptedNecessary,
-            acceptedAnalytics,
-            acceptedSupportAndUpdates: acceptedAnalytics,
-          }
-          const cookieConfig: CookieAttributes = {
-            expires: acceptedAnalytics ? 365 : 7,
-          }
-          await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
-          setLocalSupportAndUpdates(newState.acceptedSupportAndUpdates)
-          setShowIntercom(newState.acceptedSupportAndUpdates)
-        } else {
-          setLocalSupportAndUpdates(acceptedSupportAndUpdates)
-          setShowIntercom(acceptedSupportAndUpdates)
-        }
-        setLocalAnalytics(acceptedAnalytics)
-        setLocalNecessary(acceptedNecessary)
-
-        if (acceptedAnalytics && !isDesktop) {
-          loadGoogleAnalytics()
-        }
-      }
-    }
-    fetchCookiesFromStorage()
-  }, [dispatch, showAnalytics, showIntercom])
-
-  const acceptCookiesHandler = async () => {
-    const newState = {
-      acceptedNecessary: true,
-      acceptedAnalytics: !isDesktop,
-      acceptedSupportAndUpdates: true,
-    }
-    const cookieConfig: CookieAttributes = {
-      expires: 365,
-    }
-    await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
-    setShowAnalytics(!isDesktop)
-    setShowIntercom(true)
-    dispatch(closeCookieBanner())
+  const onAccept = () => {
+    props.onSubmit(formNecessary, formSupportAndUpdates, formAnalytics)
   }
 
-  const closeCookiesBannerHandler = async () => {
-    const newState = {
-      acceptedNecessary: true,
-      acceptedAnalytics: localAnalytics,
-      acceptedSupportAndUpdates: localSupportAndUpdates,
-    }
-    const cookieConfig: CookieAttributes = {
-      expires: localAnalytics ? 365 : 7,
-    }
-    await saveCookie<BannerCookiesType>(COOKIES_KEY, newState, cookieConfig)
-    setShowAnalytics(localAnalytics)
-    setShowIntercom(localSupportAndUpdates)
+  const onAcceptAll = () => {
+    setFormNecessary(true)
+    setFormSupportAndUpdates(true)
+    setFormAnalytics(true)
 
-    if (!localAnalytics) {
-      removeCookies(GA_COOKIE_LIST)
-    }
-
-    if (!localSupportAndUpdates) {
-      closeBeamer(beamerScriptRef)
-      removeCookies(BEAMER_COOKIE_LIST)
-      if (isIntercomLoaded()) {
-        closeIntercom()
-      }
-    }
-    dispatch(closeCookieBanner())
-  }
-
-  const CookiesBannerForm = () => {
-    return (
-      <div data-testid="cookies-banner-form" className={classes.container}>
-        <div className={classes.content}>
-          {key && (
-            <div className={classes.intercomAlert}>
-              <img src={AlertRedIcon} />
-              {COOKIE_ALERTS[key]}
-            </div>
-          )}
-          <p className={classes.text}>
-            We use cookies to provide you with the best experience and to help improve our website and application.
-            Please read our{' '}
-            <Link className={classes.link} to="https://gnosis-safe.io/cookie">
-              Cookie Policy
-            </Link>{' '}
-            for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
-            to enhance site navigation, analyze site usage and provide customer support.
-          </p>
-          <div className={classes.form}>
-            <div className={classes.formItem}>
-              <FormControlLabel
-                checked={localNecessary}
-                control={<Checkbox disabled />}
-                disabled
-                label="Necessary"
-                name="Necessary"
-                onChange={() => setLocalNecessary((prev) => !prev)}
-                value={localNecessary}
-              />
-            </div>
-            <div className={classes.formItem}>
-              <FormControlLabel
-                control={<Checkbox checked={localSupportAndUpdates} />}
-                label="Community support & updates"
-                name="Community support & updates"
-                onChange={() => setLocalSupportAndUpdates((prev) => !prev)}
-                value={localSupportAndUpdates}
-              />
-            </div>
-            <div className={classes.formItem}>
-              <FormControlLabel
-                control={<Checkbox checked={localAnalytics} />}
-                label="Analytics"
-                name="Analytics"
-                onChange={() => setLocalAnalytics((prev) => !prev)}
-                value={localAnalytics}
-              />
-            </div>
-            <div className={classes.formItem}>
-              <Button
-                color="primary"
-                component={Link}
-                minWidth={180}
-                onClick={() => closeCookiesBannerHandler()}
-                variant="outlined"
-              >
-                Accept selection
-              </Button>
-            </div>
-            <div className={classes.formItem}>
-              <Button
-                color="primary"
-                component={Link}
-                minWidth={180}
-                onClick={() => acceptCookiesHandler()}
-                variant="contained"
-              >
-                Accept all
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    // A delay for visual feedback
+    setTimeout(() => {
+      props.onSubmit(true, true, true)
+    }, 300)
   }
 
   return (
-    <>
-      {!isDesktop && !showIntercom && !isSafeAppView && (
-        <img
-          className={classes.intercomImage}
-          src={IntercomIcon}
-          onClick={() =>
-            dispatch(
-              openCookieBanner({
-                cookieBannerOpen: true,
-                key: COOKIE_IDS.INTERCOM,
-              }),
-            )
-          }
-        />
-      )}
-      {!isDesktop && cookieBannerOpen && <CookiesBannerForm />}
-    </>
+    <div data-testid="cookies-banner-form" className={classes.container}>
+      <div className={classes.content}>
+        {key && (
+          <div className={classes.intercomAlert}>
+            <img src={AlertRedIcon} />
+            {COOKIE_ALERTS[key]}
+          </div>
+        )}
+        <p className={classes.text}>
+          We use cookies to provide you with the best experience and to help improve our website and application. Please
+          read our{' '}
+          <Link className={classes.link} to="https://gnosis-safe.io/cookie">
+            Cookie Policy
+          </Link>{' '}
+          for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
+          to enhance site navigation, analyze site usage and provide customer support.
+        </p>
+        <div className={classes.form}>
+          <div className={classes.formItem}>
+            <FormControlLabel
+              checked={formNecessary}
+              control={<Checkbox disabled />}
+              disabled
+              label="Necessary"
+              name="Necessary"
+              onChange={() => setFormNecessary((prev) => !prev)}
+              value={formNecessary}
+            />
+          </div>
+          <div className={classes.formItem}>
+            <FormControlLabel
+              control={<Checkbox checked={formSupportAndUpdates} />}
+              label="Community support & updates"
+              name="Community support & updates"
+              onChange={() => setFormSupportAndUpdates((prev) => !prev)}
+              value={formSupportAndUpdates}
+            />
+          </div>
+          <div className={classes.formItem}>
+            <FormControlLabel
+              control={<Checkbox checked={formAnalytics} />}
+              label="Analytics"
+              name="Analytics"
+              onChange={() => setFormAnalytics((prev) => !prev)}
+              value={formAnalytics}
+            />
+          </div>
+          <div className={classes.formItem}>
+            <Button color="primary" component={Link} minWidth={180} onClick={onAccept} variant="outlined">
+              Accept selection
+            </Button>
+          </div>
+          <div className={classes.formItem}>
+            <Button color="primary" component={Link} minWidth={180} onClick={onAcceptAll} variant="contained">
+              Accept all
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
+
+const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement => {
+  return (
+    <img
+      style={{
+        position: 'fixed',
+        cursor: 'pointer',
+        height: '80px',
+        width: '80px',
+        bottom: '8px',
+        right: '10px',
+        zIndex: 1000,
+        boxShadow: '1px 2px 10px 0 var(rgba(40, 54, 61, 0.18))',
+      }}
+      src={IntercomIcon}
+      onClick={onClick}
+    />
+  )
+}
+
+const CookiesBanner = isDesktop
+  ? Fragment
+  : (): ReactElement => {
+      const dispatch = useDispatch()
+
+      const [localNecessary, setLocalNecessary] = useState(true)
+      const [localSupportAndUpdates, setLocalSupportAndUpdates] = useState(false)
+      const [localAnalytics, setLocalAnalytics] = useState(false)
+
+      const beamerScriptRef = useRef<HTMLScriptElement>()
+
+      const { cookieBannerOpen } = useSelector(cookieBannerState)
+      const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
+
+      const openBanner = useCallback((): void => {
+        dispatch(
+          openCookieBanner({
+            cookieBannerOpen: true,
+            key: COOKIE_IDS.INTERCOM,
+          }),
+        )
+      }, [dispatch])
+
+      const closeBanner = useCallback((): void => {
+        dispatch(closeCookieBanner())
+      }, [dispatch])
+
+      const saveNewCookieState = (
+        acceptedNecessary: boolean,
+        acceptedSupportAndUpdates: boolean,
+        acceptedAnalytics: boolean,
+      ): void => {
+        saveCookie<BannerCookiesType>(
+          COOKIES_KEY,
+          {
+            acceptedNecessary,
+            acceptedSupportAndUpdates,
+            acceptedAnalytics,
+          },
+          {
+            // Ask again in a week, if Analytics wasn't accepted
+            expires: acceptedAnalytics ? 365 : 7,
+          },
+        )
+      }
+
+      const acceptCookiesHandler = (
+        cookiesNecessary: boolean,
+        cookiesSupportAndUpdates: boolean,
+        cookiesAnalytics: boolean,
+      ): void => {
+        closeBanner()
+        saveNewCookieState(cookiesNecessary, cookiesSupportAndUpdates, cookiesAnalytics)
+
+        setLocalNecessary(cookiesNecessary)
+        setLocalAnalytics(cookiesAnalytics)
+        setLocalSupportAndUpdates(cookiesSupportAndUpdates)
+      }
+
+      // Init cookie banner's own cookie
+      useEffect(() => {
+        const cookiesState = loadFromCookie<BannerCookiesType>(COOKIES_KEY)
+
+        // First visit to the app
+        if (!cookiesState) {
+          openBanner()
+          return
+        }
+
+        const { acceptedNecessary, acceptedSupportAndUpdates, acceptedAnalytics } = cookiesState
+        setLocalNecessary(acceptedNecessary)
+        setLocalSupportAndUpdates(acceptedSupportAndUpdates)
+        setLocalAnalytics(acceptedAnalytics)
+      }, [setLocalNecessary, setLocalSupportAndUpdates, setLocalAnalytics, openBanner])
+
+      // Load or unload analytics depending on user choice
+      useEffect(() => {
+        localAnalytics ? loadGoogleAnalytics() : removeCookies(GA_COOKIE_LIST)
+      }, [localAnalytics])
+
+      // Toggle Intercom
+      useEffect(() => {
+        if (isSafeAppView || !localSupportAndUpdates) {
+          isIntercomLoaded() && closeIntercom()
+          return
+        }
+
+        if (!isSafeAppView && localSupportAndUpdates) {
+          !isIntercomLoaded() && loadIntercom()
+        }
+      }, [localSupportAndUpdates, isSafeAppView])
+
+      // Toggle Beamer
+      useEffect(() => {
+        localSupportAndUpdates ? loadBeamer(beamerScriptRef) : unloadBeamer(beamerScriptRef)
+      }, [localSupportAndUpdates])
+
+      return (
+        <>
+          {/* A fake Intercom button before Intercom is loaded */}
+          {!localSupportAndUpdates && !isSafeAppView && <FakeIntercomButton onClick={openBanner} />}
+
+          {/* The cookie banner itself */}
+          {cookieBannerOpen && (
+            <CookiesBannerForm
+              cookiesNecessary={localNecessary}
+              cookiesSupportAndUpdates={localSupportAndUpdates}
+              cookiesAnalytics={localAnalytics}
+              onSubmit={acceptCookiesHandler}
+            />
+          )}
+        </>
+      )
+    }
 
 export default CookiesBanner
