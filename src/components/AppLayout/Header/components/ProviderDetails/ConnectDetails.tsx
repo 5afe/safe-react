@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { lazy, ReactElement } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { Card } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
@@ -9,7 +9,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import PairingDetails from 'src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'
+// We need lazy import because the component imports static css that should only be applied if the component is rendered
+const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
 
 const styles = () => ({
   header: {

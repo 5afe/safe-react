@@ -7,6 +7,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 
 type UseEstimateSafeTxGasProps = {
   isCreation: boolean
+  isRejectTx: boolean
   txData: string
   txRecipient: string
   txAmount: string
@@ -15,6 +16,7 @@ type UseEstimateSafeTxGasProps = {
 
 export const useEstimateSafeTxGas = ({
   isCreation,
+  isRejectTx,
   txData,
   txRecipient,
   txAmount,
@@ -24,7 +26,7 @@ export const useEstimateSafeTxGas = ({
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
 
   useEffect(() => {
-    if (!isCreation) return
+    if (!isCreation || isRejectTx) return
     const estimateSafeTxGasCall = async () => {
       try {
         const safeTxGasEstimation = await estimateSafeTxGas(
@@ -43,7 +45,7 @@ export const useEstimateSafeTxGas = ({
       }
     }
     estimateSafeTxGasCall()
-  }, [isCreation, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
+  }, [isCreation, isRejectTx, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
 
   return safeTxGasEstimation
 }

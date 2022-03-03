@@ -19,6 +19,7 @@ import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
+import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -36,6 +37,7 @@ const IdenticonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 
   div:first-of-type {
     width: 32px;
@@ -158,6 +160,7 @@ const SafeHeader = ({
         {/* Identicon */}
         <IdenticonContainer>
           <FlexSpacer />
+          <Threshold />
           <Identicon address={address} size="lg" />
           <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
