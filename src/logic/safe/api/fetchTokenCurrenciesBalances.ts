@@ -27,11 +27,11 @@ export const fetchTokenCurrenciesBalances = async ({
 }: FetchTokenCurrenciesBalancesProps): Promise<BalanceEndpoint> => {
   const address = checksumAddress(safeAddress)
 
-  const items = await toItems(address, selectedCurrency, excludeSpamTokens)
+  const tokens = await getTokenBalances(address, selectedCurrency, excludeSpamTokens)
 
   return {
-    fiatTotal: items.reduce((sum, token) => sum + Number(token.fiatBalance), 0).toString(),
-    items: items.sort((a, b) => {
+    fiatTotal: tokens.reduce((sum, token) => sum + Number(token.fiatBalance), 0).toString(),
+    items: tokens.sort((a, b) => {
       return a.fiatBalance < b.fiatBalance ? 1 : -1
     }),
   }
@@ -39,7 +39,7 @@ export const fetchTokenCurrenciesBalances = async ({
 const WEI_PER = 1_000_000_000_000_000_000
 const exchangeRate = 1
 
-async function toItems(address: string, selectedCurrency: string, excludeSpamTokens: boolean) {
+async function getTokenBalances(address: string, selectedCurrency: string, excludeSpamTokens: boolean) {
   const [tokens, prices] = await Promise.all([fetchTokens(address), fetchPrices()])
 
   const filteredTokens = excludeSpamTokens ? tokens.filter((token) => !/doge/i.test(token.name)) : tokens
@@ -73,15 +73,19 @@ interface BlockscoutTokenBalance {
 }
 
 async function fetchTokens(address: string) {
-  const blockScoutEndpoint = `${getNetworkExplorerInfo().apiUrl}?module=account&action=tokenlist&address=${address}`
-  // retry once if it fails as gonza says that happens sometimes
-  const res = await fetch(blockScoutEndpoint).catch((e) => {
-    console.warn('Fetch error', e)
-    return fetch(blockScoutEndpoint)
-  })
-  const tokenBalances: BlockscoutTokenBalance[] = (await res.json()).result
+  try {
+    const blockScoutEndpoint = `${getNetworkExplorerInfo().apiUrl}?module=account&action=tokenlist&address=${address}`
+    // retry once if it fails as gonza says that happens sometimes
+    const res = await fetch(blockScoutEndpoint).catch((e) => {
+      console.warn('Fetch error', e)
+      return fetch(blockScoutEndpoint)
+    })
+    const tokenBalances: BlockscoutTokenBalance[] = (await res.json()).result
 
-  return tokenBalances
+    return tokenBalances
+  } catch (e) {
+    console.error('fetching tokens from blockscout failed twice', e)
+  }
 }
 
 interface PriceInfo {
