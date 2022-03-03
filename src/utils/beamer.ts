@@ -9,6 +9,7 @@ export const BEAMER_COOKIE_LIST: Cookie[] = [
   { name: `_BEAMER_FIRST_VISIT_${BEAMER_ID}`, path: '/' },
   { name: `_BEAMER_USER_ID_${BEAMER_ID}`, path: '/' },
   { name: `_BEAMER_FILTER_BY_URL_${BEAMER_ID}`, path: '/' },
+  { name: `_BEAMER_LAST_UPDATE_${BEAMER_ID}`, path: '/' },
 ]
 
 const BEAMER_URL = 'https://app.getbeamer.com/js/beamer-embed.js'
