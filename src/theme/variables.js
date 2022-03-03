@@ -9,6 +9,8 @@ const lg = '24px'
 const marginButtonImg = '12px'
 const md = '16px'
 const primary = '#001428'
+const primaryLite = '#EFFAF8'
+const primaryActive = '#008C73'
 const secondary = '#008C73'
 const secondaryTextOrSvg = '#B2B5B2'
 const secondaryBackground = '#f0efee'
@@ -52,9 +54,11 @@ module.exports = {
   mediumFontSize: '14px',
   orange500: '#e8663d',
   primary,
-  primary200: '#EFFAF8',
+  primaryLite,
+  primaryActive,
+  primary200: primaryLite,
   primary300: '#92C9BE',
-  primary400: '#008C73',
+  primary400: primaryActive,
   regularFont: 400,
   red400: '#C31717',
   screenLg: 1200,

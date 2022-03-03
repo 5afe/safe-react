@@ -1,4 +1,4 @@
-import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk'
+import { EthAdapterTransaction } from '@gnosis.pm/safe-core-sdk-types'
 import { GasPriceOracle } from '@gnosis.pm/safe-react-gateway-sdk'
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'

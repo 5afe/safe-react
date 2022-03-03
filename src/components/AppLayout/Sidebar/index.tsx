@@ -69,8 +69,8 @@ const Sidebar = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
-  const devTools = useMemo(() => lazyLoad('./DevTools'), [])
-  const debugToggle = useMemo(() => lazyLoad('./DebugToggle'), [])
+  const debugToggle = useMemo(() => (IS_PRODUCTION ? null : lazyLoad('./DebugToggle')), [])
+
   return (
     <>
       <SafeHeader
@@ -89,14 +89,10 @@ const Sidebar = ({
           <List items={items} />
         </>
       ) : null}
+
       <HelpContainer>
-        {!IS_PRODUCTION && safeAddress && (
-          <>
-            <StyledDivider />
-            {devTools}
-          </>
-        )}
-        {!IS_PRODUCTION && debugToggle}
+        {debugToggle}
+
         <StyledDivider />
 
         <Track {...SAFE_OVERVIEW_TRACKING_EVENTS.HELP_CENTER}>
