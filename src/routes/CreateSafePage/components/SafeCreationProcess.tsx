@@ -9,7 +9,6 @@ import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeDeployment } from 'src/routes/opening'
-import { useAnalytics, USER_EVENTS } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
@@ -85,7 +84,6 @@ function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
 
-  const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddressAccount = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)
@@ -194,8 +192,6 @@ function SafeCreationProcess(): ReactElement {
     })
     const safeAddressBookEntry = makeAddressBookEntry({ address: newSafeAddress, name: safeName, chainId })
     await dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
-
-    trackEvent(USER_EVENTS.CREATE_SAFE)
 
     // a default 5s wait before starting to request safe information
     await sleep(5000)

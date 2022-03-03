@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
@@ -26,7 +26,6 @@ import {
   BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
@@ -79,11 +78,6 @@ const Coins = (props: Props): React.ReactElement => {
   const selectedCurrency = useSelector(currentCurrencySelector)
   const safeTokens = useSelector(extendedSafeTokensSelector)
   const granted = useSelector(grantedSelector)
-  const { trackEvent } = useAnalytics()
-
-  useEffect(() => {
-    trackEvent(SAFE_EVENTS.COINS)
-  }, [trackEvent])
 
   const filteredData: List<BalanceData> = useMemo(
     () => getBalanceData(safeTokens, selectedCurrency),

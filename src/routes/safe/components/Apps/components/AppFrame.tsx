@@ -17,7 +17,6 @@ import Web3 from 'web3'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
@@ -87,7 +86,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
-  const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
@@ -303,13 +301,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     loadApp()
   }, [appUrl])
-
-  //track GA
-  useEffect(() => {
-    if (safeApp) {
-      trackEvent({ ...SAFE_EVENTS.SAFE_APP, label: safeApp.name })
-    }
-  }, [safeApp, trackEvent])
 
   return (
     <AppWrapper>

@@ -44,7 +44,6 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
@@ -91,15 +90,10 @@ const AddressBookTable = (): ReactElement => {
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [exportEntriesModalOpen, setExportEntriesModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
-  const { trackEvent } = useAnalytics()
 
   const history = useHistory()
   const queryParams = Object.fromEntries(new URLSearchParams(history.location.search))
   const entryAddressToEditOrCreateNew = queryParams?.entryAddress
-
-  useEffect(() => {
-    trackEvent(SAFE_EVENTS.ADDRESS_BOOK)
-  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

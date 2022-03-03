@@ -1,7 +1,7 @@
 import FormGroup from '@material-ui/core/FormGroup/FormGroup'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { ChangeEvent, ReactElement, useEffect } from 'react'
+import { ChangeEvent, ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import styled from 'styled-components'
@@ -14,7 +14,6 @@ import { setShowShortName } from 'src/logic/appearance/actions/setShowShortName'
 import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
 import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 
 // Other settings sections use MUI createStyles .container
@@ -34,17 +33,8 @@ const Appearance = (): ReactElement => {
   const safeAddress = extractSafeAddress()
   const [darkMode, setDarkMode] = useDarkMode()
 
-  const { trackEvent } = useAnalytics()
-
-  useEffect(() => {
-    trackEvent(SETTINGS_EVENTS.APPEARANCE)
-  }, [trackEvent])
-
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setShowShortName({ showShortName: checked }))
-
-    const label = `${SETTINGS_EVENTS.APPEARANCE.label} (${checked ? 'Enable' : 'Disable'} EIP-3770 prefixes)`
-    trackEvent({ ...SETTINGS_EVENTS.APPEARANCE, label })
   }
   const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
     dispatch(setCopyShortName({ copyShortName: checked }))
