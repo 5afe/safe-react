@@ -5,7 +5,7 @@ import { getChainInfo, _getChainId } from 'src/config'
 
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
-import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
+import { Cookie, loadFromCookie } from 'src/logic/cookies/utils'
 import { GOOGLE_ANALYTICS_ID, IS_PRODUCTION } from './constants'
 import { capitalize } from './css'
 
@@ -73,7 +73,7 @@ export const SETTINGS_EVENTS: Record<string, EventArgs> = {
   OWNERS: { ...SAFE_EVENTS.SETTINGS, label: 'Owners' },
 }
 
-export const COOKIES_LIST = [
+export const GA_COOKIE_LIST: Cookie[] = [
   { name: '_ga', path: '/' },
   { name: '_gat', path: '/' },
   { name: '_gid', path: '/' },
@@ -178,11 +178,4 @@ export const useAnalytics = (): UseAnalyticsResponse => {
   )
 
   return { trackPage, trackEvent }
-}
-
-// we remove GA cookies manually as react-ga does not provides a utility for it.
-export const removeCookies = (): void => {
-  // Extracts the main domain, e.g. gnosis-safe.io
-  const subDomain = location.host.split('.').slice(-2).join('.')
-  COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
 }
