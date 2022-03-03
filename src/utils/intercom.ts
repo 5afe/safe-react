@@ -49,7 +49,7 @@ export const loadIntercom = async (): Promise<void> => {
     })
     intercomLoaded = true
     ;(window as any).Intercom('onShow', () => {
-      trackEventGTM({ ...SAFE_OVERVIEW_TRACKING_EVENTS.OPEN_INTERCOM })
+      trackEventGTM(SAFE_OVERVIEW_TRACKING_EVENTS.OPEN_INTERCOM)
     })
   }
 }

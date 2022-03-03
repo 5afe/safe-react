@@ -132,9 +132,7 @@ function SafeCreationProcess(): ReactElement {
               ...safeCreationFormValues,
             })
 
-            trackEventGTM({
-              ...CREATE_SAFE_TRACKING_EVENTS.CONFIRM,
-            })
+            trackEventGTM(CREATE_SAFE_TRACKING_EVENTS.CONFIRM)
 
             // Monitor the latest block to find a potential speed-up tx
             txMonitor({ sender: userAddressAccount, hash: txHash, data: deploymentTx.encodeABI() })

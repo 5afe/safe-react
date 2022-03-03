@@ -44,9 +44,7 @@ function NameNewSafeStep(): ReactElement {
     // On unmount, e.g. go back/next
     return () => {
       if (hasCustomSafeName) {
-        trackEventGTM({
-          ...CREATE_SAFE_TRACKING_EVENTS.NAME,
-        })
+        trackEventGTM(CREATE_SAFE_TRACKING_EVENTS.NAME)
       }
     }
   }, [hasCustomSafeName])

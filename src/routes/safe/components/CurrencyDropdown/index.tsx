@@ -39,7 +39,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
   )
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    trackEventGTM({ ...SAFE_OVERVIEW_TRACKING_EVENTS.OPEN_CURRENCY_MENU })
+    trackEventGTM(SAFE_OVERVIEW_TRACKING_EVENTS.OPEN_CURRENCY_MENU)
     setAnchorEl(event.currentTarget)
     import('currency-flags/dist/currency-flags.min.css' as string)
   }
