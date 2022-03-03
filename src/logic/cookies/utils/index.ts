@@ -44,7 +44,7 @@ export const saveCookie = async <T extends Record<string, any>>(
 export const removeCookie = (key: string, path: string, domain: string): void => Cookies.remove(key, { path, domain })
 
 export const removeCookies = (cookieList: Cookie[]): void => {
-  // Extracts the main domain, e.g. gnosis-safe.io
-  const subDomain = location.host.split('.').slice(-2).join('.')
-  cookieList.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
+  // Extracts domain, e.g. gnosis-safe.io
+  const domain = location.host.split('.').slice(-2).join('.')
+  cookieList.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${domain}`))
 }
