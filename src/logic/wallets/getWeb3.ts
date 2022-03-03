@@ -6,6 +6,7 @@ import { ContentHash } from 'web3-eth-ens'
 import { namehash } from '@ethersproject/hash'
 import Safe, { Web3Adapter } from '@gnosis.pm/safe-core-sdk'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import memoize from 'lodash/memoize'
 
 import { ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
@@ -46,8 +47,7 @@ export const web3HttpProviderOptions = {
 }
 
 const web3ReadOnly: Web3[] = []
-export const getWeb3ReadOnly = (): Web3 => {
-  const chainId = _getChainId()
+export const getWeb3ReadOnly = (chainId = _getChainId()): Web3 => {
   if (!web3ReadOnly[chainId]) {
     web3ReadOnly[chainId] = new Web3(
       process.env.NODE_ENV !== 'test'
@@ -84,36 +84,24 @@ export const isHardwareWallet = (wallet: Wallet): boolean => {
   return isSupportedHardwareWallet || isHardwareWalletType
 }
 
-let isSmartContractWalletCache: Record<ChainId, Record<string, boolean>> = {}
+const checkSmartContract = memoize(
+  async (account, chainId): Promise<boolean> => {
+    let contractCode = ''
+    try {
+      contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
+    } catch (e) {
+      // ignore
+    }
+
+    const isSmartContract = !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+    return isSmartContract
+  },
+  // lodash normally caches on just the first arg, resolve all to determine memoization
+  (...args) => args.join(),
+)
+
 export const isSmartContractWallet = async (account: string): Promise<boolean> => {
-  if (!account) {
-    return false
-  }
-
-  const chainId = _getChainId()
-
-  if (isSmartContractWalletCache?.[chainId]?.[account] !== undefined) {
-    return isSmartContractWalletCache[chainId][account]
-  }
-
-  let contractCode = ''
-  try {
-    contractCode = await getWeb3ReadOnly().eth.getCode(account)
-  } catch (e) {
-    // ignore
-  }
-
-  const isSmartContract = !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
-
-  isSmartContractWalletCache = {
-    ...isSmartContractWalletCache,
-    [chainId]: {
-      ...(isSmartContractWalletCache?.[chainId] ?? {}),
-      [account]: isSmartContract,
-    },
-  }
-
-  return isSmartContract
+  return account ? checkSmartContract(account, _getChainId()) : false
 }
 
 export const getAddressFromDomain = (name: string): Promise<string> => {
