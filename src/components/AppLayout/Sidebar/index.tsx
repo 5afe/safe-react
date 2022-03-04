@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import List, { ListItemType, StyledListItem, StyledListItemText } from 'src/components/List'
 import SafeHeader from './SafeHeader'
-import { IS_PRODUCTION } from 'src/utils/constants'
+import { IS_PRODUCTION, BEAMER_ID } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import ListIcon from 'src/components/List/ListIcon'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
@@ -124,7 +124,7 @@ const Sidebar = ({
         <StyledDivider />
 
         <HelpList>
-          {!isDesktop && (
+          {!isDesktop && BEAMER_ID && (
             <StyledListItem id="whats-new-button" button onClick={handleClick}>
               <ListIcon type="gift" />
               <StyledListItemText>What&apos;s new</StyledListItemText>
