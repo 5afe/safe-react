@@ -84,24 +84,25 @@ export const isHardwareWallet = (wallet: Wallet): boolean => {
   return isSupportedHardwareWallet || isHardwareWalletType
 }
 
-const checkSmartContract = memoize(
-  async (account, chainId): Promise<boolean> => {
-    let contractCode = ''
-    try {
-      contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
-    } catch (e) {
-      // ignore
-    }
+export const isSmartContract = async (account: string, chainId: ChainId): Promise<boolean> => {
+  let contractCode = ''
+  try {
+    contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
+  } catch (e) {
+    console.log('e', e)
+    // ignore
+  }
 
-    const isSmartContract = !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
-    return isSmartContract
-  },
-  // lodash normally caches on just the first arg, resolve all to determine memoization
+  return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+}
+
+const memoizedIsSmartContract = memoize(
+  async (account: string, chainId: ChainId): Promise<boolean> => isSmartContract(account, chainId),
   (...args) => args.join(),
 )
 
 export const isSmartContractWallet = async (account: string): Promise<boolean> => {
-  return account ? checkSmartContract(account, _getChainId()) : false
+  return account ? memoizedIsSmartContract(account, _getChainId()) : false
 }
 
 export const getAddressFromDomain = (name: string): Promise<string> => {
