@@ -16,7 +16,7 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import SelectField from 'src/components/forms/SelectField'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { disabled, extraSmallFontSize, lg, sm, xs } from 'src/theme/variables'
+import { disabled, extraSmallFontSize, lg, sm, xs, md } from 'src/theme/variables'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
@@ -154,7 +154,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     component={TextField}
                     name={nameFieldName}
                     placeholder={ownerName}
-                    text="Owner Name"
+                    label="Owner Name"
+                    InputLabelProps={{ shrink: true }}
                     type="text"
                     validate={minMaxLength(0, 50)}
                     testId={nameFieldName}
@@ -279,8 +280,8 @@ const RowHeader = styled(Row)`
 `
 
 const OwnerNameField = styled(Field)`
-  margin-right: ${sm};
-  margin-bottom: ${sm};
+  margin-right: ${md};
+  margin-bottom: ${md};
 `
 const CheckIconAddressAdornment = styled(CheckCircle)`
   color: #03ae60;

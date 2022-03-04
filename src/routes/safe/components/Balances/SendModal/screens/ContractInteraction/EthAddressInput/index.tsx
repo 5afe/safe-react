@@ -78,7 +78,7 @@ export const EthAddressInput = ({
               placeholder={text}
               onChange={handleInputChange}
               testId={name}
-              text={text}
+              label={text}
               type="text"
               validate={validate}
             />

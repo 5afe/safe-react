@@ -3,12 +3,6 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import { lg } from 'src/theme/variables'
 
-// Neded for solving a fix in Windows browsers
-const overflowStyle = {
-  overflow: 'hidden',
-  width: '100%',
-}
-
 const styles = () =>
   createStyles({
     root: {
@@ -84,15 +78,15 @@ const TextField = (props: Props): React.ReactElement => {
   return (
     <MuiTextField
       error={hasError && showError}
-      helperText={hasError && showError ? errorMessage : helperText || ' '}
+      helperText={hasError && showError ? errorMessage : helperText || ''}
       inputProps={inputProps} // blank in order to force to have helper text
       InputProps={inputRootProps}
       multiline={multiline}
       name={name}
       onChange={onChange}
       rows={rows}
-      style={overflowStyle}
       value={value}
+      variant="outlined"
       {...rest}
     />
   )

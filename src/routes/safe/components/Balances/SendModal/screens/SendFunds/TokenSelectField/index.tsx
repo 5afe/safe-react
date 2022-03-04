@@ -25,7 +25,7 @@ const SelectedToken = ({ tokenAddress, tokens }: SelectTokenProps): ReactElement
   const token = tokens.find(({ address }) => address === tokenAddress)
 
   return (
-    <MenuItem className={classes.container}>
+    <MenuItem className={classes.container} disableRipple>
       {token ? (
         <>
           <ListItemIcon>

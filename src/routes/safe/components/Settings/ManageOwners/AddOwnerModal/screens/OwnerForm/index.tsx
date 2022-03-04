@@ -104,7 +104,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
                       name="ownerName"
                       placeholder="Owner name*"
                       testId={ADD_OWNER_NAME_INPUT_TEST_ID}
-                      text="Owner name*"
+                      label="Owner name*"
                       type="text"
                       validate={composeValidators(required, validAddressBookName)}
                     />
