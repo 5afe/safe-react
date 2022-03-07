@@ -63,7 +63,7 @@ describe('PendingTxMonitor', () => {
   })
 
   describe('monitorTx', () => {
-    it('clears the pending transaction if it was mined', async () => {
+    it("doesn't clear the pending transaction if it was mined", async () => {
       PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
@@ -74,7 +74,7 @@ describe('PendingTxMonitor', () => {
         timeMultiple: 0,
       })
 
-      expect(dispatchSpy).toHaveBeenCalledTimes(2)
+      expect(dispatchSpy).not.toBeCalled()
     })
 
     it('clears the pending transaction it the tx was not mined within 50 blocks', async () => {
