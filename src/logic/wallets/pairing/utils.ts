@@ -1,10 +1,10 @@
 import { WalletState } from '@web3-onboard/core'
 import WalletConnect from '@walletconnect/client'
 
-import { getDisabledWallets } from 'src/config'
+// import { getDisabledWallets } from 'src/config'
 import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 import { getOnboardInstance, getOnboardState } from 'src/logic/wallets/onboard'
-import { CGW_WALLETS, WALLET_MODULE_LABELS } from '../onboard/wallets'
+// import { CGW_WALLETS, WALLET_MODULE_LABELS } from '../onboard/wallets'
 
 export const initPairing = async (): Promise<void> => {
   await getOnboardInstance().connectWallet({ autoSelect: PAIRING_MODULE_NAME })
@@ -17,7 +17,8 @@ export const isPairingConnected = (): boolean => {
 }
 
 export const isPairingSupported = (): boolean => {
-  return !getDisabledWallets().some((label) => [WALLET_MODULE_LABELS.PAIRING, CGW_WALLETS.SAFE_MOBILE].includes(label))
+  return false
+  // return !getDisabledWallets().some((label) => [WALLET_MODULE_LABELS.PAIRING, CGW_WALLETS.SAFE_MOBILE].includes(label))
 }
 
 // Is pairing module initialised

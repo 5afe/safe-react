@@ -1,4 +1,4 @@
-import { Wallet } from 'bnc-onboard/dist/src/interfaces'
+import { WalletState } from '@web3-onboard/core'
 
 import { ChainId } from 'src/config/chain.d'
 import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
@@ -29,7 +29,7 @@ describe('src/logic/wallets/utils/network', () => {
         name: 'Test',
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).rejects.toThrow(
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).rejects.toThrow(
         'Code 301: Error adding a new wallet network (No such chain)',
       )
     })
@@ -46,7 +46,7 @@ describe('src/logic/wallets/utils/network', () => {
         name: 'Test',
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).rejects.toThrow(
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).rejects.toThrow(
         'Code 300: Error switching the wallet network (Some error)',
       )
     })
@@ -63,7 +63,7 @@ describe('src/logic/wallets/utils/network', () => {
         name: 'Test',
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
     })
 
     it('should resolve to undefined if request succeeds', () => {
@@ -73,7 +73,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as unknown as WalletState, '1438' as unknown as ChainId)).resolves.toEqual(undefined)
     })
   })
   describe('shouldSwitchNetwork', () => {
@@ -84,7 +84,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      expect(shouldSwitchNetwork(wallet as unknown as WalletState)).toBe(true)
     })
 
     it('should return false when wallet is not connected', () => {
@@ -92,7 +92,7 @@ describe('src/logic/wallets/utils/network', () => {
         provider: undefined,
       }
 
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      expect(shouldSwitchNetwork(wallet as unknown as WalletState)).toBe(false)
     })
 
     it('should return false when networks are the same', () => {
@@ -102,7 +102,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      expect(shouldSwitchNetwork(wallet as unknown as WalletState)).toBe(false)
     })
   })
 })
