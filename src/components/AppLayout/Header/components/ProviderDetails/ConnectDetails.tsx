@@ -9,6 +9,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 // We need lazy import because the component imports static css that should only be applied if the component is rendered
 const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
 
@@ -52,7 +53,7 @@ const ConnectDetails = ({ classes }): ReactElement => (
       <ConnectButton data-testid="heading-connect-btn" />
     </Block>
 
-    {isPairingSupported() && <PairingDetails classes={classes} />}
+    {isPairingSupported() && wrapInSuspense(<PairingDetails classes={classes} />)}
   </StyledCard>
 )
 
