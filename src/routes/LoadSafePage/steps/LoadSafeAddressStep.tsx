@@ -201,6 +201,7 @@ function LoadSafeAddressStep(): ReactElement {
           <StyledLink href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </StyledLink>
+          .
         </Paragraph>
       </Block>
     </Container>

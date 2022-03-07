@@ -104,6 +104,7 @@ function NameNewSafeStep(): ReactElement {
           <Link href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </Link>
+          .
         </Paragraph>
       </Block>
     </BlockWithPadding>
