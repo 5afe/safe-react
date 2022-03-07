@@ -25,7 +25,7 @@ import { getNativeCurrency } from 'src/config'
 import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import useIsSmartContract from 'src/logic/hooks/useIsSmartContractWallet'
+import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
 
 type Props = {
   children: ReactNode
@@ -111,9 +111,9 @@ export const TxModalWrapper = ({
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
   const isCreation = isMultisigCreation(confirmationsLen, txType)
-  const isSmart = useIsSmartContract(userAddress)
+  const isSmartContract = useIsSmartContractWallet(userAddress)
 
-  const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmart, safeVersion)
+  const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
 
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
 

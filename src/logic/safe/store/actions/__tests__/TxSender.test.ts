@@ -168,7 +168,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
@@ -205,7 +205,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
@@ -260,7 +260,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)
@@ -312,7 +312,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)

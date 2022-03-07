@@ -16,7 +16,7 @@ import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 's
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { providerSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
@@ -208,19 +208,18 @@ export class TxSender {
       .then(({ transactionHash }) => transactionHash)
   }
 
-  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+  async canSignOffchain(): Promise<boolean> {
     const { isFinalization, safeVersion } = this
 
-    const isSmart = await isSmartContractWallet(userAccountSelector(state))
-    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
+    const isSmartContract = await isSmartContractWallet(this.from)
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmartContract, safeVersion)
   }
 
   async submitTx(
-    state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
-    const isOffchain = await this.canSignOffchain(state)
+    const isOffchain = await this.canSignOffchain()
 
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
@@ -337,6 +336,6 @@ export const createTransaction = (
     sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
     // Start the creation
-    sender.submitTx(state, confirmCallback, errorCallback)
+    sender.submitTx(confirmCallback, errorCallback)
   }
 }
