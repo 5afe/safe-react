@@ -16,71 +16,30 @@ describe('PendingTxMonitor', () => {
   })
   describe('_isTxMined', () => {
     it("doesn't throw if a transaction receipt exists", async () => {
-      jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() =>
+      jest.spyOn(web3.getWeb3().eth, 'getTransactionReceipt').mockImplementationOnce(() =>
         Promise.resolve({
-          hash: '',
-          nonce: 0,
-          blockHash: '',
-          blockNumber: 0,
+          blockHash: '0x123',
+          blockNumber: 1,
+          transactionHash: 'fakeTxHash',
           transactionIndex: 0,
-          from: '',
-          to: '',
-          value: '',
-          gasPrice: '',
-          gas: 0,
-          input: '',
+          from: '0x123',
+          to: '0x123',
+          cumulativeGasUsed: 1,
+          gasUsed: 1,
+          contractAddress: '0x123',
+          logs: [],
+          status: true,
+          logsBloom: '0x123',
         }),
       )
 
       expect(async () => await PendingTxMonitor._isTxMined(0, 'fakeTxHash')).not.toThrow()
     })
-    it("doesn't throw if the transaction was mined within 50 blocks", async () => {
+    it('throws if no transaction receipt exists within 50 blocks', async () => {
       jest
-        .spyOn(web3.getWeb3().eth, 'getTransaction')
-        // Receipt can return as an object with null keys when pending
-        // https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransaction
-        .mockImplementationOnce(() =>
-          Promise.resolve({
-            hash: '',
-            nonce: 0,
-            blockHash: null,
-            blockNumber: null,
-            transactionIndex: null,
-            from: '',
-            to: '',
-            value: '',
-            gasPrice: '',
-            gas: 0,
-            input: '',
-          }),
-        )
-        // or entirely null
-        .mockImplementation(() => Promise.resolve(null as unknown as Transaction))
-      jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(51))
-
-      expect(async () => await PendingTxMonitor._isTxMined(0, 'fakeTxHash')).not.toThrow()
-    })
-    it.only("throws if there if no transaction receipt exists and it wasn't mined within 50 blocks", async () => {
-      jest
-        .spyOn(web3.getWeb3().eth, 'getTransaction')
-        .mockImplementationOnce(() =>
-          Promise.resolve(
-            Promise.resolve({
-              hash: '',
-              nonce: 0,
-              blockHash: null,
-              blockNumber: null,
-              transactionIndex: null,
-              from: '',
-              to: '',
-              value: '',
-              gasPrice: '',
-              gas: 0,
-              input: '',
-            }),
-          ),
-        )
-        .mockImplementation(() => Promise.resolve(null as unknown as Transaction))
+        .spyOn(web3.getWeb3().eth, 'getTransactionReceipt')
+        // Returns `null` if transaction is pending: https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransactionreceipt
+        .mockImplementation(() => Promise.resolve(null as any))
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(50))
 
       try {
@@ -91,6 +50,15 @@ describe('PendingTxMonitor', () => {
       } catch (e) {
         expect(e.message).toEqual('Pending transaction not found')
       }
+    })
+    it("doesn't throw if no transaction receipt exists and after 50 blocks", async () => {
+      jest
+        .spyOn(web3.getWeb3().eth, 'getTransactionReceipt')
+        // Returns `null` if transaction is pending: https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransactionreceipt
+        .mockImplementation(() => Promise.resolve(null as any))
+      jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(51))
+
+      expect(async () => await PendingTxMonitor._isTxMined(0, 'fakeTxHash')).not.toThrow()
     })
   })
 
