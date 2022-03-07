@@ -10,7 +10,6 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { loadLastUsedWallet } from 'src/logic/wallets/onboard/utils'
 import { isSupportedWallet } from 'src/logic/wallets/onboard/wallets'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const HeaderComponent = (): React.ReactElement => {
   const { wallet, account, loaded, available, connect, disconnect } = useOnboard()
@@ -40,7 +39,7 @@ const HeaderComponent = (): React.ReactElement => {
 
   const getProviderDetailsBased = () => {
     if (!loaded) {
-      return wrapInSuspense(<ConnectDetails />)
+      return <ConnectDetails />
     }
 
     return (

@@ -91,6 +91,7 @@ jobs:
           REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN: ${{ secrets.REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN }}
           REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
           REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
+          REACT_APP_BEAMER_ID: ${{ secrets.REACT_APP_BEAMER_ID }}
           REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
 
       - name: Configure AWS credentials
