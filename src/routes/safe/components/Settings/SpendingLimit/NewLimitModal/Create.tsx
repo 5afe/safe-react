@@ -10,10 +10,10 @@ import Hairline from 'src/components/layout/Hairline'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const FormContainer = styled.div`
-  padding: 24px 8px 24px 24px;
+  padding: 24px;
   align-items: center;
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 4fr auto;
   grid-template-rows: 6fr;
   gap: 16px 8px;
   grid-template-areas:

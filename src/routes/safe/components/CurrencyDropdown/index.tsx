@@ -23,6 +23,7 @@ import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { trackEventGTM } from 'src/utils/googleTagManager'
 import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/safeOverview'
+import { Button } from '@material-ui/core'
 
 export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactElement | null => {
   const dispatch = useDispatch()
@@ -67,11 +68,17 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
   return (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
-        <button className={classes.button} onClick={handleClick} type="button" data-testid={`${testId}-btn`}>
+        <Button
+          className={classes.button}
+          onClick={handleClick}
+          type="button"
+          variant="outlined"
+          data-testid={`${testId}-btn`}
+        >
           <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
             {selectedCurrency}
           </span>
-        </button>
+        </Button>
         <Menu
           anchorEl={anchorEl}
           anchorOrigin={{

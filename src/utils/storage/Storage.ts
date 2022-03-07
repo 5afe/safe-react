@@ -59,6 +59,12 @@ class Storage {
     }
   }
 
+  public removeMatching = (pattern: RegExp): void => {
+    Object.keys(this.storage)
+      .filter((key) => pattern.test(key))
+      .forEach((key) => this.storage.removeItem(key))
+  }
+
   public setWithExpiry = <T>(key: string, item: T, expiry: number): void => {
     this.setItem<ItemWithExpiry<T>>(key, {
       value: item,

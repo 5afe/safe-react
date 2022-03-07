@@ -44,7 +44,7 @@ const typePlaceholder = (text: string, type: string): string => {
 }
 
 const ArrayTypeInput = ({ name, text, type }: { name: string; text: string; type: string }): React.ReactElement => (
-  <TextAreaField name={name} placeholder={typePlaceholder(text, type)} text={text} type="text" validate={validator} />
+  <TextAreaField name={name} placeholder={typePlaceholder(text, type)} label={text} type="text" validate={validator} />
 )
 
 export default ArrayTypeInput

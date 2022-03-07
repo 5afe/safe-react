@@ -293,7 +293,7 @@ const SendFunds = ({
                     </Col>
                   </Row>
                 )}
-                <Row margin="sm">
+                <Row margin="md">
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken?.address}
@@ -328,7 +328,6 @@ const SendFunds = ({
                       }}
                       name="amount"
                       placeholder="Amount*"
-                      text="Amount*"
                       type="text"
                       testId="amount-input"
                     />
