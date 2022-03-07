@@ -9,8 +9,8 @@ import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { loadLastUsedWallet } from 'src/logic/wallets/onboard/utils'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { isSupportedWallet } from 'src/logic/wallets/onboard/wallets'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const HeaderComponent = (): React.ReactElement => {
   const { wallet, account, loaded, available, connect, disconnect } = useOnboard()
@@ -21,8 +21,8 @@ const HeaderComponent = (): React.ReactElement => {
   useEffect(() => {
     const tryLastUsedWallet = async () => {
       const lastUsedWallet = loadLastUsedWallet()
-      const isProviderEnabled = lastUsedWallet && isSupportedWallet(lastUsedWallet)
-      if (isProviderEnabled) {
+      const isWalletEnabled = lastUsedWallet && isSupportedWallet(lastUsedWallet)
+      if (isWalletEnabled) {
         await connect(lastUsedWallet)
       }
     }
