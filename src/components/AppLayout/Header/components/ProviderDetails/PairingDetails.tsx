@@ -12,6 +12,8 @@ import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
 
+const HIDE_PAIRING_STYLE = '.bn-onboard-modal-select-wallets li:first-of-type {display: none;}'
+
 const StyledDivider = styled(Divider)`
   width: calc(100% + 40px);
   margin-left: -20px;
@@ -32,7 +34,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
   // Hides first wallet in Onboard modal (pairing module)
   useEffect(() => {
     const style = document.createElement('style')
-    style.innerHTML = '.bn-onboard-modal-select-wallets li:first-of-type {display: none;}'
+    style.innerHTML = HIDE_PAIRING_STYLE
     document.head.appendChild(style)
 
     return () => {
