@@ -37,10 +37,6 @@ const wallets = (chainId: ChainId): Wallet[] => {
       LedgerTransport: (window as any).TransportNodeHid,
     },
     {
-      walletName: WALLETS.ONBOARD_DETECTED_WALLET,
-      desktop: false,
-    },
-    {
       walletName: WALLETS.KEYSTONE,
       desktop: false,
       rpcUrl,
