@@ -37,15 +37,13 @@ const monitorTx = async (
     numOfAttempts: MAX_ATTEMPTS,
   },
 ): Promise<void> => {
-  return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options)
-    .catch(() => {
-      // Ignore
-    })
-    .finally(() => {
-      // (Un-)successfully mined (resolved or threw in last backOff attempt)
-      store.dispatch(removePendingTransaction({ id: txId }))
-      store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
-    })
+  return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options).catch(() => {
+    // Unsuccessfully mined (threw in last backOff attempt)
+    store.dispatch(removePendingTransaction({ id: txId }))
+    store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
+  })
+  // If mined, pending status is removed in the transaction middleware
+  // when a transaction is added to historical transactions list
 }
 
 const monitorAllTxs = async (): Promise<void> => {
