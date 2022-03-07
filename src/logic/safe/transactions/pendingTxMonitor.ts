@@ -13,9 +13,10 @@ const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<v
   const web3 = getWeb3()
 
   if (
-    // Transaction was successfully mined
-    !(await web3.eth.getTransaction(txHash)) &&
-    // Transaction was not mined in block window
+    // Transaction hasn't yet been mined
+    // Receipt is either { ... , blockHash: null } or null when pending
+    !(await web3.eth.getTransactionReceipt(txHash))?.blockHash &&
+    // The current block is within waiting window
     (await web3.eth.getBlockNumber()) <= MAX_WAITING_BLOCK
   ) {
     throw new Error('Pending transaction not found')

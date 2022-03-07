@@ -1,3 +1,5 @@
+import { Transaction } from 'web3-core'
+
 import * as store from 'src/store'
 import * as web3 from 'src/logic/wallets/getWeb3'
 import { PendingTxMonitor } from 'src/logic/safe/transactions/pendingTxMonitor'
@@ -33,13 +35,52 @@ describe('PendingTxMonitor', () => {
       expect(async () => await PendingTxMonitor._isTxMined(0, 'fakeTxHash')).not.toThrow()
     })
     it("doesn't throw if the transaction was mined within 50 blocks", async () => {
-      jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
+      jest
+        .spyOn(web3.getWeb3().eth, 'getTransaction')
+        // Receipt can return as an object with null keys when pending
+        // https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransaction
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            hash: '',
+            nonce: 0,
+            blockHash: null,
+            blockNumber: null,
+            transactionIndex: null,
+            from: '',
+            to: '',
+            value: '',
+            gasPrice: '',
+            gas: 0,
+            input: '',
+          }),
+        )
+        // or entirely null
+        .mockImplementation(() => Promise.resolve(null as unknown as Transaction))
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(51))
 
       expect(async () => await PendingTxMonitor._isTxMined(0, 'fakeTxHash')).not.toThrow()
     })
-    it("throws if there if no transaction receipt exists and it wasn't mined within 50 blocks", async () => {
-      jest.spyOn(web3.getWeb3().eth, 'getTransaction').mockImplementation(() => Promise.resolve(null as any))
+    it.only("throws if there if no transaction receipt exists and it wasn't mined within 50 blocks", async () => {
+      jest
+        .spyOn(web3.getWeb3().eth, 'getTransaction')
+        .mockImplementationOnce(() =>
+          Promise.resolve(
+            Promise.resolve({
+              hash: '',
+              nonce: 0,
+              blockHash: null,
+              blockNumber: null,
+              transactionIndex: null,
+              from: '',
+              to: '',
+              value: '',
+              gasPrice: '',
+              gas: 0,
+              input: '',
+            }),
+          ),
+        )
+        .mockImplementation(() => Promise.resolve(null as unknown as Transaction))
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(50))
 
       try {
