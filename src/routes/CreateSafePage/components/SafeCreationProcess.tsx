@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { SafeDeployment } from 'src/routes/opening'
 import { useAnalytics, USER_EVENTS } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
@@ -84,7 +84,8 @@ function SafeCreationProcess(): ReactElement {
 
   const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
-  const userAddressAccount = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const userAddressAccount = account.address
   const chainId = useSelector(currentChainId)
 
   const [showModal, setShowModal] = useState(false)

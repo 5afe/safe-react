@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
-import { useSelector } from 'react-redux'
 import { Text } from '@gnosis.pm/safe-react-components'
 
 import Col from 'src/components/layout/Col'
@@ -9,7 +8,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { networkSelector, userEnsSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { getChainById } from 'src/config'
 
 const useStyles = makeStyles({
@@ -65,9 +64,12 @@ interface ProviderInfoProps {
 
 const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
-  const currentNetwork = useSelector(networkSelector)
-  const ensName = useSelector(userEnsSelector)
-  const chain = getChainById(currentNetwork)
+  const {
+    chain: { id },
+    account,
+  } = useOnboard()
+  const ensName = account.ens?.name || ''
+  const chain = getChainById(id)
   const addressColor = connected ? 'text' : 'warning'
   return (
     <>

@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import WALLET_ICONS from './icons'
 
 const useStyles = makeStyles({
@@ -23,7 +24,8 @@ interface WalletIconProps {
 
 const WalletIcon = ({ provider }: WalletIconProps): React.ReactElement => {
   const classes = useStyles()
-  const walletIcon = WALLET_ICONS[provider]
+  const { wallet } = useOnboard()
+  const walletIcon = WALLET_ICONS[wallet.label]
 
   return (
     <Col className={classes.container} start="sm">

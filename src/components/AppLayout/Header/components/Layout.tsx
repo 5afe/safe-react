@@ -16,7 +16,7 @@ import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
 import { useSelector } from 'react-redux'
 
 const styles = () => ({

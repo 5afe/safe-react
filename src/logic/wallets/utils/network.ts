@@ -1,11 +1,12 @@
-import { Wallet } from 'bnc-onboard/dist/src/interfaces'
-import onboard from 'src/logic/wallets/onboard'
+import WalletConnect from '@walletconnect/client'
 import { numberToHex } from 'web3-utils'
 
 import { getChainInfo, getExplorerUrl, getPublicRpcUrl, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { WalletState } from '@web3-onboard/core'
+import { getOnboardInstance, getOnboardState } from '../onboard'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
@@ -17,11 +18,15 @@ const WALLET_ERRORS = {
  * Switch the chain assuming it's MetaMask.
  * @see https://github.com/MetaMask/metamask-extension/pull/10905
  */
-const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
+const requestSwitch = async (wallet: WalletState, chainId: ChainId): Promise<void> => {
   // Note: This could support WC too
-  if (isPairingModule(wallet.name)) {
+  if (isPairingModule(wallet.label)) {
     if (wallet.provider) {
-      wallet.provider.wc.updateSession({ chainId: parseInt(chainId, 10), accounts: wallet.provider.wc.accounts })
+      const connector = (wallet.provider as any)?.connector as InstanceType<typeof WalletConnect>
+      connector.updateSession({
+        chainId: parseInt(chainId, 10),
+        accounts: connector.accounts,
+      })
     }
   } else {
     await wallet.provider.request({
@@ -40,12 +45,14 @@ const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> =>
  * Known to be implemented by MetaMask.
  * @see https://docs.metamask.io/guide/rpc-api.html#wallet-addethereumchain
  */
-const requestAdd = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
+const requestAdd = async (wallet: WalletState, chainId: ChainId): Promise<void> => {
   const { chainName, nativeCurrency } = getChainInfo()
 
   await wallet.provider?.request({
+    // @ts-expect-error 'wallet_addEthereumChain' method is not in web3-onboard types
     method: 'wallet_addEthereumChain',
     params: [
+      // @ts-expect-error 'wallet_addEthereumChain' method is not in web3-onboard types
       {
         chainId: numberToHex(chainId),
         chainName,
@@ -60,7 +67,7 @@ const requestAdd = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
 /**
  * Try switching the wallet chain, and if it fails, try adding the chain config
  */
-export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
+export const switchNetwork = async (wallet: WalletState, chainId: ChainId): Promise<void> => {
   try {
     await requestSwitch(wallet, chainId)
   } catch (e) {
@@ -84,8 +91,9 @@ export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<v
   }
 }
 
-export const shouldSwitchNetwork = (wallet: Wallet): boolean => {
+export const shouldSwitchNetwork = (wallet: WalletState): boolean => {
   // The current network can be stored under one of two keys
+  // @ts-expect-error chainId key is not standardized
   const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].some(
     (chainId) => chainId && chainId.toString() !== _getChainId(),
   )
@@ -94,14 +102,11 @@ export const shouldSwitchNetwork = (wallet: Wallet): boolean => {
 }
 
 export const switchWalletChain = async (): Promise<void> => {
-  const { wallet } = onboard().getState()
+  const { wallet } = getOnboardState()
   try {
     await switchNetwork(wallet, _getChainId())
   } catch (e) {
     e.log()
-    // Fallback to the onboard popup if switching isn't supported
-    // walletSelect must be called first: https://docs.blocknative.com/onboard#onboard-user
-    await onboard().walletSelect()
-    await onboard().walletCheck()
+    await getOnboardInstance().connectWallet()
   }
 }

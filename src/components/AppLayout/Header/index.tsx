@@ -7,45 +7,28 @@ import { UserDetails } from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import {
-  availableSelector,
-  loadedSelector,
-  providerNameSelector,
-  userAccountSelector,
-  userEnsSelector,
-} from 'src/logic/wallets/store/selectors'
-import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
-import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
+import { loadLastUsedWallet } from 'src/logic/wallets/onboard/utils'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import { isSupportedWallet } from 'src/logic/wallets/onboard/wallets'
 
 const HeaderComponent = (): React.ReactElement => {
-  const provider = useSelector(providerNameSelector)
+  const { wallet, account, loaded, available, connect, disconnect } = useOnboard()
+  const provider = wallet.label
+  const userAddress = account.address
   const chainId = useSelector(currentChainId)
-  const userAddress = useSelector(userAccountSelector)
-  const ensName = useSelector(userEnsSelector)
-  const loaded = useSelector(loadedSelector)
-  const available = useSelector(availableSelector)
 
   useEffect(() => {
-    const tryToConnectToLastUsedProvider = async () => {
-      const lastUsedProvider = loadLastUsedProvider()
-      const isProviderEnabled = lastUsedProvider && isSupportedWallet(lastUsedProvider)
+    const tryLastUsedWallet = async () => {
+      const lastUsedWallet = loadLastUsedWallet()
+      const isProviderEnabled = lastUsedWallet && isSupportedWallet(lastUsedWallet)
       if (isProviderEnabled) {
-        await onboard().walletSelect(lastUsedProvider)
+        await connect(lastUsedWallet)
       }
     }
 
-    tryToConnectToLastUsedProvider()
-  }, [chainId])
-
-  const openDashboard = () => {
-    const { wallet } = onboard().getState()
-    return wallet.type === 'sdk' && wallet.dashboard
-  }
-
-  const onDisconnect = () => {
-    onboard().walletReset()
-  }
+    tryLastUsedWallet()
+  }, [chainId, connect])
 
   const getProviderInfoBased = () => {
     if (!loaded || !provider) {
@@ -63,11 +46,10 @@ const HeaderComponent = (): React.ReactElement => {
     return (
       <UserDetails
         connected={available}
-        onDisconnect={onDisconnect}
-        openDashboard={openDashboard()}
+        onDisconnect={disconnect}
         provider={provider}
         userAddress={userAddress}
-        ensName={ensName}
+        ensName={account.ens?.name || ''}
       />
     )
   }

@@ -1,5 +1,4 @@
 import { ReactElement, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
 import styled from 'styled-components'
 
@@ -9,7 +8,7 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import {
   FIELD_CREATE_CUSTOM_SAFE_NAME,
   FIELD_CREATE_SUGGESTED_SAFE_NAME,
@@ -24,7 +23,8 @@ export const nameNewSafeStepLabel = 'Name'
 
 function NameNewSafeStep(): ReactElement {
   const [ownersWithENSName, setOwnersWithENSName] = useState<Record<string, string>>({})
-  const provider = useSelector(providerNameSelector)
+  const { wallet } = useOnboard()
+  const provider = wallet.label
 
   const { setCurrentStep } = useStepper()
 

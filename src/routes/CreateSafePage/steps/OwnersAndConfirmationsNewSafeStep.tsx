@@ -15,7 +15,7 @@ import Field from 'src/components/forms/Field'
 import ButtonHelper from 'src/components/ButtonHelper'
 import SelectField from 'src/components/forms/SelectField'
 import { useStepper } from 'src/components/Stepper/stepperContext'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { disabled, extraSmallFontSize, lg, sm, xs, md } from 'src/theme/variables'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
@@ -44,7 +44,8 @@ import { sameString } from 'src/utils/strings'
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
 function OwnersAndConfirmationsNewSafeStep(): ReactElement {
-  const provider = useSelector(providerNameSelector)
+  const { wallet } = useOnboard()
+  const provider = wallet.label
   const { setCurrentStep } = useStepper()
 
   useEffect(() => {

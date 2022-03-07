@@ -16,8 +16,7 @@ import { background, connected as connectedBg, lg, md, sm, warning, xs } from 's
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import WalletIcon from '../../assets/wallet.svg'
-import { useSelector } from 'react-redux'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import ChainIndicator from 'src/components/ChainIndicator'
 
 const styles = createStyles({
@@ -99,7 +98,6 @@ const StyledCard = styled(Card)`
 type Props = {
   connected: boolean
   onDisconnect: () => void
-  openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
   ensName: string
@@ -107,15 +105,9 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-export const UserDetails = ({
-  connected,
-  onDisconnect,
-  openDashboard,
-  provider,
-  userAddress,
-  ensName,
-}: Props): React.ReactElement => {
-  const connectedNetwork = useSelector(networkSelector)
+export const UserDetails = ({ connected, onDisconnect, provider, userAddress, ensName }: Props): React.ReactElement => {
+  const { chain } = useOnboard()
+  const connectedNetwork = chain.id
   const classes = useStyles()
 
   return (
@@ -166,15 +158,6 @@ export const UserDetails = ({
         {connectedNetwork && <ChainIndicator chainId={connectedNetwork} />}
       </Row>
       <Hairline margin="xs" />
-      {openDashboard && (
-        <Row className={classes.dashboard}>
-          <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
-            <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
-              {provider} Wallet
-            </Paragraph>
-          </Button>
-        </Row>
-      )}
       <Row className={classes.buttonRow}>
         <Button
           className={classes.disconnectButton}

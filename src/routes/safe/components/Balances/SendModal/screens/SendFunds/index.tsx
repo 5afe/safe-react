@@ -28,7 +28,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -143,7 +143,8 @@ const SendFunds = ({
   }
 
   const spendingLimits = useSelector(currentSafeSpendingLimits)
-  const currentUser = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const currentUser = account.address
 
   const sendFundsValidation = (values: { amount?: string; token?: string; txType?: string }) => {
     const { amount, token: tokenAddress, txType } = values ?? {}

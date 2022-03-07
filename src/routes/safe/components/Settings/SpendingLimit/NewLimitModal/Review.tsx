@@ -21,7 +21,7 @@ import { MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -165,7 +165,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     currentVersion: safeVersion = '',
     modules,
   } = useSelector(currentSafe) ?? {}
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const connectedWalletAddress = account.address
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',

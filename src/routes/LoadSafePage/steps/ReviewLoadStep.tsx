@@ -10,7 +10,7 @@ import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getExplorerInfo } from 'src/config'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import Hairline from 'src/components/layout/Hairline'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import {
@@ -27,7 +27,8 @@ export const reviewLoadStepLabel = 'Review'
 
 function ReviewLoadStep(): ReactElement {
   const loadSafeForm = useForm()
-  const userAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const userAddress = account.address
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues

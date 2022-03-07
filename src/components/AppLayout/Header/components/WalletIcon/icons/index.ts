@@ -1,82 +1,60 @@
-// Icons
 import metamaskIcon from './icon-metamask.png'
-import walletConnectIcon from './icon-wallet-connect.svg'
-import trezorIcon from './icon-trezor.svg'
-import ledgerIcon from './icon-ledger.svg'
 import trustIcon from './icon-trust.svg'
 import latticeIcon from './icon-lattice.svg'
-import fortmaticIcon from './icon-fortmatic.svg'
-import portisIcon from './icon-portis.svg'
 import authereumIcon from './icon-authereum.png'
-import torusIcon from './icon-torus.svg'
 import coinbaseIcon from './icon-coinbase.svg'
 import operaIcon from './icon-opera.png'
+import operaTouchIcon from './icon-opera-touch.png'
 import squarelinkIcon from './icon-squarelink.png'
-import keystoneIcon from './icon-keystone.png'
-import safeMobileIcon from './icon-safe-mobile.svg'
+import { extractWalletModule, WALLET_MODULES } from 'src/logic/wallets/onboard/wallets'
 
-import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
+const WALLET_ICON_HEIGHT = 25
 
-const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } } = {
-  [WALLET_PROVIDER.METAMASK]: {
-    src: metamaskIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.WALLETCONNECT]: {
-    src: walletConnectIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.TREZOR]: {
-    src: trezorIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.LEDGER]: {
-    src: ledgerIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.TRUST]: {
-    src: trustIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.LATTICE]: {
-    src: latticeIcon,
-    height: 41,
-  },
-  [WALLET_PROVIDER.KEYSTONE]: {
-    src: keystoneIcon,
-    height: 41,
-  },
-  [WALLET_PROVIDER.FORTMATIC]: {
-    src: fortmaticIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.PORTIS]: {
-    src: portisIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.AUTHEREUM]: {
+const onboardWalletModuleIcons = (): typeof WALLET_ICONS => {
+  return Object.entries(WALLET_MODULES).reduce(async (acc, [key, module]) => {
+    return {
+      ...acc,
+      [key]: {
+        src: (await extractWalletModule(module)?.getIcon()) || '',
+        height: WALLET_ICON_HEIGHT,
+      },
+    }
+  }, {})
+}
+export const WALLET_ICONS: { [key: string]: { src: string; height: number } } = {
+  ...onboardWalletModuleIcons(),
+  // Injected
+  Authereum: {
     src: authereumIcon,
-    height: 25,
+    height: WALLET_ICON_HEIGHT,
   },
-  [WALLET_PROVIDER.TORUS]: {
-    src: torusIcon,
-    height: 30,
-  },
-  [WALLET_PROVIDER.OPERA]: {
-    src: operaIcon,
-    height: 25,
-  },
-  [WALLET_PROVIDER.COINBASE_WALLET]: {
+  Coinbase: {
     src: coinbaseIcon,
-    height: 25,
+    height: WALLET_ICON_HEIGHT,
   },
-  [WALLET_PROVIDER.SQUARELINK]: {
+  Lattice1: {
+    src: latticeIcon,
+    height: WALLET_ICON_HEIGHT,
+  },
+  MetaMask: {
+    src: metamaskIcon,
+    height: WALLET_ICON_HEIGHT,
+  },
+  Opera: {
+    src: operaIcon,
+    height: WALLET_ICON_HEIGHT,
+  },
+  'Opera Touch': {
+    src: operaTouchIcon,
+    height: WALLET_ICON_HEIGHT,
+  },
+  Squarelink: {
     src: squarelinkIcon,
-    height: 25,
+    height: WALLET_ICON_HEIGHT,
   },
-  [WALLET_PROVIDER.SAFE_MOBILE]: {
-    src: safeMobileIcon,
-    height: 25,
+  Trust: {
+    src: trustIcon,
+    height: WALLET_ICON_HEIGHT,
   },
 }
 

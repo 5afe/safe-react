@@ -7,6 +7,7 @@ import { namehash } from '@ethersproject/hash'
 import Safe from '@gnosis.pm/safe-core-sdk'
 import Web3Adapter from '@gnosis.pm/safe-web3-lib'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import memoize from 'lodash/memoize'
 
 import { ZERO_ADDRESS } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
@@ -17,27 +18,8 @@ import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
-
-// This providers have direct relation with name assigned in bnc-onboard configuration
-export enum WALLET_PROVIDER {
-  METAMASK = 'METAMASK',
-  TORUS = 'TORUS',
-  PORTIS = 'PORTIS',
-  FORTMATIC = 'FORTMATIC',
-  SQUARELINK = 'SQUARELINK',
-  WALLETCONNECT = 'WALLETCONNECT',
-  TRUST = 'TRUST',
-  OPERA = 'OPERA',
-  // This is the provider for WALLET_LINK configuration on bnc-onboard
-  COINBASE_WALLET = 'COINBASE WALLET',
-  AUTHEREUM = 'AUTHEREUM',
-  LEDGER = 'LEDGER',
-  TREZOR = 'TREZOR',
-  LATTICE = 'LATTICE',
-  KEYSTONE = 'KEYSTONE',
-  // Safe name as PAIRING_MODULE_NAME
-  SAFE_MOBILE = 'SAFE MOBILE',
-}
+import { getOnboardState } from './onboard'
+import { WALLETS, WALLET_TYPE } from './onboard/wallets'
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
@@ -46,8 +28,7 @@ export const web3HttpProviderOptions = {
 }
 
 const web3ReadOnly: Web3[] = []
-export const getWeb3ReadOnly = (): Web3 => {
-  const chainId = _getChainId()
+export const getWeb3ReadOnly = (chainId = _getChainId()): Web3 => {
   if (!web3ReadOnly[chainId]) {
     web3ReadOnly[chainId] = new Web3(
       process.env.NODE_ENV !== 'test'
@@ -75,18 +56,36 @@ export const getChainIdFrom = (web3Provider: Web3): Promise<number> => {
   return web3Provider.eth.getChainId()
 }
 
-export const isSmartContractWallet = async (account: string): Promise<boolean> => {
-  if (!account) {
+export const isHardwareWallet = (label = getOnboardState().wallet.label): boolean => {
+  if (!label) {
     return false
   }
+
+  const { type } = WALLETS.find((wallet) => wallet.label === label) || {}
+
+  return type === WALLET_TYPE.HARDWARE
+}
+
+export const isSmartContract = async (account: string, chainId: ChainId): Promise<boolean> => {
   let contractCode = ''
   try {
-    contractCode = await getWeb3ReadOnly().eth.getCode(account)
+    contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
   } catch (e) {
     // ignore
   }
+
   return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
+
+const memoizedIsSmartContract = memoize(
+  async (account: string, chainId: ChainId): Promise<boolean> => isSmartContract(account, chainId),
+  (...args) => args.join(),
+)
+
+export const isSmartContractWallet = async (account: string): Promise<boolean> => {
+  return account ? memoizedIsSmartContract(account, _getChainId()) : false
+}
+
 export const getAddressFromDomain = (name: string): Promise<string> => {
   if (isValidCryptoDomainName(name)) {
     return getAddressFromUnstoppableDomain(name)

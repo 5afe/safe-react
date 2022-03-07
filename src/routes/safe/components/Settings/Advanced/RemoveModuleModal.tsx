@@ -16,7 +16,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 
 import { useStyles } from './style'
@@ -32,7 +32,8 @@ export const RemoveModuleModal = ({ onClose, selectedModuleAddress }: RemoveModu
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const connectedWalletAddress = account.address
 
   useEffect(() => {
     let isCurrent = true

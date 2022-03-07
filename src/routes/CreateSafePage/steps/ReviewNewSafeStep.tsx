@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useForm } from 'react-final-form'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TableContainer from '@material-ui/core/TableContainer'
 
@@ -26,12 +25,13 @@ import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreat
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { useStepper } from 'src/components/Stepper/stepperContext'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 
 export const reviewNewSafeStepLabel = 'Review'
 
 function ReviewNewSafeStep(): ReactElement | null {
-  const provider = useSelector(providerNameSelector)
+  const { wallet } = useOnboard()
+  const provider = wallet.label
 
   const { setCurrentStep } = useStepper()
 

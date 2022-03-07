@@ -20,7 +20,7 @@ import {
   DEFAULT_MAX_PRIO_FEE,
 } from 'src/logic/wallets/ethTransactions'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { providerSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
@@ -121,7 +121,8 @@ export const useEstimateTransactionGas = ({
   )
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
-  const { account: from } = useSelector(providerSelector)
+  const { account } = useOnboard()
+  const from = account.address
 
   useEffect(() => {
     if (!isExecution || !txData) {

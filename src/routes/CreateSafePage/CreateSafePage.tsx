@@ -27,7 +27,8 @@ import {
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
-import { providerNameSelector, shouldSwitchWalletChain, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
 } from './steps/OwnersAndConfirmationsNewSafeStep'
@@ -41,7 +42,8 @@ import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const providerName = useSelector(providerNameSelector)
+  const { wallet } = useOnboard()
+  const providerName = wallet.label
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const provider = !!providerName && !isWrongNetwork
 
@@ -63,7 +65,8 @@ function CreateSafePage(): ReactElement {
     checkIfSafeIsPendingToBeCreated()
   }, [provider])
 
-  const userWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const userWalletAddress = account.address
   const addressBook = useSelector(currentNetworkAddressBookAsMap)
   const location = useLocation()
   const safeRandomName = useMnemonicSafeName()

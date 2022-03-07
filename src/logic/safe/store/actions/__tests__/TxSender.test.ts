@@ -3,7 +3,6 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { store } from 'src/store'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import * as utils from 'src/logic/safe/store/actions/utils'
-import * as walletSelectors from 'src/logic/wallets/store/selectors'
 import * as safeSelectors from 'src/logic/safe/store/selectors'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
 import * as notificationBuilder from 'src/logic/notifications/notificationBuilder'
@@ -17,28 +16,6 @@ import * as send from 'src/logic/safe/transactions/send'
 import * as getWeb3 from 'src/logic/wallets/getWeb3'
 import { waitFor } from '@testing-library/react'
 import { LocalTransactionStatus } from 'src/logic/safe/store/models/types/gateway.d'
-
-jest.mock('bnc-onboard', () => () => ({
-  config: jest.fn(),
-  getState: jest.fn(() => ({
-    appNetworkId: 4,
-    wallet: {
-      provider: {
-        name: 'MetaMask',
-        account: '0x123',
-        hardwareWallet: false,
-        smartContractWallet: false,
-        network: '4',
-        available: true,
-        loaded: true,
-        ensDomain: '',
-      },
-    },
-  })),
-  walletCheck: jest.fn(),
-  walletReset: jest.fn(),
-  walletSelect: jest.fn(), // returns true or false
-}))
 
 jest.mock('src/logic/safe/store/actions/transactions/fetchTransactions', () => {
   const original = jest.requireActual('src/logic/safe/store/actions/transactions/fetchTransactions')
@@ -120,16 +97,6 @@ describe('TxSender', () => {
     jest.restoreAllMocks()
     jest.spyOn(utils, 'getNonce')
     jest.spyOn(safeSelectors, 'currentSafeCurrentVersion')
-    jest.spyOn(walletSelectors, 'providerSelector').mockImplementation(() => ({
-      name: 'MetaMask',
-      account: '0x123',
-      hardwareWallet: false,
-      smartContractWallet: false,
-      network: '4',
-      available: true,
-      loaded: true,
-      ensDomain: '',
-    }))
     jest.spyOn(safeContracts, 'getGnosisSafeInstanceAt')
     jest.spyOn(notificationBuilder, 'createTxNotifications')
     jest.spyOn(getWeb3, 'isSmartContractWallet')
@@ -172,7 +139,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
@@ -209,7 +176,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
@@ -264,7 +231,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)
@@ -316,7 +283,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)

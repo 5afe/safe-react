@@ -2,8 +2,8 @@ import { Operation, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
-import onboard, { checkWallet } from 'src/logic/wallets/onboard'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getOnboardState } from 'src/logic/wallets/onboard/index'
+import { getWeb3, isHardwareWallet, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -16,7 +16,6 @@ import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 's
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
@@ -177,13 +176,13 @@ export class TxSender {
     }
   }
 
-  async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
+  async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
 
     return await tryOffChainSigning(
       safeTxHash,
       { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
-      hardwareWallet,
+      isHardwareWallet(),
       safeVersion,
     )
   }
@@ -207,25 +206,24 @@ export class TxSender {
       .then(({ transactionHash }) => transactionHash)
   }
 
-  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+  async canSignOffchain(): Promise<boolean> {
     const { isFinalization, safeVersion } = this
-    const { smartContractWallet } = providerSelector(state)
+    const { account } = getOnboardState()
 
-    return checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+    const isSmart = await isSmartContractWallet(account.address)
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
   }
 
   async submitTx(
-    state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
-    const isOffchain = await this.canSignOffchain(state)
+    const isOffchain = await this.canSignOffchain()
 
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
       try {
-        const { hardwareWallet } = providerSelector(state)
-        const signature = await this.onlyConfirm(hardwareWallet)
+        const signature = await this.onlyConfirm()
 
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
@@ -253,9 +251,8 @@ export class TxSender {
   }
 
   static async _isOnboardReady(): Promise<boolean> {
-    // web3 is set on wallet connection
-    const walletSelected = getWeb3() ? true : await onboard().walletSelect()
-    return walletSelected && checkWallet()
+    const { available } = getOnboardState()
+    return getWeb3() && available
   }
 
   async prepare(dispatch: Dispatch, state: AppReduxState, txProps: RequiredTxProps): Promise<void> {
@@ -264,8 +261,8 @@ export class TxSender {
     }
 
     // Selectors
-    const { account } = providerSelector(state)
-    this.from = account
+    const { account } = getOnboardState()
+    this.from = account.address
 
     this.safeVersion = currentSafeCurrentVersion(state)
     this.safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, this.safeVersion)
@@ -337,6 +334,6 @@ export const createTransaction = (
     sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
     // Start the creation
-    sender.submitTx(state, confirmCallback, errorCallback)
+    sender.submitTx(confirmCallback, errorCallback)
   }
 }

@@ -19,6 +19,7 @@ import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedExce
 import { loadChains } from 'src/config/cache/chains'
 import { setChainId } from 'src/logic/config/utils'
 import { _getChainId } from 'src/config'
+import { initOnboard } from 'src/logic/wallets/onboard'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -31,16 +32,17 @@ const RootConsumer = (): React.ReactElement | null => {
   const [isError, setIsError] = useState<boolean>(false)
 
   useEffect(() => {
-    const initChains = async () => {
+    const initApp = async () => {
       try {
         await loadChains()
+        initOnboard()
         setHasChains(true)
       } catch (err) {
         logError(Errors._904, err.message)
         setIsError(true)
       }
     }
-    initChains()
+    initApp()
 
     // Set store chainId and init contracts/session
     setChainId(_getChainId())

@@ -8,7 +8,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { getAwaitingGatewayTransactions } from 'src/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getOnboardState } from 'src/logic/wallets/onboard'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   ADD_QUEUED_TRANSACTIONS,
@@ -78,9 +78,11 @@ const notificationsMiddleware =
     if (watchedActions.includes(action.type)) {
       const state = store.getState()
 
+      const { account } = getOnboardState()
+      const userAddress = account.address
+
       switch (action.type) {
         case ADD_HISTORY_TRANSACTIONS: {
-          const userAddress: string = userAccountSelector(state)
           const safesMap = safesAsMap(state)
 
           const executedTxNotification = aboutToExecuteTx.getNotification(
@@ -98,7 +100,6 @@ const notificationsMiddleware =
           const transactions: TransactionSummary[] = values
             .filter((tx) => isTransactionSummary(tx))
             .map((item: TransactionListItem) => (item as Transaction).transaction)
-          const userAddress: string = userAccountSelector(state)
           const awaitingTransactions = getAwaitingGatewayTransactions(transactions, userAddress)
 
           const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.timestamp)

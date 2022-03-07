@@ -21,7 +21,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -194,7 +194,8 @@ type Props = {
 
 export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
-  const userAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const userAddress = account.address
   const isOwner = useSelector(grantedSelector)
   const classes = useStyles()
   const safeAddress = extractSafeAddress()

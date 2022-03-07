@@ -6,7 +6,7 @@ import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 
 import { useSelector } from 'react-redux'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 

@@ -1,13 +1,13 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import {
   isMultiSigExecutionDetails,
   LocalTransactionStatus,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
 import { TransactionActionStateContext } from 'src/routes/safe/components/Transactions/TxList/TxActionProvider'
@@ -28,7 +28,8 @@ type ActionButtonsHandlers = {
 }
 
 export const useActionButtonsHandlers = (transaction: Transaction): ActionButtonsHandlers => {
-  const currentUser = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const currentUser = account.address
   const actionContext = useRef(useContext(TransactionActionStateContext))
   const hoverContext = useRef(useContext(TxHoverContext))
   const locationContext = useContext(TxLocationContext)

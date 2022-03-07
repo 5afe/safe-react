@@ -1,21 +1,18 @@
 import { ReactElement } from 'react'
 
 import Button from 'src/components/layout/Button'
-import onboard, { checkWallet } from 'src/logic/wallets/onboard'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 
-export const onConnectButtonClick = async (): Promise<void> => {
-  const walletSelected = await onboard().walletSelect()
+const ConnectButton = (props: { 'data-testid': string }): ReactElement => {
+  const { connect } = useOnboard()
 
-  // perform wallet checks only if user selected a wallet
-  if (walletSelected) {
-    await checkWallet()
-  }
+  const onConnect = async () => await connect()
+
+  return (
+    <Button color="primary" minWidth={240} onClick={onConnect} variant="contained" {...props}>
+      Connect
+    </Button>
+  )
 }
-
-const ConnectButton = (props: { 'data-testid': string }): ReactElement => (
-  <Button color="primary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
-    Connect
-  </Button>
-)
 
 export default ConnectButton

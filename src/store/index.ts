@@ -26,8 +26,6 @@ import {
   PENDING_TRANSACTIONS_ID,
 } from 'src/logic/safe/store/reducer/pendingTransactions'
 import tokensReducer, { TokenState, TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import providerMiddleware from 'src/logic/wallets/store/middleware'
-import providerReducer, { ProvidersState, PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer'
 import notificationsMiddleware from 'src/logic/safe/store/middleware/notificationsMiddleware'
 import { safeStorageMiddleware } from 'src/logic/safe/store/middleware/safeStorage'
 import safeReducer, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
@@ -72,7 +70,6 @@ const enhancer = composeEnhancers(
     save(LS_CONFIG),
     notificationsMiddleware,
     safeStorageMiddleware,
-    providerMiddleware,
     addressBookMiddleware,
     configMiddleware,
     gatewayTransactionsMiddleware,
@@ -81,7 +78,6 @@ const enhancer = composeEnhancers(
 )
 
 const reducers = {
-  [PROVIDER_REDUCER_ID]: providerReducer,
   [SAFE_REDUCER_ID]: safeReducer,
   [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
   [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
@@ -103,7 +99,6 @@ const rootReducer = combineReducers(reducers)
 // ReturnType<typeof store.getState>
 // or https://dev.to/svehla/typescript-100-type-safe-react-redux-under-20-lines-4h8n
 export type AppReduxState = CombinedState<{
-  [PROVIDER_REDUCER_ID]: ProvidersState
   [SAFE_REDUCER_ID]: SafeReducerMap
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
   [NFT_TOKENS_REDUCER_ID]: NFTTokens

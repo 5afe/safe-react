@@ -90,6 +90,6 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
 
     sender.safeTxHash = tx.safeTxHash
 
-    sender.submitTx(state)
+    sender.submitTx()
   }
 }

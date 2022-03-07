@@ -3,7 +3,6 @@ import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { MultiSend, Custom } from '@gnosis.pm/safe-react-gateway-sdk'
-import { useSelector } from 'react-redux'
 
 import { CustomIconText } from 'src/components/CustomIconText'
 import {
@@ -25,7 +24,7 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isAwaitingExecution } from './utils'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
 
@@ -116,7 +115,8 @@ export const TxCollapsed = ({
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
-  const userAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const userAddress = account.address
   const toAddress = getTxTo(transaction)
   const toInfo = useKnownAddress(toAddress)
   const txStatus = useTxStatus(transaction)

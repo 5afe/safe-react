@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -68,7 +68,8 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion)
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const connectedWalletAddress = account.address
   const chainId = useSelector(currentChainId)
 
   useEffect(

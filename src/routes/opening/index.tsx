@@ -1,6 +1,6 @@
 import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
 import { useEffect, useState, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
@@ -13,7 +13,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 
 import SuccessSvg from './assets/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
@@ -40,7 +40,8 @@ export const SafeDeployment = ({
   const [intervalStarted, setIntervalStarted] = useState(false)
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
-  const provider = useSelector(providerNameSelector)
+  const { wallet } = useOnboard()
+  const provider = wallet.label
   const dispatch = useDispatch()
 
   const confirmationStep = isConfirmationStep(stepIndex)

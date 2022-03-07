@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { CheckOwner } from './screens/CheckOwner'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { ReviewRemoveOwnerModal } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
 
@@ -65,7 +65,8 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
   const dispatch = useDispatch()
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion)
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const connectedWalletAddress = account.address
 
   useEffect(
     () => () => {

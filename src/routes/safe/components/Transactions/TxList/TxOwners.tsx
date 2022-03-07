@@ -20,7 +20,7 @@ import { black300, gray500, primary400, red400, orange500 } from 'src/theme/vari
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 
 // Icons
 
@@ -143,9 +143,10 @@ export const TxOwners = ({
   const [hideConfirmations, setHideConfirmations] = useState<boolean>(shouldHideConfirmations(detailedExecutionInfo))
 
   const { threshold } = useSelector(currentSafe)
-  const account = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const userAddress = account.address
   const chainId = useSelector(currentChainId)
-  const name = useSelector((state) => addressBookName(state, { address: account, chainId }))
+  const name = useSelector((state) => addressBookName(state, { address: userAddress, chainId }))
 
   const toggleHide = () => {
     setHideConfirmations((prev) => !prev)
@@ -183,7 +184,7 @@ export const TxOwners = ({
       </StyledStep>
       {!hideConfirmations &&
         (isImmediateExecution
-          ? getConfirmationStep({ value: account, name, logoUri: null })
+          ? getConfirmationStep({ value: userAddress, name, logoUri: null })
           : detailedExecutionInfo.confirmations.map(({ signer }) => getConfirmationStep(signer, signer.value)))}
       {detailedExecutionInfo.confirmations.length > 0 && (
         <StyledStep state="confirmed">

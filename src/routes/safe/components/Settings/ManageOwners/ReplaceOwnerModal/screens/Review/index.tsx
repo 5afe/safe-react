@@ -7,7 +7,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -51,7 +51,8 @@ export const ReviewReplaceOwnerModal = ({
     threshold = 1,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const connectedWalletAddress = account.address
 
   useEffect(() => {
     let isCurrent = true

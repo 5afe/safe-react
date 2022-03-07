@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { toWei } from 'web3-utils'
 
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -42,7 +42,8 @@ type Props = {
  * It needs to be initialized calling setGasEstimation.
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
-  const connectedWalletAddress = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const connectedWalletAddress = account.address
   const safeAddress = extractSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion) as string
   const state = useSelector((state: AppReduxState) => state)

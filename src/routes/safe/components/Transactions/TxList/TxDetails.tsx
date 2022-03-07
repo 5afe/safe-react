@@ -24,8 +24,7 @@ import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
-import { useSelector } from 'react-redux'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import TxModuleInfo from './TxModuleInfo'
 
 const NormalBreakingText = styled(Text)`
@@ -93,7 +92,8 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const txStatus = useTxStatus(transaction)
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
-  const currentUser = useSelector(userAccountSelector)
+  const { account } = useOnboard()
+  const currentUser = account.address
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
   const shouldShowStepper = data?.detailedExecutionInfo && isMultiSigExecutionDetails(data.detailedExecutionInfo)
 
