@@ -13,7 +13,6 @@ import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
-import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { CookieAttributes } from 'js-cookie'
 
@@ -228,7 +227,7 @@ const CookiesBanner = (): ReactElement => {
                 value={localNecessary}
               />
             </div>
-            <div className={classes.formItem}>
+            {/* <div className={classes.formItem}>
               <FormControlLabel
                 control={<Checkbox checked={localIntercom} />}
                 label="Customer support"
@@ -236,7 +235,7 @@ const CookiesBanner = (): ReactElement => {
                 onChange={() => setLocalIntercom((prev) => !prev)}
                 value={localIntercom}
               />
-            </div>
+            </div> */}
             <div className={classes.formItem}>
               <FormControlLabel
                 control={<Checkbox checked={localAnalytics} />}
@@ -276,13 +275,6 @@ const CookiesBanner = (): ReactElement => {
 
   return (
     <>
-      {!isDesktop && !showIntercom && !isSafeAppView && (
-        <img
-          className={classes.intercomImage}
-          src={IntercomIcon}
-          onClick={() => dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
-        />
-      )}
       {!isDesktop && showBanner?.cookieBannerOpen && (
         <CookiesBannerForm alertMessage={showBanner?.intercomAlertDisplayed} />
       )}

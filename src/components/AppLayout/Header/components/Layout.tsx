@@ -96,7 +96,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Link to={WELCOME_ROUTE}>
-          <Img alt="Gnosis Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
+          <Img alt="Gnosis Safe" height={60} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
         </Link>
       </Col>
 
