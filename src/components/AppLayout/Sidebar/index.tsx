@@ -1,11 +1,16 @@
 import { lazy, useMemo } from 'react'
 import styled from 'styled-components'
-import { Divider, IconText } from '@gnosis.pm/safe-react-components'
+import { Divider } from '@gnosis.pm/safe-react-components'
+import { useDispatch } from 'react-redux'
 
-import List, { ListItemType } from 'src/components/List'
+import List, { ListItemType, StyledListItem, StyledListItemText } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import ListIcon from 'src/components/List/ListIcon'
+import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
+import { loadFromCookie } from 'src/logic/cookies/utils'
+import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS } from 'src/logic/cookies/model/cookie'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -15,18 +20,24 @@ const HelpContainer = styled.div`
   margin-top: auto;
 `
 
+const HelpList = styled.div`
+  margin: 24px 0;
+`
+
 const HelpCenterLink = styled.a`
-  height: 30px;
-  width: 166px;
-  padding: 6px 0 8px 16px;
-  margin: 14px 0px;
+  width: 100%;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  text-align: left;
+  align-items: center;
+  padding: 8px 16px;
+  justify-content: flex-start;
   text-decoration: none;
-  display: block;
+  border-radius: 8px;
 
   &:hover {
-    border-radius: 8px;
     background-color: ${({ theme }) => theme.colors.background};
-    box-sizing: content-box;
   }
   p {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
@@ -57,6 +68,8 @@ const lazyLoad = (path: string): React.ReactElement => {
   return wrapInSuspense(<Component />)
 }
 
+const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
+
 const Sidebar = ({
   items,
   balance,
@@ -68,6 +81,23 @@ const Sidebar = ({
   onNewTransactionClick,
 }: Props): React.ReactElement => {
   const debugToggle = useMemo(() => (IS_PRODUCTION ? null : lazyLoad('./DebugToggle')), [])
+  const dispatch = useDispatch()
+
+  const handleClick = (): void => {
+    const cookiesState = loadFromCookie<BannerCookiesType>(COOKIES_KEY)
+    if (!cookiesState) {
+      dispatch(openCookieBanner({ cookieBannerOpen: true }))
+      return
+    }
+    if (!cookiesState.acceptedSupportAndUpdates) {
+      dispatch(
+        openCookieBanner({
+          cookieBannerOpen: true,
+          key: COOKIE_IDS.BEAMER,
+        }),
+      )
+    }
+  }
 
   return (
     <>
@@ -93,9 +123,19 @@ const Sidebar = ({
 
         <StyledDivider />
 
-        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-          <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
-        </HelpCenterLink>
+        <HelpList>
+          {!isDesktop && (
+            <StyledListItem id="whats-new-button" button onClick={handleClick}>
+              <ListIcon type="gift" />
+              <StyledListItemText>What&apos;s new</StyledListItemText>
+            </StyledListItem>
+          )}
+
+          <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+            <ListIcon type="question" />
+            <StyledListItemText>Help Center</StyledListItemText>
+          </HelpCenterLink>
+        </HelpList>
       </HelpContainer>
     </>
   )

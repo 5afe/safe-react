@@ -216,7 +216,7 @@ const SendCollectible = ({
                     </Paragraph>
                   </Col>
                 </Row>
-                <Row margin="sm">
+                <Row margin="md">
                   <Col>
                     <TokenSelectField
                       assets={nftAssets}

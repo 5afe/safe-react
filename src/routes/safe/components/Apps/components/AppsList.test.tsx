@@ -276,7 +276,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
 
   // see #2847 for more info
   it('Removes pinned Safe Apps from localStorage when they are not included in the remote list', async () => {
-    const defaultPinnedAppsInLocalStorage = await loadFromStorage<string[]>(appUtils.PINNED_SAFE_APP_IDS)
+    const defaultPinnedAppsInLocalStorage = loadFromStorage<string[]>(appUtils.PINNED_SAFE_APP_IDS)
     expect(defaultPinnedAppsInLocalStorage).toContain('14')
     expect(defaultPinnedAppsInLocalStorage).toContain('24')
     expect(defaultPinnedAppsInLocalStorage).toContain('228')
@@ -289,7 +289,7 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     })
 
     // after that the localStorage should be updated
-    const updatedPinnedAppsInLocalStorage = await loadFromStorage<string[]>(appUtils.PINNED_SAFE_APP_IDS)
+    const updatedPinnedAppsInLocalStorage = loadFromStorage<string[]>(appUtils.PINNED_SAFE_APP_IDS)
 
     // '228' App id should be removed from pinnedApps ['14', '24', '228'] because is not included in the remote list
     expect(updatedPinnedAppsInLocalStorage).toContain('14')

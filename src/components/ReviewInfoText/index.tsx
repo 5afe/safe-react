@@ -59,7 +59,8 @@ export const ReviewInfoText = ({
           /* tx in the past */ <>
             Nonce&nbsp;
             <b>{safeTxNonce}</b>
-            &nbsp;is below the latest transaction&apos;s nonce. Your transaction might fail. Please use nonce&nbsp;
+            &nbsp;is below the latest transaction&apos;s nonce in your queue. Please verify the submitted nonce. The
+            next recommended nonce is &nbsp;
             <b>{recommendedNonce}</b>.
           </>
         )}
