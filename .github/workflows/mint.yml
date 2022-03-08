@@ -24,7 +24,6 @@ jobs:
           value: "0"
 
       - name: Mint
-        id: mint
         if: ${{ failure() }}
         uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
         with:
@@ -36,7 +35,7 @@ jobs:
           value: "0"
 
       - name: Set success comment
-        if: steps.mint.outcome == 'success'
+        if: ${{ success() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.inputs.prNumber }}
