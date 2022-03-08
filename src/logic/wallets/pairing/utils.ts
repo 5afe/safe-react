@@ -1,34 +1,34 @@
 import { WalletState } from '@web3-onboard/core'
-import WalletConnect from '@walletconnect/client'
 
-// import { getDisabledWallets } from 'src/config'
-import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
-import { getOnboardInstance, getOnboardState } from 'src/logic/wallets/onboard'
-// import { CGW_WALLETS, WALLET_MODULE_LABELS } from '../onboard/wallets'
+import { getDisabledWallets } from 'src/config'
+import { getPairingConnector, PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing'
+import { getOnboardState } from 'src/logic/wallets/onboard'
+import { CGW_WALLETS, WALLET_MODULE_LABELS } from '../onboard/wallets'
 
+// Create WC session for pairing
 export const initPairing = async (): Promise<void> => {
-  await getOnboardInstance().connectWallet({ autoSelect: PAIRING_MODULE_NAME })
+  const connector = getPairingConnector()
+  if (!connector.connected) {
+    await connector.createSession()
+  }
 }
 
-// Is WC connected (may work for other providers)
 export const isPairingConnected = (): boolean => {
-  const { wallet } = getOnboardState()
-  return ((wallet.provider as any)?.connector as InstanceType<typeof WalletConnect>)?.connected
+  const { connected } = getPairingConnector()
+  return connected
 }
 
 export const isPairingSupported = (): boolean => {
-  return false
-  // return !getDisabledWallets().some((label) => [WALLET_MODULE_LABELS.PAIRING, CGW_WALLETS.SAFE_MOBILE].includes(label))
+  return !getDisabledWallets().some((label) => [WALLET_MODULE_LABELS.PAIRING, CGW_WALLETS.SAFE_MOBILE].includes(label))
 }
 
-// Is pairing module initialised
-export const isPairingModule = (label: WalletState['label'] = getOnboardState().wallet.label): boolean => {
+// Is web3-onboard using pairing wallet
+export const isPairingWallet = (label: WalletState['label'] = getOnboardState().wallet.label): boolean => {
   return label === PAIRING_MODULE_NAME
 }
 
-export const getPairingUri = (): string | undefined => {
-  const { wallet } = getOnboardState()
-  const wcUri = ((wallet.provider as any)?.connector as InstanceType<typeof WalletConnect>)?.uri
+export const getPairingUri = (): string => {
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
-  return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : undefined
+  const { uri } = getPairingConnector()
+  return uri ? `${PAIRING_MODULE_URI_PREFIX}${uri}` : ''
 }

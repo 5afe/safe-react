@@ -4,9 +4,10 @@ import { numberToHex } from 'web3-utils'
 import { getChainInfo, getExplorerUrl, getPublicRpcUrl, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { isPairingWallet } from 'src/logic/wallets/pairing/utils'
 import { WalletState } from '@web3-onboard/core'
 import { getOnboardInstance, getOnboardState } from '../onboard'
+import { getPairingConnector } from '../pairing'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
@@ -20,14 +21,13 @@ const WALLET_ERRORS = {
  */
 const requestSwitch = async (wallet: WalletState, chainId: ChainId): Promise<void> => {
   // Note: This could support WC too
-  if (isPairingModule(wallet.label)) {
-    if (wallet.provider) {
-      const connector = (wallet.provider as any)?.connector as InstanceType<typeof WalletConnect>
-      connector.updateSession({
-        chainId: parseInt(chainId, 10),
-        accounts: connector.accounts,
-      })
-    }
+  if (isPairingWallet(wallet.label)) {
+    const connector =
+      ((wallet.provider as any)?.connector as InstanceType<typeof WalletConnect>) || getPairingConnector()
+    connector.updateSession({
+      chainId: parseInt(chainId, 10),
+      accounts: connector.accounts,
+    })
   } else {
     await wallet.provider.request({
       method: 'wallet_switchEthereumChain',

@@ -8,9 +8,8 @@ import QRCode from 'qrcode.react'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-// import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
-import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
-import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
+import { initPairing } from 'src/logic/wallets/pairing/utils'
+import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 
 const StyledDivider = styled(Divider)`
   width: calc(100% + 40px);
@@ -25,9 +24,7 @@ const qrRefresh: CSSProperties = {
 }
 
 const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
-  const uri = useGetPairingUri()
-  const isPairingLoaded = isPairingModule()
-  // usePairing()
+  const { uri, isLoaded } = usePairing()
 
   return (
     <>
@@ -42,7 +39,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       <Row className={classes.justifyCenter}>
         {uri ? (
           <QRCode value={uri} size={QR_DIMENSION} />
-        ) : isPairingLoaded ? (
+        ) : isLoaded ? (
           <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
         ) : (
           <IconButton disableRipple style={qrRefresh} onClick={initPairing}>

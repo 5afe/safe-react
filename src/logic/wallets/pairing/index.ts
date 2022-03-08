@@ -1,16 +1,51 @@
-import { Chain, EIP1193Provider, ProviderAccounts, WalletInit } from '@web3-onboard/common'
-import { ProviderRpcError } from '@web3-onboard/common'
+import { StaticJsonRpcProvider } from '@ethersproject/providers'
+import {
+  Chain,
+  ProviderAccounts,
+  WalletInit,
+  EIP1193Provider,
+  ProviderRpcError,
+  ProviderRpcErrorCode,
+} from '@web3-onboard/common'
 import { IClientMeta } from '@walletconnect/types'
 import WalletConnect from '@walletconnect/client'
 
-import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
-import { WC_BRIDGE } from 'src/logic/wallets/onboard/wallets'
+import { APP_VERSION, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
+import { getOnboardInstance } from 'src/logic/wallets/onboard'
 
 export const PAIRING_MODULE_NAME = 'Safe Mobile'
+export const PAIRING_STORAGE_ID = 'SAFE__pairingProvider'
 
-function pairingModule(): WalletInit {
+const _pairingConnector = new WalletConnect({
+  bridge: WC_BRIDGE,
+  storageId: PAIRING_STORAGE_ID,
+})
+
+export const getPairingConnector = (): InstanceType<typeof WalletConnect> => {
+  if (!_pairingConnector) {
+    throw new Error('Pairing is not initialized')
+  }
+  return _pairingConnector
+}
+
+const connectPairingWallet = (): void => {
+  getOnboardInstance().connectWallet({ autoSelect: PAIRING_MODULE_NAME })
+}
+
+if (!_pairingConnector.connected) {
+  _pairingConnector.createSession()
+} else {
+  connectPairingWallet()
+}
+
+_pairingConnector.on('connect', () => {
+  connectPairingWallet()
+})
+
+// Modified version of web3-onboard/walletconnect v2.0.1
+export function pairingModule(): WalletInit {
   return ({ device: { browser, os } }) => {
-    const STORAGE_ID = 'SAFE__pairingProvider'
+    const connector = getPairingConnector()
 
     const app = `Safe Web v${APP_VERSION}`
     const logo = `${location.origin}${PUBLIC_URL}/resources/logo_120x120.png`
@@ -22,16 +57,8 @@ function pairingModule(): WalletInit {
       icons: [logo],
     }
 
-    const connector = new WalletConnect({
-      bridge: WC_BRIDGE,
-      storageId: STORAGE_ID,
-      clientMeta,
-    })
-
-    // WalletConnect overrides the clientMeta, so we need to set it back
+    ;(connector as any).clientMeta = clientMeta
     ;(connector as any)._clientMeta = clientMeta
-
-    connector.createSession()
 
     return {
       label: PAIRING_MODULE_NAME,
@@ -51,14 +78,15 @@ function pairingModule(): WalletInit {
           public connector: InstanceType<typeof WalletConnect>
           public chains: Chain[]
           public disconnect: EIP1193Provider['disconnect']
-          // @ts-expect-error web3-onboard does not include this
+          // @ts-expect-error type mismatch
           public emit: typeof EventEmitter['emit']
-          // @ts-expect-error web3-onboard does not include this
+          // @ts-expect-error type mismatch
           public on: typeof EventEmitter['on']
-          // @ts-expect-error web3-onboard does not include this
+          // @ts-expect-error type mismatch
           public removeListener: typeof EventEmitter['removeListener']
 
           private disconnected$: InstanceType<typeof Subject>
+          private providers: Record<string, StaticJsonRpcProvider>
 
           constructor({ connector, chains }: { connector: InstanceType<typeof WalletConnect>; chains: Chain[] }) {
             this.emit = emitter.emit.bind(emitter)
@@ -68,6 +96,7 @@ function pairingModule(): WalletInit {
             this.connector = connector
             this.chains = chains
             this.disconnected$ = new Subject()
+            this.providers = {}
 
             // Listen for session updates
             fromEvent(this.connector, 'session_update', (error, payload) => {
@@ -108,20 +137,21 @@ function pairingModule(): WalletInit {
                 next: () => {
                   this.emit('accountsChanged', [])
                   this.disconnected$.next(true)
-                  localStorage.removeItem(STORAGE_ID)
+                  localStorage?.removeItem(PAIRING_STORAGE_ID)
                 },
                 error: console.warn,
               })
 
             this.disconnect = () => this.connector.killSession()
 
-            this.request = ({ method, params }) => {
+            this.request = async ({ method, params }) => {
               if (method === 'eth_chainId') {
-                return Promise.resolve(`0x${this.connector.chainId.toString(16)}`)
+                return `0x${this.connector.chainId.toString(16)}`
               }
 
               if (method === 'eth_requestAccounts') {
                 return new Promise<ProviderAccounts>((resolve, reject) => {
+                  // Check if connection is already established
                   if (this.connector.connected) {
                     const { accounts, chainId } = this.connector.session
                     this.emit('chainChanged', `0x${chainId.toString(16)}`)
@@ -130,6 +160,7 @@ function pairingModule(): WalletInit {
 
                   // Subscribe to connection events
                   fromEvent(this.connector, 'connect', (error, payload) => {
+                    console.log('connect')
                     if (error) {
                       throw error
                     }
@@ -151,7 +182,7 @@ function pairingModule(): WalletInit {
 
               if (['wallet_switchEthereumChain', 'eth_selectAccounts'].includes(method)) {
                 throw new ProviderRpcError({
-                  code: 4200,
+                  code: ProviderRpcErrorCode.UNSUPPORTED_METHOD,
                   message: `The Provider does not support the requested method: ${method}`,
                 })
               }
@@ -176,12 +207,31 @@ function pairingModule(): WalletInit {
                 return this.connector.signTypedData(params)
               }
 
-              return this.connector.sendCustomRequest({
-                id: 1337,
-                jsonrpc: '2.0',
-                method,
-                params,
-              })
+              if (method === 'eth_accounts') {
+                return this.connector.sendCustomRequest({
+                  id: 1337,
+                  jsonrpc: '2.0',
+                  method,
+                  params,
+                })
+              }
+
+              const chainId = await this.request({ method: 'eth_chainId' })
+
+              if (!this.providers[chainId]) {
+                const currentChain = chains.find(({ id }) => id === chainId)
+
+                if (!currentChain) {
+                  throw new ProviderRpcError({
+                    code: ProviderRpcErrorCode.CHAIN_NOT_ADDED,
+                    message: `The Provider does not have a rpcUrl to make a request for the requested method: ${method}`,
+                  })
+                }
+
+                this.providers[chainId] = new StaticJsonRpcProvider(currentChain.rpcUrl)
+              }
+
+              return this.providers[chainId].send(method, params)
             }
           }
         }
@@ -193,5 +243,3 @@ function pairingModule(): WalletInit {
     }
   }
 }
-
-export default pairingModule

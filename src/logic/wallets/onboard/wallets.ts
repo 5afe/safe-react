@@ -18,12 +18,12 @@ import trezorModule from '@web3-onboard/trezor'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import walletLinkModule from '@web3-onboard/walletlink'
 
-// import pairingModule from 'src/logic/wallets/pairing/module'
-import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
+import { pairingModule } from 'src/logic/wallets/pairing'
+import { FORTMATIC_KEY, PORTIS_ID, WC_BRIDGE } from 'src/utils/constants'
 import { getDisabledWallets } from 'src/config'
 
 enum WALLET_KEYS {
-  // PAIRING = 'PAIRING',
+  PAIRING = 'PAIRING',
   FORTMATIC = 'FORTMATIC',
   INJECTED = 'INJECTED',
   KEEPKEY = 'KEEPKEY',
@@ -37,10 +37,8 @@ enum WALLET_KEYS {
   WALLETLINK = 'WALLETLINK',
 }
 
-export const WC_BRIDGE = 'https://safe-walletconnect.gnosis.io/'
-
 export const WALLET_MODULES: Record<WALLET_KEYS, WalletInit> = {
-  // PAIRING: pairingModule(),
+  PAIRING: pairingModule(),
   FORTMATIC: fortmaticModule({ apiKey: FORTMATIC_KEY }),
   INJECTED: injectedModule(),
   KEEPKEY: keepkeyModule(),
@@ -80,7 +78,7 @@ export enum WALLET_TYPE {
 }
 
 export enum CGW_WALLETS {
-  // SAFE_MOBILE = 'safeMobile',
+  SAFE_MOBILE = 'safeMobile',
   FORTMATIC = 'fortmatic',
   ONBOARD_DETECTED_WALLET = 'detectedwallet',
   KEYSTONE = 'keystone',
@@ -101,12 +99,12 @@ type WALLET = {
 }
 
 export const WALLETS: WALLET[] = [
-  // {
-  //   module: WALLET_MODULES.PAIRING,
-  //   label: WALLET_MODULE_LABELS.PAIRING,
-  //   cgw: CGW_WALLETS.SAFE_MOBILE,
-  //   supportsDesktopApp: true,
-  // },
+  {
+    module: WALLET_MODULES.PAIRING,
+    label: WALLET_MODULE_LABELS.PAIRING,
+    cgw: CGW_WALLETS.SAFE_MOBILE,
+    supportsDesktopApp: true,
+  },
   {
     module: WALLET_MODULES.FORTMATIC,
     label: WALLET_MODULE_LABELS.FORTMATIC,

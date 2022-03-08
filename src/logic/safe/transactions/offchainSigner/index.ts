@@ -1,6 +1,6 @@
 import semverSatisfies from 'semver/functions/satisfies'
 
-import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { isPairingWallet } from 'src/logic/wallets/pairing/utils'
 import { isWalletRejection } from 'src/logic/wallets/errors'
 import { getEIP712Signer, SigningTxArgs } from './EIP712Signer'
 import { ethSigner, EthSignerArgs } from './ethSigner'
@@ -23,7 +23,7 @@ export const SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES = '>=1.0.0'
 type SupportedSigners = typeof SIGNERS[keyof typeof SIGNERS][]
 const getSupportedSigners = (isHW: boolean, safeVersion: string): SupportedSigners => {
   // v1 of desktop pairing only supports eth_sign
-  if (isPairingModule()) {
+  if (isPairingWallet()) {
     return [SIGNERS.ETH_SIGN]
   }
 
