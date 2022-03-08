@@ -13,29 +13,28 @@ jobs:
     name: Mint
     runs-on: ubuntu-latest
     steps:
-      - name: Check if already minted
-        uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
-        with:
-          rpc-node: ${{ secrets.RPC_NODE}}
-          wallet-key: ${{ secrets.WALLET_KEY }}
-          contract: ${{ secrets.CONTRACT_ADDRESS }}
-          function: "tokenURI(uint256 _tokenId)"
-          inputs: '[ ${{ github.event.inputs.prNumber }} ]'
-          value: "0"
+      # - name: Check if already minted
+      #   uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
+      #   with:
+      #     rpc-node: ${{ secrets.RPC_NODE}}
+      #     wallet-key: ${{ secrets.WALLET_KEY }}
+      #     contract: ${{ secrets.CONTRACT_ADDRESS }}
+      #     function: "tokenURI(uint256 _tokenId)"
+      #     inputs: '[ ${{ github.event.inputs.prNumber }} ]'
+      #     value: "0"
 
-      - name: Mint
-        if: ${{ failure() }}
-        uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
-        with:
-          rpc-node: ${{ secrets.RPC_NODE}}
-          wallet-key: ${{ secrets.WALLET_KEY }}
-          contract: ${{ secrets.CONTRACT_ADDRESS }}
-          function: "mint(address _to, uint256 _tokenId, string _uri)"
-          inputs: '[ "${{ secrets.WALLET_ADDRESS }}", ${{ github.event.inputs.prNumber }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.inputs.prNumber }}" ]'
-          value: "0"
+      # - name: Mint
+      #   if: ${{ failure() }}
+      #   uses: web3actions/tx@d3833db41e58cb4e7f329027ad30211a22e1c5e5
+      #   with:
+      #     rpc-node: ${{ secrets.RPC_NODE}}
+      #     wallet-key: ${{ secrets.WALLET_KEY }}
+      #     contract: ${{ secrets.CONTRACT_ADDRESS }}
+      #     function: "mint(address _to, uint256 _tokenId, string _uri)"
+      #     inputs: '[ "${{ secrets.WALLET_ADDRESS }}", ${{ github.event.inputs.prNumber }}, "https://github.com/gnosis/safe-react/pull/${{ github.event.inputs.prNumber }}" ]'
+      #     value: "0"
 
       - name: Set success comment
-        if: ${{ success() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.inputs.prNumber }}
