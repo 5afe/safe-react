@@ -1,29 +1,32 @@
-import express from 'express'
-import log from 'electron-log'
-import fs from 'fs'
-import electron from 'electron'
-import https from 'https'
-import { autoUpdater } from 'electron-updater'
 import detect from 'detect-port'
+import { app, BrowserWindow, Menu, nativeImage, session, shell, screen } from 'electron'
+import log from 'electron-log'
+import { autoUpdater } from 'electron-updater'
+import express from 'express'
+import fs from 'fs'
+import https from 'https'
 import path from 'path'
 
-const { app, session, BrowserWindow, shell, Menu } = electron
-const isDev = !app.isPackaged
 const DEFAULT_PORT = 5000
-app.allowRendererProcessReuse = false
+const trezorRegExp = new RegExp(`/https:\/\/((.+\.)*trezor\.io)/gi`)
+const portisRegExp = new RegExp(`/https:\/\/((.+\.)*portis\.io)/gi`)
+
+const isDev = process.env.ELECTRON_ENV === 'development'
 const options = {
   key: fs.readFileSync(path.join(__dirname, './ssl/server.key')),
   cert: fs.readFileSync(path.join(__dirname, './ssl/server.crt')),
   ca: fs.readFileSync(path.join(__dirname, './ssl/rootCA.crt')),
 }
 
-async function getFreePort(): Promise<number> {
+let mainWindow
+
+const getFreePort = async (): Promise<number> => {
   const port = await detect(DEFAULT_PORT)
 
   return port
 }
 
-function createServer(port: number): void {
+const createServer = (port: number): void => {
   const app = express()
   const staticRoute = path.join(__dirname, '../build')
 
@@ -33,12 +36,8 @@ function createServer(port: number): void {
   https.createServer(options, app).listen(port, '127.0.0.1')
 }
 
-let mainWindow
-
-function getOpenedWindow(url: string, options) {
-  const display = electron.screen.getPrimaryDisplay()
-  const width = display.bounds.width
-  const height = display.bounds.height
+const getOpenedWindow = (url: string, options) => {
+  const { width, height } = screen.getPrimaryDisplay().bounds
 
   // filter all requests to trezor-bridge and change origin to make it work
   const filter = {
@@ -47,14 +46,14 @@ function getOpenedWindow(url: string, options) {
 
   options.webPreferences.affinity = 'main-window'
 
-  if (url.includes('trezor')) {
+  if (trezorRegExp.test(url)) {
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
       details.requestHeaders['Origin'] = 'https://connect.trezor.io'
       callback({ cancel: false, requestHeaders: details.requestHeaders })
     })
   }
 
-  if (url.includes('wallet.portis') || url.includes('trezor') || url.includes('app.tor.us')) {
+  if (portisRegExp.test(url) || trezorRegExp.test(url) || url.includes('app.tor.us')) {
     const win = new BrowserWindow({
       width: 350,
       height: 700,
@@ -64,33 +63,39 @@ function getOpenedWindow(url: string, options) {
       fullscreen: false,
       show: false,
     })
-    win.webContents.on('new-window', function (event, url) {
-      if (url.includes('trezor') && url.includes('bridge')) shell.openExternal(url)
+
+    win.webContents.on('new-window', (event, url) => {
+      if (trezorRegExp.test(url) && url.includes('bridge')) {
+        shell.openExternal(url)
+      }
     })
+
     win.once('ready-to-show', () => win.show())
 
     if (!options.webPreferences) {
       win.loadURL(url)
     }
+
     return win
   }
 
   return null
 }
 
-function createWindow(port = DEFAULT_PORT) {
+const createWindow = (port = DEFAULT_PORT) => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1366,
     height: 768,
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
-      experimentalFeatures: true,
-      enableRemoteModule: true,
+      // experimentalFeatures not needed now unless migrating to WebHID Electron >= 16
+      // experimentalFeatures: true,
+      // Needed to load Ledger from preload scripts, sharing context with main window
       contextIsolation: false,
-      nativeWindowOpen: true, // need to be set in order to display modal
+      nativeWindowOpen: true, // need to be set in order to display modal. Not needed for Electron >= 15
     },
-    icon: electron.nativeImage.createFromPath(path.join(__dirname, '../build/resources/safe.png')),
+    icon: nativeImage.createFromPath(path.join(__dirname, '../build/resources/safe.png')),
   })
 
   mainWindow.once('ready-to-show', () => {
@@ -110,7 +115,7 @@ function createWindow(port = DEFAULT_PORT) {
   mainWindow.setMenu(null)
   mainWindow.setMenuBarVisibility(false)
 
-  mainWindow.webContents.on('new-window', function (event, url, frameName, disposition, options) {
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
     const win = getOpenedWindow(url, options)
     if (win) {
       win.once('ready-to-show', () => win.show())
@@ -120,7 +125,8 @@ function createWindow(port = DEFAULT_PORT) {
       }
 
       event.newGuest = win
-    } else shell.openExternal(url)
+    }
+    // else shell.openExternal(url)
   })
 
   mainWindow.webContents.on('did-finish-load', () => {
@@ -135,9 +141,11 @@ function createWindow(port = DEFAULT_PORT) {
   mainWindow.on('closed', () => (mainWindow = null))
 }
 
-process.on('uncaughtException', function (error) {
+process.on('uncaughtException', (error) => {
   log.error(error)
 })
+
+app.allowRendererProcessReuse = false
 
 app.userAgentFallback =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.5.2 Safari/537.36'

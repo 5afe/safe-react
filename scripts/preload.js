@@ -1,13 +1,7 @@
-// All of the Node.js APIs are available in the preload process.
-// It has the same sandbox as a Chrome extension.
-// https://stackoverflow.com/a/58164407/7820085
-const {
-  remote: { app },
-} = require('electron')
 const log = require('electron-log')
 const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid-singleton').default
 
-const isDev = !app.isPackaged
+const isDev = process.env.ELECTRON_ENV === 'development'
 global.isDesktop = true
 global.TransportNodeHid = TransportNodeHid
 
