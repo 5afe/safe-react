@@ -49,6 +49,7 @@ import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { textShortener } from 'src/utils/strings'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -79,6 +80,7 @@ const AddressBookTable = (): ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
   const dispatch = useDispatch()
+  const shortener = textShortener()
   const safesList = useSelector(safesAsList)
   const addressBook = useSelector(currentNetworkAddressBook)
   const networkId = useSelector(currentChainId)
@@ -248,9 +250,7 @@ const AddressBookTable = (): ReactElement => {
                             row[AB_NAME_ID] ? (
                               row[AB_NAME_ID]
                             ) : (
-                              `${row[AB_ADDRESS_ID].toString().slice(0, 6)}...${row[AB_ADDRESS_ID].toString().slice(
-                                -6,
-                              )}`
+                              shortener(row[AB_ADDRESS_ID])
                             )
                           ) : (
                             row[column.id]
