@@ -24,7 +24,7 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-import { getCollapsedTypeText, getTxTo, isAwaitingExecution } from './utils'
+import { getTxTo, isAwaitingExecution } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
@@ -137,7 +137,7 @@ export const TxCollapsed = ({
         address={toAddress?.value || '0x'}
         iconUrl={type.icon || toInfo?.logoUri || undefined}
         iconUrlFallback={type.fallbackIcon}
-        text={getCollapsedTypeText(transaction.txInfo) || toInfo?.name || undefined}
+        text={type.text || toInfo?.name || undefined}
       />
     </div>
   )

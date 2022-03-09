@@ -37,7 +37,8 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         break
       }
       case 'SettingsChange': {
-        setType({ icon: SettingsTxIcon, text: tx.txInfo.dataDecoded.method })
+        const isDeleteGuard = tx.txInfo.settingsInfo?.type === ('DELETE_GUARD' as any)
+        setType({ icon: SettingsTxIcon, text: isDeleteGuard ? 'deleteGuard' : tx.txInfo.dataDecoded.method })
         break
       }
       case 'Custom': {

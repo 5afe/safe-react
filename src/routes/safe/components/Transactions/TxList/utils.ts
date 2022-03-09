@@ -17,7 +17,6 @@ import {
   isCustomTxInfo,
   isModuleExecutionInfo,
   isMultiSigExecutionDetails,
-  isSettingsChangeTxInfo,
   isTransferTxInfo,
   isTxQueued,
   LocalTransactionStatus,
@@ -205,26 +204,3 @@ export const isDeeplinkedTx = (): boolean => {
 export const isAwaitingExecution = (
   txStatus: typeof LocalTransactionStatus[keyof typeof LocalTransactionStatus],
 ): boolean => LocalTransactionStatus.AWAITING_EXECUTION === txStatus
-
-export const getCollapsedTypeText = (txInfo: TransactionInfo): string | undefined => {
-  if (!isSettingsChangeTxInfo(txInfo)) {
-    return undefined
-  }
-
-  const { dataDecoded, settingsInfo } = txInfo
-
-  if (!settingsInfo) {
-    return undefined
-  }
-
-  switch (settingsInfo.type) {
-    case 'DELETE_GUARD' as any: {
-      // deleteGuard doesn't exist in solidity
-      // It is decoded as 'setGuard' with a settingsInfo.type of 'DELETE_GUARD'
-      return 'deleteGuard'
-    }
-    default: {
-      return dataDecoded.method
-    }
-  }
-}
