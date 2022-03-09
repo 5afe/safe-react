@@ -2,7 +2,6 @@ const log = require('electron-log')
 const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid-singleton').default
 
 const isDev = process.env.ELECTRON_ENV === 'development'
-global.isDesktop = true
 global.TransportNodeHid = TransportNodeHid
 
 window.addEventListener('DOMContentLoaded', () => {

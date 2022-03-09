@@ -28,6 +28,7 @@ const getFreePort = async (): Promise<number> => {
 
 const createServer = (port: number): void => {
   const app = express()
+  app.disable('x-powered-by')
   const staticRoute = path.join(__dirname, '../build')
 
   // We define same route as in package.json -> homepage
@@ -148,7 +149,7 @@ process.on('uncaughtException', (error) => {
 app.allowRendererProcessReuse = false
 
 app.userAgentFallback =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.5.2 Safari/537.36'
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.6.9 Safari/537.36'
 
 app.whenReady().then(async () => {
   // Hide the menu
