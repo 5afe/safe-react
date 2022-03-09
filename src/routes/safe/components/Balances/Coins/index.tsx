@@ -25,7 +25,8 @@ import {
   getBalanceData,
   BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
-import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
+import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
@@ -78,7 +79,7 @@ const Coins = (props: Props): React.ReactElement => {
   const autoColumns = columns.filter((c) => !c.custom)
   const selectedCurrency = useSelector(currentCurrencySelector)
   const safeTokens = useSelector(extendedSafeTokensSelector)
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {

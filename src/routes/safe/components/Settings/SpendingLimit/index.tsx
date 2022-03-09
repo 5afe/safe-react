@@ -7,7 +7,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { currentSafeSpendingLimits } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 
 import { LimitsTable } from './LimitsTable'
 import { getSpendingLimitData } from './LimitsTable/dataFetcher'
@@ -21,7 +21,7 @@ const InfoText = styled(Text)`
 
 const SpendingLimit = (): ReactElement => {
   const classes = useStyles()
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
   const allowances = useSelector(currentSafeSpendingLimits)
   const spendingLimitData = getSpendingLimitData(allowances)
 

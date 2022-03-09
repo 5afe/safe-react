@@ -2,7 +2,6 @@ import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import { ReactElement, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import Row from 'src/components/layout/Row'
@@ -11,7 +10,7 @@ import Table from 'src/components/Table'
 import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { RemoveLimitModal } from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 
 import {
   generateColumns,
@@ -28,7 +27,7 @@ interface SpendingLimitTableProps {
 
 export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => {
   const classes = useStyles()
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
 
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)

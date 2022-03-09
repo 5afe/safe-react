@@ -24,7 +24,7 @@ import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
 import {
@@ -58,7 +58,7 @@ const StyledParagraph = styled(Paragraph)`
 
 const SafeDetails = (): ReactElement => {
   const classes = useStyles()
-  const isUserOwner = useSelector(grantedSelector)
+  const isUserOwner = useIsGranted()
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
   const curChainId = useSelector(currentChainId)
   const {

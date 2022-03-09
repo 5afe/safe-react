@@ -7,7 +7,7 @@ import {
   TokenType,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useMemo, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { useStyles } from './style'
 
@@ -34,7 +34,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
@@ -196,7 +196,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
   const dispatch = useDispatch()
   const { account } = useOnboard()
   const userAddress = account.address
-  const isOwner = useSelector(grantedSelector)
+  const isOwner = useIsGranted()
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
   const txInfo = useTxInfo(transaction)

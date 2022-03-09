@@ -43,7 +43,7 @@ import {
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
@@ -82,7 +82,7 @@ const AddressBookTable = (): ReactElement => {
   const safesList = useSelector(safesAsList)
   const addressBook = useSelector(currentNetworkAddressBook)
   const networkId = useSelector(currentChainId)
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
   const chainId = useSelector(currentChainId)
   const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)

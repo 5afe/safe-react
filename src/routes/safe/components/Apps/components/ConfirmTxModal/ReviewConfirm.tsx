@@ -1,7 +1,7 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { toBN } from 'web3-utils'
 
@@ -22,7 +22,7 @@ import Divider from 'src/components/Divider'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 import { ConfirmTxModalProps, DecodedTxDetailType } from '.'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -74,7 +74,7 @@ export const ReviewConfirm = ({
   const dispatch = useDispatch()
   const nativeCurrency = getNativeCurrency()
   const explorerUrl = getExplorerInfo(safeAddress)
-  const isOwner = useSelector(grantedSelector)
+  const isOwner = useIsGranted()
 
   const txRecipient: string | undefined = useMemo(
     () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),

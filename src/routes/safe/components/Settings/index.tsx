@@ -11,7 +11,7 @@ import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 import { getShortName } from 'src/config'
 
@@ -35,7 +35,7 @@ const Settings = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
   const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
 
   // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
   const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)

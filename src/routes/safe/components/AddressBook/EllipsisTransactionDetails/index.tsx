@@ -10,7 +10,7 @@ import { sameString } from 'src/utils/strings'
 import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { xs } from 'src/theme/variables'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { SAFE_ROUTES, history, extractSafeAddress, generateSafeRoute } from 'src/routes/routes'
 import { getShortName } from 'src/config'
 
@@ -47,7 +47,7 @@ export const EllipsisTransactionDetails = ({
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
 
-  const isOwnerConnected = useSelector(grantedSelector)
+  const isOwnerConnected = useIsGranted()
 
   const recipientName = useSelector((state) => addressBookEntryName(state, { address }))
   // We have to check that the name returned is not UNKNOWN

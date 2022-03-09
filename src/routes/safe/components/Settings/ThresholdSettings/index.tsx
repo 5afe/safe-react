@@ -9,7 +9,7 @@ import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 
@@ -22,7 +22,7 @@ const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
   const { address: safeAddress = '', owners, threshold = 1 } = useSelector(currentSafe) ?? {}
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
 
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)

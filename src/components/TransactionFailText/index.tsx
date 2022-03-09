@@ -5,9 +5,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 
-import { useSelector } from 'react-redux'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useShouldSwitchWalletChain from 'src/logic/hooks/useShouldSwitchWalletChain'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
 enum ErrorMessage {
@@ -42,8 +41,8 @@ export const TransactionFailText = ({
   estimationStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
-  const isWrongChain = useSelector(shouldSwitchWalletChain)
-  const isOwner = useSelector(grantedSelector)
+  const isWrongChain = useShouldSwitchWalletChain()
+  const isOwner = useIsGranted()
 
   const showError =
     isWrongChain || (isExecution && estimationStatus === EstimationStatus.FAILURE) || (isCreation && !isOwner)

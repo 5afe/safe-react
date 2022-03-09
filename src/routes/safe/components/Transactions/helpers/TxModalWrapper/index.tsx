@@ -16,7 +16,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { isSpendingLimit, ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 import { useSelector } from 'react-redux'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { List } from 'immutable'
 import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
@@ -99,7 +99,7 @@ export const TxModalWrapper = ({
   const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string>()
   const [manualGasLimit, setManualGasLimit] = useState<string>()
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
-  const isOwner = useSelector(grantedSelector)
+  const isOwner = useIsGranted()
   const { account } = useOnboard()
   const userAddress = account.address
   const safeAddress = extractSafeAddress()

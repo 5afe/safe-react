@@ -2,7 +2,7 @@ import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Icon, Text } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
 import { ReactElement } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import ModalTitle from 'src/components/ModalTitle'
@@ -16,7 +16,7 @@ import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
 import { SignMessageModalProps } from '.'
 import Hairline from 'src/components/layout/Hairline'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
@@ -77,7 +77,7 @@ export const ReviewMessage = ({
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
   const nativeCurrency = getNativeCurrency()
-  const isOwner = useSelector(grantedSelector)
+  const isOwner = useIsGranted()
 
   const handleTxRejection = () => {
     onTxReject(requestId)

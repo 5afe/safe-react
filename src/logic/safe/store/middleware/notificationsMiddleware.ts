@@ -78,8 +78,8 @@ const notificationsMiddleware =
     if (watchedActions.includes(action.type)) {
       const state = store.getState()
 
-      const { account } = getOnboardState()
-      const userAddress = account.address
+      const onboardState = getOnboardState()
+      const userAddress = onboardState.account.address
 
       switch (action.type) {
         case ADD_HISTORY_TRANSACTIONS: {
@@ -147,7 +147,7 @@ const notificationsMiddleware =
           if (!currentSafeAddress || !safe.currentVersion) {
             break
           }
-          const isUserOwner = grantedSelector(state)
+          const isUserOwner = grantedSelector(state, onboardState)
           const version = await getSafeVersionInfo(safe.currentVersion)
 
           const notificationKey = `${currentSafeAddress}-update`

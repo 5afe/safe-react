@@ -1,5 +1,4 @@
 import { ReactElement, useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -16,7 +15,7 @@ import { setChainId } from 'src/logic/config/utils'
 import { lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Paragraph from 'src/components/layout/Paragraph'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
+import useShouldSwitchWalletChain from 'src/logic/hooks/useShouldSwitchWalletChain'
 import ConnectButton from 'src/components/ConnectButton'
 import WalletSwitch from 'src/components/WalletSwitch'
 import { getChains } from 'src/config/cache/chains'
@@ -27,7 +26,7 @@ export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 function SelectWalletAndNetworkStep(): ReactElement {
   const [isNetworkSelectorPopupOpen, setIsNetworkSelectorPopupOpen] = useState(false)
   const { available: isWalletConnected } = useOnboard()
-  const isWrongNetwork = useSelector(shouldSwitchWalletChain)
+  const isWrongNetwork = useShouldSwitchWalletChain()
 
   function openNetworkSelectorPopup() {
     setIsNetworkSelectorPopupOpen(true)

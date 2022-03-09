@@ -7,7 +7,7 @@ import { getShortName } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import {
   extractSafeAddress,
   ADDRESSED_ROUTE,
@@ -23,7 +23,7 @@ const useSidebarItems = (): ListItemType[] => {
   const isSpendingLimitEnabled = hasFeature(FEATURES.SPENDING_LIMIT)
   const { needsUpdate } = useSelector(currentSafeWithNames)
   const safeAddress = extractSafeAddress()
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
 
   const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
 

@@ -27,7 +27,7 @@ import {
   SAFE_PENDING_CREATION_STORAGE_KEY,
 } from './fields/createSafeFields'
 import { useMnemonicSafeName } from 'src/logic/hooks/useMnemonicName'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
+import useShouldSwitchWalletChain from 'src/logic/hooks/useShouldSwitchWalletChain'
 import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import OwnersAndConfirmationsNewSafeStep, {
   ownersAndConfirmationsNewSafeStepLabel,
@@ -44,7 +44,7 @@ function CreateSafePage(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { wallet } = useOnboard()
   const providerName = wallet.label
-  const isWrongNetwork = useSelector(shouldSwitchWalletChain)
+  const isWrongNetwork = useShouldSwitchWalletChain()
   const provider = !!providerName && !isWrongNetwork
 
   useEffect(() => {

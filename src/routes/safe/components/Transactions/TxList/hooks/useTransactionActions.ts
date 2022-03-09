@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux'
 import { isCustomTxInfo, isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
+import useShouldSwitchWalletChain from 'src/logic/hooks/useShouldSwitchWalletChain'
 import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
 import { extractSafeAddress } from 'src/routes/routes'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { AppReduxState } from 'src/store'
 import { TxLocationContext } from '../TxLocationProvider'
 
@@ -24,8 +24,8 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   const { account } = useOnboard()
   const currentUser = account.address
   const safeAddress = extractSafeAddress()
-  const isUserAnOwner = useSelector(grantedSelector)
-  const isWrongChain = useSelector(shouldSwitchWalletChain)
+  const isUserAnOwner = useIsGranted()
+  const isWrongChain = useShouldSwitchWalletChain()
   const { txLocation } = useContext(TxLocationContext)
   const transactionsByNonce = useSelector((state: AppReduxState) =>
     getTransactionsByNonce(state, (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? -1),

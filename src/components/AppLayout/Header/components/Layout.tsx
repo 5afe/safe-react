@@ -16,8 +16,7 @@ import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
-import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
-import { useSelector } from 'react-redux'
+import useShouldSwitchWalletChain from 'src/logic/hooks/useShouldSwitchWalletChain'
 
 const styles = () => ({
   root: {
@@ -90,7 +89,7 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const isWrongChain = useSelector(shouldSwitchWalletChain)
+  const isWrongChain = useShouldSwitchWalletChain()
 
   return (
     <Row className={classes.summary}>

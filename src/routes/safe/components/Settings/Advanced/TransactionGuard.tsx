@@ -2,14 +2,13 @@ import { Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import { useState, Fragment } from 'react'
-import { useSelector } from 'react-redux'
 
 import { generateColumns } from './dataFetcher'
 import { RemoveGuardModal } from './RemoveGuardModal'
 import { useStyles } from './style'
 
 import ButtonHelper from 'src/components/ButtonHelper'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
@@ -30,7 +29,7 @@ export const TransactionGuard = ({ address }: TransactionGuardProps): React.Reac
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
 
   const [viewRemoveGuardModal, setViewRemoveGuardModal] = useState(false)
   const hideRemoveGuardModal = () => setViewRemoveGuardModal(false)

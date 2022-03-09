@@ -2,10 +2,9 @@ import { makeStyles } from '@material-ui/core/styles'
 // import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
 import { ReactElement } from 'react'
-import { useSelector } from 'react-redux'
 
 import Button from 'src/components/layout/Button'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import useIsGranted from 'src/logic/hooks/useIsGranted'
 import { fontColor, sm, xs } from 'src/theme/variables'
 
 const useStyles = makeStyles({
@@ -99,7 +98,7 @@ const useStyles = makeStyles({
 } as any)
 
 const Item = ({ data, onSend }): ReactElement => {
-  const granted = useSelector(grantedSelector)
+  const granted = useIsGranted()
   const classes = useStyles({ backgroundColor: data.color, granted })
 
   return (

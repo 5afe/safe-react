@@ -10,12 +10,13 @@ import { shouldSwitchWalletChain } from 'src/logic/wallets/onboard/selectors'
 
 import { currentSafe, currentSafeBalances } from 'src/logic/safe/store/selectors'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
-import { getOnboardState } from 'src/logic/wallets/onboard'
 
 export const grantedSelector = createSelector(
-  [currentSafe, shouldSwitchWalletChain, () => getOnboardState()],
-  (safe: SafeRecord, isWrongChain: boolean, { account }: ReturnType<typeof getOnboardState>): boolean => {
-    return isUserAnOwner(safe, account.address) && !isWrongChain
+  currentSafe,
+  shouldSwitchWalletChain,
+  (_, { account }) => account.address,
+  (safe: SafeRecord, isWrongChain: boolean, address: string): boolean => {
+    return isUserAnOwner(safe, address) && !isWrongChain
   },
 )
 
