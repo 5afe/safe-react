@@ -6,6 +6,7 @@ import { InlineEthHashInfo, InlinePrefixedEthHashInfo, StyledGridRow } from './s
 import { getExplorerInfo } from 'src/config'
 import { getByteLength } from 'src/utils/getByteLength'
 import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
+import { HexEncodedData } from 'src/routes/safe/components/Transactions/TxList/HexEncodedData'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -23,7 +24,7 @@ const ValueWrapper = styled.div`
 
 type TxDataRowType = {
   children?: ReactNode
-  inlineType?: 'hash' | 'rawData' | 'address'
+  inlineType?: 'hash' | 'rawData' | 'address' | 'bytes'
   hasExplorer?: boolean
   title: string
   value?: string | null
@@ -46,7 +47,7 @@ const generateInlineTypeValue = (
           hash={value}
           shortenHash={8}
           showCopyBtn
-          explorerUrl={hasExplorer ? getExplorerInfo(value) : undefined}
+          explorerUrl={getExplorerInfo(value)}
         />
       )
     case 'hash':
@@ -66,6 +67,8 @@ const generateInlineTypeValue = (
           <CopyToClipboardBtn textToCopy={value} />
         </FlexWrapper>
       )
+    case 'bytes':
+      return <HexEncodedData limit={60} hexData={value} />
   }
   return null
 }
@@ -91,8 +94,8 @@ export const TxDataRow = ({
           <Value method={method} type={paramType} value={value} />
         </ValueWrapper>
       )}
-      {generateInlineTypeValue(inlineType, value, hasExplorer)}
-      {!inlineType && !isArray && value && (
+      {!isArray && generateInlineTypeValue(inlineType, value, hasExplorer)}
+      {!isArray && !inlineType && value && (
         <Text size="xl" as="span">
           {value}
         </Text>

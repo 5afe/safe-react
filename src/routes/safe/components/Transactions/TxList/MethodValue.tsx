@@ -31,6 +31,11 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
           const key = `${parentId}-value-${index}`
           return Array.isArray(currentValue) ? (
             <Text key={key} size="xl" as="span">
+              {index > 0 && (
+                <>
+                  ,<br />
+                </>
+              )}
               {getArrayValue(key, currentValue)}
             </Text>
           ) : (
