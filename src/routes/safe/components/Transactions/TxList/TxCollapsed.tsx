@@ -24,7 +24,7 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-import { getTxTo, isAwaitingExecution } from './utils'
+import { getCollapsedTypeText, getTxTo, isAwaitingExecution } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
@@ -44,6 +44,8 @@ const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
       case 'SWAP_OWNER':
       case 'CHANGE_THRESHOLD':
       case 'CHANGE_IMPLEMENTATION':
+      case 'SET_GUARD' as any:
+      case 'DELETE_GUARD' as any:
         break
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
@@ -135,7 +137,7 @@ export const TxCollapsed = ({
         address={toAddress?.value || '0x'}
         iconUrl={type.icon || toInfo?.logoUri || undefined}
         iconUrlFallback={type.fallbackIcon}
-        text={type.text || toInfo?.name || undefined}
+        text={getCollapsedTypeText(transaction.txInfo) || toInfo?.name || undefined}
       />
     </div>
   )

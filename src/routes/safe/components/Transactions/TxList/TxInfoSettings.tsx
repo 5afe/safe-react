@@ -1,4 +1,4 @@
-import { SettingsChange } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SettingsChange, SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement } from 'react'
 
 import { AddressInfo } from './AddressInfo'
@@ -85,7 +85,21 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
         </InfoDetails>
       )
     }
+    case 'SET_GUARD' as any: {
+      return (
+        <InfoDetails title="Set guard:">
+          <AddressInfo
+            address={(settingsInfo as any).guard.value}
+            name={(settingsInfo as any).guard?.name || undefined}
+            avatarUrl={(settingsInfo as any).guard?.logoUri || undefined}
+          />
+        </InfoDetails>
+      )
+    }
+    case 'DELETE_GUARD' as any: {
+      return <InfoDetails title="Guard deleted">{null}</InfoDetails>
+    }
     default:
-      return null
+      return <InfoDetails title={(settingsInfo as SettingsInfo).type}>{null}</InfoDetails>
   }
 }
