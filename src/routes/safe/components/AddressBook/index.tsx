@@ -244,6 +244,14 @@ const AddressBookTable = (): ReactElement => {
                                 explorerUrl={getExplorerInfo(row[column.id])}
                               />
                             </Block>
+                          ) : column.id == AB_NAME_ID ? (
+                            row[AB_NAME_ID] ? (
+                              row[AB_NAME_ID]
+                            ) : (
+                              `${row[AB_ADDRESS_ID].toString().slice(0, 6)}...${row[AB_ADDRESS_ID].toString().slice(
+                                -6,
+                              )}`
+                            )
                           ) : (
                             row[column.id]
                           )}
