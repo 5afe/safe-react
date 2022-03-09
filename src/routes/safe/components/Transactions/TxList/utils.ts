@@ -2,7 +2,7 @@ import {
   AddressEx,
   TransactionInfo,
   Transfer,
-  TokenType,
+  TransactionTokenType,
   TransactionDetails,
   MultisigExecutionDetails,
   MultisigExecutionInfo,
@@ -54,7 +54,7 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
   }
 
   switch (txInfo.transferInfo.type) {
-    case TokenType.ERC20:
+    case TransactionTokenType.ERC20:
       return getAmountWithSymbol(
         {
           decimals: `${txInfo.transferInfo.decimals ?? 0}`,
@@ -63,10 +63,10 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
         },
         formatted,
       )
-    case TokenType.ERC721:
+    case TransactionTokenType.ERC721:
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${txInfo.transferInfo.tokenSymbol} ${getTokenIdLabel(txInfo.transferInfo)}`
-    case TokenType.NATIVE_COIN: {
+    case TransactionTokenType.NATIVE_COIN: {
       const nativeCurrency = getNativeCurrency()
       return getAmountWithSymbol(
         {
@@ -91,13 +91,13 @@ type txTokenData = {
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
   const nativeCurrency = getNativeCurrency()
   switch (txInfo.transferInfo.type) {
-    case TokenType.ERC20:
+    case TransactionTokenType.ERC20:
       return {
         address: txInfo.transferInfo.tokenAddress,
         value: txInfo.transferInfo.value,
         decimals: txInfo.transferInfo.decimals,
       }
-    case TokenType.ERC721:
+    case TransactionTokenType.ERC721:
       return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
       return {
