@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement, useEffect } from 'react'
+import { CSSProperties, ReactElement } from 'react'
 import Skeleton from '@material-ui/lab/Skeleton'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,9 +10,10 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
-import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
 
-const HIDE_PAIRING_STYLE = '.bn-onboard-modal-select-wallets li:first-of-type {display: none;}'
+// Hides first wallet in Onboard modal (pairing module)
+import 'src/components/AppLayout/Header/components/ProviderDetails/hidePairingModule.css'
+import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
 
 const StyledDivider = styled(Divider)`
   width: calc(100% + 40px);
@@ -30,17 +31,6 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
   const uri = useGetPairingUri()
   const isPairingLoaded = isPairingModule()
   usePairing()
-
-  // Hides first wallet in Onboard modal (pairing module)
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.innerHTML = HIDE_PAIRING_STYLE
-    document.head.appendChild(style)
-
-    return () => {
-      style.remove()
-    }
-  }, [])
 
   return (
     <>
