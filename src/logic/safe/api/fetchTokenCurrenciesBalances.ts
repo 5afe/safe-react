@@ -98,6 +98,9 @@ async function fetchTokensWithRetriesAndAlternate(address: string) {
     if (fulfilled) {
       const successful = fulfilled as PromiseFulfilledResult<TokenAPIResult>
       return successful.value.result
+    } else {
+      const rejected = results as PromiseRejectedResult[]
+      console.warn('Could not fetch tokens', rejected[0].reason, rejected[1].reason)
     }
   }
 
@@ -126,7 +129,8 @@ async function fetchPrices(): Promise<Record<string, number>> {
       collection[entry.symbol.toUpperCase()] = entry.derivedCUSD
       return collection
     }, {})
-  } catch {
+  } catch (e) {
+    console.error('Could not fetch prices from ubeswap subgraph', e)
     return {}
   }
 }
