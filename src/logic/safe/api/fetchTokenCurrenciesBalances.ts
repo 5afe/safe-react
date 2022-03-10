@@ -63,7 +63,12 @@ async function getTokenBalances(address: string, selectedCurrency: string, exclu
     }
   })
 }
-interface BlockscoutTokenBalance {
+
+interface BlockScoutApiResult<T> {
+  message: string
+  result: T
+}
+interface BlockScoutTokenBalance {
   balance: string
   contractAddress: string
   decimals: string
@@ -73,19 +78,32 @@ interface BlockscoutTokenBalance {
 }
 
 async function fetchTokens(address: string) {
-  try {
-    const blockScoutEndpoint = `${getNetworkExplorerInfo().apiUrl}?module=account&action=tokenlist&address=${address}`
-    // retry once if it fails as gonza says that happens sometimes
-    const res = await fetch(blockScoutEndpoint).catch((e) => {
-      console.warn('Fetch error', e)
-      return fetch(blockScoutEndpoint)
-    })
-    const tokenBalances: BlockscoutTokenBalance[] = (await res.json()).result
+  const tokenBalances = await fetchTokensWithRetriesAndAlternate(address)
+  return tokenBalances
+}
 
-    return tokenBalances
-  } catch (e) {
-    console.error('fetching tokens from blockscout failed twice', e)
+type TokenAPIResult = BlockScoutApiResult<BlockScoutTokenBalance[]>
+
+async function fetchTokensWithRetriesAndAlternate(address: string) {
+  const blockScoutEndpoint = `${getNetworkExplorerInfo().apiUrl}?module=account&action=tokenlist&address=${address}`
+
+  for (let i = 0; i < 3; i++) {
+    const results = await Promise.allSettled<[Promise<TokenAPIResult>, Promise<TokenAPIResult>]>([
+      fetch(blockScoutEndpoint).then((res) => res.json()),
+      fetch(`https://rc1-blockscout.celo-testnet.org/api?module=account&action=tokenlist&address=${address}`).then(
+        (res) => res.json(),
+      ),
+    ])
+    const fulfilled = results.find((result) => result.status === 'fulfilled')
+    if (fulfilled) {
+      const successful = fulfilled as PromiseFulfilledResult<TokenAPIResult>
+      return successful.value.result
+    }
   }
+
+  console.error('fetching tokens failed')
+
+  return []
 }
 
 interface PriceInfo {
@@ -99,12 +117,16 @@ const tokensQuery = `query { tokens(number_gte: 11749000) {
 }}`
 
 async function fetchPrices(): Promise<Record<string, number>> {
-  const { tokens } = await request<{ tokens: PriceInfo[] }>(
-    'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap',
-    tokensQuery,
-  )
-  return tokens.reduce((collection, entry) => {
-    collection[entry.symbol.toUpperCase()] = entry.derivedCUSD
-    return collection
-  }, {})
+  try {
+    const { tokens } = await request<{ tokens: PriceInfo[] }>(
+      'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap',
+      tokensQuery,
+    )
+    return tokens.reduce((collection, entry) => {
+      collection[entry.symbol.toUpperCase()] = entry.derivedCUSD
+      return collection
+    }, {})
+  } catch {
+    return {}
+  }
 }
