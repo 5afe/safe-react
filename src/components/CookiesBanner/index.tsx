@@ -245,6 +245,8 @@ const CookiesBanner = isDesktop
         cookiesAnalytics: boolean,
       ): void => {
         closeBanner()
+        cookiesSupportAndUpdates ? loadBeamer() : unloadBeamer()
+        cookiesAnalytics ? loadGoogleAnalytics() : unloadGoogleAnalytics()
         saveNewCookieState(cookiesNecessary, cookiesSupportAndUpdates, cookiesAnalytics)
 
         setLocalNecessary(cookiesNecessary)
@@ -263,15 +265,13 @@ const CookiesBanner = isDesktop
         }
 
         const { acceptedNecessary, acceptedSupportAndUpdates, acceptedAnalytics } = cookiesState
+
+        acceptedSupportAndUpdates && loadBeamer()
+        acceptedAnalytics && loadGoogleAnalytics()
         setLocalNecessary(acceptedNecessary)
         setLocalSupportAndUpdates(acceptedSupportAndUpdates)
         setLocalAnalytics(acceptedAnalytics)
       }, [setLocalNecessary, setLocalSupportAndUpdates, setLocalAnalytics, openBanner])
-
-      // Load or unload analytics depending on user choice
-      useEffect(() => {
-        localAnalytics ? loadGoogleAnalytics() : unloadGoogleAnalytics()
-      }, [localAnalytics])
 
       // Toggle Intercom
       useEffect(() => {
@@ -284,11 +284,6 @@ const CookiesBanner = isDesktop
           !isIntercomLoaded() && loadIntercom()
         }
       }, [localSupportAndUpdates, isSafeAppView])
-
-      // Toggle Beamer
-      useEffect(() => {
-        localSupportAndUpdates ? loadBeamer() : unloadBeamer()
-      }, [localSupportAndUpdates])
 
       return (
         <>
