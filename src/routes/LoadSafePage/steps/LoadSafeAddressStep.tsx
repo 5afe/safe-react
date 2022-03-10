@@ -201,8 +201,7 @@ function LoadSafeAddressStep(): ReactElement {
           <StyledLink href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </StyledLink>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          .
         </Paragraph>
       </Block>
     </Container>
