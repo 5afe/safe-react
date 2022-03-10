@@ -53,7 +53,7 @@ const Appearance = (): ReactElement => {
     <>
       <Container>
         <Heading tag="h2">Use Chain-Specific Addresses</Heading>
-        <Paragraph>You can choose whether to prepend EIP-3770 short chain names accross Safes.</Paragraph>
+        <Paragraph>You can choose whether to prepend EIP-3770 short chain names across Safes.</Paragraph>
         <StyledPrefixedEthHashInfo hash={safeAddress} />
         <FormGroup>
           <FormControlLabel

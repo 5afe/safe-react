@@ -96,16 +96,15 @@ function NameNewSafeStep(): ReactElement {
       </FieldContainer>
       <Block margin="lg">
         <Paragraph color="primary" noMargin size="lg">
-          By continuing you consent with the{' '}
+          By continuing you consent to the{' '}
           <Link href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
-          </Link>{' '}
-          and{' '}
+          </Link>
+          {' and '}
           <Link href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </Link>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          .
         </Paragraph>
       </Block>
     </BlockWithPadding>
