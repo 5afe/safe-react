@@ -27,11 +27,11 @@ export const fetchTokenCurrenciesBalances = async ({
 }: FetchTokenCurrenciesBalancesProps): Promise<BalanceEndpoint> => {
   const address = checksumAddress(safeAddress)
 
-  const items = await toItems(address, selectedCurrency, excludeSpamTokens)
+  const tokens = await getTokenBalances(address, selectedCurrency, excludeSpamTokens)
 
   return {
-    fiatTotal: items.reduce((sum, token) => sum + Number(token.fiatBalance), 0).toString(),
-    items: items.sort((a, b) => {
+    fiatTotal: tokens.reduce((sum, token) => sum + Number(token.fiatBalance), 0).toString(),
+    items: tokens.sort((a, b) => {
       return a.fiatBalance < b.fiatBalance ? 1 : -1
     }),
   }
@@ -39,7 +39,7 @@ export const fetchTokenCurrenciesBalances = async ({
 const WEI_PER = 1_000_000_000_000_000_000
 const exchangeRate = 1
 
-async function toItems(address: string, selectedCurrency: string, excludeSpamTokens: boolean) {
+async function getTokenBalances(address: string, selectedCurrency: string, excludeSpamTokens: boolean) {
   const [tokens, prices] = await Promise.all([fetchTokens(address), fetchPrices()])
 
   const filteredTokens = excludeSpamTokens ? tokens.filter((token) => !/doge/i.test(token.name)) : tokens
@@ -63,7 +63,12 @@ async function toItems(address: string, selectedCurrency: string, excludeSpamTok
     }
   })
 }
-interface BlockscoutTokenBalance {
+
+interface BlockScoutApiResult<T> {
+  message: string
+  result: T
+}
+interface BlockScoutTokenBalance {
   balance: string
   contractAddress: string
   decimals: string
@@ -73,15 +78,35 @@ interface BlockscoutTokenBalance {
 }
 
 async function fetchTokens(address: string) {
-  const blockScoutEndpoint = `${getNetworkExplorerInfo().apiUrl}?module=account&action=tokenlist&address=${address}`
-  // retry once if it fails as gonza says that happens sometimes
-  const res = await fetch(blockScoutEndpoint).catch((e) => {
-    console.warn('Fetch error', e)
-    return fetch(blockScoutEndpoint)
-  })
-  const tokenBalances: BlockscoutTokenBalance[] = (await res.json()).result
-
+  const tokenBalances = await fetchTokensWithRetriesAndAlternate(address)
   return tokenBalances
+}
+
+type TokenAPIResult = BlockScoutApiResult<BlockScoutTokenBalance[]>
+
+async function fetchTokensWithRetriesAndAlternate(address: string) {
+  const blockScoutEndpoint = `${getNetworkExplorerInfo().apiUrl}?module=account&action=tokenlist&address=${address}`
+
+  for (let i = 0; i < 3; i++) {
+    const results = await Promise.allSettled<[Promise<TokenAPIResult>, Promise<TokenAPIResult>]>([
+      fetch(blockScoutEndpoint).then((res) => res.json()),
+      fetch(`https://rc1-blockscout.celo-testnet.org/api?module=account&action=tokenlist&address=${address}`).then(
+        (res) => res.json(),
+      ),
+    ])
+    const fulfilled = results.find((result) => result.status === 'fulfilled')
+    if (fulfilled) {
+      const successful = fulfilled as PromiseFulfilledResult<TokenAPIResult>
+      return successful.value.result
+    } else {
+      const rejected = results as PromiseRejectedResult[]
+      console.warn('Could not fetch tokens', rejected[0].reason, rejected[1].reason)
+    }
+  }
+
+  console.error('fetching tokens failed')
+
+  return []
 }
 
 interface PriceInfo {
@@ -95,12 +120,17 @@ const tokensQuery = `query { tokens(number_gte: 11749000) {
 }}`
 
 async function fetchPrices(): Promise<Record<string, number>> {
-  const { tokens } = await request<{ tokens: PriceInfo[] }>(
-    'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap',
-    tokensQuery,
-  )
-  return tokens.reduce((collection, entry) => {
-    collection[entry.symbol.toUpperCase()] = entry.derivedCUSD
-    return collection
-  }, {})
+  try {
+    const { tokens } = await request<{ tokens: PriceInfo[] }>(
+      'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap',
+      tokensQuery,
+    )
+    return tokens.reduce((collection, entry) => {
+      collection[entry.symbol.toUpperCase()] = entry.derivedCUSD
+      return collection
+    }, {})
+  } catch (e) {
+    console.error('Could not fetch prices from ubeswap subgraph', e)
+    return {}
+  }
 }
