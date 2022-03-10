@@ -63,7 +63,7 @@ export const pendingTransactionsMiddleware =
         break
       }
 
-      case PROVIDER_ACTIONS.WALLET: {
+      case PROVIDER_ACTIONS.WALLET_NAME: {
         PendingTxMonitor.monitorAllTxs()
         break
       }

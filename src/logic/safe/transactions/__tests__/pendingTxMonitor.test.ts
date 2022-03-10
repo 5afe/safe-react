@@ -30,6 +30,7 @@ describe('PendingTxMonitor', () => {
           logs: [],
           status: true,
           logsBloom: '0x123',
+          effectiveGasPrice: 0,
         }),
       )
 
