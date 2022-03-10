@@ -1965,6 +1965,13 @@
     react-media "^1.10.0"
     web3-utils "^1.6.0"
 
+"@gnosis.pm/safe-react-gateway-sdk@^2.10.0":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.10.0.tgz#88e2307d21d548ea43dde8fa33630d3539e39741"
+  integrity sha512-P0A6XgjpEwCzZpk0vjLOYuaOmXL020khJF9FQRwCYPrllPUzrGjpm5gdqExNdnefrrDUKeWUumkucoXqBaMblA==
+  dependencies:
+    cross-fetch "^3.1.5"
+
 "@gnosis.pm/safe-react-gateway-sdk@^2.5.6":
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.7.4.tgz#3a1d96e30d10e4859579b558586fd25cd4ae3480"
@@ -1976,13 +1983,6 @@
   version "2.8.5"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.8.5.tgz#3b82b993ae64a5fde1a96a4b0c47a97514839055"
   integrity sha512-lrZ3gXzbNzIjIzYDs21d7I3fwwHi01YFnD+2+5Kuy0+fJAiONYXih2Z9Q4h3RS/AgzTHfL+G7WB6XB0V8GMVCQ==
-  dependencies:
-    isomorphic-unfetch "^3.1.0"
-
-"@gnosis.pm/safe-react-gateway-sdk@^2.8.6":
-  version "2.8.6"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.8.6.tgz#842c1f40ed6bd9164965836d7c4abcfe0a009af2"
-  integrity sha512-XPDOGQtUc1AON/xM4y5mGWMQ/VVaajRXVEdVmKCWOboK0bk1spkuD5oyo9hF0SB3f+lClIagb9PojOurjjWogw==
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
@@ -7397,6 +7397,13 @@ cross-fetch@^2.1.0:
   dependencies:
     node-fetch "2.6.1"
     whatwg-fetch "2.0.4"
+
+cross-fetch@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
+  integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
+  dependencies:
+    node-fetch "2.6.7"
 
 cross-spawn@6.0.5, cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
@@ -14083,6 +14090,13 @@ node-fetch@2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
+
+node-fetch@2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
+  integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
 
 node-fetch@^2.6.0, node-fetch@^2.6.1:
   version "2.6.5"
