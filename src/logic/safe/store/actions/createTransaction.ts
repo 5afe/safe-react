@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import onboard, { checkWallet } from 'src/logic/wallets/onboard'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3, isHardwareWallet, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -126,7 +126,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
+    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId } = this
 
     errorCallback?.()
 
@@ -159,7 +159,7 @@ export class TxSender {
             txArgs.sigs,
           )
           .encodeABI()
-      : txHash && safeInstance.methods.approveHash(txHash).encodeABI()
+      : this.txHash && safeInstance.methods.approveHash(this.txHash).encodeABI()
 
     if (!executeData) {
       return
@@ -177,13 +177,14 @@ export class TxSender {
     }
   }
 
-  async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
+  async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
+    const { wallet } = onboard().getState()
 
     return await tryOffChainSigning(
       safeTxHash,
       { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
-      hardwareWallet,
+      isHardwareWallet(wallet),
       safeVersion,
     )
   }
@@ -207,25 +208,23 @@ export class TxSender {
       .then(({ transactionHash }) => transactionHash)
   }
 
-  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+  async canSignOffchain(): Promise<boolean> {
     const { isFinalization, safeVersion } = this
-    const { smartContractWallet } = providerSelector(state)
 
-    return checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+    const isSmartContract = await isSmartContractWallet(this.from)
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmartContract, safeVersion)
   }
 
   async submitTx(
-    state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
-    const isOffchain = await this.canSignOffchain(state)
+    const isOffchain = await this.canSignOffchain()
 
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
       try {
-        const { hardwareWallet } = providerSelector(state)
-        const signature = await this.onlyConfirm(hardwareWallet)
+        const signature = await this.onlyConfirm()
 
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
@@ -337,6 +336,6 @@ export const createTransaction = (
     sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
     // Start the creation
-    sender.submitTx(state, confirmCallback, errorCallback)
+    sender.submitTx(confirmCallback, errorCallback)
   }
 }

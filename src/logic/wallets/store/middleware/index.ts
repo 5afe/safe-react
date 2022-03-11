@@ -9,10 +9,8 @@ import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ProviderPayloads } from 'src/logic/wallets/store/reducer'
 import { providerSelector } from '../selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { isSmartContractWallet } from 'src/logic/wallets/getWeb3'
-import { updateProviderSmartContract } from 'src/logic/wallets/store/actions/updateProviderSmartContract'
 
-let hasWallet = false
+let hasName = false
 let hasAccount = false
 let hasNetwork = false
 
@@ -26,22 +24,17 @@ const providerMiddleware =
 
     // Onboard sends provider details via separate subscriptions: wallet, account, network
     // Payloads from all three need to be combined to be `loaded` and `available`
-    if (type === PROVIDER_ACTIONS.WALLET) {
-      // Wallet has name, hardware/smart contract wallet flag set
-      hasWallet = Object.values(payload).some(Boolean)
+    if (type === PROVIDER_ACTIONS.WALLET_NAME) {
+      hasName = !!payload
     } else if (type === PROVIDER_ACTIONS.ACCOUNT) {
       hasAccount = !!payload
-
-      // Check if wallet is smart contract
-      const smartContractWallet = typeof payload === 'string' ? await isSmartContractWallet(payload) : false
-      store.dispatch(updateProviderSmartContract(smartContractWallet))
     } else if (type === PROVIDER_ACTIONS.NETWORK) {
       hasNetwork = !!payload
     } else {
       return handledAction
     }
 
-    if (!hasWallet || !hasAccount || !hasNetwork) {
+    if (!hasName || !hasAccount || !hasNetwork) {
       return handledAction
     }
 

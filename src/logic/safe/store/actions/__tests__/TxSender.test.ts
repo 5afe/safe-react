@@ -26,8 +26,6 @@ jest.mock('bnc-onboard', () => () => ({
       provider: {
         name: 'MetaMask',
         account: '0x123',
-        hardwareWallet: false,
-        smartContractWallet: false,
         network: '4',
         available: true,
         loaded: true,
@@ -123,8 +121,6 @@ describe('TxSender', () => {
     jest.spyOn(walletSelectors, 'providerSelector').mockImplementation(() => ({
       name: 'MetaMask',
       account: '0x123',
-      hardwareWallet: false,
-      smartContractWallet: false,
       network: '4',
       available: true,
       loaded: true,
@@ -172,7 +168,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
@@ -209,7 +205,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
@@ -264,7 +260,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)
@@ -316,7 +312,7 @@ describe('TxSender', () => {
       sigs: '',
     }
 
-    sender.submitTx(store.getState())
+    sender.submitTx()
 
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)
