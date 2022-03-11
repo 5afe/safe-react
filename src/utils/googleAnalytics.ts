@@ -134,7 +134,9 @@ export const loadGoogleAnalytics = (): void => {
 }
 
 export const unloadGoogleAnalytics = (): void => {
-  removeCookies(GA_COOKIE_LIST)
+  if (analyticsLoaded) {
+    removeCookies(GA_COOKIE_LIST)
+  }
 }
 
 type UseAnalyticsResponse = {
