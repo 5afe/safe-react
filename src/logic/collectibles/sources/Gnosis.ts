@@ -1,4 +1,4 @@
-import { SafeCollectibleResponse, TransactionTokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SafeCollectibleResponse, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -12,7 +12,7 @@ type TokenResult = {
   logoUri: string
   name: string
   symbol: string
-  type: TransactionTokenType
+  type: TokenType
 }
 
 type FetchResult = {
@@ -27,7 +27,7 @@ class Gnosis {
       logoUri,
       name: tokenName,
       symbol: tokenSymbol,
-      type: TransactionTokenType.ERC721,
+      type: TokenType.ERC721,
     }))
 
     return assets
