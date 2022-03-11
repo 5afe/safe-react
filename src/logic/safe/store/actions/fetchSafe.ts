@@ -95,14 +95,14 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      dispatch(fetchSafeTokens(safeAddress))
+      dispatch(fetchSafeTokens(address))
 
       if (shouldUpdateCollectibles || isInitialLoad) {
-        dispatch(fetchCollectibles(safeAddress))
+        dispatch(fetchCollectibles(address))
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
-        dispatch(fetchTransactions(chainId, safeAddress))
+        dispatch(fetchTransactions(chainId, address))
       }
 
       if (isInitialLoad) {
