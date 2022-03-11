@@ -43,15 +43,12 @@ export const loadBeamer = async (): Promise<void> => {
   scriptRef.addEventListener('load', () => window.Beamer?.init(), { once: true })
 }
 
-const closeBeamer = (): void => {
+export const unloadBeamer = (): void => {
   if (!window.Beamer || !scriptRef) return
+
   window.Beamer.destroy()
   scriptRef.remove()
   scriptRef = null
-}
-
-export const unloadBeamer = (): void => {
-  closeBeamer()
 
   setTimeout(() => {
     local.removeMatching(BEAMER_LS_RE)
