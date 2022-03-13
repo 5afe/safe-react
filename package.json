@@ -39,7 +39,9 @@
     "test:ci": "REACT_APP_ENV=test yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand --outputFile=jest.results.json",
     "update-mocks": "./scripts/update-mocks.sh",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
@@ -170,6 +172,7 @@
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
+    "cypress": "^9.5.1",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "eslint": "^7.32.0",
