@@ -114,7 +114,7 @@ const CookiesBannerForm = (props: {
       <div className={classes.content}>
         {key && (
           <div className={classes.intercomAlert}>
-            <img src={AlertRedIcon} />
+            <img src={AlertRedIcon} alt="" />
             {COOKIE_ALERTS[key]}
           </div>
         )}
@@ -176,6 +176,7 @@ const CookiesBannerForm = (props: {
 const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement => {
   return (
     <img
+      alt="Open Intercom"
       style={{
         position: 'fixed',
         cursor: 'pointer',
@@ -204,14 +205,17 @@ const CookiesBanner = isDesktop
       const { cookieBannerOpen } = useSelector(cookieBannerState)
       const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
 
-      const openBanner = useCallback((): void => {
-        dispatch(
-          openCookieBanner({
-            cookieBannerOpen: true,
-            key: COOKIE_IDS.INTERCOM,
-          }),
-        )
-      }, [dispatch])
+      const openBanner = useCallback(
+        (key?: COOKIE_IDS): void => {
+          dispatch(
+            openCookieBanner({
+              cookieBannerOpen: true,
+              key,
+            }),
+          )
+        },
+        [dispatch],
+      )
 
       const closeBanner = useCallback((): void => {
         dispatch(closeCookieBanner())
@@ -260,6 +264,7 @@ const CookiesBanner = isDesktop
         }
 
         const { acceptedNecessary, acceptedSupportAndUpdates, acceptedAnalytics } = cookiesState
+
         setLocalNecessary(acceptedNecessary)
         setLocalSupportAndUpdates(acceptedSupportAndUpdates)
         setLocalAnalytics(acceptedAnalytics)
@@ -290,7 +295,9 @@ const CookiesBanner = isDesktop
       return (
         <>
           {/* A fake Intercom button before Intercom is loaded */}
-          {!localSupportAndUpdates && !isSafeAppView && <FakeIntercomButton onClick={openBanner} />}
+          {!localSupportAndUpdates && !isSafeAppView && (
+            <FakeIntercomButton onClick={() => openBanner(COOKIE_IDS.INTERCOM)} />
+          )}
 
           {/* The cookie banner itself */}
           {cookieBannerOpen && (

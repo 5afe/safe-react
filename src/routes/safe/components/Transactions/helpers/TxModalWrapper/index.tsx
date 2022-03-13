@@ -112,8 +112,8 @@ export const TxModalWrapper = ({
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
   const isCreation = isMultisigCreation(confirmationsLen, txType)
-  const isSmart = useIsSmartContractWallet(userAddress)
-  const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmart, safeVersion)
+  const isSmartContract = useIsSmartContractWallet(userAddress)
+  const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
 
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
 

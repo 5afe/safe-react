@@ -7,6 +7,7 @@ import { camelCaseToSpaces } from 'src/utils/camelCaseToSpaces'
 import {
   isAddress,
   isArrayParameter,
+  isByte,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
 const TxInfo = styled.div`
@@ -24,7 +25,7 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
 
       {data.parameters?.map((param, index) => {
         const isArrayValueParam = isArrayParameter(param.type) || Array.isArray(param.value)
-        const inlineType = !isArrayValueParam && isAddress(param.type) ? 'address' : undefined
+        const inlineType = isAddress(param.type) ? 'address' : isByte(param.type) ? 'bytes' : undefined
         return (
           <TxDataRow
             key={`${data.method}_param-${index}`}

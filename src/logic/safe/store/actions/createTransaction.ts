@@ -125,7 +125,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
+    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId } = this
 
     errorCallback?.()
 
@@ -158,7 +158,7 @@ export class TxSender {
             txArgs.sigs,
           )
           .encodeABI()
-      : txHash && safeInstance.methods.approveHash(txHash).encodeABI()
+      : this.txHash && safeInstance.methods.approveHash(this.txHash).encodeABI()
 
     if (!executeData) {
       return

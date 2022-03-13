@@ -71,6 +71,7 @@ export const isSmartContract = async (account: string, chainId: ChainId): Promis
   try {
     contractCode = await getWeb3ReadOnly(chainId).eth.getCode(account)
   } catch (e) {
+    console.log('e', e)
     // ignore
   }
 

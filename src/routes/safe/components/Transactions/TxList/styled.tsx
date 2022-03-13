@@ -520,7 +520,7 @@ export const StyledGridRow = styled.div`
   grid-template-columns: 1fr 2.5fr;
   gap: ${md};
   justify-content: flex-start;
-  max-width: 800px;
+  max-width: 900px;
 
   & > * {
     flex-shrink: 0;
