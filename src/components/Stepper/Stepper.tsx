@@ -20,7 +20,7 @@ type StepperProps = {
   disableNextButton?: boolean
   nextButtonType?: string
   testId?: string
-  trackingId?: string
+  trackingCategory?: string
 }
 
 function StepperComponent(): ReactElement {
@@ -36,7 +36,7 @@ function StepperComponent(): ReactElement {
     nextButtonType,
 
     testId,
-    trackingId,
+    trackingCategory,
   } = useStepper()
 
   return (
@@ -59,8 +59,6 @@ function StepperComponent(): ReactElement {
         const customNextButtonLabel = currentComponent.props.nextButtonLabel
 
         const nextButtonLabel = customNextButtonLabel || 'Next'
-
-        const trackingPayload = { step: currentStep }
 
         const backButton = (
           <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
@@ -93,12 +91,20 @@ function StepperComponent(): ReactElement {
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
-                    {trackingId ? (
+                    {trackingCategory ? (
                       <>
-                        <Track id={trackingId} desc={isFirstStep ? 'Cancel' : 'Back'} payload={trackingPayload}>
+                        <Track
+                          category={trackingCategory}
+                          action={isFirstStep ? 'Cancel' : 'Go back a step'}
+                          {...(!isFirstStep && { label: currentStep })}
+                        >
                           {backButton}
                         </Track>
-                        <Track id={trackingId} desc={isLastStep ? 'Finish' : 'Next'} payload={trackingPayload}>
+                        <Track
+                          category={trackingCategory}
+                          action={isLastStep ? 'Finish' : 'Go forward a step'}
+                          {...(!isFirstStep && { label: currentStep })}
+                        >
                           {nextButton}
                         </Track>
                       </>

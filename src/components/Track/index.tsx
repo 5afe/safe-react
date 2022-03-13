@@ -1,14 +1,12 @@
-import { ReactElement, Fragment, ComponentProps } from 'react'
+import { ReactElement, Fragment } from 'react'
 
-import { getTrackDataLayer } from 'src/utils/googleTagManager'
-
-export type TrackingEvents = Record<string, Omit<ComponentProps<typeof Track>, 'children'>>
+import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
 
 type Props = {
   children: ReactElement
-  id: string
-  desc: string
-  payload?: Record<string, string | number | boolean | null>
+  category: string
+  action: string // key
+  label?: string | number | boolean // value
 }
 
 const Track = ({ children, ...trackData }: Props): typeof children => {
@@ -16,7 +14,16 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
     throw new Error('Fragments cannot be tracked.')
   }
 
-  return <div {...getTrackDataLayer(trackData)}>{children}</div>
+  const event = {
+    event: GTM_EVENT.CLICK,
+    ...trackData,
+  }
+
+  return (
+    <div data-track={`${event.category}: ${event.action}`} onClick={() => trackEvent(event)}>
+      {children}
+    </div>
+  )
 }
 
 export default Track

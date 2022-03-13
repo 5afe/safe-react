@@ -40,8 +40,8 @@ import { getShortName } from 'src/config'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { LOAD_SAFE_TRACKING_EVENTS, LOAD_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
-import { trackEventGTM } from 'src/utils/googleTagManager'
+import { LOAD_SAFE_CATEGORY, LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { trackEvent, GTM_EVENT } from 'src/utils/googleTagManager'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -91,13 +91,26 @@ function Load(): ReactElement {
       return
     }
 
+    // Track number of owners
+    trackEvent({
+      event: GTM_EVENT.META,
+      ...LOAD_SAFE_EVENTS.OWNERS,
+      label: values[FIELD_SAFE_OWNER_LIST].length,
+    })
+
     const threshold = values[FIELD_SAFE_THRESHOLD]
-    trackEventGTM({
-      ...LOAD_SAFE_TRACKING_EVENTS.LOAD,
-      payload: {
-        owners: values[FIELD_SAFE_OWNER_LIST].length,
-        ...(threshold && { threshold }),
-      },
+    if (threshold) {
+      // Track threshold
+      trackEvent({
+        event: GTM_EVENT.META,
+        ...LOAD_SAFE_EVENTS.THRESHOLD,
+        label: threshold,
+      })
+    }
+
+    trackEvent({
+      event: GTM_EVENT.CLICK,
+      ...LOAD_SAFE_EVENTS.GO_TO_SAFE,
     })
 
     updateAddressBook(values)
@@ -135,7 +148,7 @@ function Load(): ReactElement {
           testId="load-safe-form"
           onSubmit={onSubmitLoadSafe}
           key={safeAddress}
-          trackingId={LOAD_SAFE_TRACKING_ID}
+          trackingCategory={LOAD_SAFE_CATEGORY}
         >
           {safeAddress && shortName ? null : (
             <StepFormElement label={selectNetworkStepLabel} nextButtonLabel="Continue">

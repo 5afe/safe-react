@@ -14,7 +14,7 @@ import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/interco
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
-import { loadGoogleTagManager } from 'src/utils/googleTagManager'
+import { loadGoogleTagManager, unloadGoogleTagManager } from 'src/utils/googleTagManager'
 import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
@@ -268,11 +268,9 @@ const CookiesBanner = isDesktop
         setLocalAnalytics(acceptedAnalytics)
       }, [setLocalNecessary, setLocalSupportAndUpdates, setLocalAnalytics, openBanner])
 
-      // Load or unload analytics depending on user choice
+      // Load or unload GTM depending on user choice
       useEffect(() => {
-        if (localAnalytics) {
-          loadGoogleTagManager()
-        }
+        localAnalytics ? loadGoogleTagManager() : unloadGoogleTagManager()
       }, [localAnalytics])
 
       // Toggle Intercom

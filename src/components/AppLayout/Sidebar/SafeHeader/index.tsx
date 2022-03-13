@@ -20,7 +20,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
 import Track from 'src/components/Track'
-import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/safeOverview'
+import { SAFE_OVERVIEW_EVENTS } from 'src/utils/events/safeOverview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
@@ -175,15 +175,15 @@ const SafeHeader = ({
         </StyledTextSafeName>
         <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
-          <Track {...SAFE_OVERVIEW_TRACKING_EVENTS.SHOW_QR}>
+          <Track {...SAFE_OVERVIEW_EVENTS.SHOW_QR}>
             <ButtonHelper onClick={onReceiveClick}>
               <Icon size="sm" type="qrCode" tooltip="Show QR code" />
             </ButtonHelper>
           </Track>
-          <Track {...SAFE_OVERVIEW_TRACKING_EVENTS.COPY_ADDRESS}>
+          <Track {...SAFE_OVERVIEW_EVENTS.COPY_ADDRESS}>
             <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
           </Track>
-          <Track {...SAFE_OVERVIEW_TRACKING_EVENTS.OPEN_EXPLORER}>
+          <Track {...SAFE_OVERVIEW_EVENTS.OPEN_EXPLORER}>
             <ExplorerButton explorerUrl={getExplorerInfo(address)} />
           </Track>
         </IconContainer>

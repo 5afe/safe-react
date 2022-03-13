@@ -31,8 +31,8 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
-import { trackEventGTM } from 'src/utils/googleTagManager'
-import { LOAD_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { trackEvent, GTM_EVENT } from 'src/utils/googleTagManager'
+import { LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -137,7 +137,10 @@ function LoadSafeAddressStep(): ReactElement {
     // On unmount, e.g. go back/next
     return () => {
       if (hasCustomSafeName) {
-        trackEventGTM(LOAD_SAFE_TRACKING_EVENTS.NAME)
+        trackEvent({
+          event: GTM_EVENT.META,
+          ...LOAD_SAFE_EVENTS.NAME_SAFE,
+        })
       }
     }
   }, [hasCustomSafeName])

@@ -8,7 +8,7 @@ import Block from 'src/components/layout/Block'
 import Link from 'src/components/layout/Link'
 import { LOAD_SAFE_ROUTE, OPEN_SAFE_ROUTE } from 'src/routes/routes'
 import Track from 'src/components/Track'
-import { CREATE_SAFE_TRACKING_EVENTS, LOAD_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { CREATE_SAFE_EVENTS, LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 function Welcome(): ReactElement {
   return (
@@ -31,7 +31,7 @@ function Welcome(): ReactElement {
                 <Text size="xl">Create a new Safe that is controlled by one or multiple owners.</Text>
                 <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
               </CardDescriptionContainer>
-              <Track {...CREATE_SAFE_TRACKING_EVENTS.WELCOME}>
+              <Track {...CREATE_SAFE_EVENTS.CREATE_BUTTON}>
                 <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
                   <Text size="xl" color="white">
                     + Create new Safe
@@ -51,7 +51,7 @@ function Welcome(): ReactElement {
                   Safe address.
                 </Text>
               </CardDescriptionContainer>
-              <Track {...LOAD_SAFE_TRACKING_EVENTS.WELCOME}>
+              <Track {...LOAD_SAFE_EVENTS.LOAD_BUTTON}>
                 <Button
                   variant="bordered"
                   iconType="safe"

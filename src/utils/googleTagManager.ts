@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
 import { Location } from 'history'
+import { useSelector } from 'react-redux'
 
 import { ADDRESSED_ROUTE, history, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
-
 import {
   GOOGLE_TAG_MANAGER_ID,
   GOOGLE_TAG_MANAGER_AUTH_LIVE,
@@ -12,9 +12,11 @@ import {
   IS_PRODUCTION,
   GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH,
 } from 'src/utils/constants'
-import { getChainInfo } from 'src/config'
+import { _getChainId } from 'src/config'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { Cookie, removeCookies } from 'src/logic/cookies/utils'
 
-const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
+export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
   const ANON_TX_ID = 'TRANSACTION_ID'
 
@@ -53,30 +55,17 @@ const GTM_ENV_AUTH: Record<GTMEnvironment, GTMEnvironmentArgs> = {
   },
 }
 
-enum GTM_EVENTS {
-  PAGE_VIEW = 'pageview',
-  TRACK = 'data-track-event',
-}
-
-export enum GTM_DATA_LAYER_VARS {
-  // Tracked with 'pageview'
-  PAGE = 'page',
-  TRACK = 'data-layer-track',
-}
-
-enum GTM_DATA_TRACK_VARS {
-  // Following are tracked alongside 'data-track-event'
-  ID = 'data-track-id',
-  DESC = 'data-track-desc',
-  CHAIN = 'data-track-chain',
-  PAYLOAD = 'data-track-payload',
+export enum GTM_EVENT {
+  PAGEVIEW = 'pageview',
+  CLICK = 'customClick',
+  META = 'metadata',
 }
 
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
   if (!GOOGLE_TAG_MANAGER_ID || !GTM_ENVIRONMENT.auth) {
-    console.warn('Unable to initialise Google Tag Manager. `id` or `gtm_auth` missing.')
+    console.warn('Unable to initialize Google Tag Manager. `id` or `gtm_auth` missing.')
     return
   }
 
@@ -85,20 +74,33 @@ export const loadGoogleTagManager = (): void => {
     ...GTM_ENVIRONMENT,
     dataLayer: {
       // Must emit (custom) event in order to trigger page tracking
-      event: GTM_EVENTS.PAGE_VIEW,
-      [GTM_DATA_LAYER_VARS.PAGE]: getAnonymizedLocation(),
+      event: GTM_EVENT.PAGEVIEW,
+      chainId: _getChainId(),
+      page: getAnonymizedLocation(),
     },
   })
 }
 
-export const useGTMPageTracking = (): void => {
+export const unloadGoogleTagManager = (): void => {
+  const GOOGLE_ANALYTICS_COOKIE_LIST: Cookie[] = [
+    { name: '_ga', path: '/' },
+    { name: '_gat', path: '/' },
+    { name: '_gid', path: '/' },
+  ]
+  removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
+}
+
+export const usePageTracking = (): void => {
+  const chainId = useSelector(currentChainId)
+
   useEffect(() => {
     const unsubscribe = history.listen((location) => {
       TagManager.dataLayer({
         dataLayer: {
           // Must emit (custom) event in order to trigger page tracking
-          event: GTM_EVENTS.PAGE_VIEW,
-          [GTM_DATA_LAYER_VARS.PAGE]: getAnonymizedLocation(location),
+          event: [GTM_EVENT.PAGEVIEW],
+          chainId,
+          page: getAnonymizedLocation(location),
         },
       })
     })
@@ -109,37 +111,25 @@ export const useGTMPageTracking = (): void => {
   }, [])
 }
 
-type TrackDataProps = {
-  id: string
-  desc: string
-  payload?: Record<string, string | number | boolean | null>
-}
-
-type DataLayerPayload = {
-  [GTM_DATA_TRACK_VARS.ID]: string
-  [GTM_DATA_TRACK_VARS.DESC]: string
-  [GTM_DATA_TRACK_VARS.CHAIN]: string
-  [GTM_DATA_TRACK_VARS.PAYLOAD]?: string
-}
-
-export const getTrackDataLayer = ({ id, desc, payload }: TrackDataProps): DataLayerPayload => {
-  const { chainId, shortName } = getChainInfo()
-
+export const trackEvent = ({
+  event,
+  category,
+  action,
+  label = '',
+}: {
+  event: GTM_EVENT
+  category: string
+  action: string
+  label?: string | number | boolean
+}): void => {
   const dataLayer = {
-    [GTM_DATA_TRACK_VARS.ID]: id,
-    [GTM_DATA_TRACK_VARS.DESC]: desc,
-    [GTM_DATA_TRACK_VARS.CHAIN]: JSON.stringify({ chainId, shortName }),
-    ...(payload && { [GTM_DATA_TRACK_VARS.PAYLOAD]: JSON.stringify(payload) }),
+    event,
+    chainId: _getChainId(),
+    eventCategory: category,
+    eventAction: action,
+    eventLabel: label,
   }
-
-  return dataLayer
-}
-
-export const trackEventGTM = (event: TrackDataProps): void => {
   TagManager.dataLayer({
-    dataLayer: {
-      event: GTM_EVENTS.TRACK,
-      [GTM_DATA_LAYER_VARS.TRACK]: getTrackDataLayer(event),
-    },
+    dataLayer,
   })
 }

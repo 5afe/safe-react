@@ -1,54 +1,57 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 
+import * as gtm from 'src/utils/googleTagManager'
 import Track from 'src/components/Track'
 
 describe('Track', () => {
   it('renders the child', () => {
     render(
-      <Track id="test" desc="test">
-        <span>test child1</span>
+      <Track category="unit-test" action="Render child">
+        <span>child</span>
       </Track>,
     )
 
-    const child = screen.queryByText('test child1')
+    const child = screen.queryByText('child')
 
     expect(child).toBeInTheDocument()
   })
 
-  it('wraps the child with a div that contains id and stringified payload', () => {
+  it('wraps the child with a div that contains data-track attribute', () => {
     render(
-      <Track id="test" desc="test" payload={{ test: true }}>
-        <span>test child2</span>
+      <Track category="unit-test" action="Render child">
+        <span>child</span>
       </Track>,
     )
 
-    const child = screen.queryByText('test child2')?.closest('div')
+    const child = screen.queryByText('child')?.closest('div')
 
-    expect(child).toHaveAttribute('data-track-id', 'test')
-    expect(child).toHaveAttribute('data-track-desc', 'test')
-    expect(child).toHaveAttribute('data-track-chain', '{"chainId":"4","shortName":"rin"}')
-    expect(child).toHaveAttribute('data-track-payload', '{"test":true}')
+    expect(child).toHaveAttribute('data-track', 'unit-test: Render child')
   })
 
-  it('does not add the payload if it is undefined', () => {
+  it('tracks the event on click', () => {
+    const trackEventSpy = jest.spyOn(gtm, 'trackEvent').mockImplementation(jest.fn())
+
     render(
-      <Track id="test" desc="test" payload={undefined}>
-        <span>test child3</span>
+      <Track category="unit-test" action="Render child" label={true}>
+        <span>child</span>
       </Track>,
     )
 
-    const child = screen.queryByText('test child3')
+    const child = screen.queryByText('child')?.closest('div')
 
-    expect(child).not.toHaveAttribute('data-track-payload')
-  })
+    if (!child) {
+      // Fail test if child doesn't exist
+      expect(true).toBe(false)
+      return
+    }
 
-  it('throws when attempting to track a fragment', () => {
-    expect(() =>
-      render(
-        <Track id="test" desc="test">
-          <></>
-        </Track>,
-      ),
-    ).toThrow('Fragments cannot be tracked.')
+    fireEvent.click(child)
+
+    expect(trackEventSpy).toHaveBeenCalledWith({
+      event: 'customClick',
+      category: 'unit-test',
+      action: 'Render child',
+      label: true,
+    })
   })
 })
