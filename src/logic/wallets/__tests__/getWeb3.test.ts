@@ -1,7 +1,6 @@
 import * as web3 from 'src/logic/wallets/getWeb3'
 import * as config from 'src/config'
 import { isTxPendingError, isSmartContractWallet, isHardwareWallet, isSmartContract } from 'src/logic/wallets/getWeb3'
-import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
 describe('src/logic/wallets/getWeb3', () => {
   describe('isTxPendingError', () => {
@@ -77,19 +76,11 @@ describe('src/logic/wallets/getWeb3', () => {
 
   describe('isHardwareWallet', () => {
     it('should return true if the connected wallet is a supported hardware wallet', () => {
-      expect(isHardwareWallet({ name: 'Ledger' } as Wallet)).toBe(true)
-    })
-
-    it('should return true if the connected wallet is of hardware type', () => {
-      expect(isHardwareWallet({ type: 'hardware' } as Wallet)).toBe(true)
+      expect(isHardwareWallet('Ledger')).toBe(true)
     })
 
     it('should return false if the connect wallet is not a non-hardware supported wallet', () => {
-      expect(isHardwareWallet({ name: 'MetaMask' } as Wallet)).toBe(false)
-    })
-
-    it('should return false if the connect wallet is not of hardware type', () => {
-      expect(isHardwareWallet({ type: 'sdk' } as Wallet)).toBe(false)
+      expect(isHardwareWallet('MetaMask')).toBe(false)
     })
   })
 })

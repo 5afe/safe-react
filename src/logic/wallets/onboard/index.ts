@@ -11,6 +11,7 @@ import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { saveLastUsedWallet } from 'src/logic/wallets/onboard/utils'
 import { getRecommendedInjectedWallets, getSupportedWalletModules } from 'src/logic/wallets/onboard/wallets'
+import { PendingTxMonitor } from 'src/logic/safe/transactions/pendingTxMonitor'
 
 // web3-onboard instance
 export let _onboardInstance: OnboardAPI
@@ -62,6 +63,7 @@ export const initOnboard = (): OnboardAPI => {
     if (provider) {
       setWeb3(provider as unknown as Provider)
       instantiateSafeContracts()
+      PendingTxMonitor.monitorAllTxs()
     } else {
       resetWeb3()
     }
