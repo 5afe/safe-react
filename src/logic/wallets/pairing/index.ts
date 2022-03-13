@@ -7,7 +7,7 @@ import {
   ProviderRpcError,
   ProviderRpcErrorCode,
 } from '@web3-onboard/common'
-import { IClientMeta } from '@walletconnect/types'
+import type { IClientMeta } from '@walletconnect/types'
 import WalletConnect from '@walletconnect/client'
 
 import { APP_VERSION, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
@@ -28,18 +28,14 @@ export const getPairingConnector = (): InstanceType<typeof WalletConnect> => {
   return _pairingConnector
 }
 
-const connectPairingWallet = (): void => {
-  getOnboardInstance().connectWallet({ autoSelect: PAIRING_MODULE_NAME })
-}
-
 if (!_pairingConnector.connected) {
   _pairingConnector.createSession()
-} else {
-  connectPairingWallet()
 }
 
 _pairingConnector.on('connect', () => {
-  connectPairingWallet()
+  getOnboardInstance().connectWallet({
+    autoSelect: { label: PAIRING_MODULE_NAME, disableModals: true },
+  })
 })
 
 // Modified version of web3-onboard/walletconnect v2.0.1
@@ -116,13 +112,9 @@ export function pairingModule(): WalletInit {
                 error: console.warn,
               })
 
-            // Disconnect on unmount
-            fromEvent(window, 'unload')
-              .pipe(takeUntil(this.disconnected$))
-              .subscribe({
-                next: () => this.emit('disconnect'),
-                error: console.warn,
-              })
+            const onDisconnect = () => this.connector.killSession()
+
+            window.addEventListener('unload', onDisconnect, { once: true })
 
             // Listen for disconnect event
             fromEvent(this.connector, 'disconnect', (error, payload) => {
@@ -137,12 +129,12 @@ export function pairingModule(): WalletInit {
                 next: () => {
                   this.emit('accountsChanged', [])
                   this.disconnected$.next(true)
-                  localStorage?.removeItem(PAIRING_STORAGE_ID)
+                  localStorage.removeItem(PAIRING_STORAGE_ID)
                 },
                 error: console.warn,
               })
 
-            this.disconnect = () => this.connector.killSession()
+            this.disconnect = () => onDisconnect()
 
             this.request = async ({ method, params }) => {
               if (method === 'eth_chainId') {

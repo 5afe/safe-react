@@ -22,7 +22,7 @@ const HeaderComponent = (): React.ReactElement => {
       const lastUsedWallet = loadLastUsedWallet()
       const isWalletEnabled = lastUsedWallet && isSupportedWallet(lastUsedWallet)
       if (isWalletEnabled) {
-        await connect(lastUsedWallet)
+        await connect({ label: lastUsedWallet, disableModals: true })
       }
     }
 

@@ -4923,7 +4923,7 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@web3-onboard/common@^2.0.0", "@web3-onboard/common@^2.0.1":
+"@web3-onboard/common@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@web3-onboard/common/-/common-2.0.1.tgz#31355bb497ac13f77f816e7d34ad8b6d7d84ea74"
   integrity sha512-y2eJEfekIJ1GS45ReDhAKsvOZCEf6LmD7F901qzPECy6cIV3IpyzPzneLLp31isPEOQm2IUwGBb3Y+iDKiDIDA==
@@ -4932,12 +4932,21 @@
     joi "^17.4.2"
     rxjs "^7.5.2"
 
-"@web3-onboard/core@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.0.4.tgz#857a3136d488aac0bb0d00692bebd0e11c63e111"
-  integrity sha512-ZP/eNCd5nNPGiTqBO2OPuUDcUzVgvidtsGNSRMn92uCIOsJVCrFLBb7QwhbsjEBQ/7+xhtaWYsNvaWwHsHKd6g==
+"@web3-onboard/common@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/common/-/common-2.0.2.tgz#e5bcda22a6e14bd66d2f7d9b7ef9329f0c086cac"
+  integrity sha512-foFyWJIqmv83lhqyXqwW8vUdOULdRvIvj4ScxFcd3hGDYJArKnnocvAIcAAfP7Rmte3TDWejuFKz+H4dmaoUUA==
   dependencies:
-    "@web3-onboard/common" "^2.0.1"
+    ethers "5.5.4"
+    joi "^17.4.2"
+    rxjs "^7.5.2"
+
+"@web3-onboard/core@^2.0.10":
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.0.10.tgz#4aed26c9e7eee58ec9d7d1e71ddad6adee0075e8"
+  integrity sha512-4AvZKNCZLLHbDhueCBz5jvfRE9dQzEpsoA2lBVpwtXHhJzRRdYjVTUSBx1DgflzCnZUdOEuECSTwvM0OI3PtwQ==
+  dependencies:
+    "@web3-onboard/common" "^2.0.2"
     bowser "^2.11.0"
     ethers "5.5.3"
     eventemitter3 "^4.0.7"
@@ -4948,20 +4957,20 @@
     svelte "^3.46.4"
     svelte-i18n "^3.3.13"
 
-"@web3-onboard/fortmatic@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/fortmatic/-/fortmatic-2.0.0.tgz#e1d60fcfab5b755e16df3cfac106f56c3d6f6900"
-  integrity sha512-lftNn8iRZRehRNutAMxXKt6RUFe4B0nM6BT+My+IC2GOJQgkkgprxoOgf/VjwjfcWgssvFQ1kImelbUTakCjbg==
+"@web3-onboard/fortmatic@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/fortmatic/-/fortmatic-2.0.1.tgz#268c0230c95c8c3225d07ee0ea4f4b7eac8635f0"
+  integrity sha512-yHzAeaDWUEnoCn7it2xBJB5vRMVCl7Xtn8AChz403lH0VG4Zcb4sXJ7w1pkKGtT0DCh7vCn0urWUnoNVHlE+Ag==
   dependencies:
     "@web3-onboard/common" "^2.0.0"
     fortmatic "^2.2.1"
 
-"@web3-onboard/injected-wallets@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/injected-wallets/-/injected-wallets-2.0.1.tgz#9b4bccc975b2768e1912408181bbd899faebcf5e"
-  integrity sha512-1HTD9SUn/C4pvBy0iSLaSGFh4sUovcPtARi1w5xg7Ykl+j3BJGn0Ht7fMLIKJRNrUMS6YV7oQGkg8jtGdz2swg==
+"@web3-onboard/injected-wallets@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/injected-wallets/-/injected-wallets-2.0.2.tgz#bbc45baa8989aa3ce7c3e71917b9e3f8317e988a"
+  integrity sha512-0bJKwH7E6lW+RVmi6mCo44Y1Uji/oUGJ1Ul6vLljKlr9xE8slrrP+Ouu73lercFdqkvYeYfx0Eg5qV6ytanSlA==
   dependencies:
-    "@web3-onboard/common" "^2.0.0"
+    "@web3-onboard/common" "^2.0.2"
     joi "^17.4.2"
     lodash.uniqby "^4.7.0"
 
@@ -5023,10 +5032,10 @@
     "@portis/web3" "^4.0.6"
     "@web3-onboard/common" "^2.0.0"
 
-"@web3-onboard/torus@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/torus/-/torus-2.0.0.tgz#ae4e0952e3f881d07638abad212767962a033e44"
-  integrity sha512-dGEQGoZpk10FZTvZheCZk/nbMaJnlaI4QjS9asqaB0rEwA+MDC1f/bWYMp2Rf+3QIX+dt5xx9h96fdqfFv5MJA==
+"@web3-onboard/torus@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/torus/-/torus-2.0.1.tgz#e98b3640134d8717f3de236d83505712d97f20cd"
+  integrity sha512-YO3ptaXbUeCUfg7cTuzJ3LX+SO2DZanNJzBI40TxouTUQyuI3wqyywY19s43bn3hkq8e2Gaw9ckgJFDuBYtmmw==
   dependencies:
     "@toruslabs/torus-embed" "^1.18.3"
     "@web3-onboard/common" "^2.0.0"
@@ -5046,11 +5055,12 @@
     hdkey "^2.0.1"
     trezor-connect "^8.2.6"
 
-"@web3-onboard/walletconnect@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/walletconnect/-/walletconnect-2.0.0.tgz#a11a3afed0fb7cc63ef47bf4a02e1cdad23f9ccc"
-  integrity sha512-vRx+hB5bgE9xOO7yL5/mgUBhqiDrh2PdJkhoYJI/sbwWml266vsDJ8djgxV21z7Db2p9Ck33PNhtZfv6rxFsNQ==
+"@web3-onboard/walletconnect@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/walletconnect/-/walletconnect-2.0.1.tgz#7d47d63715f95005589453b305f895fe130e1be2"
+  integrity sha512-+sjYra9e1yr37/PPtcmGvTrOe3Xq+P9jMyNJbImu+3BtyqKFpCr7vnjzfCFsSLR3gAynro0SZDeFJiegyoZ2Fg==
   dependencies:
+    "@ethersproject/providers" "^5.5.0"
     "@walletconnect/client" "^1.7.1"
     "@walletconnect/qrcode-modal" "^1.7.1"
     "@web3-onboard/common" "^2.0.0"

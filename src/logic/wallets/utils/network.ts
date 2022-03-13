@@ -49,10 +49,8 @@ const requestAdd = async (wallet: WalletState, chainId: ChainId): Promise<void> 
   const { chainName, nativeCurrency } = getChainInfo()
 
   await wallet.provider?.request({
-    // @ts-expect-error 'wallet_addEthereumChain' method is not in web3-onboard types
     method: 'wallet_addEthereumChain',
     params: [
-      // @ts-expect-error 'wallet_addEthereumChain' method is not in web3-onboard types
       {
         chainId: numberToHex(chainId),
         chainName,
