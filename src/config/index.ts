@@ -7,30 +7,14 @@ import {
   GasPriceFixed,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import {
-  DEFAULT_CHAIN_ID,
-  ETHERSCAN_API_KEY,
-  INFURA_TOKEN,
-  SAFE_APPS_RPC_TOKEN,
-  TX_SERVICE_VERSION,
-} from 'src/utils/constants'
+import { ETHERSCAN_API_KEY, INFURA_TOKEN, SAFE_APPS_RPC_TOKEN, TX_SERVICE_VERSION } from 'src/utils/constants'
 import { ChainId, ChainName, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
 import { evalTemplate } from './utils'
-import local from 'src/utils/storage/local'
-import { ConfigState } from 'src/logic/config/store/reducer/reducer.d'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { store } from 'src/store'
 
-export const LOCAL_CONFIG_KEY = 'config'
-
-/**
- * Determine the initial chain id
- */
-const getInitialChainId = (): ChainId => {
-  const localItem = local.getItem<ConfigState>(LOCAL_CONFIG_KEY)
-  return localItem?.chainId || DEFAULT_CHAIN_ID
-}
-
-let _chainId = getInitialChainId()
+let _chainId = currentChainId(store.getState())
 
 export const _setChainId = (newChainId: ChainId) => {
   _chainId = newChainId

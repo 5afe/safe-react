@@ -17,8 +17,6 @@ import './KeystoneCustom.module.scss'
 import LegacyRouteRedirection from './LegacyRouteRedirection'
 import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { loadChains } from 'src/config/cache/chains'
-import { setChainId } from 'src/logic/config/utils'
-import { _getChainId } from 'src/config'
 import { initOnboard } from 'src/logic/wallets/onboard'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
@@ -43,9 +41,6 @@ const RootConsumer = (): React.ReactElement | null => {
       }
     }
     initApp()
-
-    // Set store chainId and init contracts/session
-    setChainId(_getChainId())
   }, [])
 
   // Chains failed to load

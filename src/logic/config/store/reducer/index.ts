@@ -1,12 +1,12 @@
 import { handleActions } from 'redux-actions'
-import { LOCAL_CONFIG_KEY, _getChainId } from 'src/config'
+import { DEFAULT_CHAIN_ID } from 'src/utils/constants'
 import { CONFIG_ACTIONS } from '../actions'
 import { ConfigState, ConfigPayload } from './reducer.d'
 
-export const CONFIG_REDUCER_ID = LOCAL_CONFIG_KEY
+export const CONFIG_REDUCER_ID = 'config'
 
 export const initialConfigState: ConfigState = {
-  chainId: _getChainId(),
+  chainId: DEFAULT_CHAIN_ID,
 }
 
 // Stored locally as to preserve chainId for non-EIP-3770 routes
