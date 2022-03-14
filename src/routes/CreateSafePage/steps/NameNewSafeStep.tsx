@@ -45,7 +45,7 @@ function NameNewSafeStep(): ReactElement {
     return () => {
       if (hasCustomSafeName) {
         trackEvent({
-          event: GTM_EVENT.CLICK,
+          event: GTM_EVENT.META,
           ...CREATE_SAFE_EVENTS.NAME_SAFE,
         })
       }

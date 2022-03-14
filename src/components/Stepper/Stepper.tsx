@@ -95,15 +95,15 @@ function StepperComponent(): ReactElement {
                       <>
                         <Track
                           category={trackingCategory}
-                          action={isFirstStep ? 'Cancel' : 'Go back a step'}
+                          action={isFirstStep ? 'Cancelled stepper' : 'Go back a step'}
                           {...(!isFirstStep && { label: currentStep })}
                         >
                           {backButton}
                         </Track>
                         <Track
                           category={trackingCategory}
-                          action={isLastStep ? 'Finish' : 'Go forward a step'}
-                          {...(!isFirstStep && { label: currentStep })}
+                          action={isLastStep ? 'Finished stepper' : 'Go forward a step'}
+                          {...(!isLastStep && { label: currentStep })}
                         >
                           {nextButton}
                         </Track>
