@@ -207,11 +207,10 @@ export class TxSender {
   }
 
   async canSignOffchain(): Promise<boolean> {
-    const { isFinalization, safeVersion } = this
-    const { account } = getOnboardState()
+    const { from, isFinalization, safeVersion } = this
 
-    const isSmart = await isSmartContractWallet(account.address)
-    return checkIfOffChainSignatureIsPossible(isFinalization, isSmart, safeVersion)
+    const isSmartContract = await isSmartContractWallet(from)
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmartContract, safeVersion)
   }
 
   async submitTx(

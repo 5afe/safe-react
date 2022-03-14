@@ -32,6 +32,7 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
     // We require some of the enums/types from the original module
     ...originalModule,
     Operation: jest.fn(),
+    TokenType: jest.fn(),
     TransactionTokenType: jest.fn(),
     TransactionStatus: jest.fn(),
     TransferDirection: jest.fn(),
