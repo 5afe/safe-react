@@ -86,7 +86,7 @@ function StepperProvider({
     customNextButtonLabel,
 
     testId,
-    trackingCategory: trackingCategory,
+    trackingCategory,
 
     ...store,
   }
