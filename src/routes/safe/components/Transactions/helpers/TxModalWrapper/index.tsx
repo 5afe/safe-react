@@ -140,6 +140,7 @@ export const TxModalWrapper = ({
       operation,
       isExecution: doExecute,
       approvalAndExecution,
+      txNonce,
     })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)

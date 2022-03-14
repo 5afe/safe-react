@@ -43,6 +43,7 @@ type UseEstimateTransactionGasProps = {
   manualGasLimit?: string
   isExecution: boolean
   approvalAndExecution: boolean
+  txNonce?: string
 }
 
 type TransactionGasEstimationResult = {
@@ -110,6 +111,7 @@ export const useEstimateTransactionGas = ({
   manualGasLimit,
   isExecution,
   approvalAndExecution,
+  txNonce,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation({
@@ -123,9 +125,13 @@ export const useEstimateTransactionGas = ({
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
   const { account: from } = useSelector(providerSelector)
-  const contractNonce = usePolledContractNonce()
+  const contractNonce = usePolledContractNonce(txNonce)
 
   useEffect(() => {
+    if (txNonce != null && contractNonce == null) {
+      return
+    }
+
     if (!isExecution || !txData) {
       setGasEstimation((prev) => ({ ...prev, txEstimationExecutionStatus: EstimationStatus.SUCCESS }))
       return
@@ -212,6 +218,7 @@ export const useEstimateTransactionGas = ({
     txConfirmations,
     txData,
     txRecipient,
+    txNonce,
     contractNonce,
   ])
 

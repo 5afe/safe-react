@@ -52,6 +52,7 @@ enum ErrorCodes {
   _816 = '816: Error saving transaction to history',
   _817 = '817: Unable to decode contract error message',
   _818 = '818: Failed to instantiate Core SDK',
+  _819 = '819: Failed to get Safe nonce',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',

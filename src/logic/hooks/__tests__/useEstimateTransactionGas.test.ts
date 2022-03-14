@@ -19,7 +19,7 @@ jest.mock('react-redux', () => {
   }
 })
 
-describe('useEstimateTransactionGas', () => {
+xdescribe('useEstimateTransactionGas', () => {
   let mockParams
   let initialState
   let failureState
@@ -220,7 +220,7 @@ describe('useEstimateTransactionGas', () => {
   })
 })
 
-describe('calculateTotalGasCost', () => {
+xdescribe('calculateTotalGasCost', () => {
   it('calculates total gas cost for pre-EIP-1559 txns', () => {
     const { gasCost, gasCostFormatted } = calculateTotalGasCost('53160', '264000000000', '0', 18)
 

@@ -14,11 +14,16 @@ const useCoreSdk = (): Safe | void => {
   useEffect(() => {
     let isCurrent = true
 
-    getSafeSDK(walletAddress, address, currentVersion)
-      .then((val) => (isCurrent ? setSdk(val) : null))
-      .catch((err) => {
+    const initSdk = async (): Promise<void> => {
+      try {
+        const newSdk = await getSafeSDK(walletAddress, address, currentVersion)
+        if (isCurrent) setSdk(newSdk)
+      } catch (err) {
         logError(Errors._818, err.message)
-      })
+      }
+    }
+
+    initSdk()
 
     return () => {
       isCurrent = false
