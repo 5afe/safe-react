@@ -88,14 +88,11 @@ const parseError = (err: Error): Error => {
 }
 
 const getSavedSafeCreation = (): CreateSafeFormValues | void => {
-  const savedData = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+  return loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+}
 
-  if (!savedData) {
-    goToWelcomePage()
-    return
-  }
-
-  return savedData
+const loadSavedDataOrLeave = (): CreateSafeFormValues | void => {
+  return getSavedSafeCreation() || goToWelcomePage()
 }
 
 const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Promise<TransactionReceipt> => {
@@ -103,7 +100,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
     return Promise.reject(new Error('No user address'))
   }
 
-  const safeCreationFormValues = getSavedSafeCreation()
+  const safeCreationFormValues = loadSavedDataOrLeave()
 
   if (!safeCreationFormValues) {
     return Promise.reject(new Error('No saved Safe creation'))
@@ -138,7 +135,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         // Monitor the latest block to find a potential speed-up tx
         txMonitor({ sender: userAddress, hash: txHash, data: deploymentTx.encodeABI() })
           .then((txReceipt) => {
-            console.log('Speed-up tx mined:', txReceipt)
+            console.log('Sped-up tx mined:', txReceipt)
             resolve(txReceipt)
           })
           .catch((error) => {
@@ -183,7 +180,7 @@ function SafeCreationProcess(): ReactElement {
   const [newSafeAddress, setNewSafeAddress] = useState<string>('')
 
   useEffect(() => {
-    const safeCreationFormValues = getSavedSafeCreation()
+    const safeCreationFormValues = loadSavedDataOrLeave()
     if (!safeCreationFormValues) {
       return
     }
@@ -197,7 +194,7 @@ function SafeCreationProcess(): ReactElement {
   }, [userAddress])
 
   const onSafeCreated = async (safeAddress: string): Promise<void> => {
-    const createSafeFormValues = getSavedSafeCreation()
+    const createSafeFormValues = loadSavedDataOrLeave()
 
     const defaultSafeValue = createSafeFormValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]
     const safeName = createSafeFormValues[FIELD_CREATE_CUSTOM_SAFE_NAME] || defaultSafeValue
@@ -240,7 +237,7 @@ function SafeCreationProcess(): ReactElement {
   }
 
   const onRetry = (): void => {
-    const safeCreationFormValues = getSavedSafeCreation()
+    const safeCreationFormValues = loadSavedDataOrLeave()
 
     if (!safeCreationFormValues) {
       return
