@@ -191,7 +191,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return tx
     })
 
-    communicator?.on(Methods.getCommunicationInfo, async () => ({
+    communicator?.on(Methods.getEnvironmentInfo, async () => ({
       origin: document.location.origin,
     }))
 
