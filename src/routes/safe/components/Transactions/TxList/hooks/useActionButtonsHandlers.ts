@@ -16,6 +16,7 @@ import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxLis
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
+import { DANGER_ZONE } from 'src/utils/constants'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -83,11 +84,12 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
   )
 
-  const disabledActions =
-    !currentUser ||
-    isPending ||
-    (txStatus === LocalTransactionStatus.AWAITING_EXECUTION && locationContext.txLocation === 'queued.queued') ||
-    (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser))
+  const queuedExecution =
+    txStatus === LocalTransactionStatus.AWAITING_EXECUTION && locationContext.txLocation === 'queued.queued'
+
+  const alreadySigned = txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)
+
+  const disabledActions = !currentUser || isPending || (queuedExecution && !DANGER_ZONE) || alreadySigned
 
   return {
     canCancel,

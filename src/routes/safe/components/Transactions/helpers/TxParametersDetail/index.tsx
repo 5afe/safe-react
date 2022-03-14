@@ -25,6 +25,7 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getByteLength } from 'src/utils/getByteLength'
 import { md } from 'src/theme/variables'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -105,7 +106,8 @@ export const TxParametersDetail = ({
   compact = true,
   parametersStatus,
 }: Props): ReactElement | null => {
-  const { nonce } = useSelector(currentSafe)
+  const { nonce, address, currentVersion } = useSelector(currentSafe)
+  const safeInstance = getGnosisSafeInstanceAt(address, currentVersion)
 
   const [isTxNonceOutOfOrder, setIsTxNonceOutOfOrder] = useState(false)
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
@@ -117,17 +119,23 @@ export const TxParametersDetail = ({
   const storedTx = useSelector((state: AppReduxState) => getTransactionsByNonce(state, safeNonceNumber))
 
   useEffect(() => {
-    if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) {
-      return
+    const getNonce = async () => {
+      const contractNonce = (await safeInstance.methods.nonce().call()).toString()
+
+      if (Number.isNaN(safeNonceNumber) || safeNonce === contractNonce) {
+        return
+      }
+      if (lastQueuedTxNonce === undefined && safeNonce !== contractNonce) {
+        setIsAccordionExpanded(true)
+        setIsTxNonceOutOfOrder(true)
+      }
+      if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
+        setIsAccordionExpanded(true)
+        setIsTxNonceOutOfOrder(true)
+      }
     }
-    if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
-      setIsAccordionExpanded(true)
-      setIsTxNonceOutOfOrder(true)
-    }
-    if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
-      setIsAccordionExpanded(true)
-      setIsTxNonceOutOfOrder(true)
-    }
+
+    getNonce()
   }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
   const color = useMemo(() => (areSafeParamsEnabled(parametersStatus) ? 'text' : 'secondaryLight'), [parametersStatus])

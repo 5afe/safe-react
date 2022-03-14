@@ -26,6 +26,7 @@ import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
+import { DANGER_ZONE } from 'src/utils/constants'
 
 type Props = {
   children: ReactNode
@@ -105,7 +106,7 @@ export const TxModalWrapper = ({
   const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
   const confirmationsLen = Array.from(txConfirmations || []).length
-  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce)
+  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce) || DANGER_ZONE
   const doExecute = executionApproved && canTxExecute
   const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
   const nativeCurrency = getNativeCurrency()
