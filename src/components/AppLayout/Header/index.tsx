@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import Layout from './components/Layout'
@@ -16,6 +16,12 @@ import {
 } from 'src/logic/wallets/store/selectors'
 import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
 import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
+import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+
+const HidePairingModule = lazy(
+  () => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule'),
+)
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -74,7 +80,12 @@ const HeaderComponent = (): React.ReactElement => {
   const info = getProviderInfoBased()
   const details = getProviderDetailsBased()
 
-  return <Layout providerDetails={details} providerInfo={info} />
+  return (
+    <>
+      {isPairingSupported() && wrapInSuspense(<HidePairingModule />)}
+      <Layout providerDetails={details} providerInfo={info} />
+    </>
+  )
 }
 
 export default HeaderComponent
