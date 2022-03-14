@@ -108,7 +108,7 @@ export const usePageTracking = (): void => {
     return () => {
       unsubscribe()
     }
-  }, [])
+  }, [chainId])
 }
 
 export const trackEvent = ({
