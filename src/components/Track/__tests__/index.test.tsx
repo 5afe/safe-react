@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import * as gtm from 'src/utils/googleTagManager'
 import Track from 'src/components/Track'
@@ -47,11 +47,13 @@ describe('Track', () => {
 
     fireEvent.click(child)
 
-    expect(trackEventSpy).toHaveBeenCalledWith({
-      event: 'customClick',
-      category: 'unit-test',
-      action: 'Render child',
-      label: true,
+    waitFor(() => {
+      expect(trackEventSpy).toHaveBeenCalledWith({
+        event: 'customClick',
+        category: 'unit-test',
+        action: 'Render child',
+        label: true,
+      })
     })
   })
 })
