@@ -23,7 +23,9 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
 
     // We cannot use onClick as events in children do not always bubble up
     el.current?.addEventListener('click', handleClick)
-    return el.current?.removeEventListener('click', handleClick)
+    return () => {
+      el.current?.removeEventListener('click', handleClick)
+    }
   }, [el])
 
   if (children.type === Fragment) {
