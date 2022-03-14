@@ -98,7 +98,7 @@ export const usePageTracking = (): void => {
       TagManager.dataLayer({
         dataLayer: {
           // Must emit (custom) event in order to trigger page tracking
-          event: [GTM_EVENT.PAGEVIEW],
+          event: GTM_EVENT.PAGEVIEW,
           chainId,
           page: getAnonymizedLocation(location),
         },
@@ -115,12 +115,14 @@ export const trackEvent = ({
   event,
   category,
   action,
-  label = '',
+  label,
+  value,
 }: {
   event: GTM_EVENT
   category: string
   action: string
-  label?: string | number | boolean
+  label?: string
+  value?: string | number | boolean
 }): void => {
   const dataLayer = {
     event,
@@ -128,6 +130,7 @@ export const trackEvent = ({
     eventCategory: category,
     eventAction: action,
     eventLabel: label,
+    eventValue: value,
   }
   TagManager.dataLayer({
     dataLayer,

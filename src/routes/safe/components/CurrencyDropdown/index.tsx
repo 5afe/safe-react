@@ -21,7 +21,7 @@ import { getNativeCurrency } from 'src/config'
 import { sameString } from 'src/utils/strings'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { SAFE_OVERVIEW_EVENTS } from 'src/utils/events/safeOverview'
 import { Button } from '@material-ui/core'
 
@@ -40,10 +40,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
   )
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    trackEvent({
-      event: GTM_EVENT.META,
-      ...SAFE_OVERVIEW_EVENTS.OPEN_CURRENCY_MENU,
-    })
+    trackEvent(SAFE_OVERVIEW_EVENTS.OPEN_CURRENCY_MENU)
 
     setAnchorEl(event.currentTarget)
     import('currency-flags/dist/currency-flags.min.css' as string)
@@ -55,9 +52,8 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
 
   const onCurrentCurrencyChangedHandler = async (newCurrencySelectedName: string): Promise<void> => {
     trackEvent({
-      event: GTM_EVENT.META,
       ...SAFE_OVERVIEW_EVENTS.CHANGE_CURRENCY,
-      label: newCurrencySelectedName,
+      value: newCurrencySelectedName,
     })
 
     handleClose()

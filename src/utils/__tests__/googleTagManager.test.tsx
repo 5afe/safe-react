@@ -152,7 +152,13 @@ describe('googleTagManager', () => {
     it('tracks a correctly formed event from the arguments', () => {
       const dataLayerSpy = jest.spyOn(TagManager.default, 'dataLayer').mockImplementation(jest.fn())
 
-      trackEvent({ event: 'testEvent' as GTM_EVENT, category: 'unit-test', action: 'Track event' })
+      trackEvent({
+        event: 'testEvent' as GTM_EVENT,
+        category: 'unit-test',
+        action: 'Track event',
+        label: 'Track label',
+        value: 1,
+      })
 
       expect(dataLayerSpy).toHaveBeenCalledWith({
         dataLayer: {
@@ -160,7 +166,8 @@ describe('googleTagManager', () => {
           chainId: '4',
           eventCategory: 'unit-test',
           eventAction: 'Track event',
-          eventLabel: '',
+          eventLabel: 'Track label',
+          eventValue: 1,
         },
       })
     })

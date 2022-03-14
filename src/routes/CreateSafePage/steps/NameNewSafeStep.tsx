@@ -19,7 +19,7 @@ import {
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
-import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 export const nameNewSafeStepLabel = 'Name'
@@ -44,10 +44,7 @@ function NameNewSafeStep(): ReactElement {
     // On unmount, e.g. go back/next
     return () => {
       if (hasCustomSafeName) {
-        trackEvent({
-          event: GTM_EVENT.META,
-          ...CREATE_SAFE_EVENTS.NAME_SAFE,
-        })
+        trackEvent(CREATE_SAFE_EVENTS.NAME_SAFE)
       }
     }
   }, [hasCustomSafeName])

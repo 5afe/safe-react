@@ -3,7 +3,7 @@ import { CookieAttributes } from 'js-cookie'
 import { COOKIES_KEY_INTERCOM, IntercomCookieType } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { INTERCOM_ID } from 'src/utils/constants'
-import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { SAFE_OVERVIEW_EVENTS } from 'src/utils/events/safeOverview'
 
 let intercomLoaded = false
@@ -49,10 +49,7 @@ export const loadIntercom = (): void => {
     })
     intercomLoaded = true
     ;(window as any).Intercom('onShow', () => {
-      trackEvent({
-        event: GTM_EVENT.CLICK,
-        ...SAFE_OVERVIEW_EVENTS.OPEN_INTERCOM,
-      })
+      trackEvent(SAFE_OVERVIEW_EVENTS.OPEN_INTERCOM)
     })
   }
 }

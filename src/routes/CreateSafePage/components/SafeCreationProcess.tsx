@@ -38,7 +38,7 @@ import { getExplorerInfo, getShortName } from 'src/config'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import Track from 'src/components/Track'
 
@@ -141,10 +141,7 @@ function SafeCreationProcess(): ReactElement {
           })
           .then((txReceipt) => {
             console.log('First tx mined:', txReceipt)
-            trackEvent({
-              event: GTM_EVENT.META,
-              ...CREATE_SAFE_EVENTS.CREATED_SAFE,
-            })
+            trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
             resolve(txReceipt)
           })
           .catch((error) => {

@@ -41,7 +41,7 @@ import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/sele
 import { getLoadSafeName, getOwnerName } from './fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { LOAD_SAFE_CATEGORY, LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
-import { trackEvent, GTM_EVENT } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 function Load(): ReactElement {
   const dispatch = useDispatch()
@@ -93,25 +93,20 @@ function Load(): ReactElement {
 
     // Track number of owners
     trackEvent({
-      event: GTM_EVENT.META,
       ...LOAD_SAFE_EVENTS.OWNERS,
-      label: values[FIELD_SAFE_OWNER_LIST].length,
+      value: values[FIELD_SAFE_OWNER_LIST].length,
     })
 
     const threshold = values[FIELD_SAFE_THRESHOLD]
     if (threshold) {
       // Track threshold
       trackEvent({
-        event: GTM_EVENT.META,
         ...LOAD_SAFE_EVENTS.THRESHOLD,
-        label: threshold,
+        value: threshold,
       })
     }
 
-    trackEvent({
-      event: GTM_EVENT.CLICK,
-      ...LOAD_SAFE_EVENTS.GO_TO_SAFE,
-    })
+    trackEvent(LOAD_SAFE_EVENTS.GO_TO_SAFE)
 
     updateAddressBook(values)
 
