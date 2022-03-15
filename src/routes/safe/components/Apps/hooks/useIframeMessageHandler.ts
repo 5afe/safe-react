@@ -18,6 +18,7 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getLegacyChainName } from '../utils'
+import { THIRD_PARTY_COOKIES_CHECK_URL } from './useThirdPartyCookies'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -112,9 +113,10 @@ const useIframeMessageHandler = (
         data: SDKMessageToPayload[SDKMessageIds]
       }>,
     ) => {
-      if (message.origin === window.origin) {
+      if (message.origin === window.origin || message.origin === THIRD_PARTY_COOKIES_CHECK_URL) {
         return
       }
+
       if (!selectedApp?.url.includes(message.origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
