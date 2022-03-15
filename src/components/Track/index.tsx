@@ -13,6 +13,12 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
   const el = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!el.current) {
+      return
+    }
+
+    const trackEl = el.current
+
     const handleClick = () => {
       trackEvent({
         event: GTM_EVENT.CLICK,
@@ -21,9 +27,9 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
     }
 
     // We cannot use onClick as events in children do not always bubble up
-    el.current?.addEventListener('click', handleClick)
+    trackEl.addEventListener('click', handleClick)
     return () => {
-      el.current?.removeEventListener('click', handleClick)
+      trackEl.removeEventListener('click', handleClick)
     }
   }, [el, trackData])
 
