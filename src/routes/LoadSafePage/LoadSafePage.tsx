@@ -94,7 +94,7 @@ function Load(): ReactElement {
     // Track number of owners
     trackEvent({
       ...LOAD_SAFE_EVENTS.OWNERS,
-      value: values[FIELD_SAFE_OWNER_LIST].length,
+      label: values[FIELD_SAFE_OWNER_LIST].length,
     })
 
     const threshold = values[FIELD_SAFE_THRESHOLD]
@@ -102,7 +102,7 @@ function Load(): ReactElement {
       // Track threshold
       trackEvent({
         ...LOAD_SAFE_EVENTS.THRESHOLD,
-        value: threshold,
+        label: threshold,
       })
     }
 

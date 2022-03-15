@@ -6,8 +6,7 @@ type Props = {
   children: ReactElement
   category: string
   action: string
-  label?: string
-  value?: string | number | boolean
+  label?: string | number | boolean
 }
 
 const Track = ({ children, ...trackData }: Props): typeof children => {

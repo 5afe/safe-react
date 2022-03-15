@@ -156,8 +156,7 @@ describe('googleTagManager', () => {
         event: 'testEvent' as GTM_EVENT,
         category: 'unit-test',
         action: 'Track event',
-        label: 'Track label',
-        value: 1,
+        label: 1,
       })
 
       expect(dataLayerSpy).toHaveBeenCalledWith({
@@ -166,8 +165,7 @@ describe('googleTagManager', () => {
           chainId: '4',
           eventCategory: 'unit-test',
           eventAction: 'Track event',
-          eventLabel: 'Track label',
-          eventValue: 1,
+          eventLabel: 1,
         },
       })
     })

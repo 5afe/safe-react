@@ -32,7 +32,7 @@ describe('Track', () => {
     const trackEventSpy = jest.spyOn(gtm, 'trackEvent').mockImplementation(jest.fn())
 
     render(
-      <Track category="unit-test" action="Render child" label="test" value={true}>
+      <Track category="unit-test" action="Render child" label={true}>
         <span>child</span>
       </Track>,
     )
@@ -52,8 +52,7 @@ describe('Track', () => {
         event: 'customClick',
         category: 'unit-test',
         action: 'Render child',
-        label: 'test',
-        value: true,
+        label: true,
       })
     })
   })

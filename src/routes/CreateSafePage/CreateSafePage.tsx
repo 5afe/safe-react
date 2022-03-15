@@ -74,12 +74,12 @@ function CreateSafePage(): ReactElement {
     // Track number of owners
     trackEvent({
       ...CREATE_SAFE_EVENTS.OWNERS,
-      value: newSafeFormValues[FIELD_SAFE_OWNERS_LIST].length,
+      label: newSafeFormValues[FIELD_SAFE_OWNERS_LIST].length,
     })
     // Track threshold
     trackEvent({
       ...CREATE_SAFE_EVENTS.THRESHOLD,
-      value: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
+      label: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
     })
 
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })

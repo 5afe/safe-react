@@ -53,7 +53,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
   const onCurrentCurrencyChangedHandler = async (newCurrencySelectedName: string): Promise<void> => {
     trackEvent({
       ...SAFE_OVERVIEW_EVENTS.CHANGE_CURRENCY,
-      value: newCurrencySelectedName,
+      label: newCurrencySelectedName,
     })
 
     handleClose()

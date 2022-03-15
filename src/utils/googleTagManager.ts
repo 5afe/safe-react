@@ -115,14 +115,12 @@ export const trackEvent = ({
   event,
   category,
   action,
-  label,
-  value,
+  label = '',
 }: {
   event: GTM_EVENT
   category: string
   action: string
-  label?: string
-  value?: string | number | boolean
+  label?: string | number | boolean
 }): void => {
   const dataLayer = {
     event,
@@ -130,7 +128,6 @@ export const trackEvent = ({
     eventCategory: category,
     eventAction: action,
     eventLabel: label,
-    eventValue: value,
   }
   TagManager.dataLayer({
     dataLayer,
