@@ -24,7 +24,7 @@ const GatewayTransactions = (): ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION.TRANSACTIONS)
-  }, [trackEvent])
+  }, [])
 
   const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 

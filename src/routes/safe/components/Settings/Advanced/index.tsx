@@ -45,7 +45,7 @@ const Advanced = (): ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION_SETTINGS.ADVANCED)
-  }, [trackEvent])
+  }, [])
 
   return (
     <>

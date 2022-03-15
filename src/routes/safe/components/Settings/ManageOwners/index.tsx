@@ -70,7 +70,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION_SETTINGS.OWNERS)
-  }, [trackEvent])
+  }, [])
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)

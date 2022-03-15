@@ -31,7 +31,7 @@ const ThresholdSettings = (): React.ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION_SETTINGS.THRESHOLD)
-  }, [trackEvent])
+  }, [])
 
   return (
     <>

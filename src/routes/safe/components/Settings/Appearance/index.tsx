@@ -38,7 +38,7 @@ const Appearance = (): ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION.APPEARANCE)
-  }, [trackEvent])
+  }, [])
 
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setShowShortName({ showShortName: checked }))

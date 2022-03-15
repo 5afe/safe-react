@@ -99,7 +99,7 @@ const AddressBookTable = (): ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION.ADDRESS_BOOK)
-  }, [trackEvent])
+  }, [])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

@@ -88,7 +88,7 @@ const Collectibles = (): React.ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION.COLLECTIBLES)
-  }, [trackEvent])
+  }, [])
 
   const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)

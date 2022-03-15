@@ -117,7 +117,7 @@ const SafeDetails = (): ReactElement => {
 
   useEffect(() => {
     trackEvent(SAFE_NAVIGATION_SETTINGS.DETAILS)
-  }, [trackEvent])
+  }, [])
 
   useEffect(() => {
     const getMasterCopyInfo = async () => {
