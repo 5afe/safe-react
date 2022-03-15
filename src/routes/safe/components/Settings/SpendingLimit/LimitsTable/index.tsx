@@ -8,10 +8,12 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
+import Track from 'src/components/Track'
 import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { RemoveLimitModal } from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 import {
   generateColumns,
@@ -73,9 +75,11 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
                     {granted && (
-                      <ButtonHelper onClick={() => setSelectedRow(row)} data-testid="remove-limit-btn">
-                        <Icon size="sm" type="delete" color="error" tooltip="Remove limit" />
-                      </ButtonHelper>
+                      <Track {...SETTINGS_EVENTS.SPENDING_LIMIT.REMOVE_LIMIT}>
+                        <ButtonHelper onClick={() => setSelectedRow(row)} data-testid="remove-limit-btn">
+                          <Icon size="sm" type="delete" color="error" tooltip="Remove limit" />
+                        </ButtonHelper>
+                      </Track>
                     )}
                   </Row>
                 </TableCell>

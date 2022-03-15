@@ -6,7 +6,7 @@ import { useRemoteSafeApps } from './useRemoteSafeApps'
 import { usePinnedSafeApps } from './usePinnedSafeApps'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { trackEvent } from 'src/utils/googleTagManager'
-import { SAFE_APP_EVENTS } from 'src/utils/events/safeApp'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 type UseAppListReturnType = {
   allApps: SafeApp[]
@@ -71,10 +71,10 @@ const useAppList = (): UseAppListReturnType => {
       const isAppPinned = pinnedSafeAppIds.includes(appId)
 
       if (isAppPinned) {
-        trackEvent({ ...SAFE_APP_EVENTS.PIN, label: appName })
+        trackEvent({ ...SAFE_APPS_EVENTS.PIN, label: appName })
         newPinnedIds.splice(newPinnedIds.indexOf(appId), 1)
       } else {
-        trackEvent({ ...SAFE_APP_EVENTS.UNPIN, label: appName })
+        trackEvent({ ...SAFE_APPS_EVENTS.UNPIN, label: appName })
         newPinnedIds.push(appId)
       }
 

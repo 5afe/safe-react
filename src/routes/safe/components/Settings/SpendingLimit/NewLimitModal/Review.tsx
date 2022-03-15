@@ -34,6 +34,8 @@ import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -223,6 +225,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       )
 
       dispatch(createTransaction({ ...spendingLimitTxData, delayExecution }))
+
+      if (values.withResetTime) {
+        trackEvent({ ...SETTINGS_EVENTS.SPENDING_LIMIT.PERIOD, label: `${values.resetTime} minutes` })
+      }
     }
   }
 

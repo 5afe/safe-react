@@ -1,10 +1,12 @@
-import { GTM_EVENT, trackEvent } from '../googleTagManager'
+import { GTM_EVENT } from 'src/utils/googleTagManager'
+import { addEventCategory } from 'src/utils/events/utils'
 
-const WALLET_CATEGORY = 'wallet'
-export const WALLET_EVENTS: Record<string, Parameters<typeof trackEvent>[0]> = {
+const WALLET = {
   CONNECT: {
     event: GTM_EVENT.META,
-    category: WALLET_CATEGORY,
     action: 'Connect wallet',
   },
 }
+
+const WALLET_CATEGORY = 'wallet'
+export const WALLET_EVENTS = addEventCategory(WALLET, WALLET_CATEGORY)

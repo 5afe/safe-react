@@ -4,12 +4,13 @@ import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
 
 type Props = {
   children: ReactElement
+  as?: 'span' | 'div'
   category: string
   action: string
   label?: string | number | boolean
 }
 
-const Track = ({ children, ...trackData }: Props): typeof children => {
+const Track = ({ children, as: Wrapper = 'div', ...trackData }: Props): typeof children => {
   const el = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -38,9 +39,9 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
   }
 
   return (
-    <div data-track={`${trackData.category}: ${trackData.action}`} ref={el}>
+    <Wrapper data-track={`${trackData.category}: ${trackData.action}`} ref={el}>
       {children}
-    </div>
+    </Wrapper>
   )
 }
 

@@ -132,7 +132,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Shows apps matching the search query', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -143,7 +143,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Shows app matching the name first for a query that matches in name and description of multiple apps', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Tra' } })
 
@@ -162,7 +162,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
     render(<AppsList />)
 
     const query = 'not-a-real-app'
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: query } })
 
@@ -177,7 +177,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Clears the search result when you press on clear button and shows all apps again', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
     const clearButton = screen.getByLabelText('Clear the search')
@@ -189,7 +189,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it("Doesn't display custom/pinned apps irrelevant to the search (= hides pinned/custom sections)", async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -200,7 +200,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Hides pinned/custom sections when you search', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 

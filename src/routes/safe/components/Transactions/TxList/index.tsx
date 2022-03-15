@@ -5,7 +5,7 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router
 
 import Col from 'src/components/layout/Col'
 import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { SAFE_NAVIGATION } from 'src/utils/events/navigation'
+import { NAVIGATION_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
@@ -23,7 +23,7 @@ const GatewayTransactions = (): ReactElement => {
   const { path } = useRouteMatch()
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION.TRANSACTIONS)
+    trackEvent(NAVIGATION_EVENTS.TRANSACTIONS)
   }, [])
 
   const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))

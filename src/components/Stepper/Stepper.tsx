@@ -43,7 +43,6 @@ function StepperComponent(): ReactElement {
     <StepperMUI data-testid={testId} activeStep={currentStep} orientation="vertical">
       {steps.map(function Step(step, index) {
         const isFirstStep = index === 0
-        const isLastStep = index === steps.length - 1
         const isStepLabelClickable = currentStep > index
         const classes = useStyles({ isStepLabelClickable })
 
@@ -93,21 +92,12 @@ function StepperComponent(): ReactElement {
                   <Col center="xs" xs={12}>
                     {trackingCategory ? (
                       <>
-                        <Track
-                          category={trackingCategory}
-                          action={isFirstStep ? 'Cancel' : 'Back'}
-                          {...(!isFirstStep && { label: currentStep })}
-                        >
+                        <Track category={trackingCategory} action={backButtonLabel} label={currentStep}>
                           {backButton}
                         </Track>
-                        <Track
-                          category={trackingCategory}
-                          action={isLastStep ? 'Finish' : 'Forward'}
-                          label={currentStep}
-                        >
+                        <Track category={trackingCategory} action={nextButtonLabel} label={currentStep}>
                           {nextButton}
                         </Track>
-                        Forward
                       </>
                     ) : (
                       <>

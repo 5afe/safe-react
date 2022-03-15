@@ -4,7 +4,7 @@ import { COOKIES_KEY_INTERCOM, IntercomCookieType } from 'src/logic/cookies/mode
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { INTERCOM_ID } from 'src/utils/constants'
 import { trackEvent } from 'src/utils/googleTagManager'
-import { SAFE_OVERVIEW_EVENTS } from 'src/utils/events/safeOverview'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 let intercomLoaded = false
 
@@ -49,7 +49,7 @@ export const loadIntercom = (): void => {
     })
     intercomLoaded = true
     ;(window as any).Intercom('onShow', () => {
-      trackEvent(SAFE_OVERVIEW_EVENTS.OPEN_INTERCOM)
+      trackEvent(OVERVIEW_EVENTS.OPEN_INTERCOM)
     })
   }
 }

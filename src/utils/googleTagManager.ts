@@ -61,11 +61,17 @@ export enum GTM_EVENT {
   META = 'metadata',
 }
 
+const SHOULD_LOAD_GTM = IS_PRODUCTION || document.querySelector('debug-badge')
+
 export const loadGoogleTagManager = (): void => {
+  if (!SHOULD_LOAD_GTM) {
+    return
+  }
+
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
   if (!GOOGLE_TAG_MANAGER_ID || !GTM_ENVIRONMENT.auth) {
-    console.warn('Unable to initialize Google Tag Manager. `id` or `gtm_auth` missing.')
+    console.warn('[GTM] - Unable to initialize Google Tag Manager. `id` or `gtm_auth` missing.')
     return
   }
 
@@ -88,7 +94,7 @@ export const unloadGoogleTagManager = (): void => {
     { name: '_gid', path: '/' },
   ]
 
-  if (window.dataLayer) {
+  if (SHOULD_LOAD_GTM && window.dataLayer) {
     removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
   }
 }
@@ -118,7 +124,7 @@ export const trackEvent = ({
   event,
   category,
   action,
-  label = '',
+  label,
 }: {
   event: GTM_EVENT
   category: string
@@ -130,9 +136,16 @@ export const trackEvent = ({
     chainId: _getChainId(),
     eventCategory: category,
     eventAction: action,
-    eventLabel: label,
+    ...(label && { eventLabel: label }),
   }
-  TagManager.dataLayer({
-    dataLayer,
-  })
+
+  if (!IS_PRODUCTION) {
+    console.info('[GTM] -', dataLayer)
+  }
+
+  if (SHOULD_LOAD_GTM) {
+    TagManager.dataLayer({
+      dataLayer,
+    })
+  }
 }

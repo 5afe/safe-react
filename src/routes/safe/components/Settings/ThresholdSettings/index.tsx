@@ -14,8 +14,10 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
 import { styles } from './style'
-import { SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import Track from 'src/components/Track'
 
 const useStyles = makeStyles(styles)
 
@@ -30,7 +32,7 @@ const ThresholdSettings = (): React.ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION_SETTINGS.THRESHOLD)
+    trackEvent(NAVIGATION_SETTINGS_EVENTS.THRESHOLD)
   }, [])
 
   return (
@@ -43,15 +45,17 @@ const ThresholdSettings = (): React.ReactElement => {
         </Paragraph>
         {owners && owners.length > 1 && granted && (
           <Row className={classes.buttonRow}>
-            <Button
-              className={classes.modifyBtn}
-              color="primary"
-              minWidth={120}
-              onClick={toggleModal}
-              variant="contained"
-            >
-              Change
-            </Button>
+            <Track {...SETTINGS_EVENTS.THRESHOLD.CHANGE}>
+              <Button
+                className={classes.modifyBtn}
+                color="primary"
+                minWidth={120}
+                onClick={toggleModal}
+                variant="contained"
+              >
+                Change
+              </Button>
+            </Track>
           </Row>
         )}
       </Block>

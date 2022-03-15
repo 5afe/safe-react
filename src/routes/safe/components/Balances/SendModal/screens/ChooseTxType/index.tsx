@@ -21,6 +21,8 @@ import Token from '../assets/token.svg'
 
 import { getExplorerInfo } from 'src/config'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
+import Track from 'src/components/Track'
 
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
@@ -88,53 +90,59 @@ const ChooseTxType = ({
       )}
       <Row align="center">
         <Col className={classes.buttonColumn} layout="column" middle="xs">
-          <Button
-            className={classes.firstButton}
-            color="primary"
-            minHeight={52}
-            minWidth={240}
-            onClick={() => setActiveScreen('sendFunds')}
-            variant="contained"
-            testId="modal-send-funds-btn"
-          >
-            <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
-            Send funds
-          </Button>
-          {erc721Enabled && (
+          <Track {...MODALS_EVENTS.SEND_FUNDS}>
             <Button
               className={classes.firstButton}
               color="primary"
               minHeight={52}
               minWidth={240}
-              onClick={() => setActiveScreen('sendCollectible')}
+              onClick={() => setActiveScreen('sendFunds')}
               variant="contained"
-              testId="modal-send-collectible-btn"
+              testId="modal-send-funds-btn"
             >
-              <Img
-                alt="Send collectible"
-                className={classNames(classes.leftIcon, classes.iconSmall)}
-                src={Collectible}
-              />
-              Send collectible
+              <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
+              Send funds
             </Button>
+          </Track>
+          {erc721Enabled && (
+            <Track {...MODALS_EVENTS.SEND_COLLECTIBLE}>
+              <Button
+                className={classes.firstButton}
+                color="primary"
+                minHeight={52}
+                minWidth={240}
+                onClick={() => setActiveScreen('sendCollectible')}
+                variant="contained"
+                testId="modal-send-collectible-btn"
+              >
+                <Img
+                  alt="Send collectible"
+                  className={classNames(classes.leftIcon, classes.iconSmall)}
+                  src={Collectible}
+                />
+                Send collectible
+              </Button>
+            </Track>
           )}
           {contractInteractionEnabled && (
-            <Button
-              color="primary"
-              disabled={disableContractInteraction}
-              minHeight={52}
-              minWidth={240}
-              onClick={() => setActiveScreen('contractInteraction')}
-              variant="outlined"
-              testId="modal-contract-interaction-btn"
-            >
-              <Img
-                alt="Contract Interaction"
-                className={classNames(classes.leftIcon, classes.iconSmall)}
-                src={ContractInteractionIcon}
-              />
-              Contract interaction
-            </Button>
+            <Track {...MODALS_EVENTS.CONTRACT_INTERACTION}>
+              <Button
+                color="primary"
+                disabled={disableContractInteraction}
+                minHeight={52}
+                minWidth={240}
+                onClick={() => setActiveScreen('contractInteraction')}
+                variant="outlined"
+                testId="modal-contract-interaction-btn"
+              >
+                <Img
+                  alt="Contract Interaction"
+                  className={classNames(classes.leftIcon, classes.iconSmall)}
+                  src={ContractInteractionIcon}
+                />
+                Contract interaction
+              </Button>
+            </Track>
           )}
         </Col>
       </Row>

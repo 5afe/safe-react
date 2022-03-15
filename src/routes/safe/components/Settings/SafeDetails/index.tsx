@@ -36,8 +36,9 @@ import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/con
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -81,6 +82,8 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
+    trackEvent(SETTINGS_EVENTS.DETAILS.SAFE_NAME)
+
     dispatch(
       addressBookAddOrUpdate(
         makeAddressBookEntry({ address: safeAddress, name: values.safeName, chainId: curChainId }),
@@ -116,7 +119,7 @@ const SafeDetails = (): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION_SETTINGS.DETAILS)
+    trackEvent(NAVIGATION_SETTINGS_EVENTS.DETAILS)
   }, [])
 
   useEffect(() => {

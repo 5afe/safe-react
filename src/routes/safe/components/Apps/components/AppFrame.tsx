@@ -34,7 +34,7 @@ import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { SAFE_APP_EVENTS } from 'src/utils/events/safeApp'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 
 const AppWrapper = styled.div`
@@ -317,9 +317,9 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   useEffect(() => {
     if (safeApp) {
-      trackEvent({ ...SAFE_APP_EVENTS.SAFE_APP, label: safeApp.name })
+      trackEvent({ ...SAFE_APPS_EVENTS.OPEN_APP, label: safeApp.name })
     }
-  }, [safeApp, trackEvent])
+  }, [safeApp])
 
   return (
     <AppWrapper>

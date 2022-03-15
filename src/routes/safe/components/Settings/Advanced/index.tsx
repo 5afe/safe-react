@@ -11,7 +11,7 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TransactionGuard } from './TransactionGuard'
-import { SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
 
 const InfoText = styled(Text)`
@@ -44,7 +44,7 @@ const Advanced = (): ReactElement => {
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION_SETTINGS.ADVANCED)
+    trackEvent(NAVIGATION_SETTINGS_EVENTS.ADVANCED)
   }, [])
 
   return (

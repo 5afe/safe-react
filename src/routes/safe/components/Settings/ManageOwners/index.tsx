@@ -25,8 +25,10 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import { SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
+import Track from 'src/components/Track'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -69,7 +71,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
   }
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION_SETTINGS.OWNERS)
+    trackEvent(NAVIGATION_SETTINGS_EVENTS.OWNERS)
   }, [])
 
   const columns = generateColumns()
@@ -122,18 +124,24 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <ButtonHelper onClick={onShow('EditOwner', row)} dataTestId={RENAME_OWNER_BTN_TEST_ID}>
-                        <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
-                      </ButtonHelper>
+                      <Track {...SETTINGS_EVENTS.OWNERS.EDIT_OWNER}>
+                        <ButtonHelper onClick={onShow('EditOwner', row)} dataTestId={RENAME_OWNER_BTN_TEST_ID}>
+                          <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
+                        </ButtonHelper>
+                      </Track>
                       {granted && (
                         <>
-                          <ButtonHelper onClick={onShow('ReplaceOwner', row)} dataTestId={REPLACE_OWNER_BTN_TEST_ID}>
-                            <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
-                          </ButtonHelper>
-                          {ownerData.length > 1 && (
-                            <ButtonHelper onClick={onShow('RemoveOwner', row)} dataTestId={REMOVE_OWNER_BTN_TEST_ID}>
-                              <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
+                          <Track {...SETTINGS_EVENTS.OWNERS.REPLACE_OWNER}>
+                            <ButtonHelper onClick={onShow('ReplaceOwner', row)} dataTestId={REPLACE_OWNER_BTN_TEST_ID}>
+                              <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
                             </ButtonHelper>
+                          </Track>
+                          {ownerData.length > 1 && (
+                            <Track {...SETTINGS_EVENTS.OWNERS.REMOVE_OWNER}>
+                              <ButtonHelper onClick={onShow('RemoveOwner', row)} dataTestId={REMOVE_OWNER_BTN_TEST_ID}>
+                                <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
+                              </ButtonHelper>
+                            </Track>
                           )}
                         </>
                       )}
@@ -150,15 +158,17 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
           <Hairline />
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
-              <Button
-                color="primary"
-                onClick={onShow('AddOwner')}
-                size="small"
-                testId={ADD_OWNER_BTN_TEST_ID}
-                variant="contained"
-              >
-                Add new owner
-              </Button>
+              <Track {...SETTINGS_EVENTS.OWNERS.ADD_OWNER}>
+                <Button
+                  color="primary"
+                  onClick={onShow('AddOwner')}
+                  size="small"
+                  testId={ADD_OWNER_BTN_TEST_ID}
+                  variant="contained"
+                >
+                  Add new owner
+                </Button>
+              </Track>
             </Col>
           </Row>
         </>

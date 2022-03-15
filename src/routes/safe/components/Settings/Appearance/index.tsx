@@ -15,9 +15,9 @@ import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
 import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
-import { SAFE_NAVIGATION } from 'src/utils/events/navigation'
+import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
-import { SAFE_SETTINGS } from 'src/utils/events/settings'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -37,19 +37,34 @@ const Appearance = (): ReactElement => {
   const [darkMode, setDarkMode] = useDarkMode()
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION.APPEARANCE)
+    trackEvent(NAVIGATION_SETTINGS_EVENTS.APPEARANCE)
   }, [])
 
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setShowShortName({ showShortName: checked }))
 
     trackEvent({
-      ...SAFE_SETTINGS.PREFIXES,
+      ...SETTINGS_EVENTS.APPEARANCE.PREPEND_PREFIXES,
       label: checked,
     })
   }
-  const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
+  const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setCopyShortName({ copyShortName: checked }))
+
+    trackEvent({
+      ...SETTINGS_EVENTS.APPEARANCE.COPY_PREFIXES,
+      label: checked,
+    })
+  }
+
+  const handleInvertChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setDarkMode(!darkMode)
+
+    trackEvent({
+      ...SETTINGS_EVENTS.APPEARANCE.INVERT_COLORS,
+      label: checked,
+    })
+  }
 
   return (
     <>
@@ -73,7 +88,7 @@ const Appearance = (): ReactElement => {
         <Heading tag="h2">Theme (experimental)</Heading>
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox checked={darkMode} onChange={() => setDarkMode(!darkMode)} name="showShortName" />}
+            control={<Checkbox checked={darkMode} onChange={handleInvertChange} name="showShortName" />}
             label="Inverted colors"
           />
         </FormGroup>
