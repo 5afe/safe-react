@@ -11,7 +11,7 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
@@ -140,7 +140,7 @@ export const SafeDeployment = ({
     }
 
     const isTxMined = async (txHash: string) => {
-      const web3 = getWeb3()
+      const web3 = getWeb3ReadOnly()
 
       const txResult = await web3.eth.getTransaction(txHash)
       if (txResult?.blockNumber == null) {
@@ -194,7 +194,7 @@ export const SafeDeployment = ({
 
     const awaitUntilSafeIsDeployed = async (safeCreationTxHash: string) => {
       try {
-        const web3 = getWeb3()
+        const web3 = getWeb3ReadOnly()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
         let safeAddress = ''
