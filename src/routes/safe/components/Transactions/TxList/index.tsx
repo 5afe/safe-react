@@ -1,10 +1,12 @@
 import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
+import { SAFE_NAVIGATION } from 'src/utils/events/navigation'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
@@ -19,6 +21,10 @@ const TRANSACTION_TABS: Item[] = [
 const GatewayTransactions = (): ReactElement => {
   const history = useHistory()
   const { path } = useRouteMatch()
+
+  useEffect(() => {
+    trackEvent(SAFE_NAVIGATION.TRANSACTIONS)
+  }, [trackEvent])
 
   const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 

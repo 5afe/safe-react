@@ -42,4 +42,9 @@ export const SAFE_OVERVIEW_EVENTS: Record<string, Parameters<typeof trackEvent>[
     category: SAFE_OVERVIEW_CATEGORY,
     action: 'Open Safe on block explorer',
   },
+  OPEN_SIDEBAR: {
+    event: GTM_EVENT.CLICK,
+    category: SAFE_OVERVIEW_CATEGORY,
+    action: 'Open sidebar',
+  },
 }

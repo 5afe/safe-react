@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
@@ -14,6 +14,8 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
 import { styles } from './style'
+import { SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const useStyles = makeStyles(styles)
 
@@ -26,6 +28,10 @@ const ThresholdSettings = (): React.ReactElement => {
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
   }
+
+  useEffect(() => {
+    trackEvent(SAFE_NAVIGATION_SETTINGS.THRESHOLD)
+  }, [trackEvent])
 
   return (
     <>

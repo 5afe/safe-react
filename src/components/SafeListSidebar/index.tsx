@@ -5,6 +5,8 @@ import { SafeList } from './SafeList'
 import useSidebarStyles from './style'
 import Hairline from 'src/components/layout/Hairline'
 import AddSafeButton from 'src/components/SafeListSidebar/AddSafeButton'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_OVERVIEW_EVENTS } from 'src/utils/events/safeOverview'
 
 export const SafeListSidebarContext = createContext({
   isOpen: false,
@@ -21,6 +23,9 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const classes = useSidebarStyles()
 
   const toggleSidebar = () => {
+    if (!isOpen) {
+      trackEvent(SAFE_OVERVIEW_EVENTS.OPEN_SIDEBAR)
+    }
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
@@ -29,6 +29,8 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { SAFE_NAVIGATION } from 'src/utils/events/navigation'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -78,6 +80,10 @@ const Coins = (props: Props): React.ReactElement => {
   const selectedCurrency = useSelector(currentCurrencySelector)
   const safeTokens = useSelector(extendedSafeTokensSelector)
   const granted = useSelector(grantedSelector)
+
+  useEffect(() => {
+    trackEvent(SAFE_NAVIGATION.COINS)
+  }, [trackEvent])
 
   const filteredData: List<BalanceData> = useMemo(
     () => getBalanceData(safeTokens, selectedCurrency),

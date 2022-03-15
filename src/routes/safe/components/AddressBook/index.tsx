@@ -48,6 +48,8 @@ import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { SAFE_NAVIGATION } from 'src/utils/events/navigation'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -94,6 +96,10 @@ const AddressBookTable = (): ReactElement => {
   const history = useHistory()
   const queryParams = Object.fromEntries(new URLSearchParams(history.location.search))
   const entryAddressToEditOrCreateNew = queryParams?.entryAddress
+
+  useEffect(() => {
+    trackEvent(SAFE_NAVIGATION.ADDRESS_BOOK)
+  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

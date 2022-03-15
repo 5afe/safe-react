@@ -1,5 +1,5 @@
 import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import semverSatisfies from 'semver/functions/satisfies'
@@ -11,6 +11,8 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TransactionGuard } from './TransactionGuard'
+import { SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -40,6 +42,10 @@ const Advanced = (): ReactElement => {
 
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
+
+  useEffect(() => {
+    trackEvent(SAFE_NAVIGATION_SETTINGS.ADVANCED)
+  }, [trackEvent])
 
   return (
     <>

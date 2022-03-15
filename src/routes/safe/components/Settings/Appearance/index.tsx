@@ -1,7 +1,7 @@
 import FormGroup from '@material-ui/core/FormGroup/FormGroup'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { ChangeEvent, ReactElement } from 'react'
+import { ChangeEvent, ReactElement, useEffect } from 'react'
 
 import Block from 'src/components/layout/Block'
 import styled from 'styled-components'
@@ -15,6 +15,8 @@ import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
 import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
+import { SAFE_NAVIGATION, SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -33,8 +35,17 @@ const Appearance = (): ReactElement => {
   const safeAddress = extractSafeAddress()
   const [darkMode, setDarkMode] = useDarkMode()
 
+  useEffect(() => {
+    trackEvent(SAFE_NAVIGATION.APPEARANCE)
+  }, [trackEvent])
+
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setShowShortName({ showShortName: checked }))
+
+    trackEvent({
+      ...SAFE_NAVIGATION_SETTINGS.APPEARANCE,
+      label: `${checked ? 'Enable' : 'Disable'} EIP-3770 prefixes`,
+    })
   }
   const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
     dispatch(setCopyShortName({ copyShortName: checked }))
