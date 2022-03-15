@@ -1922,6 +1922,14 @@
     "@gnosis.pm/safe-react-gateway-sdk" "^2.5.6"
     ethers "^5.4.7"
 
+"@gnosis.pm/safe-apps-sdk@7.3.0":
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-7.3.0.tgz#3a3ed38b75657a7d5cd58d5a6884ec60087b05a8"
+  integrity sha512-1f6VHJWqPRKAEg/m+fbO1XiaDrsTcI3PQg31A0ciHATlVVoh35BYXryijaQxXblLzz4eDgbbIXQdNAH683j87Q==
+  dependencies:
+    "@gnosis.pm/safe-react-gateway-sdk" "^2.10.0"
+    ethers "^5.4.7"
+
 "@gnosis.pm/safe-apps-sdk@^6.2.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-6.3.0.tgz#19f8bff136bdfdf9003745e4202e1cb85322e493"
@@ -1965,7 +1973,7 @@
     react-media "^1.10.0"
     web3-utils "^1.6.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.10.1":
+"@gnosis.pm/safe-react-gateway-sdk@^2.10.0", "@gnosis.pm/safe-react-gateway-sdk@^2.10.1":
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.10.1.tgz#62f4abf733855e734aa1eab4be4778ccd08fe689"
   integrity sha512-uIosTEqmoxhCy7WS8sIzXde2nJQwzC+KfNoeDQVeLZtEpnRZQ7R+N/qDtORMUJfKeyc8cIwkKXmVc2DRgSRxOQ==
