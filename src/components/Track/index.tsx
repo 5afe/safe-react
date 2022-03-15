@@ -25,7 +25,7 @@ const Track = ({ children, ...trackData }: Props): typeof children => {
     return () => {
       el.current?.removeEventListener('click', handleClick)
     }
-  }, [el])
+  }, [el, trackData])
 
   if (children.type === Fragment) {
     throw new Error('Fragments cannot be tracked.')
