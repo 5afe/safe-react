@@ -41,6 +41,7 @@ const SidebarWrapper = styled.aside`
   width: 200px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   z-index: 1;
 
   padding: 8px 8px 0 8px;

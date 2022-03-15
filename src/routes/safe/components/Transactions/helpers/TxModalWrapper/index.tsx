@@ -117,6 +117,7 @@ export const TxModalWrapper = ({
 
   const safeTxGasEstimation = useEstimateSafeTxGas({
     isCreation,
+    isRejectTx,
     txData,
     txRecipient: txTo || safeAddress,
     txAmount: txValue,

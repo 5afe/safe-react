@@ -1,12 +1,17 @@
 import Cookies, { CookieAttributes } from 'js-cookie'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
+export type Cookie = {
+  name: string
+  path: string
+}
+
 const PREFIX = 'v1_MAINNET__'
 
-export const loadFromCookie = async (key: string, withoutPrefix = false): Promise<undefined | Record<string, any>> => {
+export const loadFromCookie = <T extends Record<string, any>>(key: string, withoutPrefix = false): T | undefined => {
   const prefix = withoutPrefix ? '' : PREFIX
   try {
-    const stringifiedValue = await Cookies.get(`${prefix}${key}`)
+    const stringifiedValue = Cookies.get(`${prefix}${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
       return undefined
     }
@@ -18,19 +23,25 @@ export const loadFromCookie = async (key: string, withoutPrefix = false): Promis
   }
 }
 
-export const saveCookie = async (
+export const saveCookie = <T extends Record<string, any>>(
   key: string,
-  value: Record<string, any>,
+  value: T,
   options: CookieAttributes,
   withoutPrefix = false,
-): Promise<void> => {
+): void => {
   const prefix = withoutPrefix ? '' : PREFIX
   try {
     const stringifiedValue = JSON.stringify(value)
-    await Cookies.set(`${prefix}${key}`, stringifiedValue, options)
+    Cookies.set(`${prefix}${key}`, stringifiedValue, options)
   } catch (err) {
     logError(Errors._701, `cookie ${key} – ${err.message}`)
   }
 }
 
 export const removeCookie = (key: string, path: string, domain: string): void => Cookies.remove(key, { path, domain })
+
+export const removeCookies = (cookieList: Cookie[]): void => {
+  // Extracts domain, e.g. gnosis-safe.io
+  const domain = location.host.split('.').slice(-2).join('.')
+  cookieList.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${domain}`))
+}

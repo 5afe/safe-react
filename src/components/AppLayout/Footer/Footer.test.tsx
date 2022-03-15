@@ -1,5 +1,4 @@
 import Footer from './index'
-import CookiesBanner from 'src/components/CookiesBanner'
 import { render, fireEvent, screen } from 'src/utils/test-utils'
 
 describe('<Footer>', () => {
@@ -80,23 +79,6 @@ describe('<Footer>', () => {
 
     expect(cookiePolicyLinkNode).toHaveAttribute('href', 'https://gnosis-safe.io/cookie')
     expect(cookiePolicyLinkNode).toHaveAttribute('target', '_blank')
-  })
-
-  it('Should show preference cookies banner form when clicks on Preferences Link', () => {
-    render(
-      <>
-        <Footer />
-        <CookiesBanner />
-      </>,
-    )
-
-    expect(screen.queryByTestId('cookies-banner-form')).not.toBeInTheDocument()
-
-    const preferencesCookiesNode = screen.getByText('Preferences')
-
-    fireEvent.click(preferencesCookiesNode)
-
-    expect(screen.queryByTestId('cookies-banner-form')).toBeInTheDocument()
   })
 
   it('Should show the current Safe React version if its defined in environment variables', () => {

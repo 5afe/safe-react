@@ -66,7 +66,7 @@ describe('<ReviewInfoText>', () => {
 
     expect(screen.getByText(/6/)).toBeInTheDocument()
     expect(screen.getByText(/9/)).toBeInTheDocument()
-    expect(screen.getByText(/is below the latest transaction's nonce./)).toBeInTheDocument()
-    expect(screen.getByText(/Your transaction might fail./)).toBeInTheDocument()
+    expect(screen.getByText(/is below the latest transaction's nonce in your queue./)).toBeInTheDocument()
+    expect(screen.getByText(/Please verify the submitted nonce./)).toBeInTheDocument()
   })
 })
