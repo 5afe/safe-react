@@ -6,8 +6,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type ProvidersState = {
   name: string
-  hardwareWallet: boolean
-  smartContractWallet: boolean
   network: ChainId
   account: string
   available: boolean
@@ -15,23 +13,19 @@ export type ProvidersState = {
   loaded: boolean
 }
 
-export type ProviderWalletPayload = Pick<ProvidersState, 'name' | 'hardwareWallet'>
+export type ProviderNamePayload = ProvidersState['name']
 export type ProviderNetworkPayload = ProvidersState['network']
 export type ProviderAccountPayload = ProvidersState['account']
 export type ProviderEnsPayload = ProvidersState['ensDomain']
-export type ProviderSmartContractPayload = ProvidersState['smartContractWallet']
 
 export type ProviderPayloads =
-  | ProviderWalletPayload
+  | ProviderNamePayload
   | ProviderAccountPayload
   | ProviderNetworkPayload
   | ProviderEnsPayload
-  | ProviderSmartContractPayload
 
 const initialProviderState: ProvidersState = {
   name: '',
-  hardwareWallet: false,
-  smartContractWallet: false,
   account: '',
   network: '',
   ensDomain: '',
@@ -39,30 +33,39 @@ const initialProviderState: ProvidersState = {
   loaded: false,
 }
 
-const providerFactory = (provider: ProvidersState) => {
-  const { name, hardwareWallet, smartContractWallet, account, network } = provider
-  const hasWallet = !!name || hardwareWallet || smartContractWallet
-  return { ...provider, loaded: hasWallet && !!account && !!network }
-}
-
 export const PROVIDER_REDUCER_ID = 'providers'
+
+const providerFactory = (provider: ProvidersState) => {
+  const { name, account, network } = provider
+  return {
+    ...provider,
+    available: !!account,
+    loaded: !!account && !!name && !!network,
+  }
+}
 
 const providerReducer = handleActions<ProvidersState, ProviderPayloads>(
   {
-    [PROVIDER_ACTIONS.WALLET]: (state: ProvidersState, { payload }: Action<ProviderWalletPayload>) =>
-      providerFactory({ ...state, ...payload }),
+    [PROVIDER_ACTIONS.WALLET_NAME]: (state: ProvidersState, { payload }: Action<ProviderNamePayload>) =>
+      providerFactory({
+        ...state,
+        name: payload,
+      }),
     [PROVIDER_ACTIONS.NETWORK]: (state: ProvidersState, { payload }: Action<ProviderNetworkPayload>) =>
-      providerFactory({ ...state, network: payload }),
+      providerFactory({
+        ...state,
+        network: payload,
+      }),
     [PROVIDER_ACTIONS.ACCOUNT]: (state: ProvidersState, { payload }: Action<ProviderAccountPayload>) =>
       providerFactory({
         ...state,
         account: payload ? checksumAddress(payload) : '',
-        available: !!payload,
       }),
-    [PROVIDER_ACTIONS.SMART_CONTRACT]: (state: ProvidersState, { payload }: Action<ProviderSmartContractPayload>) =>
-      providerFactory({ ...state, smartContractWallet: payload }),
     [PROVIDER_ACTIONS.ENS]: (state: ProvidersState, { payload }: Action<ProviderEnsPayload>) =>
-      providerFactory({ ...state, ensDomain: payload }),
+      providerFactory({
+        ...state,
+        ensDomain: payload,
+      }),
   },
   initialProviderState,
 )

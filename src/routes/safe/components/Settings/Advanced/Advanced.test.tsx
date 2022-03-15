@@ -39,8 +39,6 @@ describe('Advanced Settings Component', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: networkId,
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       safes: {
         safes: {
@@ -70,8 +68,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -99,8 +95,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -128,8 +122,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -159,8 +151,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -193,8 +183,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: userAccount,
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -232,8 +220,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -262,8 +248,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {
@@ -295,8 +279,6 @@ describe('Advanced Settings Component', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: networkId,
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
         safes: {
           safes: {

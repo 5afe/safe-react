@@ -57,7 +57,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
     })
 
     handleClose()
-    await dispatch(fetchSafeTokens(address, newCurrencySelectedName))
+    dispatch(fetchSafeTokens(address, newCurrencySelectedName))
     dispatch(setSelectedCurrency({ selectedCurrency: newCurrencySelectedName }))
   }
 

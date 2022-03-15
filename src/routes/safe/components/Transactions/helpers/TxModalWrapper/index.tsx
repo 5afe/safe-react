@@ -18,13 +18,14 @@ import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 import { useSelector } from 'react-redux'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { List } from 'immutable'
-import { providerSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getNativeCurrency } from 'src/config'
 import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
+import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
 
 type Props = {
   children: ReactNode
@@ -109,9 +110,10 @@ export const TxModalWrapper = ({
   const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
-  const { smartContractWallet } = useSelector(providerSelector)
   const isCreation = isMultisigCreation(confirmationsLen, txType)
-  const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, smartContractWallet, safeVersion)
+  const isSmartContract = useIsSmartContractWallet(userAddress)
+
+  const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
 
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
 

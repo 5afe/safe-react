@@ -88,29 +88,12 @@ describe('fetchSafe', () => {
     })
   })
 
-  it('ignores fetched safe if chainId has changed', async () => {
-    const initialChainId = '100'
-
-    setChainId(initialChainId) // set chainId to 100, but the Safe info will return 4
-
-    const action = fetchSafe(testAddress, false)
-    await (action as MockedAction)(() => null)
-
-    await waitFor(() => {
-      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, initialChainId, testAddress)
-      expect(fetchSafeTokens).not.toHaveBeenCalled()
-      expect(fetchCollectibles).not.toHaveBeenCalled()
-      expect(fetchTransactions).not.toHaveBeenCalled()
-      expect(addViewedSafe).not.toHaveBeenCalled() // don't add to last viewed safes when not initial load
-    })
-  })
-
   describe('Collectibles/History/Queue cache tags', () => {
     const selectors = require('src/logic/safe/store/selectors')
 
     it(`doesn't load collectibles if the tag is fresh`, async () => {
-      // Set the collectible tag to that of the mocked safe info
       jest.spyOn(selectors, 'currentSafeWithNames').mockImplementation(() => ({
+        // Set the collectible tag to that of the mocked safe info
         collectiblesTag: '1629729817',
         txQueuedTag: '123',
         txHistoryTag: '123',
@@ -127,30 +110,11 @@ describe('fetchSafe', () => {
       })
     })
 
-    it(`doesn't load collectibles if the tag hasn't changed`, async () => {
-      // Set the collectible tag to that of the mocked safe info
-      jest.spyOn(selectors, 'currentSafeWithNames').mockImplementationOnce(() => ({
-        collectiblesTag: '1629729817',
-        txQueuedTag: '123',
-        txHistoryTag: '123',
-      }))
-
-      const action = fetchSafe(testAddress, false)
-      await (action as MockedAction)(() => null)
-
-      await waitFor(() => {
-        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
-        expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
-        expect(fetchCollectibles).not.toHaveBeenCalled()
-        expect(fetchTransactions).toHaveBeenCalled()
-      })
-    })
-
-    it(`loads history if either the queue or history tag has changed`, async () => {
-      // Set the collectible tag to that of the mocked safe info
+    it(`loads history if either queue or history tag has changed`, async () => {
       jest.spyOn(selectors, 'currentSafeWithNames').mockImplementationOnce(() => ({
         collectiblesTag: '123',
         txQueuedTag: '123',
+        // Set the history tag to that of the mocked safe info
         txHistoryTag: '1629729817',
       }))
 
@@ -166,9 +130,9 @@ describe('fetchSafe', () => {
     })
 
     it(`doesn't load history if both history and queue tags haven't changed`, async () => {
-      // Set the collectible tag to that of the mocked safe info
       jest.spyOn(selectors, 'currentSafeWithNames').mockImplementationOnce(() => ({
         collectiblesTag: '123',
+        // Set the history and queue tags to that of the mocked safe info
         txQueuedTag: '1629729817',
         txHistoryTag: '1629729817',
       }))

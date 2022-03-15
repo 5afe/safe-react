@@ -161,7 +161,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
     },
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
       const { chainId, safeAddress, transactionId, value } = action.payload
-      const clonedStoredTxs = cloneDeep(state[chainId]?.[safeAddress])
+      const clonedStoredTxs = cloneDeep(state[chainId]?.[safeAddress]) || {}
       const { queued: newQueued, history: newHistory } = clonedStoredTxs
 
       // get the tx group (it will be `queued.next`, `queued.queued` or `history`)

@@ -1,5 +1,5 @@
 export enum PROVIDER_ACTIONS {
-  WALLET = 'provider/walletUpdated',
+  WALLET_NAME = 'provider/nameUpdated',
   ACCOUNT = 'provider/accountUpdated',
   SMART_CONTRACT = 'provider/smartContract',
   NETWORK = 'provider/networkUpdated',
