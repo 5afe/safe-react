@@ -23,6 +23,8 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
+import { getExplorerInfo } from 'src/config'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -283,6 +285,16 @@ export const SafeDeployment = ({
           </BodyInstruction>
         )}
 
+        {steps[stepIndex].instruction && creationTxHash ? (
+          <TxText>
+            Your Safe creation transaction:
+            <br />
+            <Center>
+              <PrefixedEthHashInfo hash={creationTxHash} showCopyBtn explorerUrl={getExplorerInfo(creationTxHash)} />
+            </Center>
+          </TxText>
+        ) : null}
+
         <BodyFooter>
           {FooterComponent ? (
             <FooterComponent
@@ -372,6 +384,14 @@ const FullParagraph = styled(Paragraph)<FullParagraphProps>`
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
 
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: -10px;
+`
+
 const BodyImage = styled.div`
   grid-row: 1;
 `
@@ -382,8 +402,15 @@ const BodyInstruction = styled.div`
   grid-row: 3;
   margin: 27px 0;
 `
-const BodyFooter = styled.div`
+
+const TxText = styled.div`
   grid-row: 4;
+  margin: 3em 0;
+  font-size: 0.8em;
+`
+
+const BodyFooter = styled.div`
+  grid-row: 5;
 
   padding: 10px 0;
   display: flex;

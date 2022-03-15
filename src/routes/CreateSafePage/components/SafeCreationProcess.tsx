@@ -110,10 +110,10 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
     const confirmations = safeCreationFormValues[FIELD_NEW_SAFE_THRESHOLD]
     const ownerFields = safeCreationFormValues[FIELD_SAFE_OWNERS_LIST]
     const ownerAddresses = ownerFields.map(({ addressFieldName }) => safeCreationFormValues[addressFieldName])
-    const safeCreationSalt = safeCreationFormValues[FIELD_NEW_SAFE_PROXY_SALT]
     const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
     const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
     const gasMaxPrioFee = safeCreationFormValues[FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE]
+    const safeCreationSalt = Date.now() // never retry with the same salt
     const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
     const sendParams = createSendParams(userAddress, {
@@ -128,8 +128,9 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         onHash(txHash)
 
         saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
-          [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
           ...safeCreationFormValues,
+          [FIELD_NEW_SAFE_PROXY_SALT]: safeCreationSalt,
+          [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
         })
 
         // Monitor the latest block to find a potential speed-up tx
