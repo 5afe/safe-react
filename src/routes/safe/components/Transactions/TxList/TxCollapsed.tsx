@@ -44,6 +44,8 @@ const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
       case 'SWAP_OWNER':
       case 'CHANGE_THRESHOLD':
       case 'CHANGE_IMPLEMENTATION':
+      case 'SET_GUARD':
+      case 'DELETE_GUARD':
         break
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':

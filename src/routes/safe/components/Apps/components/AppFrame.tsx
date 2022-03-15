@@ -33,6 +33,7 @@ import { SignMessageModal } from './SignMessageModal'
 import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -86,6 +87,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
+  const granted = useSelector(grantedSelector)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
@@ -172,6 +174,9 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
   useEffect(() => {
+    /**
+     * @deprecated: getEnvInfo is a legacy method. Should not be used
+     */
     communicator?.on('getEnvInfo', () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
@@ -184,6 +189,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return tx
     })
 
+    communicator?.on(Methods.getEnvironmentInfo, async () => ({
+      origin: document.location.origin,
+    }))
+
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
       // FIXME `network` is deprecated. we should find how many apps are still using it
@@ -192,6 +201,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       chainId: parseInt(chainId, 10),
       owners,
       threshold,
+      isReadOnly: !granted,
     }))
 
     communicator?.on(Methods.getSafeBalances, async (msg) => {
@@ -261,6 +271,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     chainName,
     shortName,
     safeAppWeb3Provider,
+    granted,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {

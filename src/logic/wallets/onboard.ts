@@ -63,16 +63,10 @@ const getOnboard = (chainId: ChainId): API => {
           saveLastUsedProvider(wallet.name)
         }
 
-        store.dispatch(
-          updateProviderWallet({
-            name: wallet.name || '',
-            hardwareWallet: wallet.type === 'hardware',
-          }),
-        )
+        store.dispatch(updateProviderWallet(wallet.name || ''))
       },
       // Non-checksummed address
       address: (address) => {
-        // isSmartContract is checked when address changes (in middleware)
         store.dispatch(updateProviderAccount(address || ''))
 
         if (address) {

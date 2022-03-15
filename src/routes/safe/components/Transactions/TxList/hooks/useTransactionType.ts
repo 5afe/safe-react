@@ -37,7 +37,10 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         break
       }
       case 'SettingsChange': {
-        setType({ icon: SettingsTxIcon, text: tx.txInfo.dataDecoded.method })
+        // deleteGuard doesn't exist in Solidity
+        // It is decoded as 'setGuard' with a settingsInfo.type of 'DELETE_GUARD'
+        const isDeleteGuard = tx.txInfo.settingsInfo?.type === 'DELETE_GUARD'
+        setType({ icon: SettingsTxIcon, text: isDeleteGuard ? 'deleteGuard' : tx.txInfo.dataDecoded.method })
         break
       }
       case 'Custom': {

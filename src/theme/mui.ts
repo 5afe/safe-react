@@ -268,7 +268,6 @@ const theme = createTheme({
         color: primary,
         display: 'flex',
         height: 'auto',
-        letterSpacing: '0.5px',
         padding: md,
         lineHeight: '1.5',
         textOverflow: 'ellipsis',

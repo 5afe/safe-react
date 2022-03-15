@@ -4,7 +4,7 @@ import {
   Erc721Transfer,
   MultisigExecutionInfo,
   Operation,
-  TokenType,
+  TransactionTokenType,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -127,7 +127,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const value = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
+        if (t.current.txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
           return t.current.txInfo.transferInfo.value
         } else {
           return t.current.txDetails.txData?.value ?? '0'
@@ -144,7 +144,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const to = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
+        if (t.current.txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
           return t.current.txInfo.recipient.value
         } else {
           return (t.current.txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress

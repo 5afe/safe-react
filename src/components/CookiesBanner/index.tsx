@@ -114,7 +114,7 @@ const CookiesBannerForm = (props: {
       <div className={classes.content}>
         {key && (
           <div className={classes.intercomAlert}>
-            <img src={AlertRedIcon} />
+            <img src={AlertRedIcon} alt="" />
             {COOKIE_ALERTS[key]}
           </div>
         )}
@@ -176,6 +176,7 @@ const CookiesBannerForm = (props: {
 const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement => {
   return (
     <img
+      alt="Open Intercom"
       style={{
         position: 'fixed',
         cursor: 'pointer',
@@ -263,6 +264,7 @@ const CookiesBanner = isDesktop
         }
 
         const { acceptedNecessary, acceptedSupportAndUpdates, acceptedAnalytics } = cookiesState
+
         setLocalNecessary(acceptedNecessary)
         setLocalSupportAndUpdates(acceptedSupportAndUpdates)
         setLocalAnalytics(acceptedAnalytics)
