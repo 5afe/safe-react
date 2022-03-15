@@ -28,7 +28,7 @@ describe('Track', () => {
     expect(child).toHaveAttribute('data-track', 'unit-test: Render child')
   })
 
-  it('tracks the event on click', () => {
+  it('tracks the event on click', async () => {
     const trackEventSpy = jest.spyOn(gtm, 'trackEvent').mockImplementation(jest.fn())
 
     render(
@@ -47,7 +47,7 @@ describe('Track', () => {
 
     fireEvent.click(child)
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(trackEventSpy).toHaveBeenCalledWith({
         event: 'customClick',
         category: 'unit-test',
