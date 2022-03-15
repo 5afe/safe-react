@@ -1,6 +1,5 @@
 import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
 
-// Legacy GA events encapsulated the entire stepper under 'Created a Safe'
 export const CREATE_SAFE_CATEGORY = 'safe-creation'
 export const CREATE_SAFE_EVENTS: Record<string, Parameters<typeof trackEvent>[0]> = {
   CREATE_BUTTON: {
