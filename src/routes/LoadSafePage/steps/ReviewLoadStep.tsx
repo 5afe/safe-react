@@ -67,7 +67,7 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Name of the Safe
             </Paragraph>
-            <Paragraph color="primary" noMargin size="lg" weight="bolder" data-testid="load-form-review-safe-name">
+            <Paragraph color="primary" noMargin size="md" weight="bolder" data-testid="load-form-review-safe-name">
               {safeName}
             </Paragraph>
           </Block>
@@ -89,7 +89,7 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Connected wallet client is owner?
             </Paragraph>
-            <Paragraph data-testid={'connected-wallet-is-owner'} color="primary" noMargin size="lg" weight="bolder">
+            <Paragraph data-testid={'connected-wallet-is-owner'} color="primary" noMargin size="md" weight="bolder">
               {isUserConnectedWalletASAfeOwner ? 'Yes' : 'No (read-only)'}
             </Paragraph>
           </Block>
@@ -97,7 +97,7 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Any transaction requires the confirmation of:
             </Paragraph>
-            <Paragraph color="primary" noMargin size="lg" weight="bolder">
+            <Paragraph color="primary" noMargin size="md" weight="bolder">
               {`${threshold} out of ${ownerList.length} owners`}
             </Paragraph>
           </Block>
