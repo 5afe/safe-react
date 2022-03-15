@@ -82,7 +82,7 @@ const Coins = (props: Props): React.ReactElement => {
   const granted = useSelector(grantedSelector)
 
   useEffect(() => {
-    trackEvent(SAFE_NAVIGATION.COINS)
+    trackEvent(SAFE_NAVIGATION.BALANCE)
   }, [trackEvent])
 
   const filteredData: List<BalanceData> = useMemo(

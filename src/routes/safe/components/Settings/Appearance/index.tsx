@@ -15,8 +15,9 @@ import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
 import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
-import { SAFE_NAVIGATION, SAFE_NAVIGATION_SETTINGS } from 'src/utils/events/navigation'
+import { SAFE_NAVIGATION } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_SETTINGS } from 'src/utils/events/settings'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -43,8 +44,8 @@ const Appearance = (): ReactElement => {
     dispatch(setShowShortName({ showShortName: checked }))
 
     trackEvent({
-      ...SAFE_NAVIGATION_SETTINGS.APPEARANCE,
-      label: `${checked ? 'Enable' : 'Disable'} EIP-3770 prefixes`,
+      ...SAFE_SETTINGS.PREFIXES,
+      label: checked,
     })
   }
   const handleCopyChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>

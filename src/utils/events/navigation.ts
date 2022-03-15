@@ -3,10 +3,10 @@ import { GTM_EVENT, trackEvent } from '../googleTagManager'
 // Legacy GA tracked all navigation, as well as pageviews
 const NAVIGATION_CATEGORY = 'safe-navigation'
 export const SAFE_NAVIGATION: Record<string, Parameters<typeof trackEvent>[0]> = {
-  COINS: {
+  BALANCE: {
     event: GTM_EVENT.CLICK,
     category: NAVIGATION_CATEGORY,
-    action: 'Coins',
+    action: 'Balance',
   },
   COLLECTIBLES: {
     event: GTM_EVENT.CLICK,
