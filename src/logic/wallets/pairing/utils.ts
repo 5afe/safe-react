@@ -5,19 +5,6 @@ import { getPairingConnector, PAIRING_MODULE_NAME } from 'src/logic/wallets/pair
 import { getOnboardState } from 'src/logic/wallets/onboard'
 import { CGW_WALLETS, WALLET_MODULE_LABELS } from '../onboard/wallets'
 
-// Create WC session for pairing
-export const initPairing = async (): Promise<void> => {
-  const connector = getPairingConnector()
-  if (!connector.connected) {
-    await connector.createSession()
-  }
-}
-
-export const isPairingConnected = (): boolean => {
-  const { connected } = getPairingConnector()
-  return connected
-}
-
 export const isPairingSupported = (): boolean => {
   return !getDisabledWallets().some((label) => [WALLET_MODULE_LABELS.PAIRING, CGW_WALLETS.SAFE_MOBILE].includes(label))
 }
@@ -27,8 +14,11 @@ export const isPairingWallet = (label: WalletState['label'] = getOnboardState().
   return label === PAIRING_MODULE_NAME
 }
 
-export const getPairingUri = (): string => {
+export const isUriLoaded = (uri: string): boolean => {
+  return !!uri && !uri.endsWith('key=')
+}
+
+export const getPairingUri = (uri = getPairingConnector().uri): string => {
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
-  const { uri } = getPairingConnector()
-  return uri ? `${PAIRING_MODULE_URI_PREFIX}${uri}` : ''
+  return isUriLoaded(uri) ? `${PAIRING_MODULE_URI_PREFIX}${uri}` : ''
 }

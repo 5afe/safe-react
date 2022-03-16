@@ -12,31 +12,31 @@ import WalletConnect from '@walletconnect/client'
 
 import { APP_VERSION, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
 import { getOnboardInstance } from 'src/logic/wallets/onboard'
+import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 
 export const PAIRING_MODULE_NAME = 'Safe Mobile'
 export const PAIRING_STORAGE_ID = 'SAFE__pairingProvider'
 
-const _pairingConnector = new WalletConnect({
-  bridge: WC_BRIDGE,
-  storageId: PAIRING_STORAGE_ID,
-})
+const createPairingConnector = (): WalletConnect => {
+  const pairingConnector = new WalletConnect({
+    bridge: WC_BRIDGE,
+    storageId: PAIRING_STORAGE_ID,
+  })
+
+  pairingConnector.on('connect', () => {
+    getOnboardInstance().connectWallet({
+      autoSelect: { label: PAIRING_MODULE_NAME, disableModals: true },
+    })
+  })
+
+  return pairingConnector
+}
+
+const _pairingConnector = createPairingConnector()
 
 export const getPairingConnector = (): InstanceType<typeof WalletConnect> => {
-  if (!_pairingConnector) {
-    throw new Error('Pairing is not initialized')
-  }
   return _pairingConnector
 }
-
-if (!_pairingConnector.connected) {
-  _pairingConnector.createSession()
-}
-
-_pairingConnector.on('connect', () => {
-  getOnboardInstance().connectWallet({
-    autoSelect: { label: PAIRING_MODULE_NAME, disableModals: true },
-  })
-})
 
 // Modified version of web3-onboard/walletconnect v2.0.1
 export function pairingModule(): WalletInit {
@@ -64,6 +64,8 @@ export function pairingModule(): WalletInit {
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5 18.8511C12.7237 18.8511 12.0938 19.4811 12.0938 20.2573C12.0938 21.0336 12.7237 21.6636 13.5 21.6636C14.2762 21.6636 14.9062 21.0336 14.9062 20.2573C14.9062 19.4811 14.2762 18.8511 13.5 18.8511Z" fill="#008C73"/>
                     </svg>`,
       getInterface: async ({ chains, EventEmitter }) => {
+        const { default: QRCodeModal } = await import('@walletconnect/qrcode-modal')
+
         const { Subject, fromEvent } = await import('rxjs')
         const { takeUntil, take } = await import('rxjs/operators')
 
@@ -112,10 +114,6 @@ export function pairingModule(): WalletInit {
                 error: console.warn,
               })
 
-            const onDisconnect = () => this.connector.killSession()
-
-            window.addEventListener('unload', onDisconnect, { once: true })
-
             // Listen for disconnect event
             fromEvent(this.connector, 'disconnect', (error, payload) => {
               if (error) {
@@ -134,7 +132,10 @@ export function pairingModule(): WalletInit {
                 error: console.warn,
               })
 
-            this.disconnect = () => onDisconnect()
+            this.disconnect = () => this.connector.killSession()
+
+            // Disconnect on unload
+            window.addEventListener('unload', this.disconnect, { once: true })
 
             this.request = async ({ method, params }) => {
               if (method === 'eth_chainId') {
@@ -144,7 +145,19 @@ export function pairingModule(): WalletInit {
               if (method === 'eth_requestAccounts') {
                 return new Promise<ProviderAccounts>((resolve, reject) => {
                   // Check if connection is already established
-                  if (this.connector.connected) {
+                  if (!this.connector.connected) {
+                    // create new session
+                    this.connector.createSession().then(() => {
+                      QRCodeModal.open(getPairingUri(this.connector.uri), () =>
+                        reject(
+                          new ProviderRpcError({
+                            code: 4001,
+                            message: 'User rejected the request.',
+                          }),
+                        ),
+                      )
+                    })
+                  } else {
                     const { accounts, chainId } = this.connector.session
                     this.emit('chainChanged', `0x${chainId.toString(16)}`)
                     return resolve(accounts)
@@ -152,7 +165,6 @@ export function pairingModule(): WalletInit {
 
                   // Subscribe to connection events
                   fromEvent(this.connector, 'connect', (error, payload) => {
-                    console.log('connect')
                     if (error) {
                       throw error
                     }
@@ -165,6 +177,7 @@ export function pairingModule(): WalletInit {
                         const [{ accounts, chainId }] = params
                         this.emit('accountsChanged', accounts)
                         this.emit('chainChanged', `0x${chainId.toString(16)}`)
+                        QRCodeModal.close()
                         resolve(accounts)
                       },
                       error: reject,

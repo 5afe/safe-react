@@ -1,47 +1,38 @@
 import { useState, useEffect } from 'react'
 
-import { getPairingUri, initPairing, isPairingWallet } from 'src/logic/wallets/pairing/utils'
+import { getPairingUri, isPairingWallet, isUriLoaded } from 'src/logic/wallets/pairing/utils'
+import { getPairingConnector } from 'src/logic/wallets/pairing'
+import { getOnboardState } from 'src/logic/wallets/onboard'
 import { useOnboard } from 'src/logic/wallets/onboard/useOnboard'
-import { getPairingConnector, PAIRING_MODULE_NAME, PAIRING_STORAGE_ID } from 'src/logic/wallets/pairing'
-import { getOnboardInstance } from 'src/logic/wallets/onboard'
 
 const pairingConnector = getPairingConnector()
 
 const usePairing = (): { uri: string; isLoaded: boolean } => {
-  const [uri, setUri] = useState<string>('')
+  const [uri, setUri] = useState<string>(getPairingUri)
   const { wallet } = useOnboard()
-  const pairingUri = getPairingUri()
 
   useEffect(() => {
-    initPairing()
-  }, [])
+    const DISPLAY_URI_EVENT = 'display_uri'
 
-  useEffect(() => {
-    const subscription = getOnboardInstance()
-      .state.select('wallets')
-      .subscribe((wallets) => {
-        if (wallets.length === 0) {
-          if (!pairingConnector.connected) {
-            pairingConnector.createSession()
-          }
-          return
-        }
+    pairingConnector.on(DISPLAY_URI_EVENT, (_, { params }) => {
+      setUri(getPairingUri(params[0]))
+    })
 
-        const hasPairingWallet = wallets.some(({ label }) => label === PAIRING_MODULE_NAME)
-        if (!hasPairingWallet) {
-          pairingConnector.killSession()
-          localStorage.removeItem(PAIRING_STORAGE_ID)
-        }
-      })
+    if (!wallet.label && !pairingConnector.connected) {
+      pairingConnector.createSession()
+    }
 
-    return subscription.unsubscribe.bind(subscription)
-  }, [wallet.label])
+    return () => {
+      pairingConnector.off(DISPLAY_URI_EVENT)
 
-  useEffect(() => {
-    setUri(pairingUri)
-  }, [pairingUri])
+      const { label } = getOnboardState().wallet
+      if (label && !isPairingWallet(label)) {
+        pairingConnector.killSession()
+      }
+    }
+  }, [wallet])
 
-  return { uri, isLoaded: isPairingWallet(wallet.label) }
+  return { uri, isLoaded: isUriLoaded(uri) }
 }
 
 export default usePairing

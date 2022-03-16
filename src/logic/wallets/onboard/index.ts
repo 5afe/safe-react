@@ -96,7 +96,7 @@ const EMPTY_WALLET: WalletState = {
 }
 
 // Helpers
-export const _getOnboardState = (): AppState => {
+const _getOnboardState = (): AppState => {
   return getOnboardInstance().state.get()
 }
 const _getPrimaryWallet = (state: AppState): WalletState => {
