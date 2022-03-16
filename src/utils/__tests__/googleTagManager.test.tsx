@@ -11,8 +11,6 @@ jest.mock('react-router-dom', () => ({
   matchPath: jest.fn(),
 }))
 
-customElements.define('debug-badge', HTMLElement)
-
 describe('googleTagManager', () => {
   beforeEach(() => {
     jest.resetModules()
@@ -78,47 +76,8 @@ describe('googleTagManager', () => {
     })
   })
   describe('loadGoogleTagManager', () => {
-    it("doesn't initialize outside of prod", () => {
-      jest.doMock('src/utils/constants.ts', () => ({
-        IS_PRODUCTION: false,
-      }))
-
-      const mockInitialize = jest.fn()
-      jest.doMock('react-gtm-module', () => ({
-        initialize: mockInitialize,
-      }))
-
-      // doMock doesn't hoist
-      const { loadGoogleTagManager } = require('src/utils/googleTagManager')
-      loadGoogleTagManager()
-
-      expect(mockInitialize).not.toHaveBeenCalled()
-    })
-    it('initializes when the GTM debug badge is present', () => {
-      const mockDebugBadge = document.createElement('debug-badge')
-      document.body.appendChild(mockDebugBadge)
-
-      jest.doMock('src/utils/constants.ts', () => ({
-        GOOGLE_TAG_MANAGER_ID: 'id123',
-        GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: 'auth123',
-      }))
-
-      const mockInitialize = jest.fn()
-      jest.doMock('react-gtm-module', () => ({
-        initialize: mockInitialize,
-      }))
-
-      // doMock doesn't hoist
-      const { loadGoogleTagManager } = require('src/utils/googleTagManager')
-      loadGoogleTagManager()
-
-      expect(mockInitialize).toHaveBeenCalled()
-
-      document.body.removeChild(mockDebugBadge)
-    })
     it('prevents init without a gtm id/auth', () => {
       jest.doMock('src/utils/constants.ts', () => ({
-        IS_PRODUCTION: true,
         GOOGLE_TAG_MANAGER_ID: '',
         GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: '',
       }))
@@ -136,9 +95,8 @@ describe('googleTagManager', () => {
     })
     it('inits gtm with a pageview event', () => {
       jest.doMock('src/utils/constants.ts', () => ({
-        IS_PRODUCTION: true,
         GOOGLE_TAG_MANAGER_ID: 'id123',
-        GOOGLE_TAG_MANAGER_AUTH_LIVE: 'auth123',
+        GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: 'auth123',
       }))
 
       jest.doMock('src/config', () => ({
@@ -157,7 +115,7 @@ describe('googleTagManager', () => {
       expect(mockInitialize).toHaveBeenCalledWith({
         gtmId: 'id123',
         auth: 'auth123',
-        preview: 'env-1', // Uses production container
+        preview: 'env-3',
         dataLayer: {
           event: 'pageview',
           chainId: '4',
@@ -192,59 +150,7 @@ describe('googleTagManager', () => {
     })
   })
   describe('trackEvent', () => {
-    it("doesn't initialize outside of prod", () => {
-      jest.doMock('src/utils/constants.ts', () => ({
-        IS_PRODUCTION: false,
-      }))
-
-      const mockDataLayer = jest.fn()
-      jest.doMock('react-gtm-module', () => ({
-        dataLayer: mockDataLayer,
-      }))
-
-      // doMock doesn't hoist
-      const { trackEvent } = require('src/utils/googleTagManager')
-      trackEvent({
-        event: 'testEvent' as GTM_EVENT,
-        category: 'unit-test',
-        action: 'Track event',
-        label: 1,
-      })
-
-      expect(mockDataLayer).not.toHaveBeenCalled()
-    })
-    it('initializes when the GTM debug badge is present', () => {
-      const mockDebugBadge = document.createElement('debug-badge')
-      document.body.appendChild(mockDebugBadge)
-
-      jest.doMock('src/utils/constants.ts', () => ({
-        GOOGLE_TAG_MANAGER_ID: 'id123',
-        GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: 'auth123',
-      }))
-
-      const mockDataLayer = jest.fn()
-      jest.doMock('react-gtm-module', () => ({
-        dataLayer: mockDataLayer,
-      }))
-
-      // doMock doesn't hoist
-      const { trackEvent } = require('src/utils/googleTagManager')
-      trackEvent({
-        event: 'testEvent' as GTM_EVENT,
-        category: 'unit-test',
-        action: 'Track event',
-        label: 1,
-      })
-
-      expect(mockDataLayer).toHaveBeenCalled()
-
-      document.body.removeChild(mockDebugBadge)
-    })
     it('tracks a correctly formed event from the arguments', async () => {
-      jest.doMock('src/utils/constants.ts', () => ({
-        IS_PRODUCTION: true,
-      }))
-
       const mockDataLayer = jest.fn()
       jest.doMock('react-gtm-module', () => ({
         dataLayer: mockDataLayer,

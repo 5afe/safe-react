@@ -3,6 +3,7 @@ import TagManager, { TagManagerArgs } from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
 import { Location } from 'history'
 import { useSelector } from 'react-redux'
+import memoize from 'lodash/memoize'
 
 import { ADDRESSED_ROUTE, history, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import {
@@ -15,6 +16,7 @@ import {
 import { _getChainId } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { Cookie, removeCookies } from 'src/logic/cookies/utils'
+import { TrackEvent } from 'src/utils/events/utils'
 
 export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
@@ -61,13 +63,7 @@ export enum GTM_EVENT {
   META = 'metadata',
 }
 
-const SHOULD_LOAD_GTM = IS_PRODUCTION || document.querySelector('debug-badge')
-
 export const loadGoogleTagManager = (): void => {
-  if (!SHOULD_LOAD_GTM) {
-    return
-  }
-
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
   if (!GOOGLE_TAG_MANAGER_ID || !GTM_ENVIRONMENT.auth) {
@@ -88,15 +84,17 @@ export const loadGoogleTagManager = (): void => {
 }
 
 export const unloadGoogleTagManager = (): void => {
+  if (!window.dataLayer) {
+    return
+  }
+
   const GOOGLE_ANALYTICS_COOKIE_LIST: Cookie[] = [
     { name: '_ga', path: '/' },
     { name: '_gat', path: '/' },
     { name: '_gid', path: '/' },
   ]
 
-  if (SHOULD_LOAD_GTM && window.dataLayer) {
-    removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
-  }
+  removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
 }
 
 export const usePageTracking = (): void => {
@@ -136,16 +134,23 @@ export const trackEvent = ({
     chainId: _getChainId(),
     eventCategory: category,
     eventAction: action,
-    ...(label && { eventLabel: label }),
+    eventLabel: label,
   }
 
   if (!IS_PRODUCTION) {
     console.info('[GTM] -', dataLayer)
   }
 
-  if (SHOULD_LOAD_GTM) {
-    TagManager.dataLayer({
-      dataLayer,
-    })
-  }
+  TagManager.dataLayer({
+    dataLayer,
+  })
 }
+
+// Track event then again only when a dependency changes
+export const trackEventMemoized = memoize(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (event: TrackEvent, ..._deps: (string | number | boolean | null | undefined)[]): void => {
+    trackEvent(event)
+  },
+  (event, ...deps) => [Object.entries(event), ...deps].join(),
+)

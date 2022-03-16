@@ -30,9 +30,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { NAVIGATION_EVENTS } from 'src/utils/events/navigation'
-import { trackEvent } from 'src/utils/googleTagManager'
+import { trackEvent, trackEventMemoized } from 'src/utils/googleTagManager'
 import { ASSETS_EVENTS } from 'src/utils/events/assets'
 import Track from 'src/components/Track'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -82,17 +84,17 @@ const Coins = (props: Props): React.ReactElement => {
   const selectedCurrency = useSelector(currentCurrencySelector)
   const safeTokens = useSelector(extendedSafeTokensSelector)
   const granted = useSelector(grantedSelector)
+  const chainId = useSelector(currentChainId)
+  const { address } = useSelector(currentSafe)
 
   useEffect(() => {
     trackEvent(NAVIGATION_EVENTS.BALANCE)
   }, [])
 
-  const tokenAmount = useMemo(() => safeTokens.size, [safeTokens])
+  const differingTokens = useMemo(() => safeTokens.size, [safeTokens])
   useEffect(() => {
-    if (tokenAmount > 0) {
-      trackEvent({ ...ASSETS_EVENTS.TOKEN_AMOUNT, label: tokenAmount })
-    }
-  }, [tokenAmount])
+    trackEventMemoized({ ...ASSETS_EVENTS.DIFFERING_TOKENS, label: differingTokens }, chainId, address)
+  }, [differingTokens, chainId, address])
 
   const filteredData: List<BalanceData> = useMemo(
     () => getBalanceData(safeTokens, selectedCurrency),

@@ -10,7 +10,7 @@ const ASSETS = {
     event: GTM_EVENT.META,
     action: 'Change currency',
   },
-  TOKEN_AMOUNT: {
+  DIFFERING_TOKENS: {
     event: GTM_EVENT.META,
     action: 'Tokens',
   },
