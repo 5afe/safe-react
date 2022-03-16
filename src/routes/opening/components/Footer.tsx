@@ -1,23 +1,11 @@
 import { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
-
-import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
+import { Loader } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
-import { getHashedExplorerUrl } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
+import Paragraph from 'src/components/layout/Paragraph'
 
-const StyledText = styled(Text)`
-  display: inline-flex;
-  a {
-    margin-left: 4px;
-  }
-  svg {
-    position: relative;
-    top: 4px;
-    left: 4px;
-  }
-`
 const ButtonWithMargin = styled(Button)`
   margin-right: 16px;
 `
@@ -34,30 +22,11 @@ const LoaderText = styled.span`
   margin-left: 10px;
 `
 
-export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
-  const explorerUrl = getHashedExplorerUrl(safeCreationTxHash)
-  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(explorerUrl)
-  const explorerDomain = match !== null ? match[2] : 'Network Explorer'
-
+export const GenericFooter = (): ReactElement => {
   return (
-    <span>
-      <Text size="xl">This process should take a couple of minutes.</Text>
-      <StyledText size="xl">
-        Follow the progress on{' '}
-        <Link
-          href={explorerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="safe-create-explorer-link"
-          title="More info about this in Etherscan"
-        >
-          <Text size="xl" as="span" color="primary">
-            {explorerDomain}
-          </Text>
-          <Icon size="sm" type="externalLink" color="primary" />
-        </Link>
-      </StyledText>
-    </span>
+    <Paragraph size="lg" color="primary">
+      This process should take a couple of minutes.
+    </Paragraph>
   )
 }
 
