@@ -26,7 +26,7 @@ export const QueueTransactions = (): ReactElement => {
     return (
       <NoTransactions>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />
-        <Title size="xs">Queue transactions will appear here </Title>
+        <Title size="xs">Queued transactions will appear here </Title>
       </NoTransactions>
     )
   }
