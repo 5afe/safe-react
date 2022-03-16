@@ -48,8 +48,6 @@ import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { NAVIGATION_EVENTS } from 'src/utils/events/navigation'
-import { trackEvent } from 'src/utils/googleTagManager'
 import { ADDRESS_BOOK_EVENTS } from 'src/utils/events/addressBook'
 import Track from 'src/components/Track'
 
@@ -98,10 +96,6 @@ const AddressBookTable = (): ReactElement => {
   const history = useHistory()
   const queryParams = Object.fromEntries(new URLSearchParams(history.location.search))
   const entryAddressToEditOrCreateNew = queryParams?.entryAddress
-
-  useEffect(() => {
-    trackEvent(NAVIGATION_EVENTS.ADDRESS_BOOK)
-  }, [])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

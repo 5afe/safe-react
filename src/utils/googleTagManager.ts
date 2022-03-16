@@ -108,6 +108,10 @@ export const usePageTracking = (): void => {
           event: GTM_EVENT.PAGEVIEW,
           chainId,
           page: getAnonymizedLocation(location),
+          // Clear dataLayer
+          eventCategory: undefined,
+          eventAction: undefined,
+          eventLabel: undefined,
         },
       })
     })

@@ -1,7 +1,7 @@
 import FormGroup from '@material-ui/core/FormGroup/FormGroup'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { ChangeEvent, ReactElement, useEffect } from 'react'
+import { ChangeEvent, ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import styled from 'styled-components'
@@ -15,7 +15,6 @@ import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
 import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
-import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
@@ -35,10 +34,6 @@ const Appearance = (): ReactElement => {
   const showShortName = useSelector(showShortNameSelector)
   const safeAddress = extractSafeAddress()
   const [darkMode, setDarkMode] = useDarkMode()
-
-  useEffect(() => {
-    trackEvent(NAVIGATION_SETTINGS_EVENTS.APPEARANCE)
-  }, [])
 
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     dispatch(setShowShortName({ showShortName: checked }))

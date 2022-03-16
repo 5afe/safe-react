@@ -1,4 +1,4 @@
-import { useState, ReactElement, useEffect } from 'react'
+import { useState, ReactElement } from 'react'
 import { Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
@@ -25,8 +25,6 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
-import { trackEvent } from 'src/utils/googleTagManager'
 import Track from 'src/components/Track'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
@@ -69,10 +67,6 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
     }))
     setSelectedOwner(undefined)
   }
-
-  useEffect(() => {
-    trackEvent(NAVIGATION_SETTINGS_EVENTS.OWNERS)
-  }, [])
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)

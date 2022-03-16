@@ -29,8 +29,7 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
-import { NAVIGATION_EVENTS } from 'src/utils/events/navigation'
-import { trackEvent, trackEventMemoized } from 'src/utils/googleTagManager'
+import { trackEventMemoized } from 'src/utils/googleTagManager'
 import { ASSETS_EVENTS } from 'src/utils/events/assets'
 import Track from 'src/components/Track'
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -86,10 +85,6 @@ const Coins = (props: Props): React.ReactElement => {
   const granted = useSelector(grantedSelector)
   const chainId = useSelector(currentChainId)
   const { address } = useSelector(currentSafe)
-
-  useEffect(() => {
-    trackEvent(NAVIGATION_EVENTS.BALANCE)
-  }, [])
 
   const differingTokens = useMemo(() => safeTokens.size, [safeTokens])
   useEffect(() => {

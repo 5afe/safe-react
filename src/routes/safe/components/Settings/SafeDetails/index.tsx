@@ -36,7 +36,6 @@ import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/con
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { NAVIGATION_SETTINGS_EVENTS } from 'src/utils/events/navigation'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
@@ -117,10 +116,6 @@ const SafeDetails = (): ReactElement => {
       ? ` (there's a newer version: ${latestMasterContractVersion})`
       : ''
   }
-
-  useEffect(() => {
-    trackEvent(NAVIGATION_SETTINGS_EVENTS.DETAILS)
-  }, [])
 
   useEffect(() => {
     const getMasterCopyInfo = async () => {
