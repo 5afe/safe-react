@@ -63,9 +63,9 @@ const SETTINGS = {
       event: GTM_EVENT.CLICK,
       action: 'New spending limit',
     },
-    PERIOD: {
+    RESET_PERIOD: {
       event: GTM_EVENT.META,
-      action: 'Spending limit period',
+      action: 'Spending limit reset period',
     },
     REMOVE_LIMIT: {
       event: GTM_EVENT.CLICK,

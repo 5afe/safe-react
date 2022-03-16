@@ -226,9 +226,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
       dispatch(createTransaction({ ...spendingLimitTxData, delayExecution }))
 
-      if (values.withResetTime) {
-        trackEvent({ ...SETTINGS_EVENTS.SPENDING_LIMIT.PERIOD, label: `${values.resetTime} minutes` })
-      }
+      trackEvent({
+        ...SETTINGS_EVENTS.SPENDING_LIMIT.RESET_PERIOD,
+        label: values.withResetTime ? `${values.resetTime} minutes` : 'never',
+      })
     }
   }
 
