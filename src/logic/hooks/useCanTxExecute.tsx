@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { currentSafe } from '../safe/store/selectors'
+import { DANGER_ZONE } from 'src/utils/constants'
 
 type UseCanTxExecuteType = (
   preApprovingOwner?: string,
@@ -16,7 +17,7 @@ const useCanTxExecute: UseCanTxExecuteType = (
 ) => {
   const safeInfo = useSelector(currentSafe)
 
-  if (txNonce && parseInt(txNonce, 10) !== safeInfo.nonce) {
+  if (txNonce && parseInt(txNonce, 10) !== safeInfo.nonce && !DANGER_ZONE) {
     return false
   }
 
@@ -33,7 +34,7 @@ const useCanTxExecute: UseCanTxExecuteType = (
     return txConfirmations + 1 === threshold
   }
 
-  return false
+  return DANGER_ZONE
 }
 
 export default useCanTxExecute

@@ -14,7 +14,6 @@ import {
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 
-import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getLastTxNonce, getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areSafeParamsEnabled } from 'src/routes/safe/components/Transactions/helpers/utils'
@@ -25,7 +24,6 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getByteLength } from 'src/utils/getByteLength'
 import { md } from 'src/theme/variables'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -98,6 +96,7 @@ type Props = {
   onEdit: () => void
   isTransactionCreation: boolean
   isOffChainSignature: boolean
+  contractNonce: number
 }
 
 export const TxParametersDetail = ({
@@ -105,38 +104,36 @@ export const TxParametersDetail = ({
   txParameters,
   compact = true,
   parametersStatus,
+  contractNonce,
 }: Props): ReactElement | null => {
-  const { nonce, address, currentVersion } = useSelector(currentSafe)
-  const safeInstance = getGnosisSafeInstanceAt(address, currentVersion)
-
   const [isTxNonceOutOfOrder, setIsTxNonceOutOfOrder] = useState(false)
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
 
-  const { safeNonce = '' } = txParameters
-  const safeNonceNumber = parseInt(safeNonce, 10)
+  const { safeNonce: txNonce = '' } = txParameters
+  const txNonceNumber = parseInt(txNonce, 10)
   const lastQueuedTxNonce = useSelector(getLastTxNonce)
   const showSafeTxGas = useSafeTxGas()
-  const storedTx = useSelector((state: AppReduxState) => getTransactionsByNonce(state, safeNonceNumber))
+  const storedTx = useSelector((state: AppReduxState) => getTransactionsByNonce(state, txNonceNumber))
 
   useEffect(() => {
     const getNonce = async () => {
-      const contractNonce = (await safeInstance.methods.nonce().call()).toString()
-
-      if (Number.isNaN(safeNonceNumber) || safeNonce === contractNonce) {
+      if (Number.isNaN(txNonceNumber) || txNonceNumber === contractNonce) {
+        setIsAccordionExpanded(false)
+        setIsTxNonceOutOfOrder(false)
         return
       }
-      if (lastQueuedTxNonce === undefined && safeNonce !== contractNonce) {
+      if (lastQueuedTxNonce === undefined && txNonceNumber !== contractNonce) {
         setIsAccordionExpanded(true)
         setIsTxNonceOutOfOrder(true)
       }
-      if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
+      if (lastQueuedTxNonce && txNonceNumber !== lastQueuedTxNonce + 1) {
         setIsAccordionExpanded(true)
         setIsTxNonceOutOfOrder(true)
       }
     }
 
     getNonce()
-  }, [lastQueuedTxNonce, nonce, safeNonceNumber])
+  }, [lastQueuedTxNonce, contractNonce, txNonceNumber])
 
   const color = useMemo(() => (areSafeParamsEnabled(parametersStatus) ? 'text' : 'secondaryLight'), [parametersStatus])
 

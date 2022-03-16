@@ -23,7 +23,6 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import usePolledContractNonce from 'src/logic/hooks/usePolledContractNonce'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -44,6 +43,7 @@ type UseEstimateTransactionGasProps = {
   isExecution: boolean
   approvalAndExecution: boolean
   txNonce?: string
+  contractNonce: number
 }
 
 type TransactionGasEstimationResult = {
@@ -112,6 +112,7 @@ export const useEstimateTransactionGas = ({
   isExecution,
   approvalAndExecution,
   txNonce,
+  contractNonce,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>(
     getDefaultGasEstimation({
@@ -125,7 +126,6 @@ export const useEstimateTransactionGas = ({
   const nativeCurrency = getNativeCurrency()
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
   const { account: from } = useSelector(providerSelector)
-  const contractNonce = usePolledContractNonce(txNonce)
 
   useEffect(() => {
     if (txNonce != null && contractNonce == null) {

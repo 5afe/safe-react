@@ -26,7 +26,8 @@ import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
-import { DANGER_ZONE } from 'src/utils/constants'
+
+import usePolledContractNonce from 'src/logic/hooks/usePolledContractNonce'
 
 type Props = {
   children: ReactNode
@@ -106,7 +107,7 @@ export const TxModalWrapper = ({
   const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
   const confirmationsLen = Array.from(txConfirmations || []).length
-  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce) || DANGER_ZONE
+  const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce)
   const doExecute = executionApproved && canTxExecute
   const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
   const nativeCurrency = getNativeCurrency()
@@ -117,6 +118,8 @@ export const TxModalWrapper = ({
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
 
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
+
+  const contractNonce = usePolledContractNonce(txNonce)
 
   const safeTxGasEstimation = useEstimateSafeTxGas({
     isCreation,
@@ -141,6 +144,7 @@ export const TxModalWrapper = ({
       isExecution: doExecute,
       approvalAndExecution,
       txNonce,
+      contractNonce,
     })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -226,6 +230,7 @@ export const TxModalWrapper = ({
                 isTransactionCreation={isCreation}
                 isOffChainSignature={isOffChainSignature}
                 parametersStatus={parametersStatus}
+                contractNonce={contractNonce}
               />
             )}
           </Container>
