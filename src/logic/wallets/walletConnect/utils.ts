@@ -57,6 +57,9 @@ export const getWCWalletInterface = (
     balance: {},
     disconnect: () => {
       provider.disconnect()
+      // Clear WC cache, fixing "Missing or invalid topic field" error
+      const { storageId } = (provider.wc as any)._sessionStorage
+      localStorage.removeItem(storageId)
     },
   }
 }
