@@ -3,7 +3,6 @@ import TagManager, { TagManagerArgs } from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
 import { Location } from 'history'
 import { useSelector } from 'react-redux'
-import memoize from 'lodash/memoize'
 
 import { ADDRESSED_ROUTE, history, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import {
@@ -16,7 +15,6 @@ import {
 import { _getChainId } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { Cookie, removeCookies } from 'src/logic/cookies/utils'
-import { TrackEvent } from 'src/utils/events/utils'
 
 export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
@@ -149,12 +147,3 @@ export const trackEvent = ({
     dataLayer,
   })
 }
-
-// Track event then again only when a dependency changes
-export const trackEventMemoized = memoize(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (event: TrackEvent, ..._deps: (string | number | boolean | null | undefined)[]): void => {
-    trackEvent(event)
-  },
-  (event, ...deps) => [Object.entries(event), ...deps].join(),
-)

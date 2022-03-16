@@ -10,10 +10,8 @@ import { nftAssetsFromNftTokensSelector, orderedNFTAssets } from 'src/logic/coll
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
-import { trackEventMemoized } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { ASSETS_EVENTS } from 'src/utils/events/assets'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { currentSafe } from 'src/logic/safe/store/selectors'
 
 const useStyles = makeStyles(
   createStyles({
@@ -87,13 +85,11 @@ const Collectibles = (): React.ReactElement => {
 
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
-  const chainId = useSelector(currentChainId)
-  const { address } = useSelector(currentSafe)
 
   const nftAmount = useMemo(() => nftAssetsFromNftTokens.length, [nftAssetsFromNftTokens])
   useEffect(() => {
-    trackEventMemoized({ ...ASSETS_EVENTS.NFT_AMOUNT, label: nftAmount }, chainId, address)
-  }, [nftAmount, chainId, address])
+    trackEvent({ ...ASSETS_EVENTS.NFT_AMOUNT, label: nftAmount })
+  }, [nftAmount])
 
   const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)

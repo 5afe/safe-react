@@ -8,31 +8,22 @@ import { QueueTxList } from './QueueTxList'
 import { Centered, NoTransactions } from './styled'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
-import { trackEventMemoized } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
-import { useSelector } from 'react-redux'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { currentSafe } from 'src/logic/safe/store/selectors'
 
 export const QueueTransactions = (): ReactElement => {
   const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
-  const chainId = useSelector(currentChainId)
-  const { address } = useSelector(currentSafe)
 
   const queuedTxCount = useMemo(
     () => (transactions ? transactions.next.count + transactions.queue.count : 0),
     [transactions],
   )
   useEffect(() => {
-    trackEventMemoized(
-      {
-        ...TX_LIST_EVENTS.QUEUED_TXS,
-        label: queuedTxCount,
-      },
-      chainId,
-      address,
-    )
-  }, [queuedTxCount, chainId, address])
+    trackEvent({
+      ...TX_LIST_EVENTS.QUEUED_TXS,
+      label: queuedTxCount,
+    })
+  }, [queuedTxCount])
 
   if (count === 0 && isLoading) {
     return (
