@@ -82,15 +82,17 @@ export const loadGoogleTagManager = (): void => {
 }
 
 export const unloadGoogleTagManager = (): void => {
+  if (!window.dataLayer) {
+    return
+  }
+
   const GOOGLE_ANALYTICS_COOKIE_LIST: Cookie[] = [
     { name: '_ga', path: '/' },
     { name: '_gat', path: '/' },
     { name: '_gid', path: '/' },
   ]
 
-  if (window.dataLayer) {
-    removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
-  }
+  removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
 }
 
 export const usePageTracking = (): void => {
