@@ -8,10 +8,18 @@ import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { SafeApp } from './types'
 
+type AppManifestIcon = {
+  src: string
+  sizes: string
+  type: string
+  purpose: string
+}
+
 export interface AppManifest {
   name: string
-  iconPath: string
-  description: string
+  iconPath?: string
+  description?: string
+  icons?: AppManifestIcon[]
   providedBy: string
 }
 
@@ -35,9 +43,7 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
-  appInfo.name !== 'unknown' &&
-  // `description` exists
-  !!appInfo.description
+  appInfo.name !== 'unknown'
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
@@ -88,8 +94,8 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   const appInfoData = {
     name: appInfo.name,
-    iconPath: appInfo.iconPath,
-    description: appInfo.description,
+    iconPath: appInfo?.icons?.[0]?.src || appInfo.iconPath,
+    description: appInfo.description || '',
     providedBy: appInfo.providedBy,
   }
 
@@ -101,7 +107,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     loadingStatus: FETCH_STATUS.SUCCESS,
   }
 
-  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.iconPath}`
+  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfoData.iconPath}`
   if (await canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
