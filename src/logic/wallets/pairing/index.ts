@@ -1,14 +1,6 @@
-import { StaticJsonRpcProvider } from '@ethersproject/providers'
-import {
-  Chain,
-  ProviderAccounts,
-  WalletInit,
-  EIP1193Provider,
-  ProviderRpcError,
-  ProviderRpcErrorCode,
-} from '@web3-onboard/common'
-import type { IClientMeta } from '@walletconnect/types'
 import WalletConnect from '@walletconnect/client'
+import type { Chain, ProviderAccounts, WalletInit, EIP1193Provider } from '@web3-onboard/common'
+import type { IClientMeta } from '@walletconnect/types'
 
 import { APP_VERSION, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
 import { getOnboardInstance } from 'src/logic/wallets/onboard'
@@ -66,6 +58,9 @@ export function pairingModule(): WalletInit {
       getInterface: async ({ chains, EventEmitter }) => {
         const { default: QRCodeModal } = await import('@walletconnect/qrcode-modal')
 
+        const { StaticJsonRpcProvider } = await import('@ethersproject/providers')
+        const { ProviderRpcError, ProviderRpcErrorCode } = await import('@web3-onboard/common')
+
         const { Subject, fromEvent } = await import('rxjs')
         const { takeUntil, take } = await import('rxjs/operators')
 
@@ -84,7 +79,7 @@ export function pairingModule(): WalletInit {
           public removeListener: typeof EventEmitter['removeListener']
 
           private disconnected$: InstanceType<typeof Subject>
-          private providers: Record<string, StaticJsonRpcProvider>
+          private providers: Record<string, InstanceType<typeof StaticJsonRpcProvider>>
 
           constructor({ connector, chains }: { connector: InstanceType<typeof WalletConnect>; chains: Chain[] }) {
             this.emit = emitter.emit.bind(emitter)

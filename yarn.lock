@@ -4949,10 +4949,19 @@
     joi "^17.4.2"
     rxjs "^7.5.2"
 
-"@web3-onboard/core@^2.0.10":
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.0.10.tgz#4aed26c9e7eee58ec9d7d1e71ddad6adee0075e8"
-  integrity sha512-4AvZKNCZLLHbDhueCBz5jvfRE9dQzEpsoA2lBVpwtXHhJzRRdYjVTUSBx1DgflzCnZUdOEuECSTwvM0OI3PtwQ==
+"@web3-onboard/common@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/common/-/common-2.0.3.tgz#fdd062f8c168a35fefd97831b72fc3ad20c810fc"
+  integrity sha512-KmlZx9pbx0oCiDKtKdPNYl/OFbA2wMRUQmXEvTVZXAfwKN/UnzmJc1Mr1GbOHyLrrR29WZx7xa51f8Yyj3UUnw==
+  dependencies:
+    ethers "5.5.4"
+    joi "^17.4.2"
+    rxjs "^7.5.2"
+
+"@web3-onboard/core@^2.0.11":
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.0.11.tgz#cb6e4ed47dad8520bf81a3a7b0b286252e1abb49"
+  integrity sha512-6sSRk1gWOQ/UJUr4Y9gjFAjpyf3AJ24rtZzO4tlxlIfoS+1Y/zUVoakqOMyBuRVj/9/7EgUQAwV6vbu//ycI+A==
   dependencies:
     "@web3-onboard/common" "^2.0.2"
     bowser "^2.11.0"
@@ -4965,12 +4974,12 @@
     svelte "^3.46.4"
     svelte-i18n "^3.3.13"
 
-"@web3-onboard/fortmatic@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/fortmatic/-/fortmatic-2.0.1.tgz#268c0230c95c8c3225d07ee0ea4f4b7eac8635f0"
-  integrity sha512-yHzAeaDWUEnoCn7it2xBJB5vRMVCl7Xtn8AChz403lH0VG4Zcb4sXJ7w1pkKGtT0DCh7vCn0urWUnoNVHlE+Ag==
+"@web3-onboard/fortmatic@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/fortmatic/-/fortmatic-2.0.2.tgz#f90959344db61722ea365cf219b1036535164874"
+  integrity sha512-+IpnmEy1vqOLHC2REWIZja0QLVVnxP5vaP0uS+++hw4sZX/pHAKkySOuP4euPepkqyKeUhKEemXSxnP++pt6FQ==
   dependencies:
-    "@web3-onboard/common" "^2.0.0"
+    "@web3-onboard/common" "^2.0.3"
     fortmatic "^2.2.1"
 
 "@web3-onboard/injected-wallets@^2.0.2":
