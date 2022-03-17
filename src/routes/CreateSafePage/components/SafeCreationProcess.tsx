@@ -141,6 +141,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
             // if it was reverted. We must check the status of the receipt manually.
             if (didTxRevert(txReceipt)) {
               reject(new Error('Sped-up tx reverted'))
+              return
             }
 
             console.log('Sped-up tx mined:', txReceipt)
