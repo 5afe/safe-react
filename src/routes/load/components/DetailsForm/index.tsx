@@ -82,8 +82,8 @@ const Details = ({ classes, errors, form }) => {
     <>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="md">
-          You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
-          only stored locally and will never be shared with Gnosis or any third parties.
+          You are about to load an existing Safe wallet. First, choose a name and enter the Safe address. The name is
+          only stored locally and will never be shared.
           <br />
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
           a read-only view.
@@ -127,7 +127,7 @@ const Details = ({ classes, errors, form }) => {
           <ScanQRWrapper handleScan={handleScan} />
         </Col>
       </Block>
-      <Block margin="sm">
+      {/* <Block margin="sm">
         <Paragraph className={classes.links} color="primary" noMargin size="md">
           By continuing you consent with the{' '}
           <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
@@ -140,7 +140,7 @@ const Details = ({ classes, errors, form }) => {
           . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
           RSK blockchain. These funds cannot be accessed by Gnosis at any point.
         </Paragraph>
-      </Block>
+      </Block> */}
     </>
   )
 }

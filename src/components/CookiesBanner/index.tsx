@@ -103,11 +103,7 @@ const CookiesBanner = () => {
     <div className={classes.container}>
       <div className={classes.content}>
         <p className={classes.text}>
-          We use cookies to give you the best experience and to help improve our website. Please read our{' '}
-          <Link className={classes.link} to="https://safe.gnosis.io/cookie">
-            Cookie Policy
-          </Link>{' '}
-          for more information. By clicking &quot;Accept&quot;, you agree to the storing of cookies on your device to
+          We use cookies to give you the best experience and to help improve our website. By clicking &quot;Accept&quot;, you agree to the storing of cookies on your device to
           enhance site navigation.
         </p>
         <div className={classes.form}>
