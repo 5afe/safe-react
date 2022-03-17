@@ -56,10 +56,10 @@ export const getWCWalletInterface = (
     // (prevents us from accessing balance via Onboard, but via web3 works)
     balance: {},
     disconnect: () => {
-      provider.disconnect()
-      // Clear WC cache, fixing "Missing or invalid topic field" error
-      const { storageId } = (provider.wc as any)._sessionStorage
-      localStorage.removeItem(storageId)
+      // Only disconnect if connected
+      if (provider.wc.peerId) {
+        provider.disconnect()
+      }
     },
   }
 }
