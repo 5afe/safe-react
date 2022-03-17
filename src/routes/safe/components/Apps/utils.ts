@@ -96,7 +96,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   const appInfoData = {
     name: appInfo.name,
-    iconPath: appInfo?.icons?.[0]?.src || appInfo.iconPath,
+    iconPath: appInfo.icons ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description || '',
     providedBy: appInfo.providedBy,
   }
@@ -116,6 +116,24 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   return res
 })
+
+export const getAppIcon = (icons: AppManifestIcon[]): string => {
+  const svgIcon = icons.find((icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml')
+
+  if (svgIcon) {
+    return svgIcon.src
+  }
+
+  for (const icon of icons) {
+    for (const size of icon.sizes.split(' ')) {
+      if (Number(size?.split('x')[0]) >= 128) {
+        return icon.src
+      }
+    }
+  }
+
+  return icons[0].src || ''
+}
 
 export const getIpfsLinkFromEns = memoize(async (name: string): Promise<string | undefined> => {
   try {
