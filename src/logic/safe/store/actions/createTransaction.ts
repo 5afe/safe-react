@@ -17,7 +17,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { didTxRevert, generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
@@ -101,15 +101,15 @@ export class TxSender {
     if (!isFinalization || !this.txId) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
+        this.txId = txDetails.txId
       } catch (err) {
         logError(Errors._816, err.message)
         return
       }
     }
 
-    const id = txDetails?.txId || this.txId
-    if (isFinalization && id && this.txHash) {
-      dispatch(addPendingTransaction({ id, txHash: this.txHash }))
+    if (isFinalization && this.txId && this.txHash) {
+      dispatch(addPendingTransaction({ id: this.txId, txHash: this.txHash }))
     }
 
     notifications.closePending()
@@ -195,21 +195,14 @@ export class TxSender {
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
 
-    return await tx
-      .send(sendParams)
-      .once('transactionHash', (hash) => {
-        this.txHash = hash
+    await tx.send(sendParams).once('transactionHash', (hash) => {
+      this.txHash = hash
 
-        if (isFinalization) {
-          aboutToExecuteTx.setNonce(txArgs.nonce)
-        }
-        this.onComplete(undefined, confirmCallback)
-      })
-      .then((receipt) => {
-        if (didTxRevert(receipt)) {
-          throw Error('Transaction failed')
-        }
-      })
+      if (isFinalization) {
+        aboutToExecuteTx.setNonce(txArgs.nonce)
+      }
+      this.onComplete(undefined, confirmCallback)
+    })
   }
 
   async canSignOffchain(): Promise<boolean> {
