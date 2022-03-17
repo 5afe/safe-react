@@ -7,6 +7,12 @@ describe('SafeApp manifest', () => {
       description: 'a test',
       error: false,
       iconPath: 'icon.png',
+      icons: [
+        {
+          src: 'icon.png',
+          sizes: '512x512',
+        },
+      ],
       providedBy: 'test',
     }
 
