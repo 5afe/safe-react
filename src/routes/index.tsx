@@ -6,22 +6,21 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 import {
-  generateSafeRoute,
   LOAD_SPECIFIC_SAFE_ROUTE,
   OPEN_SAFE_ROUTE,
   ADDRESSED_ROUTE,
-  SAFE_ROUTES,
   WELCOME_ROUTE,
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
   extractSafeAddress,
+  HOME_ROUTE,
 } from './routes'
-import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
 import { usePageTracking } from 'src/utils/googleTagManager'
 
+const Home = React.lazy(() => import('./Home'))
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
@@ -82,19 +81,14 @@ const Routes = (): React.ReactElement => {
           }
 
           if (defaultSafe) {
-            return (
-              <Redirect
-                to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  shortName: getShortName(),
-                  safeAddress: defaultSafe,
-                })}
-              />
-            )
+            return <Redirect to={HOME_ROUTE} />
           }
 
           return <Redirect to={WELCOME_ROUTE} />
         }}
       />
+
+      <Route component={Home} exact path={HOME_ROUTE} />
 
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
 
