@@ -181,7 +181,7 @@ describe('PendingTxMonitor', () => {
       }
     })
 
-    it('checks each pending tx', async () => {
+    it.only('checks each pending tx', async () => {
       jest.spyOn(store.store, 'getState').mockImplementation(() => ({
         pendingTransactions: {
           '4': {
@@ -197,8 +197,23 @@ describe('PendingTxMonitor', () => {
 
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-      // Can return null if transaction is pending: https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransactionreceipt
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.reject(null as unknown as TransactionReceipt))
+      PendingTxMonitor._isTxMined = jest.fn(() =>
+        Promise.resolve({
+          blockHash: '0x123',
+          blockNumber: 1,
+          transactionHash: 'fakeTxHash',
+          transactionIndex: 0,
+          from: '0x123',
+          to: '0x123',
+          cumulativeGasUsed: 1,
+          gasUsed: 1,
+          contractAddress: '0x123',
+          logs: [],
+          status: true, // Mined successfully
+          logsBloom: '0x123',
+          effectiveGasPrice: 0,
+        }),
+      )
 
       await PendingTxMonitor.monitorAllTxs()
 
