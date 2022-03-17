@@ -137,6 +137,8 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         // Monitor the latest block to find a potential speed-up tx
         txMonitor({ sender: userAddress, hash: txHash, data: deploymentTx.encodeABI() })
           .then((txReceipt) => {
+            // txMonitor returns the txReceipt from `getTransactionReceipt` which doesn't
+            // if it was reverted. We must check the status of the receipt manually.
             if (didTxRevert(txReceipt)) {
               reject('Sped-up tx reverted')
             }
@@ -149,14 +151,11 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
           })
       })
       .then((txReceipt) => {
-        if (didTxRevert(txReceipt)) {
-          reject('Original tx reverted')
-        }
-
         console.log('Original tx mined:', txReceipt)
         resolve(txReceipt)
       })
       .catch((error) => {
+        // `deploymentTx` will throw if the transaction was reverted
         reject(parseError(error))
       })
   })
