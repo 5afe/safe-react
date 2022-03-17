@@ -11,8 +11,8 @@ import { SafeApp } from './types'
 type AppManifestIcon = {
   src: string
   sizes: string
-  type: string
-  purpose: string
+  type?: string
+  purpose?: string
 }
 
 export interface AppManifest {
