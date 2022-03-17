@@ -59,7 +59,7 @@ export const LoadSafe = ({ provider, size }) => (
 const Welcome = ({ isOldMultisigMigration, provider }: any) => {
   const headingText = isOldMultisigMigration ? (
     <>
-      We will replicate the owner structure from your existing Gnosis MultiSig
+      We will replicate the owner structure from your existing MultiSig
       <br />
       to let you test the new interface.
       <br />
@@ -68,11 +68,9 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
     </>
   ) : (
     <>
-      Gnosis Safe Multisig is the most secure way to manage crypto funds
+      Safe Multisig is the most secure way to manage crypto funds
       <br />
-      collectively. It is an improvement of the Gnosis MultiSig, which is used by more than 3000 teams
-      <br /> and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
-      <br /> design, formally verified smart contracts and vastly improved user experience.{' '}
+      collectively.{' '}
     </>
   )
   return (
@@ -80,20 +78,20 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
       <Heading align="center" margin="lg" tag="h1" weight="bold">
         Welcome to
         <br />
-        Gnosis Safe Multisig
+        RSK Safe Multisig
       </Heading>
-      <Heading align="center" margin="xl" tag="h3">
+      { <Heading align="center" margin="xl" tag="h3">
         {headingText}
         <a
           className={styles.learnMoreLink}
-          href="https://safe.gnosis.io/teams"
+          href="https://rsk.co"
           rel="noopener noreferrer"
           target="_blank"
         >
           Learn more
           <OpenInNew style={openIconStyle} />
         </a>
-      </Heading>
+      </Heading> }
       {provider ? (
         <>
           <Block className={styles.safeActions} margin="md">

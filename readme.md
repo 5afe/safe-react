@@ -1,4 +1,4 @@
-# Gnosis Safe Multisig
+# RSK Safe Multisig
 
 The most trusted platform to store digital assets on Ethereum
 
@@ -53,7 +53,7 @@ yarn build-mainnet
 
 1. Run `transaction-history-service`
 ```
-git clone https://github.com/gnosis/safe-transaction-service.git
+git clone https://github.com/rsksmart/safe-transaction-service.git
 cd safe-transaction-service
 git checkout develop
 docker-compose build

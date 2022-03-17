@@ -32,8 +32,8 @@ const SafeName = ({ classes, safeName }) => (
   <>
     <Block margin="lg">
       <Paragraph color="primary" noMargin size="md">
-        You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new wallet
-        a name. This name is only stored locally and will never be shared with Gnosis or any third parties.
+        You are about to create a new Safe wallet with one or more owners. First, let&apos;s give your new wallet
+        a name. This name is only stored locally and will never be shared.
       </Paragraph>
     </Block>
     <Block className={classes.root} margin="lg">
@@ -47,7 +47,7 @@ const SafeName = ({ classes, safeName }) => (
         validate={required}
       />
     </Block>
-    <Block margin="lg">
+    {/* <Block margin="lg">
       <Paragraph className={classes.links} color="primary" noMargin size="md">
         By continuing you consent with the{' '}
         <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
@@ -60,7 +60,7 @@ const SafeName = ({ classes, safeName }) => (
         . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
         RSK blockchain. These funds cannot be accessed by Gnosis at any point.
       </Paragraph>
-    </Block>
+    </Block> */}
   </>
 )
 
