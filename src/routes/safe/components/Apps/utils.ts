@@ -43,7 +43,9 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
-  appInfo.name !== 'unknown'
+  appInfo.name !== 'unknown' &&
+  // `icons` exists and have at least one element with an `src` prop
+  !!appInfo?.icons?.[0]?.src
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
