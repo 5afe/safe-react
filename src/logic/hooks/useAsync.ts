@@ -12,8 +12,12 @@ const useAsync = <T>(asyncCall: () => Promise<T>): AsyncResult<T> => {
   useEffect(() => {
     let isCurrent = true
 
-    setAsyncVal(undefined)
-    setErr(undefined)
+    if (asyncVal !== undefined) {
+      setAsyncVal(undefined)
+    }
+    if (err !== undefined) {
+      setErr(undefined)
+    }
 
     asyncCall()
       .then((val: T) => {
