@@ -17,7 +17,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { didTxFail, generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { didTxRevert, generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
@@ -206,7 +206,7 @@ export class TxSender {
         this.onComplete(undefined, confirmCallback)
       })
       .then((receipt) => {
-        if (didTxFail(receipt)) {
+        if (didTxRevert(receipt)) {
           throw Error('Transaction failed')
         }
       })

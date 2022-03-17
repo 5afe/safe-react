@@ -12,7 +12,7 @@ export const generateSafeTxHash = (safeAddress: string, safeVersion: string, txA
   return `0x${TypedDataUtils.sign<typeof messageTypes>(typedData).toString('hex')}`
 }
 
-export const didTxFail = (receipt: TransactionReceipt): boolean => {
+export const didTxRevert = (receipt: TransactionReceipt): boolean => {
   if (!receipt) {
     throw new Error('No transaction receipt provided')
   }

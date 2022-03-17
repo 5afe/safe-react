@@ -7,7 +7,7 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
-import { didTxFail } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<TransactionReceipt> => {
   const MAX_WAITING_BLOCK = sessionBlockNumber + 50
@@ -45,7 +45,7 @@ const monitorTx = async (
 ): Promise<void> => {
   return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options)
     .then((receipt) => {
-      if (didTxFail(receipt)) {
+      if (didTxRevert(receipt)) {
         store.dispatch(removePendingTransaction({ id: txId }))
       }
       // If successfully mined, pending status is removed in the transaction
