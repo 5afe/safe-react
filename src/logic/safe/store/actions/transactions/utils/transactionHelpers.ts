@@ -13,8 +13,5 @@ export const generateSafeTxHash = (safeAddress: string, safeVersion: string, txA
 }
 
 export const didTxRevert = (receipt: TransactionReceipt): boolean => {
-  if (!receipt) {
-    throw new Error('No transaction receipt provided')
-  }
-  return receipt.status === false
+  return receipt?.status === false
 }
