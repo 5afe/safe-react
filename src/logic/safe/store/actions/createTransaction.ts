@@ -17,7 +17,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { didTxFail, generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getNonce, canExecuteCreatedTx, navigateToTx } from 'src/logic/safe/store/actions/utils'
 import fetchTransactions from './transactions/fetchTransactions'
 import { AppReduxState } from 'src/store'
@@ -189,7 +189,7 @@ export class TxSender {
     )
   }
 
-  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<string> {
+  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<void> {
     const { txArgs, isFinalization, from, safeTxHash, txProps } = this
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
@@ -205,7 +205,11 @@ export class TxSender {
         }
         this.onComplete(undefined, confirmCallback)
       })
-      .then(({ transactionHash }) => transactionHash)
+      .then((receipt) => {
+        if (didTxFail(receipt)) {
+          throw Error('Transaction failed')
+        }
+      })
   }
 
   async canSignOffchain(): Promise<boolean> {
