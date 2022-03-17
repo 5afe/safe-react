@@ -40,6 +40,7 @@ import { getExplorerInfo, getShortName } from 'src/config'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -136,6 +137,10 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         // Monitor the latest block to find a potential speed-up tx
         txMonitor({ sender: userAddress, hash: txHash, data: deploymentTx.encodeABI() })
           .then((txReceipt) => {
+            if (didTxRevert(txReceipt)) {
+              reject('Sped-up tx reverted')
+            }
+
             console.log('Sped-up tx mined:', txReceipt)
             resolve(txReceipt)
           })
@@ -144,6 +149,10 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
           })
       })
       .then((txReceipt) => {
+        if (didTxRevert(txReceipt)) {
+          reject('Original tx reverted')
+        }
+
         console.log('Original tx mined:', txReceipt)
         resolve(txReceipt)
       })
