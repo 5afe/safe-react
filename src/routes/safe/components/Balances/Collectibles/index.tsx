@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-import { FixedSizeList as List } from 'react-window'
+import { VariableSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
 import Item from './components/Item'
@@ -106,39 +106,52 @@ const Collectibles = (): React.ReactElement => {
       </Card>
     )
   }
+
+  const getNftTokens = (index: number) => {
+    const nftAsset = nftAssetsFromNftTokens[index]
+    return nftTokens.filter(({ assetAddress }) => nftAsset.address === assetAddress)
+  }
+
+  const getItemSize = (index: number) => {
+    const NFT_CARD_HEIGHT = 365
+    const nftAmount = getNftTokens(index).length
+    const rows = Math.ceil(nftAmount / 4)
+    return rows * NFT_CARD_HEIGHT
+  }
+
   return (
     <>
       <AutoSizer>
-        {(dimensions) => (
-          <List itemCount={50} itemSize={365} {...dimensions}>
-            {({ index, style }) => {
-              const nftAsset = nftAssetsFromNftTokens[index]
-              if (!nftAsset) {
-                return null
-              }
-              return (
-                <div style={style}>
-                  <div className={classes.title}>
-                    <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
-                    <h2 className={classes.titleText}>{nftAsset.name}</h2>
-                    <div className={classes.titleFiller} />
-                  </div>
-                  <div className={classes.gridRow}>
-                    {nftTokens
-                      .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                      .map((nftToken) => (
+        {(dimensions) => {
+          return (
+            <List itemCount={50} itemSize={getItemSize} {...dimensions}>
+              {({ index, style }) => {
+                const nftAsset = nftAssetsFromNftTokens[index]
+                if (!nftAsset) {
+                  return null
+                }
+                return (
+                  <div style={style}>
+                    <div className={classes.title}>
+                      <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
+                      <h2 className={classes.titleText}>{nftAsset.name}</h2>
+                      <div className={classes.titleFiller} />
+                    </div>
+                    <div className={classes.gridRow}>
+                      {getNftTokens(index).map((nftToken) => (
                         <Item
                           data={nftToken}
                           key={`${nftAsset.slug}_${nftToken.tokenId}`}
                           onSend={() => handleItemSend(nftToken)}
                         />
                       ))}
+                    </div>
                   </div>
-                </div>
-              )
-            }}
-          </List>
-        )}
+                )
+              }}
+            </List>
+          )
+        }}
       </AutoSizer>
       <SendModal
         activeScreenType="sendCollectible"
