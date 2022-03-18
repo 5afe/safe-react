@@ -43,6 +43,13 @@ export const nextTransactions = createSelector(
   },
 )
 
+export const nextTransaction = createSelector(nextTransactions, (nextTxs) => {
+  if (!nextTxs) return
+
+  const [txs] = Object.values(nextTxs)
+  return txs?.[0]
+})
+
 export const queuedTransactions = createSelector(
   pendingTransactions,
   (pendingTransactions): StoreStructure['queued']['queued'] | undefined => {

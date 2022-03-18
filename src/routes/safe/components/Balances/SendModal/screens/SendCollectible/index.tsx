@@ -28,6 +28,7 @@ import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ModalHeader } from '../ModalHeader'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -115,7 +116,7 @@ const SendCollectible = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send collectible" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
@@ -156,7 +157,7 @@ const SendCollectible = ({
             <>
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
-                <SafeInfo />
+                <SafeInfo text="Sending from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -173,7 +174,7 @@ const SendCollectible = ({
                     tabIndex={0}
                   >
                     <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                      <Paragraph color="disabled" noMargin size="lg">
                         Recipient
                       </Paragraph>
                     </Row>
@@ -182,6 +183,7 @@ const SendCollectible = ({
                         <PrefixedEthHashInfo
                           hash={selectedEntry.address}
                           name={selectedEntry.name}
+                          strongName
                           showAvatar
                           showCopyBtn
                           explorerUrl={getExplorerInfo(selectedEntry.address)}
@@ -209,12 +211,12 @@ const SendCollectible = ({
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Collectible
                     </Paragraph>
                   </Col>
                 </Row>
-                <Row margin="sm">
+                <Row margin="md">
                   <Col>
                     <TokenSelectField
                       assets={nftAssets}
@@ -226,7 +228,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Token ID
                     </Paragraph>
                   </Col>

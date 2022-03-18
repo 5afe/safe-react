@@ -9,6 +9,7 @@ import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
 import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import useDarkMode from 'src/logic/hooks/useDarkMode'
 
 const Container = styled.div`
   height: 100vh;
@@ -40,6 +41,7 @@ const SidebarWrapper = styled.aside`
   width: 200px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   z-index: 1;
 
   padding: 8px 8px 0 8px;
@@ -92,6 +94,7 @@ const Layout: React.FC<Props> = ({
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
   const { pathname } = useLocation()
+  useDarkMode()
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 

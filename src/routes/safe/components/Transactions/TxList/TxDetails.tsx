@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
+  isCustomTxInfo,
   isModuleExecutionInfo,
   isMultiSendTxInfo,
   isMultiSigExecutionDetails,
@@ -22,7 +23,7 @@ import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
-import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import TxModuleInfo from './TxModuleInfo'
@@ -34,7 +35,7 @@ const NormalBreakingText = styled(Text)`
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
   if (isTransferTxInfo(txDetails.txInfo) || isSettingsChangeTxInfo(txDetails.txInfo)) {
-    return <TxInfo txInfo={txDetails.txInfo} />
+    return <TxInfo txInfo={txDetails.txInfo} txStatus={txDetails.txStatus} />
   }
 
   if (isCancelTxDetails(txDetails.txInfo) && isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
@@ -89,12 +90,12 @@ type TxDetailsProps = {
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
-  const txStatus = useLocalTxStatus(transaction)
+  const txStatus = useTxStatus(transaction)
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const currentUser = useSelector(userAccountSelector)
-  const hasModule = transaction.txDetails && isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)
   const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
+  const shouldShowStepper = data?.detailedExecutionInfo && isMultiSigExecutionDetails(data.detailedExecutionInfo)
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
@@ -127,32 +128,61 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
+  const customTxNoData = isCustomTxInfo(data.txInfo) && !data.txInfo.methodName && !parseInt(data.txInfo.dataSize, 10)
+  const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
+  const noTxDataBlock = customTxNoData && !onChainRejection
+  const txData = () =>
+    isMultiSend ? (
+      <>
+        <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <TxSummary txDetails={data} />
+        </div>
+        {getModuleDetails()}
+        <div
+          className={cn('tx-details', {
+            'no-padding': isMultiSendTxInfo(data.txInfo),
+            'not-executed': !data.executedAt,
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxDataGroup txDetails={data} />
+        </div>
+      </>
+    ) : (
+      <>
+        <div
+          className={cn('tx-details', {
+            'no-padding': isMultiSendTxInfo(data.txInfo) || noTxDataBlock,
+            'not-executed': !data.executedAt,
+            'will-be-replaced': willBeReplaced,
+          })}
+        >
+          <TxDataGroup txDetails={data} />
+        </div>
+        {getModuleDetails()}
+        <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <TxSummary txDetails={data} />
+        </div>
+      </>
+    )
+
   return (
-    <TxDetailsContainer ownerRows={hasModule ? 3 : 2}>
-      <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
-        <TxSummary txDetails={data} />
-      </div>
-      {isMultiSend && getModuleDetails()}
-      <div
-        className={cn('tx-details', {
-          'no-padding': isMultiSend,
-          'not-executed': !data.executedAt,
-          'will-be-replaced': willBeReplaced,
-        })}
-      >
-        <TxDataGroup txDetails={data} />
-      </div>
-      {!isMultiSend && getModuleDetails()}
-      <div
-        className={cn('tx-owners', {
-          'will-be-replaced': willBeReplaced,
-        })}
-      >
-        <TxOwners txDetails={data} isPending={isPending} />
-      </div>
-      {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (
-        <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
-          <TxExpandedActions transaction={transaction} />
+    <TxDetailsContainer>
+      <div className={cn('tx-data', { 'no-owners': !shouldShowStepper, 'no-data': noTxDataBlock })}>{txData()}</div>
+      {shouldShowStepper && (
+        <div>
+          <div
+            className={cn('tx-owners', {
+              'will-be-replaced': willBeReplaced,
+            })}
+          >
+            <TxOwners txDetails={data} isPending={isPending} />
+          </div>
+          {!isPending && !data.executedAt && txLocation !== 'history' && !!currentUser && (
+            <div className={cn('tx-details-actions', { 'will-be-replaced': willBeReplaced })}>
+              <TxExpandedActions transaction={transaction} />
+            </div>
+          )}
         </div>
       )}
     </TxDetailsContainer>

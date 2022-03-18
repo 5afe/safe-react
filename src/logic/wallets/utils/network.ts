@@ -5,6 +5,7 @@ import { numberToHex } from 'web3-utils'
 import { getChainInfo, getExplorerUrl, getPublicRpcUrl, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
+import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
@@ -17,14 +18,21 @@ const WALLET_ERRORS = {
  * @see https://github.com/MetaMask/metamask-extension/pull/10905
  */
 const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
-  await wallet.provider.request({
-    method: 'wallet_switchEthereumChain',
-    params: [
-      {
-        chainId: numberToHex(chainId),
-      },
-    ],
-  })
+  // Note: This could support WC too
+  if (isPairingModule(wallet.name)) {
+    if (wallet.provider) {
+      wallet.provider.wc.updateSession({ chainId: parseInt(chainId, 10), accounts: wallet.provider.wc.accounts })
+    }
+  } else {
+    await wallet.provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [
+        {
+          chainId: numberToHex(chainId),
+        },
+      ],
+    })
+  }
 }
 
 /**
@@ -35,7 +43,7 @@ const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> =>
 const requestAdd = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
   const { chainName, nativeCurrency } = getChainInfo()
 
-  await wallet.provider.request({
+  await wallet.provider?.request({
     method: 'wallet_addEthereumChain',
     params: [
       {
@@ -76,10 +84,13 @@ export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<v
   }
 }
 
-export const shouldSwitchNetwork = (wallet = onboard().getState()?.wallet): boolean => {
-  const desiredNetwork = _getChainId()
-  const currentNetwork = wallet?.provider?.networkVersion
-  return currentNetwork ? desiredNetwork !== currentNetwork.toString() : false
+export const shouldSwitchNetwork = (wallet: Wallet): boolean => {
+  // The current network can be stored under one of two keys
+  const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].some(
+    (chainId) => chainId && chainId.toString() !== _getChainId(),
+  )
+
+  return isCurrentNetwork
 }
 
 export const switchWalletChain = async (): Promise<void> => {
@@ -89,6 +100,8 @@ export const switchWalletChain = async (): Promise<void> => {
   } catch (e) {
     e.log()
     // Fallback to the onboard popup if switching isn't supported
+    // walletSelect must be called first: https://docs.blocknative.com/onboard#onboard-user
+    await onboard().walletSelect()
     await onboard().walletCheck()
   }
 }

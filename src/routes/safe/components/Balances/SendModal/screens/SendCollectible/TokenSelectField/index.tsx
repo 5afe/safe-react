@@ -3,7 +3,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { selectStyles, selectedTokenStyles } from './style'
+import { selectStyles, selectedTokenStyles } from '../style'
 
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
@@ -28,7 +28,7 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.Reac
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
-    <MenuItem className={classes.container}>
+    <MenuItem className={classes.container} disableRipple>
       {asset && asset.numberOfTokens ? (
         <>
           <ListItemIcon>
@@ -41,7 +41,7 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.Reac
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
+        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light" noMargin>
           Select an asset*
         </Paragraph>
       )}
@@ -68,6 +68,7 @@ const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): Reac
       disabled={!assetsAddresses.length}
       initialValue={initialValue}
       name="assetAddress"
+      displayEmpty
       renderValue={(assetAddress) => <SelectedToken assetAddress={assetAddress} assets={assets} />}
       validate={required}
     >

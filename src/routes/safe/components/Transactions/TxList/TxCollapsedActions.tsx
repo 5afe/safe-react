@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
-import useLocalTxStatus from 'src/logic/hooks/useLocalTxStatus'
+import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { isAwaitingExecution } from './utils'
 
 const IconButton = styled(MuiIconButton)`
@@ -34,8 +34,13 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
     disabledActions,
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
-  const txStatus = useLocalTxStatus(transaction)
+  const txStatus = useTxStatus(transaction)
   const isAwaitingEx = isAwaitingExecution(txStatus)
+
+  const onExecuteOrConfirm = (event) => {
+    handleOnMouseLeave()
+    handleConfirmButtonClick(event)
+  }
 
   const getTitle = () => {
     if (isAwaitingEx) {
@@ -53,7 +58,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
           <IconButton
             size="small"
             type="button"
-            onClick={handleConfirmButtonClick}
+            onClick={onExecuteOrConfirm}
             disabled={disabledActions}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}

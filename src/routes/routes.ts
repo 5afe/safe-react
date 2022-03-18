@@ -67,7 +67,7 @@ export const SAFE_ROUTES = {
 export const getNetworkRootRoutes = (): Array<{ chainId: ChainId; route: string; shortName: string }> =>
   getChains().map(({ chainId, chainName, shortName }) => ({
     chainId,
-    route: `/${chainName.replaceAll(' ', '-').toLowerCase()}`,
+    route: `/${chainName.replace(/\s+/g, '-').toLowerCase()}`,
     shortName,
   }))
 
@@ -93,14 +93,6 @@ export const extractPrefixedSafeAddress = (
     shortName: prefix,
     safeAddress: checksumAddress(address),
   }
-}
-
-export const hasPrefixedSafeAddressInUrl = (): boolean => {
-  const match = matchPath<SafeRouteSlugs>(history.location.pathname, {
-    // Routes that have addresses in URL
-    path: [ADDRESSED_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE],
-  })
-  return !!match?.params?.[SAFE_ADDRESS_SLUG]
 }
 
 export const extractShortChainName = (): ShortName => extractPrefixedSafeAddress().shortName

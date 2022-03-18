@@ -15,8 +15,8 @@ const usePinnedSafeApps = (remoteSafeApps: SafeApp[], remoteAppsFetchStatus: FET
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const loadPinnedAppIds = async () => {
-      const pinnedAppIds = (await loadFromStorage<string[]>(PINNED_SAFE_APP_IDS)) || []
+    const loadPinnedAppIds = () => {
+      const pinnedAppIds = loadFromStorage<string[]>(PINNED_SAFE_APP_IDS) || []
 
       const isRemoteSafeAppsListLoaded = remoteAppsFetchStatus === FETCH_STATUS.SUCCESS
       if (isRemoteSafeAppsListLoaded) {

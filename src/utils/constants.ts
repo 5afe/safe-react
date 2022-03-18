@@ -4,10 +4,12 @@ export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const IS_PRODUCTION = APP_ENV === 'production'
 export const IS_DESKTOP = process.env.REACT_APP_BUILD_FOR_DESKTOP === 'true'
-export const DEFAULT_CHAIN_ID = IS_PRODUCTION ? CHAIN_ID.ETHEREUM : CHAIN_ID.RINKEBY
+export const DEFAULT_CHAIN_ID =
+  process.env.REACT_APP_DEFAULT_CHAIN_ID || (IS_PRODUCTION ? CHAIN_ID.ETHEREUM : CHAIN_ID.RINKEBY)
 export const PUBLIC_URL = process.env.PUBLIC_URL
 export const TX_SERVICE_VERSION = '1'
 export const INTERCOM_ID = IS_PRODUCTION ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
+export const BEAMER_ID = IS_PRODUCTION ? process.env.REACT_APP_BEAMER_ID : 'ehlRMhQi41258'
 export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || ''
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID ?? '852b763d-f28b-4463-80cb-846d7ec5806b'

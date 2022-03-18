@@ -25,7 +25,7 @@ const SelectedToken = ({ tokenAddress, tokens }: SelectTokenProps): ReactElement
   const token = tokens.find(({ address }) => address === tokenAddress)
 
   return (
-    <MenuItem className={classes.container}>
+    <MenuItem className={classes.container} disableRipple>
       {token ? (
         <>
           <ListItemIcon>
@@ -65,7 +65,14 @@ const TokenSelectField = ({ initialValue, isValid = true, tokens }: TokenSelectF
     <Field
       classes={{ selectMenu: classes.selectMenu }}
       className={isValid ? 'isValid' : 'isInvalid'}
-      component={SelectField}
+      component={(props) => (
+        <SelectField
+          {...props}
+          inputProps={{
+            'data-testid': 'token-input',
+          }}
+        />
+      )}
       displayEmpty
       initialValue={initialValue}
       name="token"

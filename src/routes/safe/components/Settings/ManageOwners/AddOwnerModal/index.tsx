@@ -19,7 +19,6 @@ import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { _getChainId } from 'src/config'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -34,6 +33,7 @@ export const sendAddOwner = async (
   txParameters: TxParameters,
   dispatch: Dispatch,
   connectedWalletAddress: string,
+  delayExecution: boolean,
 ): Promise<void> => {
   const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
   const safeTx = await sdk.getAddOwnerTx(
@@ -42,7 +42,7 @@ export const sendAddOwner = async (
   )
   const txData = safeTx.data.data
 
-  const txHash = await dispatch(
+  await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
@@ -52,16 +52,9 @@ export const sendAddOwner = async (
       safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      delayExecution,
     }),
   )
-
-  if (txHash) {
-    dispatch(
-      addressBookAddOrUpdate(
-        makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName, chainId: _getChainId() }),
-      ),
-    )
-  }
 }
 
 type Props = {
@@ -111,11 +104,19 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
     setActiveScreen('reviewAddOwner')
   }
 
-  const onAddOwner = async (txParameters: TxParameters) => {
+  const onAddOwner = async (txParameters: TxParameters, delayExecution: boolean) => {
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch, connectedWalletAddress)
+      await sendAddOwner(
+        values,
+        safeAddress,
+        safeVersion,
+        txParameters,
+        dispatch,
+        connectedWalletAddress,
+        delayExecution,
+      )
       dispatch(
         addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress, chainId })),
       )

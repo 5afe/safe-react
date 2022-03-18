@@ -20,6 +20,7 @@ const estimateGasForDeployingSafeSpy = jest.spyOn(safeContracts, 'estimateGasFor
 const calculateGasPriceSpy = jest.spyOn(ethTransactions, 'calculateGasPrice')
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
+jest.spyOn(getWeb3ReadOnly().eth.ens, 'getResolver')
 
 jest.mock('src/logic/contracts/safeContracts', () => {
   // Require the original module to not be mocked...
@@ -65,8 +66,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -85,8 +84,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -110,8 +107,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -134,8 +129,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -168,8 +161,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -194,8 +185,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -216,8 +205,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -239,8 +226,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -264,8 +249,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -291,8 +274,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -322,8 +303,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -362,8 +341,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -420,8 +397,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -465,8 +440,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -497,8 +470,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -518,7 +489,7 @@ describe('<CreateSafePage>', () => {
       const defaultOwnerInput = screen.getByTestId('owner-address-1')
       fireEvent.change(defaultOwnerInput, { target: { value: '0x680cde08860141F9D223cE4E620B10Cd6741037E' } })
 
-      const errorText = 'Address already introduced'
+      const errorText = 'Address already added'
 
       expect(screen.getByText(errorText)).toBeInTheDocument()
     })
@@ -531,8 +502,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -577,8 +546,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -627,8 +594,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -687,8 +652,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -744,8 +707,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 
@@ -806,8 +767,6 @@ describe('<CreateSafePage>', () => {
           available: true,
           account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
           network: '4',
-          smartContractWallet: false,
-          hardwareWallet: false,
         },
       }
 

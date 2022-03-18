@@ -36,6 +36,7 @@ export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 import { OwnerValues } from '../..'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators: Record<
   string,
@@ -74,7 +75,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
 
   return (
     <>
-      <ModalHeader onClose={onClose} title="Replace owner" subTitle="1 of 2" />
+      <ModalHeader onClose={onClose} title="Replace owner" subTitle={getStepTitle(1, 2)} />
       <Hairline />
       <GnoForm
         formMutators={formMutators}
@@ -131,7 +132,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                       name="ownerName"
                       placeholder="Owner name*"
                       testId={REPLACE_OWNER_NAME_INPUT_TEST_ID}
-                      text="Owner name*"
+                      label="Owner name*"
                       type="text"
                       validate={composeValidators(required, validAddressBookName)}
                     />

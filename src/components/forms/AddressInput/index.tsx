@@ -68,7 +68,6 @@ const AddressInput = ({
       // A crypto domain name
       if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
         setResolutions((prev) => ({ ...prev, [rawVal]: '' }))
-
         getAddressFromDomain(address)
           .then((resolverAddr) => {
             const formattedAddress = checksumAddress(resolverAddr)
@@ -118,7 +117,7 @@ const AddressInput = ({
         inputAdornment={adornment}
         name={name}
         placeholder={placeholder}
-        text={text}
+        label={text}
         spellCheck={false}
         validate={allValidators}
         inputProps={{

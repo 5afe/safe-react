@@ -17,6 +17,7 @@ import { Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
@@ -42,7 +43,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="2 of 3" title="Remove owner" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 3)} title="Remove owner" />
       <Hairline />
       <GnoForm
         initialValues={{ threshold: initialValues.threshold || defaultThreshold.toString() }}

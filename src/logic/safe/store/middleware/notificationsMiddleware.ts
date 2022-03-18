@@ -23,8 +23,7 @@ import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { history, extractSafeAddress, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 import { getShortName } from 'src/config'
-import { getLocalTxStatus, localStatuses } from '../selectors/txStatus'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -107,14 +106,10 @@ const notificationsMiddleware =
           const safesMap = safesAsMap(state)
           const currentSafe = safesMap.get(safeAddress)
 
-          const hasLocalStatus = transactions.some((tx) => {
-            // Check if the local status is different from the backend status
-            const status = getLocalTxStatus(localStatuses(state), currentChainId(state), tx)
-            return status !== tx.txStatus
-          })
+          const hasPendingTx = transactions.some(({ id }) => isTxPending(state, id))
 
           if (
-            hasLocalStatus ||
+            hasPendingTx ||
             !currentSafe ||
             !isUserAnOwner(currentSafe, userAddress) ||
             awaitingTransactions.length === 0

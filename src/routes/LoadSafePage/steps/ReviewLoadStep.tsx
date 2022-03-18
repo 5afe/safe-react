@@ -19,7 +19,7 @@ import {
   FIELD_SAFE_THRESHOLD,
   LoadSafeFormValues,
 } from '../fields/loadFields'
-import { getLoadSafeName } from '../fields/utils'
+import { getLoadSafeName, getOwnerName } from '../fields/utils'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
@@ -37,11 +37,10 @@ function ReviewLoadStep(): ReactElement {
   const ownerList = formValues[FIELD_SAFE_OWNER_LIST]
 
   const ownerListWithNames = ownerList.map((owner) => {
-    const ownerFieldName = `owner-address-${owner.address}`
-    const ownerNameValue = formValues[ownerFieldName]
+    const ownerName = getOwnerName(formValues, owner.address)
     return {
       ...owner,
-      name: ownerNameValue,
+      name: ownerName,
     }
   })
 
@@ -68,7 +67,7 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Name of the Safe
             </Paragraph>
-            <Paragraph color="primary" noMargin size="lg" weight="bolder" data-testid="load-form-review-safe-name">
+            <Paragraph color="primary" noMargin size="md" weight="bolder" data-testid="load-form-review-safe-name">
               {safeName}
             </Paragraph>
           </Block>
@@ -90,7 +89,7 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Connected wallet client is owner?
             </Paragraph>
-            <Paragraph data-testid={'connected-wallet-is-owner'} color="primary" noMargin size="lg" weight="bolder">
+            <Paragraph data-testid={'connected-wallet-is-owner'} color="primary" noMargin size="md" weight="bolder">
               {isUserConnectedWalletASAfeOwner ? 'Yes' : 'No (read-only)'}
             </Paragraph>
           </Block>
@@ -98,7 +97,7 @@ function ReviewLoadStep(): ReactElement {
             <Paragraph color="disabled" noMargin size="sm">
               Any transaction requires the confirmation of:
             </Paragraph>
-            <Paragraph color="primary" noMargin size="lg" weight="bolder">
+            <Paragraph color="primary" noMargin size="md" weight="bolder">
               {`${threshold} out of ${ownerList.length} owners`}
             </Paragraph>
           </Block>

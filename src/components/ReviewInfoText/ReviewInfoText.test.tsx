@@ -1,57 +1,72 @@
-import { useSelector } from 'react-redux'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { render, screen } from 'src/utils/test-utils'
 import { ReviewInfoText } from './index'
-import { history } from 'src/routes/routes'
 
-const safeAddress = '0xC245cb45B044d66fbE8Fb33C26c0b28B4fc367B2'
-const url = `/rin:${safeAddress}/settings/advanced`
-history.location.pathname = url
+jest.mock('src/logic/hooks/useRecommendedNonce', () => ({
+  __esModule: true,
+  default: () => 9,
+}))
 
 describe('<ReviewInfoText>', () => {
   const initialData = {
     gasCostFormatted: '0',
     isExecution: true,
-    isCreation: false,
+    isCreation: true,
+    isRejection: false,
     isOffChainSignature: false,
     txEstimationExecutionStatus: EstimationStatus.SUCCESS,
   }
-  const customState = {
-    safes: {
-      safes: {
-        [safeAddress]: {
-          address: safeAddress,
-          nonce: 8,
-          modules: null,
-          guard: '',
-          currentVersion: '1.3.0',
-        },
-      },
-    },
-  }
-  const testId = 'reviewInfoText-component'
-  const warningCommonCopy =
-    'will need to be created and executed before this transaction, are you sure you want to do this?'
 
-  it('Renders ReviewInfoText with safeNonce being one lastTxNonce + 1', () => {
-    const lastTxNonce = 10
-    const safeNonce = `${lastTxNonce + 1}`
+  it('renders only base text with safeNonce in order', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="9" />)
 
-    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
-
-    expect(screen.getByTestId(testId)).toBeInTheDocument()
-    expect(screen.queryByText(warningCommonCopy)).not.toBeInTheDocument()
+    expect(screen.getByText(/You're about to create a transaction/)).toBeInTheDocument()
   })
 
-  it('Renders ReviewInfoText with safeNonce more than one transaction ahead of lastTxNonce', () => {
-    const lastTxNonce = 10
-    const safeNonce = `${lastTxNonce + 4}`
-    const expectedCopy = 'transactions ' + warningCommonCopy
+  it('renders only base text with safeNonce in order and not a creation', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="9" isCreation={false} />)
 
-    render(<ReviewInfoText {...initialData} safeNonce={safeNonce} testId={testId} />, customState)
+    expect(screen.getByText(/You're about to execute a transaction/)).toBeInTheDocument()
+  })
 
-    expect(screen.getByTestId(testId)).toBeInTheDocument()
-    expect(screen.getByText('6')).toBeInTheDocument()
-    expect(screen.queryByText(expectedCopy)).toBeInTheDocument()
+  it('renders only base text that is not a creation and nonce in future', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="100" isCreation={false} />)
+
+    expect(screen.getByText(/You're about to execute a transaction/)).toBeInTheDocument()
+    expect(screen.queryByText(/will need to be created and executed before this transaction/)).not.toBeInTheDocument()
+  })
+
+  it('renders only base text for a rejection tx with a nonce in the past', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="1" isRejection={true} />)
+
+    expect(screen.getByText(/You're about to create a rejection transaction/)).toBeInTheDocument()
+    expect(screen.queryByText(/will need to be created and executed before this transaction/)).not.toBeInTheDocument()
+  })
+
+  it('renders a warning with a safeNonce +1 tx in the future', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="10" />)
+
+    expect(screen.getByText(/1/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/transaction will need to be created and executed before this transaction/),
+    ).toBeInTheDocument()
+  })
+
+  it('renders a warning with a safeNonce +2 txs the future', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="11" />)
+
+    expect(screen.getByText(/2/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/transactions will need to be created and executed before this transaction/),
+    ).toBeInTheDocument()
+  })
+
+  it('renders a warning with an already used safeNonce', () => {
+    render(<ReviewInfoText {...initialData} safeNonce="6" />)
+
+    expect(screen.getByText(/6/)).toBeInTheDocument()
+    expect(screen.getByText(/9/)).toBeInTheDocument()
+    expect(screen.getByText(/is below the latest transaction's nonce in your queue./)).toBeInTheDocument()
+    expect(screen.getByText(/Please verify the submitted nonce./)).toBeInTheDocument()
   })
 })
