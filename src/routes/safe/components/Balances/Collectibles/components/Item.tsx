@@ -54,11 +54,13 @@ const useStyles = makeStyles({
   },
   image: {
     borderRadius: '8px',
-    height: '200px',
-    flexGrow: '1',
-    width: '200px',
+    maxWidth: '200px',
+    maxHeight: '200px',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain',
     margin: '12px 12px 0',
+    alignSelf: 'center',
   },
   textContainer: {
     boxSizing: 'border-box',
