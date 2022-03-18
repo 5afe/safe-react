@@ -96,8 +96,8 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   const appInfoData = {
     name: appInfo.name,
-    iconPath: appInfo.icons ? getAppIcon(appInfo.icons) : appInfo.iconPath,
-    description: appInfo.description || '',
+    iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
+    description: appInfo.description,
     providedBy: appInfo.providedBy,
   }
 
