@@ -26,6 +26,7 @@ export interface AppManifest {
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
 const MIN_ICON_WIDTH = 128
+const MANIFEST_ERROR_MESSAGE = 'App manifest does not fulfil the required structure.'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
@@ -86,8 +87,12 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
   }
 
   // verify imported app fulfil safe requirements
-  if (validateManifest && (!appInfo || !isAppManifestValid(appInfo))) {
-    throw Error('App manifest does not fulfil the required structure.')
+  if (!appInfo || !isAppManifestValid(appInfo)) {
+    if (validateManifest) {
+      throw Error(MANIFEST_ERROR_MESSAGE)
+    } else {
+      console.error(MANIFEST_ERROR_MESSAGE)
+    }
   }
 
   // the DB origin field has a limit of 100 characters
