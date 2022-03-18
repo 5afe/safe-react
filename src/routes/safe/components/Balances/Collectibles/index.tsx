@@ -1,7 +1,9 @@
-import { useEffect, Fragment, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
+import { FixedSizeList as List } from 'react-window'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 import Item from './components/Item'
 
@@ -95,46 +97,56 @@ const Collectibles = (): React.ReactElement => {
     setSendNFTsModalOpen(true)
   }
 
-  return (
-    <Card className={classes.cardOuter}>
-      <div className={classes.cardInner}>
-        {/* No collectibles */}
-        {nftAssetsFromNftTokens.length === 0 && (
+  if (nftAssetsFromNftTokens.length === 0) {
+    return (
+      <Card className={classes.cardOuter}>
+        <div className={classes.cardInner}>
           <Paragraph className={classes.noData}>No collectibles available</Paragraph>
+        </div>
+      </Card>
+    )
+  }
+  return (
+    <>
+      <AutoSizer>
+        {(dimensions) => (
+          <List itemCount={50} itemSize={365} {...dimensions}>
+            {({ index, style }) => {
+              const nftAsset = nftAssetsFromNftTokens[index]
+              if (!nftAsset) {
+                return null
+              }
+              return (
+                <div style={style}>
+                  <div className={classes.title}>
+                    <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
+                    <h2 className={classes.titleText}>{nftAsset.name}</h2>
+                    <div className={classes.titleFiller} />
+                  </div>
+                  <div className={classes.gridRow}>
+                    {nftTokens
+                      .filter(({ assetAddress }) => nftAsset.address === assetAddress)
+                      .map((nftToken) => (
+                        <Item
+                          data={nftToken}
+                          key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                          onSend={() => handleItemSend(nftToken)}
+                        />
+                      ))}
+                  </div>
+                </div>
+              )
+            }}
+          </List>
         )}
-
-        {/* collectibles List*/}
-        {nftAssetsFromNftTokens.length > 0 &&
-          nftAssetsFromNftTokens.map((nftAsset) => {
-            return (
-              <Fragment key={nftAsset.slug}>
-                <div className={classes.title}>
-                  <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
-                  <h2 className={classes.titleText}>{nftAsset.name}</h2>
-                  <div className={classes.titleFiller} />
-                </div>
-                <div className={classes.gridRow}>
-                  {nftTokens
-                    .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                    .map((nftToken) => (
-                      <Item
-                        data={nftToken}
-                        key={`${nftAsset.slug}_${nftToken.tokenId}`}
-                        onSend={() => handleItemSend(nftToken)}
-                      />
-                    ))}
-                </div>
-              </Fragment>
-            )
-          })}
-      </div>
+      </AutoSizer>
       <SendModal
         activeScreenType="sendCollectible"
         isOpen={sendNFTsModalOpen}
         onClose={() => setSendNFTsModalOpen(false)}
         selectedToken={selectedToken}
       />
-    </Card>
+    </>
   )
 }
 
