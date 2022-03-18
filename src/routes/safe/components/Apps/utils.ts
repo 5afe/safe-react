@@ -120,7 +120,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
 export const getAppIcon = (icons: AppManifestIcon[]): string => {
   const svgIcon = icons.find(
-    (icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml' || icon?.purpose === 'any',
+    (icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml' || icon?.purpose?.includes('any'),
   )
 
   if (svgIcon) {
