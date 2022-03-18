@@ -8,7 +8,9 @@ export const nftTokens = (state: AppReduxState): NFTTokens => state[NFT_TOKENS_R
 
 export const nftAssetsSelector = createSelector(nftAssets, (assets) => assets)
 
-export const nftTokensSelector = createSelector(nftTokens, (tokens) => tokens)
+export const nftTokensSelector = createSelector(nftTokens, (tokens) => tokens.items)
+
+export const nftLoadedSelector = createSelector(nftTokens, (tokens) => tokens.loaded)
 
 const nftAssetsToListSelector = createSelector(nftAssets, (assets): NFTAsset[] => {
   return assets ? Object.values(assets) : []
