@@ -47,7 +47,7 @@ const useStyles = makeStyles(
     title: {
       alignItems: 'center',
       display: 'flex',
-      margin: '0 0 18px',
+      margin: '18px',
     },
     titleImg: {
       backgroundPosition: '50% 50%',
@@ -109,10 +109,7 @@ const Collectibles = (): React.ReactElement => {
   return (
     <>
       <Virtuoso
-        style={{
-          height: 'calc(100% - 54px)', // breadcrumb height
-          width: '100%',
-        }}
+        useWindowScroll
         data={nftAssetsFromNftTokens}
         itemContent={(_, nftAsset) => {
           // Larger collectible lists can cause this to be initially undefined
