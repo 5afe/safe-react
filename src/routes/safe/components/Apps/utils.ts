@@ -63,7 +63,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
   }
 }
 
-export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp> => {
+export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest = true): Promise<SafeApp> => {
   let res = {
     ...getEmptySafeApp(),
     error: true,
@@ -86,7 +86,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   }
 
   // verify imported app fulfil safe requirements
-  if (!appInfo || !isAppManifestValid(appInfo)) {
+  if (validateManifest && (!appInfo || !isAppManifestValid(appInfo))) {
     throw Error('App manifest does not fulfil the required structure.')
   }
 
