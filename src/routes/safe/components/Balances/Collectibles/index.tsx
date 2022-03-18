@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-import { VariableSizeList as List } from 'react-window'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import { Virtuoso } from 'react-virtuoso'
 
 import Item from './components/Item'
 
@@ -107,52 +106,43 @@ const Collectibles = (): React.ReactElement => {
     )
   }
 
-  const getNftTokens = (index: number) => {
-    const nftAsset = nftAssetsFromNftTokens[index]
-    return nftTokens.filter(({ assetAddress }) => nftAsset.address === assetAddress)
-  }
-
-  const getItemSize = (index: number) => {
-    const NFT_CARD_HEIGHT = 365
-    const nftAmount = getNftTokens(index).length
-    const rows = Math.ceil(nftAmount / 4)
-    return rows * NFT_CARD_HEIGHT
-  }
-
   return (
     <>
-      <AutoSizer>
-        {(dimensions) => {
+      <Virtuoso
+        style={{
+          height: 'calc(100% - 54px)', // breadcrumb height
+          width: '100%',
+        }}
+        totalCount={nftAssetsFromNftTokens.length}
+        itemContent={(index) => {
+          const nftAsset = nftAssetsFromNftTokens[index]
+          // Larger collectible lists can cause this to be initially undefined
+          if (!nftAsset) {
+            return null
+          }
+
           return (
-            <List itemCount={50} itemSize={getItemSize} {...dimensions}>
-              {({ index, style, key }) => {
-                const nftAsset = nftAssetsFromNftTokens[index]
-                if (!nftAsset) {
-                  return null
-                }
-                return (
-                  <div style={style} key={key}>
-                    <div className={classes.title}>
-                      <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
-                      <h2 className={classes.titleText}>{nftAsset.name}</h2>
-                      <div className={classes.titleFiller} />
-                    </div>
-                    <div className={classes.gridRow}>
-                      {getNftTokens(index).map((nftToken) => (
-                        <Item
-                          data={nftToken}
-                          key={`${nftAsset.slug}_${nftToken.tokenId}`}
-                          onSend={() => handleItemSend(nftToken)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )
-              }}
-            </List>
+            <Fragment key={nftAsset.slug}>
+              <div className={classes.title}>
+                <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
+                <h2 className={classes.titleText}>{nftAsset.name}</h2>
+                <div className={classes.titleFiller} />
+              </div>
+              <div className={classes.gridRow}>
+                {nftTokens
+                  .filter(({ assetAddress }) => nftAsset.address === assetAddress)
+                  .map((nftToken) => (
+                    <Item
+                      data={nftToken}
+                      key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                      onSend={() => handleItemSend(nftToken)}
+                    />
+                  ))}
+              </div>
+            </Fragment>
           )
         }}
-      </AutoSizer>
+      />
       <SendModal
         activeScreenType="sendCollectible"
         isOpen={sendNFTsModalOpen}
