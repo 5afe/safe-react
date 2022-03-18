@@ -25,6 +25,7 @@ export interface AppManifest {
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
+const MIN_ICON_WIDTH = 128
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
@@ -118,7 +119,9 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 })
 
 export const getAppIcon = (icons: AppManifestIcon[]): string => {
-  const svgIcon = icons.find((icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml')
+  const svgIcon = icons.find(
+    (icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml' || icon?.purpose === 'any',
+  )
 
   if (svgIcon) {
     return svgIcon.src
@@ -126,7 +129,7 @@ export const getAppIcon = (icons: AppManifestIcon[]): string => {
 
   for (const icon of icons) {
     for (const size of icon.sizes.split(' ')) {
-      if (Number(size?.split('x')[0]) >= 128) {
+      if (Number(size?.split('x')[0]) >= MIN_ICON_WIDTH) {
         return icon.src
       }
     }
