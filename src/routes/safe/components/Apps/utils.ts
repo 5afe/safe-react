@@ -18,7 +18,7 @@ type AppManifestIcon = {
 export interface AppManifest {
   name: string
   iconPath?: string
-  description?: string
+  description: string
   icons?: AppManifestIcon[]
   providedBy: string
 }
@@ -43,7 +43,9 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
-  appInfo.name !== 'unknown'
+  appInfo.name !== 'unknown' &&
+  // `description` exists
+  !!appInfo.description
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {

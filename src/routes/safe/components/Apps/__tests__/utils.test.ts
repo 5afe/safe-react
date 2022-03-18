@@ -1,7 +1,7 @@
 import { getAppIcon, isAppManifestValid } from '../utils'
 
 describe('SafeApp manifest', () => {
-  it('It should return true given a manifest with mandatory values supplied', async () => {
+  it('It should return true given a manifest with mandatory values supplied', () => {
     const manifest = {
       name: 'test',
       description: 'a test',
@@ -20,7 +20,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(true)
   })
 
-  it('It should return false given a manifest without name', async () => {
+  it('It should return false given a manifest without name', () => {
     const manifest = {
       name: '',
       description: 'a test',
@@ -32,7 +32,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(false)
   })
 
-  it('It should return false given a manifest without description', async () => {
+  it('It should return false given a manifest without description', () => {
     const manifest = {
       name: 'test',
       description: '',
@@ -44,7 +44,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(false)
   })
 
-  it.only('It should return the best icon given an icons array', () => {
+  it('It should return the best icon given an icons array', () => {
     const icons = [
       {
         src: 'one.png',
