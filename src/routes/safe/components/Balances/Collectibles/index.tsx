@@ -109,7 +109,9 @@ const Collectibles = (): React.ReactElement => {
   return (
     <>
       <Virtuoso
-        useWindowScroll
+        style={{
+          height: 'calc(100% - 54px)', // Remove breadcrumb hight
+        }}
         data={nftAssetsFromNftTokens}
         itemContent={(_, nftAsset) => {
           // Larger collectible lists can cause this to be initially undefined
