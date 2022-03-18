@@ -125,13 +125,13 @@ const Collectibles = (): React.ReactElement => {
         {(dimensions) => {
           return (
             <List itemCount={50} itemSize={getItemSize} {...dimensions}>
-              {({ index, style }) => {
+              {({ index, style, key }) => {
                 const nftAsset = nftAssetsFromNftTokens[index]
                 if (!nftAsset) {
                   return null
                 }
                 return (
-                  <div style={style}>
+                  <div style={style} key={key}>
                     <div className={classes.title}>
                       <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
                       <h2 className={classes.titleText}>{nftAsset.name}</h2>
