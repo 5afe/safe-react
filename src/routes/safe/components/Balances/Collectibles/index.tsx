@@ -113,9 +113,8 @@ const Collectibles = (): React.ReactElement => {
           height: 'calc(100% - 54px)', // breadcrumb height
           width: '100%',
         }}
-        totalCount={nftAssetsFromNftTokens.length}
-        itemContent={(index) => {
-          const nftAsset = nftAssetsFromNftTokens[index]
+        data={nftAssetsFromNftTokens}
+        itemContent={(_, nftAsset) => {
           // Larger collectible lists can cause this to be initially undefined
           if (!nftAsset) {
             return null
