@@ -21,7 +21,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -316,7 +316,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   }, [appUrl])
 
   useEffect(() => {
-    if (safeApp) {
+    if (safeApp && safeApp.name !== EMPTY_SAFE_APP) {
       trackEvent({ ...SAFE_APPS_EVENTS.OPEN_APP, label: safeApp.name })
     }
   }, [safeApp])

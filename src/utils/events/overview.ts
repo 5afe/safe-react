@@ -6,6 +6,10 @@ const OVERVIEW = {
     event: GTM_EVENT.CLICK,
     action: 'Go to Welcome page',
   },
+  PAIRING_BUTTON: {
+    event: GTM_EVENT.CLICK,
+    action: 'Download App',
+  },
   OPEN_ONBOARD: {
     event: GTM_EVENT.CLICK,
     action: 'Open wallet modal',

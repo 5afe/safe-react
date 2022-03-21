@@ -71,10 +71,10 @@ const useAppList = (): UseAppListReturnType => {
       const isAppPinned = pinnedSafeAppIds.includes(appId)
 
       if (isAppPinned) {
-        trackEvent({ ...SAFE_APPS_EVENTS.PIN, label: appName })
+        trackEvent({ ...SAFE_APPS_EVENTS.UNPIN, label: appName })
         newPinnedIds.splice(newPinnedIds.indexOf(appId), 1)
       } else {
-        trackEvent({ ...SAFE_APPS_EVENTS.UNPIN, label: appName })
+        trackEvent({ ...SAFE_APPS_EVENTS.PIN, label: appName })
         newPinnedIds.push(appId)
       }
 
