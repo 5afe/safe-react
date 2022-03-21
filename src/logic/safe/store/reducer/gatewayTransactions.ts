@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
+import merge from 'lodash/merge'
 
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -41,6 +42,19 @@ export type TransactionDetailsPayload = {
 }
 
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
+
+const getUpdatedTx = (storedTx: Transaction, newTx: Transaction) => {
+  const hasMoreConfirmations =
+    isMultisigExecutionInfo(storedTx.executionInfo) &&
+    isMultisigExecutionInfo(newTx.executionInfo) &&
+    storedTx.executionInfo.confirmationsSubmitted !== newTx.executionInfo.confirmationsSubmitted
+
+  return hasMoreConfirmations
+    ? // Will remove txDetails
+      newTx
+    : // Create new object, preserving txDetails
+      merge({}, storedTx, newTx)
+}
 
 export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState, Payload>(
   {
@@ -89,8 +103,8 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
     },
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
-      let newNext = {}
-      let newQueued = {}
+      let newNext = cloneDeep(state[chainId]?.[safeAddress]?.queued?.next || {})
+      let newQueued = cloneDeep(state[chainId]?.[safeAddress]?.queued?.queued || {})
 
       let label: 'next' | 'queued' | undefined
 
@@ -122,15 +136,30 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         }
 
         const newTx = value.transaction
+
         if (label === 'queued') {
           if (newQueued?.[txNonce]) {
-            newQueued[txNonce] = [...newQueued[txNonce], newTx]
+            const txIndex = newQueued[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
+
+            if (txIndex !== -1) {
+              const storedTx = newQueued[txNonce][txIndex]
+              newQueued[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
+            } else {
+              newQueued[txNonce] = [...newQueued[txNonce], newTx]
+            }
           } else {
             newQueued = { ...newQueued, [txNonce]: [newTx] }
           }
         } else {
           if (newNext?.[txNonce]) {
-            newNext[txNonce] = [...newNext[txNonce], newTx]
+            const txIndex = newNext[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
+
+            if (txIndex !== -1) {
+              const storedTx = newNext[txNonce][txIndex]
+              newNext[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
+            } else {
+              newNext[txNonce] = [...newNext[txNonce], newTx]
+            }
           } else {
             newNext = { [txNonce]: [newTx] }
           }
