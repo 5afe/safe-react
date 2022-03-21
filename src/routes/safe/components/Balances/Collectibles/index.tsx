@@ -117,7 +117,7 @@ const Collectibles = (): React.ReactElement => {
     <>
       <Virtuoso
         style={{
-          height: 'calc(100% - 54px)', // Remove breadcrumb hight
+          height: 'calc(100% - 54px)', // Remove breadcrumb height
         }}
         data={nftAssetsFromNftTokens}
         itemContent={(_, nftAsset) => {
@@ -136,10 +136,10 @@ const Collectibles = (): React.ReactElement => {
               <div className={classes.gridRow}>
                 {nftTokens
                   .filter(({ assetAddress }) => nftAsset.address === assetAddress)
-                  .map((nftToken) => (
+                  .map((nftToken, i) => (
                     <Item
                       data={nftToken}
-                      key={`${nftAsset.slug}_${nftToken.tokenId}`}
+                      key={`${nftAsset.slug}_${nftToken.tokenId}_${i}`}
                       onSend={() => handleItemSend(nftToken)}
                     />
                   ))}
