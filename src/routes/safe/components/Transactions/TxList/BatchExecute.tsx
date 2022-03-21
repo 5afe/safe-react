@@ -30,7 +30,6 @@ import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/
 import { extractSafeAddress } from 'src/routes/routes'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { AppReduxState } from 'src/store'
 import { addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { DecodeTxs } from 'src/components/DecodeTxs'
@@ -169,12 +168,12 @@ async function getBatchExecuteData(transactions: Transaction[], safeInstance: Gn
 export const BatchExecute = (): ReactElement => {
   const dispatch = useDispatch<Dispatch>()
   const safeAddress = extractSafeAddress()
-  const { nonce, address, currentVersion } = useSelector(currentSafe)
+  const { address, currentVersion } = useSelector(currentSafe)
   const account = useSelector(userAccountSelector)
   const safeInstance = getGnosisSafeInstanceAt(address, currentVersion)
   const multiSendInstance = getMultisendContract()
   const multiSendContractAddress = getMultisendContractAddress()
-  const batchableTransactions = useSelector((state: AppReduxState) => getBatchableTransactions(state, nonce))
+  const batchableTransactions = useSelector(getBatchableTransactions)
   const [isModalOpen, setModalOpen] = useState(false)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const [decodedData, setDecodedData] = useState<DecodedTxDetailType>()

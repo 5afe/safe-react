@@ -13,6 +13,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
 import { AppReduxState } from 'src/store'
 import { extractSafeAddress } from 'src/routes/routes'
+import { currentSafeNonce } from 'src/logic/safe/store/selectors/index'
 
 export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewayTransactions'] => {
   return state[GATEWAY_TRANSACTIONS_ID]
@@ -167,7 +168,7 @@ export const getLastTxNonce = createSelector(getLastTransaction, (lastTx) => {
 export const getBatchableTransactions = createSelector(
   nextTransaction,
   queuedTransactions,
-  (_: AppReduxState, safeNonce: number) => safeNonce,
+  currentSafeNonce,
   (nextTx, queuedTxs, safeNonce) => {
     const batchableTransactions: Transaction[] = []
     let currentNonce = safeNonce
