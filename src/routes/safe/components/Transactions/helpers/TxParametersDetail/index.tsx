@@ -118,15 +118,19 @@ export const TxParametersDetail = ({
 
   useEffect(() => {
     if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) {
+      setIsAccordionExpanded(false)
+      setIsTxNonceOutOfOrder(false)
       return
     }
     if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
       setIsAccordionExpanded(true)
       setIsTxNonceOutOfOrder(true)
+      return
     }
     if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
       setIsAccordionExpanded(true)
       setIsTxNonceOutOfOrder(true)
+      return
     }
   }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 

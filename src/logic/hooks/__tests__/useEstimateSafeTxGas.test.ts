@@ -27,7 +27,7 @@ describe('useEstimateSafeTxGas', () => {
       const { result } = renderHook(() =>
         useEstimateSafeTxGas({
           txAmount: '',
-          txData: '',
+          txData: '0x',
           txRecipient: '',
           isCreation: false,
           isRejectTx: false,
@@ -47,12 +47,32 @@ describe('useEstimateSafeTxGas', () => {
       const { result } = renderHook(() =>
         useEstimateSafeTxGas({
           txAmount: '',
-          txData: '',
+          txData: '0x',
           txRecipient: '',
           isCreation: false,
           isRejectTx: true,
         }),
       )
+      expect(result.current).toBe('0')
+    })
+
+    expect(spy).toHaveBeenCalledTimes(0)
+  })
+
+  it(`should return 0 if tx data is not passed`, async () => {
+    const spy = jest.spyOn(gas, 'estimateSafeTxGas')
+
+    await actResolve(() => {
+      const { result } = renderHook(() =>
+        useEstimateSafeTxGas({
+          txAmount: '',
+          txData: '',
+          txRecipient: '',
+          isCreation: true,
+          isRejectTx: false,
+        }),
+      )
+
       expect(result.current).toBe('0')
     })
 
@@ -66,7 +86,7 @@ describe('useEstimateSafeTxGas', () => {
       renderHook(() =>
         useEstimateSafeTxGas({
           txAmount: '',
-          txData: '',
+          txData: '0x',
           txRecipient: '',
           isCreation: true,
           isRejectTx: false,
@@ -86,7 +106,7 @@ describe('useEstimateSafeTxGas', () => {
       const { result } = renderHook(() =>
         useEstimateSafeTxGas({
           txAmount: '',
-          txData: '',
+          txData: '0x',
           txRecipient: '',
           isCreation: true,
           isRejectTx: false,

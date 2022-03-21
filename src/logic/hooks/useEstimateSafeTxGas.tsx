@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import useAsync from './useAsync'
+import useAsync from 'src/logic/hooks/useAsync'
 
 type UseEstimateSafeTxGasProps = {
   isCreation: boolean
@@ -27,7 +27,7 @@ export const useEstimateSafeTxGas = ({
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
 
   const requestSafeTxGas = useCallback((): Promise<string> => {
-    if (!isCreation || isRejectTx) return Promise.resolve(defaultEstimation)
+    if (!isCreation || isRejectTx || !txData) return Promise.resolve(defaultEstimation)
 
     return estimateSafeTxGas(
       {

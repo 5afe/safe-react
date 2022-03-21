@@ -4,12 +4,9 @@ import { toWei } from 'web3-utils'
 
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { extractSafeAddress } from 'src/routes/routes'
-import { AppReduxState } from 'src/store'
-import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import useRecommendedNonce from 'src/logic/hooks/useRecommendedNonce'
 
 export type TxParameters = {
   safeNonce?: string
@@ -44,10 +41,9 @@ type Props = {
 export const useTransactionParameters = (props?: Props): TxParameters => {
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
-  const safeVersion = useSelector(currentSafeCurrentVersion) as string
-  const state = useSelector((state: AppReduxState) => state)
 
   // Safe Params
+  const recommendedNonce = useRecommendedNonce(safeAddress)
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
   // SafeTxGas: for a new Tx call requiredTxGas, for an existing tx get it from the backend.
   const [safeTxGas, setSafeTxGas] = useState<string | undefined>(props?.initialSafeTxGas)
@@ -92,21 +88,10 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
 
   // Calc safe nonce
   useEffect(() => {
-    const getSafeNonce = async () => {
-      if (safeAddress) {
-        try {
-          const recommendedNonce = (await getRecommendedNonce(safeAddress)).toString()
-          setSafeNonce(recommendedNonce)
-        } catch (e) {
-          logError(Errors._616, e.message)
-        }
-      }
+    if (recommendedNonce != null) {
+      setSafeNonce(String(recommendedNonce))
     }
-
-    if (safeNonce === undefined) {
-      getSafeNonce()
-    }
-  }, [safeAddress, safeVersion, safeNonce, state])
+  }, [recommendedNonce])
 
   return {
     safeNonce,
