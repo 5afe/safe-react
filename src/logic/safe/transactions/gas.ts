@@ -116,7 +116,11 @@ export const checkTransactionExecution = async ({
       from,
       gas: gasLimit,
     })
-    .catch(() => false)
+    .then(() => true)
+    .catch((e) => {
+      console.warn('Transaction will fail\n\n', e)
+      return false
+    })
 }
 
 export const isMaxFeeParam = (): boolean => {
