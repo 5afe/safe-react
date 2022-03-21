@@ -88,11 +88,10 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
 
   // verify imported app fulfil safe requirements
   if (!appInfo || !isAppManifestValid(appInfo)) {
-    const errorMessage = `${appInfo.name || 'Safe App'}: ${MANIFEST_ERROR_MESSAGE}`
     if (validateManifest) {
-      throw Error(errorMessage)
+      throw Error(`App ${MANIFEST_ERROR_MESSAGE.toLocaleLowerCase()}`)
     } else {
-      console.error(errorMessage)
+      console.error(`${appInfo.name || 'Safe App'}: ${MANIFEST_ERROR_MESSAGE}`)
     }
   }
 
