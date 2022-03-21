@@ -11,10 +11,7 @@ import { cookieBannerState } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, unloadGoogleAnalytics } from 'src/utils/googleAnalytics'
-import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
-import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -138,7 +135,7 @@ const CookiesBannerForm = (props: {
               value={formNecessary}
             />
           </div>
-          <div className={classes.formItem}>
+          {/* <div className={classes.formItem}>
             <FormControlLabel
               control={<Checkbox checked={formSupportAndUpdates} />}
               label="Community support & updates"
@@ -146,7 +143,7 @@ const CookiesBannerForm = (props: {
               onChange={() => setFormSupportAndUpdates((prev) => !prev)}
               value={formSupportAndUpdates}
             />
-          </div>
+          </div> */}
           <div className={classes.formItem}>
             <FormControlLabel
               control={<Checkbox checked={formAnalytics} />}
@@ -178,11 +175,10 @@ const CookiesBanner = isDesktop
       const dispatch = useDispatch()
 
       const [localNecessary, setLocalNecessary] = useState(true)
-      const [localSupportAndUpdates, setLocalSupportAndUpdates] = useState(false)
       const [localAnalytics, setLocalAnalytics] = useState(false)
 
       const { cookieBannerOpen } = useSelector(cookieBannerState)
-      const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
+      // const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
 
       const openBanner = useCallback(
         (key?: COOKIE_IDS): void => {
@@ -229,7 +225,6 @@ const CookiesBanner = isDesktop
 
         setLocalNecessary(cookiesNecessary)
         setLocalAnalytics(cookiesAnalytics)
-        setLocalSupportAndUpdates(cookiesSupportAndUpdates)
       }
 
       // Init cookie banner's own cookie
@@ -242,33 +237,32 @@ const CookiesBanner = isDesktop
           return
         }
 
-        const { acceptedNecessary, acceptedSupportAndUpdates, acceptedAnalytics } = cookiesState
+        const { acceptedNecessary, acceptedAnalytics } = cookiesState
         setLocalNecessary(acceptedNecessary)
-        setLocalSupportAndUpdates(acceptedSupportAndUpdates)
         setLocalAnalytics(acceptedAnalytics)
-      }, [setLocalNecessary, setLocalSupportAndUpdates, setLocalAnalytics, openBanner])
+      }, [setLocalNecessary, setLocalAnalytics, openBanner])
 
       // Load or unload analytics depending on user choice
       useEffect(() => {
         localAnalytics ? loadGoogleAnalytics() : unloadGoogleAnalytics()
       }, [localAnalytics])
 
-      // Toggle Intercom
-      useEffect(() => {
-        if (isSafeAppView || !localSupportAndUpdates) {
-          isIntercomLoaded() && closeIntercom()
-          return
-        }
+      // // Toggle Intercom
+      // useEffect(() => {
+      //   if (isSafeAppView || !localSupportAndUpdates) {
+      //     isIntercomLoaded() && closeIntercom()
+      //     return
+      //   }
 
-        if (!isSafeAppView && localSupportAndUpdates) {
-          !isIntercomLoaded() && loadIntercom()
-        }
-      }, [localSupportAndUpdates, isSafeAppView])
+      //   if (!isSafeAppView && localSupportAndUpdates) {
+      //     !isIntercomLoaded() && loadIntercom()
+      //   }
+      // }, [localSupportAndUpdates, isSafeAppView])
 
       // Toggle Beamer
-      useEffect(() => {
-        localSupportAndUpdates ? loadBeamer() : unloadBeamer()
-      }, [localSupportAndUpdates])
+      // useEffect(() => {
+      //   localSupportAndUpdates ? loadBeamer() : unloadBeamer()
+      // }, [localSupportAndUpdates])
 
       return (
         <>
@@ -276,7 +270,7 @@ const CookiesBanner = isDesktop
           {cookieBannerOpen && (
             <CookiesBannerForm
               cookiesNecessary={localNecessary}
-              cookiesSupportAndUpdates={localSupportAndUpdates}
+              cookiesSupportAndUpdates={false}
               cookiesAnalytics={localAnalytics}
               onSubmit={acceptCookiesHandler}
             />
