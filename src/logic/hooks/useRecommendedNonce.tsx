@@ -5,7 +5,7 @@ import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactio
 import useAsync from 'src/logic/hooks/useAsync'
 
 const useRecommendedNonce = (safeAddress: string): number => {
-  const lastTxNonce = useSelector(getLastTxNonce) || 0
+  const lastTxNonce = useSelector(getLastTxNonce) || -1
 
   const getNonce = useCallback(() => {
     return getRecommendedNonce(safeAddress)
