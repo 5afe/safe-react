@@ -12,6 +12,8 @@ import { FormButtons } from './FormButtons'
 import { getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 const FORM_ID = 'add-apps-form'
 
@@ -100,6 +102,7 @@ const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement =>
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(async () => {
+    trackEvent(SAFE_APPS_EVENTS.ADD_CUSTOM_APP)
     onAddApp(appInfo)
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.APPS, extractPrefixedSafeAddress()),

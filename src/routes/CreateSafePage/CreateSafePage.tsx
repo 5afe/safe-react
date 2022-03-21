@@ -37,8 +37,8 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
-import { CREATE_SAFE_TRACKING_EVENTS, CREATE_SAFE_TRACKING_ID } from 'src/utils/tags/createLoadSafe'
-import { trackEventGTM } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_CATEGORY, CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
@@ -71,12 +71,15 @@ function CreateSafePage(): ReactElement {
   const safeRandomName = useMnemonicSafeName()
 
   const showSafeCreationProcess = (newSafeFormValues: CreateSafeFormValues): void => {
-    trackEventGTM({
-      ...CREATE_SAFE_TRACKING_EVENTS.CREATE,
-      payload: {
-        owners: newSafeFormValues[FIELD_SAFE_OWNERS_LIST].length,
-        threshold: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
-      },
+    // Track number of owners
+    trackEvent({
+      ...CREATE_SAFE_EVENTS.OWNERS,
+      label: newSafeFormValues[FIELD_SAFE_OWNERS_LIST].length,
+    })
+    // Track threshold
+    trackEvent({
+      ...CREATE_SAFE_EVENTS.THRESHOLD,
+      label: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
     })
 
     saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
@@ -126,7 +129,7 @@ function CreateSafePage(): ReactElement {
           initialValues={initialFormValues}
           onSubmit={showSafeCreationProcess}
           testId={'create-safe-form'}
-          trackingId={CREATE_SAFE_TRACKING_ID}
+          trackingCategory={CREATE_SAFE_CATEGORY}
         >
           <StepFormElement
             label={selectWalletAndNetworkStepLabel}

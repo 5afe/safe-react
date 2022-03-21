@@ -1,22 +1,48 @@
-import { ReactElement, Fragment, ComponentProps } from 'react'
+import { ReactElement, Fragment, useEffect, useRef } from 'react'
 
-import { getTrackDataLayer } from 'src/utils/googleTagManager'
-
-export type TrackingEvents = Record<string, Omit<ComponentProps<typeof Track>, 'children'>>
+import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
 
 type Props = {
   children: ReactElement
-  id: string
-  desc: string
-  payload?: Record<string, string | number | boolean | null>
+  as?: 'span' | 'div'
+  category: string
+  action: string
+  label?: string | number | boolean
 }
 
-const Track = ({ children, ...trackData }: Props): typeof children => {
+const Track = ({ children, as: Wrapper = 'div', ...trackData }: Props): typeof children => {
+  const el = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!el.current) {
+      return
+    }
+
+    const trackEl = el.current
+
+    const handleClick = () => {
+      trackEvent({
+        event: GTM_EVENT.CLICK,
+        ...trackData,
+      })
+    }
+
+    // We cannot use onClick as events in children do not always bubble up
+    trackEl.addEventListener('click', handleClick)
+    return () => {
+      trackEl.removeEventListener('click', handleClick)
+    }
+  }, [el, trackData])
+
   if (children.type === Fragment) {
     throw new Error('Fragments cannot be tracked.')
   }
 
-  return <div {...getTrackDataLayer(trackData)}>{children}</div>
+  return (
+    <Wrapper data-track={`${trackData.category}: ${trackData.action}`} ref={el}>
+      {children}
+    </Wrapper>
+  )
 }
 
 export default Track

@@ -16,6 +16,8 @@ import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxLis
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -50,8 +52,12 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
           return
         }
       }
+      const actionSelected = canExecute || canConfirmThenExecute ? 'execute' : 'confirm'
+
+      trackEvent(TX_LIST_EVENTS[actionSelected.toUpperCase()])
+
       actionContext.current.selectAction({
-        actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
+        actionSelected,
         transactionId: transaction.id,
       })
     },
@@ -61,6 +67,9 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const handleCancelButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation()
+
+      trackEvent(TX_LIST_EVENTS.REJECT)
+
       actionContext.current.selectAction({
         actionSelected: 'cancel',
         transactionId: transaction.id,

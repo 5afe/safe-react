@@ -22,7 +22,7 @@ type StepperProviderTypes = {
   stepsComponents: ReactElement[]
   children: ReactElement
   testId?: string
-  trackingId?: string
+  trackingCategory?: string
 }
 
 function StepperProvider({
@@ -32,7 +32,7 @@ function StepperProvider({
   stepsComponents,
   children,
   testId,
-  trackingId,
+  trackingCategory,
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
@@ -86,7 +86,7 @@ function StepperProvider({
     customNextButtonLabel,
 
     testId,
-    trackingId,
+    trackingCategory,
 
     ...store,
   }

@@ -7,7 +7,7 @@ import Button from 'src/components/layout/Button'
 import { getHashedExplorerUrl } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
 import Track from 'src/components/Track'
-import { CREATE_SAFE_TRACKING_EVENTS } from 'src/utils/tags/createLoadSafe'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 const StyledText = styled(Text)`
   display: inline-flex;
@@ -72,7 +72,7 @@ export const ContinueFooter = ({
 }): ReactElement => (
   <FooterContainer>
     <Hairline />
-    <Track {...CREATE_SAFE_TRACKING_EVENTS.GET_STARTED}>
+    <Track {...CREATE_SAFE_EVENTS.GET_STARTED}>
       <Button
         color="primary"
         disabled={continueButtonDisabled}

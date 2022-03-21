@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
@@ -10,6 +10,8 @@ import { nftAssetsFromNftTokensSelector, orderedNFTAssets } from 'src/logic/coll
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { ASSETS_EVENTS } from 'src/utils/events/assets'
 
 const useStyles = makeStyles(
   createStyles({
@@ -83,6 +85,11 @@ const Collectibles = (): React.ReactElement => {
 
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
+
+  const nftAmount = useMemo(() => nftAssetsFromNftTokens.length, [nftAssetsFromNftTokens])
+  useEffect(() => {
+    trackEvent({ ...ASSETS_EVENTS.NFT_AMOUNT, label: nftAmount })
+  }, [nftAmount])
 
   const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)

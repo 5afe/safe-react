@@ -20,7 +20,7 @@ import {
 import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
-import { useGTMPageTracking } from 'src/utils/googleTagManager'
+import { usePageTracking } from 'src/utils/googleTagManager'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -33,7 +33,7 @@ const Routes = (): React.ReactElement => {
   const defaultSafe = useSelector(lastViewedSafe)
 
   // Google Tag Manager page tracking
-  useGTMPageTracking()
+  usePageTracking()
 
   return (
     <Switch>

@@ -21,7 +21,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -34,6 +34,8 @@ import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -312,6 +314,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     loadApp()
   }, [appUrl])
+
+  useEffect(() => {
+    if (safeApp && safeApp.name !== EMPTY_SAFE_APP) {
+      trackEvent({ ...SAFE_APPS_EVENTS.OPEN_APP, label: safeApp.name })
+    }
+  }, [safeApp])
 
   return (
     <AppWrapper>

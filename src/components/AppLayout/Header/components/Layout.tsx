@@ -18,7 +18,7 @@ import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
-import { SAFE_OVERVIEW_TRACKING_EVENTS } from 'src/utils/tags/safeOverview'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 
 const styles = () => ({
@@ -97,7 +97,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
-        <Track {...SAFE_OVERVIEW_TRACKING_EVENTS.HOME}>
+        <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={WELCOME_ROUTE}>
             <Img alt="Gnosis Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
           </Link>
