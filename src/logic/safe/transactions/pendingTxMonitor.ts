@@ -7,21 +7,19 @@ import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
 
-const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<boolean> => {
+const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<void> => {
   const MAX_WAITING_BLOCK = sessionBlockNumber + 50
+
   const web3 = getWeb3()
-  const receipt = await web3.eth.getTransactionReceipt(txHash)
 
   if (
     // Transaction hasn't yet been mined
-    !receipt &&
+    !(await web3.eth.getTransactionReceipt(txHash)) &&
     // The current block is within waiting window
     (await web3.eth.getBlockNumber()) <= MAX_WAITING_BLOCK
   ) {
     throw new Error('Pending transaction not found')
   }
-
-  return receipt ? receipt.status : true
 }
 
 // Progressively after 10s, 20s, 40s, 80s, 160s, 320s - total of 6.5 minutes
@@ -39,21 +37,11 @@ const monitorTx = async (
     numOfAttempts: MAX_ATTEMPTS,
   },
 ): Promise<void> => {
-  const clearPending = () => {
+  return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options).catch(() => {
+    // Unsuccessfully mined (threw in last backOff attempt)
     store.dispatch(removePendingTransaction({ id: txId }))
     store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
-  }
-
-  return (
-    backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options)
-      .then((status) => {
-        // Tx reverted
-        if (status === false) clearPending()
-      })
-      // Unsuccessfully mined (threw in last backOff attempt)
-      .catch(clearPending)
-  )
-
+  })
   // If mined, pending status is removed in the transaction middleware
   // when a transaction is added to historical transactions list
 }
