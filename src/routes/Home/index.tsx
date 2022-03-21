@@ -5,6 +5,7 @@ import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-compo
 import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
+import TxsToConfirmList from 'src/components/QueuedTransactionList'
 
 const Card = styled.div`
   background: #fff;
@@ -35,6 +36,7 @@ function Home(): ReactElement {
 
         <Card>
           <h2>Transactions to Sign</h2>
+          <TxsToConfirmList />
         </Card>
 
         <Card>
