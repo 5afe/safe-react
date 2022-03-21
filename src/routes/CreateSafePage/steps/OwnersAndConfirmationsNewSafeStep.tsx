@@ -155,7 +155,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     name={nameFieldName}
                     placeholder={ownerName}
                     label="Owner Name"
-                    InputLabelProps={{ shrink: true }}
                     type="text"
                     validate={minMaxLength(0, 50)}
                     testId={nameFieldName}
