@@ -47,7 +47,7 @@ export const nextTransaction = createSelector(nextTransactions, (nextTxs) => {
   if (!nextTxs) return
 
   const [txs] = Object.values(nextTxs)
-  return txs?.[0]
+  return txs?.[0] // If a reject tx exists, this will still return the initial tx
 })
 
 export const queuedTransactions = createSelector(
@@ -182,18 +182,19 @@ export const getBatchableTransactions = createSelector(
       currentNonce = nextTx.executionInfo.nonce
     }
 
-    if (queuedTxs) {
-      Object.values(queuedTxs).forEach((queuedTxs1) => {
-        queuedTxs1.forEach((queuedTx) => {
-          if (
-            isMultisigExecutionInfo(queuedTx.executionInfo) &&
-            queuedTx.executionInfo.nonce === currentNonce + 1 &&
-            queuedTx.executionInfo.confirmationsSubmitted >= queuedTx.executionInfo.confirmationsRequired
-          ) {
-            batchableTransactions.push(queuedTx)
-            currentNonce = queuedTx.executionInfo.nonce
-          }
-        })
+    if (queuedTxs && batchableTransactions.length > 0) {
+      Object.values(queuedTxs).forEach((queuedTxsByNonce) => {
+        // We are ignoring reject txs
+        const queuedTx = queuedTxsByNonce[0]
+
+        if (
+          isMultisigExecutionInfo(queuedTx.executionInfo) &&
+          queuedTx.executionInfo.nonce === currentNonce + 1 &&
+          queuedTx.executionInfo.confirmationsSubmitted >= queuedTx.executionInfo.confirmationsRequired
+        ) {
+          batchableTransactions.push(queuedTx)
+          currentNonce = queuedTx.executionInfo.nonce
+        }
       })
     }
 
