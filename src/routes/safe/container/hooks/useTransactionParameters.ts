@@ -88,10 +88,10 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
 
   // Calc safe nonce
   useEffect(() => {
-    if (recommendedNonce != null) {
+    if (recommendedNonce != null && safeNonce === undefined) {
       setSafeNonce(String(recommendedNonce))
     }
-  }, [recommendedNonce])
+  }, [recommendedNonce, safeNonce])
 
   return {
     safeNonce,

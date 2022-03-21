@@ -125,6 +125,7 @@ export const TxModalWrapper = ({
     txAmount: txValue,
     operation,
   })
+  if (safeTxGas == null) safeTxGas = safeTxGasEstimation
 
   const { gasCostFormatted, gasPriceFormatted, gasMaxPrioFeeFormatted, gasLimit, txEstimationExecutionStatus } =
     useEstimateTransactionGas({
@@ -150,7 +151,7 @@ export const TxModalWrapper = ({
     const newGasLimit = txParameters.ethGasLimit
     const oldMaxPrioFee = gasMaxPrioFeeFormatted
     const newMaxPrioFee = txParameters.ethMaxPrioFee
-    const oldSafeTxGas = safeTxGasEstimation
+    const oldSafeTxGas = safeTxGas
     const newSafeTxGas = txParameters.safeTxGas
 
     if (oldGasPrice !== newGasPrice) {
@@ -192,7 +193,7 @@ export const TxModalWrapper = ({
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       ethMaxPrioFee={gasMaxPrioFeeFormatted}
-      safeTxGas={safeTxGasEstimation}
+      safeTxGas={safeTxGas}
       safeNonce={txNonce}
       parametersStatus={parametersStatus}
       closeEditModalCallback={onEditClose}
