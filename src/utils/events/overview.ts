@@ -6,7 +6,7 @@ const OVERVIEW = {
     event: GTM_EVENT.CLICK,
     action: 'Go to Welcome page',
   },
-  PAIRING_BUTTON: {
+  IPHONE_APP_BUTTON: {
     event: GTM_EVENT.CLICK,
     action: 'Download App',
   },
