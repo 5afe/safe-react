@@ -21,7 +21,7 @@ const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<b
     throw new Error('Pending transaction not found')
   }
 
-  return receipt.status
+  return receipt ? receipt.status : true
 }
 
 // Progressively after 10s, 20s, 40s, 80s, 160s, 320s - total of 6.5 minutes

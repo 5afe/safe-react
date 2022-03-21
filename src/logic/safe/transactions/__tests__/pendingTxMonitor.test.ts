@@ -1,5 +1,3 @@
-import { Transaction } from 'web3-core'
-
 import * as store from 'src/store'
 import * as web3 from 'src/logic/wallets/getWeb3'
 import { PendingTxMonitor } from 'src/logic/safe/transactions/pendingTxMonitor'
@@ -65,7 +63,7 @@ describe('PendingTxMonitor', () => {
 
   describe('monitorTx', () => {
     it("doesn't clear the pending transaction if it was mined", async () => {
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(true))
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
@@ -76,6 +74,20 @@ describe('PendingTxMonitor', () => {
       })
 
       expect(dispatchSpy).not.toBeCalled()
+    })
+
+    it('clears the pending transaction if it was reverted', async () => {
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(false))
+
+      const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
+        numOfAttempts: 1,
+        startingDelay: 0,
+        timeMultiple: 0,
+      })
+
+      expect(dispatchSpy).toHaveBeenCalled()
     })
 
     it('clears the pending transaction it the tx was not mined within 50 blocks', async () => {
@@ -120,7 +132,9 @@ describe('PendingTxMonitor', () => {
 
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.reject())
 
-      const isPendingSpy = jest.spyOn(PendingTxMonitor, '_isTxMined').mockImplementation(jest.fn())
+      const isPendingSpy = jest
+        .spyOn(PendingTxMonitor, '_isTxMined')
+        .mockImplementation(jest.fn(() => Promise.reject()))
 
       try {
         await PendingTxMonitor.monitorAllTxs()
@@ -148,7 +162,7 @@ describe('PendingTxMonitor', () => {
 
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(true))
 
       await PendingTxMonitor.monitorAllTxs()
 
