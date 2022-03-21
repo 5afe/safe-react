@@ -116,23 +116,19 @@ export const TxParametersDetail = ({
   const storedTx = useSelector((state: AppReduxState) => getTransactionsByNonce(state, txNonceNumber))
 
   useEffect(() => {
-    const getNonce = async () => {
-      if (Number.isNaN(txNonceNumber) || txNonceNumber === contractNonce) {
-        setIsAccordionExpanded(false)
-        setIsTxNonceOutOfOrder(false)
-        return
-      }
-      if (lastQueuedTxNonce === undefined && txNonceNumber !== contractNonce) {
-        setIsAccordionExpanded(true)
-        setIsTxNonceOutOfOrder(true)
-      }
-      if (lastQueuedTxNonce && txNonceNumber !== lastQueuedTxNonce + 1) {
-        setIsAccordionExpanded(true)
-        setIsTxNonceOutOfOrder(true)
-      }
+    if (Number.isNaN(txNonceNumber) || txNonceNumber === contractNonce) {
+      setIsAccordionExpanded(false)
+      setIsTxNonceOutOfOrder(false)
+      return
     }
-
-    getNonce()
+    if (lastQueuedTxNonce === undefined && txNonceNumber !== contractNonce) {
+      setIsAccordionExpanded(true)
+      setIsTxNonceOutOfOrder(true)
+    }
+    if (lastQueuedTxNonce && txNonceNumber !== lastQueuedTxNonce + 1) {
+      setIsAccordionExpanded(true)
+      setIsTxNonceOutOfOrder(true)
+    }
   }, [lastQueuedTxNonce, contractNonce, txNonceNumber])
 
   const color = useMemo(() => (areSafeParamsEnabled(parametersStatus) ? 'text' : 'secondaryLight'), [parametersStatus])
