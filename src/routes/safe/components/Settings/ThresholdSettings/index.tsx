@@ -14,6 +14,8 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
 import { styles } from './style'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import Track from 'src/components/Track'
 
 const useStyles = makeStyles(styles)
 
@@ -37,15 +39,17 @@ const ThresholdSettings = (): React.ReactElement => {
         </Paragraph>
         {owners && owners.length > 1 && granted && (
           <Row className={classes.buttonRow}>
-            <Button
-              className={classes.modifyBtn}
-              color="primary"
-              minWidth={120}
-              onClick={toggleModal}
-              variant="contained"
-            >
-              Change
-            </Button>
+            <Track {...SETTINGS_EVENTS.THRESHOLD.CHANGE}>
+              <Button
+                className={classes.modifyBtn}
+                color="primary"
+                minWidth={120}
+                onClick={toggleModal}
+                variant="contained"
+              >
+                Change
+              </Button>
+            </Track>
           </Row>
         )}
       </Block>

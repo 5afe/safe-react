@@ -65,7 +65,7 @@ export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
   if (!GOOGLE_TAG_MANAGER_ID || !GTM_ENVIRONMENT.auth) {
-    console.warn('Unable to initialize Google Tag Manager. `id` or `gtm_auth` missing.')
+    console.warn('[GTM] - Unable to initialize Google Tag Manager. `id` or `gtm_auth` missing.')
     return
   }
 
@@ -106,6 +106,10 @@ export const usePageTracking = (): void => {
           event: GTM_EVENT.PAGEVIEW,
           chainId,
           page: getAnonymizedLocation(location),
+          // Clear dataLayer
+          eventCategory: undefined,
+          eventAction: undefined,
+          eventLabel: undefined,
         },
       })
     })
@@ -120,7 +124,7 @@ export const trackEvent = ({
   event,
   category,
   action,
-  label = '',
+  label,
 }: {
   event: GTM_EVENT
   category: string
@@ -134,6 +138,11 @@ export const trackEvent = ({
     eventAction: action,
     eventLabel: label,
   }
+
+  if (!IS_PRODUCTION) {
+    console.info('[GTM] -', dataLayer)
+  }
+
   TagManager.dataLayer({
     dataLayer,
   })

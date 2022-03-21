@@ -7,7 +7,8 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ProviderPayloads } from 'src/logic/wallets/store/reducer'
 import { providerSelector } from '../selectors'
-import { currentChainId } from 'src/logic/config/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { WALLET_EVENTS } from 'src/utils/events/wallet'
 
 let hasName = false
 let hasAccount = false
@@ -38,7 +39,7 @@ const providerMiddleware =
     }
 
     const state = store.getState()
-    const { available, loaded, network } = providerSelector(state)
+    const { available, loaded, name, account } = providerSelector(state)
 
     // @TODO: `loaded` flag that is/was always set to true - should be moved to wallet connection catch
     // Wallet, account and network did not successfully load
@@ -48,9 +49,10 @@ const providerMiddleware =
       return handledAction
     }
 
-    if (available) {
-      // Only track when wallet connects to same chain as chain displayed in UI
-      if (currentChainId(state) === network) {
+    if (available && name) {
+      // Only track when account has been successfully saved to store
+      if (payload === account) {
+        trackEvent({ ...WALLET_EVENTS.CONNECT, label: name })
       }
     } else {
       store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))

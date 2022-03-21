@@ -3,7 +3,8 @@ import { matchPath } from 'react-router-dom'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { history } from 'src/routes/routes'
-import { getAnonymizedLocation, usePageTracking, trackEvent, GTM_EVENT } from 'src/utils/googleTagManager'
+import { getAnonymizedLocation, usePageTracking, GTM_EVENT } from 'src/utils/googleTagManager'
+import { waitFor } from '@testing-library/react'
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -149,9 +150,14 @@ describe('googleTagManager', () => {
     })
   })
   describe('trackEvent', () => {
-    it('tracks a correctly formed event from the arguments', () => {
-      const dataLayerSpy = jest.spyOn(TagManager.default, 'dataLayer').mockImplementation(jest.fn())
+    it('tracks a correctly formed event from the arguments', async () => {
+      const mockDataLayer = jest.fn()
+      jest.doMock('react-gtm-module', () => ({
+        dataLayer: mockDataLayer,
+      }))
 
+      // doMock doesn't hoist
+      const { trackEvent } = require('src/utils/googleTagManager')
       trackEvent({
         event: 'testEvent' as GTM_EVENT,
         category: 'unit-test',
@@ -159,14 +165,16 @@ describe('googleTagManager', () => {
         label: 1,
       })
 
-      expect(dataLayerSpy).toHaveBeenCalledWith({
-        dataLayer: {
-          event: 'testEvent',
-          chainId: '4',
-          eventCategory: 'unit-test',
-          eventAction: 'Track event',
-          eventLabel: 1,
-        },
+      await waitFor(() => {
+        expect(mockDataLayer).toHaveBeenCalledWith({
+          dataLayer: {
+            event: 'testEvent',
+            chainId: '4',
+            eventCategory: 'unit-test',
+            eventAction: 'Track event',
+            eventLabel: 1,
+          },
+        })
       })
     })
   })

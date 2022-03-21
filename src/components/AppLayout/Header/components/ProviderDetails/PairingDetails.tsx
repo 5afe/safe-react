@@ -11,6 +11,8 @@ import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import Track from 'src/components/Track'
 
 const StyledDivider = styled(Divider)`
   width: calc(100% + 40px);
@@ -54,8 +56,12 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       <Row>
         <Paragraph className={classes.centerText} size="sm">
           Scan this code in the{' '}
-          <Link href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">Gnosis Safe app</Link> to sign
-          transactions with your mobile device.
+          <Track {...OVERVIEW_EVENTS.IPHONE_APP_BUTTON}>
+            <Link href="https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Connect&mt=8">
+              Gnosis Safe app
+            </Link>
+          </Track>{' '}
+          to sign transactions with your mobile device.
           <br />
           <Link href="https://help.gnosis-safe.io/en/articles/5584901-desktop-pairing">Learn more</Link> about this
           feature.
@@ -63,13 +69,15 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       </Row>
 
       <Row className={classes.justifyCenter}>
-        <a href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">
-          <img
-            src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
-            alt="Download on the App Store"
-            className={classes.appStore}
-          />
-        </a>
+        <Track {...OVERVIEW_EVENTS.IPHONE_APP_BUTTON}>
+          <a href="https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Connect&mt=8">
+            <img
+              src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
+              alt="Download on the App Store"
+              className={classes.appStore}
+            />
+          </a>
+        </Track>
       </Row>
     </>
   )

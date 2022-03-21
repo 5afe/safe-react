@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import { sortedSafeListSelector } from 'src/components/SafeListSidebar/selectors'
 import { getChains } from 'src/config/cache/chains'
 import { ChainId } from 'src/config/chain.d'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { SafeRecordProps } from '../store/models/safe'
 import { getLocalNetworkSafesById } from '../utils'
 
@@ -21,12 +23,21 @@ const useLocalSafes = (): LocalSafes => {
   // Reload added Safes from the localStorage when addedAddresses changes
   useEffect(() => {
     const getLocalSafes = () => {
-      getChains().forEach(({ chainId }) => {
+      getChains().forEach(({ chainId, chainName }) => {
         const localSafe = getLocalNetworkSafesById(chainId)
         setLocalSafes((prevSafes) => ({
           ...prevSafes,
           ...(localSafe && { [chainId]: localSafe }),
         }))
+
+        if (localSafe && localSafe.length > 0) {
+          const event = OVERVIEW_EVENTS.ADDED_SAFES_ON_NETWORK
+          trackEvent({
+            ...event,
+            action: `${event.action} ${chainName}`,
+            label: localSafe.length,
+          })
+        }
       })
     }
 

@@ -17,6 +17,7 @@ export interface AppManifest {
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
+export const EMPTY_SAFE_APP = 'unknown'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
@@ -35,7 +36,7 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
-  appInfo.name !== 'unknown' &&
+  appInfo.name !== EMPTY_SAFE_APP &&
   // `description` exists
   !!appInfo.description
 
@@ -43,7 +44,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
     id: Math.random().toString(),
     url,
-    name: 'unknown',
+    name: EMPTY_SAFE_APP,
     iconUrl: appsIconSvg,
     description: '',
     fetchStatus: FETCH_STATUS.LOADING,
