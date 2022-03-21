@@ -51,6 +51,7 @@ enum ErrorCodes {
   _815 = '815: Error preparing transaction sender',
   _816 = '816: Error saving transaction to history',
   _817 = '817: Unable to decode contract error message',
+  _820 = '820: Error submitting a multi-send transaction',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',

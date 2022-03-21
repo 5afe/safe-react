@@ -144,19 +144,16 @@ export const getLastTransaction = createSelector(
     if (queuedTxs && Object.keys(queuedTxs).length > 0) {
       const queuedNonces = Object.keys(queuedTxs)
       const highestQueuedNonce = Number(queuedNonces.sort()[queuedNonces.length - 1])
-      const lastQueuedTx = Object.values(queuedTxs[highestQueuedNonce])[0]
-      return lastQueuedTx
+      return Object.values(queuedTxs[highestQueuedNonce])[0]
     }
 
     if (nextTxs && Object.keys(nextTxs).length > 0) {
-      const nextTx = Object.values(nextTxs)[0][0]
-      return nextTx
+      return Object.values(nextTxs)[0][0]
     }
 
     if (historyTxs) {
       // History Txs are ordered by timestamp so no need to sort them.
-      const lastHistoryTx = flatten(Object.values(historyTxs)).find((tx) => tx.executionInfo != undefined) || null
-      return lastHistoryTx
+      return flatten(Object.values(historyTxs)).find((tx) => tx.executionInfo != undefined) || null
     }
 
     return null
@@ -166,3 +163,40 @@ export const getLastTransaction = createSelector(
 export const getLastTxNonce = createSelector(getLastTransaction, (lastTx) => {
   return isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
 })
+
+export const getBatchableTransactions = createSelector(
+  nextTransaction,
+  queuedTransactions,
+  (_: AppReduxState, safeNonce: number) => safeNonce,
+  (nextTx, queuedTxs, safeNonce) => {
+    const batchableTransactions: Transaction[] = []
+    let currentNonce = safeNonce
+
+    if (
+      nextTx &&
+      isMultisigExecutionInfo(nextTx.executionInfo) &&
+      nextTx.executionInfo.nonce === currentNonce &&
+      nextTx.executionInfo.confirmationsSubmitted >= nextTx.executionInfo.confirmationsRequired
+    ) {
+      batchableTransactions.push(nextTx)
+      currentNonce = nextTx.executionInfo.nonce
+    }
+
+    if (queuedTxs) {
+      Object.values(queuedTxs).forEach((queuedTxs1) => {
+        queuedTxs1.forEach((queuedTx) => {
+          if (
+            isMultisigExecutionInfo(queuedTx.executionInfo) &&
+            queuedTx.executionInfo.nonce === currentNonce + 1 &&
+            queuedTx.executionInfo.confirmationsSubmitted >= queuedTx.executionInfo.confirmationsRequired
+          ) {
+            batchableTransactions.push(queuedTx)
+            currentNonce = queuedTx.executionInfo.nonce
+          }
+        })
+      })
+    }
+
+    return batchableTransactions
+  },
+)
