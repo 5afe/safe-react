@@ -7,7 +7,11 @@ import { Virtuoso } from 'react-virtuoso'
 import Item from './components/Item'
 
 import Paragraph from 'src/components/layout/Paragraph'
-import { nftAssetsFromNftTokensSelector, orderedNFTAssets } from 'src/logic/collectibles/store/selectors'
+import {
+  nftAssetsFromNftTokensSelector,
+  nftLoadedSelector,
+  orderedNFTAssets,
+} from 'src/logic/collectibles/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
@@ -84,6 +88,7 @@ const Collectibles = (): React.ReactElement => {
   const [selectedToken, setSelectedToken] = useState<NFTToken | undefined>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = useState(false)
 
+  const nftLoaded = useSelector(nftLoadedSelector)
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
 
@@ -100,7 +105,9 @@ const Collectibles = (): React.ReactElement => {
     return (
       <Card className={classes.cardOuter}>
         <div className={classes.cardInner}>
-          <Paragraph className={classes.noData}>No collectibles available</Paragraph>
+          <Paragraph className={classes.noData}>
+            {nftLoaded ? 'No collectibles available' : 'Loading collectibles...'}
+          </Paragraph>
         </div>
       </Card>
     )
