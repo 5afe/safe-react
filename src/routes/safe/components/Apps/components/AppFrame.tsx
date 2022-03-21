@@ -305,7 +305,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     const loadApp = async () => {
       try {
-        const app = await getAppInfoFromUrl(appUrl)
+        const app = await getAppInfoFromUrl(appUrl, false)
         setSafeApp(app)
       } catch (err) {
         logError(Errors._900, `${appUrl}, ${err.message}`)

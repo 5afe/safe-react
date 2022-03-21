@@ -8,15 +8,25 @@ import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { SafeApp } from './types'
 
+type AppManifestIcon = {
+  src: string
+  sizes: string
+  type?: string
+  purpose?: string
+}
+
 export interface AppManifest {
   name: string
-  iconPath: string
+  iconPath?: string
   description: string
+  icons?: AppManifestIcon[]
   providedBy: string
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
+const MIN_ICON_WIDTH = 128
+const MANIFEST_ERROR_MESSAGE = 'Manifest does not fulfil the required structure.'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
@@ -54,7 +64,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
   }
 }
 
-export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp> => {
+export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest = true): Promise<SafeApp> => {
   let res = {
     ...getEmptySafeApp(),
     error: true,
@@ -78,7 +88,11 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   // verify imported app fulfil safe requirements
   if (!appInfo || !isAppManifestValid(appInfo)) {
-    throw Error('App manifest does not fulfil the required structure.')
+    if (validateManifest) {
+      throw Error(`App ${MANIFEST_ERROR_MESSAGE.toLocaleLowerCase()}`)
+    } else {
+      console.error(`${appInfo.name || 'Safe App'}: ${MANIFEST_ERROR_MESSAGE}`)
+    }
   }
 
   // the DB origin field has a limit of 100 characters
@@ -88,7 +102,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   const appInfoData = {
     name: appInfo.name,
-    iconPath: appInfo.iconPath,
+    iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description,
     providedBy: appInfo.providedBy,
   }
@@ -101,13 +115,31 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     loadingStatus: FETCH_STATUS.SUCCESS,
   }
 
-  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.iconPath}`
+  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfoData.iconPath}`
   if (await canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
 
   return res
 })
+
+export const getAppIcon = (icons: AppManifestIcon[]): string => {
+  const svgIcon = icons.find((icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml')
+
+  if (svgIcon) {
+    return svgIcon.src
+  }
+
+  for (const icon of icons) {
+    for (const size of icon.sizes.split(' ')) {
+      if (Number(size?.split('x')[0]) >= MIN_ICON_WIDTH) {
+        return icon.src
+      }
+    }
+  }
+
+  return icons[0].src || ''
+}
 
 export const getIpfsLinkFromEns = memoize(async (name: string): Promise<string | undefined> => {
   try {
