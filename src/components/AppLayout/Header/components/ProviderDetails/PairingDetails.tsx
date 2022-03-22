@@ -11,6 +11,7 @@ import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
+import AppstoreButton from 'src/components/AppstoreButton'
 
 const StyledDivider = styled(Divider)`
   width: calc(100% + 40px);
@@ -63,13 +64,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       </Row>
 
       <Row className={classes.justifyCenter}>
-        <a href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">
-          <img
-            src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
-            alt="Download on the App Store"
-            className={classes.appStore}
-          />
-        </a>
+        <AppstoreButton placement="pairing" />
       </Row>
     </>
   )
