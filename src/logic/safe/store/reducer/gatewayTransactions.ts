@@ -50,7 +50,7 @@ const getUpdatedTx = (storedTx: Transaction, newTx: Transaction) => {
     storedTx.executionInfo.confirmationsSubmitted !== newTx.executionInfo.confirmationsSubmitted
 
   return hasMoreConfirmations
-    ? // Will remove txDetails
+    ? // Will remove txDetails as they will have changed because of confirmations
       newTx
     : // Create new object, preserving txDetails
       merge({}, storedTx, newTx)
@@ -141,7 +141,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
           if (newQueued?.[txNonce]) {
             const txIndex = newQueued[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
 
-            if (txIndex !== -1) {
+            if (txIndex >= 0) {
               const storedTx = newQueued[txNonce][txIndex]
               newQueued[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
             } else {
@@ -154,7 +154,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
           if (newNext?.[txNonce]) {
             const txIndex = newNext[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
 
-            if (txIndex !== -1) {
+            if (txIndex >= 0) {
               const storedTx = newNext[txNonce][txIndex]
               newNext[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
             } else {
