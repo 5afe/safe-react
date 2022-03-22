@@ -1,10 +1,10 @@
-import { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { lg, sm, md } from 'src/theme/variables'
 import Button from 'src/components/layout/Button'
 import { Modal } from 'src/components/Modal'
-import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import {
@@ -44,6 +44,7 @@ import { getInteractionTitle } from 'src/routes/safe/components/Transactions/hel
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
 function getTxInfo(transaction: Transaction, safeAddress: string) {
   if (!transaction.txDetails) return {}
@@ -137,10 +138,19 @@ function getTxRecipient(txInfo: any, safeAddress: string) {
   }
 }
 
-async function getBatchExecuteData(transactions: Transaction[], safeInstance: GnosisSafe, safeAddress: string) {
+async function getBatchExecuteData(
+  dispatch: Dispatch,
+  transactions: Transaction[],
+  safeInstance: GnosisSafe,
+  safeAddress: string,
+) {
   const batchableTransactionsWithDetails = await Promise.all(
     transactions.map(async (transaction) => {
-      const transactionDetails = await fetchSafeTransaction(transaction.id)
+      if (transaction.txDetails) return transaction
+
+      const txDetails = await dispatch(fetchTransactionDetails({ transactionId: transaction.id }))
+
+      const transactionDetails = txDetails || (await fetchSafeTransaction(transaction.id))
       return {
         ...transaction,
         txDetails: transactionDetails,
@@ -165,7 +175,7 @@ async function getBatchExecuteData(transactions: Transaction[], safeInstance: Gn
   return getMultiSendJoinedTxs(txs)
 }
 
-export const BatchExecute = (): ReactElement => {
+const BatchExecute = (): ReactElement => {
   const dispatch = useDispatch<Dispatch>()
   const safeAddress = extractSafeAddress()
   const { address, currentVersion } = useSelector(currentSafe)
@@ -177,19 +187,6 @@ export const BatchExecute = (): ReactElement => {
   const [isModalOpen, setModalOpen] = useState(false)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const [decodedData, setDecodedData] = useState<DecodedTxDetailType>()
-
-  useEffect(() => {
-    let isCurrent = true
-    const handleGetBatchExecuteData = async () => {
-      const batchExecuteData = await getBatchExecuteData(batchableTransactions, safeInstance, safeAddress)
-      isCurrent && setMultiSendCallData(batchExecuteData)
-    }
-    handleGetBatchExecuteData()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [safeAddress, safeInstance, batchableTransactions])
 
   useEffect(() => {
     let isCurrent = true
@@ -210,6 +207,16 @@ export const BatchExecute = (): ReactElement => {
 
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
+  }
+
+  const handleOpenModal = () => {
+    toggleModal()
+
+    const handleGetBatchExecuteData = async () => {
+      const batchExecuteData = await getBatchExecuteData(dispatch, batchableTransactions, safeInstance, safeAddress)
+      setMultiSendCallData(batchExecuteData)
+    }
+    handleGetBatchExecuteData()
   }
 
   const handleBatchExecute = async () => {
@@ -236,13 +243,13 @@ export const BatchExecute = (): ReactElement => {
       <StyledButton
         color="primary"
         variant="contained"
-        onClick={toggleModal}
+        onClick={handleOpenModal}
         disabled={batchableTransactions.length <= 1}
       >
-        Batch Execute {batchableTransactions.length > 1 ? `(${batchableTransactions.length})` : ''}
+        Batch-Execute {batchableTransactions.length > 1 ? `(${batchableTransactions.length})` : ''}
       </StyledButton>
-      <Modal description="Batch Execute" handleClose={toggleModal} open={isModalOpen} title="Batch Execute">
-        <ModalHeader onClose={toggleModal} title="Batch execute transactions" />
+      <Modal description="Batch-Execute" handleClose={toggleModal} open={isModalOpen} title="Batch-Execute">
+        <ModalHeader onClose={toggleModal} title="Batch-execute transactions" />
         <Hairline />
         <ModalContent>
           <Row margin="md">
@@ -259,7 +266,6 @@ export const BatchExecute = (): ReactElement => {
               showAvatar
               textSize="lg"
               showCopyBtn
-              name={''}
               explorerUrl={getExplorerInfo(multiSendContractAddress)}
             />
           </Row>
@@ -267,7 +273,7 @@ export const BatchExecute = (): ReactElement => {
             <DecodeTxs txs={batchableTransactions as any} decodedData={decodedData} />
           </Row>
           <Paragraph size="md" align="center" color="disabled" noMargin>
-            Be aware that if any of the transaction fails, all of them will be reverted.
+            Be aware that if any of the transactions fail, all of them will revert.
           </Paragraph>
         </ModalContent>
         <Modal.Footer withoutBorder>
@@ -277,7 +283,6 @@ export const BatchExecute = (): ReactElement => {
               onClick: handleBatchExecute,
               disabled: batchableTransactions.length <= 1,
               text: 'Submit',
-              testId: 'submit-tx-btn',
             }}
           />
         </Modal.Footer>
@@ -295,3 +300,5 @@ const StyledButton = styled(Button)`
 const ModalContent = styled.div`
   padding: ${lg} ${lg} 0;
 `
+
+export const MemoizedBatchExecute = React.memo(BatchExecute)

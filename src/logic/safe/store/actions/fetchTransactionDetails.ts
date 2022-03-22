@@ -14,7 +14,7 @@ const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_
 
 export const fetchTransactionDetails =
   ({ transactionId }: { transactionId: Transaction['id'] }) =>
-  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<Transaction['txDetails']> => {
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<undefined | Transaction['txDetails']> => {
     const transaction = getTransactionByAttribute(getState(), {
       attributeValue: transactionId,
       attributeName: 'id',
@@ -30,6 +30,7 @@ export const fetchTransactionDetails =
       const transactionDetails = await fetchSafeTransaction(transactionId)
 
       dispatch(updateTransactionDetails({ chainId, transactionId, safeAddress, value: transactionDetails }))
+      return transactionDetails
     } catch (error) {
       console.error(`Failed to retrieve transaction ${transactionId} details`, error.message)
     }
