@@ -30,6 +30,14 @@ const MODALS = {
     event: GTM_EVENT.CLICK,
     action: 'Edit estimation',
   },
+  EXECUTE_TX: {
+    event: GTM_EVENT.CLICK,
+    action: 'Execute transaction',
+  },
+  USE_SPENDING_LIMIT: {
+    event: GTM_EVENT.META,
+    action: 'Use spending limit',
+  },
 }
 
 const MODALS_CATEGORY = 'modals'

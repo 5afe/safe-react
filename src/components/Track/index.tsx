@@ -1,13 +1,13 @@
 import { ReactElement, Fragment, useEffect, useRef } from 'react'
 
-import { GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
+import { EventLabel, GTM_EVENT, trackEvent } from 'src/utils/googleTagManager'
 
 type Props = {
   children: ReactElement
   as?: 'span' | 'div'
   category: string
   action: string
-  label?: string | number | boolean
+  label?: EventLabel
 }
 
 const Track = ({ children, as: Wrapper = 'div', ...trackData }: Props): typeof children => {

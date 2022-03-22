@@ -61,6 +61,7 @@ export enum GTM_EVENT {
   META = 'metadata',
 }
 
+let currentPathname = ''
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
@@ -69,6 +70,9 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
+  const page = getAnonymizedLocation()
+  currentPathname = page
+
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
     ...GTM_ENVIRONMENT,
@@ -76,7 +80,9 @@ export const loadGoogleTagManager = (): void => {
       // Must emit (custom) event in order to trigger page tracking
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
-      page: getAnonymizedLocation(),
+      page,
+      // Flag used to prevent GA triggers
+      dev: !IS_PRODUCTION,
     },
   })
 }
@@ -100,6 +106,9 @@ export const usePageTracking = (): void => {
 
   useEffect(() => {
     const unsubscribe = history.listen((location) => {
+      if (location.pathname === currentPathname) {
+        return
+      }
       TagManager.dataLayer({
         dataLayer: {
           // Must emit (custom) event in order to trigger page tracking
@@ -110,6 +119,8 @@ export const usePageTracking = (): void => {
           eventCategory: undefined,
           eventAction: undefined,
           eventLabel: undefined,
+          // Flag used to prevent GA triggers
+          dev: !IS_PRODUCTION,
         },
       })
     })
@@ -118,6 +129,18 @@ export const usePageTracking = (): void => {
       unsubscribe()
     }
   }, [chainId])
+}
+
+export type EventLabel = string | number | boolean | null
+const tryParse = (value?: EventLabel): EventLabel | undefined => {
+  if (typeof value !== 'string') {
+    return value
+  }
+  try {
+    return JSON.parse(value)
+  } catch {
+    return value
+  }
 }
 
 export const trackEvent = ({
@@ -129,18 +152,20 @@ export const trackEvent = ({
   event: GTM_EVENT
   category: string
   action: string
-  label?: string | number | boolean
+  label?: EventLabel
 }): void => {
   const dataLayer = {
     event,
     chainId: _getChainId(),
     eventCategory: category,
     eventAction: action,
-    eventLabel: label,
+    eventLabel: tryParse(label),
+    // Flag used to prevent GA triggers
+    dev: !IS_PRODUCTION,
   }
 
   if (!IS_PRODUCTION) {
-    console.info('[GTM] -', dataLayer)
+    console.info('[GTM]', dataLayer)
   }
 
   TagManager.dataLayer({
