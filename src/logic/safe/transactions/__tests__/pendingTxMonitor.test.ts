@@ -181,7 +181,7 @@ describe('PendingTxMonitor', () => {
       }
     })
 
-    it.only('checks each pending tx', async () => {
+    it('checks each pending tx', async () => {
       jest.spyOn(store.store, 'getState').mockImplementation(() => ({
         pendingTransactions: {
           '4': {
