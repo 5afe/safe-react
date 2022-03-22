@@ -101,15 +101,15 @@ export class TxSender {
     if (!isFinalization || !this.txId) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
+        this.txId = txDetails.txId
       } catch (err) {
         logError(Errors._816, err.message)
         return
       }
     }
 
-    const id = txDetails?.txId || this.txId
-    if (isFinalization && id && this.txHash) {
-      dispatch(addPendingTransaction({ id, txHash: this.txHash }))
+    if (isFinalization && this.txId && this.txHash) {
+      dispatch(addPendingTransaction({ id: this.txId, txHash: this.txHash }))
     }
 
     notifications.closePending()
@@ -189,23 +189,20 @@ export class TxSender {
     )
   }
 
-  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<string> {
+  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<void> {
     const { txArgs, isFinalization, from, safeTxHash, txProps } = this
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
 
-    return await tx
-      .send(sendParams)
-      .once('transactionHash', (hash) => {
-        this.txHash = hash
+    await tx.send(sendParams).once('transactionHash', (hash) => {
+      this.txHash = hash
 
-        if (isFinalization) {
-          aboutToExecuteTx.setNonce(txArgs.nonce)
-        }
-        this.onComplete(undefined, confirmCallback)
-      })
-      .then(({ transactionHash }) => transactionHash)
+      if (isFinalization) {
+        aboutToExecuteTx.setNonce(txArgs.nonce)
+      }
+      this.onComplete(undefined, confirmCallback)
+    })
   }
 
   async canSignOffchain(): Promise<boolean> {
