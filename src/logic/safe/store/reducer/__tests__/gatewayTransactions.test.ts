@@ -1,4 +1,14 @@
-import { Label, TransactionStatus, TransactionTokenType, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  ConflictHeader,
+  Label,
+  MultisigExecutionInfo,
+  Transaction,
+  TransactionDetails,
+  TransactionStatus,
+  TransactionSummary,
+  TransactionTokenType,
+  TransferDirection,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 
 import gatewayTransactionsReducer, {
   GatewayTransactionsState,
@@ -18,6 +28,12 @@ const EMPTY_STATE: GatewayTransactionsState = {
     },
   },
 }
+
+const MOCK_TX_META: Omit<Transaction, 'transaction'> = {
+  conflictType: 'None',
+  type: 'TRANSACTION',
+}
+
 describe('gatewayTransactionsReducer', () => {
   describe('ADD_QUEUED_TRANSACTIONS', () => {
     const NEXT_LABEL: Label = {
@@ -30,40 +46,65 @@ describe('gatewayTransactionsReducer', () => {
       type: 'LABEL',
     }
 
+    // Must be declared separately to appease TypeScript
+    const MOCK_MULTISIG_EXECUTION_INFO: MultisigExecutionInfo = {
+      nonce: 0,
+      type: 'MULTISIG',
+      confirmationsRequired: 2,
+      confirmationsSubmitted: 2,
+      missingSigners: null,
+    }
+
+    const MOCK_TX_SUMMARY: Omit<TransactionSummary, 'id'> = {
+      timestamp: 0,
+      txStatus: TransactionStatus.AWAITING_EXECUTION,
+      txInfo: {
+        type: 'Transfer',
+        sender: { value: '', name: null, logoUri: null },
+        recipient: { value: '', name: null, logoUri: null },
+        direction: TransferDirection.OUTGOING,
+        transferInfo: {
+          type: TransactionTokenType.NATIVE_COIN,
+          value: '',
+        },
+      },
+      executionInfo: MOCK_MULTISIG_EXECUTION_INFO,
+    }
+
+    const MOCK_TX_DETAILS: Omit<TransactionDetails, 'txId' | 'txStatus'> = {
+      executedAt: null,
+      txInfo: {
+        type: 'Transfer',
+        sender: { value: '', name: null, logoUri: null },
+        recipient: { value: '', name: null, logoUri: null },
+        direction: TransferDirection.OUTGOING,
+        transferInfo: {
+          type: TransactionTokenType.NATIVE_COIN,
+          value: '',
+        },
+      },
+      txData: null,
+      detailedExecutionInfo: null,
+      txHash: null,
+      safeAppInfo: null,
+    }
+
     it('adds `queued.queued` transaction summaries', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: {
+          id: 'sdifhgsiodugheiorjngnegerg',
+          ...MOCK_TX_SUMMARY,
+        },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          QUEUED_LABEL,
-          {
-            transaction: {
-              id: 'sdfgdsfgdsfgdfgfd',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [QUEUED_LABEL, mockTx],
       }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
@@ -71,30 +112,7 @@ describe('gatewayTransactionsReducer', () => {
             queued: {
               next: {},
               queued: {
-                0: [
-                  {
-                    id: 'sdfgdsfgdsfgdfgfd',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                0: [mockTx.transaction],
               },
             },
             history: {},
@@ -102,74 +120,36 @@ describe('gatewayTransactionsReducer', () => {
         },
       }
 
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
-
       expect(newState).toEqual(expectedState)
     })
     it('adds `queued.next` transaction summaries', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: {
+          id: 'sdfgsergrse5gsr5ghsxdfgh',
+          ...MOCK_TX_SUMMARY,
+          txStatus: TransactionStatus.AWAITING_CONFIRMATIONS,
+          executionInfo: {
+            ...MOCK_MULTISIG_EXECUTION_INFO,
+            confirmationsSubmitted: 0,
+          },
+        },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          NEXT_LABEL,
-          {
-            transaction: {
-              id: '356as4tse34',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [NEXT_LABEL, mockTx],
       }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
           [ZERO_ADDRESS]: {
             queued: {
               next: {
-                0: [
-                  {
-                    id: '356as4tse34',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                0: [mockTx.transaction],
               },
               queued: {},
             },
@@ -178,96 +158,29 @@ describe('gatewayTransactionsReducer', () => {
         },
       }
 
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
-
       expect(newState).toEqual(expectedState)
     })
-    it('handles payloads with multiple transactions of the same label', () => {
-      const testPayload: QueuedPayload = {
+    it('handles payloads with multiple transactions of the same label/same nonce', () => {
+      const mockTx: Transaction = {
+        transaction: { id: 'sdfgdsfgdsfgdfgfd', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+      const mockTx2: Transaction = {
+        transaction: { id: 'sg5be475eb5yydrtyhgtdr', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+      const mockTx3: Transaction = {
+        transaction: { id: 'cxsewec5tce5', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          QUEUED_LABEL,
-          {
-            transaction: {
-              id: 'sdfgdsfgdsfgdfgfd',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-          {
-            transaction: {
-              id: 'fdhdfhdrtthydfrthrdfht',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-          {
-            transaction: {
-              id: 've5dry5rvd45vyrthdtrfy',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [QUEUED_LABEL, mockTx, mockTx2, mockTx3],
       }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
@@ -275,74 +188,7 @@ describe('gatewayTransactionsReducer', () => {
             queued: {
               next: {},
               queued: {
-                0: [
-                  {
-                    id: 'sdfgdsfgdsfgdfgfd',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                  {
-                    id: 'fdhdfhdrtthydfrthrdfht',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                  {
-                    id: 've5dry5rvd45vyrthdtrfy',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                0: [mockTx.transaction, mockTx2.transaction, mockTx3.transaction],
               },
             },
             history: {},
@@ -350,173 +196,70 @@ describe('gatewayTransactionsReducer', () => {
         },
       }
 
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
-
       expect(newState).toEqual(expectedState)
     })
     it('handles payloads with multiple transactions with varying labels', () => {
-      const testPayload: QueuedPayload = {
+      const mockNextTx: Transaction = {
+        transaction: { id: 'btr6uy5r6rbfghhjg', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+      const mockQueuedTx: Transaction = {
+        transaction: {
+          id: 'dbfyujndftyiuft7yuiftyu',
+          ...MOCK_TX_SUMMARY,
+          executionInfo: {
+            ...MOCK_MULTISIG_EXECUTION_INFO,
+            nonce: 1,
+          },
+        },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
         values: [
           NEXT_LABEL,
-          {
-            transaction: {
-              id: 'sv4tew4t45e4t4e',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
+          mockNextTx,
           QUEUED_LABEL, // Different label
-          {
-            transaction: {
-              id: 'sdfgsdfgdsfg',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 1,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
+          mockQueuedTx,
         ],
       }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
           [ZERO_ADDRESS]: {
             queued: {
               next: {
-                0: [
-                  {
-                    id: 'sv4tew4t45e4t4e',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                0: [mockNextTx.transaction],
               },
               queued: {
-                1: [
-                  {
-                    id: 'sdfgsdfgdsfg',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 1,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                1: [mockQueuedTx.transaction],
               },
             },
             history: {},
           },
         },
       }
-
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
 
       expect(newState).toEqual(expectedState)
     })
 
     it('defaults to a `queued.queued` if no label is present', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'dfgbh65rb5yrthhdft', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        // No label
-        values: [
-          {
-            transaction: {
-              id: '4v5eydrtdyrtyxcrt',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [mockTx],
       }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
@@ -524,295 +267,92 @@ describe('gatewayTransactionsReducer', () => {
             queued: {
               next: {},
               queued: {
-                0: [
-                  {
-                    id: '4v5eydrtdyrtyxcrt',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                0: [mockTx.transaction],
               },
             },
             history: {},
           },
         },
       }
-
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
 
       expect(newState).toEqual(expectedState)
     })
 
     it('does not add transactions without a nonce to be added', () => {
-      const testPayload: QueuedPayload = {
-        chainId: '4',
-        safeAddress: ZERO_ADDRESS,
-        values: [
-          NEXT_LABEL,
-          {
-            transaction: {
-              id: '5bhrt6byftghfg',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: undefined as unknown as number, // No nonce
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
+      const mockTx: Transaction = {
+        transaction: {
+          id: 'dfgbh65rb5yrthhdft',
+          ...MOCK_TX_SUMMARY,
+          executionInfo: {
+            ...MOCK_MULTISIG_EXECUTION_INFO,
+            nonce: undefined as unknown as number, // Remove nonce
           },
-        ],
+        },
+        ...MOCK_TX_META,
       }
 
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
+      const mockPayload: QueuedPayload = {
+        chainId: '4',
+        safeAddress: ZERO_ADDRESS,
+        values: [mockTx],
+      }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       expect(newState).toEqual(EMPTY_STATE)
     })
 
     it('removes conflict headers', () => {
-      const testPayload: QueuedPayload = {
-        chainId: '4',
-        safeAddress: ZERO_ADDRESS,
-        values: [
-          {
-            nonce: 0,
-            type: 'CONFLICT_HEADER',
-          },
-        ],
+      const mockConflicHeader: ConflictHeader = {
+        nonce: 0,
+        type: 'CONFLICT_HEADER',
       }
 
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
+      const mockPayload: QueuedPayload = {
+        chainId: '4',
+        safeAddress: ZERO_ADDRESS,
+        values: [mockConflicHeader],
+      }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       expect(newState).toEqual(EMPTY_STATE)
     })
-
-    it('pushes `queued.queued` transactions with the same nonce', () => {
-      const testPayload: QueuedPayload = {
-        chainId: '4',
-        safeAddress: ZERO_ADDRESS,
-        values: [
-          QUEUED_LABEL,
-          {
-            transaction: {
-              id: 'svergvse5svt54se5v4',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
-      }
-
-      const prevState: GatewayTransactionsState = {
-        4: {
-          [ZERO_ADDRESS]: {
-            queued: {
-              next: {},
-              queued: {
-                0: [
-                  {
-                    id: 'srte54v45esw4v54vexdvfg',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
-              },
-            },
-            history: {},
-          },
-        },
-      }
-
-      const expectedState: GatewayTransactionsState = {
-        4: {
-          [ZERO_ADDRESS]: {
-            queued: {
-              next: {},
-              queued: {
-                0: [
-                  {
-                    id: 'srte54v45esw4v54vexdvfg',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                  // Pushed
-                  {
-                    id: 'svergvse5svt54se5v4',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
-              },
-            },
-            history: {},
-          },
-        },
-      }
-
-      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(testPayload))
-
-      expect(newState).toEqual(expectedState)
-    })
     it('adds `queued.queued` transactions to different nonce keys if the nonce differs between then', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'sdfgdsfgdsfgdfgfd', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+      const mockTx2: Transaction = {
+        transaction: {
+          id: 'sg5be475eb5yydrtyhgtdr',
+          ...MOCK_TX_SUMMARY,
+          executionInfo: {
+            ...MOCK_MULTISIG_EXECUTION_INFO,
+            nonce: 1,
+          },
+        },
+        ...MOCK_TX_META,
+      }
+      const mockTx3: Transaction = {
+        transaction: {
+          id: 'cxsewec5tce5',
+          ...MOCK_TX_SUMMARY,
+          executionInfo: {
+            ...MOCK_MULTISIG_EXECUTION_INFO,
+            nonce: 2,
+          },
+        },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          QUEUED_LABEL,
-          {
-            transaction: {
-              id: 'hdr5dr5hdr5hreh',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-          {
-            transaction: {
-              id: 'dfgndfnnhdf6rn6t',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 1, // Diferent nonnce
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [QUEUED_LABEL, mockTx, mockTx2, mockTx3],
       }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
@@ -820,100 +360,29 @@ describe('gatewayTransactionsReducer', () => {
             queued: {
               next: {},
               queued: {
-                0: [
-                  {
-                    id: 'hdr5dr5hdr5hreh',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
-                // Different nonce
-                1: [
-                  {
-                    id: 'dfgndfnnhdf6rn6t',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 1,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                  },
-                ],
+                0: [mockTx.transaction],
+                1: [mockTx2.transaction],
+                2: [mockTx3.transaction],
               },
             },
             history: {},
           },
         },
       }
-
-      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(testPayload))
 
       expect(newState).toEqual(expectedState)
     })
 
     it('merges existing `queued.queued` transactions', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          QUEUED_LABEL,
-          {
-            transaction: {
-              id: 'sxdfhjfgtyyjkftuyfu6yucgyhjc',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [QUEUED_LABEL, mockTx],
       }
 
       const prevState: GatewayTransactionsState = {
@@ -924,45 +393,12 @@ describe('gatewayTransactionsReducer', () => {
               queued: {
                 0: [
                   {
-                    id: 'sxdfhjfgtyyjkftuyfu6yucgyhjc',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
+                    ...mockTx.transaction,
                     // Would have been added via `UPDATE_TRANSACTION_DETAILS`
                     txDetails: {
-                      txId: 'sxdfhjfgtyyjkftuyfu6yucgyhjc',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_EXECUTION,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
+                      txId: mockTx.transaction.id,
+                      txStatus: mockTx.transaction.txStatus,
+                      ...MOCK_TX_DETAILS,
                     },
                   },
                 ],
@@ -973,255 +409,64 @@ describe('gatewayTransactionsReducer', () => {
         },
       }
 
-      const expectedState: GatewayTransactionsState = {
-        4: {
-          [ZERO_ADDRESS]: {
-            queued: {
-              next: {},
-              queued: {
-                0: [
-                  {
-                    id: 'sxdfhjfgtyyjkftuyfu6yucgyhjc',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                    // Should keep `txDetails`
-                    txDetails: {
-                      txId: 'sxdfhjfgtyyjkftuyfu6yucgyhjc',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_EXECUTION,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
-                    },
-                  },
-                ],
-              },
-            },
-            history: {},
-          },
-        },
-      }
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
 
-      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(testPayload))
-
-      expect(newState).toEqual(expectedState)
+      // Should remain the same as it keeps the `txDetails` via merge
+      expect(newState).toEqual(prevState)
     })
 
     it('merges existing `queued.next` transactions', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          NEXT_LABEL,
-          {
-            transaction: {
-              id: 'sdfge4g4ges4sge4ge',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [NEXT_LABEL, mockTx],
       }
 
       const prevState: GatewayTransactionsState = {
         4: {
           [ZERO_ADDRESS]: {
             queued: {
+              queued: {},
               next: {
                 0: [
                   {
-                    id: 'sdfge4g4ges4sge4ge',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
+                    ...mockTx.transaction,
                     // Would have been added via `UPDATE_TRANSACTION_DETAILS`
                     txDetails: {
-                      txId: 'sdfge4g4ges4sge4ge',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_EXECUTION,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
+                      txId: mockTx.transaction.id,
+                      txStatus: mockTx.transaction.txStatus,
+                      ...MOCK_TX_DETAILS,
                     },
                   },
                 ],
               },
-              queued: {},
             },
             history: {},
           },
         },
       }
 
-      const expectedState: GatewayTransactionsState = {
-        4: {
-          [ZERO_ADDRESS]: {
-            queued: {
-              next: {
-                0: [
-                  {
-                    id: 'sdfge4g4ges4sge4ge',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                    // Should keep `txDetails`
-                    txDetails: {
-                      txId: 'sdfge4g4ges4sge4ge',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_EXECUTION,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
-                    },
-                  },
-                ],
-              },
-              queued: {},
-            },
-            history: {},
-          },
-        },
-      }
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
 
-      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(testPayload))
-
-      expect(newState).toEqual(expectedState)
+      // Should remain the same as it keeps the `txDetails` via merge
+      expect(newState).toEqual(prevState)
     })
 
     it('replaces `queued.queued` transactions if there are new confirmations', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          QUEUED_LABEL,
-          {
-            transaction: {
-              id: 'gfjt6tr66ft6fjtgjyftyj',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [QUEUED_LABEL, mockTx],
       }
 
       const prevState: GatewayTransactionsState = {
@@ -1232,45 +477,16 @@ describe('gatewayTransactionsReducer', () => {
               queued: {
                 0: [
                   {
-                    id: 'gfjt6tr66ft6fjtgjyftyj',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_CONFIRMATIONS,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
+                    ...mockTx.transaction,
                     executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
+                      ...MOCK_MULTISIG_EXECUTION_INFO,
                       confirmationsSubmitted: 0,
-                      missingSigners: null,
                     },
                     // Would have been added via `UPDATE_TRANSACTION_DETAILS`
                     txDetails: {
-                      txId: 'gfjt6tr66ft6fjtgjyftyj',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_EXECUTION,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
+                      txId: mockTx.transaction.id,
+                      txStatus: mockTx.transaction.txStatus,
+                      ...MOCK_TX_DETAILS,
                     },
                   },
                 ],
@@ -1280,6 +496,8 @@ describe('gatewayTransactionsReducer', () => {
           },
         },
       }
+
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
@@ -1287,75 +505,27 @@ describe('gatewayTransactionsReducer', () => {
             queued: {
               next: {},
               queued: {
-                0: [
-                  {
-                    id: 'gfjt6tr66ft6fjtgjyftyj',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                    // Has removed `txDetails`
-                  },
-                ],
+                // Removed `txDetails`, using the payload transaction instead
+                0: [mockTx.transaction],
               },
             },
             history: {},
           },
         },
       }
-
-      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(testPayload))
 
       expect(newState).toEqual(expectedState)
     })
     it('replaces `queued.next` transactions if there are new confirmations', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
-        values: [
-          NEXT_LABEL,
-          {
-            transaction: {
-              id: 'dvgry6u5uv67bifftyi7',
-              timestamp: 0,
-              txStatus: TransactionStatus.AWAITING_EXECUTION,
-              txInfo: {
-                type: 'Transfer',
-                sender: { value: '', name: null, logoUri: null },
-                recipient: { value: '', name: null, logoUri: null },
-                direction: TransferDirection.OUTGOING,
-                transferInfo: {
-                  type: TransactionTokenType.NATIVE_COIN,
-                  value: '',
-                },
-              },
-              executionInfo: {
-                nonce: 0,
-                type: 'MULTISIG',
-                confirmationsRequired: 2,
-                confirmationsSubmitted: 2,
-                missingSigners: null,
-              },
-            },
-            conflictType: 'None',
-            type: 'TRANSACTION',
-          },
-        ],
+        values: [NEXT_LABEL, mockTx],
       }
 
       const prevState: GatewayTransactionsState = {
@@ -1365,45 +535,16 @@ describe('gatewayTransactionsReducer', () => {
               next: {
                 0: [
                   {
-                    id: 'dvgry6u5uv67bifftyi7',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_CONFIRMATIONS,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
+                    ...mockTx.transaction,
                     executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
+                      ...MOCK_MULTISIG_EXECUTION_INFO,
                       confirmationsSubmitted: 0,
-                      missingSigners: null,
                     },
                     // Would have been added via `UPDATE_TRANSACTION_DETAILS`
                     txDetails: {
-                      txId: 'dvgry6u5uv67bifftyi7',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_CONFIRMATIONS,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
+                      txId: mockTx.transaction.id,
+                      txStatus: mockTx.transaction.txStatus,
+                      ...MOCK_TX_DETAILS,
                     },
                   },
                 ],
@@ -1414,37 +555,16 @@ describe('gatewayTransactionsReducer', () => {
           },
         },
       }
+
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
           [ZERO_ADDRESS]: {
             queued: {
               next: {
-                0: [
-                  {
-                    id: 'dvgry6u5uv67bifftyi7',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_EXECUTION,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 2,
-                      missingSigners: null,
-                    },
-                    // Has removed `txDetails`
-                  },
-                ],
+                // Removed `txDetails`, using the payload transaction instead
+                0: [mockTx.transaction],
               },
               queued: {},
             },
@@ -1453,12 +573,15 @@ describe('gatewayTransactionsReducer', () => {
         },
       }
 
-      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(testPayload))
-
       expect(newState).toEqual(expectedState)
     })
     it('resets the `queued.next` if there are no `queued` transactions at all', () => {
-      const testPayload: QueuedPayload = {
+      const mockTx: Transaction = {
+        transaction: { id: 'sdfgsdfgdsfg', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
         values: [],
@@ -1469,49 +592,7 @@ describe('gatewayTransactionsReducer', () => {
           [ZERO_ADDRESS]: {
             queued: {
               next: {
-                0: [
-                  {
-                    id: 'sv4tset4ves4tves4vtes4t',
-                    timestamp: 0,
-                    txStatus: TransactionStatus.AWAITING_CONFIRMATIONS,
-                    txInfo: {
-                      type: 'Transfer',
-                      sender: { value: '', name: null, logoUri: null },
-                      recipient: { value: '', name: null, logoUri: null },
-                      direction: TransferDirection.OUTGOING,
-                      transferInfo: {
-                        type: TransactionTokenType.NATIVE_COIN,
-                        value: '',
-                      },
-                    },
-                    executionInfo: {
-                      nonce: 0,
-                      type: 'MULTISIG',
-                      confirmationsRequired: 2,
-                      confirmationsSubmitted: 0,
-                      missingSigners: null,
-                    },
-                    txDetails: {
-                      txId: 'sv4tset4ves4tves4vtes4t',
-                      executedAt: null,
-                      txStatus: TransactionStatus.AWAITING_CONFIRMATIONS,
-                      txInfo: {
-                        type: 'Transfer',
-                        sender: { value: '', name: null, logoUri: null },
-                        recipient: { value: '', name: null, logoUri: null },
-                        direction: TransferDirection.OUTGOING,
-                        transferInfo: {
-                          type: TransactionTokenType.NATIVE_COIN,
-                          value: '',
-                        },
-                      },
-                      txData: null,
-                      detailedExecutionInfo: null,
-                      txHash: null,
-                      safeAppInfo: null,
-                    },
-                  },
-                ],
+                0: [mockTx.transaction],
               },
               queued: {},
             },
@@ -1519,6 +600,8 @@ describe('gatewayTransactionsReducer', () => {
           },
         },
       }
+
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
 
       const expectedState: GatewayTransactionsState = {
         4: {
@@ -1531,8 +614,6 @@ describe('gatewayTransactionsReducer', () => {
           },
         },
       }
-
-      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(testPayload))
 
       expect(newState).toEqual(expectedState)
     })
