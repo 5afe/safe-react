@@ -81,8 +81,6 @@ export const loadGoogleTagManager = (): void => {
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
       page,
-      // Flag used to prevent GA triggers
-      dev: !IS_PRODUCTION,
     },
   })
 }
@@ -119,8 +117,6 @@ export const usePageTracking = (): void => {
           eventCategory: undefined,
           eventAction: undefined,
           eventLabel: undefined,
-          // Flag used to prevent GA triggers
-          dev: !IS_PRODUCTION,
         },
       })
     })
@@ -160,8 +156,6 @@ export const trackEvent = ({
     eventCategory: category,
     eventAction: action,
     eventLabel: tryParse(label),
-    // Flag used to prevent GA triggers
-    dev: !IS_PRODUCTION,
   }
 
   if (!IS_PRODUCTION) {
