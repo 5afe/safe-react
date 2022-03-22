@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
-import AppstoreLightBadge from 'src/assets/icons/appstore-light.png'
-import AppstoreDarkBadge from 'src/assets/icons/appstore-dark.svg'
+import AppstoreDarkBadge from 'src/assets/icons/appstore.svg'
+import AppstoreLightBadge from 'src/assets/icons/appstore-alt.svg'
 
 enum LINKS {
   footer = 'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Footer&mt=8',
@@ -20,7 +20,7 @@ const AppstoreButton = (props: AppstoreButtonProps): ReactElement => {
         alt="Download on the App Store"
         style={{
           display: 'block',
-          height: `${props.light ? 30 : 35}px`,
+          height: '35px',
         }}
       />
     </a>
