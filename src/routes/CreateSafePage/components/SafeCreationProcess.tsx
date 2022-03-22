@@ -42,6 +42,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import Track from 'src/components/Track'
+import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -138,6 +139,13 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         // Monitor the latest block to find a potential speed-up tx
         txMonitor({ sender: userAddress, hash: txHash, data: deploymentTx.encodeABI() })
           .then((txReceipt) => {
+            // txMonitor returns the txReceipt from `getTransactionReceipt` which doesn't throw
+            // if it was reverted. We must check the status of the receipt manually.
+            if (didTxRevert(txReceipt)) {
+              reject(new Error('Sped-up tx reverted'))
+              return
+            }
+
             console.log('Sped-up tx mined:', txReceipt)
             trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
             resolve(txReceipt)
@@ -152,6 +160,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         resolve(txReceipt)
       })
       .catch((error) => {
+        // `deploymentTx` will throw if the transaction was reverted
         reject(parseError(error))
       })
   })

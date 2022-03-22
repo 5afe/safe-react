@@ -1,4 +1,5 @@
 import { backOff, IBackOffOptions } from 'exponential-backoff'
+import { TransactionReceipt } from 'web3-core'
 
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -6,20 +7,25 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
-const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<void> => {
+const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<TransactionReceipt> => {
   const MAX_WAITING_BLOCK = sessionBlockNumber + 50
 
   const web3 = getWeb3()
 
+  const receipt = await web3.eth.getTransactionReceipt(txHash)
+
   if (
     // Transaction hasn't yet been mined
-    !(await web3.eth.getTransactionReceipt(txHash)) &&
+    !receipt &&
     // The current block is within waiting window
     (await web3.eth.getBlockNumber()) <= MAX_WAITING_BLOCK
   ) {
     throw new Error('Pending transaction not found')
   }
+
+  return receipt
 }
 
 // Progressively after 10s, 20s, 40s, 80s, 160s, 320s - total of 6.5 minutes
@@ -37,13 +43,19 @@ const monitorTx = async (
     numOfAttempts: MAX_ATTEMPTS,
   },
 ): Promise<void> => {
-  return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options).catch(() => {
-    // Unsuccessfully mined (threw in last backOff attempt)
-    store.dispatch(removePendingTransaction({ id: txId }))
-    store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
-  })
-  // If mined, pending status is removed in the transaction middleware
-  // when a transaction is added to historical transactions list
+  return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options)
+    .then((receipt) => {
+      if (didTxRevert(receipt)) {
+        store.dispatch(removePendingTransaction({ id: txId }))
+      }
+      // If successfully mined, pending status is removed in the transaction
+      // middleware when a transaction is added to historical transactions list
+    })
+    .catch(() => {
+      // Unsuccessfully mined (threw in last backOff attempt)
+      store.dispatch(removePendingTransaction({ id: txId }))
+      store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
+    })
 }
 
 const monitorAllTxs = async (): Promise<void> => {

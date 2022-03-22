@@ -13,6 +13,7 @@ import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
+import AppstoreButton from 'src/components/AppstoreButton'
 
 const StyledDivider = styled(Divider)`
   width: calc(100% + 40px);
@@ -70,13 +71,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
 
       <Row className={classes.justifyCenter}>
         <Track {...OVERVIEW_EVENTS.IPHONE_APP_BUTTON}>
-          <a href="https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Connect&mt=8">
-            <img
-              src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1599436800&h=93244e063e3bdf5b5b9f93aff647da09"
-              alt="Download on the App Store"
-              className={classes.appStore}
-            />
-          </a>
+          <AppstoreButton placement="pairing" />
         </Track>
       </Row>
     </>
