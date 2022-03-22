@@ -84,7 +84,10 @@ const Coins = (props: Props): React.ReactElement => {
 
   const differingTokens = useMemo(() => safeTokens.size, [safeTokens])
   useEffect(() => {
-    trackEvent({ ...ASSETS_EVENTS.DIFFERING_TOKENS, label: differingTokens })
+    // Safe does not have any tokens until fetching is complete
+    if (differingTokens > 0) {
+      trackEvent({ ...ASSETS_EVENTS.DIFFERING_TOKENS, label: differingTokens })
+    }
   }, [differingTokens])
 
   const filteredData: List<BalanceData> = useMemo(
