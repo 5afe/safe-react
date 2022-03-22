@@ -23,8 +23,6 @@ describe('<CurrencyDropdown>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       currencyValues: {
         selectedCurrency: 'EUR',
@@ -48,8 +46,6 @@ describe('<CurrencyDropdown>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       currencyValues: {
         selectedCurrency: 'USD',
@@ -110,8 +106,6 @@ describe('<CurrencyDropdown>', () => {
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
         network: '4',
-        smartContractWallet: false,
-        hardwareWallet: false,
       },
       currencyValues: {
         selectedCurrency: 'USD',

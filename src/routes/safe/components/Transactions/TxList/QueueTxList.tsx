@@ -1,5 +1,5 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import { Fragment, ReactElement, useContext } from 'react'
+import { Fragment, ReactElement, useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
@@ -59,24 +59,33 @@ type QueueTransactionProps = {
   transactions: Transaction[]
 }
 
-const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement =>
-  transactions.length > 1 ? (
-    <GroupedTransactionsCard>
+const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
+  const [nrChildrenExpanded, setNrChildrenExpanded] = useState(0)
+
+  const handleChildExpand = (expand: number) => {
+    setNrChildrenExpanded((val) => val + expand)
+  }
+
+  if (transactions.length === 1) {
+    return <TxQueueRow transaction={transactions[0]} />
+  }
+
+  return (
+    <GroupedTransactionsCard expanded={!!nrChildrenExpanded}>
       <TxHoverProvider>
         <Disclaimer nonce={nonce} />
         <GroupedTransactions>
           {transactions.map((transaction, index) => (
             <Fragment key={`${nonce}-${transaction.id}`}>
               <TreeView firstElement={!index} />
-              <TxQueueRow isGrouped transaction={transaction} />
+              <TxQueueRow isGrouped transaction={transaction} onChildExpand={handleChildExpand} />
             </Fragment>
           ))}
         </GroupedTransactions>
       </TxHoverProvider>
     </GroupedTransactionsCard>
-  ) : (
-    <TxQueueRow transaction={transactions[0]} />
   )
+}
 
 type QueueTxListProps = {
   transactions: TransactionDetails['transactions']

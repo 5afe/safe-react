@@ -7,9 +7,11 @@ import {
   addPendingTransaction,
   removePendingTransaction,
 } from 'src/logic/safe/store/actions/pendingTransactions'
-import { PENDING_TRANSACTIONS_ID, PendingTransactionPayload } from 'src/logic/safe/store/reducer/pendingTransactions'
+import { PENDING_TRANSACTIONS_ID, PendingTransactionPayloads } from 'src/logic/safe/store/reducer/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { allPendingTxs } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { allPendingTxIds } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { PendingTxMonitor } from 'src/logic/safe/transactions/pendingTxMonitor'
+import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 
 // Share updated statuses between tabs/windows
 // Test env and Safari don't support BroadcastChannel
@@ -44,10 +46,11 @@ if (channel) {
 }
 
 export const pendingTransactionsMiddleware =
-  ({ getState }: typeof reduxStore) =>
+  (store: typeof reduxStore) =>
   (next: Dispatch) =>
-  async (action: Action<PendingTransactionPayload>): Promise<Action<PendingTransactionPayload>> => {
+  async (action: Action<PendingTransactionPayloads>): Promise<Action<PendingTransactionPayloads>> => {
     const handledAction = next(action)
+    const state = store.getState()
 
     switch (action.type) {
       case PENDING_TRANSACTIONS_ACTIONS.ADD:
@@ -56,8 +59,12 @@ export const pendingTransactionsMiddleware =
           channel.postMessage(action)
         }
 
-        const state = getState()
-        session.setItem(PENDING_TRANSACTIONS_ID, allPendingTxs(state))
+        session.setItem(PENDING_TRANSACTIONS_ID, allPendingTxIds(state))
+        break
+      }
+
+      case PROVIDER_ACTIONS.WALLET_NAME: {
+        PendingTxMonitor.monitorAllTxs()
         break
       }
       default:

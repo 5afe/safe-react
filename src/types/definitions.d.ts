@@ -1,5 +1,6 @@
 import 'styled-components'
 import { theme } from '@gnosis.pm/safe-react-components'
+import { BeamerConfig, BeamerMethods } from './Beamer.d'
 
 type Theme = typeof theme
 
@@ -11,6 +12,8 @@ declare global {
       autoRefreshOnNetworkChange: boolean
       isMetaMask: boolean
     }
+    beamer_config?: BeamerConfig
+    Beamer?: BeamerMethods
   }
 }
 declare module '@openzeppelin/contracts/build/contracts/ERC721'

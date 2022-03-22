@@ -14,6 +14,8 @@ import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
+import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -76,14 +78,14 @@ export const fetchSafe =
     const state = store.getState()
     const chainId = currentChainId(state)
 
-    // If the network has changed while the safe was being loaded,
-    // ignore the result
-    if (remoteSafeInfo?.chainId !== chainId) {
-      return
-    }
-
     // remote (client-gateway)
     if (remoteSafeInfo) {
+      // If the network has changed while the safe was being loaded,
+      // ignore the result
+      if (remoteSafeInfo.chainId !== chainId) {
+        return
+      }
+
       safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
 
       // If these polling timestamps have changed, fetch again
@@ -93,16 +95,22 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
+      dispatch(fetchSafeTokens(address))
+
       if (shouldUpdateCollectibles || isInitialLoad) {
-        dispatch(fetchCollectibles(safeAddress))
+        dispatch(fetchCollectibles(address))
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
-        dispatch(fetchTransactions(chainId, safeAddress))
+        dispatch(fetchTransactions(chainId, address))
+      }
+
+      if (isInitialLoad) {
+        dispatch(addViewedSafe(address))
       }
     }
 
-    const owners = buildSafeOwners(remoteSafeInfo?.owners)
+    const owners = buildSafeOwners(remoteSafeInfo?.owners || [])
 
     return dispatch(updateSafe({ address, ...safeInfo, owners }))
   }

@@ -46,6 +46,7 @@ import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -174,7 +175,7 @@ const SendFunds = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle="1 of 2" title="Send funds" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send funds" />
       <Hairline />
       <GnoForm
         formMutators={formMutators}
@@ -244,7 +245,7 @@ const SendFunds = ({
           return (
             <>
               <Block className={classes.formContainer}>
-                <SafeInfo />
+                <SafeInfo text="Sending from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -260,8 +261,8 @@ const SendFunds = ({
                     role="listbox"
                     tabIndex={0}
                   >
-                    <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Row margin="sm">
+                      <Paragraph color="disabled" noMargin size="lg">
                         Recipient
                       </Paragraph>
                     </Row>
@@ -269,6 +270,7 @@ const SendFunds = ({
                       <PrefixedEthHashInfo
                         hash={selectedEntry.address}
                         name={selectedEntry.name}
+                        strongName
                         showAvatar
                         showCopyBtn
                         explorerUrl={getExplorerInfo(selectedEntry.address)}
@@ -291,7 +293,7 @@ const SendFunds = ({
                     </Col>
                   </Row>
                 )}
-                <Row margin="sm">
+                <Row margin="md">
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken?.address}
@@ -305,7 +307,7 @@ const SendFunds = ({
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Amount
                     </Paragraph>
                     <ButtonLink onClick={setMaxAllowedAmount} weight="bold" testId="send-max-btn">
@@ -326,7 +328,6 @@ const SendFunds = ({
                       }}
                       name="amount"
                       placeholder="Amount*"
-                      text="Amount*"
                       type="text"
                       testId="amount-input"
                     />

@@ -6,7 +6,6 @@ import Providers from 'src/components/Providers'
 import { createPreloadedStore, store } from 'src/store'
 import { history } from 'src/routes/routes'
 import theme from 'src/theme/mui'
-import { makeProvider } from 'src/logic/wallets/store/model/provider'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import makeSafe from 'src/logic/safe/store/models/safe'
 
@@ -14,7 +13,6 @@ import makeSafe from 'src/logic/safe/store/models/safe'
 function renderWithProviders(Components: ReactElement, customState?: any): RenderResult {
   const customStore = {
     ...customState,
-    providers: makeProvider(customState?.providers),
     safes: Map({
       safes: Map(buildSafesState(customState?.safes?.safes)),
       latestMasterContractVersion: customState?.safes?.latestMasterContractVersion || '1.3.0',

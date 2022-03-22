@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { generateSignaturesFromTxConfirmations, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
+import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { AppReduxState } from 'src/store'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -11,8 +11,6 @@ import { Dispatch, DispatchReturn } from './types'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { TxSender } from './createTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { getLastTransaction } from '../selectors/gatewayTransactions'
-import { shouldExecuteTransaction } from './utils'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -34,8 +32,8 @@ interface ProcessTransactionArgs {
     gasToken: string
     refundReceiver: string
   }
-  userAddress: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
+  preApprovingOwner?: string
   thresholdReached: boolean
 }
 
@@ -75,14 +73,7 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       return
     }
 
-    // Execute right away?
-    sender.isFinalization =
-      approveAndExecute ||
-      (await shouldExecuteTransaction(sender.safeInstance, sender.nonce, getLastTransaction(state)))
-
-    sender.approveAndExecute = approveAndExecute
-
-    const preApprovingOwner = approveAndExecute && !props.thresholdReached ? props.userAddress : undefined
+    sender.isFinalization = approveAndExecute && !!(props.thresholdReached || props.preApprovingOwner)
 
     sender.txArgs = {
       ...tx, // Merge previous tx with new data
@@ -91,13 +82,14 @@ export const processTransaction = (props: ProcessTransactionArgs): ProcessTransa
       data: txProps.txData,
       gasPrice: tx.gasPrice || '0',
       sender: sender.from,
-      sigs:
-        generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner) ||
-        getPreValidatedSignatures(sender.from),
+      sigs: generateSignaturesFromTxConfirmations(
+        tx.confirmations,
+        approveAndExecute ? props.preApprovingOwner : undefined,
+      ),
     }
 
     sender.safeTxHash = tx.safeTxHash
 
-    sender.submitTx(state)
+    sender.submitTx()
   }
 }

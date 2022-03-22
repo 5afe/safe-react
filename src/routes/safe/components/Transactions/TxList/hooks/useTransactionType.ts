@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTxQueued, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
@@ -32,12 +32,15 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         setType({
           icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
-          text: isSendTx ? 'Send' : 'Receive',
+          text: isSendTx ? (isTxQueued(tx.txStatus) ? 'Send' : 'Sent') : 'Received',
         })
         break
       }
       case 'SettingsChange': {
-        setType({ icon: SettingsTxIcon, text: tx.txInfo.dataDecoded.method })
+        // deleteGuard doesn't exist in Solidity
+        // It is decoded as 'setGuard' with a settingsInfo.type of 'DELETE_GUARD'
+        const isDeleteGuard = tx.txInfo.settingsInfo?.type === 'DELETE_GUARD'
+        setType({ icon: SettingsTxIcon, text: isDeleteGuard ? 'deleteGuard' : tx.txInfo.dataDecoded.method })
         break
       }
       case 'Custom': {

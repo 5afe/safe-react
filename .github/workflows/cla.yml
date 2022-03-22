@@ -21,6 +21,6 @@ jobs:
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-cla-document: 'https://github.com/gnosis/safe-react/blob/main/GNOSISCLA.md'
           branch: 'cla-signatures'
-          allowlist: lukasschor,mikheevm,rmeissner,germartinez,davidalbela,Uxio0,dasanra,francovenica,tschubotz,luarx,giacomolicari,gnosis-info,bot*,katspaugh,DaniSomoza,iamacook,yagopv,usame-algan,InoMurko
+          allowlist: lukasschor,mikheevm,rmeissner,germartinez,davidalbela,Uxio0,dasanra,francovenica,tschubotz,luarx,giacomolicari,gnosis-info,bot*,katspaugh,DaniSomoza,iamacook,yagopv,usame-algan
           empty-commit-flag: false
           blockchain-storage-flag: false

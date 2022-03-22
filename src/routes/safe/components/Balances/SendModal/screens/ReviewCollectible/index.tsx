@@ -24,6 +24,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -101,13 +102,13 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   return (
     <TxModalWrapper txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle="2 of 2" title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send collectible" />
       <Hairline />
       <Block className={classes.container}>
-        <SafeInfo />
+        <SafeInfo text="Sending from" />
         <Divider withArrow />
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             Recipient
           </Paragraph>
         </Row>
@@ -116,6 +117,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             <PrefixedEthHashInfo
               hash={tx.recipientAddress}
               name={tx.recipientName}
+              strongName
               showAvatar
               showCopyBtn
               explorerUrl={getExplorerInfo(tx.recipientAddress)}
@@ -123,7 +125,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </Col>
         </Row>
         <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+          <Paragraph color="disabled" noMargin size="lg">
             {textShortener({ charsStart: 40, charsEnd: 0 })(tx.assetName)}
           </Paragraph>
         </Row>

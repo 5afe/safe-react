@@ -1,4 +1,7 @@
 import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { grey400, lg, md, primary200, primary300, sm } from 'src/theme/variables'
 import styled, { css } from 'styled-components'
 import { isDeeplinkedTx } from './utils'
 
@@ -22,12 +25,8 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
 export const NoPaddingAccordion = styled(Accordion).attrs((props) =>
   isDeeplinkedTx() ? { expanded: true, ...props } : props,
 )`
-  &.MuiAccordion-root {
-    background-color: transparent;
-
-    .MuiAccordionDetails-root {
-      padding: 0;
-    }
+  &.MuiAccordion-root .MuiAccordionDetails-root {
+    padding: 0;
   }
 `
 
@@ -37,6 +36,10 @@ export const ActionAccordion = styled(Accordion)`
       border-top: none;
     }
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     &.Mui-expanded {
       &:last-child {
         border-bottom: none;
@@ -44,7 +47,7 @@ export const ActionAccordion = styled(Accordion)`
     }
 
     .MuiAccordionDetails-root {
-      padding: 16px;
+      padding: ${lg};
     }
   }
 `
@@ -75,38 +78,39 @@ export const SubTitle = styled(Text)`
 `
 
 export const StyledTransactions = styled.div`
-  background-color: ${({ theme }) => theme.colors.white};
-  border-radius: 8px;
-  box-shadow: #00000026 0 4px 12px 0;
   overflow: hidden;
   width: 100%;
 
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+
   & > .MuiAccordion-root {
+    border: 2px solid ${grey400};
+    border-radius: 8px;
+
     &:first-child {
-      border-top: none;
+      border: 2px solid ${grey400};
     }
 
-    &:last-child {
-      border-bottom: none;
+    & .MuiAccordionSummary-root.Mui-expanded,
+    & .MuiAccordionSummary-root:hover {
+      background-color: ${primary200};
     }
 
-    &:last-of-type {
-      div {
-        row-gap: 0px;
-      }
+    &.Mui-expanded {
+      border: 2px solid ${primary300};
     }
   }
 `
 
-export const GroupedTransactionsCard = styled(StyledTransactions)`
+export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: boolean }>`
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: transparent;
-  border-radius: 0;
-  box-shadow: none;
+  background-color: ${({ theme }) => theme.colors.white}};
 
-  &:not(:last-child) {
-    border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-  }
+  border: 2px solid ${({ expanded }) => (expanded ? `${primary300}` : `${grey400}`)};
+  box-sizing: border-box;
+  border-radius: 8px;
 
   .MuiAccordion-root,
   .MuiAccordionSummary-root,
@@ -119,22 +123,25 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
     }
   }
 
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.background};
+  .disclaimer-container {
+    background-color: ${({ theme, expanded }) => (expanded ? `${primary200}` : theme.colors.inputField)};
+  }
 
-    .MuiAccordionDetails-root {
-      div[class^='tx-'] {
-        background-color: ${({ theme }) => theme.colors.background};
-      }
+  &:hover {
+    background-color: ${primary200};
+
+    .tx-data > div,
+    .tx-data ~ div > div {
+      background-color: ${primary200};
     }
 
     .disclaimer-container {
-      background-color: ${({ theme }) => theme.colors.inputField};
+      background-color: transparent;
     }
   }
 `
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '1fr',
   type: '3fr',
   info: '3fr',
   time: '2.5fr',
@@ -144,10 +151,19 @@ const gridColumns = {
 }
 
 const willBeReplaced = css`
+  .will-be-replaced {
+    pointer-events: none;
+  }
+
+  .will-be-replaced.tx-details-actions button,
+  .will-be-replaced img {
+    filter: grayscale(1) opacity(0.8) !important;
+  }
+
   .will-be-replaced * {
+    pointer-events: none;
     color: gray !important;
     text-decoration: line-through !important;
-    filter: grayscale(1) opacity(0.8) !important;
   }
 `
 
@@ -155,32 +171,6 @@ const failedTransaction = css`
   &.failed-transaction {
     div[class^='tx-']:not(.tx-status):not(.tx-nonce) {
       opacity: 0.5;
-    }
-  }
-`
-
-const onChainRejection = css`
-  &.on-chain-rejection {
-    background-color: ${({ theme }) => theme.colors.errorTooltip};
-    border-left: 4px solid ${({ theme }) => theme.colors.error};
-    border-radius: 4px;
-    padding-left: 7px;
-    height: 22px;
-    max-width: 165px;
-
-    > div {
-      height: 17px;
-      align-items: center;
-      padding-top: 3px;
-    }
-
-    p {
-      font-size: 11px;
-      line-height: 16px;
-      letter-spacing: 1px;
-      font-weight: bold;
-      text-transform: uppercase;
-      margin-left: -2px;
     }
   }
 `
@@ -195,10 +185,6 @@ export const StyledTransaction = styled.div`
 
   & > div {
     align-self: center;
-  }
-
-  .tx-type {
-    ${onChainRejection};
   }
 
   .tx-votes {
@@ -295,10 +281,6 @@ export const GroupedTransactions = styled(StyledTransaction)`
     grid-column-end: span 6;
     grid-column-start: 2;
 
-    &:first-child {
-      border: 0;
-    }
-
     &.Mui-expanded {
       justify-self: center;
       width: calc(100% - 32px);
@@ -323,7 +305,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 `
 
 export const DisclaimerContainer = styled(StyledTransaction)`
-  background-color: ${({ theme }) => theme.colors.inputField} !important;
+  background-color: ${({ theme }) => theme.colors.inputField};
   border-radius: 4px;
   margin: 12px 8px 0 12px;
   padding: 8px 12px;
@@ -339,31 +321,71 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
+export const TxDetailsContainer = styled.div`
   ${willBeReplaced};
 
   background-color: ${({ theme }) => theme.colors.separator} !important;
-  column-gap: 2px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: minmax(min-content, max-content);
-  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
-  row-gap: 2px;
+  gap: 2px;
+  grid-template-columns: 2fr 1fr;
   width: 100%;
 
   & > div {
-    background-color: ${({ theme }) => theme.colors.white};
+    display: grid;
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
     line-break: anywhere;
     overflow: hidden;
-    padding: 20px 24px;
     word-break: break-all;
+
+    & > div {
+      padding: 20px 24px;
+      background-color: ${({ theme }) => theme.colors.white};
+    }
   }
 
   .tx-summary {
+    background-color: ${({ theme }) => theme.colors.white};
+    // grows to the height of tx-owner column
+    flex-grow: 1;
+    position: relative;
+
+    &.no-data {
+      row-span: 2;
+    }
+  }
+
+  .tx-creation {
+    // to occupy the unexistant "owners" column
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .tx-share {
-    float: right;
+    position: absolute;
+    top: 20px;
+    right: 24px;
+  }
+
+  .tx-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+
+    & > div:last-of-type {
+      flex: 1;
+    }
+
+    &.no-owners {
+      grid-column: span 2;
+    }
+
+    &.no-data {
+      gap: 0;
+    }
   }
 
   .tx-details {
@@ -378,20 +400,18 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
 
   .tx-owners {
     padding: 24px;
-    grid-column-start: 2;
-    grid-row-end: span ${({ ownerRows }) => ownerRows || 2};
-    grid-row-start: 1;
+    grid-row-end: span 2;
   }
 
   .tx-details-actions {
-    align-items: center;
+    align-items: flex-end;
+    padding-bottom: 24px;
     display: flex;
-    height: 60px;
+    gap: 8px;
     justify-content: center;
 
     button {
       color: ${({ theme }) => theme.colors.white};
-      margin: 0 8px;
 
       &:hover {
         color: ${({ theme }) => theme.colors.white};
@@ -416,64 +436,19 @@ export const TxDetailsContainer = styled.div<{ ownerRows?: number }>`
   }
 `
 
-export const OwnerList = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding-left: 6px;
-
-  .legend {
-    left: 15px;
-    padding-bottom: 0.86em;
-    position: relative;
-    top: -3px;
-
-    .owner-info {
-      margin: 5px;
-    }
-
-    span::first-of-type {
-      color: #008c73;
-      font-weight: bold;
-    }
-  }
-
-  ul {
-    margin-top: 0;
-  }
-
-  .icon {
-    left: -7px;
-    position: absolute;
-    width: 16px;
-    z-index: 2;
-  }
-`
-
-export const OwnerListItem = styled.li`
-  display: flex;
-  position: relative;
-
-  &::before {
-    border-left: 2px ${({ theme }) => theme.colors.icon} solid;
-    border-radius: 1px;
-    content: '';
-    height: calc(100% - 16px);
-    top: 16px;
-    left: 0;
-    position: absolute;
-    z-index: 1;
-  }
-
-  &:last-child::before {
-    border-left: none;
-  }
-`
-
 export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
 
   span {
-    font-weight: normal;
+    font-weight: bold;
+  }
+`
+
+export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
+  display: inline-flex;
+
+  span {
+    font-weight: bold;
   }
 `
 
@@ -539,4 +514,31 @@ export const NoTransactions = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 60px;
+`
+export const StyledGridRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+  gap: ${md};
+  justify-content: flex-start;
+  max-width: 900px;
+
+  & > * {
+    flex-shrink: 0;
+  }
+`
+
+export const StyledTxInfoDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${sm};
+  margin-bottom: ${md};
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+`
+
+export const StyledDetailsTitle = styled(Text)<{ uppercase?: boolean }>`
+  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : null)};
+  letter-spacing: ${({ uppercase }) => (uppercase ? '1px' : null)};
 `

@@ -24,6 +24,7 @@ import {
   FIELD_NEW_SAFE_PROXY_SALT,
   FIELD_NEW_SAFE_GAS_PRICE,
   FIELD_SAFE_OWNER_ENS_LIST,
+  FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE,
 } from '../fields/createSafeFields'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
@@ -99,6 +100,8 @@ function SafeCreationProcess(): ReactElement {
       return
     }
 
+    if (!userAddressAccount) return
+
     setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
 
     setCreationTxPromise(
@@ -109,11 +112,13 @@ function SafeCreationProcess(): ReactElement {
         const safeCreationSalt = safeCreationFormValues[FIELD_NEW_SAFE_PROXY_SALT]
         const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
         const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
+        const gasMaxPrioFee = safeCreationFormValues[FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE]
         const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
         const sendParams = createSendParams(userAddressAccount, {
           ethGasLimit: gasLimit.toString(),
           ethGasPriceInGWei: gasPrice,
+          ethMaxPrioFeeInGWei: gasMaxPrioFee.toString(),
         })
 
         deploymentTx

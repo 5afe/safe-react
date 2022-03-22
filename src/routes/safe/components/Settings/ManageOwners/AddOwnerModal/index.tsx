@@ -19,7 +19,6 @@ import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { _getChainId } from 'src/config'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -43,7 +42,7 @@ export const sendAddOwner = async (
   )
   const txData = safeTx.data.data
 
-  const txHash = await dispatch(
+  await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
@@ -56,14 +55,6 @@ export const sendAddOwner = async (
       delayExecution,
     }),
   )
-
-  if (txHash) {
-    dispatch(
-      addressBookAddOrUpdate(
-        makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName, chainId: _getChainId() }),
-      ),
-    )
-  }
 }
 
 type Props = {

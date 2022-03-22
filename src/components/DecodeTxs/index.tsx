@@ -1,19 +1,28 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
-import {
-  DecodedDataResponse,
-  DecodedDataBasicParameter,
-  DecodedDataParameterValue,
-} from '@gnosis.pm/safe-react-gateway-sdk'
+import { DecodedDataBasicParameter, DecodedDataParameterValue } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash/get'
-import { Text, CopyToClipboardBtn, IconText, FixedIcon } from '@gnosis.pm/safe-react-components'
-import { hexToBytes } from 'web3-utils'
+import {
+  Text,
+  CopyToClipboardBtn,
+  IconText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@gnosis.pm/safe-react-components'
 
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
 import { getExplorerInfo } from 'src/config'
-import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
+import { DecodedTxDetailType } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import PrefixedEthHashInfo from '../PrefixedEthHashInfo'
+import { getByteLength } from 'src/utils/getByteLength'
 import { getInteractionTitle } from 'src/routes/safe/components/Transactions/helpers/utils'
+import {
+  DecodedTxDetail,
+  isDataDecodedParameterValue,
+} from 'src/routes/safe/components/Apps/components/ConfirmTxModal/DecodedTxDetail'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -21,6 +30,12 @@ const FlexWrapper = styled.div<{ margin: number }>`
 
   > :nth-child(2) {
     margin-left: ${({ margin }) => margin}px;
+  }
+`
+
+const StyledAccordionSummary = styled(AccordionSummary)`
+  & .MuiAccordionSummary-content {
+    justify-content: space-between;
   }
 `
 
@@ -32,43 +47,9 @@ const BasicTxInfoWrapper = styled.div`
   }
 `
 
-const TxList = styled.div`
-  width: 100%;
-  max-height: 260px;
-  overflow-y: auto;
-  border-top: 2px solid ${({ theme }) => theme.colors.separator};
-`
-
-const TxListItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  padding: 0 24px;
-  height: 50px;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-
-  :hover {
-    cursor: pointer;
-  }
-`
 const ElementWrapper = styled.div`
   margin-bottom: 15px;
 `
-
-export const getByteLength = (data: string | string[]): number => {
-  try {
-    if (!Array.isArray(data)) {
-      data = data.split(',')
-    }
-    // Return the sum of the byte sizes of each hex string
-    return data.reduce((result, hex) => {
-      const bytes = hexToBytes(hex)
-      return result + bytes.length
-    }, 0)
-  } catch (err) {
-    return 0
-  }
-}
 
 export const BasicTxInfo = ({
   txRecipient,
@@ -85,9 +66,11 @@ export const BasicTxInfo = ({
     <BasicTxInfoWrapper>
       {/* TO */}
       <>
-        <Text size="lg" strong>
-          {getInteractionTitle(txValue)}
-        </Text>
+        <Row margin="xs">
+          <Paragraph color="disabled" noMargin size="lg">
+            {getInteractionTitle(txValue)}
+          </Paragraph>
+        </Row>
         <PrefixedEthHashInfo
           hash={txRecipient}
           showAvatar
@@ -99,11 +82,15 @@ export const BasicTxInfo = ({
       </>
       <>
         {/* Data */}
-        <Text size="lg" strong>
-          Data (hex encoded):
-        </Text>
+        <Row margin="xs">
+          <Paragraph color="disabled" noMargin size="lg">
+            Data (hex encoded):
+          </Paragraph>
+        </Row>
         <FlexWrapper margin={5}>
-          <Text size="lg">{txData ? getByteLength(txData) : 0} bytes</Text>
+          <Paragraph noMargin size="lg">
+            {txData ? getByteLength(txData) : 0} bytes
+          </Paragraph>
           <CopyToClipboardBtn textToCopy={txData} />
         </FlexWrapper>
       </>
@@ -111,82 +98,68 @@ export const BasicTxInfo = ({
   )
 }
 
-export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
+export const getParameterElement = ({ name, type, value }: DecodedDataBasicParameter, index: number): ReactElement => {
   let valueElement
 
-  if (parameter.type === 'address') {
-    valueElement = (
-      <PrefixedEthHashInfo
-        hash={parameter.value}
-        showAvatar
-        textSize="lg"
-        showCopyBtn
-        explorerUrl={getExplorerInfo(parameter.value)}
-      />
-    )
-  }
-
-  if (parameter.type.startsWith('bytes')) {
-    valueElement = (
-      <FlexWrapper margin={5}>
-        <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
-        <CopyToClipboardBtn textToCopy={parameter.value} />
-      </FlexWrapper>
-    )
+  if (!Array.isArray(value)) {
+    switch (type) {
+      case 'address':
+        valueElement = (
+          <PrefixedEthHashInfo hash={value} showAvatar textSize="lg" showCopyBtn explorerUrl={getExplorerInfo(value)} />
+        )
+        break
+      case 'bytes':
+        valueElement = (
+          <FlexWrapper margin={5}>
+            <Text size="lg">{getByteLength(value)} bytes</Text>
+            <CopyToClipboardBtn textToCopy={value} />
+          </FlexWrapper>
+        )
+        break
+    }
   }
 
   if (!valueElement) {
-    let value = parameter.value
-    if (parameter.type.endsWith('[]')) {
-      try {
-        value = JSON.stringify(parameter.value)
-      } catch (e) {}
-    }
-    valueElement = <Text size="lg">{value}</Text>
+    valueElement = <Text size="lg">{JSON.stringify(value)}</Text>
   }
 
   return (
     <ElementWrapper key={index}>
       <Text size="lg" strong>
-        {parameter.name} ({parameter.type})
+        {name} ({type})
       </Text>
       {valueElement}
     </ElementWrapper>
   )
 }
 
-const SingleTx = ({
-  decodedData,
-  onTxItemClick,
-}: {
-  decodedData: DecodedDataResponse | null
-  onTxItemClick: (decodedTxDetails: DecodedDataResponse) => void
-}): ReactElement | null => {
+const SingleTx = ({ decodedData }: { decodedData: DecodedTxDetailType }): ReactElement | null => {
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
+
+  const onChangeExpand = () => {
+    setIsAccordionExpanded((prev) => !prev)
+  }
+
   if (!decodedData) {
     return null
   }
 
-  return (
-    <TxList>
-      <TxListItem onClick={() => onTxItemClick(decodedData)}>
-        <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
+  const method = isDataDecodedParameterValue(decodedData) ? decodedData.dataDecoded?.method : decodedData.method
 
-        <FlexWrapper margin={20}>
-          <Text size="xl">{decodedData.method}</Text>
-          <FixedIcon type="chevronRight" />
-        </FlexWrapper>
-      </TxListItem>
-    </TxList>
+  return (
+    <Accordion compact expanded={isAccordionExpanded} onChange={onChangeExpand}>
+      <StyledAccordionSummary>
+        <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
+        <Text size="xl">{method}</Text>
+      </StyledAccordionSummary>
+      <AccordionDetails>
+        <DecodedTxDetail decodedTxData={decodedData} />
+      </AccordionDetails>
+    </Accordion>
   )
 }
 
-const MultiSendTx = ({
-  decodedData,
-  onTxItemClick,
-}: {
-  decodedData: DecodedDataResponse | null
-  onTxItemClick: (decodedTxDetails: DecodedDataParameterValue) => void
-}): ReactElement | null => {
+const MultiSendTx = ({ decodedData }: { decodedData: DecodedTxDetailType }): ReactElement | null => {
   const txs: DecodedDataParameterValue[] | undefined = get(decodedData, 'parameters[0].valueDecoded')
 
   if (!txs) {
@@ -194,31 +167,19 @@ const MultiSendTx = ({
   }
 
   return (
-    <TxList>
+    <>
       {txs.map((tx, index) => (
-        <TxListItem key={index} onClick={() => onTxItemClick(tx)}>
-          <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
-
-          <FlexWrapper margin={20}>
-            {tx.dataDecoded && <Text size="xl">{tx.dataDecoded.method}</Text>}
-            <FixedIcon type="chevronRight" />
-          </FlexWrapper>
-        </TxListItem>
+        <SingleTx key={`${tx.to}_${index}`} decodedData={tx} />
       ))}
-    </TxList>
+    </>
   )
 }
 
 type Props = {
   txs: Transaction[]
-  decodedData: DecodedDataResponse | null
-  onTxItemClick: (decodedTxDetails: DecodedTxDetail) => void
+  decodedData: DecodedTxDetailType
 }
 
-export const DecodeTxs = ({ txs, decodedData, onTxItemClick }: Props): ReactElement => {
-  return txs.length > 1 ? (
-    <MultiSendTx decodedData={decodedData} onTxItemClick={onTxItemClick} />
-  ) : (
-    <SingleTx decodedData={decodedData} onTxItemClick={onTxItemClick} />
-  )
+export const DecodeTxs = ({ txs, decodedData }: Props): ReactElement => {
+  return txs.length > 1 ? <MultiSendTx decodedData={decodedData} /> : <SingleTx decodedData={decodedData} />
 }

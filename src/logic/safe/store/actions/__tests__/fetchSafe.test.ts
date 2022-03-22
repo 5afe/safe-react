@@ -1,173 +1,187 @@
-// --no-ignore
-import { Map } from 'immutable'
-import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk'
+import { waitFor } from 'src/utils/test-utils'
+import * as GatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
+import { setChainId } from 'src/logic/config/utils'
 
-import { buildSafe, fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import * as storageUtils from 'src/utils/storage'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
-import { inMemoryPartialSafeInformation, localSafesInfo, remoteSafeInfoWithoutModules } from '../mocks/safeInformation'
-import * as gateway from '@gnosis.pm/safe-react-gateway-sdk'
+jest.mock('src/logic/safe/store/actions/transactions/fetchTransactions')
+jest.mock('src/logic/collectibles/store/actions/fetchCollectibles')
+jest.mock('src/logic/tokens/store/actions/fetchSafeTokens')
+jest.mock('src/logic/currentSession/store/actions/addViewedSafe')
 
-jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
-  const originalModule = jest.requireActual('@gnosis.pm/safe-react-gateway-sdk')
+jest.mock('src/logic/safe/store/selectors', () => {
+  const actual = jest.requireActual('src/logic/safe/store/selectors')
   return {
-    ...originalModule,
-    getSafeInfo: jest.fn(),
+    __esModule: true,
+    ...actual,
+    currentSafeWithNames: () => ({
+      collectiblesTag: '123',
+      txQueuedTag: '123',
+      txHistoryTag: '123',
+    }),
   }
 })
 
-jest.mock('src/utils/storage/index')
-
-describe('buildSafe', () => {
-  const SAFE_ADDRESS = '0xe414604Ad49602C0b9c0b08D0781ECF96740786a'
-  const mockedGateway = gateway as jest.Mocked<typeof gateway>
-  const storageUtil = require('src/utils/storage/index') as jest.Mocked<typeof storageUtils>
-
-  afterAll(() => {
-    jest.unmock('@gnosis.pm/safe-react-gateway-sdk')
-    jest.unmock('src/utils/storage/index')
-  })
-
-  // ToDo: use a property other than `name`
-  it.skip('should return a Partial SafeRecord with a mix of remote and local safe info', async () => {
-    mockedGateway.getSafeInfo.mockImplementationOnce(async () => remoteSafeInfoWithoutModules as any)
-    storageUtil.loadFromStorage.mockImplementationOnce(async () => localSafesInfo)
-    const finalValues: Partial<SafeRecordProps> = {
-      modules: undefined,
-      spendingLimits: undefined,
-    }
-
-    const builtSafe = await buildSafe(SAFE_ADDRESS)
-
-    expect(builtSafe).toStrictEqual({ ...inMemoryPartialSafeInformation, ...finalValues })
-  })
-  it.skip('should return a Partial SafeRecord when `remoteSafeInfo` is not present', async () => {
-    jest.spyOn(global.console, 'error').mockImplementationOnce(() => {})
-    mockedGateway.getSafeInfo.mockImplementationOnce(async () => {
-      throw new Error('-- test -- no resource available')
-    })
-    storageUtil.loadFromStorage.mockImplementationOnce(async () => localSafesInfo)
-
-    const builtSafe = await buildSafe(SAFE_ADDRESS)
-
-    expect(builtSafe).toStrictEqual({ ...inMemoryPartialSafeInformation })
-  })
-  it.skip('should return a Partial SafeRecord when `localSafeInfo` is not present', async () => {
-    mockedGateway.getSafeInfo.mockImplementationOnce(async () => remoteSafeInfoWithoutModules as any)
-    storageUtil.loadFromStorage.mockImplementationOnce(async () => undefined)
-
-    const builtSafe = await buildSafe(SAFE_ADDRESS)
-
-    expect(builtSafe).toStrictEqual({
-      address: SAFE_ADDRESS,
-      threshold: 2,
-      owners: [
-        '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
-        '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-        '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-        '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-        '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-      ],
-      modules: undefined,
-      spendingLimits: undefined,
-      nonce: 492,
-      currentVersion: '1.1.1',
-      needsUpdate: false,
-      featuresEnabled: ['ERC721', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
-    })
-  })
-  it.skip('should return a Partial SafeRecord with only `address` and `name` keys if it fails to recover info', async () => {
-    jest.spyOn(global.console, 'error').mockImplementationOnce(() => {})
-    mockedGateway.getSafeInfo.mockImplementationOnce(async () => {
-      throw new Error('-- test -- no resource available')
-    })
-    const finalValues: Partial<SafeRecordProps> = {
-      address: SAFE_ADDRESS,
-      owners: undefined,
-    }
-    storageUtil.loadFromStorage.mockImplementationOnce(async () => undefined)
-
-    const builtSafe = await buildSafe(SAFE_ADDRESS)
-
-    expect(builtSafe).toStrictEqual(finalValues)
-  })
-})
+type MockedAction = (callback: () => null) => Promise<unknown>
 
 describe('fetchSafe', () => {
-  const SAFE_ADDRESS = '0xe414604Ad49602C0b9c0b08D0781ECF96740786a'
-  const mockedGateway = gateway as jest.Mocked<typeof gateway>
-  const middlewares = [thunk]
-  const mockStore = configureMockStore(middlewares)
+  // Spies
+  jest.spyOn(GatewaySDK, 'getSafeInfo')
+  jest.spyOn(GatewaySDK, 'getBalances')
 
-  afterAll(() => {
-    jest.unmock('@gnosis.pm/safe-react-gateway-sdk')
-    jest.unmock('src/utils/storage/index')
+  // Mocked modules
+  const { default: fetchTransactions } = require('src/logic/safe/store/actions/transactions/fetchTransactions')
+  const { fetchCollectibles } = require('src/logic/collectibles/store/actions/fetchCollectibles')
+  const { fetchSafeTokens } = require('src/logic/tokens/store/actions/fetchSafeTokens')
+  const { default: addViewedSafe } = require('src/logic/currentSession/store/actions/addViewedSafe')
+
+  // Actual fetchSafe function
+  const { fetchSafe } = require('src/logic/safe/store/actions/fetchSafe')
+
+  // Test args
+  const testAddress = '0xAdCa2CCcF35CbB27fD757f1c0329DF767f8E38F0'
+  const chainId = '4'
+  const cgwUrl = 'https://safe-client.staging.gnosisdev.com'
+
+  afterEach(() => {
+    setChainId(chainId)
   })
-  it('should create UPDATE_SAFE with remoteSafeInfo', async () => {
-    mockedGateway.getSafeInfo.mockImplementationOnce(async () => remoteSafeInfoWithoutModules as any)
-    const expectedActions = [
-      {
-        type: UPDATE_SAFE,
-        payload: {
-          address: SAFE_ADDRESS,
-          chainId: '4',
-          collectiblesTag: '1634550387',
-          guard: undefined,
-          threshold: 2,
-          txHistoryTag: '1633430459',
-          txQueuedTag: '1634550387',
-          owners: [
-            '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
-            '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-            '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-            '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-            '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-          ],
-          modules: undefined,
-          spendingLimits: undefined,
-          nonce: 492,
-          currentVersion: '1.3.0',
-          needsUpdate: false,
-          featuresEnabled: [
-            'CONTRACT_INTERACTION',
-            'DOMAIN_LOOKUP',
-            'EIP1559',
-            'ERC721',
-            'SAFE_APPS',
-            'SAFE_TX_GAS_OPTIONAL',
-            'SPENDING_LIMIT',
-          ],
-        },
-      },
-    ]
 
-    const store = mockStore(
-      Map({
-        safes: Map(),
-        latestMasterContractVersion: '',
-      }),
-    )
-    await store.dispatch(fetchSafe(SAFE_ADDRESS))
+  it('fetches a safe for the first time', async () => {
+    const action = fetchSafe(testAddress, true)
+    await (action as MockedAction)(() => null)
 
-    expect(store.getActions()).toEqual(expectedActions)
-  })
-  it('should not dispatch updateSafe if `remoteSafeInfo` is not present', async () => {
-    jest.spyOn(global.console, 'error').mockImplementationOnce(() => {})
-    mockedGateway.getSafeInfo.mockImplementationOnce(async () => {
-      throw new Error('-- test -- no resource available')
+    await waitFor(() => {
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+      expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
+      expect(fetchCollectibles).toHaveBeenCalledWith(testAddress)
+      expect(fetchTransactions).toHaveBeenCalledWith(chainId, testAddress)
+      expect(addViewedSafe).toHaveBeenCalledWith(testAddress) // initial load, so add to last viewed safes
     })
-    const expectedActions = []
+  })
 
-    const store = mockStore(
-      Map({
-        safes: Map(),
-        latestMasterContractVersion: '',
-      }),
-    )
-    await store.dispatch(fetchSafe(SAFE_ADDRESS))
+  it('fetches a safe by address', async () => {
+    const action = fetchSafe(testAddress, false)
+    await (action as MockedAction)(() => null)
 
-    expect(store.getActions()).toEqual(expectedActions)
+    await waitFor(() => {
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+      expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
+      expect(fetchCollectibles).toHaveBeenCalledWith(testAddress)
+      expect(fetchTransactions).toHaveBeenCalledWith(chainId, testAddress)
+      expect(addViewedSafe).not.toHaveBeenCalled() // don't add to last viewed safes when not initial load
+    })
+  })
+
+  it('ignores fetched safe if chainId has changed', async () => {
+    const initialChainId = '100'
+
+    setChainId(initialChainId) // set chainId to 100, but the Safe info will return 4
+
+    const action = fetchSafe(testAddress, false)
+    await (action as MockedAction)(() => null)
+
+    await waitFor(() => {
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, initialChainId, testAddress)
+      expect(fetchSafeTokens).not.toHaveBeenCalled()
+      expect(fetchCollectibles).not.toHaveBeenCalled()
+      expect(fetchTransactions).not.toHaveBeenCalled()
+      expect(addViewedSafe).not.toHaveBeenCalled() // don't add to last viewed safes when not initial load
+    })
+  })
+
+  it('ignores fetched safe if chainId has changed', async () => {
+    const initialChainId = '100'
+
+    setChainId(initialChainId) // set chainId to 100, but the Safe info will return 4
+
+    const action = fetchSafe(testAddress, false)
+    await (action as MockedAction)(() => null)
+
+    await waitFor(() => {
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, initialChainId, testAddress)
+      expect(fetchSafeTokens).not.toHaveBeenCalled()
+      expect(fetchCollectibles).not.toHaveBeenCalled()
+      expect(fetchTransactions).not.toHaveBeenCalled()
+      expect(addViewedSafe).not.toHaveBeenCalled() // don't add to last viewed safes when not initial load
+    })
+  })
+
+  describe('Collectibles/History/Queue cache tags', () => {
+    const selectors = require('src/logic/safe/store/selectors')
+
+    it(`doesn't load collectibles if the tag is fresh`, async () => {
+      // Set the collectible tag to that of the mocked safe info
+      jest.spyOn(selectors, 'currentSafeWithNames').mockImplementation(() => ({
+        collectiblesTag: '1629729817',
+        txQueuedTag: '123',
+        txHistoryTag: '123',
+      }))
+
+      const action = fetchSafe(testAddress, false)
+      await (action as MockedAction)(() => null)
+
+      await waitFor(() => {
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
+        expect(fetchCollectibles).not.toHaveBeenCalled()
+        expect(fetchTransactions).toHaveBeenCalled()
+      })
+    })
+
+    it(`doesn't load collectibles if the tag hasn't changed`, async () => {
+      // Set the collectible tag to that of the mocked safe info
+      jest.spyOn(selectors, 'currentSafeWithNames').mockImplementationOnce(() => ({
+        collectiblesTag: '1629729817',
+        txQueuedTag: '123',
+        txHistoryTag: '123',
+      }))
+
+      const action = fetchSafe(testAddress, false)
+      await (action as MockedAction)(() => null)
+
+      await waitFor(() => {
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
+        expect(fetchCollectibles).not.toHaveBeenCalled()
+        expect(fetchTransactions).toHaveBeenCalled()
+      })
+    })
+
+    it(`loads history if either the queue or history tag has changed`, async () => {
+      // Set the collectible tag to that of the mocked safe info
+      jest.spyOn(selectors, 'currentSafeWithNames').mockImplementationOnce(() => ({
+        collectiblesTag: '123',
+        txQueuedTag: '123',
+        txHistoryTag: '1629729817',
+      }))
+
+      const action = fetchSafe(testAddress, false)
+      await (action as MockedAction)(() => null)
+
+      await waitFor(() => {
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
+        expect(fetchCollectibles).toHaveBeenCalled()
+        expect(fetchTransactions).toHaveBeenCalled()
+      })
+    })
+
+    it(`doesn't load history if both history and queue tags haven't changed`, async () => {
+      // Set the collectible tag to that of the mocked safe info
+      jest.spyOn(selectors, 'currentSafeWithNames').mockImplementationOnce(() => ({
+        collectiblesTag: '123',
+        txQueuedTag: '1629729817',
+        txHistoryTag: '1629729817',
+      }))
+
+      const action = fetchSafe(testAddress, false)
+      await (action as MockedAction)(() => null)
+
+      await waitFor(() => {
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
+        expect(fetchCollectibles).toHaveBeenCalled()
+        expect(fetchTransactions).not.toHaveBeenCalled()
+      })
+    })
   })
 })

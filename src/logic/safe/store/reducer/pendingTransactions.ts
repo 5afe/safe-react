@@ -7,38 +7,50 @@ import { _getChainId } from 'src/config'
 
 export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
 
-export type PendingTransactionsState = Record<ChainId, Record<string, boolean>>
+export type PendingTransactionsState = Record<ChainId, Record<string, string>>
 
 const initialPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID) || {}
 
-export type PendingTransactionPayload = {
+export type RemovePendingTransactionPayload = {
   id: string
   isBroadcast?: boolean
 }
 
-export const pendingTransactionsReducer = handleActions<PendingTransactionsState, PendingTransactionPayload>(
+export type AddPendingTransactionPayload = RemovePendingTransactionPayload & {
+  txHash: string
+}
+
+export type PendingTransactionPayloads = AddPendingTransactionPayload | RemovePendingTransactionPayload
+
+export const pendingTransactionsReducer = handleActions<PendingTransactionsState, PendingTransactionPayloads>(
   {
     [PENDING_TRANSACTIONS_ACTIONS.ADD]: (
       state: PendingTransactionsState,
-      action: Action<PendingTransactionPayload>,
+      action: Action<AddPendingTransactionPayload>,
     ) => {
       const chainId = _getChainId()
-      const { id } = action.payload
+      const { id, txHash } = action.payload
 
       return {
         ...state,
-        [chainId]: { ...state[chainId], [id]: true },
+        [chainId]: { ...state[chainId], [id]: txHash },
       }
     },
     [PENDING_TRANSACTIONS_ACTIONS.REMOVE]: (
       state: PendingTransactionsState,
-      action: Action<PendingTransactionPayload>,
+      action: Action<RemovePendingTransactionPayload>,
     ) => {
       const chainId = _getChainId()
       const { id } = action.payload
 
       // Omit id from the pending transactions on current chain
       const { [id]: _, ...newChainState } = state[chainId] || {}
+
+      if (Object.keys(newChainState[chainId] || {}).length === 0) {
+        // Omit chainId from the pending transactions if no pending transactions on chain
+        const { [chainId]: _, ...newState } = state
+        return newState
+      }
 
       return {
         ...state,

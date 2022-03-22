@@ -4,7 +4,7 @@ import {
   Erc721Transfer,
   MultisigExecutionInfo,
   Operation,
-  TokenType,
+  TransactionTokenType,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,29 +22,26 @@ import { processTransaction } from 'src/logic/safe/store/actions/processTransact
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { isThresholdReached } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionActions'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
-import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  ExpandedTxDetails,
+  isMultiSigExecutionDetails,
+  isMultisigExecutionInfo,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
-export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
-const getModalTitleAndDescription = (
-  thresholdReached: boolean,
-  isCancelTx: boolean,
-): { title: string; description: string } => {
+const getModalTitleAndDescription = (thresholdReached: boolean): { title: string; description: string } => {
   const modalInfo = {
     title: 'Execute transaction rejection',
     description: 'This action will execute this transaction.',
-  }
-
-  if (isCancelTx) {
-    return modalInfo
   }
 
   if (thresholdReached) {
@@ -130,7 +127,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const value = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
+        if (t.current.txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
           return t.current.txInfo.transferInfo.value
         } else {
           return t.current.txDetails.txData?.value ?? '0'
@@ -147,7 +144,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const to = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
+        if (t.current.txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
           return t.current.txInfo.recipient.value
         } else {
           return (t.current.txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
@@ -191,30 +188,36 @@ const useTxInfo = (transaction: Props['transaction']) => {
 
 type Props = {
   onClose: () => void
-  isCancelTx?: boolean
   isOpen: boolean
   transaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
-  txParameters: TxParameters
 }
 
-export const ApproveTxModal = ({ onClose, isCancelTx = false, isOpen, transaction }: Props): React.ReactElement => {
+export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
+  const isOwner = useSelector(grantedSelector)
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
-  const executionInfo = transaction.executionInfo as MultisigExecutionInfo
-  const thresholdReached = !!(executionInfo && isThresholdReached(executionInfo))
-  const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
-
   const txInfo = useTxInfo(transaction)
-  const { confirmations } = txInfo
+
+  const { executionInfo } = transaction
+  const { confirmationsSubmitted = 0, confirmationsRequired = 0 } = isMultisigExecutionInfo(executionInfo)
+    ? executionInfo
+    : {}
+  const thresholdReached = confirmationsSubmitted >= confirmationsRequired
+  const { description, title } = getModalTitleAndDescription(thresholdReached)
+
+  let preApprovingOwner: string | undefined = undefined
+  if (!thresholdReached && isOwner && confirmationsSubmitted === confirmationsRequired - 1) {
+    preApprovingOwner = userAddress
+  }
 
   const approveTx = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       processTransaction({
         safeAddress,
         tx: txInfo,
-        userAddress,
+        preApprovingOwner,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: !delayExecution,
         ethParameters: txParameters,
@@ -229,8 +232,8 @@ export const ApproveTxModal = ({ onClose, isCancelTx = false, isOpen, transactio
       <TxModalWrapper
         operation={txInfo.operation}
         txNonce={txInfo.nonce.toString()}
-        txConfirmations={confirmations}
-        txThreshold={executionInfo.confirmationsRequired}
+        txConfirmations={txInfo.confirmations}
+        txThreshold={confirmationsRequired}
         txTo={txInfo.to}
         txData={txInfo.data}
         txValue={txInfo.value}

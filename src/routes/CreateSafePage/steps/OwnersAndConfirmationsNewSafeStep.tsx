@@ -16,7 +16,7 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import SelectField from 'src/components/forms/SelectField'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { disabled, extraSmallFontSize, lg, sm, xs } from 'src/theme/variables'
+import { disabled, extraSmallFontSize, lg, sm, xs, md } from 'src/theme/variables'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
@@ -39,6 +39,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { sameString } from 'src/utils/strings'
 
 export const ownersAndConfirmationsNewSafeStepLabel = 'Owners and Confirmations'
 
@@ -89,10 +90,14 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 
   const getENSName = async (address: string): Promise<void> => {
     const ensName = await reverseENSLookup(address)
-    const newOwnersWithENSName: Record<string, string> = Object.assign(ownersWithENSName, {
-      [address]: ensName,
-    })
-    createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, newOwnersWithENSName)
+    createSafeForm.change(FIELD_SAFE_OWNER_ENS_LIST, { ...ownersWithENSName, [address]: ensName })
+  }
+
+  const handleScan = async (address: string, closeQrModal: () => void, addressFieldName: string): Promise<void> => {
+    const scannedAddress = address.startsWith('ethereum:') ? address.replace('ethereum:', '') : address
+    await getENSName(scannedAddress)
+    createSafeForm.change(addressFieldName, scannedAddress)
+    closeQrModal()
   }
 
   return (
@@ -128,16 +133,18 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
       <Hairline />
       <Block margin="md" padding="md">
         <RowHeader>
-          {owners.map(({ nameFieldName, addressFieldName }) => {
+          {owners.map(({ nameFieldName, addressFieldName }, i: number) => {
             const hasOwnerAddressError = formErrors[addressFieldName]
             const ownerAddress = createSafeFormValues[addressFieldName]
             const showDeleteIcon = addressFieldName !== 'owner-address-0' // we hide de delete icon for the first owner
             const ownerName = ownersWithENSName[ownerAddress] || 'Owner Name'
 
-            const handleScan = async (address: string, closeQrModal: () => void): Promise<void> => {
-              await getENSName(address)
-              createSafeForm.change(addressFieldName, address)
-              closeQrModal()
+            const isRepeated = (value: string) => {
+              const prevOwners = owners.filter((_: typeof owners[number], index: number) => index !== i)
+              const repeated = prevOwners.some((owner: typeof owners[number]) => {
+                return sameString(createSafeFormValues[owner.addressFieldName], value)
+              })
+              return repeated ? ADDRESS_REPEATED_ERROR : undefined
             }
 
             return (
@@ -147,7 +154,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     component={TextField}
                     name={nameFieldName}
                     placeholder={ownerName}
-                    text="Owner Name"
+                    label="Owner Name"
                     type="text"
                     validate={minMaxLength(0, 50)}
                     testId={nameFieldName}
@@ -156,11 +163,12 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 <Col xs={7}>
                   <AddressInput
                     fieldMutator={async (address) => {
-                      await getENSName(address)
                       createSafeForm.change(addressFieldName, address)
                       const addressName = addressBook[address]?.name
                       if (addressName) {
                         createSafeForm.change(nameFieldName, addressName)
+                      } else {
+                        await getENSName(address)
                       }
                     }}
                     inputAdornment={
@@ -176,10 +184,14 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                     placeholder="Owner Address*"
                     text="Owner Address"
                     testId={addressFieldName}
+                    validators={[isRepeated]}
                   />
                 </Col>
                 <OwnersIconsContainer xs={1} center="xs" middle="xs">
-                  <ScanQRWrapper handleScan={handleScan} testId={`${addressFieldName}-scan-QR`} />
+                  <ScanQRWrapper
+                    handleScan={(...args) => handleScan(...args, addressFieldName)}
+                    testId={`${addressFieldName}-scan-QR`}
+                  />
                 </OwnersIconsContainer>
                 {showDeleteIcon && (
                   <OwnersIconsContainer xs={1} center="xs" middle="xs">
@@ -212,7 +224,12 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
                 component={SelectField}
                 data-testid="threshold-selector-input"
                 name={FIELD_NEW_SAFE_THRESHOLD}
-                validate={composeValidators(required, minValue(1))}
+                validate={(val) => {
+                  const isValidThreshold = () => {
+                    return !!threshold && threshold <= owners.length ? undefined : THRESHOLD_ERROR
+                  }
+                  return composeValidators(required, minValue(1), isValidThreshold)(val)
+                }}
               >
                 {owners.map((_, option) => (
                   <MenuItem
@@ -236,34 +253,6 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
 }
 
 export default OwnersAndConfirmationsNewSafeStep
-
-export const ownersAndConfirmationsNewSafeStepValidations = (values: {
-  [FIELD_SAFE_OWNERS_LIST]: Array<Record<string, string>>
-  [FIELD_NEW_SAFE_THRESHOLD]: number
-}): Record<string, string> => {
-  const errors = {}
-
-  const owners = values[FIELD_SAFE_OWNERS_LIST]
-  const threshold = values[FIELD_NEW_SAFE_THRESHOLD]
-  const addresses = owners.map(({ addressFieldName }) => values[addressFieldName])
-
-  // we check repeated addresses
-  owners.forEach(({ addressFieldName }, index) => {
-    const address = values[addressFieldName]
-    const previousOwners = addresses.slice(0, index)
-    const isRepeated = previousOwners.includes(address)
-    if (isRepeated) {
-      errors[addressFieldName] = ADDRESS_REPEATED_ERROR
-    }
-  })
-
-  const isValidThreshold = !!threshold && threshold <= owners.length
-  if (!isValidThreshold) {
-    errors[FIELD_NEW_SAFE_THRESHOLD] = THRESHOLD_ERROR
-  }
-
-  return errors
-}
 
 const BlockWithPadding = styled(Block)`
   padding: ${lg};
@@ -290,8 +279,8 @@ const RowHeader = styled(Row)`
 `
 
 const OwnerNameField = styled(Field)`
-  margin-right: ${sm};
-  margin-bottom: ${sm};
+  margin-right: ${md};
+  margin-bottom: ${md};
 `
 const CheckIconAddressAdornment = styled(CheckCircle)`
   color: #03ae60;

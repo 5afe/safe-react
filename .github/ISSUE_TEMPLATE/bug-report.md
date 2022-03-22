@@ -4,17 +4,15 @@ about: Create an issue to fix a bug
 ---
 
 <!--
-BEFORE SUBMITTING: Please search to make sure this issue has not been opened already
+BEFORE SUBMITTING: Please search to make sure this issue hasn't been reported already
 -->
 
 ## Description
 
 ## Environment
- - Browser:
+ - Browser: Chrome
  - Wallet: MetaMask
- - Safe:
- - Environment:
-   - production (rinkeby)
+ - Chain: Rinkeby
 
 ## Steps to reproduce
  1. Go to

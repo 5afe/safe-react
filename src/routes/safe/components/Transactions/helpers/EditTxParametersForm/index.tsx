@@ -2,9 +2,8 @@ import { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
-import { Title, Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
+import { Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
-import { fromWei } from 'web3-utils'
 
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
@@ -13,7 +12,7 @@ import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { minValue } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue } from 'src/components/forms/validator'
 import { Modal } from 'src/components/Modal'
 import {
   ParametersStatus,
@@ -24,11 +23,11 @@ import {
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import { extractSafeAddress } from 'src/routes/routes'
-import useGetRecommendedNonce from 'src/logic/hooks/useGetRecommendedNonce'
-import { DEFAULT_MAX_PRIO_FEE } from 'src/logic/hooks/useEstimateTransactionGas'
+import useRecommendedNonce from 'src/logic/hooks/useRecommendedNonce'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const StyledDivider = styled(Divider)`
-  margin: 0px;
+  margin: 0;
 `
 const StyledDividerFooter = styled(Divider)`
   margin: 16px -24px;
@@ -43,7 +42,7 @@ const SafeOptions = styled.div`
 const EthereumOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 20px 12px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -55,11 +54,13 @@ const StyledLink = styled(Link)`
   }
 `
 const StyledText = styled(Text)`
-  margin: 0 0 4px 0;
+  margin: 0 0 16px 0;
 `
+
 const StyledTextMt = styled(Text)`
-  margin: 16px 0 4px 0;
+  margin: 16px 0;
 `
+
 const useStyles = makeStyles(styles)
 
 interface Props {
@@ -76,7 +77,7 @@ const formValidation = (values: Record<keyof TxParameters, string>): Record<stri
 
   const ethGasPriceValidation = minValue(0, true)(ethGasPrice)
 
-  const ethMaxPrioFeeValidation = minValue(0, true)(ethMaxPrioFee)
+  const ethMaxPrioFeeValidation = composeValidators(minValue(0, true), maxValue(ethGasPrice))(ethMaxPrioFee)
 
   const ethNonceValidation = minValue(0, true)(ethNonce)
 
@@ -104,7 +105,7 @@ export const EditTxParametersForm = ({
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
   const safeAddress = extractSafeAddress()
-  const recommendedNonce = useGetRecommendedNonce(safeAddress)
+  const recommendedNonce = useRecommendedNonce(safeAddress)
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -118,9 +119,9 @@ export const EditTxParametersForm = ({
     <>
       {/* Header */}
       <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
-        <Title size="sm" withoutMargin>
-          Advanced options
-        </Title>
+        <Paragraph size="xl" noMargin>
+          Advanced parameters
+        </Paragraph>
         <IconButton disableRipple onClick={onCloseFormHandler}>
           <Close className={classes.closeIcon} />
         </IconButton>
@@ -152,7 +153,7 @@ export const EditTxParametersForm = ({
                   name="safeNonce"
                   defaultValue={safeNonce}
                   placeholder="Safe nonce"
-                  text="Safe nonce"
+                  label="Safe nonce"
                   type="number"
                   min="0"
                   component={TextField}
@@ -163,7 +164,7 @@ export const EditTxParametersForm = ({
                     name="safeTxGas"
                     defaultValue={safeTxGas}
                     placeholder="SafeTxGas"
-                    text="SafeTxGas"
+                    label="SafeTxGas"
                     type="number"
                     min="0"
                     component={TextField}
@@ -183,7 +184,7 @@ export const EditTxParametersForm = ({
                       name="ethNonce"
                       defaultValue={ethNonce}
                       placeholder="Nonce"
-                      text="Nonce"
+                      label="Nonce"
                       type="number"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
@@ -192,10 +193,10 @@ export const EditTxParametersForm = ({
                       name="ethGasLimit"
                       defaultValue={ethGasLimit}
                       placeholder="Gas limit"
-                      text="Gas limit"
+                      label="Gas limit"
                       type="number"
                       component={TextField}
-                      disabled={parametersStatus === 'CANCEL_TRANSACTION'}
+                      disabled={!areEthereumParamsVisible(parametersStatus)}
                     />
                     {((gasPriceText) => (
                       <Field
@@ -203,7 +204,7 @@ export const EditTxParametersForm = ({
                         defaultValue={ethGasPrice}
                         type="number"
                         placeholder={gasPriceText}
-                        text={gasPriceText}
+                        label={gasPriceText}
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
                       />
@@ -214,8 +215,8 @@ export const EditTxParametersForm = ({
                         name="ethMaxPrioFee"
                         defaultValue={ethMaxPrioFee}
                         type="number"
-                        placeholder={`${fromWei(DEFAULT_MAX_PRIO_FEE, 'gwei')} (GWEI)`}
-                        text="Max priority fee (GWEI)"
+                        placeholder="Max priority fee"
+                        label="Max priority fee (GWEI)"
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
                       />

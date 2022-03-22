@@ -15,10 +15,24 @@ git log origin/main..origin/dev --pretty=format:'* %s'
 ### QA
 * The QA team do regression testing on this branch
 * If issues are found, bugfixes are merged into this branch
-* Once the QA is done, we push the branch to `main`
-* `main` is automatically deployed to staging – some extra QA can be done there if needed
+* Once the QA is done, proceed to the next step
 
 ### Tag & release
+Wait for all the checks on GitHub to pass.
+* Switch to the main branch and make sure it's up to date:
+```
+git checkout main
+git fetch --all
+git reset --hard origin/main
+```
+* Pull from the release branch:
+```
+git pull origin release/3.15.0
+```
+* Push to main:
+```
+git push origin main
+```
 * Create and push a new version tag :
 ```
 git tag v3.15.0
