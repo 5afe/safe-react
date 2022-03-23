@@ -127,14 +127,14 @@ export function pairingModule(): WalletInit {
                 error: console.warn,
               })
 
+            // Disconnect on unload
+            fromEvent(window, 'unload', { once: true }).subscribe(this.disconnect)
+
             this.disconnect = () => {
               if (this.connector.peerId) {
                 this.connector.killSession()
               }
             }
-
-            // Disconnect on unload
-            window.addEventListener('unload', this.disconnect, { once: true })
 
             this.request = async ({ method, params }) => {
               if (method === 'eth_chainId') {
