@@ -1,6 +1,6 @@
 import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
-import { ReactElement } from 'react'
-import { useSelector } from 'react-redux'
+import { ChangeEvent, ReactElement } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import semverSatisfies from 'semver/functions/satisfies'
 
@@ -11,6 +11,11 @@ import { ModulesTable } from './ModulesTable'
 import Block from 'src/components/layout/Block'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TransactionGuard } from './TransactionGuard'
+import FormGroup from '@material-ui/core/FormGroup/FormGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox/Checkbox'
+import { setBatchExecute } from 'src/logic/settings/actions/setBatchExecute'
+import { batchExecuteSelector } from 'src/logic/settings/selectors'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -35,11 +40,16 @@ const NoTransactionGuardLegend = (): ReactElement => (
 const DOCS_LINK = 'https://docs.gnosis-safe.io/contracts/modules-1'
 
 const Advanced = (): ReactElement => {
+  const dispatch = useDispatch()
   const classes = useStyles()
-  const { nonce, modules, guard, currentVersion } = useSelector(currentSafe)
+  const { nonce, modules, guard, currentVersion } = useSelector(currentSafe) ?? {}
+  const batchExecute = useSelector(batchExecuteSelector)
 
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
+
+  const handleSetBatchExecute = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
+    dispatch(setBatchExecute({ batchExecute: checked }))
 
   return (
     <>
@@ -97,6 +107,17 @@ const Advanced = (): ReactElement => {
           {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
         </Block>
       )}
+      <Block className={classes.container}>
+        <Title size="xs" withoutMargin>
+          Transactions
+        </Title>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={batchExecute} onChange={handleSetBatchExecute} name="batchExecute" />}
+            label="Batch-Execution"
+          />
+        </FormGroup>
+      </Block>
     </>
   )
 }

@@ -50,11 +50,22 @@ import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
 import { pendingTransactionsMiddleware } from 'src/logic/safe/store/middleware/pendingTransactionsMiddleware'
 import { gatewayTransactionsMiddleware } from 'src/logic/safe/store/middleware/gatewayTransactionsMiddleware'
+import advancedSettingsReducer, {
+  ADVANCED_SETTINGS_REDUCER_ID,
+  AdvancedSettingsState,
+  initialAdvancedSettingsState,
+} from 'src/logic/settings/reducer/advanced'
 
 const CURRENCY_KEY = `${CURRENCY_REDUCER_ID}.selectedCurrency`
 
 export const LS_CONFIG: RLSOptions | LoadOptions = {
-  states: [ADDRESS_BOOK_REDUCER_ID, CURRENCY_KEY, APPEARANCE_REDUCER_ID, CONFIG_REDUCER_ID],
+  states: [
+    ADDRESS_BOOK_REDUCER_ID,
+    CURRENCY_KEY,
+    APPEARANCE_REDUCER_ID,
+    CONFIG_REDUCER_ID,
+    ADVANCED_SETTINGS_REDUCER_ID,
+  ],
   namespace: LS_NAMESPACE,
   namespaceSeparator: LS_SEPARATOR,
   disableWarnings: true,
@@ -62,6 +73,7 @@ export const LS_CONFIG: RLSOptions | LoadOptions = {
     [CURRENCY_REDUCER_ID]: initialCurrencyState,
     [APPEARANCE_REDUCER_ID]: initialAppearanceState,
     [CONFIG_REDUCER_ID]: initialConfigState,
+    [ADVANCED_SETTINGS_REDUCER_ID]: initialAdvancedSettingsState,
   },
 }
 
@@ -95,6 +107,7 @@ const reducers = {
   [CURRENT_SESSION_REDUCER_ID]: currentSessionReducer,
   [CONFIG_REDUCER_ID]: configReducer,
   [APPEARANCE_REDUCER_ID]: appearanceReducer,
+  [ADVANCED_SETTINGS_REDUCER_ID]: advancedSettingsReducer,
 }
 
 const rootReducer = combineReducers(reducers)
@@ -117,6 +130,7 @@ export type AppReduxState = CombinedState<{
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
   [CONFIG_REDUCER_ID]: ConfigState
   [APPEARANCE_REDUCER_ID]: AppearanceState
+  [ADVANCED_SETTINGS_REDUCER_ID]: AdvancedSettingsState
 }>
 
 export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
