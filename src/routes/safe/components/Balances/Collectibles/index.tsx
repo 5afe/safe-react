@@ -92,7 +92,7 @@ const Collectibles = (): React.ReactElement => {
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
 
-  const nftAmount = useMemo(() => nftAssetsFromNftTokens.length, [nftAssetsFromNftTokens])
+  const nftAmount = useMemo(() => nftTokens.length, [nftTokens])
   useEffect(() => {
     trackEvent({ ...ASSETS_EVENTS.NFT_AMOUNT, label: nftAmount })
   }, [nftAmount])

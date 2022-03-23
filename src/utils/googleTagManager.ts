@@ -61,6 +61,7 @@ export enum GTM_EVENT {
   META = 'metadata',
 }
 
+let currentPathname = history.location.pathname
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
@@ -69,6 +70,11 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
+  // Cache name to prevent tracking of same page
+  currentPathname = history.location.pathname
+
+  const page = getAnonymizedLocation()
+
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
     ...GTM_ENVIRONMENT,
@@ -76,7 +82,7 @@ export const loadGoogleTagManager = (): void => {
       // Must emit (custom) event in order to trigger page tracking
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
-      page: getAnonymizedLocation(),
+      page,
     },
   })
 }
@@ -100,6 +106,12 @@ export const usePageTracking = (): void => {
 
   useEffect(() => {
     const unsubscribe = history.listen((location) => {
+      if (location.pathname === currentPathname) {
+        return
+      }
+
+      currentPathname = location.pathname
+
       TagManager.dataLayer({
         dataLayer: {
           // Must emit (custom) event in order to trigger page tracking
@@ -120,6 +132,18 @@ export const usePageTracking = (): void => {
   }, [chainId])
 }
 
+export type EventLabel = string | number | boolean | null
+const tryParse = (value?: EventLabel): EventLabel | undefined => {
+  if (typeof value !== 'string') {
+    return value
+  }
+  try {
+    return JSON.parse(value)
+  } catch {
+    return value
+  }
+}
+
 export const trackEvent = ({
   event,
   category,
@@ -129,18 +153,18 @@ export const trackEvent = ({
   event: GTM_EVENT
   category: string
   action: string
-  label?: string | number | boolean
+  label?: EventLabel
 }): void => {
   const dataLayer = {
     event,
     chainId: _getChainId(),
     eventCategory: category,
     eventAction: action,
-    eventLabel: label,
+    eventLabel: tryParse(label),
   }
 
   if (!IS_PRODUCTION) {
-    console.info('[GTM] -', dataLayer)
+    console.info('[GTM]', dataLayer)
   }
 
   TagManager.dataLayer({
