@@ -140,7 +140,7 @@ const AppsList = (): React.ReactElement => {
           color="secondary"
           iconSize="sm"
           iconType="info"
-          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk. Any communication within the Apps is for informational purposes only and must not be construed as investment advice to engage in any transaction."
+          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Celo. Interacting with the apps is at your own risk. Any communication within the Apps is for informational purposes only and must not be construed as investment advice to engage in any transaction."
           textSize="sm"
         />
       </ContentWrapper>

@@ -14,9 +14,9 @@ describe('<Footer>', () => {
   it('Should show footer links', () => {
     render(<Footer />)
 
-    const gnosisCopyrightNode = screen.getByText(/©\d{4} cLabs/)
+    const cLabsCopyrightNode = screen.getByText(/©\d{4} cLabs/)
 
-    expect(gnosisCopyrightNode).toBeInTheDocument()
+    expect(cLabsCopyrightNode).toBeInTheDocument()
 
     const termsLinkNode = screen.getByText('Terms')
     expect(termsLinkNode).toBeInTheDocument()

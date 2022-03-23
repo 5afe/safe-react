@@ -24,15 +24,6 @@ const Content = styled.div`
   }
 `
 
-const LinkWrapper = styled.div`
-  display: inline-flex;
-  margin-bottom: 10px;
-
-  > :first-of-type {
-    margin-right: 5px;
-  }
-`
-
 const LinkContent = styled.div`
   display: flex;
   align-items: center;
@@ -82,30 +73,6 @@ const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) 
       <Content>
         <Title size="md">Something went wrong, please try again.</Title>
         <FixedIcon type="networkError" />
-        {IS_PRODUCTION && (
-          <div>
-            <Text size="xl" as="span">
-              In case the problem persists, please reach out to us via{' '}
-            </Text>
-            <LinkWrapper>
-              <a target="_blank" href="email: mailto:safe@gnosis.io" rel="noopener noreferrer">
-                <Text color="primary" size="lg" as="span">
-                  Email
-                </Text>
-              </a>
-              <Icon type="externalLink" color="primary" size="sm" />
-            </LinkWrapper>
-            or{' '}
-            <LinkWrapper>
-              <a target="_blank" href="https://discordapp.com/invite/FPMRAwK" rel="noopener noreferrer">
-                <Text color="primary" size="lg" as="span">
-                  Discord
-                </Text>
-              </a>
-              <Icon type="externalLink" color="primary" size="sm" />
-            </LinkWrapper>
-          </div>
-        )}
         {!IS_PRODUCTION && (
           <>
             <Text size="xl" color="error">

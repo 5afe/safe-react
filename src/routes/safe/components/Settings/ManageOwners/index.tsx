@@ -83,7 +83,7 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
         </Heading>
         <Paragraph className={classes.annotation}>
           Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never shared
-          with Gnosis or any third parties.
+          with Celo or any third parties.
         </Paragraph>
         <TableContainer>
           <Table

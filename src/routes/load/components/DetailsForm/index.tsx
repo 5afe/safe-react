@@ -84,7 +84,7 @@ const DetailsForm = ({ errors, form, safeName }: DetailsFormProps): ReactElement
       <Block margin="md">
         <Paragraph color="primary" noMargin size="md">
           You are about to add an existing Celo Safe. First, choose a name and enter the Safe address. The name is only
-          stored locally and will never be shared with Gnosis or any third parties.
+          stored locally and will never be shared with Celo or any third parties.
           <br />
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
           a read-only view.

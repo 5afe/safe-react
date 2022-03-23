@@ -66,6 +66,11 @@ const StyledButtonLink = styled(ButtonLink)`
   margin: 16px 0 16px -8px;
 `
 
+const Superscript = styled.span`
+  vertical-align: super;
+  font-size: 0.4em;
+`
+
 type Props = {
   isOldMultisigMigration?: boolean
 }
@@ -76,7 +81,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
     <Block>
       {/* Title */}
       <Title size="md" strong>
-        Welcome to Celo Safe.
+        Welcome to Celo Safe<Superscript> BETA</Superscript>
       </Title>
 
       {/* Subtitle */}
