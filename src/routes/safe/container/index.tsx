@@ -59,7 +59,7 @@ const Container = (): React.ReactElement => {
   })
 
   if (hasLoadFailed) {
-    return <SafeLoadError isSafeLoaded={isSafeLoaded} />
+    return <SafeLoadError />
   }
 
   if (!isSafeLoaded) {
