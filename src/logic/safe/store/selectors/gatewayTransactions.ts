@@ -15,6 +15,8 @@ import { AppReduxState } from 'src/store'
 import { extractSafeAddress } from 'src/routes/routes'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors/index'
 
+const BATCH_LIMIT = 10
+
 export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewayTransactions'] => {
   return state[GATEWAY_TRANSACTIONS_ID]
 }
@@ -191,7 +193,8 @@ export const getBatchableTransactions = createSelector(
         if (
           isMultisigExecutionInfo(queuedTx.executionInfo) &&
           queuedTx.executionInfo.nonce === currentNonce + 1 &&
-          queuedTx.executionInfo.confirmationsSubmitted >= queuedTx.executionInfo.confirmationsRequired
+          queuedTx.executionInfo.confirmationsSubmitted >= queuedTx.executionInfo.confirmationsRequired &&
+          batchableTransactions.length < BATCH_LIMIT
         ) {
           batchableTransactions.push(queuedTx)
           currentNonce = queuedTx.executionInfo.nonce
