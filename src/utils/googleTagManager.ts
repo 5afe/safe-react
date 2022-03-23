@@ -104,7 +104,7 @@ export const usePageTracking = (): void => {
 
   useEffect(() => {
     const unsubscribe = history.listen((location) => {
-      if (location.pathname === currentPathname) {
+      if (location.pathname !== currentPathname) {
         return
       }
       TagManager.dataLayer({
