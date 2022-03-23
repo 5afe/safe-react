@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.22.0",
+  "version": "3.22.1",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -38,8 +38,6 @@
     "test:coverage": "REACT_APP_ENV=test yarn test --coverage --watchAll=false",
     "test:ci": "REACT_APP_ENV=test yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand --outputFile=jest.results.json",
     "update-mocks": "./scripts/update-mocks.sh",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/",
     "prepare": "husky install"
   },
@@ -133,6 +131,7 @@
     "react-redux": "7.2.4",
     "react-router-dom": "5.2.0",
     "react-scripts": "^4.0.1",
+    "react-virtuoso": "^2.8.2",
     "redux": "4.1.1",
     "redux-actions": "^2.6.5",
     "redux-localstorage-simple": "^2.4.1",
@@ -150,11 +149,6 @@
     "@gnosis.pm/safe-core-sdk-types": "1.0.0",
     "@rescripts/cli": "^0.0.16",
     "@sentry/cli": "^1.67.2",
-    "@storybook/addon-actions": "^6.3.8",
-    "@storybook/addon-links": "^6.3.8",
-    "@storybook/addons": "^6.3.8",
-    "@storybook/preset-create-react-app": "^3.1.5",
-    "@storybook/react": "6.0.0",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",

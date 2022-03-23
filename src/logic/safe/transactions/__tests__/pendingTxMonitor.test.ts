@@ -1,4 +1,4 @@
-import { Transaction } from 'web3-core'
+import { TransactionReceipt } from 'web3-core'
 
 import * as store from 'src/store'
 import * as web3 from 'src/logic/wallets/getWeb3'
@@ -65,7 +65,23 @@ describe('PendingTxMonitor', () => {
 
   describe('monitorTx', () => {
     it("doesn't clear the pending transaction if it was mined", async () => {
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
+      PendingTxMonitor._isTxMined = jest.fn(() =>
+        Promise.resolve({
+          blockHash: '0x123',
+          blockNumber: 1,
+          transactionHash: 'fakeTxHash',
+          transactionIndex: 0,
+          from: '0x123',
+          to: '0x123',
+          cumulativeGasUsed: 1,
+          gasUsed: 1,
+          contractAddress: '0x123',
+          logs: [],
+          status: true, // Mined successfully
+          logsBloom: '0x123',
+          effectiveGasPrice: 0,
+        }),
+      )
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
@@ -77,9 +93,42 @@ describe('PendingTxMonitor', () => {
 
       expect(dispatchSpy).not.toBeCalled()
     })
+    it('clears the pending transaction if it failed', async () => {
+      PendingTxMonitor._isTxMined = jest.fn(() =>
+        Promise.resolve({
+          blockHash: '0x123',
+          blockNumber: 1,
+          transactionHash: 'fakeTxHash',
+          transactionIndex: 0,
+          from: '0x123',
+          to: '0x123',
+          cumulativeGasUsed: 1,
+          gasUsed: 1,
+          contractAddress: '0x123',
+          logs: [],
+          status: false, // Mining failed
+          logsBloom: '0x123',
+          effectiveGasPrice: 0,
+        }),
+      )
+
+      const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
+        numOfAttempts: 1,
+        startingDelay: 0,
+        timeMultiple: 0,
+      })
+
+      expect(dispatchSpy).toBeCalledWith({
+        type: 'pendingTransactions/remove',
+        payload: { id: 'fakeTxId' },
+      })
+    })
 
     it('clears the pending transaction it the tx was not mined within 50 blocks', async () => {
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.reject())
+      // Can return null if transaction is pending: https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransactionreceipt
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.reject(null as unknown as TransactionReceipt))
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
@@ -148,7 +197,23 @@ describe('PendingTxMonitor', () => {
 
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
+      PendingTxMonitor._isTxMined = jest.fn(() =>
+        Promise.resolve({
+          blockHash: '0x123',
+          blockNumber: 1,
+          transactionHash: 'fakeTxHash',
+          transactionIndex: 0,
+          from: '0x123',
+          to: '0x123',
+          cumulativeGasUsed: 1,
+          gasUsed: 1,
+          contractAddress: '0x123',
+          logs: [],
+          status: true, // Mined successfully
+          logsBloom: '0x123',
+          effectiveGasPrice: 0,
+        }),
+      )
 
       await PendingTxMonitor.monitorAllTxs()
 
