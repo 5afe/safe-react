@@ -1,11 +1,11 @@
-import { Identicon, Text } from '@gnosis.pm/safe-react-components'
+import { Identicon, Switch, Text } from '@gnosis.pm/safe-react-components'
 import {
   getTransactionQueue,
   Transaction,
   TransactionListItem,
   TransactionSummary,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-import { List } from '@material-ui/core'
+import { FormControlLabel, List } from '@material-ui/core'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -13,6 +13,7 @@ import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getChainById } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
+import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { black300, grey400 } from 'src/theme/variables'
@@ -40,6 +41,7 @@ const getTxsAwaitingYourSignatureByChainId = async (
   chainId: string,
   safeAddress: string,
   account: string,
+  ownedSafes = false,
 ): Promise<TransactionSummary[]> => {
   const { results } = await getTransactionQueue(GATEWAY_URL, chainId, checksumAddress(safeAddress))
 
@@ -52,7 +54,7 @@ const getTxsAwaitingYourSignatureByChainId = async (
       (result) =>
         result.transaction.txStatus === 'AWAITING_CONFIRMATIONS' &&
         result.transaction.executionInfo?.type === 'MULTISIG' &&
-        result.transaction.executionInfo.missingSigners?.some((addr) => addr.value === account),
+        (ownedSafes ? result.transaction.executionInfo.missingSigners?.some((addr) => addr.value === account) : 1),
     )
     .map(({ transaction }) => transaction)
 
@@ -60,24 +62,35 @@ const getTxsAwaitingYourSignatureByChainId = async (
 }
 
 const TxsToConfirmList = (): ReactElement => {
-  const ownedSafes = useOwnerSafes()
+  const ownedSafes: Record<string, string[]> = useOwnerSafes()
+  const localSafesWithDetails = useLocalSafes()
+  const localSafes: Record<string, string[]> = Object.entries(localSafesWithDetails).reduce(
+    (result, [chain, safes]) => {
+      const safesAddr = safes.map((safe) => safe.address)
+      return { ...result, [chain]: safesAddr }
+    },
+    {},
+  )
   const userAccount = useSelector(userAccountSelector)
 
   const [loading, setLoading] = useState<boolean>(true)
   const [txsAwaitingConfirmation, setTxsAwaitingConfirmation] = useState<Record<ChainId, TransactionSummary[]>>({})
+  const [displayOwnedSafes, setDisplayOwnedSafes] = useState<boolean>(false)
+
+  const handleToggleOwnedSafes = () => setDisplayOwnedSafes((val) => !val)
 
   // Fetch txs awaiting confirmations after retrieving the owned safes from the LocalStorage
   useEffect(() => {
-    if (!Object.keys(ownedSafes || {}).length) {
+    if (!Object.keys((displayOwnedSafes ? ownedSafes : localSafes) || {}).length) {
       return
     }
     const fetchAwaitingConfirmationTxs = async () => {
       const txs: Record<string, TransactionSummary[]> = {}
 
-      for (const [chainId, safesPerChain] of Object.entries(ownedSafes)) {
+      for (const [chainId, safesPerChain] of Object.entries(displayOwnedSafes ? ownedSafes : localSafes)) {
         const arrayPromises: Array<Promise<TransactionSummary[]>> = []
         for (const safe of safesPerChain) {
-          arrayPromises.push(getTxsAwaitingYourSignatureByChainId(chainId, safe, userAccount))
+          arrayPromises.push(getTxsAwaitingYourSignatureByChainId(chainId, safe, userAccount, displayOwnedSafes))
         }
         const txsByChain: TransactionSummary[] = await Promise.all(arrayPromises).then((values) => values.flat())
 
@@ -89,7 +102,7 @@ const TxsToConfirmList = (): ReactElement => {
       setLoading(false)
     }
     fetchAwaitingConfirmationTxs()
-  }, [ownedSafes, userAccount])
+  }, [ownedSafes, localSafes, userAccount, displayOwnedSafes])
 
   if (!userAccount) {
     return <h3>Connect a wallet</h3>
@@ -100,41 +113,47 @@ const TxsToConfirmList = (): ReactElement => {
   }
 
   return (
-    <List component="div">
-      {Object.entries(txsAwaitingConfirmation).map((chain) => {
-        const [chainId, transactions] = chain
-        const { shortName } = getChainById(chainId)
-        if (!transactions.length) return null
+    <>
+      <FormControlLabel
+        control={<Switch checked={displayOwnedSafes} onChange={handleToggleOwnedSafes} />}
+        label="Only Owned Safes"
+      />
+      <List component="div">
+        {Object.entries(txsAwaitingConfirmation).map((chain) => {
+          const [chainId, transactions] = chain
+          const { shortName } = getChainById(chainId)
+          if (!transactions.length) return null
 
-        const aggregatedTxsBySafe: Record<string, number> = transactions.reduce((acc, val) => {
-          // Retrieve safeHash from the transactionId
-          const [, safeHash] = val.id.split('_')
-          if (!acc[safeHash]) {
-            return { ...acc, [safeHash]: 1 }
-          }
-          return { ...acc, [safeHash]: (acc[safeHash] += 1) }
-        }, {})
+          const aggregatedTxsBySafe: Record<string, number> = transactions.reduce((acc, val) => {
+            // Retrieve safeHash from the transactionId
+            const [, safeHash] = val.id.split('_')
+            if (!acc[safeHash]) {
+              return { ...acc, [safeHash]: 1 }
+            }
+            return { ...acc, [safeHash]: (acc[safeHash] += 1) }
+          }, {})
 
-        return Object.entries(aggregatedTxsBySafe).map((safeTxCount) => {
-          const [safeHash, count] = safeTxCount
-          return (
-            <TransactionToConfirm key={`${safeHash}`} href={`/${shortName}:${safeHash}/transactions/queue`}>
-              <OverlapDots>
-                <CircleDot networkId={chainId} />
-                <div style={{ width: '24px', height: '24px' }}>
-                  <Identicon address={safeHash} size="sm" />
-                </div>
-              </OverlapDots>
-              <PrefixedEthHashInfo textSize="lg" hash={safeHash} shortenHash={8} shortName={shortName} />
-              <Text color="text" size="lg" as="span" strong>
-                ({count})
-              </Text>
-              {ChevronRight}
-            </TransactionToConfirm>
-          )
-        })
-      })}
-    </List>
+          return Object.entries(aggregatedTxsBySafe).map((safeTxCount) => {
+            const [safeHash, count] = safeTxCount
+            return (
+              <TransactionToConfirm key={`${safeHash}`} href={`/${shortName}:${safeHash}/transactions/queue`}>
+                <OverlapDots>
+                  <CircleDot networkId={chainId} />
+                  <div style={{ width: '24px', height: '24px' }}>
+                    <Identicon address={safeHash} size="sm" />
+                  </div>
+                </OverlapDots>
+                <PrefixedEthHashInfo textSize="lg" hash={safeHash} shortenHash={8} shortName={shortName} />
+                <Text color="text" size="lg" as="span" strong>
+                  ({count})
+                </Text>
+                {ChevronRight}
+              </TransactionToConfirm>
+            )
+          })
+        })}
+      </List>
+    </>
   )
 }
 
