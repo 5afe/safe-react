@@ -185,9 +185,18 @@ describe('PendingTxMonitor', () => {
       jest.spyOn(store.store, 'getState').mockImplementation(() => ({
         pendingTransactions: {
           '4': {
-            fakeTxId: 'fakeTxHash',
-            fakeTxId2: 'fakeTxHash2',
-            fakeTxId3: 'fakeTxHash3',
+            fakeTxId: {
+              txHash: 'fakeTxHash',
+              block: 0,
+            },
+            fakeTxId2: {
+              txHash: 'fakeTxHash2',
+              block: 1,
+            },
+            fakeTxId3: {
+              txHash: 'fakeTxHash3',
+              block: 2,
+            },
           },
         },
         config: {
@@ -219,9 +228,47 @@ describe('PendingTxMonitor', () => {
 
       expect((PendingTxMonitor._isTxMined as jest.Mock).mock.calls).toEqual([
         [0, 'fakeTxHash'],
-        [0, 'fakeTxHash2'],
-        [0, 'fakeTxHash3'],
+        [1, 'fakeTxHash2'],
+        [2, 'fakeTxHash3'],
       ])
+    })
+    it('falls back to the current block number if none was set', async () => {
+      jest.spyOn(store.store, 'getState').mockImplementation(() => ({
+        pendingTransactions: {
+          '4': {
+            fakeTxId: {
+              txHash: 'fakeTxHash',
+            },
+          },
+        },
+        config: {
+          chainId: '4',
+        },
+      }))
+
+      jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
+
+      PendingTxMonitor._isTxMined = jest.fn(() =>
+        Promise.resolve({
+          blockHash: '0x123',
+          blockNumber: 1,
+          transactionHash: 'fakeTxHash',
+          transactionIndex: 0,
+          from: '0x123',
+          to: '0x123',
+          cumulativeGasUsed: 1,
+          gasUsed: 1,
+          contractAddress: '0x123',
+          logs: [],
+          status: true, // Mined successfully
+          logsBloom: '0x123',
+          effectiveGasPrice: 0,
+        }),
+      )
+
+      await PendingTxMonitor.monitorAllTxs()
+
+      expect((PendingTxMonitor._isTxMined as jest.Mock).mock.calls).toEqual([[0, 'fakeTxHash']])
     })
   })
 })

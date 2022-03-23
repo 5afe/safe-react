@@ -9,8 +9,8 @@ import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTr
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
-const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<TransactionReceipt> => {
-  const MAX_WAITING_BLOCK = sessionBlockNumber + 50
+const _isTxMined = async (blockNumber: number, txHash: string): Promise<TransactionReceipt> => {
+  const MAX_WAITING_BLOCK = blockNumber + 50
 
   const web3 = getWeb3()
 
@@ -72,8 +72,8 @@ const monitorAllTxs = async (): Promise<void> => {
   try {
     const sessionBlockNumber = await web3.eth.getBlockNumber()
     await Promise.all(
-      pendingTxs.map(([txId, txHash]) => {
-        return PendingTxMonitor.monitorTx(sessionBlockNumber, txId, txHash)
+      pendingTxs.map(([txId, { txHash, block = sessionBlockNumber }]) => {
+        return PendingTxMonitor.monitorTx(block, txId, txHash)
       }),
     )
   } catch {
