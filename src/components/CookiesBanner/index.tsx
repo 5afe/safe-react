@@ -16,8 +16,7 @@ import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { CookieAttributes } from 'js-cookie'
-
-const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
+import { IS_DESKTOP } from 'src/utils/constants'
 
 const useStyles = makeStyles({
   container: {
@@ -150,7 +149,7 @@ const CookiesBanner = (): ReactElement => {
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
 
-        if (acceptedAnalytics && !isDesktop) {
+        if (acceptedAnalytics && !IS_DESKTOP) {
           loadGoogleAnalytics()
         }
       }
@@ -161,14 +160,14 @@ const CookiesBanner = (): ReactElement => {
   const acceptCookiesHandler = async () => {
     const newState = {
       acceptedNecessary: true,
-      acceptedAnalytics: !isDesktop,
+      acceptedAnalytics: !IS_DESKTOP,
       acceptedIntercom: true,
     }
     const cookieConfig: CookieAttributes = {
       expires: 365,
     }
     await saveCookie(COOKIES_KEY, newState, cookieConfig)
-    setShowAnalytics(!isDesktop)
+    setShowAnalytics(!IS_DESKTOP)
     setShowIntercom(true)
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
@@ -276,14 +275,14 @@ const CookiesBanner = (): ReactElement => {
 
   return (
     <>
-      {!isDesktop && !showIntercom && !isSafeAppView && (
+      {!IS_DESKTOP && !showIntercom && !isSafeAppView && (
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
           onClick={() => dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
         />
       )}
-      {!isDesktop && showBanner?.cookieBannerOpen && (
+      {!IS_DESKTOP && showBanner?.cookieBannerOpen && (
         <CookiesBannerForm alertMessage={showBanner?.intercomAlertDisplayed} />
       )}
     </>

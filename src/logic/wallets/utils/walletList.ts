@@ -2,7 +2,7 @@ import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl, getDisabledWallets, _getChainId } from 'src/config'
 import { WALLETS } from 'src/config/chain.d'
-import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
+import { IS_DESKTOP, FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
 type Wallet = WalletInitOptions & {
   desktop: boolean
@@ -72,7 +72,7 @@ const wallets = (): Wallet[] => {
 }
 
 export const getSupportedWallets = (): WalletInitOptions[] => {
-  if (window.isDesktop) {
+  if (IS_DESKTOP) {
     return wallets()
       .filter(({ desktop }) => desktop)
       .filter(({ walletName }) => !getDisabledWallets().includes(walletName))
