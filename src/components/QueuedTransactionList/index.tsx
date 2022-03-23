@@ -25,7 +25,7 @@ import { GATEWAY_URL } from 'src/utils/constants'
 
 import styled from 'styled-components'
 
-const getTxsAwaitingYourSignatureByChainId = async (
+const getTxsAwaitingConfirmationByChainId = async (
   chainId: string,
   safeAddress: string,
   account: string,
@@ -65,14 +65,20 @@ const TxsToConfirmList = (): ReactElement => {
 
   const [loading, setLoading] = useState<boolean>(true)
   const [txsAwaitingConfirmation, setTxsAwaitingConfirmation] = useState<TransactionsSummaryPerChain>({})
-  const [displayOwnedSafes, setDisplayOwnedSafes] = useState<boolean>(true)
+  const [displayOwnedSafes, setDisplayOwnedSafes] = useState<boolean>(false)
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
 
-  const safesToTraverse = displayOwnedSafes ? ownedSafes : localSafes
+  const canDisplayOwnedSafes = displayOwnedSafes && userAccount
+  const safesToTraverse = canDisplayOwnedSafes ? ownedSafes : localSafes
+
+  const title = <h2>Transactions to Sign</h2>
 
   const handleToggleOwnedSafes = () => {
-    setDisplayOwnedSafes((val) => !val)
-    setIsInitialLoad(true)
+    if (userAccount) {
+      setDisplayOwnedSafes((val) => !val)
+      setTxsAwaitingConfirmation({})
+      setIsInitialLoad(true)
+    }
   }
 
   // Fetch txs awaiting confirmations after retrieving the owned safes from the LocalStorage
@@ -85,9 +91,9 @@ const TxsToConfirmList = (): ReactElement => {
 
       for (const [chainId, safesPerChain] of Object.entries(safesToTraverse).slice(0, 3)) {
         txs[chainId] = {}
-        const arrayPromises = safesPerChain.map((safeAddr) =>
-          getTxsAwaitingYourSignatureByChainId(chainId, safeAddr, userAccount, displayOwnedSafes),
-        )
+        const arrayPromises = safesPerChain.map((safeAddr) => {
+          return getTxsAwaitingConfirmationByChainId(chainId, safeAddr, userAccount, displayOwnedSafes)
+        })
         const txsByChain = await Promise.all(arrayPromises)
 
         txsByChain.forEach((summaries, i) => {
@@ -100,15 +106,28 @@ const TxsToConfirmList = (): ReactElement => {
       setIsInitialLoad(false)
     }
     fetchAwaitingConfirmationTxs()
-  }, [displayOwnedSafes, userAccount])
+  }, [displayOwnedSafes, userAccount, safesToTraverse])
 
-  if (loading || Object.keys(txsAwaitingConfirmation).length === 0) {
-    return <h3>Loading</h3>
+  if (loading || isInitialLoad) {
+    return (
+      <>
+        {title}
+        <h3>Loading</h3>
+      </>
+    )
   }
 
+  if (Object.keys(txsAwaitingConfirmation).length === 0) {
+    return (
+      <>
+        {title}
+        <h3>No Transactions</h3>
+      </>
+    )
+  }
   return (
     <>
-      <h2>Transactions to Sign</h2>
+      {title}
       <FormControlLabel
         control={<Switch checked={displayOwnedSafes} onChange={handleToggleOwnedSafes} />}
         label="Only Owned Safes"
