@@ -2,12 +2,12 @@ import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
 import { useState, lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES, extractSafeAddress } from 'src/routes/routes'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import SafeLoadError from '../components/SafeLoadError'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
@@ -29,16 +29,17 @@ const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBo
 
 const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const owners = useSelector(currentSafeOwners)
+  const { address, owners } = useSelector(currentSafeWithNames)
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 
   const addressFromUrl = extractSafeAddress()
-  useLoadSafe(addressFromUrl) // load initially
-  useSafeScheduledUpdates(addressFromUrl) // load every X seconds
+  useLoadSafe(address) // load initially
+  useSafeScheduledUpdates(address) // load every X seconds
 
   useEffect(() => {
-    if (isSafeLoaded) {
+    if (isSafeLoaded && address === addressFromUrl) {
+      setHasLoadFailed(false)
       return
     }
 
@@ -59,7 +60,7 @@ const Container = (): React.ReactElement => {
   })
 
   if (hasLoadFailed) {
-    return <SafeLoadError />
+    return <SafeLoadError isSafeLoaded={isSafeLoaded} />
   }
 
   if (!isSafeLoaded) {
