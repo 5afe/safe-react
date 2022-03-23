@@ -52,7 +52,9 @@ class Gnosis {
 
   static extractNFTAsset = (asset: TokenResult, nftTokens: NFTTokens): NFTAsset => {
     const mainAssetAddress = asset.address
-    const numberOfTokens = nftTokens.filter(({ assetAddress }) => sameAddress(assetAddress, mainAssetAddress)).length
+    const numberOfTokens = nftTokens.items.filter(({ assetAddress }) =>
+      sameAddress(assetAddress, mainAssetAddress),
+    ).length
 
     return {
       address: mainAssetAddress,
@@ -80,7 +82,7 @@ class Gnosis {
   }
 
   static extractTokens(tokens: SafeCollectibleResponse[]): NFTTokens {
-    return tokens.map((token) => ({
+    const items = tokens.map((token) => ({
       assetAddress: token.address,
       color: 'red',
       description: token.description || '',
@@ -88,6 +90,7 @@ class Gnosis {
       name: token.name || '',
       tokenId: token.id,
     }))
+    return { items, loaded: true }
   }
 
   /**

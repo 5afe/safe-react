@@ -127,7 +127,11 @@ export function pairingModule(): WalletInit {
                 error: console.warn,
               })
 
-            this.disconnect = () => this.connector.killSession()
+            this.disconnect = () => {
+              if (this.connector.peerId) {
+                this.connector.killSession()
+              }
+            }
 
             // Disconnect on unload
             window.addEventListener('unload', this.disconnect, { once: true })

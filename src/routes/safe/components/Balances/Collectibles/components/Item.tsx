@@ -51,14 +51,14 @@ const useStyles = makeStyles({
     zIndex: '5',
   },
   image: {
-    backgroundColor: (props) => `#${props.backgroundColor}` || '#f0efee',
-    backgroundPosition: '50% 50%',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
     borderRadius: '8px',
-    height: '178px',
-    flexGrow: '1',
+    maxWidth: '200px',
+    maxHeight: '200px',
     width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    margin: '12px 12px 0',
+    alignSelf: 'center',
   },
   textContainer: {
     boxSizing: 'border-box',
@@ -104,7 +104,7 @@ const Item = ({ data, onSend }): ReactElement => {
   return (
     <div className={classes.item}>
       <div className={classes.mainContent}>
-        <div className={classes.image} style={{ backgroundImage: `url(${data.image})` }} />
+        <img src={data.image} className={classes.image} loading="lazy" />
         <div className={classes.textContainer}>
           {data.name && (
             <h3 className={classes.title} title={data.name}>
