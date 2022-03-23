@@ -17,7 +17,6 @@ type PagedQueuedTransactions = {
 }
 
 export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
-  // get next & queued transactions from Redux
   const transactions = useQueueTransactions()
   const chainId = useSelector(currentChainId)
 

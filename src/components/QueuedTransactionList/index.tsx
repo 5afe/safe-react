@@ -80,7 +80,6 @@ const TxsToConfirmList = (): ReactElement => {
     if (!isInitialLoad || !Object.keys(safesToTraverse || {}).length) {
       return
     }
-    let isCurrent = true
     const fetchAwaitingConfirmationTxs = async () => {
       const txs: TransactionsSummaryPerChain = {}
 
@@ -96,15 +95,11 @@ const TxsToConfirmList = (): ReactElement => {
           txs[chainId][safeAddress] = summaries
         })
       }
-      if (!isCurrent) return
       setTxsAwaitingConfirmation(txs)
       setLoading(false)
       setIsInitialLoad(false)
     }
     fetchAwaitingConfirmationTxs()
-    return () => {
-      isCurrent = false
-    }
   }, [displayOwnedSafes, userAccount])
 
   if (loading || Object.keys(txsAwaitingConfirmation).length === 0) {
@@ -113,6 +108,7 @@ const TxsToConfirmList = (): ReactElement => {
 
   return (
     <>
+      <h2>Transactions to Sign</h2>
       <FormControlLabel
         control={<Switch checked={displayOwnedSafes} onChange={handleToggleOwnedSafes} />}
         label="Only Owned Safes"

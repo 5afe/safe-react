@@ -35,7 +35,6 @@ function Home(): ReactElement {
         </Card>
 
         <Card>
-          <h2>Transactions to Sign</h2>
           <TxsToConfirmList />
         </Card>
 
