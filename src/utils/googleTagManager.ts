@@ -61,7 +61,7 @@ export enum GTM_EVENT {
   META = 'metadata',
 }
 
-let currentPathname = ''
+let currentPathname = history.location.pathname
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
@@ -70,8 +70,10 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
+  // Cache name to prevent tracking of same page
+  currentPathname = history.location.pathname
+
   const page = getAnonymizedLocation()
-  currentPathname = page
 
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
@@ -104,9 +106,12 @@ export const usePageTracking = (): void => {
 
   useEffect(() => {
     const unsubscribe = history.listen((location) => {
-      if (location.pathname !== currentPathname) {
+      if (location.pathname === currentPathname) {
         return
       }
+
+      currentPathname = location.pathname
+
       TagManager.dataLayer({
         dataLayer: {
           // Must emit (custom) event in order to trigger page tracking

@@ -19,10 +19,12 @@ export const QueueTransactions = (): ReactElement => {
     [transactions],
   )
   useEffect(() => {
-    trackEvent({
-      ...TX_LIST_EVENTS.QUEUED_TXS,
-      label: queuedTxCount,
-    })
+    if (queuedTxCount > 0) {
+      trackEvent({
+        ...TX_LIST_EVENTS.QUEUED_TXS,
+        label: queuedTxCount,
+      })
+    }
   }, [queuedTxCount])
 
   if (count === 0 && isLoading) {
