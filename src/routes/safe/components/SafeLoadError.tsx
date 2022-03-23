@@ -17,7 +17,7 @@ const SafeLoadError = ({ isSafeLoaded }: { isSafeLoaded: boolean }): ReactElemen
         dispatch(removeViewedSafe(address))
       }
     }
-  }, [dispatch, address])
+  }, [dispatch, address, isSafeLoaded])
 
   return <FetchError text="This Safe couldn't be loaded" buttonText="Back to Main Page" redirectRoute={WELCOME_ROUTE} />
 }
