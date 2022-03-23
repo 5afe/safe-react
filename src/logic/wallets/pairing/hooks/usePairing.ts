@@ -26,7 +26,7 @@ const usePairing = (): { uri: string; isLoaded: boolean } => {
       pairingConnector.off(DISPLAY_URI_EVENT)
 
       const { label } = getOnboardState().wallet
-      if (label && !isPairingWallet(label)) {
+      if (label && !isPairingWallet(label) && pairingConnector.peerId) {
         pairingConnector.killSession()
       }
     }
