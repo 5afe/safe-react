@@ -7,7 +7,7 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES, extractSafeAddress } from 'src/routes/routes'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import SafeLoadError from '../components/SafeLoadError'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
@@ -33,11 +33,14 @@ const Container = (): React.ReactElement => {
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 
-  useLoadSafe(address) // load initially
-  useSafeScheduledUpdates(address) // load every X seconds
+  const addressFromUrl = extractSafeAddress()
+  const safeAddress = address || addressFromUrl
+
+  useLoadSafe(safeAddress) // load initially
+  useSafeScheduledUpdates(safeAddress) // load every X seconds
 
   useEffect(() => {
-    if (isSafeLoaded) {
+    if (isSafeLoaded && address === safeAddress) {
       setHasLoadFailed(false)
       return
     }
