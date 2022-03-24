@@ -13,6 +13,8 @@ import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_ROUTES, history, extractSafeAddress, generateSafeRoute } from 'src/routes/routes'
 import { getShortName } from 'src/config'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 const useStyles = makeStyles(
   createStyles({
@@ -58,6 +60,10 @@ export const EllipsisTransactionDetails = ({
   const closeMenuHandler = () => setAnchorEl(null)
 
   const addOrEditEntryHandler = () => {
+    trackEvent({
+      ...TX_LIST_EVENTS.ADDRESS_BOOK,
+      label: isStoredInAddressBook ? 'Edit' : 'Add',
+    })
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ADDRESS_BOOK, {
         shortName: getShortName(),

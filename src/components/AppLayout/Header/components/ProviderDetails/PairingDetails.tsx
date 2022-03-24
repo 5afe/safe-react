@@ -11,6 +11,8 @@ import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import Track from 'src/components/Track'
 import AppstoreButton from 'src/components/AppstoreButton'
 
 const StyledDivider = styled(Divider)`
@@ -55,8 +57,12 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       <Row>
         <Paragraph className={classes.centerText} size="sm">
           Scan this code in the{' '}
-          <Link href="https://apps.apple.com/us/app/gnosis-safe/id1515759131">Gnosis Safe app</Link> to sign
-          transactions with your mobile device.
+          <Track {...OVERVIEW_EVENTS.IPHONE_APP_BUTTON}>
+            <Link href="https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Connect&mt=8">
+              Gnosis Safe app
+            </Link>
+          </Track>{' '}
+          to sign transactions with your mobile device.
           <br />
           <Link href="https://help.gnosis-safe.io/en/articles/5584901-desktop-pairing">Learn more</Link> about this
           feature.
@@ -64,7 +70,9 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       </Row>
 
       <Row className={classes.justifyCenter}>
-        <AppstoreButton placement="pairing" />
+        <Track {...OVERVIEW_EVENTS.IPHONE_APP_BUTTON}>
+          <AppstoreButton placement="pairing" />
+        </Track>
       </Row>
     </>
   )

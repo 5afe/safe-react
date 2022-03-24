@@ -8,6 +8,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ParametersStatus, areEthereumParamsVisible } from '../utils'
 import Bold from 'src/components/layout/Bold'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
+import Track from 'src/components/Track'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -70,12 +72,14 @@ export const TxEstimatedFeesDetail = ({
 
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
-      <StyledAccordionSummary>
-        <Text size="xl">Estimated fee price</Text>
-        <Text size="xl">
-          <Bold>{gasCost}</Bold>
-        </Text>
-      </StyledAccordionSummary>
+      <Track {...MODALS_EVENTS.ESTIMATION} label={isAccordionExpanded ? 'Close' : 'Open'}>
+        <StyledAccordionSummary>
+          <Text size="xl">Estimated fee price</Text>
+          <Text size="xl">
+            <Bold>{gasCost}</Bold>
+          </Text>
+        </StyledAccordionSummary>
+      </Track>
       <AccordionDetails>
         <AccordionDetailsWrapper>
           {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
@@ -103,9 +107,11 @@ export const TxEstimatedFeesDetail = ({
               )}
             </>
           )}
-          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
-            Edit
-          </StyledButtonLink>
+          <Track {...MODALS_EVENTS.EDIT_ESTIMATION}>
+            <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
+              Edit
+            </StyledButtonLink>
+          </Track>
         </AccordionDetailsWrapper>
       </AccordionDetails>
     </Accordion>

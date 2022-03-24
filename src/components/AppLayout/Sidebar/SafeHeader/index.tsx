@@ -19,6 +19,8 @@ import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
+import Track from 'src/components/Track'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
@@ -173,11 +175,17 @@ const SafeHeader = ({
         </StyledTextSafeName>
         <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
-          <ButtonHelper onClick={onReceiveClick}>
-            <Icon size="sm" type="qrCode" tooltip="Show QR" />
-          </ButtonHelper>
-          <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
-          <ExplorerButton explorerUrl={getExplorerInfo(address)} />
+          <Track {...OVERVIEW_EVENTS.SHOW_QR}>
+            <ButtonHelper onClick={onReceiveClick}>
+              <Icon size="sm" type="qrCode" tooltip="Show QR code" />
+            </ButtonHelper>
+          </Track>
+          <Track {...OVERVIEW_EVENTS.COPY_ADDRESS}>
+            <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
+          </Track>
+          <Track {...OVERVIEW_EVENTS.OPEN_EXPLORER}>
+            <ExplorerButton explorerUrl={getExplorerInfo(address)} />
+          </Track>
         </IconContainer>
 
         {!granted && (
@@ -189,12 +197,20 @@ const SafeHeader = ({
         )}
 
         <StyledText size="xl">{balance}</StyledText>
-        <StyledButton size="md" disabled={!granted} color="primary" variant="contained" onClick={onNewTransactionClick}>
-          <FixedIcon type="arrowSentWhite" />
-          <Text size="xl" color="white">
-            New transaction
-          </Text>
-        </StyledButton>
+        <Track {...OVERVIEW_EVENTS.NEW_TRANSACTION}>
+          <StyledButton
+            size="md"
+            disabled={!granted}
+            color="primary"
+            variant="contained"
+            onClick={onNewTransactionClick}
+          >
+            <FixedIcon type="arrowSentWhite" />
+            <Text size="xl" color="white">
+              New transaction
+            </Text>
+          </StyledButton>
+        </Track>
       </Container>
     </>
   )

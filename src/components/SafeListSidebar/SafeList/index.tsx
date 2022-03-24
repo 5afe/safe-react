@@ -2,7 +2,7 @@ import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import styled from 'styled-components'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { Fragment, ReactElement } from 'react'
+import { Fragment, ReactElement, useEffect } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
 import uniqBy from 'lodash/uniqBy'
@@ -17,6 +17,9 @@ import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import { getChains } from 'src/config/cache/chains'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { getChainById } from 'src/config'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -74,6 +77,19 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
   const curChainId = useSelector(currentChainId)
+
+  useEffect(() => {
+    const addedSafes = localSafes?.[curChainId]?.length || 0
+    if (addedSafes === 0) {
+      return
+    }
+    const event = OVERVIEW_EVENTS.ADDED_SAFES_ON_NETWORK
+    trackEvent({
+      ...event,
+      action: `${event.action} ${getChainById(curChainId).chainName}`,
+      label: addedSafes,
+    })
+  }, [localSafes, curChainId])
 
   return (
     <StyledList>

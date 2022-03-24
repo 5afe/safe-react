@@ -21,6 +21,8 @@ import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { getChainById } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 const styles = {
   root: {
@@ -89,6 +91,8 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
     (e: React.SyntheticEvent, chainId: ChainId) => {
       e.preventDefault()
       clickAway()
+
+      trackEvent({ ...OVERVIEW_EVENTS.SWITCH_NETWORK, label: chainId })
 
       const newRoute = getNetworkRootRoutes().find((network) => network.chainId === chainId)
       if (newRoute) {

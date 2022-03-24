@@ -17,12 +17,11 @@ import Web3 from 'web3'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -35,6 +34,8 @@ import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -89,7 +90,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const granted = useSelector(grantedSelector)
-  const { trackEvent } = useAnalytics()
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
@@ -315,12 +315,11 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     loadApp()
   }, [appUrl])
 
-  //track GA
   useEffect(() => {
-    if (safeApp) {
-      trackEvent({ ...SAFE_EVENTS.SAFE_APP, label: safeApp.name })
+    if (safeApp && safeApp.name !== EMPTY_SAFE_APP) {
+      trackEvent({ ...SAFE_APPS_EVENTS.OPEN_APP, label: safeApp.name })
     }
-  }, [safeApp, trackEvent])
+  }, [safeApp])
 
   return (
     <AppWrapper>

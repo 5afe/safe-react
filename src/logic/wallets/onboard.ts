@@ -18,6 +18,7 @@ import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
@@ -65,9 +66,8 @@ const getOnboard = (chainId: ChainId): API => {
 
         store.dispatch(updateProviderWallet(wallet.name || ''))
       },
-      // Non-checksummed address
       address: (address) => {
-        store.dispatch(updateProviderAccount(address || ''))
+        store.dispatch(updateProviderAccount(checksumAddress(address) || ''))
 
         if (address) {
           prevAddress = address
