@@ -29,6 +29,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { QueueTxList } from './QueueTxList'
 import { HistoryTxList } from './HistoryTxList'
 import FetchError from '../../FetchError'
+import { useQueueTransactions } from './hooks/useQueueTransactions'
 
 const TxSingularDetails = (): ReactElement => {
   const { [TRANSACTION_ID_SLUG]: safeTxHash = '' } = useParams<SafeRouteSlugs>()
@@ -37,6 +38,7 @@ const TxSingularDetails = (): ReactElement => {
   const dispatch = useDispatch()
   const history = useHistory()
   const chainId = useSelector(currentChainId)
+  const transactions = useQueueTransactions()
 
   const indexedTx = useSelector(
     (state: AppReduxState) =>
@@ -97,9 +99,31 @@ const TxSingularDetails = (): ReactElement => {
         },
       ],
     }
-    // And add it to the corresponding list in the store
-    dispatch(isTxQueued(listItemTx.txStatus) ? addQueuedTransactions(payload) : addHistoryTransactions(payload))
-  }, [fetchedTx, chainId, dispatch])
+
+    // Add historical transaction
+    if (!isTxQueued(listItemTx.txStatus)) {
+      dispatch(addHistoryTransactions(payload))
+      return
+    }
+
+    // Don't add queued transaction until queue list has automatically polled
+    if (!transactions || (transactions.next.count === 0 && transactions.queue.count === 0)) {
+      return
+    }
+
+    // Prepend label to queue transaction payload
+    const isNext = transactions.next.transactions.some(([, txs]) => txs.some(({ id }) => id === listItemTx.id))
+    payload.values = [
+      {
+        label: isNext ? 'next' : 'queued',
+        type: 'LABEL',
+      },
+      ...payload.values,
+    ]
+
+    // Add queued transaction
+    dispatch(addQueuedTransactions(payload))
+  }, [fetchedTx, chainId, dispatch, transactions?.next.count, transactions?.queue.count])
 
   if (!indexedTx && error) {
     const safeParams = extractPrefixedSafeAddress()

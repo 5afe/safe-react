@@ -247,7 +247,7 @@ describe('gatewayTransactionsReducer', () => {
       expect(newState).toEqual(expectedState)
     })
 
-    it('defaults to a `queued.queued` if no label is present', () => {
+    it('sets the label to `queued.next` if there is no label and the transaction is already loaded under `queued.next', () => {
       const mockTx: Transaction = {
         transaction: { id: 'dfgbh65rb5yrthhdft', ...MOCK_TX_SUMMARY },
         ...MOCK_TX_META,
@@ -257,6 +257,47 @@ describe('gatewayTransactionsReducer', () => {
         chainId: '4',
         safeAddress: ZERO_ADDRESS,
         values: [mockTx],
+      }
+
+      const prevState: GatewayTransactionsState = {
+        4: {
+          [ZERO_ADDRESS]: {
+            queued: {
+              next: { 0: [mockTx.transaction] },
+              queued: {},
+            },
+            history: {},
+          },
+        },
+      }
+
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
+
+      const expectedState: GatewayTransactionsState = {
+        4: {
+          [ZERO_ADDRESS]: {
+            queued: {
+              next: { 0: [mockTx.transaction] },
+              queued: {},
+            },
+            history: {},
+          },
+        },
+      }
+
+      expect(newState).toEqual(expectedState)
+    })
+
+    it('defaults to a `queued.queued` if there is no label and previous state', () => {
+      const mockTx: Transaction = {
+        transaction: { id: 'dfgbh65rb5yrthhdft', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
+        chainId: '4',
+        safeAddress: ZERO_ADDRESS,
+        values: [mockTx], // No label
       }
 
       const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
