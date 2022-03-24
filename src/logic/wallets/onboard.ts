@@ -20,7 +20,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
-export const saveLastUsedProvider = (name: string) => {
+export const saveLastUsedProvider = (name: string): void => {
   const expireInDays = (days: number) => 60 * 60 * 24 * 1000 * days
   const expiry = isPairingModule(name) ? expireInDays(1) : expireInDays(365)
   saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
