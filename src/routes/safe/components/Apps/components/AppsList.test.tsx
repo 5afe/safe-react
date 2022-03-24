@@ -5,7 +5,6 @@ import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import * as googleAnalytics from 'src/utils/googleAnalytics'
 
 jest.mock('src/routes/routes', () => {
   const original = jest.requireActual('src/routes/routes')
@@ -14,8 +13,6 @@ jest.mock('src/routes/routes', () => {
     extractSafeAddress: () => '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
   }
 })
-
-const spyTrackEventGA = jest.fn()
 
 beforeEach(() => {
   // Includes an id that doesn't exist in the remote apps to check that there's no error
@@ -27,11 +24,6 @@ beforeEach(() => {
       url: 'https://apps.gnosis-safe.io/drain-safe',
     },
   ])
-
-  jest.spyOn(googleAnalytics, 'useAnalytics').mockImplementation(() => ({
-    trackPage: jest.fn(),
-    trackEvent: spyTrackEventGA,
-  }))
 
   jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValueOnce(
     Promise.resolve({
@@ -140,7 +132,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Shows apps matching the search query', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -151,7 +143,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Shows app matching the name first for a query that matches in name and description of multiple apps', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Tra' } })
 
@@ -170,7 +162,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
     render(<AppsList />)
 
     const query = 'not-a-real-app'
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: query } })
 
@@ -185,7 +177,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Clears the search result when you press on clear button and shows all apps again', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
     const clearButton = screen.getByLabelText('Clear the search')
@@ -197,7 +189,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it("Doesn't display custom/pinned apps irrelevant to the search (= hides pinned/custom sections)", async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -208,7 +200,7 @@ describe('Safe Apps -> AppsList -> Search', () => {
   it('Hides pinned/custom sections when you search', async () => {
     render(<AppsList />)
 
-    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g Compound'))
+    const searchInput = await waitFor(() => screen.getByPlaceholderText('e.g. Compound'))
 
     fireEvent.input(searchInput, { target: { value: 'Compound' } })
 
@@ -241,8 +233,6 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
     })
 
-    expect(spyTrackEventGA).not.toHaveBeenCalled()
-
     const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
     const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
     act(() => {
@@ -252,11 +242,6 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
-      expect(spyTrackEventGA).toHaveBeenCalledWith({
-        action: 'Pin',
-        category: 'Safe App',
-        label: 'Compound',
-      })
     })
 
     const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')
@@ -266,11 +251,6 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
 
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).queryByText('Compound')).not.toBeInTheDocument()
-      expect(spyTrackEventGA).toHaveBeenCalledWith({
-        action: 'Unpin',
-        category: 'Safe App',
-        label: 'Compound',
-      })
     })
   })
 

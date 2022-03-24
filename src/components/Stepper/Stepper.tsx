@@ -12,6 +12,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { boldFont, lg, sm } from 'src/theme/variables'
 import { StepperProvider, useStepper } from './stepperContext'
+import Track from 'src/components/Track'
 
 type StepperProps = {
   children: ReactElement[]
@@ -19,6 +20,7 @@ type StepperProps = {
   disableNextButton?: boolean
   nextButtonType?: string
   testId?: string
+  trackingCategory?: string
 }
 
 function StepperComponent(): ReactElement {
@@ -34,6 +36,7 @@ function StepperComponent(): ReactElement {
     nextButtonType,
 
     testId,
+    trackingCategory,
   } = useStepper()
 
   return (
@@ -56,6 +59,26 @@ function StepperComponent(): ReactElement {
 
         const nextButtonLabel = customNextButtonLabel || 'Next'
 
+        const backButton = (
+          <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
+            {backButtonLabel}
+          </Button>
+        )
+
+        const nextButton = (
+          <Button
+            onClick={onClickNextStep}
+            color="primary"
+            type={nextButtonType || 'button'}
+            disabled={disableNextButton || step.props.disableNextButton}
+            size="small"
+            className={classes.nextButton}
+            variant="contained"
+          >
+            {nextButtonLabel}
+          </Button>
+        )
+
         return (
           <StepMUI key={step.props.label}>
             <StepLabel onClick={onClickLabel} className={classes.stepLabel}>
@@ -67,20 +90,21 @@ function StepperComponent(): ReactElement {
                 <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
-                    <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
-                      {backButtonLabel}
-                    </Button>
-                    <Button
-                      onClick={onClickNextStep}
-                      color="primary"
-                      type={nextButtonType || 'button'}
-                      disabled={disableNextButton || step.props.disableNextButton}
-                      size="small"
-                      className={classes.nextButton}
-                      variant="contained"
-                    >
-                      {nextButtonLabel}
-                    </Button>
+                    {trackingCategory ? (
+                      <>
+                        <Track category={trackingCategory} action={backButtonLabel} label={currentStep}>
+                          {backButton}
+                        </Track>
+                        <Track category={trackingCategory} action={nextButtonLabel} label={currentStep}>
+                          {nextButton}
+                        </Track>
+                      </>
+                    ) : (
+                      <>
+                        {backButton}
+                        {nextButton}
+                      </>
+                    )}
                   </Col>
                 </Row>
               </Paper>

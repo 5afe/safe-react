@@ -17,8 +17,11 @@ import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
+import { currentSafe, currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import { store } from 'src/store'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -55,6 +58,9 @@ export const sendAddOwner = async (
       delayExecution,
     }),
   )
+
+  trackEvent({ ...SETTINGS_EVENTS.THRESHOLD.THRESHOLD, label: values.threshold })
+  trackEvent({ ...SETTINGS_EVENTS.THRESHOLD.OWNERS, label: currentSafe(store.getState()).owners.length })
 }
 
 type Props = {

@@ -20,7 +20,7 @@ import {
 import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
-import useGaEvents from 'src/logic/hooks/useGaEvents'
+import { usePageTracking } from 'src/utils/googleTagManager'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -32,8 +32,8 @@ const Routes = (): React.ReactElement => {
   const { pathname } = location
   const defaultSafe = useSelector(lastViewedSafe)
 
-  // Anonymize and track page views
-  useGaEvents()
+  // Google Tag Manager page tracking
+  usePageTracking()
 
   return (
     <Switch>

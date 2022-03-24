@@ -14,6 +14,8 @@ import { getSpendingLimitData } from './LimitsTable/dataFetcher'
 import { NewLimitModal } from './NewLimitModal'
 import { NewLimitSteps } from './NewLimitSteps'
 import { useStyles } from './style'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import Track from 'src/components/Track'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -50,16 +52,18 @@ const SpendingLimit = (): ReactElement => {
         <>
           <Row align="end" className={classes.buttonRow} grow>
             <Col end="xs">
-              <Button
-                className={classes.actionButton}
-                color="primary"
-                size="md"
-                data-testid="new-spending-limit-button"
-                onClick={openNewSpendingLimitModal}
-                variant="contained"
-              >
-                New spending limit
-              </Button>
+              <Track {...SETTINGS_EVENTS.SPENDING_LIMIT.NEW_LIMIT}>
+                <Button
+                  className={classes.actionButton}
+                  color="primary"
+                  size="md"
+                  data-testid="new-spending-limit-button"
+                  onClick={openNewSpendingLimitModal}
+                  variant="contained"
+                >
+                  New spending limit
+                </Button>
+              </Track>
             </Col>
           </Row>
           {showNewSpendingLimitModal && <NewLimitModal close={closeNewSpendingLimitModal} open={true} />}

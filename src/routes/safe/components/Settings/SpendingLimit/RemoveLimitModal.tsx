@@ -18,6 +18,8 @@ import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -55,6 +57,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
           delayExecution,
         }),
       )
+
+      trackEvent(SETTINGS_EVENTS.SPENDING_LIMIT.LIMIT_REMOVED)
     } catch (e) {
       console.error(
         `failed to remove spending limit ${spendingLimit.beneficiary} -> ${spendingLimit.spent.tokenAddress}`,

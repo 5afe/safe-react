@@ -58,6 +58,7 @@ export const initOnboard = (): OnboardAPI => {
 
     if (label) {
       saveLastUsedWallet(label)
+      //TODO: trackEvent({ ...WALLET_EVENTS.CONNECT, label })
     }
 
     if (provider) {

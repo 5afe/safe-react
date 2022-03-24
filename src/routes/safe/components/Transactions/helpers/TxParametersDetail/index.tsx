@@ -25,6 +25,8 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getByteLength } from 'src/utils/getByteLength'
 import { md } from 'src/theme/variables'
+import Track from 'src/components/Track'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -146,9 +148,11 @@ export const TxParametersDetail = ({
 
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
-      <AccordionSummary>
-        <Text size="xl">Advanced parameters</Text>
-      </AccordionSummary>
+      <Track {...MODALS_EVENTS.ADVANCED_PARAMS} label={isAccordionExpanded ? 'Close' : 'Open'}>
+        <AccordionSummary>
+          <Text size="xl">Advanced parameters</Text>
+        </AccordionSummary>
+      </Track>
       <AccordionDetails>
         <AccordionDetailsWrapper>
           <StyledText size="md" color="placeHolder">
@@ -162,9 +166,11 @@ export const TxParametersDetail = ({
           />
 
           {showSafeTxGas && <TxParameter name="SafeTxGas" value={txParameters.safeTxGas || '0'} color={color} />}
-          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
-            Edit
-          </StyledButtonLink>
+          <Track {...MODALS_EVENTS.EDIT_ADVANCED_PARAMS}>
+            <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
+              Edit
+            </StyledButtonLink>
+          </Track>
           {storedTx?.length > 0 && <TxAdvancedParametersDetail tx={storedTx[0]} />}
         </AccordionDetailsWrapper>
       </AccordionDetails>

@@ -7,6 +7,8 @@ import List, { ListItemType, StyledListItem, StyledListItemText } from 'src/comp
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION, BEAMER_ID } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import Track from 'src/components/Track'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import ListIcon from 'src/components/List/ListIcon'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { loadFromCookie } from 'src/logic/cookies/utils'
@@ -125,16 +127,20 @@ const Sidebar = ({
 
         <HelpList>
           {!isDesktop && BEAMER_ID && (
-            <StyledListItem id="whats-new-button" button onClick={handleClick}>
-              <ListIcon type="gift" />
-              <StyledListItemText>What&apos;s new</StyledListItemText>
-            </StyledListItem>
+            <Track {...OVERVIEW_EVENTS.WHATS_NEW}>
+              <StyledListItem id="whats-new-button" button onClick={handleClick}>
+                <ListIcon type="gift" />
+                <StyledListItemText>What&apos;s new</StyledListItemText>
+              </StyledListItem>
+            </Track>
           )}
 
-          <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-            <ListIcon type="question" />
-            <StyledListItemText>Help Center</StyledListItemText>
-          </HelpCenterLink>
+          <Track {...OVERVIEW_EVENTS.HELP_CENTER}>
+            <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
+              <ListIcon type="question" />
+              <StyledListItemText>Help Center</StyledListItemText>
+            </HelpCenterLink>
+          </Track>
         </HelpList>
       </HelpContainer>
     </>
