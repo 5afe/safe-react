@@ -4,7 +4,6 @@ import { TableColumn } from 'src/components/Table/types.d'
 import { Token } from 'src/logic/tokens/store/model/token'
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
-export const BALANCE_TABLE_VALUE_ID = 'value'
 
 const getTokenPriceInCurrency = (balance: string, currencySelected?: string): string => {
   if (!currencySelected) {
@@ -18,7 +17,6 @@ export interface BalanceData {
   assetOrder: string
   balance: string
   balanceOrder: number
-  value: string
   valueOrder: number
 }
 
@@ -36,7 +34,6 @@ export const getBalanceData = (safeTokens: List<Token>, currencySelected?: strin
       assetOrder: token.name,
       [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(tokenBalance?.toString() || '0')} ${token.symbol}`,
       balanceOrder: Number(tokenBalance),
-      [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(fiatBalance || '0', currencySelected),
       valueOrder: Number(tokenBalance),
     }
   })
@@ -72,15 +69,6 @@ export const generateColumns = (): List<TableColumn> => {
     static: true,
   }
 
-  const value: TableColumn = {
-    id: BALANCE_TABLE_VALUE_ID,
-    align: 'right',
-    order: true,
-    label: 'Value',
-    custom: false,
-    static: true,
-    disablePadding: false,
-  }
 
-  return List([assetColumn, balanceColumn, value, actions])
+  return List([assetColumn, balanceColumn, actions])
 }
