@@ -87,7 +87,7 @@
     "@gnosis.pm/safe-apps-sdk": "6.2.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
-    "@gnosis.pm/safe-deployments": "^1.8.0",
+    "@gnosis.pm/safe-deployments": "https://github.com/shyftfederation/safe-deployments.git#36f8fe1cb7d74c5a01844b9d95c94aed1dfe9ddb",
     "@gnosis.pm/safe-react-components": "^0.9.8",
     "@gnosis.pm/safe-react-gateway-sdk": "^2.8.6",
     "@gnosis.pm/safe-web3-lib": "^1.0.0",
