@@ -20,7 +20,6 @@ import AssetTableCell from 'src/routes/safe/components/Balances/AssetTableCell'
 import {
   BALANCE_TABLE_ASSET_ID,
   BALANCE_TABLE_BALANCE_ID,
-  BALANCE_TABLE_VALUE_ID,
   generateColumns,
   getBalanceData,
   BalanceData,
@@ -106,25 +105,6 @@ const Coins = (props: Props): React.ReactElement => {
                   }
                   case BALANCE_TABLE_BALANCE_ID: {
                     cellItem = <div data-testid={`balance-${row[BALANCE_TABLE_ASSET_ID].symbol}`}>{row[id]}</div>
-                    break
-                  }
-                  case BALANCE_TABLE_VALUE_ID: {
-                    // If there are no values for that row but we have balances, we display as '0.00 {CurrencySelected}'
-                    // In case we don't have balances, we display a skeleton
-                    const showCurrencyValueRow = row[id] || row[BALANCE_TABLE_BALANCE_ID]
-                    const valueWithCurrency = row[id] ? row[id] : `0.00 ${selectedCurrency}`
-                    cellItem =
-                      showCurrencyValueRow && selectedCurrency ? (
-                        <div className={classes.currencyValueRow}>
-                          {valueWithCurrency}
-                          <CurrencyTooltip
-                            valueWithCurrency={valueWithCurrency}
-                            balanceWithSymbol={row[BALANCE_TABLE_BALANCE_ID]}
-                          />
-                        </div>
-                      ) : (
-                        <Skeleton animation="wave" />
-                      )
                     break
                   }
                   default: {
