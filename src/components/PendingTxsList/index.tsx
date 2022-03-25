@@ -1,43 +1,44 @@
-import { Identicon, Switch, Text } from '@gnosis.pm/safe-react-components'
-import { getTransactionQueue, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
-import { FormControlLabel, List } from '@material-ui/core'
+import { Identicon } from '@gnosis.pm/safe-react-components'
+import { getTransactionQueue, TransactionSummary, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
+import { List } from '@material-ui/core'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { ReactElement, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
-import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getChainById } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
-import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import {
   isMultisigExecutionInfo,
   isTransactionSummary,
+  isTransferTxInfo,
   LocalTransactionStatus,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { grey400 } from 'src/theme/variables'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { GATEWAY_URL } from 'src/utils/constants'
+import { CustomIconText } from 'src/components/CustomIconText'
+import { getAssetInfo } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { TxInfo } from 'src/routes/safe/components/Transactions/TxList/TxCollapsed'
+
+import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/outgoing.svg'
+import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 
 import styled from 'styled-components'
+import Spacer from 'src/components/Spacer'
 
 const getTxsAwaitingConfirmationByChainId = async (
   chainId: string,
   safeAddress: string,
-  account: string,
-  ownedSafes = false,
 ): Promise<TransactionSummary[]> => {
   const { results } = await getTransactionQueue(GATEWAY_URL, chainId, checksumAddress(safeAddress))
   return results.reduce((acc, cur) => {
     if (
       isTransactionSummary(cur) &&
       isMultisigExecutionInfo(cur.transaction.executionInfo) &&
-      cur.transaction.txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS &&
-      (ownedSafes ? cur.transaction.executionInfo.missingSigners?.some(({ value }) => value === account) : true)
+      cur.transaction.txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS
     ) {
       return [...acc, cur.transaction]
     }
@@ -51,8 +52,7 @@ type TransactionsSummaryPerChain = {
   }
 }
 
-const TxsToConfirmList = (): ReactElement => {
-  const ownedSafes: Record<string, string[]> = useOwnerSafes()
+const PendingTxsList = (): ReactElement => {
   const localSafesWithDetails = useLocalSafes()
   const localSafes: Record<string, string[]> = Object.entries(localSafesWithDetails).reduce(
     (result, [chain, safes]) => {
@@ -61,54 +61,42 @@ const TxsToConfirmList = (): ReactElement => {
     },
     {},
   )
-  const userAccount = useSelector(userAccountSelector)
 
-  const [loading, setLoading] = useState<boolean>(true)
   const [txsAwaitingConfirmation, setTxsAwaitingConfirmation] = useState<TransactionsSummaryPerChain>({})
-  const [displayOwnedSafes, setDisplayOwnedSafes] = useState<boolean>(false)
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
-
-  const canDisplayOwnedSafes = displayOwnedSafes && userAccount
-  const safesToTraverse = canDisplayOwnedSafes ? ownedSafes : localSafes
 
   const title = <h2>Transactions to Sign</h2>
 
-  const handleToggleOwnedSafes = () => {
-    if (userAccount) {
-      setDisplayOwnedSafes((val) => !val)
-      setTxsAwaitingConfirmation({})
-      setIsInitialLoad(true)
-    }
-  }
-
   // Fetch txs awaiting confirmations after retrieving the owned safes from the LocalStorage
   useEffect(() => {
-    if (!isInitialLoad || !Object.keys(safesToTraverse || {}).length) {
+    if (!isInitialLoad || !Object.keys(localSafes || {}).length) {
       return
     }
+
     const fetchAwaitingConfirmationTxs = async () => {
       const txs: TransactionsSummaryPerChain = {}
 
-      for (const [chainId, safesPerChain] of Object.entries(safesToTraverse).slice(0, 3)) {
+      // todo: remove the slice
+      for (const [chainId, safesPerChain] of Object.entries(localSafes).slice(1, 3)) {
         txs[chainId] = {}
         const arrayPromises = safesPerChain.map((safeAddr) => {
-          return getTxsAwaitingConfirmationByChainId(chainId, safeAddr, userAccount, displayOwnedSafes)
+          return getTxsAwaitingConfirmationByChainId(chainId, safeAddr)
         })
-        const txsByChain = await Promise.all(arrayPromises)
+        const pendingTxs = await Promise.all(arrayPromises)
 
-        txsByChain.forEach((summaries, i) => {
+        pendingTxs.forEach((summaries, i) => {
+          if (!summaries.length) return // filter out the safes without pending transactions
           const safeAddress = safesPerChain[i]
           txs[chainId][safeAddress] = summaries
         })
       }
       setTxsAwaitingConfirmation(txs)
-      setLoading(false)
       setIsInitialLoad(false)
     }
     fetchAwaitingConfirmationTxs()
-  }, [displayOwnedSafes, userAccount, safesToTraverse])
+  }, [localSafes, isInitialLoad])
 
-  if (loading || isInitialLoad) {
+  if (isInitialLoad) {
     return (
       <>
         {title}
@@ -128,32 +116,38 @@ const TxsToConfirmList = (): ReactElement => {
   return (
     <>
       {title}
-      <FormControlLabel
-        control={<Switch checked={displayOwnedSafes} onChange={handleToggleOwnedSafes} />}
-        label="Only Owned Safes"
-      />
       <List component="div">
         {Object.entries(txsAwaitingConfirmation)?.map(([chainId, transactionsPerSafe]) => {
           const { shortName } = getChainById(chainId)
           return Object.entries(transactionsPerSafe).map(([safeAddress, transactions]) => {
             if (!transactions.length) return null
-
             const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress, shortName })
-            return (
-              <TransactionToConfirm key={safeAddress} to={url}>
-                <OverlapDots>
-                  <CircleDot networkId={chainId} />
-                  <div style={{ width: '24px', height: '24px' }}>
-                    <Identicon address={safeAddress} size="sm" />
-                  </div>
-                </OverlapDots>
-                <PrefixedEthHashInfo textSize="lg" hash={safeAddress} shortenHash={8} shortName={shortName} />
-                <Text color="text" size="lg" as="span" strong>
-                  ({transactions.length})
-                </Text>
-                <ChevronRightIcon />
-              </TransactionToConfirm>
-            )
+
+            return transactions.map((transaction) => {
+              const info = getAssetInfo(transaction.txInfo)
+
+              return (
+                <TransactionToConfirm key={transaction.id} to={url}>
+                  <OverlapDots>
+                    <CircleDot networkId={chainId} />
+                    <div style={{ width: '24px', height: '24px' }}>
+                      <Identicon address={safeAddress} size="sm" />
+                    </div>
+                  </OverlapDots>
+                  <CustomIconText
+                    address="0x"
+                    iconUrl={
+                      isTransferTxInfo(transaction.txInfo) &&
+                      transaction.txInfo.direction === TransferDirection.OUTGOING
+                        ? OutgoingTxIcon
+                        : SettingsTxIcon || undefined
+                    }
+                  />
+                  {info ? <TxInfo info={info} /> : <Spacer />}
+                  <ChevronRightIcon />
+                </TransactionToConfirm>
+              )
+            })
           })
         })}
       </List>
@@ -161,7 +155,7 @@ const TxsToConfirmList = (): ReactElement => {
   )
 }
 
-export default TxsToConfirmList
+export default PendingTxsList
 
 const OverlapDots = styled.div`
   height: 24px;
@@ -176,9 +170,9 @@ const OverlapDots = styled.div`
 
 const TransactionToConfirm = styled(Link)`
   height: 40px;
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
+  grid-template-columns: 1fr 1fr 4fr 1fr;
   gap: 4px;
   margin: 16px auto;
   text-decoration: none;
