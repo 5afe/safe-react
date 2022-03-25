@@ -50,7 +50,7 @@ export const nextTransaction = createSelector(nextTransactions, (nextTxs) => {
   if (!nextTxs) return
 
   const [txs] = Object.values(nextTxs)
-  return txs?.[0] // If a reject tx exists, this will still return the initial tx
+  return txs // If a reject tx exists, this will still return the initial tx
 })
 
 export const queuedTransactions = createSelector(
@@ -175,32 +175,41 @@ export const getBatchableTransactions = createSelector(
     const batchableTransactions: Transaction[] = []
     let currentNonce = safeNonce
 
-    if (
-      nextTx &&
-      isMultisigExecutionInfo(nextTx.executionInfo) &&
-      nextTx.executionInfo.nonce === currentNonce &&
-      nextTx.executionInfo.confirmationsSubmitted >= nextTx.executionInfo.confirmationsRequired
-    ) {
-      batchableTransactions.push(nextTx)
-      currentNonce = nextTx.executionInfo.nonce
+    if (!nextTx) return batchableTransactions
+
+    function addToBatchIfEligible(transaction: Transaction, currentTxNonce: number): void {
+      if (
+        isMultisigExecutionInfo(transaction.executionInfo) &&
+        transaction.executionInfo.nonce === currentTxNonce &&
+        transaction.executionInfo.confirmationsSubmitted >= transaction.executionInfo.confirmationsRequired &&
+        batchableTransactions.length < BATCH_LIMIT
+      ) {
+        batchableTransactions.push(transaction)
+        currentNonce = transaction.executionInfo.nonce
+      }
     }
 
-    if (queuedTxs && batchableTransactions.length > 0) {
-      Object.values(queuedTxs).forEach((queuedTxsByNonce) => {
-        // We are ignoring reject txs
-        const queuedTx = queuedTxsByNonce[0]
-
-        if (
-          isMultisigExecutionInfo(queuedTx.executionInfo) &&
-          queuedTx.executionInfo.nonce === currentNonce + 1 &&
-          queuedTx.executionInfo.confirmationsSubmitted >= queuedTx.executionInfo.confirmationsRequired &&
-          batchableTransactions.length < BATCH_LIMIT
-        ) {
-          batchableTransactions.push(queuedTx)
-          currentNonce = queuedTx.executionInfo.nonce
-        }
-      })
+    if (nextTx.length > 1) {
+      const nextTxRejection = nextTx[1]
+      addToBatchIfEligible(nextTxRejection, currentNonce)
     }
+
+    if (batchableTransactions.length === 0) {
+      const nextTransaction = nextTx[0]
+      addToBatchIfEligible(nextTransaction, currentNonce)
+    }
+
+    if (!queuedTxs || batchableTransactions.length === 0) return batchableTransactions
+
+    Object.values(queuedTxs).forEach((queuedTxsByNonce) => {
+      if (queuedTxsByNonce.length > 1) {
+        const queuedTxRejection = queuedTxsByNonce[1]
+        addToBatchIfEligible(queuedTxRejection, currentNonce + 1)
+      }
+
+      const queuedTx = queuedTxsByNonce[0]
+      addToBatchIfEligible(queuedTx, currentNonce + 1)
+    })
 
     return batchableTransactions
   },

@@ -50,55 +50,61 @@ const defaultNextTx: Transaction = {
 }
 
 describe('getBatchableTransactions', () => {
-  it('returns an empty array if there is no next transaction', () => {
+  it('returns an empty array if there is no next tx', () => {
     const result = getBatchableTransactions.resultFunc(undefined, undefined, 1)
     expect(result).toHaveLength(0)
   })
 
-  it('returns an empty array if nonce of next transaction is out-of-order', () => {
-    const mockTx = {
-      ...defaultNextTx,
-      executionInfo: {
-        ...defaultNextTx.executionInfo,
-        nonce: 2,
-      } as MultisigExecutionInfo,
-    }
+  it('returns an empty array if nonce of next tx is out-of-order', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
 
     const result = getBatchableTransactions.resultFunc(mockTx, undefined, 1)
     expect(result).toHaveLength(0)
   })
 
-  it('returns an empty array if next transaction doesnt have enough confirmations', () => {
-    const mockTx = {
-      ...defaultNextTx,
-      executionInfo: {
-        ...defaultNextTx.executionInfo,
-        confirmationsRequired: 2,
-        confirmationsSubmitted: 1,
-      } as MultisigExecutionInfo,
-    }
+  it('returns an empty array if next tx doesnt have enough confirmations', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 1,
+        } as MultisigExecutionInfo,
+      },
+    ]
 
     const result = getBatchableTransactions.resultFunc(mockTx, undefined, 1)
     expect(result).toHaveLength(0)
   })
 
-  it('returns next transaction if it is eligible', () => {
-    const mockTx = {
-      ...defaultNextTx,
-      executionInfo: {
-        ...defaultNextTx.executionInfo,
-        nonce: 1,
-        confirmationsRequired: 2,
-        confirmationsSubmitted: 2,
-      } as MultisigExecutionInfo,
-    }
+  it('returns next tx if it is eligible', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 1,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
 
     const result = getBatchableTransactions.resultFunc(mockTx, undefined, 1)
     expect(result).toHaveLength(1)
   })
 
-  it('adds queued transaction to the result if it is eligible', () => {
-    const mockTx = {
+  it('chooses reject tx over next transaction if both are eligible', () => {
+    const mockNextTx = {
       ...defaultNextTx,
       executionInfo: {
         ...defaultNextTx.executionInfo,
@@ -107,6 +113,74 @@ describe('getBatchableTransactions', () => {
         confirmationsSubmitted: 2,
       } as MultisigExecutionInfo,
     }
+
+    const mockRejectTx = {
+      ...defaultNextTx,
+      txInfo: {
+        ...mockTxInfo,
+        type: 'Custom',
+        isCancellation: true,
+      } as unknown as Custom,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 1,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockTx = [mockNextTx, mockRejectTx]
+
+    const result = getBatchableTransactions.resultFunc(mockTx, undefined, 1)
+    expect(result).toHaveLength(1)
+    expect(result).toContain(mockRejectTx)
+  })
+
+  it('chooses next tx if reject tx is not eligible', () => {
+    const mockNextTx = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 1,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockRejectTx = {
+      ...defaultNextTx,
+      txInfo: {
+        ...mockTxInfo,
+        type: 'Custom',
+        isCancellation: true,
+      } as unknown as Custom,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 1,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 1,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockTx = [mockNextTx, mockRejectTx]
+
+    const result = getBatchableTransactions.resultFunc(mockTx, undefined, 1)
+    expect(result).toHaveLength(1)
+    expect(result).toContain(mockNextTx)
+  })
+
+  it('adds queued tx to the result if it is eligible', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 1,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
 
     const mockQueueTx = {
       ...defaultNextTx,
@@ -122,18 +196,21 @@ describe('getBatchableTransactions', () => {
 
     const result = getBatchableTransactions.resultFunc(mockTx, mockQueueTxs, 1)
     expect(result).toHaveLength(2)
+    expect(result).toContain(mockQueueTx)
   })
 
-  it('adds queued transaction to the result even if there is a reject tx for the same nonce', () => {
-    const mockTx = {
-      ...defaultNextTx,
-      executionInfo: {
-        ...defaultNextTx.executionInfo,
-        nonce: 1,
-        confirmationsRequired: 2,
-        confirmationsSubmitted: 2,
-      } as MultisigExecutionInfo,
-    }
+  it('chooses reject tx over queued tx if both are eligible', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 1,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
 
     const mockQueueTx = {
       ...defaultNextTx,
@@ -164,19 +241,66 @@ describe('getBatchableTransactions', () => {
 
     const result = getBatchableTransactions.resultFunc(mockTx, mockQueueTxs, 1)
     expect(result).toHaveLength(2)
-    expect(result).not.toContain(mockRejectTx.txInfo.isCancellation)
+    expect(result).toContain(mockRejectTx)
   })
 
-  it('doesnt add a queued transaction if there is one before that is missing confirmations', () => {
-    const mockTx = {
+  it('chooses queued tx if reject tx is not eligible', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 1,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
+
+    const mockQueueTx = {
       ...defaultNextTx,
       executionInfo: {
         ...defaultNextTx.executionInfo,
-        nonce: 1,
+        nonce: 2,
         confirmationsRequired: 2,
         confirmationsSubmitted: 2,
       } as MultisigExecutionInfo,
     }
+
+    const mockRejectTx = {
+      ...defaultNextTx,
+      txInfo: {
+        ...mockTxInfo,
+        type: 'Custom',
+        isCancellation: true,
+      } as unknown as Custom,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 2,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 1,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockQueueTxs = { 2: [mockQueueTx, mockRejectTx] }
+
+    const result = getBatchableTransactions.resultFunc(mockTx, mockQueueTxs, 1)
+    expect(result).toHaveLength(2)
+    expect(result).toContain(mockQueueTx)
+  })
+
+  it('doesnt add a queued tx if there is one before that is missing confirmations', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 1,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
 
     const mockQueueTx1 = {
       ...defaultNextTx,
