@@ -33,7 +33,7 @@ const FetchError = ({ text, buttonText, redirectRoute, onClick }: FetchErrorProp
 
       <Title size="xs">{text}</Title>
 
-      <StyledLink to={redirectRoute} onClick={() => onClick?.()}>
+      <StyledLink to={redirectRoute} onClick={onClick}>
         <Button color="primary" size="medium" variant="contained">
           {buttonText}
         </Button>
