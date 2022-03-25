@@ -77,16 +77,6 @@ describe('src/logic/wallets/utils/network', () => {
     })
   })
   describe('shouldSwitchNetwork', () => {
-    it('should return true when networks mismatch', () => {
-      const wallet = {
-        provider: {
-          networkVersion: '4',
-        },
-      }
-
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
-    })
-
     it('should return false when wallet is not connected', () => {
       const wallet = {
         provider: undefined,
@@ -94,15 +84,63 @@ describe('src/logic/wallets/utils/network', () => {
 
       expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
     })
+    describe('should return true when networks mismatch', () => {
+      it('for numeric `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: 4,
+          },
+        }
 
-    it('should return false when networks are the same', () => {
-      const wallet = {
-        provider: {
-          networkVersion: '1',
-        },
-      }
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      })
+      it('for strict hex `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '0x2',
+          },
+        }
 
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      })
+      it('for string `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '4',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      })
+    })
+    describe('should return false when networks are the same', () => {
+      it('for numeric `chainIds`', () => {
+        const wallet = {
+          provider: {
+            networkVersion: 1,
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      })
+      it('for strict hex `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '0x1',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      })
+      it('for string `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '1',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      })
     })
   })
 })
