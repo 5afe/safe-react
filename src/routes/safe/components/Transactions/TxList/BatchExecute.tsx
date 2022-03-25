@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -12,6 +12,8 @@ import {
   Erc721Transfer,
   MultisigExecutionInfo,
   Operation,
+  TransactionDetails,
+  TransactionInfo,
   TransactionTokenType,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
@@ -30,7 +32,6 @@ import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/
 import { extractSafeAddress } from 'src/routes/routes'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { DecodeTxs } from 'src/components/DecodeTxs'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
@@ -43,21 +44,28 @@ import Hairline from 'src/components/layout/Hairline'
 import { getInteractionTitle } from 'src/routes/safe/components/Transactions/helpers/utils'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
+import { createMultiSendTransaction } from 'src/logic/safe/store/actions/TxMultiSender'
+import { BatchExecuteHoverContext } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 
-function getTxInfo(transaction: Transaction, safeAddress: string) {
-  if (!transaction.txDetails) return {}
+type TxInfoProps = Pick<
+  TxArgs,
+  | 'data'
+  | 'baseGas'
+  | 'gasPrice'
+  | 'safeTxGas'
+  | 'gasToken'
+  | 'nonce'
+  | 'refundReceiver'
+  | 'valueInWei'
+  | 'to'
+  | 'operation'
+>
 
-  const confirmations =
-    transaction.txDetails.detailedExecutionInfo &&
-    isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-      ? List(
-          transaction.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-            makeConfirmation({ owner: signer.value, signature }),
-          ),
-        )
-      : List([])
+function getTxInfo(transaction: Transaction, safeAddress: string): TxInfoProps {
+  if (!transaction.txDetails) return {} as TxInfoProps
+
   const data = transaction.txDetails.txData?.hexData ?? EMPTY_DATA
   const baseGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
     ? transaction.txDetails.detailedExecutionInfo.baseGas
@@ -75,19 +83,11 @@ function getTxInfo(transaction: Transaction, safeAddress: string) {
   const refundReceiver = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
     ? transaction.txDetails.detailedExecutionInfo.refundReceiver.value
     : ZERO_ADDRESS
-  const safeTxHash = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.safeTxHash
-    : EMPTY_DATA
   const valueInWei = getTxValue(transaction.txInfo, transaction.txDetails)
   const to = getTxRecipient(transaction.txInfo, safeAddress)
   const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
-  const origin = transaction.safeAppInfo
-    ? JSON.stringify({ name: transaction.safeAppInfo.name, url: transaction.safeAppInfo.url })
-    : ''
-  const id = transaction.id
 
   return {
-    confirmations,
     data,
     baseGas,
     gasPrice,
@@ -95,16 +95,26 @@ function getTxInfo(transaction: Transaction, safeAddress: string) {
     gasToken,
     nonce,
     refundReceiver,
-    safeTxHash,
     valueInWei,
     to,
     operation,
-    origin,
-    id,
   }
 }
 
-function getTxValue(txInfo: any, txDetails: any) {
+function getTxConfirmations(transaction: Transaction) {
+  if (!transaction.txDetails) return List([])
+
+  return transaction.txDetails.detailedExecutionInfo &&
+    isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? List(
+        transaction.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
+          makeConfirmation({ owner: signer.value, signature }),
+        ),
+      )
+    : List([])
+}
+
+function getTxValue(txInfo: TransactionInfo, txDetails: TransactionDetails) {
   switch (txInfo.type) {
     case 'Transfer':
       if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
@@ -121,7 +131,7 @@ function getTxValue(txInfo: any, txDetails: any) {
   }
 }
 
-function getTxRecipient(txInfo: any, safeAddress: string) {
+function getTxRecipient(txInfo: TransactionInfo, safeAddress: string) {
   switch (txInfo.type) {
     case 'Transfer':
       if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
@@ -143,6 +153,7 @@ async function getBatchExecuteData(
   transactions: Transaction[],
   safeInstance: GnosisSafe,
   safeAddress: string,
+  account: string,
 ) {
   const batchableTransactionsWithDetails = await Promise.all(
     transactions.map(async (transaction) => {
@@ -160,9 +171,10 @@ async function getBatchExecuteData(
 
   const txs: MultiSendTx[] = batchableTransactionsWithDetails.map((transaction) => {
     const txInfo = getTxInfo(transaction, safeAddress)
-    const sigs = generateSignaturesFromTxConfirmations(txInfo.confirmations, undefined)
+    const confirmations = getTxConfirmations(transaction)
+    const sigs = generateSignaturesFromTxConfirmations(confirmations, undefined)
 
-    const txArgs: any = { ...txInfo, sigs, safeInstance }
+    const txArgs: TxArgs = { ...txInfo, sigs, safeInstance, sender: account }
     const data = getExecutionTransaction(txArgs).encodeABI()
 
     return {
@@ -176,6 +188,7 @@ async function getBatchExecuteData(
 }
 
 const BatchExecute = (): ReactElement => {
+  const hoverContext = useContext(BatchExecuteHoverContext)
   const dispatch = useDispatch<Dispatch>()
   const safeAddress = extractSafeAddress()
   const { address, currentVersion } = useSelector(currentSafe)
@@ -205,6 +218,14 @@ const BatchExecute = (): ReactElement => {
     }
   }, [multiSendCallData, multiSendInstance.methods])
 
+  const handleOnMouseEnter = useCallback(() => {
+    hoverContext.setActiveHover(batchableTransactions.map((tx) => tx.id))
+  }, [batchableTransactions, hoverContext])
+
+  const handleOnMouseLeave = useCallback(() => {
+    hoverContext.setActiveHover()
+  }, [hoverContext])
+
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
   }
@@ -213,29 +234,28 @@ const BatchExecute = (): ReactElement => {
     toggleModal()
 
     const handleGetBatchExecuteData = async () => {
-      const batchExecuteData = await getBatchExecuteData(dispatch, batchableTransactions, safeInstance, safeAddress)
+      const batchExecuteData = await getBatchExecuteData(
+        dispatch,
+        batchableTransactions,
+        safeInstance,
+        safeAddress,
+        account,
+      )
       setMultiSendCallData(batchExecuteData)
     }
     handleGetBatchExecuteData()
   }
 
   const handleBatchExecute = async () => {
-    toggleModal()
+    createMultiSendTransaction({
+      transactions: batchableTransactions,
+      multiSendCallData,
+      dispatch,
+      account,
+      safeAddress,
+    })
 
-    try {
-      await multiSendInstance.methods
-        .multiSend(multiSendCallData)
-        .send({
-          from: account,
-        })
-        .on('transactionHash', (txHash) => {
-          batchableTransactions.forEach((tx) => {
-            dispatch(addPendingTransaction({ id: tx.id, txHash: txHash }))
-          })
-        })
-    } catch (error) {
-      logError(Errors._820, error.message)
-    }
+    toggleModal()
   }
 
   return (
@@ -245,6 +265,8 @@ const BatchExecute = (): ReactElement => {
         variant="contained"
         onClick={handleOpenModal}
         disabled={batchableTransactions.length <= 1}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
       >
         Batch-Execute {batchableTransactions.length > 1 ? `(${batchableTransactions.length})` : ''}
       </StyledButton>

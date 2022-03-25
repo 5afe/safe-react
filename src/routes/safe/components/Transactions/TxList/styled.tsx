@@ -87,6 +87,10 @@ export const StyledTransactions = styled.div`
   flex-direction: column;
   row-gap: 6px;
 
+  & .MuiAccordion-root.highlight .MuiAccordionSummary-root {
+    background-color: ${primary200};
+  }
+
   & > .MuiAccordion-root {
     border: 2px solid ${grey400};
     border-radius: 8px;
