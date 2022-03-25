@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Img from 'src/components/layout/Img'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { TokenTransferAsset } from './hooks/useAssetInfo'
+import { TokenTransferAsset } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 const Amount = styled(Text)`
   margin-left: 10px;

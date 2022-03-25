@@ -1,10 +1,10 @@
 import { TransactionStatus, Transfer, TransferDirection } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 
-import { AssetInfo, TokenTransferAsset, useAssetInfo } from './hooks/useAssetInfo'
 import { TxInfoDetails } from './TxInfoDetails'
 import { isTxQueued } from 'src/logic/safe/store/models/types/gateway.d'
+import { AssetInfo, getAssetInfo, TokenTransferAsset } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export const isTransferAssetInfo = (value?: AssetInfo): value is TokenTransferAsset => {
   return value?.type === 'Transfer'
@@ -33,7 +33,7 @@ export const TxInfoTransfer = ({
   txInfo: Transfer
   txStatus: TransactionStatus
 }): ReactElement | null => {
-  const assetInfo = useAssetInfo(txInfo)
+  const assetInfo = useMemo(() => getAssetInfo(txInfo), [txInfo])
   const [details, setDetails] = useState<Details | undefined>()
 
   useEffect(() => {

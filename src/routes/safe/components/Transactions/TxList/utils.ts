@@ -7,6 +7,8 @@ import {
   MultisigExecutionDetails,
   MultisigExecutionInfo,
   Erc721Transfer,
+  SettingsChange,
+  Custom,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
@@ -17,6 +19,7 @@ import {
   isCustomTxInfo,
   isModuleExecutionInfo,
   isMultiSigExecutionDetails,
+  isSettingsChangeTxInfo,
   isTransferTxInfo,
   isTxQueued,
   LocalTransactionStatus,
@@ -31,6 +34,30 @@ interface AmountData {
   decimals?: number | string
   symbol?: string
   value: number | string
+}
+
+export type TokenTransferAsset = {
+  type: 'Transfer'
+  name: string
+  logoUri: string
+  directionSign: '+' | '-' | ''
+  amountWithSymbol: string
+  tokenType: string
+}
+
+export type AssetInfo = TokenTransferAsset | SettingsChange | Custom
+
+export const isTokenTransferAsset = (value: AssetInfo): value is TokenTransferAsset => {
+  return value.type === 'Transfer'
+}
+
+const defaultTokenTransferAsset: TokenTransferAsset = {
+  type: 'Transfer',
+  name: NOT_AVAILABLE,
+  logoUri: NOT_AVAILABLE,
+  directionSign: '',
+  amountWithSymbol: NOT_AVAILABLE,
+  tokenType: 'UNKNOWN',
 }
 
 const getAmountWithSymbol = (
@@ -204,3 +231,54 @@ export const isDeeplinkedTx = (): boolean => {
 export const isAwaitingExecution = (
   txStatus: typeof LocalTransactionStatus[keyof typeof LocalTransactionStatus],
 ): boolean => LocalTransactionStatus.AWAITING_EXECUTION === txStatus
+
+export const getAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => {
+  const amountWithSymbol = getTxAmount(txInfo)
+  if (isTransferTxInfo(txInfo)) {
+    const { direction, transferInfo } = txInfo as Transfer
+    const directionSign = direction === 'INCOMING' ? '+' : '-'
+
+    switch (transferInfo.type) {
+      case TransactionTokenType.ERC20: {
+        return {
+          type: 'Transfer',
+          name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
+          logoUri: transferInfo.logoUri ?? defaultTokenTransferAsset.logoUri,
+          directionSign,
+          amountWithSymbol,
+          tokenType: transferInfo.type,
+        }
+      }
+      case TransactionTokenType.ERC721: {
+        return {
+          type: 'Transfer',
+          name: `${transferInfo.tokenName ?? defaultTokenTransferAsset.name} ${getTokenIdLabel(transferInfo)}`,
+          logoUri: transferInfo.logoUri ?? defaultTokenTransferAsset.logoUri,
+          directionSign: directionSign,
+          amountWithSymbol,
+          tokenType: transferInfo.type,
+        }
+      }
+      case TransactionTokenType.NATIVE_COIN: {
+        const nativeCurrency = getNativeCurrency()
+
+        return {
+          type: 'Transfer',
+          name: nativeCurrency.name ?? defaultTokenTransferAsset.name,
+          logoUri: nativeCurrency.logoUri ?? defaultTokenTransferAsset.logoUri,
+          directionSign: directionSign,
+          amountWithSymbol,
+          tokenType: transferInfo.type,
+        }
+      }
+    }
+  }
+
+  if (isSettingsChangeTxInfo(txInfo)) {
+    return txInfo as SettingsChange
+  }
+
+  if (isCustomTxInfo(txInfo)) {
+    return txInfo as Custom
+  }
+}
