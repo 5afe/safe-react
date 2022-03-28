@@ -1,24 +1,14 @@
-import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { store } from 'src/store'
 import { lg, sm, md } from 'src/theme/variables'
 import Button from 'src/components/layout/Button'
 import { Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import {
-  Erc20Transfer,
-  Erc721Transfer,
-  MultisigExecutionInfo,
-  Operation,
-  TransactionDetails,
-  TransactionInfo,
-  TransactionTokenType,
-} from '@gnosis.pm/safe-react-gateway-sdk'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
-import { List } from 'immutable'
-import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import {
@@ -26,7 +16,6 @@ import {
   getMultisendContract,
   getMultisendContractAddress,
 } from 'src/logic/contracts/safeContracts'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { extractSafeAddress } from 'src/routes/routes'
@@ -48,105 +37,8 @@ import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTrans
 import { createMultiSendTransaction } from 'src/logic/safe/store/actions/TxMultiSender'
 import { BatchExecuteHoverContext } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-
-type TxInfoProps = Pick<
-  TxArgs,
-  | 'data'
-  | 'baseGas'
-  | 'gasPrice'
-  | 'safeTxGas'
-  | 'gasToken'
-  | 'nonce'
-  | 'refundReceiver'
-  | 'valueInWei'
-  | 'to'
-  | 'operation'
->
-
-function getTxInfo(transaction: Transaction, safeAddress: string): TxInfoProps {
-  if (!transaction.txDetails) return {} as TxInfoProps
-
-  const data = transaction.txDetails.txData?.hexData ?? EMPTY_DATA
-  const baseGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.baseGas
-    : '0'
-  const gasPrice = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.gasPrice
-    : '0'
-  const safeTxGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.safeTxGas
-    : '0'
-  const gasToken = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.gasToken
-    : ZERO_ADDRESS
-  const nonce = (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
-  const refundReceiver = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.refundReceiver.value
-    : ZERO_ADDRESS
-  const valueInWei = getTxValue(transaction.txInfo, transaction.txDetails)
-  const to = getTxRecipient(transaction.txInfo, safeAddress)
-  const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
-
-  return {
-    data,
-    baseGas,
-    gasPrice,
-    safeTxGas,
-    gasToken,
-    nonce,
-    refundReceiver,
-    valueInWei,
-    to,
-    operation,
-  }
-}
-
-function getTxConfirmations(transaction: Transaction) {
-  if (!transaction.txDetails) return List([])
-
-  return transaction.txDetails.detailedExecutionInfo &&
-    isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? List(
-        transaction.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-          makeConfirmation({ owner: signer.value, signature }),
-        ),
-      )
-    : List([])
-}
-
-function getTxValue(txInfo: TransactionInfo, txDetails: TransactionDetails) {
-  switch (txInfo.type) {
-    case 'Transfer':
-      if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
-        return txInfo.transferInfo.value
-      } else {
-        return txDetails.txData?.value ?? '0'
-      }
-    case 'Custom':
-      return txInfo.value
-    case 'Creation':
-    case 'SettingsChange':
-    default:
-      return '0'
-  }
-}
-
-function getTxRecipient(txInfo: TransactionInfo, safeAddress: string) {
-  switch (txInfo.type) {
-    case 'Transfer':
-      if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
-        return txInfo.recipient.value
-      } else {
-        return (txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
-      }
-    case 'Custom':
-      return txInfo.to.value
-    case 'Creation':
-    case 'SettingsChange':
-    default:
-      return safeAddress
-  }
-}
+import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { getTxConfirmations, getTxInfo } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 async function getBatchExecuteData(
   dispatch: Dispatch,
@@ -200,6 +92,10 @@ const BatchExecute = (): ReactElement => {
   const [isModalOpen, setModalOpen] = useState(false)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const [decodedData, setDecodedData] = useState<DecodedTxDetailType>()
+  const hasPendingTx = useMemo(
+    () => batchableTransactions.some(({ id }) => isTxPending(store.getState(), id)),
+    [batchableTransactions],
+  )
 
   useEffect(() => {
     let isCurrent = true
@@ -264,7 +160,7 @@ const BatchExecute = (): ReactElement => {
         color="primary"
         variant="contained"
         onClick={handleOpenModal}
-        disabled={batchableTransactions.length <= 1}
+        disabled={batchableTransactions.length <= 1 || hasPendingTx}
         onMouseEnter={handleOnMouseEnter}
         onMouseLeave={handleOnMouseLeave}
       >

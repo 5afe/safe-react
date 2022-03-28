@@ -7,6 +7,8 @@ import {
   MultisigExecutionDetails,
   MultisigExecutionInfo,
   Erc721Transfer,
+  Operation,
+  Erc20Transfer,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
@@ -23,8 +25,27 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { SAFE_ROUTES, TRANSACTION_ID_SLUG, history } from 'src/routes/routes'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { List } from 'immutable'
+import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+
+type TxInfoProps = Pick<
+  TxArgs,
+  | 'data'
+  | 'baseGas'
+  | 'gasPrice'
+  | 'safeTxGas'
+  | 'gasToken'
+  | 'nonce'
+  | 'refundReceiver'
+  | 'valueInWei'
+  | 'to'
+  | 'operation'
+>
 
 export const NOT_AVAILABLE = 'n/a'
 interface AmountData {
@@ -133,6 +154,91 @@ export const getTxTo = ({ txInfo }: Pick<Transaction, 'txInfo'>): AddressEx | un
     case 'Creation': {
       return txInfo.factory || undefined
     }
+  }
+}
+
+export const getTxInfo = (transaction: Transaction, safeAddress: string): TxInfoProps => {
+  if (!transaction.txDetails) return {} as TxInfoProps
+
+  const data = transaction.txDetails.txData?.hexData ?? EMPTY_DATA
+  const baseGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.baseGas
+    : '0'
+  const gasPrice = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.gasPrice
+    : '0'
+  const safeTxGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.safeTxGas
+    : '0'
+  const gasToken = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.gasToken
+    : ZERO_ADDRESS
+  const nonce = (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
+  const refundReceiver = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.refundReceiver.value
+    : ZERO_ADDRESS
+  const valueInWei = getTxValue(transaction.txInfo, transaction.txDetails)
+  const to = getTxRecipient(transaction.txInfo, safeAddress)
+  const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
+
+  return {
+    data,
+    baseGas,
+    gasPrice,
+    safeTxGas,
+    gasToken,
+    nonce,
+    refundReceiver,
+    valueInWei,
+    to,
+    operation,
+  }
+}
+
+export const getTxConfirmations = (transaction: Transaction): List<Confirmation> => {
+  if (!transaction.txDetails) return List([])
+
+  return transaction.txDetails.detailedExecutionInfo &&
+    isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? List(
+        transaction.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
+          makeConfirmation({ owner: signer.value, signature }),
+        ),
+      )
+    : List([])
+}
+
+const getTxValue = (txInfo: TransactionInfo, txDetails: TransactionDetails): string => {
+  switch (txInfo.type) {
+    case 'Transfer':
+      if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
+        return txInfo.transferInfo.value
+      } else {
+        return txDetails.txData?.value ?? '0'
+      }
+    case 'Custom':
+      return txInfo.value
+    case 'Creation':
+    case 'SettingsChange':
+    default:
+      return '0'
+  }
+}
+
+const getTxRecipient = (txInfo: TransactionInfo, safeAddress: string): string => {
+  switch (txInfo.type) {
+    case 'Transfer':
+      if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
+        return txInfo.recipient.value
+      } else {
+        return (txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
+      }
+    case 'Custom':
+      return txInfo.to.value
+    case 'Creation':
+    case 'SettingsChange':
+    default:
+      return safeAddress
   }
 }
 
