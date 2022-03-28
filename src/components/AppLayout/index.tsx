@@ -122,7 +122,7 @@ const Layout: React.FC<Props> = ({
         </SidebarWrapper>
         <ContentWrapper>
           <div>{children}</div>
-          {!hasFooter && <Footer />}
+          {hasFooter && <Footer />}
         </ContentWrapper>
       </BodyWrapper>
 
