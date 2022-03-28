@@ -1,0 +1,344 @@
+[
+  {
+    "safeAddress": "0xF31B1a211d75d7aeD828C94CB0cdA093d9D7E50D",
+    "chainId": "4",
+    "totalPending": 24,
+    "summaries": [
+      {
+        "id": "multisig_0xF31B1a211e75d7aeD828C94CB0cdA093d9D7E50D_0x889b088e1320c24940ffc9774917817a0fb5626b2822445c2bda76832184fce2",
+        "timestamp": 1648035189746,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0xF31B1a211d75d7aeD828C94CB0cdA093d9D7E50D"
+          },
+          "recipient": {
+            "value": "0x5085ebBECD8b2759B329685511b45E4d8651e918"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "107700000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 13,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0xF33B1a211d75d7aeD828C94CB0cdA093d9D7E50D_0x889b088e1320c24940ffc9774917817a0fb5626b2822445c2bda76832184fce2",
+        "timestamp": 1648035189746,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0xF31B1a211d75d7aeD828C94CB0cdA093d9D7E50D"
+          },
+          "recipient": {
+            "value": "0x5085ebBECD8b2759B329685511b45E4d8651e918"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "98000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 13,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0xF31B1a211d75d7aeD828C948B0cdA093d9D7E50D_0x889b088e1320c24940ffc9774917817a0fb5626b2822445c2bda76832184fce2",
+        "timestamp": 1648035189746,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0xF31B1a211d75d7aeD828C94CB0cdA093d9D7E50D"
+          },
+          "recipient": {
+            "value": "0x5085ebBECD8b2759B329685511b45E4d8651e918"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "10000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 13,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0xF32B1a211d75d7aeD828C94CB0cdA093d9D7E50D_0x889b088e1320c24940ffc9774917817a0fb5626b2822445c2bda76832184fce2",
+        "timestamp": 1648035189746,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0xF31B1a211d75d7aeD828C94CB0cdA093d9D7E50D"
+          },
+          "recipient": {
+            "value": "0x5085ebBECD8b2759B329685511b45E4d8651e918"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "230000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 13,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0xC31B1a211d75d7aeD828C94CB0cdA093d9D7E50D_0x889b088e1320c24940ffc9774917817a0fb5626b2822445c2bda76832184fce2",
+        "timestamp": 1648035189746,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0xF31B1a211d75d7aeD828C94CB0cdA093d9D7E50D"
+          },
+          "recipient": {
+            "value": "0x5085ebBECD8b2759B329685511b45E4d8651e918"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "200000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 13,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "safeAddress": "0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A",
+    "chainId": "4",
+    "totalPending": 1,
+    "summaries": [
+      {
+        "id": "multisig_0xb3b83b204C458B461de9B0CD2739DB152b4fa5A_0x3d7a9b02a15f803571d66719fc45ddeecaef058779dfeb6a9276e1abb6cccd59",
+        "timestamp": 1644329113910,
+        "txStatus": "AWAITING_EXECUTION",
+        "txInfo": {
+          "type": "Custom",
+          "to": {
+            "value": "0xE93426CCb2051557e5bF82A7B6504f5F6bff43A8"
+          },
+          "dataSize": "484",
+          "value": "0",
+          "methodName": "execTransaction",
+          "isCancellation": false
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 228,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 2
+        }
+      }
+    ]
+  },
+  {
+    "safeAddress": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb",
+    "chainId": "5",
+    "totalPending": 12,
+    "summaries": [
+      {
+        "id": "multisig_0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb_0x380d358411ba4e6b8fdd1c3170225c4603724dd03c2c2dfc39a77a62f60b7c31",
+        "timestamp": 1647892482343,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "recipient": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "10000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 1,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0x554ec7B53fC330c9Fc6D08fD12b724c450e4eAfb_0x380d358411ba4e6b8fdd1c3170225c4603724dd03c2c2dfc39a77a62f60b7c31",
+        "timestamp": 1647892482343,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "recipient": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "233400000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 1,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0x526ec7B53fC330c9Fc6D08fD12b724c450e4eAfb_0x380d358411ba4e6b8fdd1c3170225c4603724dd03c2c2dfc39a77a62f60b7c31",
+        "timestamp": 1647892482343,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "recipient": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "543400000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 1,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0x524ea7B53fC330c9Fc6D08fD12b724c450e4eAfb_0x380d358411ba4e6b8fdd1c3170225c4603724dd03c2c2dfc39a77a62f60b7c31",
+        "timestamp": 1647892482343,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "recipient": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "193400000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 1,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      },
+      {
+        "id": "multisig_0x514ec7B53fC330c9Fc6D08fD12b724c450e4eAfb_0x380d358411ba4e6b8fdd1c3170225c4603724dd03c2c2dfc39a77a62f60b7c31",
+        "timestamp": 1647892482343,
+        "txStatus": "AWAITING_CONFIRMATIONS",
+        "txInfo": {
+          "type": "Transfer",
+          "sender": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "recipient": {
+            "value": "0x524ec7B53fC330c9Fc6D08fD12b724c450e4eAfb"
+          },
+          "direction": "OUTGOING",
+          "transferInfo": {
+            "type": "NATIVE_COIN",
+            "value": "773400000000000000"
+          }
+        },
+        "executionInfo": {
+          "type": "MULTISIG",
+          "nonce": 1,
+          "confirmationsRequired": 2,
+          "confirmationsSubmitted": 1,
+          "missingSigners": [
+            {
+              "value": "0xc81DeFC11034BDdFbFeeF299987Cd8f74A5B9bd8"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
