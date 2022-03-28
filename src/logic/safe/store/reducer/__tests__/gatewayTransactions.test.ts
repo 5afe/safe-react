@@ -456,6 +456,49 @@ describe('gatewayTransactionsReducer', () => {
       expect(newState).toEqual(prevState)
     })
 
+    it('sorts `queued.queued` transactions by ascending timestamp when adding a new transaction', () => {
+      const mockOldestTx = {
+        transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY }, // Timestamp of 0
+        ...MOCK_TX_META,
+      }
+      const mockOldTx = {
+        transaction: { id: 'sdgbfghsdfhsd', ...MOCK_TX_SUMMARY, timestamp: 1 },
+        ...MOCK_TX_META,
+      }
+      const mockNewTx = {
+        transaction: { id: 'ser5464e5s45', ...MOCK_TX_SUMMARY, timestamp: 2 },
+        ...MOCK_TX_META,
+      }
+      const mockNewestTx = {
+        transaction: { id: 'sdegrsdh656', ...MOCK_TX_SUMMARY, timestamp: 3 },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
+        chainId: '4',
+        safeAddress: ZERO_ADDRESS,
+        values: [QUEUED_LABEL, mockNewTx, mockOldestTx, mockNewestTx, mockOldTx],
+      }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
+
+      const expectedState = {
+        4: {
+          [ZERO_ADDRESS]: {
+            queued: {
+              next: {},
+              queued: {
+                0: [mockOldestTx.transaction, mockOldTx.transaction, mockNewTx.transaction, mockNewestTx.transaction],
+              },
+            },
+            history: {},
+          },
+        },
+      }
+
+      expect(newState).toEqual(expectedState)
+    })
+
     it('merges existing `queued.next` transactions', () => {
       const mockTx: Transaction = {
         transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY },
@@ -496,6 +539,49 @@ describe('gatewayTransactionsReducer', () => {
 
       // Should remain the same as it keeps the `txDetails` via merge
       expect(newState).toEqual(prevState)
+    })
+
+    it('sorts `queued.next` transactions by timestamp when adding a new transaction', () => {
+      const mockOldestTx = {
+        transaction: { id: 'gsdfgsdfgfdgsf', ...MOCK_TX_SUMMARY }, // Timestamp of 0
+        ...MOCK_TX_META,
+      }
+      const mockOldTx = {
+        transaction: { id: 'sdgbfghsdfhsd', ...MOCK_TX_SUMMARY, timestamp: 1 },
+        ...MOCK_TX_META,
+      }
+      const mockNewTx = {
+        transaction: { id: 'ser5464e5s45', ...MOCK_TX_SUMMARY, timestamp: 2 },
+        ...MOCK_TX_META,
+      }
+      const mockNewestTx = {
+        transaction: { id: 'sdegrsdh656', ...MOCK_TX_SUMMARY, timestamp: 3 },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
+        chainId: '4',
+        safeAddress: ZERO_ADDRESS,
+        values: [NEXT_LABEL, mockNewTx, mockOldestTx, mockNewestTx, mockOldTx],
+      }
+
+      const newState = gatewayTransactionsReducer(EMPTY_STATE, addQueuedTransactions(mockPayload))
+
+      const expectedState = {
+        4: {
+          [ZERO_ADDRESS]: {
+            queued: {
+              next: {
+                0: [mockOldestTx.transaction, mockOldTx.transaction, mockNewTx.transaction, mockNewestTx.transaction],
+              },
+              queued: {},
+            },
+            history: {},
+          },
+        },
+      }
+
+      expect(newState).toEqual(expectedState)
     })
 
     it('replaces `queued.queued` transactions if there are new confirmations', () => {

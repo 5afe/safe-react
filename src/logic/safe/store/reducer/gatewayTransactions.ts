@@ -145,7 +145,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
               const storedTx = newQueued[txNonce][txIndex]
               newQueued[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
             } else {
-              newQueued[txNonce] = [...newQueued[txNonce], newTx]
+              newQueued[txNonce] = [...newQueued[txNonce], newTx].sort((a, b) => a.timestamp - b.timestamp)
             }
           } else {
             newQueued = { ...newQueued, [txNonce]: [newTx] }
@@ -158,7 +158,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
               const storedTx = newNext[txNonce][txIndex]
               newNext[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
             } else {
-              newNext[txNonce] = [...newNext[txNonce], newTx]
+              newNext[txNonce] = [...newNext[txNonce], newTx].sort((a, b) => a.timestamp - b.timestamp)
             }
           } else {
             newNext = { [txNonce]: [newTx] }
