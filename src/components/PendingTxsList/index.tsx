@@ -16,7 +16,7 @@ import {
   LocalTransactionStatus,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
-import { grey400 } from 'src/theme/variables'
+import { grey400, sm } from 'src/theme/variables'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { GATEWAY_URL } from 'src/utils/constants'
 import { CustomIconText } from 'src/components/CustomIconText'
@@ -169,12 +169,13 @@ const OverlapDots = styled.div`
 `
 
 const TransactionToConfirm = styled(Link)`
+  min-width: 250px;
   height: 40px;
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 1fr 4fr 1fr;
   gap: 4px;
-  margin: 16px auto;
+  margin: ${sm} auto;
   text-decoration: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 2px solid ${grey400};

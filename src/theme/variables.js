@@ -5,21 +5,15 @@ const errorColor = '#f02525'
 const fancyColor = '#f02525'
 const fontColor = '#001428'
 const headerHeight = '52px'
-const lg = '24px'
 const marginButtonImg = '12px'
-const md = '16px'
 const primary = '#001428'
 const primaryLite = '#EFFAF8'
 const primaryActive = '#008C73'
 const secondary = '#008C73'
 const secondaryTextOrSvg = '#B2B5B2'
 const secondaryBackground = '#f0efee'
-const sm = '8px'
 const warningColor = '#ffc05f'
 const alertWarningColor = '#FBE5C5'
-const xl = '32px'
-const xs = '4px'
-const xxl = '40px'
 
 module.exports = {
   background: '#F6F7F8',
@@ -46,11 +40,11 @@ module.exports = {
   gray500: '#E2E3E3',
   headerHeight,
   largeFontSize: '16px',
-  lg,
+  lg: '24px',
   lightFont: 300,
   mainFontFamily: 'Averta, sans-serif',
   marginButtonImg,
-  md,
+  md: '16px',
   mediumFontSize: '14px',
   orange500: '#e8663d',
   primary,
@@ -72,12 +66,12 @@ module.exports = {
   secondaryFontFamily: 'Averta, monospace',
   secondaryText: secondaryTextOrSvg,
   secondaryBackground,
-  sm,
+  sm: '8px',
   smallFontSize: '12px',
   warning: warningColor,
   alertWarning: alertWarningColor,
-  xl,
-  xs,
-  xxl,
+  xl: '32px',
+  xs: '4px',
+  xxl: '40px',
   xxlFontSize: '32px',
 }
