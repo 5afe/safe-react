@@ -44,16 +44,31 @@ export type TransactionDetailsPayload = {
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
 
 const getUpdatedTx = (storedTx: Transaction, newTx: Transaction) => {
-  const hasMoreConfirmations =
+  const isUpdatedTx =
     isMultisigExecutionInfo(storedTx.executionInfo) &&
     isMultisigExecutionInfo(newTx.executionInfo) &&
     storedTx.executionInfo.confirmationsSubmitted !== newTx.executionInfo.confirmationsSubmitted
 
-  return hasMoreConfirmations
+  return isUpdatedTx
     ? // Will remove txDetails as they will have changed because of confirmations
       newTx
     : // Create new object, preserving txDetails
       merge({}, storedTx, newTx)
+}
+
+const updateTxs = (txs: Transaction[], newTx: Transaction) => {
+  const newTxs = cloneDeep(txs)
+  const txIndex = txs.findIndex(({ id }) => sameString(id, newTx.id))
+
+  if (txIndex >= 0) {
+    const storedTx = newTxs[txIndex]
+    newTxs[txIndex] = getUpdatedTx(storedTx, newTx)
+  } else {
+    newTxs.push(newTx)
+    newTxs.sort((a, b) => a.timestamp - b.timestamp)
+  }
+
+  return newTxs
 }
 
 export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState, Payload>(
@@ -139,27 +154,13 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
 
         if (label === 'queued') {
           if (newQueued?.[txNonce]) {
-            const txIndex = newQueued[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
-
-            if (txIndex >= 0) {
-              const storedTx = newQueued[txNonce][txIndex]
-              newQueued[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
-            } else {
-              newQueued[txNonce] = [...newQueued[txNonce], newTx].sort((a, b) => a.timestamp - b.timestamp)
-            }
+            newQueued[txNonce] = updateTxs(newQueued[txNonce], newTx)
           } else {
             newQueued = { ...newQueued, [txNonce]: [newTx] }
           }
         } else {
           if (newNext?.[txNonce]) {
-            const txIndex = newNext[txNonce].findIndex(({ id }) => sameString(id, newTx.id))
-
-            if (txIndex >= 0) {
-              const storedTx = newNext[txNonce][txIndex]
-              newNext[txNonce][txIndex] = getUpdatedTx(storedTx, newTx)
-            } else {
-              newNext[txNonce] = [...newNext[txNonce], newTx].sort((a, b) => a.timestamp - b.timestamp)
-            }
+            newNext[txNonce] = updateTxs(newNext[txNonce], newTx)
           } else {
             newNext = { [txNonce]: [newTx] }
           }
