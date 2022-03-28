@@ -60,7 +60,7 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       // Omit id from the pending transactions on current chain
       const { [id]: _, ...newChainState } = state[chainId] || {}
 
-      if (Object.keys(newChainState[chainId] || {}).length === 0) {
+      if (Object.keys(newChainState || {}).length === 0) {
         // Omit chainId from the pending transactions if no pending transactions on chain
         const { [chainId]: _, ...newState } = state
         return newState
