@@ -171,44 +171,45 @@ export const getBatchableTransactions = createSelector(
   nextTransaction,
   queuedTransactions,
   currentSafeNonce,
-  (nextTx, queuedTxs, safeNonce) => {
+  (nextTxs, queuedTxs, safeNonce) => {
     const batchableTransactions: Transaction[] = []
     let currentNonce = safeNonce
 
-    if (!nextTx) return batchableTransactions
+    if (!nextTxs) return batchableTransactions
 
-    function addToBatchIfEligible(transaction: Transaction, currentTxNonce: number): void {
+    function isTxEligible(transaction: Transaction): boolean {
+      return (
+        isMultisigExecutionInfo(transaction.executionInfo) &&
+        transaction.executionInfo.nonce === currentNonce &&
+        transaction.executionInfo.confirmationsSubmitted >= transaction.executionInfo.confirmationsRequired
+      )
+    }
+
+    function addToBatchIfEligible(transaction: Transaction): void {
       if (
         isMultisigExecutionInfo(transaction.executionInfo) &&
-        transaction.executionInfo.nonce === currentTxNonce &&
-        transaction.executionInfo.confirmationsSubmitted >= transaction.executionInfo.confirmationsRequired &&
+        isTxEligible(transaction) &&
         batchableTransactions.length < BATCH_LIMIT
       ) {
         batchableTransactions.push(transaction)
-        currentNonce = transaction.executionInfo.nonce
+        currentNonce = transaction.executionInfo.nonce + 1
       }
     }
 
-    if (nextTx.length > 1) {
-      const nextTxRejection = nextTx[1]
-      addToBatchIfEligible(nextTxRejection, currentNonce)
+    const eligibleTransactions = nextTxs.filter((tx) => isTxEligible(tx))
+
+    for (const eligibleTransaction of eligibleTransactions) {
+      addToBatchIfEligible(eligibleTransaction)
     }
 
-    if (batchableTransactions.length === 0) {
-      const nextTransaction = nextTx[0]
-      addToBatchIfEligible(nextTransaction, currentNonce)
-    }
-
-    if (!queuedTxs || batchableTransactions.length === 0) return batchableTransactions
+    if (!queuedTxs) return batchableTransactions
 
     Object.values(queuedTxs).forEach((queuedTxsByNonce) => {
-      if (queuedTxsByNonce.length > 1) {
-        const queuedTxRejection = queuedTxsByNonce[1]
-        addToBatchIfEligible(queuedTxRejection, currentNonce + 1)
-      }
+      const eligibleTransactions = queuedTxsByNonce.filter((tx) => isTxEligible(tx))
 
-      const queuedTx = queuedTxsByNonce[0]
-      addToBatchIfEligible(queuedTx, currentNonce + 1)
+      for (const eligibleTransaction of eligibleTransactions) {
+        addToBatchIfEligible(eligibleTransaction)
+      }
     })
 
     return batchableTransactions

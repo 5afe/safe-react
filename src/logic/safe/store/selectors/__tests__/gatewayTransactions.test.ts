@@ -103,7 +103,7 @@ describe('getBatchableTransactions', () => {
     expect(result).toHaveLength(1)
   })
 
-  it('chooses reject tx over next transaction if both are eligible', () => {
+  it('chooses the first eligible transaction in group', () => {
     const mockNextTx = {
       ...defaultNextTx,
       executionInfo: {
@@ -125,15 +125,25 @@ describe('getBatchableTransactions', () => {
         ...defaultNextTx.executionInfo,
         nonce: 1,
         confirmationsRequired: 2,
+        confirmationsSubmitted: 1,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockNextTx1 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 1,
+        confirmationsRequired: 2,
         confirmationsSubmitted: 2,
       } as MultisigExecutionInfo,
     }
 
-    const mockTx = [mockNextTx, mockRejectTx]
+    const mockTx = [mockRejectTx, mockNextTx1, mockNextTx]
 
     const result = getBatchableTransactions.resultFunc(mockTx, undefined, 1)
     expect(result).toHaveLength(1)
-    expect(result).toContain(mockRejectTx)
+    expect(result).toContain(mockNextTx1)
   })
 
   it('chooses next tx if reject tx is not eligible', () => {
@@ -199,7 +209,7 @@ describe('getBatchableTransactions', () => {
     expect(result).toContain(mockQueueTx)
   })
 
-  it('chooses reject tx over queued tx if both are eligible', () => {
+  it('chooses first eligible tx in queued group', () => {
     const mockTx = [
       {
         ...defaultNextTx,
@@ -218,7 +228,17 @@ describe('getBatchableTransactions', () => {
         ...defaultNextTx.executionInfo,
         nonce: 2,
         confirmationsRequired: 2,
-        confirmationsSubmitted: 2,
+        confirmationsSubmitted: 1,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockQueueTx1 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 2,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 1,
       } as MultisigExecutionInfo,
     }
 
@@ -237,7 +257,7 @@ describe('getBatchableTransactions', () => {
       } as MultisigExecutionInfo,
     }
 
-    const mockQueueTxs = { 2: [mockQueueTx, mockRejectTx] }
+    const mockQueueTxs = { 2: [mockQueueTx1, mockQueueTx, mockRejectTx] }
 
     const result = getBatchableTransactions.resultFunc(mockTx, mockQueueTxs, 1)
     expect(result).toHaveLength(2)
