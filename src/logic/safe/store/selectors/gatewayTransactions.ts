@@ -196,7 +196,7 @@ export const getBatchableTransactions = createSelector(
       }
     }
 
-    const eligibleTransactions = nextTxs.filter((tx) => isTxEligible(tx))
+    const eligibleTransactions = nextTxs.filter(isTxEligible)
 
     for (const eligibleTransaction of eligibleTransactions) {
       addToBatchIfEligible(eligibleTransaction)
@@ -205,7 +205,7 @@ export const getBatchableTransactions = createSelector(
     if (!queuedTxs) return batchableTransactions
 
     Object.values(queuedTxs).forEach((queuedTxsByNonce) => {
-      const eligibleTransactions = queuedTxsByNonce.filter((tx) => isTxEligible(tx))
+      const eligibleTransactions = queuedTxsByNonce.filter(isTxEligible)
 
       for (const eligibleTransaction of eligibleTransactions) {
         addToBatchIfEligible(eligibleTransaction)
