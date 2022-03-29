@@ -702,6 +702,50 @@ describe('gatewayTransactionsReducer', () => {
 
       expect(newState).toEqual(expectedState)
     })
+    it('removes the transaction that moves from `queued.queued` to `queued.next`', () => {
+      const mockTx: Transaction = {
+        transaction: { id: 'sdfgsdfgdsfg', ...MOCK_TX_SUMMARY },
+        ...MOCK_TX_META,
+      }
+
+      const mockPayload: QueuedPayload = {
+        chainId: '4',
+        safeAddress: ZERO_ADDRESS,
+        values: [NEXT_LABEL, mockTx],
+      }
+
+      const prevState: GatewayTransactionsState = {
+        4: {
+          [ZERO_ADDRESS]: {
+            queued: {
+              next: {},
+              queued: {
+                0: [mockTx.transaction],
+              },
+            },
+            history: {},
+          },
+        },
+      }
+
+      const newState = gatewayTransactionsReducer(prevState, addQueuedTransactions(mockPayload))
+
+      const expectedState: GatewayTransactionsState = {
+        4: {
+          [ZERO_ADDRESS]: {
+            queued: {
+              next: {
+                0: [mockTx.transaction],
+              },
+              queued: {}, // Transaction removed
+            },
+            history: {},
+          },
+        },
+      }
+
+      expect(newState).toEqual(expectedState)
+    })
     it('resets the `queued.next` if there are no `queued` transactions at all', () => {
       const mockTx: Transaction = {
         transaction: { id: 'sdfgsdfgdsfg', ...MOCK_TX_SUMMARY },
