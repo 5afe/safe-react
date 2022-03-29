@@ -8,6 +8,7 @@ export const BatchExecuteHoverContext = createContext<{
   setActiveHover: () => {},
 })
 
+// Used for highlighting transactions that will be included when executing them as a batch
 export const BatchExecuteHoverProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [activeHover, setActiveHover] = useState<string[]>()
 

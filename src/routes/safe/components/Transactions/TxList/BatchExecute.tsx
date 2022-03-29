@@ -140,14 +140,14 @@ const BatchExecute = (): ReactElement => {
         onMouseEnter={handleOnMouseEnter}
         onMouseLeave={handleOnMouseLeave}
       >
-        Batch-Execute {batchableTransactions.length > 1 ? `(${batchableTransactions.length})` : ''}
+        Execute Batch {batchableTransactions.length > 1 ? `(${batchableTransactions.length})` : ''}
       </StyledButton>
-      <Modal description="Batch-Execute" handleClose={toggleModal} open={isModalOpen} title="Batch-Execute">
-        <ModalHeader onClose={toggleModal} title="Batch-execute transactions" />
+      <Modal description="Execute Batch" handleClose={toggleModal} open={isModalOpen} title="Execute Batch">
+        <ModalHeader onClose={toggleModal} title="Batch-Execute transactions" />
         <Hairline />
         <ModalContent>
           <Row margin="md">
-            <Paragraph noMargin>This action will execute {batchableTransactions.length} Transactions.</Paragraph>
+            <Paragraph noMargin>This action will execute {batchableTransactions.length} transactions.</Paragraph>
           </Row>
           <Row margin="xs">
             <Paragraph color="disabled" noMargin size="lg">
@@ -193,4 +193,5 @@ const ModalContent = styled.div`
   padding: ${lg} ${lg} 0;
 `
 
+// Since there are no props we can safely use memoize
 export const MemoizedBatchExecute = React.memo(BatchExecute)

@@ -1,14 +1,14 @@
 import {
   AddressEx,
-  TransactionInfo,
-  Transfer,
-  TransactionTokenType,
-  TransactionDetails,
+  Erc20Transfer,
+  Erc721Transfer,
   MultisigExecutionDetails,
   MultisigExecutionInfo,
-  Erc721Transfer,
   Operation,
-  Erc20Transfer,
+  TransactionDetails,
+  TransactionInfo,
+  TransactionTokenType,
+  Transfer,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { matchPath } from 'react-router-dom'
@@ -19,6 +19,7 @@ import {
   isCustomTxInfo,
   isModuleExecutionInfo,
   isMultiSigExecutionDetails,
+  isMultisigExecutionInfo,
   isTransferTxInfo,
   isTxQueued,
   LocalTransactionStatus,
@@ -26,7 +27,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES, TRANSACTION_ID_SLUG, history } from 'src/routes/routes'
+import { history, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { List } from 'immutable'
@@ -160,37 +161,39 @@ export const getTxTo = ({ txInfo }: Pick<Transaction, 'txInfo'>): AddressEx | un
 export const getTxInfo = (transaction: Transaction, safeAddress: string): TxInfoProps => {
   if (!transaction.txDetails) return {} as TxInfoProps
 
-  const data = transaction.txDetails.txData?.hexData ?? EMPTY_DATA
-  const baseGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.baseGas
-    : '0'
-  const gasPrice = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.gasPrice
-    : '0'
-  const safeTxGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.safeTxGas
-    : '0'
-  const gasToken = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.gasToken
-    : ZERO_ADDRESS
-  const nonce = (transaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
-  const refundReceiver = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.refundReceiver.value
-    : ZERO_ADDRESS
-  const valueInWei = getTxValue(transaction.txInfo, transaction.txDetails)
-  const to = getTxRecipient(transaction.txInfo, safeAddress)
-  const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
+  const DEFAULT_TX_INFO = {
+    data: EMPTY_DATA,
+    baseGas: '0',
+    gasPrice: '0',
+    safeTxGas: '0',
+    gasToken: ZERO_ADDRESS,
+    nonce: 0,
+    refundReceiver: ZERO_ADDRESS,
+    valueInWei: getTxValue(transaction.txInfo, transaction.txDetails),
+    to: getTxRecipient(transaction.txInfo, safeAddress),
+    operation: Operation.CALL,
+  }
+
+  if (!isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)) {
+    return DEFAULT_TX_INFO
+  }
+
+  const { baseGas, gasPrice, safeTxGas, gasToken, refundReceiver } = transaction.txDetails.detailedExecutionInfo
+  const data = transaction.txDetails.txData?.hexData ?? DEFAULT_TX_INFO.data
+  const nonce = isMultisigExecutionInfo(transaction.executionInfo)
+    ? transaction.executionInfo.nonce
+    : DEFAULT_TX_INFO.nonce
+  const operation = transaction.txDetails.txData?.operation ?? DEFAULT_TX_INFO.operation
 
   return {
+    ...DEFAULT_TX_INFO,
     data,
     baseGas,
     gasPrice,
     safeTxGas,
     gasToken,
     nonce,
-    refundReceiver,
-    valueInWei,
-    to,
+    refundReceiver: refundReceiver.value,
     operation,
   }
 }
@@ -282,7 +285,7 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
       : now
     : txDetails.executedAt || now
 
-  const tx: Transaction = {
+  return {
     id: txDetails.txId,
     timestamp,
     txStatus: txDetails.txStatus,
@@ -291,8 +294,6 @@ export const makeTxFromDetails = (txDetails: TransactionDetails): Transaction =>
     safeAppInfo: txDetails?.safeAppInfo || undefined,
     txDetails,
   }
-
-  return tx
 }
 
 export const isDeeplinkedTx = (): boolean => {

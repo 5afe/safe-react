@@ -1,3 +1,4 @@
+import { Dispatch } from './types'
 import { isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { MultiSend } from 'src/types/contracts/multi_send.d'
 import { addPendingTransaction, removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
@@ -13,7 +14,7 @@ import { _getChainId } from 'src/config'
 type TxMultiSenderProps = {
   transactions: Transaction[]
   multiSendCallData: string
-  dispatch: any
+  dispatch: Dispatch
   account: string
   safeAddress: string
 }
@@ -22,10 +23,10 @@ export class TxMultiSender {
   transactions: Transaction[]
   multiSendCallData: string
   multiSendContract: MultiSend
-  dispatch: any
+  dispatch: Dispatch
   account: string
   safeAddress: string
-  notifications: any
+  notifications: ReturnType<typeof createTxNotifications>
 
   constructor({ transactions, multiSendCallData, dispatch, account, safeAddress }: TxMultiSenderProps) {
     this.transactions = transactions
@@ -49,7 +50,7 @@ export class TxMultiSender {
         .on('transactionHash', (txHash) => {
           transactions.forEach((tx) => {
             const txNonce = isMultisigExecutionInfo(tx.executionInfo) ? tx.executionInfo.nonce : undefined
-            aboutToExecuteTx.setNonce(txNonce)
+            txNonce && aboutToExecuteTx.setNonce(txNonce)
             dispatch(addPendingTransaction({ id: tx.id, txHash: txHash }))
             this.onComplete()
           })
@@ -71,25 +72,18 @@ export class TxMultiSender {
 
     notifications.closePending()
 
-    transactions.forEach((tx) => {
-      dispatch(removePendingTransaction({ id: tx.id }))
+    transactions.forEach(({ id }) => {
+      dispatch(removePendingTransaction({ id }))
     })
 
     if (isWalletRejection(err)) {
       notifications.showOnRejection(err)
-      return
     }
   }
 }
 
-export const createMultiSendTransaction = ({
-  transactions,
-  multiSendCallData,
-  dispatch,
-  account,
-  safeAddress,
-}: TxMultiSenderProps): Promise<void> => {
-  const sender = new TxMultiSender({ transactions, multiSendCallData, dispatch, account, safeAddress })
+export const createMultiSendTransaction = (props: TxMultiSenderProps): Promise<void> => {
+  const sender = new TxMultiSender(props)
 
   return sender.sendTx()
 }

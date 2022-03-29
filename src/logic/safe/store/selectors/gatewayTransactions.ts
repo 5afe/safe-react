@@ -1,4 +1,3 @@
-import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import { createSelector } from 'reselect'
 
@@ -156,7 +155,11 @@ export const getLastTransaction = createSelector(
 
     if (historyTxs) {
       // History Txs are ordered by timestamp so no need to sort them.
-      return flatten(Object.values(historyTxs)).find((tx) => tx.executionInfo != undefined) || null
+      return (
+        Object.values(historyTxs)
+          .flat()
+          .find((tx) => tx.executionInfo != undefined) || null
+      )
     }
 
     return null
@@ -175,7 +178,7 @@ export const getBatchableTransactions = createSelector(
     const batchableTransactions: Transaction[] = []
     let currentNonce = safeNonce
 
-    if (!nextTxs) return batchableTransactions
+    if (!nextTxs || !queuedTxs) return batchableTransactions
 
     function isTxEligible(transaction: Transaction): boolean {
       return (
@@ -196,20 +199,11 @@ export const getBatchableTransactions = createSelector(
       }
     }
 
-    const eligibleTransactions = nextTxs.filter(isTxEligible)
+    const allTxs = [nextTxs, ...Object.values(queuedTxs)]
 
-    for (const eligibleTransaction of eligibleTransactions) {
-      addToBatchIfEligible(eligibleTransaction)
-    }
-
-    if (!queuedTxs) return batchableTransactions
-
-    Object.values(queuedTxs).forEach((queuedTxsByNonce) => {
-      const eligibleTransactions = queuedTxsByNonce.filter(isTxEligible)
-
-      for (const eligibleTransaction of eligibleTransactions) {
-        addToBatchIfEligible(eligibleTransaction)
-      }
+    Object.values(allTxs).forEach((tx) => {
+      const eligibleTransactions = tx.filter(isTxEligible)
+      eligibleTransactions.forEach(addToBatchIfEligible)
     })
 
     return batchableTransactions
