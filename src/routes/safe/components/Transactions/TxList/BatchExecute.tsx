@@ -186,7 +186,8 @@ const BatchExecute = (): ReactElement => {
 const StyledButton = styled(Button)`
   align-self: flex-end;
   margin-right: ${sm};
-  margin-top: ${md};
+  margin-top: -51px;
+  margin-bottom: ${md};
 `
 
 const ModalContent = styled.div`
