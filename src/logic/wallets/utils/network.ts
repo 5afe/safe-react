@@ -1,6 +1,6 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 import onboard from 'src/logic/wallets/onboard'
-import { numberToHex } from 'web3-utils'
+import { hexToNumberString, isHexStrict, numberToHex } from 'web3-utils'
 
 import { getChainInfo, getExplorerUrl, getPublicRpcUrl, _getChainId } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
@@ -85,12 +85,24 @@ export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<v
 }
 
 export const shouldSwitchNetwork = (wallet: Wallet): boolean => {
-  // The current network can be stored under one of two keys
-  const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].some(
-    (chainId) => chainId && chainId.toString() !== _getChainId(),
-  )
+  if (!wallet.provider) {
+    return false
+  }
 
-  return isCurrentNetwork
+  // The current network can be stored under one of two keys
+  const isCurrentNetwork = [wallet?.provider?.networkVersion, wallet?.provider?.chainId].some((chainId) => {
+    const _chainId = _getChainId()
+
+    if (typeof chainId === 'number') {
+      return chainId.toString() === _chainId
+    }
+    if (typeof chainId === 'string') {
+      return isHexStrict(chainId) ? hexToNumberString(chainId) === _chainId : chainId === _chainId
+    }
+    return false
+  })
+
+  return !isCurrentNetwork
 }
 
 export const switchWalletChain = async (): Promise<void> => {

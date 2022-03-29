@@ -39,9 +39,10 @@ export const getRpcMap = (): IRPCMap => {
   }, {})
 }
 
+export const WALLET_CONNECT_MODULE_NAME = 'WalletConnect'
 const patchedWalletConnect = (chainId: ChainId): WalletModule => {
   return {
-    name: 'WalletConnect',
+    name: WALLET_CONNECT_MODULE_NAME,
     svg: walletConnectIcon,
     wallet: async ({ resetWalletState }: Helpers) => {
       const provider = new WalletConnectProvider({
@@ -56,13 +57,13 @@ const patchedWalletConnect = (chainId: ChainId): WalletModule => {
       provider.autoRefreshOnNetworkChange = false
 
       provider.wc.on('disconnect', () => {
-        resetWalletState({ disconnected: true, walletName: 'WalletConnect' })
+        resetWalletState({ disconnected: true, walletName: WALLET_CONNECT_MODULE_NAME })
       })
 
       return {
         provider,
         interface: {
-          name: 'WalletConnect',
+          name: WALLET_CONNECT_MODULE_NAME,
           connect: () =>
             new Promise((resolve, reject) => {
               provider

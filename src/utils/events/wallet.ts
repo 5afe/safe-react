@@ -6,6 +6,10 @@ const WALLET = {
     event: GTM_EVENT.META,
     action: 'Connect wallet',
   },
+  WALLET_CONNECT: {
+    event: GTM_EVENT.META,
+    action: 'WalletConnect Peer',
+  },
 }
 
 const WALLET_CATEGORY = 'wallet'
