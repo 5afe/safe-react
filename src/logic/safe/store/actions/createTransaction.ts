@@ -33,6 +33,8 @@ import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransa
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { isWalletRejection } from 'src/logic/wallets/errors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { WALLET_EVENTS } from 'src/utils/events/wallet'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -226,6 +228,8 @@ export class TxSender {
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
           this.onComplete(signature, confirmCallback)
+          // Only track if onComplete succeeds
+          trackEvent(WALLET_EVENTS.OFF_CHAIN_SIGNATURE)
         } else {
           throw Error('No signature received')
         }
@@ -239,6 +243,8 @@ export class TxSender {
     // On-chain signature or execution
     try {
       await this.sendTx(confirmCallback)
+      // Only track if transaction succeeds
+      trackEvent(WALLET_EVENTS.ON_CHAIN_INTERACTION)
     } catch (err) {
       logError(Errors._803, err.message)
       this.onError(err, errorCallback)
