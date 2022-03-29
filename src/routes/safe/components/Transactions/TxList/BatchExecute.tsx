@@ -31,6 +31,8 @@ import { BatchExecuteHoverContext } from 'src/routes/safe/components/Transaction
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { getTxConfirmations, getTxInfo } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import Track from 'src/components/Track'
 
 async function getBatchExecuteData(
   dispatch: Dispatch,
@@ -131,16 +133,18 @@ export const BatchExecute = React.memo((): ReactElement => {
 
   return (
     <>
-      <StyledButton
-        color="primary"
-        variant="contained"
-        onClick={handleOpenModal}
-        disabled={!isBatchable || hasPendingTx}
-        onMouseEnter={handleOnMouseEnter}
-        onMouseLeave={handleOnMouseLeave}
-      >
-        Execute Batch {isBatchable ? `(${batchableTransactions.length})` : ''}
-      </StyledButton>
+      <Track {...TX_LIST_EVENTS.BATCH_EXECUTE} label={batchableTransactions.length}>
+        <StyledButton
+          color="primary"
+          variant="contained"
+          onClick={handleOpenModal}
+          disabled={!isBatchable || hasPendingTx}
+          onMouseEnter={handleOnMouseEnter}
+          onMouseLeave={handleOnMouseLeave}
+        >
+          Execute Batch {isBatchable ? `(${batchableTransactions.length})` : ''}
+        </StyledButton>
+      </Track>
       <Modal description="Execute Batch" handleClose={toggleModal} open={isModalOpen} title="Execute Batch">
         <ModalHeader onClose={toggleModal} title="Batch-Execute transactions" />
         <Hairline />
@@ -185,6 +189,7 @@ export const BatchExecute = React.memo((): ReactElement => {
 BatchExecute.displayName = 'BatchExecute'
 
 const StyledButton = styled(Button)`
+  display: block;
   align-self: flex-end;
   margin-right: ${sm};
   margin-top: -51px;
