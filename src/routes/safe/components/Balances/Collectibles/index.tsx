@@ -17,6 +17,7 @@ import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { ASSETS_EVENTS } from 'src/utils/events/assets'
+import useIgnoreResizeObserverError from 'src/logic/hooks/useIgnoreResizeObserverError'
 
 const useStyles = makeStyles(
   createStyles({
@@ -91,6 +92,9 @@ const Collectibles = (): React.ReactElement => {
   const nftLoaded = useSelector(nftLoadedSelector)
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
+
+  // Virtuoso throws errors regarding ResizeObserver
+  useIgnoreResizeObserverError()
 
   const nftAmount = useMemo(() => nftTokens.length, [nftTokens])
   useEffect(() => {
