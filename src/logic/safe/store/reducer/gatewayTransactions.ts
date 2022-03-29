@@ -125,7 +125,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
       const { chainId, safeAddress, values } = action.payload
       let newNext = state[chainId]?.[safeAddress]?.queued?.next || {}
       // We must clone as we delete transactions that move from queue to next
-      let newQueued = cloneDeep(state[chainId]?.[safeAddress]?.queued?.queued || {})
+      let newQueued = { ...(state[chainId]?.[safeAddress]?.queued?.queued || {}) }
 
       let label: 'next' | 'queued' | undefined
 
