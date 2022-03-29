@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js'
-import ReactDOM from 'react-dom'
+import * as ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import Root from 'src/components/Root'
@@ -19,8 +20,12 @@ Sentry.init({
   ignoreErrors: ['Internal JSON-RPC error', 'JsonRpcEngine', 'Non-Error promise rejection captured with keys: code'],
 })
 
-const root = document.getElementById('root')
+const container = document.getElementById('root') || document.body.appendChild(document.createElement('div'))
 
-if (root !== null) {
-  ReactDOM.render(<Root />, root)
-}
+const root = ReactDOM.createRoot(container)
+
+root.render(
+  <StrictMode>
+    <Root />
+  </StrictMode>,
+)
