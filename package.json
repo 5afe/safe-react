@@ -130,7 +130,7 @@
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.2.4",
     "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.1",
     "react-virtuoso": "^2.8.2",
     "redux": "4.1.1",
     "redux-actions": "^2.6.5",

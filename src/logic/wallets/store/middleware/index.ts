@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux'
 import { Action } from 'redux-actions'
+import WalletConnectProvider from '@walletconnect/web3-provider'
 
 import { store as reduxStore } from 'src/store'
 import { enhanceSnackbarForAction, NOTIFICATIONS } from 'src/logic/notifications'
@@ -10,12 +11,13 @@ import { providerSelector } from '../selectors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { resetWeb3, setWeb3 } from '../../getWeb3'
-import onboard, { removeLastUsedProvider, saveLastUsedProvider } from '../../onboard'
+import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
+import onboard, { removeLastUsedProvider, saveLastUsedProvider } from 'src/logic/wallets/onboard'
+import { WALLET_CONNECT_MODULE_NAME } from 'src/logic/wallets/patchedWalletConnect'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
-let hasWalletName = false
-let hasAccount = false
-let hasNetwork = false
+const UNKNOWN_PEER = 'Unknown'
 
 const providerMiddleware =
   (store: ReturnType<typeof reduxStore>) =>
@@ -23,34 +25,30 @@ const providerMiddleware =
   async (action: Action<ProviderPayloads>): Promise<Action<ProviderPayloads>> => {
     const handledAction = next(action)
 
-    const { type, payload } = action
+    const isProviderAction = [
+      PROVIDER_ACTIONS.WALLET_NAME,
+      PROVIDER_ACTIONS.ACCOUNT,
+      PROVIDER_ACTIONS.NETWORK,
+    ].includes(action.type as PROVIDER_ACTIONS)
 
-    // Onboard sends provider details via separate subscriptions: wallet, account, network
-    // Payloads from all three need to be combined to be `loaded` and `available`
-    if (type === PROVIDER_ACTIONS.WALLET_NAME) {
-      hasWalletName = !!payload
-    } else if (type === PROVIDER_ACTIONS.ACCOUNT) {
-      hasAccount = !!payload
-    } else if (type === PROVIDER_ACTIONS.NETWORK) {
-      hasNetwork = !!payload
-    } else {
-      // Dispatched actions from reducers unrelated to wallet
+    // Prevent other dispatches from triggering this middleware
+    if (!isProviderAction) {
       return handledAction
     }
 
-    // No wallet is connected via onboard
-    if (!hasWalletName && !hasAccount && !hasNetwork) {
+    const state = store.getState()
+    const { name, account, network, loaded, available } = providerSelector(state)
+
+    // No wallet is connected via onboard, reset provider
+    if (!name && !account && !network) {
       resetWeb3()
       removeLastUsedProvider()
     }
 
     // Wallet 'partially' connected: only a subset of onboard subscription(s) have fired
-    if (!hasWalletName || !hasAccount || !hasNetwork) {
+    if (!name || !account || !network) {
       return handledAction
     }
-
-    const state = store.getState()
-    const { available, loaded, name, account } = providerSelector(state)
 
     // @TODO: `loaded` flag that is/was always set to true - should be moved to wallet connection catch
     // Wallet, account and network did not successfully load
@@ -64,18 +62,27 @@ const providerMiddleware =
       return handledAction
     }
 
+    const { wallet, address } = onboard().getState()
+
+    if (name === wallet.name) {
+      saveLastUsedProvider(name)
+    }
+
     // Instantiate web3/contract
-    const { wallet } = onboard().getState()
     if (wallet.provider) {
       setWeb3(wallet.provider)
       instantiateSafeContracts()
     }
 
-    if (name) {
-      saveLastUsedProvider(name)
-      // Only track when account has been successfully saved to store
-      if (payload === account) {
-        trackEvent({ ...WALLET_EVENTS.CONNECT, label: name })
+    // Only track when store/UI is in sync with onboard
+    if (account === checksumAddress(address) && !shouldSwitchNetwork(wallet)) {
+      trackEvent({ ...WALLET_EVENTS.CONNECT, label: name })
+      // Track WalletConnect peer wallet
+      if (name === WALLET_CONNECT_MODULE_NAME) {
+        trackEvent({
+          ...WALLET_EVENTS.WALLET_CONNECT,
+          label: (wallet.provider as InstanceType<typeof WalletConnectProvider>)?.wc?.peerMeta?.name || UNKNOWN_PEER,
+        })
       }
     }
 
