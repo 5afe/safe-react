@@ -21,148 +21,60 @@ import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import styled from 'styled-components'
 import Spacer from 'src/components/Spacer'
 
-// Replaces the to be implemented BE endpoint
+// Pending transactions data to be implemented BE endpoint
 import mockData from './mockData.json'
-type MockType = {
+type SafePendingTransactionsType = {
   safeAddress: string
   chainId: ChainId
   totalPending: number
   summaries: TransactionSummary[]
 }
-const mock = mockData as unknown as MockType[]
+const mock = mockData as unknown as SafePendingTransactionsType[]
 
-/**
-const getTxsAwaitingConfirmationByChainId = async (
-  chainId: string,
-  safeAddress: string,
-): Promise<TransactionSummary[]> => {
-  const { results } = await getTransactionQueue(GATEWAY_URL, chainId, checksumAddress(safeAddress))
-  return results.reduce((acc, cur) => {
-    if (
-      isTransactionSummary(cur) &&
-      isMultisigExecutionInfo(cur.transaction.executionInfo) &&
-      cur.transaction.txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS
-    ) {
-      return [...acc, cur.transaction]
-    }
-    return acc
-  }, [])
-}
+// Displays up to 5 transactions across chains
+const transactionsToDisplay = (data: SafePendingTransactionsType[]): SafePendingTransactionsType[] => {
+  const MAX_PENDING_TXS = 5
 
-type TransactionsSummaryPerChain = {
-  [chainId: ChainId]: {
-    [safeAddress: string]: TransactionSummary[]
+  // If there are more than 5 Safes with pending transactions
+  if (data.length >= MAX_PENDING_TXS) {
+    return data.slice(0, MAX_PENDING_TXS).map((safe) => ({ ...safe, summaries: [safe.summaries[0]] }))
   }
+
+  // If there are less than MAX_PENDING_TXS in total
+  const totalPendingTransactions = data.reduce((acc, val) => acc + val.totalPending, 0)
+  if (totalPendingTransactions <= MAX_PENDING_TXS) {
+    return data
+  }
+
+  const safesToDisplay: SafePendingTransactionsType[] = []
+  let countDisplayTransactions = 0
+  let summariesIndex = 0
+
+  // Fill MAX_PENDING_TXS transactions to display
+  while (countDisplayTransactions < MAX_PENDING_TXS) {
+    for (let i = 0; i < data.length; i++) {
+      if (summariesIndex === 0) {
+        // Deep copy
+        const safe = JSON.parse(JSON.stringify(data[i]))
+        safe.summaries = [safe.summaries[summariesIndex]]
+        safesToDisplay.push(safe)
+      } else {
+        const nextTxSummary = data[i].summaries[summariesIndex]
+        nextTxSummary && safesToDisplay[i].summaries.push(nextTxSummary)
+      }
+      countDisplayTransactions++
+    }
+    summariesIndex++
+  }
+  return safesToDisplay
 }
- */
 
 const PendingTxsList = (): ReactElement => {
-  // Code to be used when using the new BE endpoint
-  /**
-  const localSafesWithDetails = useLocalSafes()
-  const localSafes: Record<string, string[]> = Object.entries(localSafesWithDetails).reduce(
-    (result, [chain, safes]) => {
-      const safesAddr = safes.map((safe) => safe.address)
-      return { ...result, [chain]: safesAddr }
-    },
-    {},
-  )
-
-  const [txsAwaitingConfirmation, setTxsAwaitingConfirmation] = useState<TransactionsSummaryPerChain>({})
-  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
-
-  const title = <h2>Transactions to Sign</h2>
-
-  Fetch txs awaiting confirmations after retrieving the owned safes from the LocalStorage
-  useEffect(() => {
-    if (!isInitialLoad || !Object.keys(localSafes || {}).length) {
-      return
-    }
-
-    const fetchAwaitingConfirmationTxs = async () => {
-      const txs: TransactionsSummaryPerChain = {}
-
-      // todo: remove the slice
-      for (const [chainId, safesPerChain] of Object.entries(localSafes).slice(1, 3)) {
-        txs[chainId] = {}
-        const arrayPromises = safesPerChain.map((safeAddr) => {
-          return getTxsAwaitingConfirmationByChainId(chainId, safeAddr)
-        })
-        const pendingTxs = await Promise.all(arrayPromises)
-
-        pendingTxs.forEach((summaries, i) => {
-          if (!summaries.length) return // filter out the safes without pending transactions
-          const safeAddress = safesPerChain[i]
-          txs[chainId][safeAddress] = summaries
-        })
-      }
-      setTxsAwaitingConfirmation(txs)
-      setIsInitialLoad(false)
-    }
-    fetchAwaitingConfirmationTxs()
-  }, [localSafes, isInitialLoad])
-
-  if (isInitialLoad) {
-    return (
-      <>
-        {title}
-        <h3>Loading</h3>
-      </>
-    )
-  }
-
-  if (Object.keys(txsAwaitingConfirmation).length === 0) {
-    return (
-      <>
-        {title}
-        <h3>No Transactions</h3>
-      </>
-    )
-  }
-   */
-
-  const transactionsToDisplay = (): MockType[] => {
-    const MAX_PENDING_TXS = 5
-
-    // If there are more than 5 Safes with pending transactions
-    if (mock.length >= MAX_PENDING_TXS) {
-      return mock.slice(0, MAX_PENDING_TXS).map((safe) => ({ ...safe, summaries: [safe.summaries[0]] }))
-    }
-
-    // If there are less than MAX_PENDING_TXS in total
-    const totalPendingTransactions = mock.reduce((acc, val) => acc + val.totalPending, 0)
-    if (totalPendingTransactions <= MAX_PENDING_TXS) {
-      return mock
-    }
-
-    const safesToDisplay: MockType[] = []
-    let countDisplayTransactions = 0
-    let summariesIndex = 0
-
-    // Fill MAX_PENDING_TXS transactions to display
-    while (countDisplayTransactions < MAX_PENDING_TXS) {
-      for (let i = 0; i < mock.length; i++) {
-        if (summariesIndex === 0) {
-          // Deep copy
-          const safe = JSON.parse(JSON.stringify(mock[i]))
-          safe.summaries = [safe.summaries[summariesIndex]]
-          safesToDisplay.push(safe)
-        } else {
-          const nextTxSummary = mock[i].summaries[summariesIndex]
-          nextTxSummary && safesToDisplay[i].summaries.push(nextTxSummary)
-        }
-        countDisplayTransactions++
-      }
-      summariesIndex++
-    }
-    return safesToDisplay
-  }
-
   return (
     <>
       <h2>Transactions to Sign</h2>
       <List component="div">
-        {transactionsToDisplay().map(({ safeAddress, chainId, totalPending, summaries }) => {
+        {transactionsToDisplay(mock).map(({ safeAddress, chainId, totalPending, summaries }) => {
           const { shortName } = getChainById(chainId)
           const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress, shortName })
           return summaries.map((transaction) => {
