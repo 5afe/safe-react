@@ -7,7 +7,14 @@ import { _getChainId } from 'src/config'
 
 export const PENDING_TRANSACTIONS_ID = 'pendingTransactions'
 
-export type PendingTransactionsState = Record<ChainId, Record<string, string>>
+export type PendingTransactionsState = {
+  [chainId: ChainId]: {
+    [id: string]: {
+      txHash: string
+      block?: number
+    }
+  }
+}
 
 const initialPendingTxsState = session.getItem<PendingTransactionsState>(PENDING_TRANSACTIONS_ID) || {}
 
@@ -18,6 +25,7 @@ export type RemovePendingTransactionPayload = {
 
 export type AddPendingTransactionPayload = RemovePendingTransactionPayload & {
   txHash: string
+  block?: number
 }
 
 export type PendingTransactionPayloads = AddPendingTransactionPayload | RemovePendingTransactionPayload
@@ -29,11 +37,17 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       action: Action<AddPendingTransactionPayload>,
     ) => {
       const chainId = _getChainId()
-      const { id, txHash } = action.payload
+      const { id, txHash, block } = action.payload
 
       return {
         ...state,
-        [chainId]: { ...state[chainId], [id]: txHash },
+        [chainId]: {
+          ...state[chainId],
+          [id]: {
+            txHash,
+            block,
+          },
+        },
       }
     },
     [PENDING_TRANSACTIONS_ACTIONS.REMOVE]: (
@@ -46,7 +60,7 @@ export const pendingTransactionsReducer = handleActions<PendingTransactionsState
       // Omit id from the pending transactions on current chain
       const { [id]: _, ...newChainState } = state[chainId] || {}
 
-      if (Object.keys(newChainState[chainId] || {}).length === 0) {
+      if (Object.keys(newChainState || {}).length === 0) {
         // Omit chainId from the pending transactions if no pending transactions on chain
         const { [chainId]: _, ...newState } = state
         return newState

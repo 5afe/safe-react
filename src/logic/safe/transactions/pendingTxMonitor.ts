@@ -1,5 +1,4 @@
 import { backOff, IBackOffOptions } from 'exponential-backoff'
-import { TransactionReceipt } from 'web3-core'
 
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -9,23 +8,23 @@ import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTr
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
-const _isTxMined = async (sessionBlockNumber: number, txHash: string): Promise<TransactionReceipt> => {
-  const MAX_WAITING_BLOCK = sessionBlockNumber + 50
+const _isTxMined = async (blockNumber: number, txHash: string): Promise<boolean> => {
+  const MAX_WAITING_BLOCK = blockNumber + 50
 
   const web3 = getWeb3()
 
   const receipt = await web3.eth.getTransactionReceipt(txHash)
 
-  if (
-    // Transaction hasn't yet been mined
-    !receipt &&
-    // The current block is within waiting window
-    (await web3.eth.getBlockNumber()) <= MAX_WAITING_BLOCK
-  ) {
+  if (receipt) {
+    return !didTxRevert(receipt)
+  }
+
+  if ((await web3.eth.getBlockNumber()) <= MAX_WAITING_BLOCK) {
+    // backOff retries
     throw new Error('Pending transaction not found')
   }
 
-  return receipt
+  return false
 }
 
 // Progressively after 10s, 20s, 40s, 80s, 160s, 320s - total of 6.5 minutes
@@ -44,12 +43,11 @@ const monitorTx = async (
   },
 ): Promise<void> => {
   return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options)
-    .then((receipt) => {
-      if (didTxRevert(receipt)) {
+    .then((isMined) => {
+      if (!isMined) {
         store.dispatch(removePendingTransaction({ id: txId }))
       }
-      // If successfully mined, pending status is removed in the transaction
-      // middleware when a transaction is added to historical transactions list
+      // If successfully mined the transaction will be removed by the automatic polling
     })
     .catch(() => {
       // Unsuccessfully mined (threw in last backOff attempt)
@@ -72,8 +70,8 @@ const monitorAllTxs = async (): Promise<void> => {
   try {
     const sessionBlockNumber = await web3.eth.getBlockNumber()
     await Promise.all(
-      pendingTxs.map(([txId, txHash]) => {
-        return PendingTxMonitor.monitorTx(sessionBlockNumber, txId, txHash)
+      pendingTxs.map(([txId, { txHash, block = sessionBlockNumber }]) => {
+        return PendingTxMonitor.monitorTx(block, txId, txHash)
       }),
     )
   } catch {
