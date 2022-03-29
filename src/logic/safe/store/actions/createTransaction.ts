@@ -116,6 +116,8 @@ export class TxSender {
 
     notifications.closePending()
 
+    trackEvent(signature ? WALLET_EVENTS.OFF_CHAIN_SIGNATURE : WALLET_EVENTS.ON_CHAIN_INTERACTION)
+
     // This is used to communicate the safeTxHash to a Safe App caller
     confirmCallback?.(safeTxHash)
 
@@ -228,8 +230,6 @@ export class TxSender {
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
           this.onComplete(signature, confirmCallback)
-          // Only track if onComplete succeeds
-          trackEvent(WALLET_EVENTS.OFF_CHAIN_SIGNATURE)
         } else {
           throw Error('No signature received')
         }
@@ -243,8 +243,6 @@ export class TxSender {
     // On-chain signature or execution
     try {
       await this.sendTx(confirmCallback)
-      // Only track if transaction succeeds
-      trackEvent(WALLET_EVENTS.ON_CHAIN_INTERACTION)
     } catch (err) {
       logError(Errors._803, err.message)
       this.onError(err, errorCallback)
