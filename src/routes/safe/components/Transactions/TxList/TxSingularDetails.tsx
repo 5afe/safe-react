@@ -123,7 +123,7 @@ const TxSingularDetails = (): ReactElement => {
 
     // Add queued transaction
     dispatch(addQueuedTransactions(payload))
-  }, [fetchedTx, chainId, dispatch, transactions?.next.count, transactions?.queue.count])
+  }, [fetchedTx, chainId, dispatch, transactions, transactions?.next.count, transactions?.queue.count])
 
   if (!indexedTx && error) {
     const safeParams = extractPrefixedSafeAddress()
