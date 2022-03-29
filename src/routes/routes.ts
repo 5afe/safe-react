@@ -3,6 +3,7 @@ import { generatePath, matchPath } from 'react-router-dom'
 
 import { getChains } from 'src/config/cache/chains'
 import { ChainId, ShortName } from 'src/config/chain.d'
+import { checksumAddress } from 'src/utils/checksumAddress'
 import { PUBLIC_URL } from 'src/utils/constants'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
@@ -90,7 +91,7 @@ export const extractPrefixedSafeAddress = (
 
   return {
     shortName: prefix,
-    safeAddress: address,
+    safeAddress: checksumAddress(address),
   }
 }
 

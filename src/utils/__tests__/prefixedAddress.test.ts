@@ -22,12 +22,6 @@ describe('Prefixed address utils', () => {
         prefix: 'rin',
       })
     })
-    it('checksums the input address', () => {
-      expect(parsePrefixedAddress('rin:0xe83fa375a2a7c383b1fb6a6ed6bb22f6a123a980')).toStrictEqual({
-        address: '0xe83FA375a2a7c383B1fB6a6ed6bB22F6A123a980',
-        prefix: 'rin',
-      })
-    })
 
     it('parses an empty address', () => {
       expect(parsePrefixedAddress('')).toStrictEqual({
