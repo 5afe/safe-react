@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useContext, useMemo, useState } from 
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { store } from 'src/store'
+import { AppReduxState } from 'src/store'
 import { lg, sm, md } from 'src/theme/variables'
 import Button from 'src/components/layout/Button'
 import { ButtonStatus, Modal } from 'src/components/Modal'
@@ -14,7 +14,6 @@ import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
-import { extractSafeAddress } from 'src/routes/routes'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
@@ -57,7 +56,7 @@ async function getBatchExecuteData(
   const txs: MultiSendTx[] = batchableTransactionsWithDetails.map((transaction) => {
     const txInfo = getTxInfo(transaction, safeAddress)
     const confirmations = getTxConfirmations(transaction)
-    const sigs = generateSignaturesFromTxConfirmations(confirmations, undefined)
+    const sigs = generateSignaturesFromTxConfirmations(confirmations)
 
     const txArgs: TxArgs = { ...txInfo, sigs, safeInstance, sender: account }
     const data = getExecutionTransaction(txArgs).encodeABI()
@@ -72,22 +71,24 @@ async function getBatchExecuteData(
   return getMultiSendJoinedTxs(txs)
 }
 
-const BatchExecute = (): ReactElement => {
+// Memoized as it receives no props
+export const BatchExecute = React.memo((): ReactElement => {
   const hoverContext = useContext(BatchExecuteHoverContext)
   const dispatch = useDispatch<Dispatch>()
-  const safeAddress = extractSafeAddress()
-  const { address, currentVersion } = useSelector(currentSafe)
+  const { address: safeAddress, currentVersion } = useSelector(currentSafe)
   const account = useSelector(userAccountSelector)
-  const safeInstance = getGnosisSafeInstanceAt(address, currentVersion)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, currentVersion)
   const multiSendContractAddress = getMultisendContractAddress()
   const batchableTransactions = useSelector(getBatchableTransactions)
   const [isModalOpen, setModalOpen] = useState(false)
   const [buttonStatus, setButtonStatus] = useState(ButtonStatus.LOADING)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
+  const store = useSelector((state: AppReduxState) => state)
   const hasPendingTx = useMemo(
-    () => batchableTransactions.some(({ id }) => isTxPending(store.getState(), id)),
-    [batchableTransactions],
+    () => batchableTransactions.some(({ id }) => isTxPending(store, id)),
+    [batchableTransactions, store],
   )
+  const isBatchable = batchableTransactions.length > 1
 
   const handleOnMouseEnter = useCallback(() => {
     hoverContext.setActiveHover(batchableTransactions.map((tx) => tx.id))
@@ -101,21 +102,19 @@ const BatchExecute = (): ReactElement => {
     setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const handleOpenModal = () => {
+  const handleOpenModal = async () => {
     toggleModal()
 
-    const handleGetBatchExecuteData = async () => {
-      const batchExecuteData = await getBatchExecuteData(
-        dispatch,
-        batchableTransactions,
-        safeInstance,
-        safeAddress,
-        account,
-      )
-      setButtonStatus(ButtonStatus.READY)
-      setMultiSendCallData(batchExecuteData)
-    }
-    handleGetBatchExecuteData()
+    const batchExecuteData = await getBatchExecuteData(
+      dispatch,
+      batchableTransactions,
+      safeInstance,
+      safeAddress,
+      account,
+    )
+
+    setButtonStatus(ButtonStatus.READY)
+    setMultiSendCallData(batchExecuteData)
   }
 
   const handleBatchExecute = async () => {
@@ -136,11 +135,11 @@ const BatchExecute = (): ReactElement => {
         color="primary"
         variant="contained"
         onClick={handleOpenModal}
-        disabled={batchableTransactions.length <= 1 || hasPendingTx}
+        disabled={!isBatchable || hasPendingTx}
         onMouseEnter={handleOnMouseEnter}
         onMouseLeave={handleOnMouseLeave}
       >
-        Execute Batch {batchableTransactions.length > 1 ? `(${batchableTransactions.length})` : ''}
+        Execute Batch {isBatchable ? `(${batchableTransactions.length})` : ''}
       </StyledButton>
       <Modal description="Execute Batch" handleClose={toggleModal} open={isModalOpen} title="Execute Batch">
         <ModalHeader onClose={toggleModal} title="Batch-Execute transactions" />
@@ -181,7 +180,9 @@ const BatchExecute = (): ReactElement => {
       </Modal>
     </>
   )
-}
+})
+
+BatchExecute.displayName = 'BatchExecute'
 
 const StyledButton = styled(Button)`
   align-self: flex-end;
@@ -193,6 +194,3 @@ const StyledButton = styled(Button)`
 const ModalContent = styled.div`
   padding: ${lg} ${lg} 0;
 `
-
-// Since there are no props we can safely use memoize
-export const MemoizedBatchExecute = React.memo(BatchExecute)

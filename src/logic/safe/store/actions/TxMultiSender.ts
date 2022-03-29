@@ -51,12 +51,12 @@ export class TxMultiSender {
           transactions.forEach((tx) => {
             const txNonce = isMultisigExecutionInfo(tx.executionInfo) ? tx.executionInfo.nonce : undefined
             txNonce && aboutToExecuteTx.setNonce(txNonce)
-            dispatch(addPendingTransaction({ id: tx.id, txHash: txHash }))
+            dispatch(addPendingTransaction({ id: tx.id, txHash }))
             this.onComplete()
           })
         })
     } catch (error) {
-      logError(Errors._820, error.message)
+      logError(Errors._818, error.message)
       this.onError(error)
     }
   }

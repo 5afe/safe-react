@@ -180,30 +180,20 @@ export const getBatchableTransactions = createSelector(
 
     if (!nextTxs || !queuedTxs) return batchableTransactions
 
-    function isTxEligible(transaction: Transaction): boolean {
-      return (
-        isMultisigExecutionInfo(transaction.executionInfo) &&
-        transaction.executionInfo.nonce === currentNonce &&
-        transaction.executionInfo.confirmationsSubmitted >= transaction.executionInfo.confirmationsRequired
-      )
-    }
-
-    function addToBatchIfEligible(transaction: Transaction): void {
-      if (
-        isMultisigExecutionInfo(transaction.executionInfo) &&
-        isTxEligible(transaction) &&
-        batchableTransactions.length < BATCH_LIMIT
-      ) {
-        batchableTransactions.push(transaction)
-        currentNonce = transaction.executionInfo.nonce + 1
-      }
-    }
-
     const allTxs = [nextTxs, ...Object.values(queuedTxs)]
 
-    Object.values(allTxs).forEach((tx) => {
-      const eligibleTransactions = tx.filter(isTxEligible)
-      eligibleTransactions.forEach(addToBatchIfEligible)
+    Object.values(allTxs).forEach((txByNonce) => {
+      txByNonce.forEach((tx) => {
+        if (
+          batchableTransactions.length < BATCH_LIMIT &&
+          isMultisigExecutionInfo(tx.executionInfo) &&
+          tx.executionInfo.nonce === currentNonce &&
+          tx.executionInfo.confirmationsSubmitted >= tx.executionInfo.confirmationsRequired
+        ) {
+          batchableTransactions.push(tx)
+          currentNonce = tx.executionInfo.nonce + 1
+        }
+      })
     })
 
     return batchableTransactions
