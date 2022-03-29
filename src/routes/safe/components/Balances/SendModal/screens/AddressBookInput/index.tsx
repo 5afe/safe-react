@@ -16,7 +16,6 @@ import {
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { trimSpaces } from 'src/utils/strings'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { checksumAddress } from 'src/utils/checksumAddress'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
@@ -66,9 +65,8 @@ const BaseAddressBookInput = ({
 
     // Automatically checksum valid addresses
     const { address } = parsePrefixedAddress(fullAddress)
-    const checkedAddr = checksumAddress(address) || address
-    const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: checkedAddr })
-    return filteredEntries.length === 1 ? filteredEntries[0] : checkedAddr
+    const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: address })
+    return filteredEntries.length === 1 ? filteredEntries[0] : address
   }
 
   const onChange: AutocompleteProps<AddressBookEntry, false, false, true>['onChange'] = (_, value, reason) => {

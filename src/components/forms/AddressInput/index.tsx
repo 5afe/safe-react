@@ -80,11 +80,10 @@ const AddressInput = ({
       } else {
         // A regular address hash
         if (!mustBeEthereumAddress(address)) {
-          const parsed = parsePrefixedAddress(address)
-          const checkedAddress = checksumAddress(parsed.address) || parsed.address
+          const prefixed = parsePrefixedAddress(address)
 
           // Field mutator (parent component) always gets an unprefixed address
-          fieldMutator(checkedAddress)
+          fieldMutator(prefixed.address)
         }
       }
     },
