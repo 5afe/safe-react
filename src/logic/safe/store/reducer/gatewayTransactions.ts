@@ -120,7 +120,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
     },
     // If a queued transaction summary is added, it will either be added to the singular `queued.next`
     // list or the pushed/update the `queued.queued` list by nonce in descending date order. If the
-    // number of confirmations is higher than the current stored one, the tx will be overwritten
+    // number of confirmations differs in comparison to the stored one, the tx will be overwritten
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
       let newNext = state[chainId]?.[safeAddress]?.queued?.next || {}
