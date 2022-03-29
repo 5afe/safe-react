@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, ReactElement } from 'react'
+import { Virtuoso } from 'react-virtuoso'
 
-// Virtualized list throws an error regarding the ResizeObserver loop. It cannot deliver all observations
-// in one animation frame. The author of the `ResizeObserver` spec assures that it can be safely ignored:
+// The ResizeObserver cannot deliver all observations in one animation frame.
+// The author of the `ResizeObserver` spec assures that it can be safely ignored:
 // https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded#comment86691361_49384120
 
 const ignoreResizeObserverErrors = (e: ErrorEvent) => {
@@ -14,12 +15,13 @@ const ignoreResizeObserverErrors = (e: ErrorEvent) => {
   }
 }
 
-const useIgnoreResizeObserverError = (): null => {
+const VirtualizedList: typeof Virtuoso = ({ children, ...props }): ReactElement => {
   useEffect(() => {
     window.addEventListener('error', ignoreResizeObserverErrors)
     return () => window.removeEventListener('error', ignoreResizeObserverErrors)
   })
-  return null
+
+  return <Virtuoso {...props}>{children}</Virtuoso>
 }
 
-export default useIgnoreResizeObserverError
+export default VirtualizedList

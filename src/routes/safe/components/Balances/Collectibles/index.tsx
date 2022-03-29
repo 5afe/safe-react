@@ -2,7 +2,6 @@ import { Fragment, useEffect, useMemo, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-import { Virtuoso } from 'react-virtuoso'
 
 import Item from './components/Item'
 
@@ -17,7 +16,7 @@ import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { ASSETS_EVENTS } from 'src/utils/events/assets'
-import useIgnoreResizeObserverError from 'src/logic/hooks/useIgnoreResizeObserverError'
+import VirtualizedList from 'src/components/VirtualizedList'
 
 const useStyles = makeStyles(
   createStyles({
@@ -93,9 +92,6 @@ const Collectibles = (): React.ReactElement => {
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
 
-  // Virtuoso throws errors regarding ResizeObserver
-  useIgnoreResizeObserverError()
-
   const nftAmount = useMemo(() => nftTokens.length, [nftTokens])
   useEffect(() => {
     trackEvent({ ...ASSETS_EVENTS.NFT_AMOUNT, label: nftAmount })
@@ -120,7 +116,7 @@ const Collectibles = (): React.ReactElement => {
 
   return (
     <>
-      <Virtuoso
+      <VirtualizedList
         style={{
           height: 'calc(100% - 54px)', // Remove breadcrumb height
         }}
