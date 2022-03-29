@@ -19,7 +19,7 @@ const VirtualizedList: typeof Virtuoso = ({ children, style, ...props }): ReactE
   useEffect(() => {
     window.addEventListener('error', ignoreResizeObserverErrors)
     return () => window.removeEventListener('error', ignoreResizeObserverErrors)
-  })
+  }, [])
 
   return (
     <Virtuoso
