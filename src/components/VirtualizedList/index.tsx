@@ -15,13 +15,23 @@ const ignoreResizeObserverErrors = (e: ErrorEvent) => {
   }
 }
 
-const VirtualizedList: typeof Virtuoso = ({ children, ...props }): ReactElement => {
+const VirtualizedList: typeof Virtuoso = ({ children, style, ...props }): ReactElement => {
   useEffect(() => {
     window.addEventListener('error', ignoreResizeObserverErrors)
     return () => window.removeEventListener('error', ignoreResizeObserverErrors)
   })
 
-  return <Virtuoso {...props}>{children}</Virtuoso>
+  return (
+    <Virtuoso
+      style={{
+        height: 'calc(100% - 54px)', // Remove breadcrumb height
+        ...style,
+      }}
+      {...props}
+    >
+      {children}
+    </Virtuoso>
+  )
 }
 
 export default VirtualizedList
