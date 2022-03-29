@@ -10,6 +10,8 @@ import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
 import AddSafeWidget from 'src/components/Dashboard/AddSafe'
 import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
 
+import SafeAppCard from 'src/components/Dashboard/SafeApps/Card'
+
 const Card = styled.div`
   background: #fff;
   padding: 40px;
@@ -60,6 +62,16 @@ function Home(): ReactElement {
         <Card>
           <h2>Gas Fees</h2>
         </Card>
+      </Row>
+
+      <h2>Safe dApps</h2>
+      <Row>
+        <SafeAppCard
+          name="Wallet Connect"
+          description="Connect your Safe to any app with Wallet Connect"
+          logoUri="https://apps.gnosis-safe.io/wallet-connect/wallet-connect.svg"
+          appUri="https://apps.gnosis-safe.io/wallet-connect"
+        />
       </Row>
     </Page>
   )
