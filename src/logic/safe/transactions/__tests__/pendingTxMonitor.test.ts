@@ -1,4 +1,4 @@
-import { Transaction } from 'web3-core'
+import { TransactionReceipt } from 'web3-core'
 
 import * as store from 'src/store'
 import * as web3 from 'src/logic/wallets/getWeb3'
@@ -65,7 +65,7 @@ describe('PendingTxMonitor', () => {
 
   describe('monitorTx', () => {
     it("doesn't clear the pending transaction if it was mined", async () => {
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(true))
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
@@ -77,8 +77,56 @@ describe('PendingTxMonitor', () => {
 
       expect(dispatchSpy).not.toBeCalled()
     })
+    it('clears the pending transaction if it failed', async () => {
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(false))
+
+      const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
+        numOfAttempts: 1,
+        startingDelay: 0,
+        timeMultiple: 0,
+      })
+
+      expect(dispatchSpy).toBeCalledWith({
+        type: 'pendingTransactions/remove',
+        payload: { id: 'fakeTxId' },
+      })
+    })
 
     it('clears the pending transaction it the tx was not mined within 50 blocks', async () => {
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(false))
+
+      const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
+        numOfAttempts: 1,
+        startingDelay: 0,
+        timeMultiple: 0,
+      })
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('clears the pending transaction it retrieving the block number throws', async () => {
+      jest
+        .spyOn(web3.getWeb3().eth, 'getTransactionReceipt')
+        // Returns `null` if transaction is pending: https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransactionreceipt
+        .mockImplementation(() => Promise.resolve(null as any))
+      jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.reject())
+
+      const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
+
+      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
+        numOfAttempts: 1,
+        startingDelay: 0,
+        timeMultiple: 0,
+      })
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(2)
+    })
+
+    it('clears the pending transaction it throws in the final backOff', async () => {
       PendingTxMonitor._isTxMined = jest.fn(() => Promise.reject())
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
@@ -136,9 +184,18 @@ describe('PendingTxMonitor', () => {
       jest.spyOn(store.store, 'getState').mockImplementation(() => ({
         pendingTransactions: {
           '4': {
-            fakeTxId: 'fakeTxHash',
-            fakeTxId2: 'fakeTxHash2',
-            fakeTxId3: 'fakeTxHash3',
+            fakeTxId: {
+              txHash: 'fakeTxHash',
+              block: 0,
+            },
+            fakeTxId2: {
+              txHash: 'fakeTxHash2',
+              block: 1,
+            },
+            fakeTxId3: {
+              txHash: 'fakeTxHash3',
+              block: 2,
+            },
           },
         },
         config: {
@@ -148,15 +205,37 @@ describe('PendingTxMonitor', () => {
 
       jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
 
-      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve())
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(true))
 
       await PendingTxMonitor.monitorAllTxs()
 
       expect((PendingTxMonitor._isTxMined as jest.Mock).mock.calls).toEqual([
         [0, 'fakeTxHash'],
-        [0, 'fakeTxHash2'],
-        [0, 'fakeTxHash3'],
+        [1, 'fakeTxHash2'],
+        [2, 'fakeTxHash3'],
       ])
+    })
+    it('falls back to the current block number if none was set', async () => {
+      jest.spyOn(store.store, 'getState').mockImplementation(() => ({
+        pendingTransactions: {
+          '4': {
+            fakeTxId: {
+              txHash: 'fakeTxHash',
+            },
+          },
+        },
+        config: {
+          chainId: '4',
+        },
+      }))
+
+      jest.spyOn(web3.getWeb3().eth, 'getBlockNumber').mockImplementation(() => Promise.resolve(0))
+
+      PendingTxMonitor._isTxMined = jest.fn(() => Promise.resolve(true))
+
+      await PendingTxMonitor.monitorAllTxs()
+
+      expect((PendingTxMonitor._isTxMined as jest.Mock).mock.calls).toEqual([[0, 'fakeTxHash']])
     })
   })
 })

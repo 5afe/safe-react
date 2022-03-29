@@ -3,11 +3,9 @@ import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
-import { setWeb3, resetWeb3 } from 'src/logic/wallets/getWeb3'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
-import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
 import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
@@ -18,10 +16,11 @@ import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
-const saveLastUsedProvider = (name: string) => {
+export const saveLastUsedProvider = (name: string): void => {
   const expireInDays = (days: number) => 60 * 60 * 24 * 1000 * days
   const expiry = isPairingModule(name) ? expireInDays(1) : expireInDays(365)
   saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
@@ -29,6 +28,10 @@ const saveLastUsedProvider = (name: string) => {
 
 export const loadLastUsedProvider = (): string | undefined => {
   return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
+}
+
+export const removeLastUsedProvider = (): void => {
+  removeFromStorage(LAST_USED_PROVIDER_KEY)
 }
 
 const getNetworkName = (chainId: ChainId) => {
@@ -45,39 +48,16 @@ const hasENSSupport = (chainId: ChainId): boolean => {
   return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
 }
 
-let prevAddress = ''
-
 const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
     networkId: parseInt(chainId, 10),
     networkName: getNetworkName(chainId),
     subscriptions: {
       wallet: async (wallet) => {
-        if (wallet.provider) {
-          setWeb3(wallet.provider)
-          instantiateSafeContracts()
-        }
-
-        // Cache wallet for reconnection
-        if (wallet.name) {
-          saveLastUsedProvider(wallet.name)
-        }
-
         store.dispatch(updateProviderWallet(wallet.name || ''))
       },
-      // Non-checksummed address
       address: (address) => {
-        store.dispatch(updateProviderAccount(address || ''))
-
-        if (address) {
-          prevAddress = address
-        }
-
-        // Wallet disconnected
-        if (!address && prevAddress) {
-          resetWeb3()
-          removeFromStorage(LAST_USED_PROVIDER_KEY)
-        }
+        store.dispatch(updateProviderAccount(checksumAddress(address) || ''))
       },
       network: (networkId) => {
         store.dispatch(updateProviderNetwork(networkId?.toString() || ''))

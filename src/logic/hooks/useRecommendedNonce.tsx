@@ -1,36 +1,19 @@
-import { SafeTransactionEstimation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { getLastTxNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import useAsync from 'src/logic/hooks/useAsync'
 
 const useRecommendedNonce = (safeAddress: string): number => {
-  const lastTxNonce = useSelector(getLastTxNonce)
-  const [recommendedNonce, setRecommendedNonce] = useState<number>(lastTxNonce ? lastTxNonce + 1 : 0)
+  const lastTxNonce = useSelector(getLastTxNonce) || -1
 
-  useEffect(() => {
-    let isCurrent = true
+  const getNonce = useCallback(() => {
+    return getRecommendedNonce(safeAddress)
+  }, [safeAddress])
 
-    const fetchRecommendedNonce = async () => {
-      let recommendedNonce: SafeTransactionEstimation['recommendedNonce']
-      try {
-        recommendedNonce = await getRecommendedNonce(safeAddress)
-      } catch (e) {
-        return
-      }
+  const { result } = useAsync<number>(getNonce)
 
-      if (isCurrent) {
-        setRecommendedNonce(recommendedNonce)
-      }
-    }
-    fetchRecommendedNonce()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [lastTxNonce, safeAddress])
-
-  return recommendedNonce
+  return result == null ? lastTxNonce + 1 : result
 }
 
 export default useRecommendedNonce

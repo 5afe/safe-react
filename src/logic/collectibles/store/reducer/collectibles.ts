@@ -29,5 +29,5 @@ export const nftTokensReducer = handleActions<NFTTokens, NFTTokensPayload>(
       return nftTokens
     },
   },
-  [],
+  { items: [], loaded: false },
 )

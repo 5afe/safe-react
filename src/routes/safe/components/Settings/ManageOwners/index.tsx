@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactElement } from 'react'
+import { useState, ReactElement } from 'react'
 import { Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
@@ -24,8 +24,9 @@ import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+import Track from 'src/components/Track'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -39,7 +40,6 @@ type Props = {
 }
 
 const ManageOwners = ({ granted, owners }: Props): ReactElement => {
-  const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
   const [selectedOwner, setSelectedOwner] = useState<OwnerData | undefined>()
@@ -67,10 +67,6 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
     }))
     setSelectedOwner(undefined)
   }
-
-  useEffect(() => {
-    trackEvent(SETTINGS_EVENTS.OWNERS)
-  }, [trackEvent])
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
@@ -122,18 +118,24 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <ButtonHelper onClick={onShow('EditOwner', row)} dataTestId={RENAME_OWNER_BTN_TEST_ID}>
-                        <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
-                      </ButtonHelper>
+                      <Track {...SETTINGS_EVENTS.OWNERS.EDIT_OWNER}>
+                        <ButtonHelper onClick={onShow('EditOwner', row)} dataTestId={RENAME_OWNER_BTN_TEST_ID}>
+                          <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
+                        </ButtonHelper>
+                      </Track>
                       {granted && (
                         <>
-                          <ButtonHelper onClick={onShow('ReplaceOwner', row)} dataTestId={REPLACE_OWNER_BTN_TEST_ID}>
-                            <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
-                          </ButtonHelper>
-                          {ownerData.length > 1 && (
-                            <ButtonHelper onClick={onShow('RemoveOwner', row)} dataTestId={REMOVE_OWNER_BTN_TEST_ID}>
-                              <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
+                          <Track {...SETTINGS_EVENTS.OWNERS.REPLACE_OWNER}>
+                            <ButtonHelper onClick={onShow('ReplaceOwner', row)} dataTestId={REPLACE_OWNER_BTN_TEST_ID}>
+                              <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
                             </ButtonHelper>
+                          </Track>
+                          {ownerData.length > 1 && (
+                            <Track {...SETTINGS_EVENTS.OWNERS.REMOVE_OWNER}>
+                              <ButtonHelper onClick={onShow('RemoveOwner', row)} dataTestId={REMOVE_OWNER_BTN_TEST_ID}>
+                                <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
+                              </ButtonHelper>
+                            </Track>
                           )}
                         </>
                       )}
@@ -150,15 +152,17 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
           <Hairline />
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
-              <Button
-                color="primary"
-                onClick={onShow('AddOwner')}
-                size="small"
-                testId={ADD_OWNER_BTN_TEST_ID}
-                variant="contained"
-              >
-                Add new owner
-              </Button>
+              <Track {...SETTINGS_EVENTS.OWNERS.ADD_OWNER}>
+                <Button
+                  color="primary"
+                  onClick={onShow('AddOwner')}
+                  size="small"
+                  testId={ADD_OWNER_BTN_TEST_ID}
+                  variant="contained"
+                >
+                  Add new owner
+                </Button>
+              </Track>
             </Col>
           </Row>
         </>

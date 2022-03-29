@@ -1,5 +1,6 @@
 import 'styled-components'
 import { theme } from '@gnosis.pm/safe-react-components'
+import { DataLayerArgs } from 'react-gtm-module'
 import { BeamerConfig, BeamerMethods } from './Beamer.d'
 
 type Theme = typeof theme
@@ -14,6 +15,7 @@ declare global {
     }
     beamer_config?: BeamerConfig
     Beamer?: BeamerMethods
+    dataLayer?: DataLayerArgs['dataLayer']
   }
 }
 declare module '@openzeppelin/contracts/build/contracts/ERC721'

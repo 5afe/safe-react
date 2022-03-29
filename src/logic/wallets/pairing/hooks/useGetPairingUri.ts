@@ -6,7 +6,9 @@ export const useGetPairingUri = (): string | undefined => {
   const [uri, setUri] = useState<string>()
 
   useEffect(() => {
-    setUri(onboardUri)
+    setTimeout(() => {
+      setUri(getPairingUri())
+    }, 100)
   }, [onboardUri])
 
   return uri

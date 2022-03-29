@@ -10,7 +10,6 @@ import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeDeployment } from 'src/routes/opening'
-import { useAnalytics, USER_EVENTS } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
@@ -40,6 +39,10 @@ import { getExplorerInfo, getShortName } from 'src/config'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import Track from 'src/components/Track'
+import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -136,7 +139,15 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
         // Monitor the latest block to find a potential speed-up tx
         txMonitor({ sender: userAddress, hash: txHash, data: deploymentTx.encodeABI() })
           .then((txReceipt) => {
+            // txMonitor returns the txReceipt from `getTransactionReceipt` which doesn't throw
+            // if it was reverted. We must check the status of the receipt manually.
+            if (didTxRevert(txReceipt)) {
+              reject(new Error('Sped-up tx reverted'))
+              return
+            }
+
             console.log('Sped-up tx mined:', txReceipt)
+            trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
             resolve(txReceipt)
           })
           .catch((error) => {
@@ -145,9 +156,11 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
       })
       .then((txReceipt) => {
         console.log('Original tx mined:', txReceipt)
+        trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
         resolve(txReceipt)
       })
       .catch((error) => {
+        // `deploymentTx` will throw if the transaction was reverted
         reject(parseError(error))
       })
   })
@@ -170,7 +183,6 @@ function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
 
-  const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)
@@ -212,8 +224,6 @@ function SafeCreationProcess(): ReactElement {
     })
     const safeAddressBookEntry = makeAddressBookEntry({ address: safeAddress, name: safeName, chainId })
     dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
-
-    trackEvent(USER_EVENTS.CREATE_SAFE)
 
     // a default 5s wait before starting to request safe information
     await sleep(5000)
@@ -304,16 +314,18 @@ function SafeCreationProcess(): ReactElement {
           }
           footer={
             <ButtonContainer>
-              <Button
-                testId="safe-created-button"
-                onClick={onClickModalButton}
-                color="primary"
-                type={'button'}
-                size="small"
-                variant="contained"
-              >
-                Continue
-              </Button>
+              <Track {...CREATE_SAFE_EVENTS.GO_TO_SAFE}>
+                <Button
+                  testId="safe-created-button"
+                  onClick={onClickModalButton}
+                  color="primary"
+                  type={'button'}
+                  size="small"
+                  variant="contained"
+                >
+                  Continue
+                </Button>
+              </Track>
             </ButtonContainer>
           }
         />

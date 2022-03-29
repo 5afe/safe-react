@@ -112,7 +112,7 @@ const mockPromiEvent = {
 }
 
 describe('TxSender', () => {
-  let tryOffChainSigningSpy, saveTxToHistorySpy, addPendingTransactionSpy, navigateToTxSpy, fetchTransactionsSpy
+  let tryOffChainSigningSpy, saveTxToHistorySpy, setPendingTransactionSpy, navigateToTxSpy, fetchTransactionsSpy
 
   beforeEach(() => {
     jest.restoreAllMocks()
@@ -135,7 +135,7 @@ describe('TxSender', () => {
     saveTxToHistorySpy = jest
       .spyOn(txHistory, 'saveTxToHistory')
       .mockImplementation(() => Promise.resolve(mockTransactionDetails as any))
-    addPendingTransactionSpy = jest.spyOn(pendingTransactions, 'addPendingTransaction')
+    setPendingTransactionSpy = jest.spyOn(pendingTransactions, 'setPendingTransaction')
     navigateToTxSpy = jest.spyOn(utils, 'navigateToTx')
     fetchTransactionsSpy = jest.spyOn(fetchTransactions, 'default')
 
@@ -173,7 +173,7 @@ describe('TxSender', () => {
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
       expect(saveTxToHistorySpy).toHaveBeenCalledTimes(1)
-      expect(addPendingTransactionSpy).toHaveBeenCalledTimes(0)
+      expect(setPendingTransactionSpy).toHaveBeenCalledTimes(0)
       expect(navigateToTxSpy).toHaveBeenCalledTimes(0)
       expect(fetchTransactionsSpy).toHaveBeenCalledTimes(1)
     })
@@ -210,7 +210,7 @@ describe('TxSender', () => {
     await waitFor(() => {
       expect(tryOffChainSigningSpy).toHaveBeenCalledTimes(1)
       expect(saveTxToHistorySpy).toHaveBeenCalledTimes(1)
-      expect(addPendingTransactionSpy).toHaveBeenCalledTimes(0)
+      expect(setPendingTransactionSpy).toHaveBeenCalledTimes(0)
       expect(navigateToTxSpy).toHaveBeenCalledTimes(1)
       expect(fetchTransactionsSpy).toHaveBeenCalledTimes(1)
     })
@@ -266,7 +266,7 @@ describe('TxSender', () => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)
       expect(setNonceSpy).toHaveBeenCalledTimes(1)
       expect(saveTxToHistorySpy).toHaveBeenCalledTimes(1)
-      expect(addPendingTransactionSpy).toHaveBeenCalledTimes(1)
+      expect(setPendingTransactionSpy).toHaveBeenCalledTimes(1)
       expect(navigateToTxSpy).toHaveBeenCalledTimes(1)
       expect(fetchTransactionsSpy).toHaveBeenCalledTimes(1)
     })
@@ -317,7 +317,7 @@ describe('TxSender', () => {
     await waitFor(() => {
       expect(getExecutionTransactionSpy).toHaveBeenCalledTimes(1)
       expect(setNonceSpy).toHaveBeenCalledTimes(1)
-      expect(addPendingTransactionSpy).toHaveBeenCalledTimes(1)
+      expect(setPendingTransactionSpy).toHaveBeenCalledTimes(1)
       expect(saveTxToHistorySpy).toHaveBeenCalledTimes(0)
       expect(navigateToTxSpy).toHaveBeenCalledTimes(0)
       expect(fetchTransactionsSpy).toHaveBeenCalledTimes(1)

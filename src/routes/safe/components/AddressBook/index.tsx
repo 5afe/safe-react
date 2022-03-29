@@ -44,11 +44,12 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { useHistory } from 'react-router'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { ADDRESS_BOOK_EVENTS } from 'src/utils/events/addressBook'
+import Track from 'src/components/Track'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -91,15 +92,10 @@ const AddressBookTable = (): ReactElement => {
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [exportEntriesModalOpen, setExportEntriesModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
-  const { trackEvent } = useAnalytics()
 
   const history = useHistory()
   const queryParams = Object.fromEntries(new URLSearchParams(history.location.search))
   const entryAddressToEditOrCreateNew = queryParams?.entryAddress
-
-  useEffect(() => {
-    trackEvent(SAFE_EVENTS.ADDRESS_BOOK)
-  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -172,41 +168,47 @@ const AddressBookTable = (): ReactElement => {
           </Breadcrumb>
         </Col>
         <Col end="sm" sm={6} xs={12}>
-          <ButtonLink
-            onClick={() => {
-              setSelectedEntry(initialEntryState)
-              setExportEntriesModalOpen(true)
-            }}
-            color="primary"
-            iconType="exportImg"
-            iconSize="sm"
-            textSize="xl"
-          >
-            Export
-          </ButtonLink>
-          <ButtonLink
-            onClick={() => {
-              setImportEntryModalOpen(true)
-            }}
-            color="primary"
-            iconType="importImg"
-            iconSize="sm"
-            textSize="xl"
-          >
-            Import
-          </ButtonLink>
-          <ButtonLink
-            onClick={() => {
-              setSelectedEntry(initialEntryState)
-              setEditCreateEntryModalOpen(true)
-            }}
-            color="primary"
-            iconType="add"
-            iconSize="sm"
-            textSize="xl"
-          >
-            Create entry
-          </ButtonLink>
+          <Track {...ADDRESS_BOOK_EVENTS.EXPORT}>
+            <ButtonLink
+              onClick={() => {
+                setSelectedEntry(initialEntryState)
+                setExportEntriesModalOpen(true)
+              }}
+              color="primary"
+              iconType="exportImg"
+              iconSize="sm"
+              textSize="xl"
+            >
+              Export
+            </ButtonLink>
+          </Track>
+          <Track {...ADDRESS_BOOK_EVENTS.IMPORT}>
+            <ButtonLink
+              onClick={() => {
+                setImportEntryModalOpen(true)
+              }}
+              color="primary"
+              iconType="importImg"
+              iconSize="sm"
+              textSize="xl"
+            >
+              Import
+            </ButtonLink>
+          </Track>
+          <Track {...ADDRESS_BOOK_EVENTS.CREATE_ENTRY}>
+            <ButtonLink
+              onClick={() => {
+                setSelectedEntry(initialEntryState)
+                setEditCreateEntryModalOpen(true)
+              }}
+              color="primary"
+              iconType="add"
+              iconSize="sm"
+              textSize="xl"
+            >
+              Create entry
+            </ButtonLink>
+          </Track>
         </Col>
       </Menu>
       <Block className={classes.formContainer}>
@@ -252,53 +254,59 @@ const AddressBookTable = (): ReactElement => {
                     })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
-                        <ButtonHelper
-                          onClick={() => {
-                            setSelectedEntry({
-                              entry: row,
-                              isOwnerAddress: userOwner,
-                            })
-                            setEditCreateEntryModalOpen(true)
-                          }}
-                        >
-                          <Icon
-                            size="sm"
-                            type="edit"
-                            tooltip="Edit entry"
-                            className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
-                          />
-                        </ButtonHelper>
-                        <ButtonHelper
-                          onClick={() => {
-                            setSelectedEntry({ entry: row })
-                            setDeleteEntryModalOpen(true)
-                          }}
-                        >
-                          <Icon
-                            size="sm"
-                            type="delete"
-                            color="error"
-                            tooltip="Delete entry"
-                            className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
-                          />
-                        </ButtonHelper>
-                        {granted ? (
-                          <StyledButton
-                            color="primary"
+                        <Track {...ADDRESS_BOOK_EVENTS.EDIT_ENTRY}>
+                          <ButtonHelper
+                            onClick={() => {
+                              setSelectedEntry({
+                                entry: row,
+                                isOwnerAddress: userOwner,
+                              })
+                              setEditCreateEntryModalOpen(true)
+                            }}
+                          >
+                            <Icon
+                              size="sm"
+                              type="edit"
+                              tooltip="Edit entry"
+                              className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
+                            />
+                          </ButtonHelper>
+                        </Track>
+                        <Track {...ADDRESS_BOOK_EVENTS.DELETE_ENTRY}>
+                          <ButtonHelper
                             onClick={() => {
                               setSelectedEntry({ entry: row })
-                              setSendFundsModalOpen(true)
+                              setDeleteEntryModalOpen(true)
                             }}
-                            size="md"
-                            variant="contained"
-                            data-testid={SEND_ENTRY_BUTTON}
                           >
-                            <FixedIcon type="arrowSentWhite" />
-                            <Text size="xl" color="white">
-                              Send
-                            </Text>
-                          </StyledButton>
-                        ) : null}
+                            <Icon
+                              size="sm"
+                              type="delete"
+                              color="error"
+                              tooltip="Delete entry"
+                              className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
+                            />
+                          </ButtonHelper>
+                        </Track>
+                        {granted && (
+                          <Track {...ADDRESS_BOOK_EVENTS.SEND}>
+                            <StyledButton
+                              color="primary"
+                              onClick={() => {
+                                setSelectedEntry({ entry: row })
+                                setSendFundsModalOpen(true)
+                              }}
+                              size="md"
+                              variant="contained"
+                              data-testid={SEND_ENTRY_BUTTON}
+                            >
+                              <FixedIcon type="arrowSentWhite" />
+                              <Text size="xl" color="white">
+                                Send
+                              </Text>
+                            </StyledButton>
+                          </Track>
+                        )}
                       </Row>
                     </TableCell>
                   </TableRow>
