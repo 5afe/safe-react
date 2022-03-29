@@ -1,9 +1,10 @@
-import { ReactElement } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Text, Title } from '@gnosis.pm/safe-react-components'
 import { Bookmark, BookmarkBorder } from '@material-ui/icons'
 import { IconButton } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { Link, generatePath } from 'react-router-dom'
+import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -40,30 +41,52 @@ const IconBtn = styled(IconButton)`
   }
 `
 
-const StyledFooter = styled.div`
-  position: absolute;
-  bottom: 24px;
-`
-
 type CardProps = {
   name: string
   description: string
   logoUri: string
   appUri: string
-  isPinned?: boolean
+  isPinned: boolean
+  onPin: () => void
 }
 
 const Card = (props: CardProps): ReactElement => {
+  const path = generatePath(GENERIC_APPS_ROUTE)
+  const { isPinned } = props
+  const [localPinned, setLocalPinned] = useState<boolean>(isPinned)
+  const { onPin } = props
+
+  const handlePinClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      setLocalPinned((prev) => !prev)
+    },
+    [setLocalPinned],
+  )
+
+  useEffect(() => {
+    if (localPinned === isPinned) return
+
+    // Add a small delay when pinning/unpinning for visual feedback
+    const delay = setTimeout(onPin, 500)
+    return () => clearTimeout(delay)
+  }, [localPinned, isPinned, onPin])
+
   return (
-    <StyledLink to="#">
+    <StyledLink to={`${path}?appUrl=${props.appUri}`}>
       <StyledCard>
-        <IconBtn>{props.isPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
         <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
+
         <Title size="xs">{props.name}</Title>
+
         <Text size="md" color="inputFilled">
           {props.description}
         </Text>
-        <StyledFooter>Last used at:</StyledFooter>
+
+        {/* Bookmark button */}
+        <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
+
+        {/* TODO: Share button */}
       </StyledCard>
     </StyledLink>
   )
