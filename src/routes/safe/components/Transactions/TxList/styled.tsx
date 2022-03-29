@@ -15,7 +15,7 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  align-items: flex-end;
+  align-items: center;
 `
 
 export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
