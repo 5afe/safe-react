@@ -408,4 +408,127 @@ describe('getBatchableTransactions', () => {
     const result = getBatchableTransactions.resultFunc(mockTx, mockQueueTxs, 1)
     expect(result).toHaveLength(2)
   })
+
+  it('adds a maximum of 10 transactions to the batch', () => {
+    const mockTx = [
+      {
+        ...defaultNextTx,
+        executionInfo: {
+          ...defaultNextTx.executionInfo,
+          nonce: 1,
+          confirmationsRequired: 2,
+          confirmationsSubmitted: 2,
+        } as MultisigExecutionInfo,
+      },
+    ]
+
+    const mockQueueTx1 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 2,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockQueueTx2 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 3,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockQueueTx3 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 4,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx4 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 5,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx5 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 6,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx6 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 7,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx7 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 8,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx8 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 9,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx9 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 10,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+    const mockQueueTx10 = {
+      ...defaultNextTx,
+      executionInfo: {
+        ...defaultNextTx.executionInfo,
+        nonce: 11,
+        confirmationsRequired: 2,
+        confirmationsSubmitted: 2,
+      } as MultisigExecutionInfo,
+    }
+
+    const mockQueueTxs = {
+      2: [mockQueueTx1],
+      3: [mockQueueTx2],
+      4: [mockQueueTx3],
+      5: [mockQueueTx4],
+      6: [mockQueueTx5],
+      7: [mockQueueTx6],
+      8: [mockQueueTx7],
+      9: [mockQueueTx8],
+      10: [mockQueueTx9],
+      11: [mockQueueTx10],
+    }
+
+    const result = getBatchableTransactions.resultFunc(mockTx, mockQueueTxs, 1)
+    expect(result).toHaveLength(10)
+  })
 })
