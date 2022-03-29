@@ -9,15 +9,22 @@ const StyledGrid = styled.div`
   gap: 20px;
 `
 
+const MAX_APPS = 3
+
 const Grid = (): ReactElement => {
-  const { pinnedSafeApps, togglePin } = useAppList()
+  const { allApps, pinnedSafeApps, togglePin } = useAppList()
+  // Transactions Builder && Wallet connect
+  const officialAppIds = ['29', '11']
+  const officialApps = allApps.filter((app) => officialAppIds.includes(app.id))
+
+  const displayedApps = pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
 
   return (
     <div>
       <h2>Safe Apps</h2>
 
       <StyledGrid>
-        {pinnedSafeApps.map((safeApp) => (
+        {displayedApps.map((safeApp) => (
           <Card
             key={safeApp.id}
             name={safeApp.name}
