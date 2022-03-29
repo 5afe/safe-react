@@ -9,7 +9,7 @@ import { QueueTxList } from './QueueTxList'
 import { Centered, NoTransactions } from './styled'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
-import { batchExecuteSelector } from 'src/logic/settings/selectors'
+import { batchExecuteSelector } from 'src/logic/appearance/selectors'
 import { BatchExecute } from 'src/routes/safe/components/Transactions/TxList/BatchExecute'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
@@ -52,8 +52,7 @@ export const QueueTransactions = (): ReactElement => {
   }
 
   return (
-    <>
-      <BatchExecuteHoverProvider>
+    <BatchExecuteHoverProvider>
         {batchExecute && <BatchExecute />}
         <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
           {/* Next list */}
@@ -61,10 +60,10 @@ export const QueueTransactions = (): ReactElement => {
             {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
           </TxLocationContext.Provider>
 
-        {/* Queue list */}
-        <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-          {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
-        </TxLocationContext.Provider>
+          {/* Queue list */}
+          <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+            {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
+          </TxLocationContext.Provider>
       </TxsInfiniteScroll>
     </BatchExecuteHoverProvider>
   )

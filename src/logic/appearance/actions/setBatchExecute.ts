@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions'
 
-import { SetBatchExecutePayload } from '../reducer/advanced'
+import { SetBatchExecutePayload } from '../reducer/appearance'
 
 export const SET_BATCH_EXECUTE = 'SET_BATCH_EXECUTE'
 

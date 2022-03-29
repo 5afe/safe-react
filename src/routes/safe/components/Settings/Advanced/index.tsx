@@ -14,8 +14,8 @@ import { TransactionGuard } from './TransactionGuard'
 import FormGroup from '@material-ui/core/FormGroup/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
-import { setBatchExecute } from 'src/logic/settings/actions/setBatchExecute'
-import { batchExecuteSelector } from 'src/logic/settings/selectors'
+import { setBatchExecute } from 'src/logic/appearance/actions/setBatchExecute'
+import { batchExecuteSelector } from 'src/logic/appearance/selectors'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
