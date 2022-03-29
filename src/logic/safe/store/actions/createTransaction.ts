@@ -33,6 +33,8 @@ import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransa
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { isWalletRejection } from 'src/logic/wallets/errors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { WALLET_EVENTS } from 'src/utils/events/wallet'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -113,6 +115,8 @@ export class TxSender {
     }
 
     notifications.closePending()
+
+    trackEvent(signature ? WALLET_EVENTS.OFF_CHAIN_SIGNATURE : WALLET_EVENTS.ON_CHAIN_INTERACTION)
 
     // This is used to communicate the safeTxHash to a Safe App caller
     confirmCallback?.(safeTxHash)

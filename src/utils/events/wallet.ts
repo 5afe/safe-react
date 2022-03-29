@@ -6,9 +6,13 @@ const WALLET = {
     event: GTM_EVENT.META,
     action: 'Connect wallet',
   },
-  WALLET_CONNECT: {
+  OFF_CHAIN_SIGNATURE: {
     event: GTM_EVENT.META,
-    action: 'WalletConnect Peer',
+    action: 'Off-chain signature',
+  },
+  ON_CHAIN_INTERACTION: {
+    event: GTM_EVENT.META,
+    action: 'On-chain interaction',
   },
 }
 
