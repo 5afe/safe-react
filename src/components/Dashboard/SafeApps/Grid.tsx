@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import styled from 'styled-components'
 import { Button } from '@gnosis.pm/safe-react-components'
 import { generatePath, Link } from 'react-router-dom'
@@ -36,16 +36,22 @@ const StyledLink = styled(Link)`
   }
 `
 
+// Transactions Builder && Wallet connect
+const officialAppIds = ['29', '11']
 const MAX_APPS = 3
 
 const Grid = (): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin } = useAppList()
-  // Transactions Builder && Wallet connect
-  const officialAppIds = ['29', '11']
-  const pinnedSafeAppsIds = pinnedSafeApps.map((app) => app.id)
-  const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppsIds.includes(app.id))
 
-  const displayedApps = pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
+  const pinnedSafeAppsIds = useMemo(() => pinnedSafeApps.map((app) => app.id), [pinnedSafeApps])
+  const officialApps = useMemo(
+    () => allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppsIds.includes(app.id)),
+    [allApps, pinnedSafeAppsIds],
+  )
+  const displayedApps = useMemo(
+    () => pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS),
+    [pinnedSafeAppsIds, officialApps],
+  )
 
   const path = generatePath(GENERIC_APPS_ROUTE)
 
