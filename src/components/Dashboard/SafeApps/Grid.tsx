@@ -55,6 +55,8 @@ const Grid = (): ReactElement => {
 
   const path = generatePath(GENERIC_APPS_ROUTE)
 
+  if (allApps.length === 0) return <></>
+
   return (
     <div>
       <h2>Safe Apps</h2>
