@@ -42,7 +42,8 @@ const Grid = (): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin } = useAppList()
   // Transactions Builder && Wallet connect
   const officialAppIds = ['29', '11']
-  const officialApps = allApps.filter((app) => officialAppIds.includes(app.id))
+  const pinnedSafeAppsIds = pinnedSafeApps.map((app) => app.id)
+  const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppsIds.includes(app.id))
 
   const displayedApps = pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
 
