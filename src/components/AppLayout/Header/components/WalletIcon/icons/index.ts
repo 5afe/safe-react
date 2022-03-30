@@ -1,5 +1,6 @@
 // Icons
 import metamaskIcon from './icon-metamask.png'
+import tallyHoIcon from './icon-tallyho.svg'
 import walletConnectIcon from './icon-wallet-connect.svg'
 import trezorIcon from './icon-trezor.svg'
 import ledgerIcon from './icon-ledger.svg'
@@ -20,6 +21,10 @@ import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } } = {
   [WALLET_PROVIDER.METAMASK]: {
     src: metamaskIcon,
+    height: 25,
+  },
+  [WALLET_PROVIDER.TALLYHO]: {
+    src: tallyHoIcon,
     height: 25,
   },
   [WALLET_PROVIDER.WALLETCONNECT]: {
