@@ -43,14 +43,14 @@ const MAX_APPS = 3
 const Grid = (): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin } = useAppList()
 
-  const pinnedSafeAppsIds = useMemo(() => pinnedSafeApps.map((app) => app.id), [pinnedSafeApps])
+  const pinnedSafeAppIds = useMemo(() => pinnedSafeApps.map((app) => app.id), [pinnedSafeApps])
   const officialApps = useMemo(
-    () => allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppsIds.includes(app.id)),
-    [allApps, pinnedSafeAppsIds],
+    () => allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppIds.includes(app.id)),
+    [allApps, pinnedSafeAppIds],
   )
   const displayedApps = useMemo(
     () => pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS),
-    [pinnedSafeAppsIds, officialApps],
+    [pinnedSafeApps, officialApps],
   )
 
   const path = generatePath(GENERIC_APPS_ROUTE)
