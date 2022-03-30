@@ -84,7 +84,9 @@ const TxSingularDetails = (): ReactElement => {
 
   // Add the tx to the store
   useEffect(() => {
-    if (!fetchedTx) return
+    if (!fetchedTx || indexedTx) {
+      return
+    }
 
     // Format the tx details into a History or Queue-like tx item
     const listItemTx = makeTxFromDetails(fetchedTx)
@@ -106,8 +108,8 @@ const TxSingularDetails = (): ReactElement => {
       return
     }
 
-    // Don't add queued transaction until queue list has automatically polled
-    if (!transactions || (transactions.next.count === 0 && transactions.queue.count === 0)) {
+    // Don't add queued transaction until transaction store has initialised
+    if (!transactions) {
       return
     }
 
@@ -123,7 +125,7 @@ const TxSingularDetails = (): ReactElement => {
 
     // Add queued transaction
     dispatch(addQueuedTransactions(payload))
-  }, [fetchedTx, chainId, dispatch, transactions, transactions?.next.count, transactions?.queue.count])
+  }, [fetchedTx, chainId, dispatch, transactions, indexedTx])
 
   if (!indexedTx && error) {
     const safeParams = extractPrefixedSafeAddress()
