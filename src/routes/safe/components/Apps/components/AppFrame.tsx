@@ -249,8 +249,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         to: checksumAddress(to),
         ...rest,
       }))
-
-      console.log('sendTransactions', msg.data.params)
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(transctions, msg.data.params.params, msg.data.id)
     })
