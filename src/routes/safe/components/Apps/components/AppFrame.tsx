@@ -36,6 +36,7 @@ import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -244,7 +245,14 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.sendTransactions, (msg) => {
       // @ts-expect-error explore ways to fix this
-      openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
+      const transctions = (msg.data.params.txs as Transaction[]).map(({ to, ...rest }) => ({
+        to: checksumAddress(to),
+        ...rest,
+      }))
+
+      console.log('sendTransactions', msg.data.params)
+      // @ts-expect-error explore ways to fix this
+      openConfirmationModal(transctions, msg.data.params.params, msg.data.id)
     })
 
     communicator?.on(Methods.signMessage, async (msg) => {
