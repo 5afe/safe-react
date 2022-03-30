@@ -6,6 +6,7 @@ import { generatePath, Link } from 'react-router-dom'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 import Card from 'src/components/Dashboard/SafeApps/Card'
+import ExploreIcon from 'src/assets/icons/explore.svg'
 
 const StyledGrid = styled.div`
   display: flex;
@@ -35,21 +36,13 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledIcon = styled.img`
-  width: 160px;
-  height: auto;
-`
-
 const MAX_APPS = 3
-
-const OFFICIAL_APPS: Record<string, string> = {
-  TRANSACTION_BUILDER: '29',
-  WALLET_CONNECT: '11',
-}
 
 const Grid = (): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin } = useAppList()
-  const officialApps = allApps.filter((app) => Object.values(OFFICIAL_APPS).includes(app.id))
+  // Transactions Builder && Wallet connect
+  const officialAppIds = ['29', '11']
+  const officialApps = allApps.filter((app) => officialAppIds.includes(app.id))
 
   const displayedApps = pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
 
@@ -75,10 +68,10 @@ const Grid = (): ReactElement => {
         ))}
         {displayedApps.length < MAX_APPS && (
           <StyledExplorerButton>
-            <StyledIcon src="./resources/explore.svg" alt="Explore Safe Apps" />
+            <img alt="Explore Safe Apps" src={ExploreIcon} />
             <StyledLink to={path}>
               <Button size="md" color="primary" variant="contained">
-                Explore
+                Explore Safe Apps
               </Button>
             </StyledLink>
           </StyledExplorerButton>
