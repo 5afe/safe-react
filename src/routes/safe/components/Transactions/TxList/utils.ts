@@ -211,7 +211,7 @@ export const getTxConfirmations = (transaction: Transaction): List<Confirmation>
     : List([])
 }
 
-const getTxValue = (txInfo: TransactionInfo, txDetails: TransactionDetails): string => {
+export const getTxValue = (txInfo: TransactionInfo, txDetails: TransactionDetails): string => {
   switch (txInfo.type) {
     case 'Transfer':
       if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {
@@ -228,7 +228,7 @@ const getTxValue = (txInfo: TransactionInfo, txDetails: TransactionDetails): str
   }
 }
 
-const getTxRecipient = (txInfo: TransactionInfo, safeAddress: string): string => {
+export const getTxRecipient = (txInfo: TransactionInfo, safeAddress: string): string => {
   switch (txInfo.type) {
     case 'Transfer':
       if (txInfo.transferInfo.type === TransactionTokenType.NATIVE_COIN) {

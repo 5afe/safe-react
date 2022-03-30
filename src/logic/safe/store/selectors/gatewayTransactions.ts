@@ -180,7 +180,11 @@ export const getBatchableTransactions = createSelector(
 
     if (!nextTxs || !queuedTxs) return batchableTransactions
 
-    const allTxs = [nextTxs, ...Object.values(queuedTxs)]
+    // We slice as to not disturb the default order but still start from the most recent tx
+    const sortedNextTxs = nextTxs.slice().sort((a, b) => b.timestamp - a.timestamp)
+    const sortedQueuedTxs = Object.values(queuedTxs).map((tx) => tx.slice().sort((a, b) => b.timestamp - a.timestamp))
+
+    const allTxs = [sortedNextTxs, ...sortedQueuedTxs]
 
     Object.values(allTxs).forEach((txByNonce) => {
       txByNonce.forEach((tx) => {

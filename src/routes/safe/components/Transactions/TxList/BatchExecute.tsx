@@ -8,7 +8,6 @@ import Button from 'src/components/layout/Button'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { Transaction as DecodeTx } from '@gnosis.pm/safe-apps-sdk-v1'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
@@ -31,7 +30,12 @@ import { createMultiSendTransaction } from 'src/logic/safe/store/actions/TxMulti
 import { BatchExecuteHoverContext } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
-import { getTxConfirmations, getTxInfo } from 'src/routes/safe/components/Transactions/TxList/utils'
+import {
+  getTxConfirmations,
+  getTxInfo,
+  getTxRecipient,
+  getTxValue,
+} from 'src/routes/safe/components/Transactions/TxList/utils'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import { DecodedTxDetailType } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 import { DecodeTxs } from 'src/components/DecodeTxs'
@@ -177,16 +181,16 @@ export const BatchExecute = React.memo((): ReactElement => {
             {batchableTransactions.map((transaction) => {
               if (!transaction.txDetails?.txData) return null
 
-              const tx: DecodeTx = {
-                to: transaction.txDetails?.txData.to.value || '',
-                value: transaction.txDetails?.txData.value || '0',
+              const tx = {
+                to: getTxRecipient(transaction.txInfo, safeAddress),
+                value: getTxValue(transaction.txInfo, transaction.txDetails),
                 data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
               }
               const decodedDataParams: DecodedDataParameterValue = {
                 operation: 0,
-                to: transaction.txDetails?.txData.to.value,
-                value: transaction.txDetails?.txData.value || '0',
-                data: EMPTY_DATA,
+                to: tx.to,
+                value: tx.value,
+                data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
                 dataDecoded: null,
               }
 
