@@ -51,10 +51,9 @@ type CardProps = {
 }
 
 const Card = (props: CardProps): ReactElement => {
-  const path = generatePath(GENERIC_APPS_ROUTE)
-  const { isPinned } = props
+  const appRoute = generatePath(GENERIC_APPS_ROUTE) + `?appUrl=${props.appUri}`
+  const { isPinned, onPin } = props
   const [localPinned, setLocalPinned] = useState<boolean>(isPinned)
-  const { onPin } = props
 
   const handlePinClick = useCallback(
     (e: React.MouseEvent) => {
@@ -73,7 +72,7 @@ const Card = (props: CardProps): ReactElement => {
   }, [localPinned, isPinned, onPin])
 
   return (
-    <StyledLink to={`${path}?appUrl=${props.appUri}`}>
+    <StyledLink to={appRoute}>
       <StyledCard>
         <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
 

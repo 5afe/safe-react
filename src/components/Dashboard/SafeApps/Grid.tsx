@@ -13,8 +13,6 @@ const StyledGrid = styled.div`
   gap: 20px;
 `
 
-const MAX_APPS = 3
-
 const StyledExplorerButton = styled.div`
   width: 260px;
   height: 200px;
@@ -42,11 +40,16 @@ const StyledIcon = styled.img`
   height: auto;
 `
 
+const MAX_APPS = 3
+
+const OFFICIAL_APPS: Record<string, string> = {
+  TRANSACTION_BUILDER: '29',
+  WALLET_CONNECT: '11',
+}
+
 const Grid = (): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin } = useAppList()
-  // Transactions Builder && Wallet connect
-  const officialAppIds = ['29', '11']
-  const officialApps = allApps.filter((app) => officialAppIds.includes(app.id))
+  const officialApps = allApps.filter((app) => Object.values(OFFICIAL_APPS).includes(app.id))
 
   const displayedApps = pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
 
