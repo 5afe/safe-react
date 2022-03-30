@@ -41,49 +41,46 @@ const officialAppIds = ['29', '11']
 const MAX_APPS = 3
 
 const Grid = (): ReactElement => {
-  const { allApps, pinnedSafeApps, togglePin } = useAppList()
+  const { allApps, pinnedSafeApps, togglePin, isLoading } = useAppList()
 
-  const pinnedSafeAppIds = useMemo(() => pinnedSafeApps.map((app) => app.id), [pinnedSafeApps])
-  const officialApps = useMemo(
-    () => allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppIds.includes(app.id)),
-    [allApps, pinnedSafeAppIds],
-  )
-  const displayedApps = useMemo(
-    () => pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS),
-    [pinnedSafeApps, officialApps],
-  )
+  const displayedApps = useMemo(() => {
+    const pinnedSafeAppIds = pinnedSafeApps.map((app) => app.id)
+    const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppIds.includes(app.id))
+    return pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
+  }, [allApps, pinnedSafeApps])
 
   const path = generatePath(GENERIC_APPS_ROUTE)
-
-  if (allApps.length === 0) return <></>
 
   return (
     <div>
       <h2>Safe Apps</h2>
-
-      <StyledGrid>
-        {displayedApps.map((safeApp) => (
-          <Card
-            key={safeApp.id}
-            name={safeApp.name}
-            description={safeApp.description}
-            logoUri={safeApp.iconUrl}
-            appUri={safeApp.url}
-            isPinned={pinnedSafeApps.some((app) => app.id === safeApp.id)}
-            onPin={() => togglePin(safeApp)}
-          />
-        ))}
-        {displayedApps.length < MAX_APPS && (
-          <StyledExplorerButton>
-            <img alt="Explore Safe Apps" src={ExploreIcon} />
-            <StyledLink to={path}>
-              <Button size="md" color="primary" variant="contained">
-                Explore Safe Apps
-              </Button>
-            </StyledLink>
-          </StyledExplorerButton>
-        )}
-      </StyledGrid>
+      {isLoading ? (
+        <h2>Loading...</h2>
+      ) : (
+        <StyledGrid>
+          {displayedApps.map((safeApp) => (
+            <Card
+              key={safeApp.id}
+              name={safeApp.name}
+              description={safeApp.description}
+              logoUri={safeApp.iconUrl}
+              appUri={safeApp.url}
+              isPinned={pinnedSafeApps.some((app) => app.id === safeApp.id)}
+              onPin={() => togglePin(safeApp)}
+            />
+          ))}
+          {displayedApps.length < MAX_APPS && (
+            <StyledExplorerButton>
+              <img alt="Explore Safe Apps" src={ExploreIcon} />
+              <StyledLink to={path}>
+                <Button size="md" color="primary" variant="contained">
+                  Explore Safe Apps
+                </Button>
+              </StyledLink>
+            </StyledExplorerButton>
+          )}
+        </StyledGrid>
+      )}
     </div>
   )
 }
