@@ -119,7 +119,7 @@ const Advanced = (): ReactElement => {
           </InfoText>
           <FormControlLabel
             control={<Checkbox checked={batchExecute} onChange={handleSetBatchExecute} name="batchExecute" />}
-            label="Batch-Execution"
+            label="Batch execution"
           />
         </FormGroup>
       </Block>
