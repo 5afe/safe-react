@@ -161,7 +161,12 @@ export const BatchExecute = React.memo((): ReactElement => {
         <Hairline />
         <ModalContent>
           <Row margin="md">
-            <Paragraph noMargin>This action will execute {batchableTransactions.length} transactions.</Paragraph>
+            <Paragraph noMargin>
+              This transaction batches a total of {batchableTransactions.length} transactions from your queue into a
+              single Ethereum transaction. Please check every included transaction carefully, especially if you have
+              rejection transactions, and make sure you want to execute all of them. Included transactions are
+              highlighted in green when you hover over the execute button.
+            </Paragraph>
           </Row>
           <Row margin="xs">
             <Paragraph color="disabled" noMargin size="lg">
@@ -200,7 +205,8 @@ export const BatchExecute = React.memo((): ReactElement => {
             })}
           </Row>
           <Paragraph size="md" align="center" color="disabled" noMargin>
-            Be aware that if any of the transactions fail, all of them will revert.
+            This feature is still in experimental mode. Be aware, that if one of the included transactions fails, all
+            included transactions will fail. This will result in the loss of the allocated transaction fees.
           </Paragraph>
         </ModalContent>
         <Modal.Footer withoutBorder>
