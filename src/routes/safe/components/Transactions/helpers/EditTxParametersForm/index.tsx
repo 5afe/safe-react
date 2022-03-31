@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useCallback, useState } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -23,6 +23,9 @@ import {
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import Paragraph from 'src/components/layout/Paragraph'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import * as React from 'react'
 
 const StyledDivider = styled(Divider)`
   margin: 0;
@@ -102,6 +105,8 @@ export const EditTxParametersForm = ({
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
+  const [manualSafeNonce, setManualSafeNonce] = useState<string>('')
+  const [hasChangedSafeNonce, setHasChangedSafeNonce] = useState<boolean>(false)
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -110,6 +115,22 @@ export const EditTxParametersForm = ({
   const onCloseFormHandler = () => {
     onClose()
   }
+
+  const handleSafeNonceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setHasChangedSafeNonce(true)
+    setManualSafeNonce(e.target.value)
+  }, [])
+
+  const showAdornment = !safeNonce && !hasChangedSafeNonce
+  const loadingAdornment = showAdornment
+    ? {
+        endAdornment: (
+          <InputAdornment position="end">
+            <CircularProgress size="16px" />
+          </InputAdornment>
+        ),
+      }
+    : null
 
   return (
     <>
@@ -128,7 +149,7 @@ export const EditTxParametersForm = ({
       <Block className={classes.container}>
         <GnoForm
           initialValues={{
-            safeNonce: safeNonce || '0',
+            safeNonce: hasChangedSafeNonce ? manualSafeNonce : safeNonce || '',
             safeTxGas: safeTxGas || '',
             ethNonce: ethNonce || '',
             ethGasLimit: ethGasLimit || '',
@@ -153,7 +174,9 @@ export const EditTxParametersForm = ({
                   type="number"
                   min="0"
                   component={TextField}
-                  disabled={!areSafeParamsEnabled(parametersStatus) || !safeNonce}
+                  disabled={!areSafeParamsEnabled(parametersStatus)}
+                  onChange={handleSafeNonceChange}
+                  inputAdornment={loadingAdornment}
                 />
                 {showSafeTxGas && (
                   <Field

@@ -27,6 +27,7 @@ import { getByteLength } from 'src/utils/getByteLength'
 import { md } from 'src/theme/variables'
 import Track from 'src/components/Track'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
+import { Skeleton } from '@material-ui/lab'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -70,10 +71,6 @@ const StyledDivider = styled(Divider)`
 type TxParam = string | ReactElement
 type TxParameterProps = { name: TxParam; value?: TxParam | null; color?: ThemeColors } & ColoredTextProps
 const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement | null => {
-  if (value == null || value === '') {
-    return null
-  }
-
   const getEl = (prop?: TxParam) => {
     return typeof prop === 'string' ? (
       <ColoredText size="lg" {...rest}>
@@ -87,7 +84,7 @@ const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement |
   return (
     <TxParameterWrapper>
       {getEl(name)}
-      {getEl(value)}
+      {value == null || value === '' ? <Skeleton animation="wave" width="30px" /> : getEl(value)}
     </TxParameterWrapper>
   )
 }
