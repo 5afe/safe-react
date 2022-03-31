@@ -250,7 +250,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         ...rest,
       }))
       // @ts-expect-error explore ways to fix this
-      openConfirmationModal(transctions, msg.data.params.params, msg.data.id)
+      openConfirmationModal(transactions, msg.data.params.params, msg.data.id)
     })
 
     communicator?.on(Methods.signMessage, async (msg) => {
