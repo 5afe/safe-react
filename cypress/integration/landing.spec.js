@@ -1,12 +1,12 @@
 describe('Landing page', () => {
   it('redirects to welcome page', () => {
-    cy.visit('/app')
+    cy.visit('/')
 
     cy.url().should('include', '/app/welcome')
   })
 
   it('features discoverability cookies', () => {
-    cy.visit('https://safe-team.dev.gnosisdev.com/app')
+    cy.visit('/')
 
     const cookieBannerId = '[data-testid="cookies-banner-form"]'
 
