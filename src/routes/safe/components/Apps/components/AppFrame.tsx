@@ -245,7 +245,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.sendTransactions, (msg) => {
       // @ts-expect-error explore ways to fix this
-      const transctions = (msg.data.params.txs as Transaction[]).map(({ to, ...rest }) => ({
+      const transactions = (msg.data.params.txs as Transaction[]).map(({ to, ...rest }) => ({
         to: checksumAddress(to),
         ...rest,
       }))
