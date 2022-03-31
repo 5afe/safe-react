@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useState } from 'react'
+import { ReactElement, useState, ChangeEvent } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -25,7 +25,6 @@ import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import Paragraph from 'src/components/layout/Paragraph'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import * as React from 'react'
 
 const StyledDivider = styled(Divider)`
   margin: 0;
@@ -105,8 +104,7 @@ export const EditTxParametersForm = ({
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
-  const [manualSafeNonce, setManualSafeNonce] = useState<string>('')
-  const [hasChangedSafeNonce, setHasChangedSafeNonce] = useState<boolean>(false)
+  const [manualSafeNonce, setManualSafeNonce] = useState<string>()
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -116,11 +114,7 @@ export const EditTxParametersForm = ({
     onClose()
   }
 
-  const handleSafeNonceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setHasChangedSafeNonce(true)
-    setManualSafeNonce(e.target.value)
-  }, [])
-
+  const hasChangedSafeNonce = manualSafeNonce !== undefined
   const showAdornment = !safeNonce && !hasChangedSafeNonce
   const loadingAdornment = showAdornment
     ? {
@@ -175,7 +169,7 @@ export const EditTxParametersForm = ({
                   min="0"
                   component={TextField}
                   disabled={!areSafeParamsEnabled(parametersStatus)}
-                  onChange={handleSafeNonceChange}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setManualSafeNonce(e.target.value)}
                   inputAdornment={loadingAdornment}
                 />
                 {showSafeTxGas && (
