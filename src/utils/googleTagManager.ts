@@ -179,14 +179,12 @@ export const trackSafeAppEvent = ({
   method,
   params,
   sdkVersion,
-  oui,
 }: {
   event: GTM_EVENT
   name: string
   method: string
   params: any
   sdkVersion: string
-  oui?: number
 }): void => {
   const dataLayer = {
     event,
@@ -195,7 +193,6 @@ export const trackSafeAppEvent = ({
     safeAppMethod: method,
     safeAppParams: params,
     safeAppSDKVersion: sdkVersion,
-    oui,
   }
 
   if (!IS_PRODUCTION) {
