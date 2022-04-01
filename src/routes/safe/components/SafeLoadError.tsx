@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 import removeViewedSafe from 'src/logic/currentSession/store/actions/removeViewedSafe'
 import FetchError from './FetchError'
-import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 
 const SafeLoadError = (): ReactElement => {
   const dispatch = useDispatch()
 
-  const { address } = useSelector(currentSafeWithNames)
+  const { address } = useSelector(currentSafe)
   const onClick = () => dispatch(removeViewedSafe(address))
 
   return (
