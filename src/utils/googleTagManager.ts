@@ -59,6 +59,7 @@ export enum GTM_EVENT {
   PAGEVIEW = 'pageview',
   CLICK = 'customClick',
   META = 'metadata',
+  SAFE_APP = 'safeApp',
 }
 
 let currentPathname = history.location.pathname
@@ -161,6 +162,40 @@ export const trackEvent = ({
     eventCategory: category,
     eventAction: action,
     eventLabel: tryParse(label),
+  }
+
+  if (!IS_PRODUCTION) {
+    console.info('[GTM]', dataLayer)
+  }
+
+  TagManager.dataLayer({
+    dataLayer,
+  })
+}
+
+export const trackSafeAppEvent = ({
+  event,
+  name,
+  method,
+  params,
+  sdkVersion,
+  oui,
+}: {
+  event: GTM_EVENT
+  name: string
+  method: string
+  params: any
+  sdkVersion: string
+  oui?: number
+}): void => {
+  const dataLayer = {
+    event,
+    chainId: _getChainId(),
+    safeAppName: name,
+    safeAppMethod: method,
+    safeAppParams: params,
+    safeAppSDKVersion: sdkVersion,
+    oui,
   }
 
   if (!IS_PRODUCTION) {

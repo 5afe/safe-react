@@ -10,6 +10,7 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { SafeApp } from './types'
+import { GTM_EVENT, trackSafeAppEvent } from 'src/utils/googleTagManager'
 
 type MessageHandler = (
   msg: SDKMessageEvent,
@@ -64,6 +65,15 @@ class AppCommunicator {
     const hasHandler = this.canHandleMessage(msg)
 
     if (validMessage && hasHandler) {
+      trackSafeAppEvent({
+        event: GTM_EVENT.SAFE_APP,
+        name: this.app.name,
+        method: msg.data.method,
+        params: msg.data.params,
+        sdkVersion: msg.data.env.sdkVersion,
+        oui: 3,
+      })
+
       const handler = this.handlers.get(msg.data.method)
       try {
         // @ts-expect-error Handler existence is checked in this.canHandleMessage
