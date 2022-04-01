@@ -17,6 +17,7 @@ import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import HDWalletProvider from '@truffle/hdwallet-provider'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
@@ -27,6 +28,10 @@ export const saveLastUsedProvider = (name: string): void => {
 }
 
 export const loadLastUsedProvider = (): string | undefined => {
+  if (window['Cypress']) {
+    return 'e2e-wallet'
+  }
+
   return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
 }
 
@@ -46,6 +51,24 @@ const getNetworkName = (chainId: ChainId) => {
 
 const hasENSSupport = (chainId: ChainId): boolean => {
   return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
+}
+
+const customSDKWallet: any = {
+  name: 'e2e-wallet',
+  wallet: async (helpers) => {
+    const { createModernProviderInterface } = helpers
+    const provider = new HDWalletProvider({
+      mnemonic: 'XXX',
+      providerOrUrl: 'https://rinkeby.infura.io/v3/xxx',
+    })
+
+    return {
+      provider,
+      interface: createModernProviderInterface(provider),
+    }
+  },
+  desktop: true,
+  mobile: true,
 }
 
 const getOnboard = (chainId: ChainId): API => {
@@ -71,7 +94,7 @@ const getOnboard = (chainId: ChainId): API => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: getSupportedWallets(chainId),
+      wallets: window['Cypress'] ? [customSDKWallet] : getSupportedWallets(chainId),
     },
     walletCheck: [
       { checkName: 'derivationPath' },
