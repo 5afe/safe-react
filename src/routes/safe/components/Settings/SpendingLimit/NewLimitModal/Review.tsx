@@ -166,7 +166,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     spendingLimits,
     currentVersion: safeVersion = '',
     modules,
-  } = useSelector(currentSafe) ?? {}
+  } = useSelector(currentSafe)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
