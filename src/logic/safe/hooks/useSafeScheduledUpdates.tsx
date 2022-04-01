@@ -20,5 +20,5 @@ export const useSafeScheduledUpdates = (safeAddress?: string, isInitialLoad = fa
     return () => {
       clearTimeout(timer)
     }
-  }, [dispatch, safeAddress, chainId, pollCount, setPollCount])
+  }, [dispatch, safeAddress, chainId, pollCount, setPollCount, isInitialLoad])
 }
