@@ -8,7 +8,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 
 const Container = styled.div`
@@ -98,8 +98,8 @@ const Layout: React.FC<Props> = ({
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
-  const noFooter = !!matchPath(pathname, {
-    path: [SAFE_ROUTES.APPS],
+  const hasFooter = !!matchPath(pathname, {
+    path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
   return (
@@ -122,7 +122,7 @@ const Layout: React.FC<Props> = ({
         </SidebarWrapper>
         <ContentWrapper>
           <div>{children}</div>
-          {!noFooter && <Footer />}
+          {hasFooter && <Footer />}
         </ContentWrapper>
       </BodyWrapper>
 

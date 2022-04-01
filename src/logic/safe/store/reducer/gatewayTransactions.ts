@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
+import merge from 'lodash/merge'
 
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -42,8 +43,38 @@ export type TransactionDetailsPayload = {
 
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
 
+const getSingularUpdatedQueueTx = (storedTx: Transaction, newTx: Transaction) => {
+  const isUpdatedTx =
+    isMultisigExecutionInfo(storedTx.executionInfo) &&
+    isMultisigExecutionInfo(newTx.executionInfo) &&
+    storedTx.executionInfo.confirmationsSubmitted !== newTx.executionInfo.confirmationsSubmitted
+
+  return isUpdatedTx
+    ? // Will remove txDetails as they will have changed because of new confirmations
+      newTx
+    : // Create new object, preserving txDetails
+      merge({}, storedTx, newTx)
+}
+
+const getUpdatedQueueTxs = (txs: Transaction[], newTx: Transaction) => {
+  const newTxs = txs.slice()
+  const txIndex = txs.findIndex(({ id }) => sameString(id, newTx.id))
+
+  if (txIndex >= 0) {
+    const storedTx = newTxs[txIndex]
+    newTxs[txIndex] = getSingularUpdatedQueueTx(storedTx, newTx)
+  } else {
+    newTxs.push(newTx)
+    newTxs.sort((a, b) => a.timestamp - b.timestamp)
+  }
+
+  return newTxs
+}
+
 export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState, Payload>(
   {
+    // If a historical transaction summary is added, it will either be pushed to the end of the `history` by
+    // (start of day) date/once or overwrite the currently existing one in chronologically descending order
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { chainId, safeAddress, values, isTail = false } = action.payload
       const newHistory: StoreStructure['history'] = cloneDeep(state[chainId]?.[safeAddress]?.history || {})
@@ -87,10 +118,14 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         },
       }
     },
+    // If a queued transaction summary is added, it will either be added to the singular `queued.next`
+    // list or the pushed/update the `queued.queued` list by nonce in descending date order. If the
+    // number of confirmations differs in comparison to the stored one, the tx will be overwritten
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
-      let newNext = {}
-      let newQueued = {}
+      let newNext = state[chainId]?.[safeAddress]?.queued?.next || {}
+      // We must clone as we delete transactions that move from queue to next
+      let newQueued = { ...(state[chainId]?.[safeAddress]?.queued?.queued || {}) }
 
       let label: 'next' | 'queued' | undefined
 
@@ -122,17 +157,22 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         }
 
         const newTx = value.transaction
+
         if (label === 'queued') {
           if (newQueued?.[txNonce]) {
-            newQueued[txNonce] = [...newQueued[txNonce], newTx]
+            newQueued[txNonce] = getUpdatedQueueTxs(newQueued[txNonce], newTx)
           } else {
             newQueued = { ...newQueued, [txNonce]: [newTx] }
           }
         } else {
           if (newNext?.[txNonce]) {
-            newNext[txNonce] = [...newNext[txNonce], newTx]
+            newNext[txNonce] = getUpdatedQueueTxs(newNext[txNonce], newTx)
           } else {
             newNext = { [txNonce]: [newTx] }
+          }
+          // Remove queued transaction from queue that moved to next
+          if (newQueued?.[txNonce]) {
+            delete newQueued[txNonce]
           }
         }
       })
@@ -159,6 +199,8 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         },
       }
     },
+    // Transaction details will be added to existing transaction summaries in the store as they are not
+    // part of summaries
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
       const { chainId, safeAddress, transactionId, value } = action.payload
       const clonedStoredTxs = cloneDeep(state[chainId]?.[safeAddress]) || {}

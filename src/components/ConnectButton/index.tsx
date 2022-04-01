@@ -15,7 +15,7 @@ export const onConnectButtonClick = async (): Promise<void> => {
 }
 
 const ConnectButton = (props: { 'data-testid': string }): ReactElement => (
-  <Track {...OVERVIEW_EVENTS.ONBOARD}>
+  <Track {...OVERVIEW_EVENTS.OPEN_ONBOARD}>
     <Button color="primary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
       Connect
     </Button>
