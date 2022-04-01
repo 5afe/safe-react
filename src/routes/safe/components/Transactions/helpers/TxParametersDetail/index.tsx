@@ -71,6 +71,10 @@ const StyledDivider = styled(Divider)`
 type TxParam = string | ReactElement
 type TxParameterProps = { name: TxParam; value?: TxParam | null; color?: ThemeColors } & ColoredTextProps
 const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement | null => {
+  if (value == null || value === '') {
+    return null
+  }
+
   const getEl = (prop?: TxParam) => {
     return typeof prop === 'string' ? (
       <ColoredText size="lg" {...rest}>
@@ -84,7 +88,7 @@ const TxParameter = ({ name, value, ...rest }: TxParameterProps): ReactElement |
   return (
     <TxParameterWrapper>
       {getEl(name)}
-      {value == null || value === '' ? <Skeleton animation="wave" width="30px" /> : getEl(value)}
+      {getEl(value)}
     </TxParameterWrapper>
   )
 }
@@ -155,12 +159,14 @@ export const TxParametersDetail = ({
           <StyledText size="md" color="placeHolder">
             Safe transaction parameters
           </StyledText>
-          <TxParameter
-            name="Safe nonce"
-            value={txParameters.safeNonce || ''}
-            isError={isTxNonceOutOfOrder}
-            color={color}
-          />
+          <TxParameterWrapper>
+            <Text size="lg" color={isTxNonceOutOfOrder ? 'error' : color}>
+              Safe nonce
+            </Text>
+            <Text size="lg" color={isTxNonceOutOfOrder ? 'error' : color}>
+              {txParameters.safeNonce ? txParameters.safeNonce : <Skeleton animation="wave" width="30px" />}
+            </Text>
+          </TxParameterWrapper>
 
           {showSafeTxGas && <TxParameter name="SafeTxGas" value={txParameters.safeTxGas || '0'} color={color} />}
           <Track {...MODALS_EVENTS.EDIT_ADVANCED_PARAMS}>
