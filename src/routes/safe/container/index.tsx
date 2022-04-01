@@ -3,7 +3,7 @@ import { useState, lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { currentSafeFeaturesEnabled, currentSafeOwners } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafe } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES, extractSafeAddress } from 'src/routes/routes'
@@ -29,16 +29,18 @@ const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBo
 
 const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const owners = useSelector(currentSafeOwners)
+  const { address, owners } = useSelector(currentSafe)
+  const addressFromUrl = extractSafeAddress()
+  const safeAddress = address || addressFromUrl
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 
-  const addressFromUrl = extractSafeAddress()
-  useLoadSafe(addressFromUrl) // load initially
-  useSafeScheduledUpdates(addressFromUrl) // load every X seconds
+  useLoadSafe(safeAddress) // load initially
+  useSafeScheduledUpdates(safeAddress, hasLoadFailed) // load every X seconds
 
   useEffect(() => {
     if (isSafeLoaded) {
+      setHasLoadFailed(false)
       return
     }
 

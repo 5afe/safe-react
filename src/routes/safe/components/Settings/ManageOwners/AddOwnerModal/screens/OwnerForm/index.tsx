@@ -62,7 +62,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
     onSubmit(values)
   }
   const addressBookMap = useSelector(currentNetworkAddressBookAsMap)
-  const { address: safeAddress = '', owners = [] } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress = '', owners = [] } = useSelector(currentSafe)
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 

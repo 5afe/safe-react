@@ -120,7 +120,7 @@ export const useEstimateTransactionGas = ({
     }),
   )
   const nativeCurrency = getNativeCurrency()
-  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const { account: from } = useSelector(providerSelector)
 
   useEffect(() => {

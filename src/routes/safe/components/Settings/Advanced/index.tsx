@@ -36,7 +36,7 @@ const DOCS_LINK = 'https://docs.gnosis-safe.io/contracts/modules-1'
 
 const Advanced = (): ReactElement => {
   const classes = useStyles()
-  const { nonce, modules, guard, currentVersion } = useSelector(currentSafe) ?? {}
+  const { nonce, modules, guard, currentVersion } = useSelector(currentSafe)
 
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
