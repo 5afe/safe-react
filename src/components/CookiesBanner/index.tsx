@@ -15,9 +15,8 @@ import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/interco
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { IS_DESKTOP } from 'src/utils/constants'
 import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
-
-const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
 const useStyles = makeStyles({
   container: {
@@ -193,7 +192,7 @@ const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement 
   )
 }
 
-const CookiesBanner = isDesktop
+const CookiesBanner = IS_DESKTOP
   ? Fragment
   : (): ReactElement => {
       const dispatch = useDispatch()
