@@ -1,4 +1,4 @@
-import { ReactElement, useState, ChangeEvent } from 'react'
+import { ReactElement, useState, ChangeEvent, useCallback } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -114,6 +114,11 @@ export const EditTxParametersForm = ({
     onClose()
   }
 
+  const handleSafeNonceChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => setManualSafeNonce(e.target.value),
+    [],
+  )
+
   const hasChangedSafeNonce = manualSafeNonce !== undefined
   const showAdornment = !safeNonce && !hasChangedSafeNonce
   const loadingAdornment = showAdornment
@@ -169,7 +174,7 @@ export const EditTxParametersForm = ({
                   min="0"
                   component={TextField}
                   disabled={!areSafeParamsEnabled(parametersStatus)}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setManualSafeNonce(e.target.value)}
+                  onChange={handleSafeNonceChange}
                   inputAdornment={loadingAdornment}
                 />
                 {showSafeTxGas && (
