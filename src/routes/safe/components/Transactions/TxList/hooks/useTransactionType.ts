@@ -63,7 +63,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
             // We only have the current threshold as reference, therefore threshold/n
             setType({
               icon,
-              text: safe.threshold === newThreshold ? method : `${method}ChangeThreshold (${newThreshold}/n)`,
+              text: safe.threshold === newThreshold ? method : `${method} + changeThreshold (${newThreshold}/n)`,
             })
             break
           }
