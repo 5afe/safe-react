@@ -109,6 +109,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
     knownAddressBookAddress.isInAddressBook,
     toAddress?.logoUri,
     toAddress?.name,
+    safe.threshold,
   ])
 
   return type
