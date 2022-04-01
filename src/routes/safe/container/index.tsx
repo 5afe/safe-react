@@ -36,7 +36,7 @@ const Container = (): React.ReactElement => {
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 
   useLoadSafe(safeAddress) // load initially
-  useSafeScheduledUpdates(safeAddress) // load every X seconds
+  useSafeScheduledUpdates(safeAddress, hasLoadFailed) // load every X seconds
 
   useEffect(() => {
     if (isSafeLoaded) {
