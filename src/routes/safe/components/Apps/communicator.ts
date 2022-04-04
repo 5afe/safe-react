@@ -69,7 +69,9 @@ class AppCommunicator {
         event: GTM_EVENT.SAFE_APP,
         name: this.app.name,
         method: msg.data.method,
-        params: msg.data.params,
+        params: msg.data.params
+          ? JSON.parse(JSON.stringify(msg.data.params).replaceAll(/0x[a-fA-F0-9]{40}/g, 'ethereum-address'))
+          : undefined,
         sdkVersion: msg.data.env.sdkVersion,
       })
 
