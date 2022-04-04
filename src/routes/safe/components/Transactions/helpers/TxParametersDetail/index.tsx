@@ -27,6 +27,7 @@ import { getByteLength } from 'src/utils/getByteLength'
 import { md } from 'src/theme/variables'
 import Track from 'src/components/Track'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
+import { Skeleton } from '@material-ui/lab'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -158,12 +159,14 @@ export const TxParametersDetail = ({
           <StyledText size="md" color="placeHolder">
             Safe transaction parameters
           </StyledText>
-          <TxParameter
-            name="Safe nonce"
-            value={txParameters.safeNonce || ''}
-            isError={isTxNonceOutOfOrder}
-            color={color}
-          />
+          <TxParameterWrapper>
+            <Text size="lg" color={isTxNonceOutOfOrder ? 'error' : color}>
+              Safe nonce
+            </Text>
+            <Text size="lg" color={isTxNonceOutOfOrder ? 'error' : color}>
+              {txParameters.safeNonce ? txParameters.safeNonce : <Skeleton animation="wave" width="30px" />}
+            </Text>
+          </TxParameterWrapper>
 
           {showSafeTxGas && <TxParameter name="SafeTxGas" value={txParameters.safeTxGas || '0'} color={color} />}
           <Track {...MODALS_EVENTS.EDIT_ADVANCED_PARAMS}>
