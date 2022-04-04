@@ -9,7 +9,6 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import {
   HistoryGatewayResponse,
-  isConflictHeader,
   isLabel,
   isMultisigExecutionInfo,
   isTransactionSummary,
@@ -49,13 +48,11 @@ type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
  */
 const makeQueueByNonce = (items: QueuedGatewayResponse['results']): Record<string, Transaction[]> => {
   return items.reduce((result, item) => {
-    if (isLabel(item) || isConflictHeader(item)) return result
-    if (!isMultisigExecutionInfo(item.transaction.executionInfo)) return result
+    if (!(isTransactionSummary(item) && isMultisigExecutionInfo(item.transaction.executionInfo))) return result
 
-    if (!result[item.transaction.executionInfo.nonce]) {
-      result[item.transaction.executionInfo.nonce] = []
-    }
-    result[item.transaction.executionInfo.nonce].push(item.transaction)
+    const { nonce } = item.transaction.executionInfo
+    if (!result[nonce]) result[nonce] = []
+    result[nonce].push(item.transaction)
 
     return result
   }, {})
@@ -118,12 +115,14 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
 
+      // From a list of TransactionItems, create two sub-lists split by where the last label is
+      // If there's just one label at the first index, put all the items to the "next" group
       let nextItems = values
-      let restItems = values.slice(0, 0)
+      let queuedItems = values.slice(0, 0)
       const lastLabelIndex = findLastIndex(values, isLabel)
       if (lastLabelIndex > 0) {
         nextItems = values.slice(0, lastLabelIndex)
-        restItems = values.slice(lastLabelIndex)
+        queuedItems = values.slice(lastLabelIndex)
       }
 
       return {
@@ -137,7 +136,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
             // overwrite queued lists
             queued: {
               next: makeQueueByNonce(nextItems),
-              queued: makeQueueByNonce(restItems),
+              queued: makeQueueByNonce(queuedItems),
             },
           },
         },
