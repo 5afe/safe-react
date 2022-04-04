@@ -1,5 +1,5 @@
 import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
-import { ChangeEvent, ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import semverSatisfies from 'semver/functions/satisfies'
@@ -14,7 +14,7 @@ import { TransactionGuard } from './TransactionGuard'
 import FormGroup from '@material-ui/core/FormGroup/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
-import { setBatchExecute } from 'src/logic/appearance/actions/setBatchExecute'
+import { toggleBatchExecute } from 'src/logic/appearance/actions/toggleBatchExecute'
 import { batchExecuteSelector } from 'src/logic/appearance/selectors'
 
 const InfoText = styled(Text)`
@@ -48,8 +48,7 @@ const Advanced = (): ReactElement => {
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
 
-  const handleSetBatchExecute = (_: ChangeEvent<HTMLInputElement>, checked: boolean) =>
-    dispatch(setBatchExecute({ batchExecute: checked }))
+  const handleToggleBatchExecute = () => dispatch(toggleBatchExecute())
 
   return (
     <>
@@ -118,7 +117,7 @@ const Advanced = (): ReactElement => {
             will fail. This will result in the loss of the allocated transaction fees.
           </InfoText>
           <FormControlLabel
-            control={<Checkbox checked={batchExecute} onChange={handleSetBatchExecute} name="batchExecute" />}
+            control={<Checkbox checked={batchExecute} onChange={handleToggleBatchExecute} name="batchExecute" />}
             label="Batch execution"
           />
         </FormGroup>
