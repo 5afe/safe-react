@@ -26,6 +26,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { QueueTxList } from './QueueTxList'
 import { HistoryTxList } from './HistoryTxList'
 import FetchError from '../../FetchError'
+import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { useQueueTransactions } from './hooks/useQueueTransactions'
 
 const TxSingularDetails = (): ReactElement => {
@@ -35,7 +36,7 @@ const TxSingularDetails = (): ReactElement => {
   const dispatch = useDispatch()
   const history = useHistory()
   const chainId = useSelector(currentChainId)
-  const transactions = useQueueTransactions()
+  const queueTransactions = useQueueTransactions()
 
   const indexedTx = useSelector(
     (state: AppReduxState) =>
@@ -44,6 +45,8 @@ const TxSingularDetails = (): ReactElement => {
         : null,
     shallowEqual,
   )
+
+  const isPending = useSelector((state: AppReduxState) => isTxPending(state, fetchedTx?.txId || ''))
 
   // When safeTxHash changes, we fetch tx for this hash to get the txId
   useEffect(() => {
@@ -100,12 +103,12 @@ const TxSingularDetails = (): ReactElement => {
     }
 
     // Don't add queued transaction until transaction store has initialised
-    if (!transactions) {
+    if (!queueTransactions) {
       return
     }
 
     // Prepend label to queue transaction payload
-    const isNext = transactions.next.transactions.some(([, txs]) => txs.some(({ id }) => id === listItemTx.id))
+    const isNext = queueTransactions.next.transactions.some(([, txs]) => txs.some(({ id }) => id === listItemTx.id))
     payload.values = [
       {
         label: isNext ? LabelValue.Next : LabelValue.Queued,
@@ -116,7 +119,7 @@ const TxSingularDetails = (): ReactElement => {
 
     // Add queued transaction
     dispatch(addQueuedTransactions(payload))
-  }, [fetchedTx, chainId, dispatch, transactions, indexedTx])
+  }, [fetchedTx, chainId, dispatch, queueTransactions, indexedTx])
 
   if (!indexedTx && error) {
     const safeParams = extractPrefixedSafeAddress()
@@ -138,7 +141,7 @@ const TxSingularDetails = (): ReactElement => {
   }
 
   const { transaction, txLocation } = indexedTx
-  const TxList = isTxQueued(transaction.txStatus) ? QueueTxList : HistoryTxList
+  const TxList = isTxQueued(transaction.txStatus) && !isPending ? QueueTxList : HistoryTxList
 
   return (
     <TxLocationContext.Provider value={{ txLocation }}>
