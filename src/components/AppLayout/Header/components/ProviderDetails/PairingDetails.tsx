@@ -10,7 +10,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
 import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
-import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import AppstoreButton from 'src/components/AppstoreButton'
@@ -28,9 +27,8 @@ const qrRefresh: CSSProperties = {
 }
 
 const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
-  const uri = useGetPairingUri()
+  const { uri, isLoaded } = usePairing()
   const isPairingLoaded = isPairingModule()
-  usePairing()
 
   return (
     <>
@@ -43,7 +41,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       </Row>
 
       <Row className={classes.justifyCenter}>
-        {uri ? (
+        {isLoaded ? (
           <QRCode value={uri} size={QR_DIMENSION} />
         ) : isPairingLoaded ? (
           <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />

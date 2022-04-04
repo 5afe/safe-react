@@ -5,8 +5,8 @@ import { PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 import { WALLETS } from 'src/config/chain.d'
 import onboard from 'src/logic/wallets/onboard'
 
-export const initPairing = async (): Promise<void> => {
-  await onboard().walletSelect(PAIRING_MODULE_NAME)
+export const initPairing = (): void => {
+  onboard().walletSelect(PAIRING_MODULE_NAME)
 }
 
 // Is WC connected (may work for other providers)
@@ -23,8 +23,11 @@ export const isPairingModule = (name: Wallet['name'] = onboard().getState().wall
   return name === PAIRING_MODULE_NAME
 }
 
-export const getPairingUri = (): string | undefined => {
-  const wcUri = onboard().getState().wallet.provider?.wc?.uri
+export const isPairingUriLoaded = (uri: string): boolean => {
+  return uri ? !uri.endsWith('key=') : false
+}
+
+export const getPairingUri = (wcUri: string = onboard().getState().wallet.provider?.wc?.uri): string => {
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
-  return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : undefined
+  return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : ''
 }

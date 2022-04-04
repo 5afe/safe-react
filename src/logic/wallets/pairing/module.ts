@@ -1,3 +1,4 @@
+import WalletConnectProvider from '@walletconnect/web3-provider'
 import { IClientMeta } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
@@ -5,6 +6,7 @@ import UAParser from 'ua-parser-js'
 import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
+import onboard from 'src/logic/wallets/onboard'
 
 // Modified version of the built in WC module in Onboard v1.35.5
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
@@ -33,43 +35,62 @@ const getClientMeta = (): IClientMeta => {
   }
 }
 
-// Note: this shares a lot of similarities with the patchedWalletConnect module
-const getPairingModule = (chainId: ChainId): WalletModule => {
+const createPairingProvider = (chainId: ChainId): WalletConnectProvider => {
   const STORAGE_ID = 'SAFE__pairingProvider'
   const clientMeta = getClientMeta()
 
+  // Provider is enabled as/when needed in `PairingDetails.tsx`
+  const provider = getWalletConnectProvider(chainId, {
+    storageId: STORAGE_ID,
+    qrcode: false, // Don't show QR modal
+    clientMeta,
+  })
+
+  // WalletConnect overrides the clientMeta, so we need to set it back
+  ;(provider.wc as any).clientMeta = clientMeta
+  ;(provider.wc as any)._clientMeta = clientMeta
+
+  // If previous session reconnects, update onboard
+  provider.on('connect', () => {
+    onboard().walletSelect(PAIRING_MODULE_NAME)
+  })
+
+  const onDisconnect = () => {
+    onboard().walletReset()
+  }
+
+  provider.wc.on('disconnect', onDisconnect)
+
+  window.addEventListener('unload', onDisconnect, { once: true })
+
+  return provider
+}
+
+let _pairingProvider: WalletConnectProvider | undefined
+
+export const getPairingProvider = (chainId: ChainId): WalletConnectProvider => {
+  // We cannot initialize provider immediately as we need to wait for chains to load RPCs
+  if (!_pairingProvider) {
+    // Successful pairing does not use chainId of provider but that of the pairee
+    // so we need not reinitialize the pairing provider when chainId differs
+    _pairingProvider = createPairingProvider(chainId)
+  }
+  return _pairingProvider
+}
+
+// Note: this shares a lot of similarities with the patchedWalletConnect module
+const getPairingModule = (chainId: ChainId): WalletModule => {
+  const name = PAIRING_MODULE_NAME
+  const provider = getPairingProvider(chainId)
   return {
-    name: PAIRING_MODULE_NAME,
-    wallet: async ({ resetWalletState }) => {
-      const provider = getWalletConnectProvider(chainId, {
-        storageId: STORAGE_ID,
-        qrcode: false, // Don't show QR modal
-        clientMeta,
-      })
-
-      // WalletConnect overrides the clientMeta, so we need to set it back
-      ;(provider.wc as any).clientMeta = clientMeta
-      ;(provider.wc as any)._clientMeta = clientMeta
-
-      const onDisconnect = () => {
-        resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
-      }
-
-      provider.wc.on('disconnect', onDisconnect)
-
-      window.addEventListener('unload', onDisconnect, { once: true })
-
-      // Establish WC connection
-      provider.enable()
-
-      return {
-        provider,
-        interface: {
-          ...getWCWalletInterface(provider),
-          name: PAIRING_MODULE_NAME,
-        },
-      }
-    },
+    name,
+    wallet: async () => ({
+      provider,
+      interface: {
+        ...getWCWalletInterface(provider),
+        name,
+      },
+    }),
     type: 'sdk',
     desktop: true,
     mobile: false,
