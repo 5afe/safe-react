@@ -108,15 +108,23 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         },
       }
     },
-    // If a queued transaction summary is added, it will either be added to the singular `queued.next`
-    // list or the pushed/update the `queued.queued` list by nonce in descending date order. If the
-    // number of confirmations differs in comparison to the stored one, the tx will be overwritten
+
+    // Queue is overwritten completely on every update
+    // CGW sends a list of items where some items are LABELS (next and queued),
+    // some are CONFLICT_HEADERS (ignored),
+    // and some are actual TRANSACTIONS.
+    // We split the queue into next and queued by the index of the last LABEL.
+    // Then group TRANSACTIONS by their nonces.
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
 
+      let nextItems = values
+      let restItems = values.slice(0, 0)
       const lastLabelIndex = findLastIndex(values, isLabel)
-      const nextItems = values.slice(0, lastLabelIndex)
-      const restItems = values.slice(lastLabelIndex)
+      if (lastLabelIndex > 0) {
+        nextItems = values.slice(0, lastLabelIndex)
+        restItems = values.slice(lastLabelIndex)
+      }
 
       return {
         // all the safes with their respective states
