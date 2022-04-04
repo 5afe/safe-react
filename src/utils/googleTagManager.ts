@@ -186,12 +186,16 @@ export const trackSafeAppEvent = ({
   params: any
   sdkVersion: string
 }): void => {
+  const DEPRECATED_METHODS = ['getEnvInfo']
+
   const dataLayer = {
     event,
     chainId: _getChainId(),
     safeAppName: name,
     safeAppMethod: method,
-    safeAppParams: params,
+    safeAppParams: params ? JSON.stringify(params).replaceAll(/0x[a-fA-F0-9]{40}/g, 'ethereum-address') : undefined,
+    safeAppEthMethod: params?.call || undefined,
+    safeAppDeprecatedMethod: DEPRECATED_METHODS.includes(method),
     safeAppSDKVersion: sdkVersion,
   }
 
