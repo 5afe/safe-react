@@ -4,9 +4,10 @@ import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
 import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
-import { ChainId } from 'src/config/chain'
+import { ChainId } from 'src/config/chain.d'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
 import onboard from 'src/logic/wallets/onboard'
+import { _getChainId } from 'src/config'
 
 // Modified version of the built in WC module in Onboard v1.35.5
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
@@ -68,20 +69,20 @@ const createPairingProvider = (chainId: ChainId): WalletConnectProvider => {
 
 let _pairingProvider: WalletConnectProvider | undefined
 
-export const getPairingProvider = (chainId: ChainId): WalletConnectProvider => {
+export const getPairingProvider = (): WalletConnectProvider => {
   // We cannot initialize provider immediately as we need to wait for chains to load RPCs
   if (!_pairingProvider) {
     // Successful pairing does not use chainId of provider but that of the pairee
-    // so we need not reinitialize the pairing provider when chainId differs
-    _pairingProvider = createPairingProvider(chainId)
+    // so we can use any chainId here and it need not be updated
+    _pairingProvider = createPairingProvider(_getChainId())
   }
   return _pairingProvider
 }
 
 // Note: this shares a lot of similarities with the patchedWalletConnect module
-const getPairingModule = (chainId: ChainId): WalletModule => {
+const getPairingModule = (): WalletModule => {
   const name = PAIRING_MODULE_NAME
-  const provider = getPairingProvider(chainId)
+  const provider = getPairingProvider()
   return {
     name,
     wallet: async () => ({

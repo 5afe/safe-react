@@ -1,6 +1,6 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
-import { getDisabledWallets, _getChainId } from 'src/config'
+import { getDisabledWallets } from 'src/config'
 import { getPairingProvider, PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 import { WALLETS } from 'src/config/chain.d'
 import onboard from 'src/logic/wallets/onboard'
@@ -11,7 +11,7 @@ export const initPairing = (): void => {
 
 // Is WC connected (may work for other providers)
 export const isPairingConnected = (): boolean => {
-  return getPairingProvider(_getChainId()).connected
+  return getPairingProvider().connected
 }
 
 export const isPairingSupported = (): boolean => {

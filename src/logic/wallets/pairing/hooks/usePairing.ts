@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { getPairingUri, isPairingModule, isPairingUriLoaded } from 'src/logic/wallets/pairing/utils'
 import onboard from 'src/logic/wallets/onboard'
 import { getPairingProvider } from 'src/logic/wallets/pairing/module'
-import { currentChainId } from 'src/logic/config/store/selectors'
 
 const usePairing = (): { uri: string; isLoaded: boolean } => {
   const [uri, setUri] = useState<string>('')
-  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
     // Interface with the WC provider directly
-    const pairingProvider = getPairingProvider(chainId)
+    const pairingProvider = getPairingProvider()
 
     const DISPLAY_URI_EVENT = 'display_uri'
 
