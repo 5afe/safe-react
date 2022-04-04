@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
+import { LabelValue, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { isTxQueued } from 'src/logic/safe/store/models/types/gateway.d'
 import {
@@ -117,7 +117,7 @@ const TxSingularDetails = (): ReactElement => {
     const isNext = transactions.next.transactions.some(([, txs]) => txs.some(({ id }) => id === listItemTx.id))
     payload.values = [
       {
-        label: isNext ? 'next' : 'queued',
+        label: isNext ? LabelValue.Next : LabelValue.Queued,
         type: 'LABEL',
       },
       ...payload.values,

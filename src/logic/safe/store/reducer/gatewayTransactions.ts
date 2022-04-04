@@ -1,7 +1,7 @@
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
-import findLastIndex from 'lodash/findLastIndex'
+import { LabelValue } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -110,19 +110,19 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
     // CGW sends a list of items where some items are LABELS (next and queued),
     // some are CONFLICT_HEADERS (ignored),
     // and some are actual TRANSACTIONS.
-    // We split the queue into next and queued by the index of the last LABEL.
+    // We split the queue into next and queued by the index of the "Queued" LABEL.
     // Then group TRANSACTIONS by their nonces.
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
 
-      // From a list of TransactionItems, create two sub-lists split by where the last label is
-      // If there's just one label at the first index, put all the items to the "next" group
+      // From the list of TransactionItems, create two sub-lists split by where the "Queued" label is.
+      // If there's no "Queued" label, put all the items into the "next" group.
       let nextItems = values
       let queuedItems = values.slice(0, 0)
-      const lastLabelIndex = findLastIndex(values, isLabel)
-      if (lastLabelIndex > 0) {
-        nextItems = values.slice(0, lastLabelIndex)
-        queuedItems = values.slice(lastLabelIndex)
+      const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === LabelValue.Queued)
+      if (qLabelIndex > -1) {
+        nextItems = values.slice(0, qLabelIndex)
+        queuedItems = values.slice(qLabelIndex)
       }
 
       return {

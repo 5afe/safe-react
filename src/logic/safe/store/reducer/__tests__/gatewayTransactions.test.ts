@@ -1,6 +1,7 @@
 import {
   ConflictHeader,
   Label,
+  LabelValue,
   MultisigExecutionInfo,
   Transaction,
   TransactionStatus,
@@ -36,12 +37,12 @@ const MOCK_TX_META: Omit<Transaction, 'transaction'> = {
 describe('gatewayTransactionsReducer', () => {
   describe('ADD_QUEUED_TRANSACTIONS', () => {
     const NEXT_LABEL: Label = {
-      label: 'next',
+      label: LabelValue.Next,
       type: 'LABEL',
     }
 
     const QUEUED_LABEL: Label = {
-      label: 'queued',
+      label: LabelValue.Queued,
       type: 'LABEL',
     }
 
@@ -247,12 +248,12 @@ describe('gatewayTransactionsReducer', () => {
         4: {
           [ZERO_ADDRESS]: {
             queued: {
-              next: {
+              next: {},
+              queued: {
                 0: [mockTx.transaction],
                 1: [mockTx2.transaction],
                 2: [mockTx3.transaction],
               },
-              queued: {},
             },
             history: {},
           },
