@@ -114,8 +114,8 @@ const Advanced = (): ReactElement => {
         <FormGroup>
           <InfoText size="lg">
             This feature allows you to batch execute queued transactions. They must be fully signed and strictly
-            sequential in safeNonce. Be aware that if one of the included transactions fails, the whole batch will fail
-            risking the loss of the allocated transaction fees.
+            sequential in safeNonce. Be aware, that if one of the included transactions fails, all included transactions
+            will fail. This will result in the loss of the allocated transaction fees.
           </InfoText>
           <FormControlLabel
             control={<Checkbox checked={batchExecute} onChange={handleSetBatchExecute} name="batchExecute" />}

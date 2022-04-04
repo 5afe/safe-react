@@ -22,8 +22,13 @@ export const fetchTransactionDetails =
     const safeAddress = extractSafeAddress()
     const chainId = currentChainId(getState())
 
-    if (transaction?.txDetails || !safeAddress) {
+    // @TODO: Believed to be based on legacy selector, might be able to remove now
+    if (!safeAddress) {
       return
+    }
+
+    if (transaction?.txDetails) {
+      return transaction.txDetails
     }
 
     try {
