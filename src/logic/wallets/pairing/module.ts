@@ -4,7 +4,6 @@ import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
 import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
-import { ChainId } from 'src/config/chain.d'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
 import onboard from 'src/logic/wallets/onboard'
 import { _getChainId } from 'src/config'
@@ -36,12 +35,13 @@ const getClientMeta = (): IClientMeta => {
   }
 }
 
-const createPairingProvider = (chainId: ChainId): WalletConnectProvider => {
+const createPairingProvider = (): WalletConnectProvider => {
   const STORAGE_ID = 'SAFE__pairingProvider'
   const clientMeta = getClientMeta()
 
-  // Provider is enabled as/when needed in `PairingDetails.tsx`
-  const provider = getWalletConnectProvider(chainId, {
+  // Successful pairing does not use chainId of provider but that of the pairee
+  // so we can use any chainId here and it need not be updated
+  const provider = getWalletConnectProvider(_getChainId(), {
     storageId: STORAGE_ID,
     qrcode: false, // Don't show QR modal
     clientMeta,
@@ -64,6 +64,7 @@ const createPairingProvider = (chainId: ChainId): WalletConnectProvider => {
 
   window.addEventListener('unload', onDisconnect, { once: true })
 
+  // Provider is enabled as/when needed in `PairingDetails.tsx`
   return provider
 }
 
@@ -72,9 +73,7 @@ let _pairingProvider: WalletConnectProvider | undefined
 export const getPairingProvider = (): WalletConnectProvider => {
   // We cannot initialize provider immediately as we need to wait for chains to load RPCs
   if (!_pairingProvider) {
-    // Successful pairing does not use chainId of provider but that of the pairee
-    // so we can use any chainId here and it need not be updated
-    _pairingProvider = createPairingProvider(_getChainId())
+    _pairingProvider = createPairingProvider()
   }
   return _pairingProvider
 }
