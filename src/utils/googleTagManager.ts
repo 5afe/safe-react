@@ -151,7 +151,7 @@ type EventDataLayer = {
   chainId: string
   eventCategory: string
   eventAction: string
-  eventLabel: EventLabel | undefined
+  eventLabel?: EventLabel
 }
 
 export const trackEvent = ({
@@ -184,10 +184,10 @@ type SafeAppEventDataLayer = {
   chainId: string
   safeAppName: string
   safeAppMethod: string
-  safeAppParams: string | undefined
-  safeAppEthMethod: string | undefined
+  safeAppParams?: string
+  safeAppEthMethod?: string
   safeAppDeprecatedMethod: boolean
-  safeAppSDKVersion: string
+  safeAppSDKVersion?: string
 }
 
 export const trackSafeAppEvent = ({
@@ -201,7 +201,7 @@ export const trackSafeAppEvent = ({
   name: string
   method: string
   params: any
-  sdkVersion: string
+  sdkVersion?: string
 }): void => {
   const dataLayer: SafeAppEventDataLayer = {
     event,

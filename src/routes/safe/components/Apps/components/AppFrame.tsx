@@ -35,7 +35,7 @@ import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
-import { trackEvent } from 'src/utils/googleTagManager'
+import { GTM_EVENT, trackEvent, trackSafeAppEvent } from 'src/utils/googleTagManager'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -285,6 +285,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send({ safeTxHash }, requestId as string)
+
+    trackSafeAppEvent({
+      event: GTM_EVENT.SAFE_APP,
+      name: JSON.parse(safeApp.id).name,
+      method: 'txConfirm',
+      params: safeTxHash,
+    })
   }
 
   const onTxReject = (requestId: RequestId) => {
@@ -296,6 +303,13 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send('Transaction was rejected', requestId as string, true)
+
+    trackSafeAppEvent({
+      event: GTM_EVENT.SAFE_APP,
+      name: JSON.parse(safeApp.id).name,
+      method: 'txReject',
+      params: requestId,
+    })
   }
 
   useEffect(() => {
