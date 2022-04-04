@@ -16,7 +16,10 @@ type MessageHandler = (
   msg: SDKMessageEvent,
 ) => void | MethodToResponse[Methods] | ErrorResponse | Promise<MethodToResponse[Methods] | ErrorResponse | void>
 
-type LegacyMethods = 'getEnvInfo'
+export enum LegacyMethods {
+  getEnvInfo = 'getEnvInfo',
+}
+
 type SDKMethods = Methods | LegacyMethods
 
 class AppCommunicator {

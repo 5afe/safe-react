@@ -15,6 +15,7 @@ import {
 import { _getChainId } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { Cookie, removeCookies } from 'src/logic/cookies/utils'
+import { LegacyMethods } from 'src/routes/safe/components/Apps/communicator'
 
 export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
@@ -145,6 +146,14 @@ const tryParse = (value?: EventLabel): EventLabel | undefined => {
   }
 }
 
+type EventDataLayer = {
+  event: GTM_EVENT
+  chainId: string
+  eventCategory: string
+  eventAction: string
+  eventLabel: EventLabel | undefined
+}
+
 export const trackEvent = ({
   event,
   category,
@@ -156,7 +165,7 @@ export const trackEvent = ({
   action: string
   label?: EventLabel
 }): void => {
-  const dataLayer = {
+  const dataLayer: EventDataLayer = {
     event,
     chainId: _getChainId(),
     eventCategory: category,
@@ -164,13 +173,21 @@ export const trackEvent = ({
     eventLabel: tryParse(label),
   }
 
-  if (!IS_PRODUCTION) {
-    console.info('[GTM]', dataLayer)
-  }
+  track(dataLayer)
+}
 
-  TagManager.dataLayer({
-    dataLayer,
-  })
+const ETHEREUM_ADDRESS_REGEX = /0x[a-fA-F0-9]{40}/g
+const ETHEREUM_ADDRESS = 'ETHEREUM_ADDRESS'
+
+type SafeAppEventDataLayer = {
+  event: GTM_EVENT
+  chainId: string
+  safeAppName: string
+  safeAppMethod: string
+  safeAppParams: string | undefined
+  safeAppEthMethod: string | undefined
+  safeAppDeprecatedMethod: boolean
+  safeAppSDKVersion: string
 }
 
 export const trackSafeAppEvent = ({
@@ -186,19 +203,21 @@ export const trackSafeAppEvent = ({
   params: any
   sdkVersion: string
 }): void => {
-  const DEPRECATED_METHODS = ['getEnvInfo']
-
-  const dataLayer = {
+  const dataLayer: SafeAppEventDataLayer = {
     event,
     chainId: _getChainId(),
     safeAppName: name,
     safeAppMethod: method,
-    safeAppParams: params ? JSON.stringify(params).replaceAll(/0x[a-fA-F0-9]{40}/g, 'ethereum-address') : undefined,
+    safeAppParams: params ? JSON.stringify(params).replaceAll(ETHEREUM_ADDRESS_REGEX, ETHEREUM_ADDRESS) : undefined,
     safeAppEthMethod: params?.call || undefined,
-    safeAppDeprecatedMethod: DEPRECATED_METHODS.includes(method),
+    safeAppDeprecatedMethod: Object.values<string>(LegacyMethods).includes(method),
     safeAppSDKVersion: sdkVersion,
   }
 
+  track(dataLayer)
+}
+
+function track(dataLayer: EventDataLayer | SafeAppEventDataLayer) {
   if (!IS_PRODUCTION) {
     console.info('[GTM]', dataLayer)
   }

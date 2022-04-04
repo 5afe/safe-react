@@ -23,7 +23,7 @@ import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
-import { useAppCommunicator } from '../communicator'
+import { LegacyMethods, useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
@@ -179,7 +179,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     /**
      * @deprecated: getEnvInfo is a legacy method. Should not be used
      */
-    communicator?.on('getEnvInfo', () => ({
+    communicator?.on(LegacyMethods.getEnvInfo, () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
 
