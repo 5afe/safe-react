@@ -120,7 +120,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
       let nextItems = values
       let queuedItems = values.slice(0, 0)
       const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === LabelValue.Queued)
-      if (qLabelIndex > -1) {
+      if (qLabelIndex >= 0) {
         nextItems = values.slice(0, qLabelIndex)
         queuedItems = values.slice(qLabelIndex)
       }
@@ -163,7 +163,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         for (const [timestamp, transactions] of Object.entries(txGroup)) {
           const txIndex = transactions.findIndex(({ id }) => sameString(id, transactionId))
 
-          if (txIndex !== -1) {
+          if (txIndex >= 0) {
             txGroup[timestamp][txIndex]['txDetails'] = value
             break txLocationLoop
           }

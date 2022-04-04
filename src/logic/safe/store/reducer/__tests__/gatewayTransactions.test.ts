@@ -126,6 +126,13 @@ describe('gatewayTransactionsReducer', () => {
         },
         ...MOCK_TX_META,
       }
+      const mockQueuedTx2: Transaction = {
+        ...mockQueuedTx,
+        transaction: {
+          ...mockQueuedTx.transaction,
+          id: '123',
+        },
+      }
 
       const mockPayload: QueuedPayload = {
         chainId: '4',
@@ -135,7 +142,7 @@ describe('gatewayTransactionsReducer', () => {
           mockNextTx,
           QUEUED_LABEL, // Different label
           mockQueuedTx,
-          mockQueuedTx,
+          mockQueuedTx2,
         ],
       }
 
@@ -149,7 +156,7 @@ describe('gatewayTransactionsReducer', () => {
                 0: [mockNextTx.transaction],
               },
               queued: {
-                1: [mockQueuedTx.transaction, mockQueuedTx.transaction],
+                1: [mockQueuedTx.transaction, mockQueuedTx2.transaction],
               },
             },
             history: {},
