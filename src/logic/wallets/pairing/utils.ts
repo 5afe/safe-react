@@ -28,7 +28,7 @@ export const isPairingUriLoaded = (uri: string): boolean => {
 }
 
 // chainId is irrelevant after the pairing provider has been established
-export const getPairingUri = (wcUri: string = getPairingProvider(_getChainId()).wc.uri): string => {
+export const getPairingUri = (wcUri: string): string => {
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
   return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : ''
 }
