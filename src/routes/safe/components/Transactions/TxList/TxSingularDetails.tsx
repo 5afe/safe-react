@@ -20,10 +20,7 @@ import { AppReduxState } from 'src/store'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { makeTxFromDetails } from './utils'
-import {
-  addQueuedTransactions,
-  addHistoryTransactions,
-} from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import { addQueuedTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { HistoryPayload, QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { QueueTxList } from './QueueTxList'
@@ -100,12 +97,6 @@ const TxSingularDetails = (): ReactElement => {
           conflictType: 'None', // Not used in reducer
         },
       ],
-    }
-
-    // Add historical transaction
-    if (!isTxQueued(listItemTx.txStatus)) {
-      dispatch(addHistoryTransactions(payload))
-      return
     }
 
     // Don't add queued transaction until transaction store has initialised
