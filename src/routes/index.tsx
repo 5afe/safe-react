@@ -15,6 +15,7 @@ import {
   getNetworkRootRoutes,
   extractSafeAddress,
   HOME_ROUTE,
+  SAFE_ROUTES,
 } from './routes'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
@@ -88,7 +89,7 @@ const Routes = (): React.ReactElement => {
         }}
       />
 
-      <Route component={Home} exact path={HOME_ROUTE} />
+      <Route component={Home} exact path={[HOME_ROUTE, SAFE_ROUTES.DASHBOARD]} />
 
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
 

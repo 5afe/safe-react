@@ -97,7 +97,7 @@ const SafeListItem = ({
   const handleOpenSafe = (): void => {
     onSafeClick()
     onNetworkSwitch?.()
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug))
+    history.push(generateSafeRoute(SAFE_ROUTES.DASHBOARD, routesSlug))
   }
 
   const handleLoadSafe = (): void => {
