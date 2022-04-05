@@ -89,7 +89,7 @@ type TxDetailsProps = {
 
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const { data, loading } = useTransactionDetails(transaction.id)
+  const { data = transaction.txDetails, loading } = useTransactionDetails(transaction.id)
   const txStatus = useTxStatus(transaction)
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
@@ -110,7 +110,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <Centered padding={10}>
         <Loader size="sm" />
