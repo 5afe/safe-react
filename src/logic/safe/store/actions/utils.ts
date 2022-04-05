@@ -139,7 +139,7 @@ export const navigateToTx = (safeAddress: string, txDetails: TransactionDetails)
   const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
+    [TRANSACTION_ID_SLUG]: txDetails.txId,
   })
 
   history.push(txRoute)
