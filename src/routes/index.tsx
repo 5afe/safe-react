@@ -14,13 +14,14 @@ import {
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
   extractSafeAddress,
-  HOME_ROUTE,
+  SAFE_ROUTES,
+  generateSafeRoute,
 } from './routes'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
 import { usePageTracking } from 'src/utils/googleTagManager'
+import { getShortName } from 'src/config'
 
-const Home = React.lazy(() => import('./Home'))
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
@@ -81,14 +82,19 @@ const Routes = (): React.ReactElement => {
           }
 
           if (defaultSafe) {
-            return <Redirect to={HOME_ROUTE} />
+            return (
+              <Redirect
+                to={generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
+                  shortName: getShortName(),
+                  safeAddress: defaultSafe,
+                })}
+              />
+            )
           }
 
           return <Redirect to={WELCOME_ROUTE} />
         }}
       />
-
-      <Route component={Home} exact path={HOME_ROUTE} />
 
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
 
