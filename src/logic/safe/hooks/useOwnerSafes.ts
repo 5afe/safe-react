@@ -29,6 +29,7 @@ const useOwnerSafes = (): UseOwnerSafesType => {
     let isCurrent = true
 
     const load = async () => {
+      setIsLoading(true)
       try {
         const safes = await fetchSafesByOwner(connectedWalletAddress)
         if (isCurrent) {
@@ -39,14 +40,11 @@ const useOwnerSafes = (): UseOwnerSafesType => {
               [chainId]: safes,
             },
           }))
-          setIsLoading(false)
         }
       } catch (err) {
-        if (isCurrent) {
-          logError(Errors._610, err.message)
-          setIsLoading(false)
-        }
+        logError(Errors._610, err.message)
       }
+      setIsLoading(false)
     }
     load()
 

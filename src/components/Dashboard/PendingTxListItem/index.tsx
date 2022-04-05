@@ -14,6 +14,7 @@ import { isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gatew
 import Spacer from 'src/components/Spacer'
 import { CustomIconText } from 'src/components/CustomIconText'
 import { TxInfo } from 'src/routes/safe/components/Transactions/TxList/TxCollapsed'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
 const TransactionToConfirm = styled(Link)`
   min-width: 270px;
@@ -64,7 +65,7 @@ const PendingTx = ({ transaction, url }: PendingTxType): ReactElement => {
         {isMultisigExecutionInfo(transaction.executionInfo) && transaction.executionInfo.nonce}
       </Text>
       <CustomIconText
-        address={toAddress?.value || '0x'}
+        address={toAddress?.value || EMPTY_DATA}
         iconUrl={type.icon || toInfo?.logoUri || undefined}
         iconUrlFallback={type.fallbackIcon}
         text={type.text || toInfo?.name || undefined}

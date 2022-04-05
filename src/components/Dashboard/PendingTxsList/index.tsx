@@ -1,10 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react'
-import {
-  getTransactionQueue,
-  Transaction,
-  TransactionListItem,
-  TransactionSummary,
-} from '@gnosis.pm/safe-react-gateway-sdk'
+import { getTransactionQueue, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import { List } from '@material-ui/core'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
@@ -47,8 +42,7 @@ const PendingTxsList = (): ReactElement => {
     if (isLoadingOwnerSafes === undefined) return
 
     if (ownerSafes[chainId]?.length) {
-      // setSelectedSafe(ownerSafes[chainId][0])
-      setSelectedSafe('0x10888911E6bD655d72C3081384C17EA7F205375A')
+      setSelectedSafe(ownerSafes[chainId][0])
     } else {
       setSelectedSafe(defaultSafe)
     }
@@ -61,17 +55,17 @@ const PendingTxsList = (): ReactElement => {
 
     let isCurrent = true
     const fetchQueuedTxs = async () => {
+      setIsFetchingPendingTxs(true)
       const { results } = await getTransactionQueue(GATEWAY_URL, chainId, checksumAddress(selectedSafe))
       const txs = results
-        .filter((result) => isTransactionSummary(result))
+        .filter(isTransactionSummary)
         .slice(0, MAX_TXS_DISPLAY)
-        .map((item: TransactionListItem) => (item as Transaction).transaction)
+        .map((item) => item.transaction)
       if (isCurrent) {
         setQueuedTransactions(txs)
         setIsFetchingPendingTxs(false)
       }
     }
-    setIsFetchingPendingTxs(true)
     fetchQueuedTxs()
 
     return () => {
@@ -82,8 +76,8 @@ const PendingTxsList = (): ReactElement => {
   if (isFetchingPendingTxs) {
     return (
       <>
-        {Array.from(Array(MAX_TXS_DISPLAY).keys()).map((_, idx) => (
-          <TransactionSkeleton key={idx} />
+        {Array.from(Array(MAX_TXS_DISPLAY).keys()).map((key) => (
+          <TransactionSkeleton key={key} />
         ))}
       </>
     )
