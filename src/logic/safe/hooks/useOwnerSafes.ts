@@ -9,7 +9,7 @@ import useCachedState from 'src/utils/storage/useCachedState'
 type OwnedSafesCache = Record<string, Record<string, string[]>>
 
 type UseOwnerSafesType = {
-  isLoading: boolean
+  hasLoaded: boolean
   ownerSafes: Record<string, string[]>
 }
 
@@ -20,7 +20,7 @@ const useOwnerSafes = (): UseOwnerSafesType => {
   const chainId = useSelector(currentChainId)
   const [cache = {}, setCache] = useCachedState<OwnedSafesCache>(storageKey)
   const ownerSafes = cache[connectedWalletAddress] || {}
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [hasLoaded, setHasLoaded] = useState<boolean>(false)
 
   useEffect(() => {
     if (!connectedWalletAddress) {
@@ -29,7 +29,6 @@ const useOwnerSafes = (): UseOwnerSafesType => {
     let isCurrent = true
 
     const load = async () => {
-      setIsLoading(true)
       try {
         const safes = await fetchSafesByOwner(connectedWalletAddress)
         if (isCurrent) {
@@ -44,7 +43,7 @@ const useOwnerSafes = (): UseOwnerSafesType => {
       } catch (err) {
         logError(Errors._610, err.message)
       }
-      setIsLoading(false)
+      setHasLoaded(true)
     }
     load()
 
@@ -53,7 +52,7 @@ const useOwnerSafes = (): UseOwnerSafesType => {
     }
   }, [chainId, connectedWalletAddress, setCache])
 
-  return { isLoading, ownerSafes }
+  return { hasLoaded, ownerSafes }
 }
 
 export default useOwnerSafes

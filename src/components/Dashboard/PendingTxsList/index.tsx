@@ -29,7 +29,7 @@ const PendingTxsList = (): ReactElement => {
   const chainId = useSelector(currentChainId)
   const defaultSafe = useSelector(lastViewedSafe)
 
-  const { isLoading: isLoadingOwnerSafes, ownerSafes } = useOwnerSafes()
+  const { hasLoaded: isLoadingOwnerSafes, ownerSafes } = useOwnerSafes()
   const [loadingOwnerSafes, setLoadingOwnerSafes] = useState<boolean>()
 
   // Selected Safe should come from the SideBar task when it's done
@@ -39,7 +39,7 @@ const PendingTxsList = (): ReactElement => {
   const [queuedTransactions, setQueuedTransactions] = useState<TransactionSummary[]>([])
 
   useEffect(() => {
-    if (isLoadingOwnerSafes === undefined) return
+    if (!isLoadingOwnerSafes) return
 
     if (ownerSafes[chainId]?.length) {
       setSelectedSafe(ownerSafes[chainId][0])
