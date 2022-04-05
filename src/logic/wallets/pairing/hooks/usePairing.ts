@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { getPairingUri, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import onboard from 'src/logic/wallets/onboard'
@@ -19,24 +19,24 @@ const usePairing = (): { uri: string } => {
   const WC_EVENTS = useMemo(() => Object.values(WC_EVENT), [])
   const [uri, setUri] = useState<string>(getPairingUri(provider.wc.uri))
 
-  const createPairingSession = () => {
+  const createPairingSession = useCallback(() => {
     if (provider.wc.connected) {
       return
     }
     provider.enable()
     provider.wc.createSession()
-  }
+  }, [provider])
 
-  const updatePairingUri = () => {
+  const updatePairingUri = useCallback(() => {
     const pairingUri = getPairingUri(provider.wc.uri)
     setUri(pairingUri)
-  }
+  }, [provider])
 
-  const restartPairingSession = () => {
+  const restartPairingSession = useCallback(() => {
     onboard().walletReset()
     createPairingSession()
     updatePairingUri()
-  }
+  }, [createPairingSession, updatePairingUri])
 
   useEffect(() => {
     // Attach event listeners
