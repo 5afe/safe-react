@@ -24,7 +24,7 @@ export const useEstimateSafeTxGas = ({
   operation,
 }: UseEstimateSafeTxGasProps): string => {
   const defaultEstimation = '0'
-  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
 
   const requestSafeTxGas = useCallback((): Promise<string> => {
     if (!isCreation || isRejectTx || !txData) return Promise.resolve(defaultEstimation)

@@ -23,7 +23,7 @@ export const latestMasterContractVersion = createSelector(safesState, (safeState
 export const currentSafe = createSelector(
   [safesAsMap, () => extractSafeAddress()],
   (safes: SafesMap, address: string) => {
-    return safes.get(address, baseSafe(address))
+    return safes.get(address, baseSafe(address)) ?? {}
   },
 )
 

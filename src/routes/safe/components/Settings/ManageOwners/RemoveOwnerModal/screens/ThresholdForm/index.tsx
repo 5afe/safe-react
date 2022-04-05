@@ -34,7 +34,7 @@ type Props = {
 
 export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
-  const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
+  const { owners, threshold = 1 } = useSelector(currentSafe)
   const ownersCount = owners?.length ?? 0
   const handleSubmit = (values) => {
     onSubmit(values)

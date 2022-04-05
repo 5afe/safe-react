@@ -109,7 +109,7 @@ export const TxModalWrapper = ({
   const doExecute = executionApproved && canTxExecute
   const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
   const nativeCurrency = getNativeCurrency()
-  const { currentVersion: safeVersion, threshold } = useSelector(currentSafe) ?? {}
+  const { currentVersion: safeVersion, threshold } = useSelector(currentSafe)
   const isCreation = isMultisigCreation(confirmationsLen, txType)
   const isSmartContract = useIsSmartContractWallet(userAddress)
 

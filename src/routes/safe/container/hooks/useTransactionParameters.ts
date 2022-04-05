@@ -4,10 +4,8 @@ import { toWei } from 'web3-utils'
 
 import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { extractSafeAddress } from 'src/routes/routes'
-import { AppReduxState } from 'src/store'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
@@ -44,8 +42,6 @@ type Props = {
 export const useTransactionParameters = (props?: Props): TxParameters => {
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = extractSafeAddress()
-  const safeVersion = useSelector(currentSafeCurrentVersion) as string
-  const state = useSelector((state: AppReduxState) => state)
 
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
@@ -103,10 +99,10 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       }
     }
 
-    if (safeNonce === undefined) {
+    if (!safeNonce) {
       getSafeNonce()
     }
-  }, [safeAddress, safeVersion, safeNonce, state])
+  }, [safeAddress, safeNonce])
 
   return {
     safeNonce,
