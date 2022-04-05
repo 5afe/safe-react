@@ -23,18 +23,20 @@ import FetchError from '../../FetchError'
 import useAsync from 'src/logic/hooks/useAsync'
 import { getTransactionWithLocationByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
-const useStoredTx = (txId?: string): { txLocation: TxLocation; transaction: Transaction } | undefined => {
-  return useSelector(
-    (state: AppReduxState) =>
-      txId ? getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }) : undefined,
-    shallowEqual,
+const useStoredTx = (txId?: string): { txLocation: TxLocation; transaction?: Transaction } => {
+  return (
+    useSelector(
+      (state: AppReduxState) =>
+        txId ? getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }) : undefined,
+      shallowEqual,
+    ) || { txLocation: 'history' }
   )
 }
 
 const TxSingularDetails = (): ReactElement => {
   // Get a safeTxHash from the URL
   const { [TRANSACTION_ID_SLUG]: txId = '' } = useParams<SafeRouteSlugs>()
-  const { transaction, txLocation } = useStoredTx(txId) || { txLocation: 'history' }
+  const { transaction, txLocation } = useStoredTx(txId)
 
   // When this callback changes, we refetch the tx details
   const fetchTxDetails = useCallback(() => fetchSafeTransaction(txId), [txId])
