@@ -5,7 +5,7 @@ import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-compo
 import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
-import PendingTxsList from 'src/components/PendingTxsList'
+import PendingTxsList from 'src/components/Dashboard/PendingTxsList'
 
 import AddSafeWidget from 'src/components/Dashboard/AddSafe'
 import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
