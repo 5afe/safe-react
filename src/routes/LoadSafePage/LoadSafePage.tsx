@@ -120,7 +120,7 @@ function Load(): ReactElement {
 
     // Go to the newly added Safe
     history.push(
-      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+      generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
         shortName: getShortName(),
         safeAddress: checksummedAddress,
       }),

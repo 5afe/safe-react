@@ -43,7 +43,7 @@ function getDestinationRoute(nextAvailableSafe: SafeRecordProps | undefined) {
     shortName,
     safeAddress: nextAvailableSafe.address,
   }
-  return generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, routesSlug)
+  return generateSafeRoute(SAFE_ROUTES.DASHBOARD, routesSlug)
 }
 
 const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
