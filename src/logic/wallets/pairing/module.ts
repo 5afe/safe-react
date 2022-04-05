@@ -5,7 +5,6 @@ import UAParser from 'ua-parser-js'
 
 import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
 import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
-import onboard from 'src/logic/wallets/onboard'
 import { _getChainId } from 'src/config'
 
 // Modified version of the built in WC module in Onboard v1.35.5
@@ -40,7 +39,7 @@ const createPairingProvider = (): WalletConnectProvider => {
   const clientMeta = getClientMeta()
 
   // Successful pairing does not use chainId of provider but that of the pairee
-  // so we can use any chainId here and it need not be updated
+  // so we can use any chainId here
   const provider = getWalletConnectProvider(_getChainId(), {
     storageId: STORAGE_ID,
     qrcode: false, // Don't show QR modal
@@ -51,20 +50,6 @@ const createPairingProvider = (): WalletConnectProvider => {
   ;(provider.wc as any).clientMeta = clientMeta
   ;(provider.wc as any)._clientMeta = clientMeta
 
-  // If previous session reconnects, update onboard
-  provider.on('connect', () => {
-    onboard().walletSelect(PAIRING_MODULE_NAME)
-  })
-
-  const onDisconnect = () => {
-    onboard().walletReset()
-  }
-
-  provider.wc.on('disconnect', onDisconnect)
-
-  window.addEventListener('unload', onDisconnect, { once: true })
-
-  // Provider is enabled as/when needed in `PairingDetails.tsx`
   return provider
 }
 
@@ -82,15 +67,32 @@ export const getPairingProvider = (): WalletConnectProvider => {
 const getPairingModule = (): WalletModule => {
   const name = PAIRING_MODULE_NAME
   const provider = getPairingProvider()
+
+  const hasCachedSession = provider.wc.session.connected
+
+  // Enable provider so as to connect previously saved session
+  if (hasCachedSession) {
+    provider.enable()
+  }
+
   return {
     name,
-    wallet: async () => ({
-      provider,
-      interface: {
-        ...getWCWalletInterface(provider),
-        name,
-      },
-    }),
+    wallet: async ({ resetWalletState }) => {
+      if (hasCachedSession) {
+        const onDisconnect = () => resetWalletState({ walletName: name, disconnected: true })
+
+        provider.wc.on('disconnect', onDisconnect)
+        window.addEventListener('unload', onDisconnect, { once: true })
+      }
+
+      return {
+        provider,
+        interface: {
+          ...getWCWalletInterface(provider),
+          name,
+        },
+      }
+    },
     type: 'sdk',
     desktop: true,
     mobile: false,
