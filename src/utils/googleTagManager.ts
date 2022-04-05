@@ -196,12 +196,14 @@ export const trackSafeAppEvent = ({
   method,
   params,
   sdkVersion,
+  deprecated = false,
 }: {
   event: GTM_EVENT
   name: string
   method: string
   params: any
   sdkVersion?: string
+  deprecated?: boolean
 }): void => {
   const dataLayer: SafeAppEventDataLayer = {
     event,
@@ -210,7 +212,7 @@ export const trackSafeAppEvent = ({
     safeAppMethod: method,
     safeAppParams: params ? JSON.stringify(params).replaceAll(ETHEREUM_ADDRESS_REGEX, ETHEREUM_ADDRESS) : undefined,
     safeAppEthMethod: params?.call || undefined,
-    safeAppDeprecatedMethod: Object.values<string>(LegacyMethods).includes(method),
+    safeAppDeprecatedMethod: deprecated || Object.values<string>(LegacyMethods).includes(method),
     safeAppSDKVersion: sdkVersion,
   }
 

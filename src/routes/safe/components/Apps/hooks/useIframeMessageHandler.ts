@@ -71,6 +71,7 @@ const useIframeMessageHandler = (
         name: selectedApp?.id || '',
         method: messageId,
         params: undefined,
+        deprecated: true,
       })
 
       switch (messageId) {
