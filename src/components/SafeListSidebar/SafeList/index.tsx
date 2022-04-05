@@ -74,7 +74,7 @@ const isSameAddress = (addrA: string, addrB: string): boolean => addrA.toLowerCa
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
   const currentSafeAddress = extractSafeAddress()
-  const ownedSafes = useOwnerSafes()
+  const { ownerSafes } = useOwnerSafes()
   const localSafes = useLocalSafes()
   const curChainId = useSelector(currentChainId)
 
@@ -95,7 +95,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
     <StyledList>
       {getChains().map(({ chainId, theme, chainName }) => {
         const isCurrentNetwork = chainId === curChainId
-        const ownedSafesOnNetwork = ownedSafes[chainId] || []
+        const ownedSafesOnNetwork = ownerSafes[chainId] || []
         const localSafesOnNetwork = uniqBy(localSafes[chainId].filter(isNotLoadedViaUrl), ({ address }) =>
           address.toLowerCase(),
         )

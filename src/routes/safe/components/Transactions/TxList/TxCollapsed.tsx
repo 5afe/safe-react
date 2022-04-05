@@ -29,7 +29,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
 
-const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
+export const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }): ReactElement | null => {
   if (isTokenTransferAsset(info)) {
     return <TokenTransferAmount assetInfo={info} />
   }
