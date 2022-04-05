@@ -14,7 +14,6 @@ export const isPairingModule = (name: Wallet['name'] = onboard().getState().wall
   return name === PAIRING_MODULE_NAME
 }
 
-// chainId is irrelevant after the pairing provider has been established
 export const getPairingUri = (wcUri: string): string => {
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
   return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : ''

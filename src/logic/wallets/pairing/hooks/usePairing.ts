@@ -16,7 +16,7 @@ const usePairing = (): { uri: string } => {
   // Interface with the WalletConnect provider directly
   const provider = useMemo(getPairingProvider, [])
 
-  const WC_EVENTS = useMemo(() => Object.values(WC_EVENT), [WC_EVENT])
+  const WC_EVENTS = useMemo(() => Object.values(WC_EVENT), [])
   const [uri, setUri] = useState<string>(getPairingUri(provider.wc.uri))
 
   const createPairingSession = () => {
@@ -76,7 +76,7 @@ const usePairing = (): { uri: string } => {
         }
       })
     }
-  }, [])
+  }, [WC_EVENTS, createPairingSession, provider, restartPairingSession, updatePairingUri])
 
   return { uri }
 }
