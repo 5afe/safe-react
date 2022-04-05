@@ -22,7 +22,6 @@ import { setChainIdFromUrl } from 'src/utils/history'
 import { usePageTracking } from 'src/utils/googleTagManager'
 import { getShortName } from 'src/config'
 
-const Home = React.lazy(() => import('./Home'))
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
@@ -96,8 +95,6 @@ const Routes = (): React.ReactElement => {
           return <Redirect to={WELCOME_ROUTE} />
         }}
       />
-
-      <Route component={Home} exact path={SAFE_ROUTES.DASHBOARD} />
 
       <Route component={Welcome} exact path={WELCOME_ROUTE} />
 

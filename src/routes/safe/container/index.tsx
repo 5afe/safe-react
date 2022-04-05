@@ -1,5 +1,5 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
-import { useState, lazy, useEffect } from 'react'
+import React, { useState, lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
@@ -21,6 +21,7 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
+const Home = React.lazy(() => import('src/routes/Home'))
 const Apps = lazy(() => import('src/routes/safe/components/Apps'))
 const Settings = lazy(() => import('src/routes/safe/components/Settings'))
 const Balances = lazy(() => import('src/routes/safe/components/Balances'))
@@ -87,6 +88,7 @@ const Container = (): React.ReactElement => {
   return (
     <>
       <Switch>
+        <Route exact path={SAFE_ROUTES.DASHBOARD} render={() => wrapInSuspense(<Home />, null)} />
         <Route
           exact
           path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}
