@@ -13,7 +13,7 @@ import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeList
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Img from 'src/components/layout/Img'
-import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { safesWithNamesAsMap } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
@@ -23,6 +23,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
+import { extractSafeAddress } from 'src/routes/routes'
 
 const notificationStyles = {
   success: {
@@ -51,12 +52,13 @@ const useStyles = makeStyles(notificationStyles)
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
+  const safesAsMap = useSelector(safesWithNamesAsMap)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-  const { address: safeAddress } = useSelector(currentSafeWithNames)
+  const safeAddress = extractSafeAddress()
+  const { address, name: safeName, totalFiatBalance: currentSafeBalance } = safesAsMap[safeAddress]
 
   useAddressBookSync()
 
@@ -91,7 +93,7 @@ const App: React.FC = ({ children }) => {
 
           <AppLayout
             sidebarItems={sidebarItems}
-            safeAddress={safeAddress}
+            safeAddress={address}
             safeName={safeName}
             balance={balance}
             granted={granted}
