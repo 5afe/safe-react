@@ -27,13 +27,13 @@ const MAX_TXS_DISPLAY = 5
 
 const PendingTxsList = (): ReactElement => {
   const chainId = useSelector(currentChainId)
-  const defaultSafe = useSelector(lastViewedSafe) || undefined
+  const defaultSafe = useSelector(lastViewedSafe)
 
   const { isLoading: isLoadingOwnerSafes, ownerSafes } = useOwnerSafes()
   const [loadingOwnerSafes, setLoadingOwnerSafes] = useState<boolean>()
 
   // Selected Safe should come from the SideBar task when it's done
-  const [selectedSafe, setSelectedSafe] = useState<string>()
+  const [selectedSafe, setSelectedSafe] = useState<string | null>()
 
   const [isFetchingPendingTxs, setIsFetchingPendingTxs] = useState<boolean>()
   const [queuedTransactions, setQueuedTransactions] = useState<TransactionSummary[]>([])
@@ -51,7 +51,7 @@ const PendingTxsList = (): ReactElement => {
 
   // Fetch txs awaiting confirmations
   useEffect(() => {
-    if (selectedSafe === undefined) return
+    if (!selectedSafe) return
 
     let isCurrent = true
     const fetchQueuedTxs = async () => {
