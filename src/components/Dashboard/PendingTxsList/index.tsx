@@ -1,7 +1,8 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { List } from '@material-ui/core'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
+import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { sm } from 'src/theme/variables'
@@ -11,7 +12,7 @@ import { getChainById } from 'src/config'
 import PendingTxListItem from 'src/components/Dashboard/PendingTxListItem'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { MAX_TXS_DISPLAY } from 'src/routes/Home'
-import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
+import { useQueueTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useQueueTransactions'
 
 const SkeletonWrapper = styled.div`
   margin: ${sm} auto;
@@ -19,11 +20,38 @@ const SkeletonWrapper = styled.div`
   overflow: hidden;
 `
 
-const PendingTxsList = ({ transactions }: { transactions?: Transaction[] }): ReactElement => {
+const PendingTxsList = (): ReactElement | null => {
   const { address } = useSelector(currentSafe)
   const chainId = useSelector(currentChainId)
 
-  if (!transactions) {
+  const queue = useQueueTransactions()
+
+  const queuedTxsToDisplay: Transaction[] = useMemo(() => {
+    let txs: Transaction[] = []
+
+    if (!queue) {
+      return txs
+    }
+
+    nonceLoop: for (const { transactions } of Object.values(queue)) {
+      for (const [, transactionsByNonce] of transactions) {
+        // Add same nonced transactions to list
+        txs = txs.concat(transactionsByNonce)
+
+        // If adding same nonced transactions exceeded/reached limit, cleanup and break
+        if (txs.length >= MAX_TXS_DISPLAY) {
+          if (txs.length > MAX_TXS_DISPLAY) {
+            txs = txs.slice(0, MAX_TXS_DISPLAY)
+          }
+          break nonceLoop
+        }
+      }
+    }
+
+    return txs
+  }, [queue])
+
+  if (!queue) {
     return (
       <List component="div">
         {Array.from(Array(MAX_TXS_DISPLAY).keys()).map((key) => (
@@ -35,15 +63,15 @@ const PendingTxsList = ({ transactions }: { transactions?: Transaction[] }): Rea
     )
   }
 
-  if (!transactions?.length) {
-    return <h3>This Safe has no pending transactions</h3>
+  if (!queuedTxsToDisplay?.length) {
+    return <h3>This Safe has no queued transactions</h3>
   }
 
   const { shortName } = getChainById(chainId)
   const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress: address, shortName })
   return (
     <List component="div">
-      {transactions?.map((transaction) => (
+      {queuedTxsToDisplay?.map((transaction) => (
         <PendingTxListItem transaction={transaction} url={url} key={transaction.id} />
       ))}
     </List>
