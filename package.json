@@ -127,6 +127,7 @@
     "react-final-form": "^6.5.3",
     "react-final-form-listeners": "^1.0.2",
     "react-gtm-module": "^2.0.11",
+    "react-hook-form": "^7.29.0",
     "react-intersection-observer": "^8.32.0",
     "react-papaparse": "^3.16.1",
     "react-qr-reader": "^2.2.1",
