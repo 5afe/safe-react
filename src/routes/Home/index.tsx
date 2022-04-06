@@ -54,7 +54,7 @@ function Home(): ReactElement {
 
         <Card>
           <h2>Transactions to Sign</h2>
-          <PendingTxsList />
+          <PendingTxsList size={MAX_TXS_DISPLAY} />
         </Card>
       </Row>
 

@@ -11,7 +11,6 @@ import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { getChainById } from 'src/config'
 import PendingTxListItem from 'src/components/Dashboard/PendingTxs/PendingTxListItem'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { MAX_TXS_DISPLAY } from 'src/routes/Home'
 import { useQueueTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useQueueTransactions'
 
 const SkeletonWrapper = styled.div`
@@ -20,7 +19,7 @@ const SkeletonWrapper = styled.div`
   overflow: hidden;
 `
 
-const PendingTxsList = (): ReactElement | null => {
+const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null => {
   const { address } = useSelector(currentSafe)
   const chainId = useSelector(currentChainId)
 
@@ -39,9 +38,9 @@ const PendingTxsList = (): ReactElement | null => {
         txs = txs.concat(transactionsByNonce)
 
         // If adding same nonced transactions exceeded/reached limit, cleanup and break
-        if (txs.length >= MAX_TXS_DISPLAY) {
-          if (txs.length > MAX_TXS_DISPLAY) {
-            txs = txs.slice(0, MAX_TXS_DISPLAY)
+        if (txs.length >= size) {
+          if (txs.length > size) {
+            txs = txs.slice(0, size)
           }
           break nonceLoop
         }
@@ -49,12 +48,12 @@ const PendingTxsList = (): ReactElement | null => {
     }
 
     return txs
-  }, [queue])
+  }, [queue, size])
 
   if (!queue) {
     return (
       <List component="div">
-        {Array.from(Array(MAX_TXS_DISPLAY).keys()).map((key) => (
+        {Array.from(Array(size).keys()).map((key) => (
           <SkeletonWrapper key={key}>
             <Skeleton variant="rect" height={52} />
           </SkeletonWrapper>
