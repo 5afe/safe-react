@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Card, Title, Button, Text, Loader } from '@gnosis.pm/safe-react-components'
 import Divider from '@material-ui/core/Divider'
@@ -9,24 +10,21 @@ import Popper from '@material-ui/core/Popper'
 
 import SuccessSvg from 'src/assets/icons/safe-created.svg'
 import DemoSvg from 'src/assets/icons/demo.svg'
+import { getChainById } from 'src/config'
+import { getChains } from 'src/config/cache/chains'
 import { generateSafeRoute, history, OPEN_SAFE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
-import { useAppList } from '../safe/components/Apps/hooks/appList/useAppList'
+import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
+import { setChainId } from 'src/logic/config/utils'
 import ProviderDisconnected from 'src/components/AppLayout/Header/components/ProviderInfo/ProviderDisconnected'
 import Provider from 'src/components/AppLayout/Header/components/Provider'
 import ConnectDetails from 'src/components/AppLayout/Header/components/ProviderDetails/ConnectDetails'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
-import { useLocation } from 'react-router-dom'
-import { setChainId } from 'src/logic/config/utils'
-import Track from 'src/components/Track'
-import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
-import { getChainById } from 'src/config'
-import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { getAppInfoFromUrl } from '../safe/components/Apps/utils'
-import { SafeApp } from '../safe/components/Apps/types'
-import { getChains } from 'src/config/cache/chains'
 
 const DEMO_SAFE_MAINNET = '0xfF501B324DC6d78dC9F983f140B9211c3EdB4dc7'
 
@@ -153,13 +151,11 @@ function SafeAppLandingPage(): ReactElement {
                           <Img alt="Vault" height={92} src={SuccessSvg} />
                         </BodyImage>
 
-                        <Track {...CREATE_SAFE_EVENTS.CREATE_BUTTON}>
-                          <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
-                            <Text size="xl" color="white">
-                              Create new Safe
-                            </Text>
-                          </Button>
-                        </Track>
+                        <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+                          <Text size="xl" color="white">
+                            Create new Safe
+                          </Text>
+                        </Button>
                       </>
                     )}
                   </>
