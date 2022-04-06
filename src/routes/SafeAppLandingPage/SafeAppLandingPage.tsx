@@ -101,10 +101,12 @@ function SafeAppLandingPage(): ReactElement {
 
   const userSafe = getUserSafe()
 
+  const showLoader = isLoading || !safeAppDetails
+
   return (
     <Container>
       <StyledCard>
-        {isLoading || !safeAppDetails ? (
+        {showLoader ? (
           <LoaderContainer>
             <Loader size="md" />
           </LoaderContainer>
@@ -151,7 +153,14 @@ function SafeAppLandingPage(): ReactElement {
                           <Img alt="Vault" height={92} src={SuccessSvg} />
                         </BodyImage>
 
-                        <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+                        <Button
+                          data-testid={'create-new-safe-link'}
+                          size="lg"
+                          color="primary"
+                          variant="contained"
+                          component={Link}
+                          to={OPEN_SAFE_ROUTE}
+                        >
                           <Text size="xl" color="white">
                             Create new Safe
                           </Text>
@@ -199,6 +208,7 @@ function SafeAppLandingPage(): ReactElement {
                 </BodyImage>
                 {safeAppUrl && (
                   <StyledDemoButton
+                    data-testid={'open-demo-app-link'}
                     color="primary"
                     component={Link}
                     to={`${demoSafeAppsPath}?appUrl=${encodeURI(safeAppUrl)}`}
