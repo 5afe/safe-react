@@ -15,7 +15,7 @@ import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
-import SuccessSvg from './assets/safe-created.svg'
+import SuccessSvg from 'src/assets/icons/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultLoading from './assets/creation-process.gif'
 import { TransactionReceipt } from 'web3-core'

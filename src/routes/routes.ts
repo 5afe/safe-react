@@ -44,6 +44,7 @@ export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
 export const OPEN_SAFE_ROUTE = '/open'
 export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By providing no slug, we get '/load'
+export const SAFE_APP_LANDPAGE_ROUTE = '/share/safe-app'
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {

@@ -8,7 +8,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { SAFE_APP_LANDPAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 
 const Container = styled.div`
@@ -102,24 +102,30 @@ const Layout: React.FC<Props> = ({
     path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
+  const showSideBar = !matchPath(pathname, {
+    path: [SAFE_APP_LANDPAGE_ROUTE],
+  })
+
   return (
     <Container>
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
       <BodyWrapper>
-        <SidebarWrapper data-testid="sidebar">
-          <Sidebar
-            items={sidebarItems}
-            safeAddress={safeAddress}
-            safeName={safeName}
-            balance={balance}
-            granted={granted}
-            onToggleSafeList={onToggleSafeList}
-            onReceiveClick={onReceiveClick}
-            onNewTransactionClick={onNewTransactionClick}
-          />
-        </SidebarWrapper>
+        {showSideBar && (
+          <SidebarWrapper data-testid="sidebar">
+            <Sidebar
+              items={sidebarItems}
+              safeAddress={safeAddress}
+              safeName={safeName}
+              balance={balance}
+              granted={granted}
+              onToggleSafeList={onToggleSafeList}
+              onReceiveClick={onReceiveClick}
+              onNewTransactionClick={onNewTransactionClick}
+            />
+          </SidebarWrapper>
+        )}
         <ContentWrapper>
           <div>{children}</div>
           {hasFooter && <Footer />}
