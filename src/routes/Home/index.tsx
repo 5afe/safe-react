@@ -6,13 +6,19 @@ import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 
+import AddSafeWidget from 'src/components/Dashboard/AddSafe'
+import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
+
 const Card = styled.div`
   background: #fff;
-  padding: 0 20px 30px;
+  padding: 40px;
   border-radius: 8px;
   flex: 1;
-  max-width: 500px;
   margin: 10px;
+
+  & > h2 {
+    margin-top: 0;
+  }
 `
 
 function Home(): ReactElement {
@@ -27,6 +33,16 @@ function Home(): ReactElement {
 
         <Col end="sm" sm={6} xs={12} />
       </Menu>
+
+      <Row>
+        <Card>
+          <AddSafeWidget />
+        </Card>
+
+        <Card>
+          <CreateSafeWidget />
+        </Card>
+      </Row>
 
       <Row>
         <Card>
