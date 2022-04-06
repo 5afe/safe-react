@@ -4,20 +4,18 @@ import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { grey400, sm } from 'src/theme/variables'
+import { sm } from 'src/theme/variables'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { getChainById } from 'src/config'
 import PendingTxListItem from 'src/components/Dashboard/PendingTxListItem'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { MAX_TXS_DISPLAY } from 'src/routes/Home'
+import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 
-const TransactionSkeleton = styled.div`
-  min-width: 270px;
-  height: 40px;
-  background-color: ${grey400};
-  border-radius: 8px;
+const SkeletonWrapper = styled.div`
   margin: ${sm} auto;
+  padding: 4px 16px;
 `
 
 const PendingTxsList = ({ transactions }: { transactions?: Transaction[] }): ReactElement => {
@@ -26,11 +24,13 @@ const PendingTxsList = ({ transactions }: { transactions?: Transaction[] }): Rea
 
   if (!transactions) {
     return (
-      <>
+      <List component="div">
         {Array.from(Array(MAX_TXS_DISPLAY).keys()).map((key) => (
-          <TransactionSkeleton key={key} />
+          <SkeletonWrapper key={key}>
+            <Skeleton variant="rect" width={270} height={40} />
+          </SkeletonWrapper>
         ))}
-      </>
+      </List>
     )
   }
 
