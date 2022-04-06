@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Icon, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Link } from 'react-router-dom'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
@@ -9,7 +9,7 @@ import { useAssetInfo } from 'src/routes/safe/components/Transactions/TxList/hoo
 import { useKnownAddress } from 'src/routes/safe/components/Transactions/TxList/hooks/useKnownAddress'
 import { useTransactionType } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionType'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
-import { grey400, primary200, sm } from 'src/theme/variables'
+import { boldFont, grey400, primary200, sm } from 'src/theme/variables'
 import { isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import Spacer from 'src/components/Spacer'
 import { CustomIconText } from 'src/components/CustomIconText'
@@ -24,7 +24,7 @@ const TransactionToConfirm = styled(Link)`
   grid-template-columns: 25px 3fr 2fr 1.5fr;
   gap: 4px;
   margin: ${sm} auto;
-  padding: 4px 8px;
+  padding: 4px 16px;
   text-decoration: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 2px solid ${grey400};
@@ -33,18 +33,15 @@ const TransactionToConfirm = styled(Link)`
 `
 
 const StyledConfirmationsCount = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  padding: 8px 6px;
   border-radius: 8px;
   background-color: ${primary200};
-  padding: 8px 6px;
+  font-weight: ${boldFont};
 `
 
 const TxConfirmations = styled.div`
   display: flex;
   align-items: center;
-  align-self: flex-end;
   margin-left: auto;
 `
 
@@ -74,8 +71,7 @@ const PendingTx = ({ transaction, url }: PendingTxType): ReactElement => {
       <TxConfirmations>
         {isMultisigExecutionInfo(transaction.executionInfo) ? (
           <StyledConfirmationsCount>
-            <Icon type="check" size="md" color="primary" />
-            {transaction.executionInfo.confirmationsSubmitted}
+            {`${transaction.executionInfo.confirmationsSubmitted}/${transaction.executionInfo.confirmationsRequired}`}
           </StyledConfirmationsCount>
         ) : (
           <Spacer />
