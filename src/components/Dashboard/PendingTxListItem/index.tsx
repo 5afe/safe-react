@@ -21,7 +21,7 @@ const TransactionToConfirm = styled(Link)`
   height: 40px;
   display: grid;
   align-items: center;
-  grid-template-columns: 25px 3fr 2fr 1.5fr;
+  grid-template-columns: 25px auto 2fr 1.5fr;
   gap: 4px;
   margin: ${sm} auto;
   padding: 4px 16px;

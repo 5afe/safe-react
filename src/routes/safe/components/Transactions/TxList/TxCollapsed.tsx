@@ -28,6 +28,7 @@ import { getTxTo, isAwaitingExecution } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
+import Spacer from 'src/components/Spacer'
 
 export const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }): ReactElement | null => {
   if (isTokenTransferAsset(info)) {
@@ -46,7 +47,7 @@ export const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }): Reac
       case 'CHANGE_IMPLEMENTATION':
       case 'SET_GUARD':
       case 'DELETE_GUARD':
-        break
+        return <Spacer />
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
         return (

@@ -74,7 +74,9 @@ function Home(): ReactElement {
           <h2>Transactions to Sign</h2>
           <PendingTxsList transactions={pendingTransactionsToDisplay} />
         </Card>
+      </Row>
 
+      <Row>
         <Card>
           <h2>Gas Fees</h2>
         </Card>
