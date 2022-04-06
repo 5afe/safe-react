@@ -61,8 +61,8 @@ const usePairing = (): { uri: string } => {
       const { name } = onboard().getState().wallet
       const connectedToNonPairingWallet = name && !isPairingModule(name) && provider.wc.peerId
       if (connectedToNonPairingWallet) {
-        provider.disconnect()
         cleanupEventListeners()
+        provider.disconnect()
         return
       }
 
