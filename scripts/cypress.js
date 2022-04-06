@@ -18,9 +18,9 @@ function launchCypressEnv() {
   readline.question(
     'Which environment do you want to test: (l)ocal, (d)evelopment, (s)taging or (p)roduction? ',
     (env) => {
-      const key = env?.[0].toLowerCase()
+      const key = env?.[0].toLowerCase() || 'l'
 
-      if (!key || key === 'l') {
+      if (key === 'l') {
         exec(cmd)
       } else if (Object.keys(DEPLOYMENTS).includes(key)) {
         exec(`${cmd} --config baseUrl=${DEPLOYMENTS[key]}`)
