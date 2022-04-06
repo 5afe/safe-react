@@ -70,7 +70,7 @@ class AppCommunicator {
     if (validMessage && hasHandler) {
       trackSafeAppEvent({
         event: GTM_EVENT.SAFE_APP,
-        name: this.app.name,
+        app: this.app,
         method: msg.data.method,
         params: msg.data.params,
         sdkVersion: msg.data.env.sdkVersion,

@@ -16,6 +16,7 @@ import { _getChainId } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { Cookie, removeCookies } from 'src/logic/cookies/utils'
 import { LegacyMethods } from 'src/routes/safe/components/Apps/communicator'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
 export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
@@ -192,23 +193,25 @@ type SafeAppEventDataLayer = {
 
 export const trackSafeAppEvent = ({
   event,
-  name,
+  app,
   method,
   params,
   sdkVersion,
   deprecated = false,
 }: {
   event: GTM_EVENT
-  name: string
+  app?: SafeApp
   method: string
   params: any
   sdkVersion?: string
   deprecated?: boolean
 }): void => {
+  const safeApp = JSON.parse(app?.id || 'unknown')
+
   const dataLayer: SafeAppEventDataLayer = {
     event,
     chainId: _getChainId(),
-    safeAppName: name,
+    safeAppName: safeApp.name || safeApp.url || safeApp,
     safeAppMethod: method,
     safeAppParams: params ? JSON.stringify(params).replaceAll(ETHEREUM_ADDRESS_REGEX, ETHEREUM_ADDRESS) : undefined,
     safeAppEthMethod: params?.call || undefined,

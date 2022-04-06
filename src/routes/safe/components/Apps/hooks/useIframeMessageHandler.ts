@@ -68,7 +68,7 @@ const useIframeMessageHandler = (
 
       trackSafeAppEvent({
         event: GTM_EVENT.SAFE_APP,
-        name: selectedApp?.id || '',
+        app: selectedApp,
         method: messageId,
         params: undefined,
         deprecated: true,

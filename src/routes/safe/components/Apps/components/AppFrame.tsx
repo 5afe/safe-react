@@ -296,7 +296,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     trackSafeAppEvent({
       event: GTM_EVENT.SAFE_APP,
-      name: JSON.parse(safeApp.id).name,
+      app: safeApp,
       method: TX_CONFIRM,
       params: safeTxHash,
     })
@@ -314,7 +314,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     trackSafeAppEvent({
       event: GTM_EVENT.SAFE_APP,
-      name: JSON.parse(safeApp.id).name,
+      app: safeApp,
       method: TX_REJECT,
       params: requestId,
     })
