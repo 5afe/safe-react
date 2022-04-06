@@ -40,14 +40,8 @@
     "update-mocks": "./scripts/update-mocks.sh",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/",
     "prepare": "husky install",
-    "cypress:open": "cypress open",
-    "cypress:open:dev": "cypress open --config baseUrl=https://safe-team.dev.gnosisdev.com/app",
-    "cypress:open:staging": "cypress open --config baseUrl=https://safe-team.staging.gnosisdev.com/app",
-    "cypress:open:prod": "cypress open --config baseUrl=https://gnosis-safe.io/app",
-    "cypress:run": "cypress run",
-    "cypress:run:dev": "cypress run --config baseUrl=https://safe-team.dev.gnosisdev.com/app",
-    "cypress:run:staging": "cypress run --config baseUrl=https://safe-team.staging.gnosisdev.com/app",
-    "cypress:run:prod": "cypress run --config baseUrl=https://gnosis-safe.io/app"
+    "cypress:open": "node ./scripts/cypress.js open",
+    "cypress:run": "node ./scripts/cypress.js run"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
