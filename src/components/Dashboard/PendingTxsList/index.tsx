@@ -15,7 +15,8 @@ import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 
 const SkeletonWrapper = styled.div`
   margin: ${sm} auto;
-  padding: 4px 16px;
+  border-radius: 8px;
+  overflow: hidden;
 `
 
 const PendingTxsList = ({ transactions }: { transactions?: Transaction[] }): ReactElement => {
@@ -27,7 +28,7 @@ const PendingTxsList = ({ transactions }: { transactions?: Transaction[] }): Rea
       <List component="div">
         {Array.from(Array(MAX_TXS_DISPLAY).keys()).map((key) => (
           <SkeletonWrapper key={key}>
-            <Skeleton variant="rect" width={270} height={40} />
+            <Skeleton variant="rect" height={52} />
           </SkeletonWrapper>
         ))}
       </List>
