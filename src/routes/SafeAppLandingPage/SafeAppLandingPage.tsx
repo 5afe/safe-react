@@ -273,10 +273,11 @@ const ChainLabel = styled(Text)`
 
 const ChainsContainer = styled.div`
   display: flex;
-  margin-top: 12px;
+  flex-wrap: wrap;
 
-  && > div + div {
-    margin-left: 8px;
+  && > div {
+    margin-top: 12px;
+    margin-right: 8px;
   }
 `
 
