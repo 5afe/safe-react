@@ -19,6 +19,11 @@ const usePairing = (): { uri: string } => {
   const WC_EVENTS = useMemo(() => Object.values(WC_EVENT), [])
   const [uri, setUri] = useState<string>(getPairingUri(provider.wc.uri))
 
+  const cleanupEventListeners = useCallback(() => {
+    // @ts-expect-error - `off()` is missing in `IConnector` type
+    WC_EVENTS.forEach((event) => provider.wc.off(event))
+  }, [provider])
+
   const createPairingSession = useCallback(() => {
     if (provider.wc.connected) {
       return
@@ -39,44 +44,36 @@ const usePairing = (): { uri: string } => {
   }, [createPairingSession, updatePairingUri])
 
   useEffect(() => {
-    // Attach event listeners
-    WC_EVENTS.forEach((event) => {
-      provider.wc.on(event, () => {
-        if (event === WC_EVENT.CONNECT) {
-          console.log('connect')
-          onboard().walletSelect(PAIRING_MODULE_NAME)
-        }
-        if (event === WC_EVENT.DISCONNECT) {
-          restartPairingSession()
-        }
-        updatePairingUri()
-      })
+    // Prevent duplicate event listeners from being added
+    cleanupEventListeners()
+
+    provider.wc.on(WC_EVENT.CONNECT, () => {
+      onboard().walletSelect(PAIRING_MODULE_NAME)
     })
+
+    provider.wc.on(WC_EVENT.DISCONNECT, restartPairingSession)
+
+    WC_EVENTS.forEach((event) => provider.wc.on(event, updatePairingUri))
 
     createPairingSession()
 
     return () => {
-      // Remove event listeners on unmount
-      // @ts-expect-error - `off()` is missing in provider type
-      WC_EVENTS.forEach((event) => provider.wc.off(event))
-
-      // Kill current session if another wallet is selected
       const { name } = onboard().getState().wallet
-      if (name && !isPairingModule(name) && provider.wc.peerId) {
+      const connectedToNonPairingWallet = name && !isPairingModule(name) && provider.wc.peerId
+      if (connectedToNonPairingWallet) {
         provider.disconnect()
+        cleanupEventListeners()
         return
       }
 
-      // Otherwise attach disconnection event liseners
-      provider.wc.on(WC_EVENT.DISCONNECT, restartPairingSession)
       provider.wc.on(WC_EVENT.SESSION_UPDATE, (_, { params }) => {
-        // Session approval was revoked, 'disconnect' event doesn't fire
-        if (params[0]?.approved === false) {
+        const didRevokeSessionApproval = params[0]?.approved === false
+        if (didRevokeSessionApproval) {
           restartPairingSession()
         }
       })
     }
-  }, [WC_EVENTS, createPairingSession, provider, restartPairingSession, updatePairingUri])
+  }, [cleanupEventListeners, WC_EVENTS, createPairingSession, provider, restartPairingSession, updatePairingUri])
 
   return { uri }
 }
