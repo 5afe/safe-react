@@ -17,8 +17,8 @@ const cmd = `cypress ${process.argv[2]}`
 function launchCypressEnv() {
   readline.question(
     'Which environment do you want to test: (l)ocal, (d)evelopment, (s)taging or (p)roduction? ',
-    (env) => {
-      const key = env?.[0].toLowerCase() || 'l'
+    ([env = 'l']) => {
+      const key = env.toLowerCase()
 
       if (key === 'l') {
         exec(cmd)
