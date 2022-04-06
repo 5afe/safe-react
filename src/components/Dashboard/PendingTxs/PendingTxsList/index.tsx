@@ -11,7 +11,7 @@ import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { getChainById } from 'src/config'
 import PendingTxListItem from 'src/components/Dashboard/PendingTxs/PendingTxListItem'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { useQueueTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useQueueTransactions'
+import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
 const SkeletonWrapper = styled.div`
   margin: ${sm} auto;
@@ -23,29 +23,21 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   const { address } = useSelector(currentSafe)
   const chainId = useSelector(currentChainId)
 
-  const queue = useQueueTransactions()
+  const queueTxns = useSelector(pendingTransactions)
 
   const queuedTxsToDisplay: Transaction[] = useMemo(() => {
-    let txs: Transaction[] = []
+    if (!queueTxns) return []
 
-    if (!queue) {
-      return txs
-    }
+    return (
+      Object.values(queueTxns.next)
+        .concat(Object.values(queueTxns.queued))
+        // take the first (i.e. newest) tx in a group of txns with the same nonce
+        .map((group: Transaction[]) => group[0])
+        .slice(0, size)
+    )
+  }, [queueTxns, size])
 
-    txs = Object.values(Object.values(queue))
-      // get the transactions from 'queue.next' and 'queue.queue'
-      .map((queue) => queue.transactions)
-      .flat()
-      // get the Transaction[] per nonce
-      .map((el) => el[1])
-      // select the first Transaction per nonce
-      .map((el) => el[0])
-      .slice(0, size)
-
-    return txs
-  }, [queue, size])
-
-  if (!queue) {
+  if (!queueTxns) {
     return (
       <List component="div">
         {Array.from(Array(size).keys()).map((key) => (
