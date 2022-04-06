@@ -22,8 +22,6 @@ const Card = styled.div`
   }
 `
 
-export const MAX_TXS_DISPLAY = 5
-
 function Home(): ReactElement {
   return (
     <Page>
@@ -54,7 +52,7 @@ function Home(): ReactElement {
 
         <Card>
           <h2>Transactions to Sign</h2>
-          <PendingTxsList size={MAX_TXS_DISPLAY} />
+          <PendingTxsList />
         </Card>
       </Row>
 

@@ -32,20 +32,15 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
       return txs
     }
 
-    nonceLoop: for (const { transactions } of Object.values(queue)) {
-      for (const [, transactionsByNonce] of transactions) {
-        // Add same nonced transactions to list
-        txs = txs.concat(transactionsByNonce)
-
-        // If adding same nonced transactions exceeded/reached limit, cleanup and break
-        if (txs.length >= size) {
-          if (txs.length > size) {
-            txs = txs.slice(0, size)
-          }
-          break nonceLoop
-        }
-      }
-    }
+    txs = Object.values(Object.values(queue))
+      // get the transactions from 'queue.next' and 'queue.queue'
+      .map((queue) => queue.transactions)
+      .flat()
+      // get the Transaction[] per nonce
+      .map((el) => el[1])
+      // select the first Transaction per nonce
+      .map((el) => el[0])
+      .slice(0, size)
 
     return txs
   }, [queue, size])
