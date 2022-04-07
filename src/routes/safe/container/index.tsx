@@ -89,6 +89,15 @@ const Container = (): React.ReactElement => {
   return (
     <>
       <Switch>
+        {/* Legacy redirect */}
+        <Route
+          path={SAFE_ROUTES.LEGACY_COLLECTIBLES}
+          exact
+          render={() => (
+            <Redirect to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES, extractPrefixedSafeAddress())} />
+          )}
+        />
+
         <Route
           exact
           path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}

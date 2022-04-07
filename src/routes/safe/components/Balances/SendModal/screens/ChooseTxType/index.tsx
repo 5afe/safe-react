@@ -115,12 +115,8 @@ const ChooseTxType = ({
                 variant="contained"
                 testId="modal-send-collectible-btn"
               >
-                <Img
-                  alt="Send collectible"
-                  className={classNames(classes.leftIcon, classes.iconSmall)}
-                  src={Collectible}
-                />
-                Send collectible
+                <Img alt="Send NFT" className={classNames(classes.leftIcon, classes.iconSmall)} src={Collectible} />
+                Send NFT
               </Button>
             </Track>
           )}

@@ -106,9 +106,7 @@ const Collectibles = (): React.ReactElement => {
     return (
       <Card className={classes.cardOuter}>
         <div className={classes.cardInner}>
-          <Paragraph className={classes.noData}>
-            {nftLoaded ? 'No collectibles available' : 'Loading collectibles...'}
-          </Paragraph>
+          <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
         </div>
       </Card>
     )
