@@ -21,6 +21,12 @@ type Props = {
   type?: HTMLInputTypeAttribute
 }
 
+const isValidRecipient = (address: string): string | undefined => {
+  if (address && !isValidAddress(address)) {
+    return 'Recipient not found'
+  }
+}
+
 const RHFAddressSearchField = ({ name, control, ...props }: Props): ReactElement => {
   const showChainPrefix = useSelector(showShortNameSelector)
   const addressBookOnChain = useSelector(currentNetworkAddressBook)
@@ -31,7 +37,9 @@ const RHFAddressSearchField = ({ name, control, ...props }: Props): ReactElement
   const { field, fieldState } = useController({
     name,
     control,
-    rules: { validate: (address: string) => (address ? isValidAddress(address) : true) || 'Recipient not found' },
+    rules: {
+      validate: isValidRecipient,
+    },
   })
 
   const onInputChange = async (newValue: string) => {

@@ -12,7 +12,7 @@ type Props = {
   type?: HTMLInputTypeAttribute
 }
 
-// TODO: Centralise these with `TxInfoSettings`
+// TODO: Create enum in the types for these types
 const MODULES: { label: string; type: SettingsInfo['type'] }[] = [
   {
     type: 'SET_FALLBACK_HANDLER',
@@ -56,12 +56,18 @@ const MODULES: { label: string; type: SettingsInfo['type'] }[] = [
   },
 ]
 
+const isValidModule = (module: SettingsInfo['type']): string | undefined => {
+  if (module && MODULES.every(({ type }) => type !== module)) {
+    return 'Invalid module'
+  }
+}
+
 const RHFModuleSearchField = ({ name, control, ...props }: Props): ReactElement => {
   const { field, fieldState } = useController({
     name,
     control,
     rules: {
-      validate: (module: string) => (module ? MODULES.some(({ type }) => type === module) : true) || 'Invalid module',
+      validate: isValidModule,
     },
   })
 
@@ -71,21 +77,24 @@ const RHFModuleSearchField = ({ name, control, ...props }: Props): ReactElement 
       getOptionLabel={({ label }) => label}
       onChange={(_, module) => field.onChange(module?.type || undefined)}
       noOptionsText="No module found"
-      renderInput={({ inputProps, ...params }) => (
-        <TextField
-          innerRef={field.ref}
-          {...params}
-          {...props}
-          name={name}
-          variant="outlined"
-          error={!!fieldState.error}
-          helperText={fieldState.error?.message}
-          inputProps={{
-            ...inputProps,
-            className: undefined, // Remove style override
-          }}
-        />
-      )}
+      fullWidth={false}
+      renderInput={({ inputProps, ...params }) => {
+        return (
+          <TextField
+            innerRef={field.ref}
+            {...params}
+            {...props}
+            name={name}
+            variant="outlined"
+            error={!!fieldState.error}
+            helperText={fieldState.error?.message}
+            inputProps={{
+              ...inputProps,
+              className: undefined, // Remove style override
+            }}
+          />
+        )
+      }}
     />
   )
 }

@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
+import { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/components/forms/RHF/RHFTextField'
@@ -21,9 +22,7 @@ enum FilterType {
   MODULE = 'Module',
   MULTISIG = 'Multisignature',
 }
-enum Module {
-  EXAMPLE = 'Example',
-}
+
 type FilterForm = {
   type: FilterType
   from: number
@@ -31,8 +30,30 @@ type FilterForm = {
   recipient: string
   amount: number
   tokenAddress: string
-  module: Module
+  module: SettingsInfo['type']
   nonce: number
+}
+
+const isValidAmount = (value: FilterForm['amount']): string | undefined => {
+  if (value && isNaN(Number(value))) {
+    return 'Invalid number'
+  }
+}
+
+const isValidTokenAddress = (value: FilterForm['tokenAddress']): string | undefined => {
+  if (value && !isValidAddress(value)) {
+    return 'Invalid address'
+  }
+}
+
+const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
+  const number = Number(value)
+  if (isNaN(number)) {
+    return 'Invalid number'
+  }
+  if (number < 0) {
+    return 'Nonce cannot be negative'
+  }
 }
 
 const Filter = (): ReactElement => {
@@ -92,19 +113,34 @@ const Filter = (): ReactElement => {
                 <RHFAddressSearchField name="recipient" label="Recipient" control={control} />
                 {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
                   <>
-                    <RHFTextField name="amount" label="Amount" control={control} />
+                    <RHFTextField
+                      name="amount"
+                      label="Amount"
+                      control={control}
+                      rules={{
+                        validate: isValidAmount,
+                      }}
+                    />
                     {type === FilterType.INCOMING && (
                       <RHFTextField
                         name="tokenAddress"
                         label="Token Address"
                         control={control}
                         rules={{
-                          validate: (address: string) =>
-                            (address ? isValidAddress(address) : true) || 'Invalid address',
+                          validate: isValidTokenAddress,
                         }}
                       />
                     )}
-                    {type === FilterType.MULTISIG && <RHFTextField name="nonce" label="Nonce" control={control} />}
+                    {type === FilterType.MULTISIG && (
+                      <RHFTextField
+                        name="nonce"
+                        label="Nonce"
+                        control={control}
+                        rules={{
+                          validate: isValidNonce,
+                        }}
+                      />
+                    )}
                   </>
                 )}
                 {type === FilterType.MODULE && <RHFModuleSearchField name="module" label="Module" control={control} />}
