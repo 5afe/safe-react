@@ -22,7 +22,7 @@ export const BALANCE_ROW_TEST_ID = 'balance-row'
 
 enum SECTION_NAME {
   coins = 'Coins',
-  collectibles = 'Collectibles',
+  collectibles = 'NFTs',
 }
 
 const Balances = (): ReactElement => {

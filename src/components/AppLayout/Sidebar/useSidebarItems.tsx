@@ -61,7 +61,7 @@ const useSidebarItems = (): ListItemType[] => {
       }),
       makeEntryItem({
         disabled: !isCollectiblesEnabled,
-        label: 'Collectibles',
+        label: 'NFTs',
         iconType: 'collectibles',
         href: currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES,
       }),
