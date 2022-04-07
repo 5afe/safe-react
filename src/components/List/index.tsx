@@ -9,7 +9,11 @@ import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
-import { secondary } from 'src/theme/variables'
+import { secondary, primaryGreen200 } from 'src/theme/variables'
+
+const ListItemWrapper = styled.div`
+  padding: 0 12px;
+`
 
 export const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
@@ -21,11 +25,17 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
+    background-color: ${primaryGreen200};
     border-radius: 8px;
   }
 
+  &.MuiListItem-root {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
   &.MuiListItem-root.Mui-selected {
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${primaryGreen200};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
@@ -50,7 +60,17 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
 
 const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
-    margin: 4px 0;
+    margin: 4px 0 4px 15px;
+    width: calc(100% - 15px);
+
+    &::before {
+      content: '';
+      width: 6px;
+      height: 1px;
+      background: #e1e1e1;
+      position: absolute;
+      left: -15px;
+    }
   }
 
   & .MuiListItemText-root span {
@@ -58,11 +78,12 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
+    background-color: ${primaryGreen200};
     border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${primaryGreen200};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
@@ -77,23 +98,21 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
 export const StyledListItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
-    font-size: 0.76em;
+    font-size: 14px;
     font-weight: 600;
     line-height: 1.5;
-    letter-spacing: 1px;
-    color: ${({ theme }) => theme.colors.placeHolder};
-    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #162d45 !important;
   }
 `
 
 const StyledListSubItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
-    font-size: 0.85em;
+    font-size: 14px;
     font-weight: 400;
-    letter-spacing: 0px;
-    color: ${({ theme }) => theme.colors.placeHolder};
-    text-transform: none;
+    letter-spacing: 0;
+    color: #162d45 !important;
   }
 `
 
@@ -129,6 +148,10 @@ const useStyles = makeStyles((theme: Theme) =>
         outline: '1px solid #dadada',
         borderRadius: '20px',
       },
+    },
+    listMui: {
+      marginLeft: '20px',
+      borderLeft: '1px solid #e1e1e1',
     },
     nested: {
       paddingLeft: theme.spacing(3),
@@ -188,7 +211,7 @@ const List = ({ items }: Props): React.ReactElement => {
         onClick={onClick}
         selected={item.selected || isSubItemSelected(item)}
       >
-        {item.icon && item.icon}
+        {item.icon && !isSubItem && item.icon}
 
         <TextAndBadgeWrapper>
           <StyledBadge badgeContent=" " color="error" invisible={!item.badge} variant="dot">
@@ -219,16 +242,16 @@ const List = ({ items }: Props): React.ReactElement => {
       {items
         .filter(({ disabled }) => !disabled)
         .map((item) => (
-          <div key={item.label}>
+          <ListItemWrapper key={item.label}>
             {getListItem(item, false)}
             {item.subItems && (
               <Collapse in={groupCollapseStatus[item.href]} timeout="auto" unmountOnExit>
-                <ListMui component="div" disablePadding>
+                <ListMui component="div" disablePadding className={classes.listMui}>
                   {item.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
                 </ListMui>
               </Collapse>
             )}
-          </div>
+          </ListItemWrapper>
         ))}
     </ListMui>
   )
