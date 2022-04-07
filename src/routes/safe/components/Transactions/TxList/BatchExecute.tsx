@@ -216,8 +216,8 @@ export const BatchExecute = React.memo((): ReactElement => {
             </div>
           </Row>
           <Paragraph size="md" align="center" color="disabled" noMargin>
-            This feature is still in experimental mode. Be aware, that if one of the included transactions fails, all
-            included transactions will fail. This will result in the loss of the allocated transaction fees.
+            This feature is still in experimental mode. Be aware that if any of the included transactions reverts, none
+            of them will be executed. This will result in the loss of the allocated transaction fees.
           </Paragraph>
         </ModalContent>
         <Modal.Footer withoutBorder>
