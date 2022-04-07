@@ -1,64 +1,42 @@
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { loadPagedQueuedTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
-import { addQueuedTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import { currentChainId } from 'src/logic/config/store/selectors'
-import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransactions'
-import { Errors } from 'src/logic/exceptions/CodedException'
-import { Await } from 'src/types/helpers'
-import { extractSafeAddress } from 'src/routes/routes'
+import { useSelector } from 'react-redux'
+import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+
+type TxnEntries = {
+  count: number
+  transactions: Array<[string, Transaction[]]>
+}
 
 type PagedQueuedTransactions = {
   count: number
   isLoading: boolean
-  transactions?: QueueTransactionsInfo
+  transactions?: {
+    next: TxnEntries
+    queue: TxnEntries
+  }
   hasMore: boolean
   next: () => Promise<void>
 }
 
 export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
-  const transactions = useQueueTransactions()
-  const chainId = useSelector(currentChainId)
+  const queueTxns = useSelector(pendingTransactions)
+  const countNext = queueTxns ? Object.keys(queueTxns.next).length : 0
+  const countQueued = queueTxns ? Object.keys(queueTxns.queued).length : 0
 
-  const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
-  const [hasMore, setHasMore] = useState(true)
-
-  const nextPage = async () => {
-    let results: Await<ReturnType<typeof loadPagedQueuedTransactions>>
-    try {
-      results = await loadPagedQueuedTransactions(safeAddress)
-    } catch (e) {
-      // No next page
-      if (e.content !== Errors._608) {
-        e.log()
-      }
-    }
-
-    if (!results) {
-      setHasMore(false)
-      return
-    }
-
-    const { values, next } = results
-
-    if (next === null) {
-      setHasMore(false)
-    }
-
-    if (values) {
-      dispatch(addQueuedTransactions({ chainId, safeAddress, values }))
-    } else {
-      setHasMore(false)
-    }
+  return {
+    count: countNext + countQueued,
+    isLoading: !queueTxns,
+    transactions: {
+      next: {
+        count: countNext,
+        transactions: Object.entries(queueTxns?.next || {}),
+      },
+      queue: {
+        count: countQueued,
+        transactions: Object.entries(queueTxns?.queued || {}),
+      },
+    },
+    hasMore: false,
+    next: () => Promise.resolve(),
   }
-
-  let count
-  if (transactions) {
-    count = transactions.next.count + transactions.queue.count
-  }
-
-  const isLoading = typeof transactions === 'undefined' || typeof count === 'undefined'
-
-  return { count, isLoading, transactions, hasMore, next: nextPage }
 }
