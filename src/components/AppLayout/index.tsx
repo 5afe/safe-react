@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { useLocation, matchPath } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
 import { SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
+import { screenSm } from 'src/theme/variables'
 
 const Container = styled.div`
   height: 100vh;
@@ -47,6 +48,14 @@ const SidebarWrapper = styled.aside`
   padding: 8px 8px 0 8px;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
+
+  @media (max-width: ${screenSm}px) {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    transition: transform 200ms ease-out;
+    transform: translateX(${({ $expanded }: { $expanded: boolean }) => ($expanded ? '0' : '-95%')});
+  }
 `
 
 const ContentWrapper = styled.div`
@@ -93,6 +102,7 @@ const Layout: React.FC<Props> = ({
   sidebarItems,
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
+  const [expanded, setExpanded] = useState(false)
   const { pathname } = useLocation()
   useDarkMode()
 
@@ -102,13 +112,21 @@ const Layout: React.FC<Props> = ({
     path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
+  const onSidebarClick = useCallback(
+    (e: React.MouseEvent): void => {
+      e.stopPropagation()
+      setExpanded((prev) => !prev)
+    },
+    [setExpanded],
+  )
+
   return (
-    <Container>
+    <Container onClick={() => setExpanded(false)}>
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
       <BodyWrapper>
-        <SidebarWrapper data-testid="sidebar">
+        <SidebarWrapper data-testid="sidebar" $expanded={expanded} onClick={onSidebarClick}>
           <Sidebar
             items={sidebarItems}
             safeAddress={safeAddress}
