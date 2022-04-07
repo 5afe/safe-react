@@ -7,7 +7,7 @@ import { lg, sm, md } from 'src/theme/variables'
 import Button from 'src/components/layout/Button'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
@@ -199,6 +199,13 @@ export const BatchExecute = React.memo((): ReactElement => {
                 value: tx.value,
                 data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
                 dataDecoded: null,
+              }
+
+              if (isCustomTxInfo(transaction.txInfo) && transaction.txInfo.isCancellation) {
+                decodedDataParams.dataDecoded = {
+                  method: 'On-chain rejection',
+                  parameters: [],
+                }
               }
 
               const decodedData = transaction.txDetails?.txData.dataDecoded || decodedDataParams
