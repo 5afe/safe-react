@@ -16,6 +16,7 @@ import {
   getNetworkRootRoutes,
   extractSafeAddress,
   SAFE_ROUTES,
+  GENERIC_APPS_ROUTE,
 } from './routes'
 import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
@@ -82,14 +83,33 @@ const Routes = (): React.ReactElement => {
           }
 
           if (lastSafe) {
-            const redirectPath = generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
-              shortName: getShortName(),
-              safeAddress: lastSafe,
-            })
-            return <Redirect to={`${redirectPath}${location.search}`} />
+            return (
+              <Redirect
+                to={generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
+                  shortName: getShortName(),
+                  safeAddress: lastSafe,
+                })}
+              />
+            )
           }
 
           return <Redirect to={WELCOME_ROUTE} />
+        }}
+      />
+
+      {/* Redirect /app/apps?appUrl=https://... to that app within the current Safe */}
+      <Route
+        exact
+        path={GENERIC_APPS_ROUTE}
+        render={() => {
+          if (!lastSafe) {
+            return <Redirect to={WELCOME_ROUTE} />
+          }
+          const redirectPath = generateSafeRoute(SAFE_ROUTES.APPS, {
+            shortName: getShortName(),
+            safeAddress: lastSafe,
+          })
+          return <Redirect to={`${redirectPath}${location.search}`} />
         }}
       />
 

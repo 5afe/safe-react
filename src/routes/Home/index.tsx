@@ -59,12 +59,8 @@ function Home(): ReactElement {
       </Row>
 
       <Row>
-        <Card>
-          <h2>Gas Fees</h2>
-        </Card>
+        <SafeApps />
       </Row>
-
-      <SafeApps />
     </Page>
   )
 }
