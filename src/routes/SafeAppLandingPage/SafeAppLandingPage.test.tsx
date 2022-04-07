@@ -188,4 +188,23 @@ describe('<SafeAppLandingPage>', () => {
       expect(window.location.pathname).toBe(WELCOME_ROUTE)
     })
   })
+
+  it('Redirects to the Welcome Page if Safe App details are missing and load Manifest.json fails', async () => {
+    // load manifest.json failed
+    jest.spyOn(appUtils, 'getAppInfoFromUrl').mockReturnValue(Promise.reject({}))
+
+    const SHARE_SAFE_APP_LINK = `share/safe-app?appUrl=${SAFE_APP_URL_FROM_MANIFEST}&chainId=${SAFE_APP_CHAIN_ID}`
+
+    history.push(SHARE_SAFE_APP_LINK)
+
+    render(<SafeAppLandingPage />)
+
+    // shows a Loader
+    const loaderNode = screen.getByRole('progressbar')
+    expect(loaderNode).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe(WELCOME_ROUTE)
+    })
+  })
 })
