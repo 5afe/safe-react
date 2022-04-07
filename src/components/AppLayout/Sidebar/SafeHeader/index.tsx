@@ -4,6 +4,7 @@ import {
   Icon,
   FixedIcon,
   Text,
+  Title,
   Identicon,
   Button,
   CopyToClipboardBtn,
@@ -13,6 +14,7 @@ import { useRouteMatch } from 'react-router-dom'
 
 import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
+import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo, getExplorerInfo } from 'src/config'
 import { border, fontColor } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
@@ -35,7 +37,7 @@ const Container = styled.div`
 
 const IdenticonContainer = styled.div`
   width: 100%;
-  margin: 8px;
+  margin: 14px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,8 +62,9 @@ const StyledIcon = styled(Icon)`
 const IconContainer = styled.div`
   width: 100px;
   display: flex;
-  padding: 4px 0;
+  gap: 8px;
   justify-content: space-evenly;
+  margin: 14px 0;
 `
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -72,12 +75,68 @@ const StyledButton = styled(Button)`
   }
 `
 
+const StyledExplorerButton = styled(ExplorerButton)`
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: #f0efee;
+
+  & .icon-color {
+    transition: fill 0.2s ease-in-out;
+  }
+
+  &:hover {
+    background-color: #effaf8;
+    & .icon-color {
+      fill: #008c73;
+    }
+  }
+`
+
+const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: #f0efee;
+
+  & .icon-color {
+    transition: fill 0.2s ease-in-out;
+  }
+
+  &:hover {
+    background-color: #effaf8;
+    & .icon-color {
+      fill: #008c73;
+    }
+  }
+`
+
+const StyledQRCodeButton = styled.button`
+  border: 0;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: #f0efee;
+
+  & .icon-color {
+    transition: fill 0.2s ease-in-out;
+  }
+
+  &:hover {
+    background-color: #effaf8;
+    & .icon-color {
+      fill: #008c73;
+    }
+  }
+`
+
 type StyledTextLabelProps = {
   chainInfo: ChainInfo
 }
 
 const StyledTextLabel = styled(Text)`
-  margin: -8px 0 4px -8px;
+  margin: -8px 0 0 -8px;
   padding: 4px 8px;
   width: 100%;
   text-align: center;
@@ -100,7 +159,7 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
 
 const StyledLabel = styled.div`
   background-color: ${({ theme }) => theme.colors.icon};
-  margin: 4px 0 0 0 !important;
+  margin: 0 0 14px 0 !important;
   padding: 4px 8px;
   border-radius: 4px;
   letter-spacing: 1px;
@@ -108,8 +167,8 @@ const StyledLabel = styled.div`
     line-height: 18px;
   }
 `
-const StyledText = styled(Text)`
-  margin: 8px 0 16px 0;
+const StyledText = styled(Title)`
+  margin: 0 0 14px 0;
 `
 
 type Props = {
@@ -170,21 +229,21 @@ const SafeHeader = ({
         </IdenticonContainer>
 
         {/* SafeInfo */}
-        <StyledTextSafeName size="lg" center>
+        <StyledTextSafeName size="xl" center>
           {safeName}
         </StyledTextSafeName>
         <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <Track {...OVERVIEW_EVENTS.SHOW_QR}>
-            <ButtonHelper onClick={onReceiveClick}>
+            <StyledQRCodeButton onClick={onReceiveClick}>
               <Icon size="sm" type="qrCode" tooltip="Show QR code" />
-            </ButtonHelper>
+            </StyledQRCodeButton>
           </Track>
           <Track {...OVERVIEW_EVENTS.COPY_ADDRESS}>
-            <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
+            <StyledCopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
           </Track>
           <Track {...OVERVIEW_EVENTS.OPEN_EXPLORER}>
-            <ExplorerButton explorerUrl={getExplorerInfo(address)} />
+            <StyledExplorerButton explorerUrl={getExplorerInfo(address)} />
           </Track>
         </IconContainer>
 
@@ -196,7 +255,10 @@ const SafeHeader = ({
           </StyledLabel>
         )}
 
-        <StyledText size="xl">{balance}</StyledText>
+        <Paragraph color="black400" noMargin size="md">
+          Total Balance
+        </Paragraph>
+        <StyledText size="xs">{balance}</StyledText>
         <Track {...OVERVIEW_EVENTS.NEW_TRANSACTION}>
           <StyledButton
             size="md"
@@ -206,7 +268,7 @@ const SafeHeader = ({
             onClick={onNewTransactionClick}
           >
             <FixedIcon type="arrowSentWhite" />
-            <Text size="xl" color="white">
+            <Text size="lg" color="white" strong>
               New transaction
             </Text>
           </StyledButton>
