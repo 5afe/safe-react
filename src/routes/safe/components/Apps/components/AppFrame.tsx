@@ -131,7 +131,11 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     if (appIsLoading && currentApp) {
       const trackData = loadFromStorage<AppTrackData>(APPS_DASHBOARD) || {}
-      saveToStorage(APPS_DASHBOARD, { ...trackData, [currentApp.id]: { timestamp: Date.now() } })
+      let currentOpenCount = trackData[currentApp.id]?.openCount
+      saveToStorage(APPS_DASHBOARD, {
+        ...trackData,
+        [currentApp.id]: { timestamp: Date.now(), openCount: currentOpenCount ? ++currentOpenCount : 1 },
+      })
       timer.current = window.setTimeout(() => {
         setIsLoadingSlow(true)
       }, SAFE_POLLING_INTERVAL)
