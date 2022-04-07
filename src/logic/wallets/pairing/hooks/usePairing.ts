@@ -43,20 +43,15 @@ const usePairing = (): { uri: string } => {
       onboard().walletSelect(PAIRING_MODULE_NAME)
     })
 
-    // Handle disconnection/session revocation
-    const restartPairingSession = () => {
-      onboard().walletReset()
-      createPairingSession()
-    }
-
-    provider.wc.on(WC_EVENT.DISCONNECT, restartPairingSession)
+    // Handle disconnection (`walletReset()` occurs inside pairing module)
+    provider.wc.on(WC_EVENT.DISCONNECT, createPairingSession)
     provider.wc.on(WC_EVENT.SESSION_UPDATE, (_, { params }) => {
       const didRevokeSession = params[0]?.approved === false
       if (didRevokeSession) {
-        restartPairingSession()
+        createPairingSession()
       }
     })
-  }, [WC_EVENTS, provider, updatePairingUri])
+  }, [WC_EVENTS, provider, updatePairingUri, createPairingSession])
 
   const cleanupCustomEventListeners = useCallback(() => {
     if (!preservedOnboardEvents) {

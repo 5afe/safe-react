@@ -71,16 +71,15 @@ const getPairingModule = (): WalletModule => {
   return {
     name,
     wallet: async ({ resetWalletState }) => {
-      const onDisconnect = () => resetWalletState({ walletName: name, disconnected: true })
-
-      // Enable provider so as to connect previously interrupted sessions
-      const hasCachedSession = provider.wc.session.connected
-      if (hasCachedSession) {
+      // Enable provider when a previously interrupted session exists
+      if (provider.wc.session.connected) {
         provider.enable()
-        provider.wc.on('disconnect', onDisconnect)
       }
 
-      // Kill session is module unmounts (non-pairing wallet connects)
+      const onDisconnect = () => resetWalletState({ walletName: name, disconnected: true })
+      provider.wc.on('disconnect', onDisconnect)
+
+      // Kill session if module unmounts (a non-pairing wallet connects)
       window.addEventListener('unload', onDisconnect, { once: true })
 
       return {
