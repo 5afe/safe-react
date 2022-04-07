@@ -1,21 +1,26 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener'
 import RadioGroup from '@material-ui/core/RadioGroup/RadioGroup'
 import Radio from '@material-ui/core/Radio/Radio'
 import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import type { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/components/forms/RHF/RHFTextField'
 import RHFAddressSearchField from 'src/components/forms/RHF/RHFAddressSearchField'
-
-import { lg, md, primary300, grey400, largeFontSize } from 'src/theme/variables'
 import RHFModuleSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFModuleSearchField'
+import BackdropLayout from 'src/components/layout/Backdrop'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
+
+import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
 
 enum FilterType {
   INCOMING = 'Incoming',
@@ -71,6 +76,12 @@ const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
 }
 
 const Filter = (): ReactElement => {
+  const [showFilter, setShowFilter] = useState<boolean>(true)
+
+  const onClickAway = () => setShowFilter(false)
+
+  const toggleFilter = () => setShowFilter((prev) => !prev)
+
   const { handleSubmit, formState, reset, watch, control } = useForm<FilterForm>({
     defaultValues: {
       [TYPE_FIELD_NAME]: FilterType.INCOMING,
@@ -99,85 +110,118 @@ const Filter = (): ReactElement => {
   }
 
   return (
-    <Wrapper>
-      <StyledPaper elevation={0} variant="outlined">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FilterWrapper>
-            <StyledTxTypeFormControl>
-              <StyledFormLabel>Transaction type</StyledFormLabel>
-              <Controller
-                name={TYPE_FIELD_NAME}
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup {...field}>
-                    {Object.values(FilterType).map((value) => (
-                      <StyledRadioFormControlLabel value={value} control={<Radio />} label={value} key={value} />
-                    ))}
-                  </RadioGroup>
-                )}
-              />
-            </StyledTxTypeFormControl>
-            <ParamsFormControl>
-              <StyledFormLabel>Parameters</StyledFormLabel>
-              <ParametersFormWrapper>
-                <RHFTextField name={FROM_FIELD_NAME} label="From" type="date" control={control} />
-                <RHFTextField name={TO_FIELD_NAME} label="To" type="date" control={control} />
-                <RHFAddressSearchField name={RECIPIENT_FIELD_NAME} label="Recipient" control={control} />
-                {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
-                  <>
-                    <RHFTextField
-                      name={AMOUNT_FIELD_NAME}
-                      label="Amount"
+    <>
+      <BackdropLayout isOpen={showFilter} />
+      <ClickAwayListener onClickAway={onClickAway}>
+        <Wrapper>
+          <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
+            <StyledFilterIconImage src={filterIcon} /> Filters{' '}
+            {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}
+          </StyledFilterButton>
+          {showFilter && (
+            <StyledPaper elevation={0} variant="outlined">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <FilterWrapper>
+                  <StyledTxTypeFormControl>
+                    <StyledFormLabel>Transaction type</StyledFormLabel>
+                    <Controller
+                      name={TYPE_FIELD_NAME}
                       control={control}
-                      rules={{
-                        validate: isValidAmount,
-                      }}
+                      render={({ field }) => (
+                        <RadioGroup {...field}>
+                          {Object.values(FilterType).map((value) => (
+                            <StyledRadioFormControlLabel value={value} control={<Radio />} label={value} key={value} />
+                          ))}
+                        </RadioGroup>
+                      )}
                     />
-                    {type === FilterType.INCOMING && (
-                      <RHFTextField
-                        name={TOKEN_ADDRESS_FIELD_NAME}
-                        label="Token Address"
-                        control={control}
-                        rules={{
-                          validate: isValidTokenAddress,
-                        }}
-                      />
-                    )}
-                    {type === FilterType.MULTISIG && (
-                      <RHFTextField
-                        name={NONCE_FIELD_NAME}
-                        label="Nonce"
-                        control={control}
-                        rules={{
-                          validate: isValidNonce,
-                        }}
-                      />
-                    )}
-                  </>
-                )}
-                {type === FilterType.MODULE && (
-                  <RHFModuleSearchField name={MODULE_FIELD_NAME} label="Module" control={control} />
-                )}
-              </ParametersFormWrapper>
-              <ButtonWrapper>
-                <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
-                  Apply
-                </Button>
-                <Button variant="contained" onClick={onClear} disabled={!isClearable} color="gray">
-                  Clear
-                </Button>
-              </ButtonWrapper>
-            </ParamsFormControl>
-          </FilterWrapper>
-        </form>
-      </StyledPaper>
-    </Wrapper>
+                  </StyledTxTypeFormControl>
+                  <ParamsFormControl>
+                    <StyledFormLabel>Parameters</StyledFormLabel>
+                    <ParametersFormWrapper>
+                      <RHFTextField name={FROM_FIELD_NAME} label="From" type="date" control={control} />
+                      <RHFTextField name={TO_FIELD_NAME} label="To" type="date" control={control} />
+                      <RHFAddressSearchField name={RECIPIENT_FIELD_NAME} label="Recipient" control={control} />
+                      {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
+                        <>
+                          <RHFTextField
+                            name={AMOUNT_FIELD_NAME}
+                            label="Amount"
+                            control={control}
+                            rules={{
+                              validate: isValidAmount,
+                            }}
+                          />
+                          {type === FilterType.INCOMING && (
+                            <RHFTextField
+                              name={TOKEN_ADDRESS_FIELD_NAME}
+                              label="Token Address"
+                              control={control}
+                              rules={{
+                                validate: isValidTokenAddress,
+                              }}
+                            />
+                          )}
+                          {type === FilterType.MULTISIG && (
+                            <RHFTextField
+                              name={NONCE_FIELD_NAME}
+                              label="Nonce"
+                              control={control}
+                              rules={{
+                                validate: isValidNonce,
+                              }}
+                            />
+                          )}
+                        </>
+                      )}
+                      {type === FilterType.MODULE && (
+                        <RHFModuleSearchField name={MODULE_FIELD_NAME} label="Module" control={control} />
+                      )}
+                    </ParametersFormWrapper>
+                    <ButtonWrapper>
+                      <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
+                        Apply
+                      </Button>
+                      <Button variant="contained" onClick={onClear} disabled={!isClearable} color="gray">
+                        Clear
+                      </Button>
+                    </ButtonWrapper>
+                  </ParamsFormControl>
+                </FilterWrapper>
+              </form>
+            </StyledPaper>
+          )}
+        </Wrapper>
+      </ClickAwayListener>
+    </>
   )
 }
 
 export default Filter
 
+const StyledFilterButton = styled(Button)`
+  &.MuiButton-root {
+    align-items: center;
+    background-color: ${primary200};
+    border: 2px solid ${primary300};
+    color: #162d45;
+    align-self: flex-end;
+    margin-right: ${md};
+    margin-top: -51px;
+    margin-bottom: ${md};
+    &:hover {
+      background-color: ${primary200};
+    }
+  }
+`
+
+const StyledFilterIconImage = styled.img`
+  margin-right: ${sm};
+`
+
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   position: relative;
   z-index: 1;
