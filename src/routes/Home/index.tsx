@@ -5,6 +5,7 @@ import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-compo
 import Page from 'src/components/layout/Page'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
+import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
 
 import AddSafeWidget from 'src/components/Dashboard/AddSafe'
 import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
@@ -51,8 +52,11 @@ function Home(): ReactElement {
 
         <Card>
           <h2>Transactions to Sign</h2>
+          <PendingTxsList />
         </Card>
+      </Row>
 
+      <Row>
         <Card>
           <h2>Gas Fees</h2>
         </Card>
