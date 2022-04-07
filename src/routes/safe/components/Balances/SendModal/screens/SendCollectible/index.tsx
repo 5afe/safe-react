@@ -212,7 +212,7 @@ const SendCollectible = ({
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph color="disabled" noMargin size="md">
-                      Collectible
+                      NFT collection
                     </Paragraph>
                   </Col>
                 </Row>
