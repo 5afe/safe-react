@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useLocation, matchPath } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
@@ -37,6 +37,16 @@ const BodyWrapper = styled.div`
   flex-direction: row;
 `
 
+const slideIn = keyframes`
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-95%);
+  }
+`
+
 const SidebarWrapper = styled.aside`
   height: 100%;
   width: 200px;
@@ -55,6 +65,7 @@ const SidebarWrapper = styled.aside`
     left: 0;
     transition: transform 200ms ease-out;
     transform: translateX(${({ $expanded }: { $expanded: boolean }) => ($expanded ? '0' : '-95%')});
+    animation: ${slideIn} 300ms ease-in;
   }
 `
 
