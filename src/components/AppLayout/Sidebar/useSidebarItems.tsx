@@ -35,7 +35,7 @@ const useSidebarItems = (): ListItemType[] => {
       label,
       badge,
       disabled,
-      icon: <ListIcon type={iconType} />,
+      icon: <ListIcon type={iconType} size="sm" color="text" />,
       selected: href === matchSafeWithSidebarSection?.url,
       href,
       subItems,
@@ -104,18 +104,18 @@ const useSidebarItems = (): ListItemType[] => {
 
     return [
       makeEntryItem({
-        label: 'ASSETS',
+        label: 'Assets',
         iconType: 'assets',
         href: currentSafeRoutes.ASSETS_BALANCES,
         subItems: assetsSubItems,
       }),
       makeEntryItem({
-        label: 'TRANSACTIONS',
+        label: 'Transactions',
         iconType: 'transactionsInactive',
         href: currentSafeRoutes.TRANSACTIONS_HISTORY,
       }),
       makeEntryItem({
-        label: 'ADDRESS BOOK',
+        label: 'Address Book',
         iconType: 'addressBook',
         href: currentSafeRoutes.ADDRESS_BOOK,
       }),
