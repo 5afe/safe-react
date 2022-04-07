@@ -23,6 +23,7 @@ export interface AppManifest {
   providedBy: string
 }
 
+export const APPS_DASHBOARD = 'APPS_DASHBOARD'
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
 export const EMPTY_SAFE_APP = 'unknown'
