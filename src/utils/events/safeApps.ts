@@ -22,6 +22,14 @@ const SAFE_APPS = {
     event: GTM_EVENT.META,
     action: 'Add custom Safe App',
   },
+  TRANSACTION_CONFIRMED: {
+    event: GTM_EVENT.META,
+    action: 'Transaction Confirmed',
+  },
+  TRANSACTION_REJECTED: {
+    event: GTM_EVENT.META,
+    action: 'Transaction Rejected',
+  },
 }
 
 const SAFE_APPS_CATEGORY = 'safe-apps'

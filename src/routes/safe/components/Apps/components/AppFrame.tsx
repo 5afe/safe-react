@@ -35,7 +35,7 @@ import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
-import { GTM_EVENT, trackEvent, trackSafeAppEvent } from 'src/utils/googleTagManager'
+import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const AppWrapper = styled.div`
@@ -85,8 +85,6 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
-const TX_CONFIRM = 'txConfirm'
-const TX_REJECT = 'txReject'
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
@@ -294,12 +292,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     // Safe Apps SDK V2 Handler
     communicator?.send({ safeTxHash }, requestId as string)
 
-    trackSafeAppEvent({
-      event: GTM_EVENT.SAFE_APP,
-      app: safeApp,
-      method: TX_CONFIRM,
-      params: safeTxHash,
-    })
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_CONFIRMED, label: safeApp.name })
   }
 
   const onTxReject = (requestId: RequestId) => {
@@ -312,12 +305,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     // Safe Apps SDK V2 Handler
     communicator?.send('Transaction was rejected', requestId as string, true)
 
-    trackSafeAppEvent({
-      event: GTM_EVENT.SAFE_APP,
-      app: safeApp,
-      method: TX_REJECT,
-      params: requestId,
-    })
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
   }
 
   useEffect(() => {

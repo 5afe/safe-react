@@ -19,7 +19,7 @@ import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getLegacyChainName } from '../utils'
 import { THIRD_PARTY_COOKIES_CHECK_URL } from './useThirdPartyCookies'
-import { GTM_EVENT, trackSafeAppEvent } from 'src/utils/googleTagManager'
+import { trackSafeAppEvent } from 'src/utils/googleTagManager'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -67,11 +67,8 @@ const useIframeMessageHandler = (
       }
 
       trackSafeAppEvent({
-        event: GTM_EVENT.SAFE_APP,
         app: selectedApp,
         method: messageId,
-        params: undefined,
-        deprecated: true,
       })
 
       switch (messageId) {
