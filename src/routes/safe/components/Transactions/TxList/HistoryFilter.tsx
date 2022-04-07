@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import RadioGroup from '@material-ui/core/RadioGroup/RadioGroup'
@@ -9,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabe
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/components/forms/RHF/RHFTextField'
+import RHFAddressSearchField from 'src/components/forms/RHF/RHFAddressSearchField'
 
 import { lg, md, primary300, grey400, largeFontSize } from 'src/theme/variables'
 
@@ -31,8 +33,8 @@ type FilterForm = {
   nonce: number
 }
 
-const HistoryFilter = () => {
-  const { handleSubmit, formState, control, reset, watch } = useForm<FilterForm>({
+const HistoryFilter = (): ReactElement => {
+  const { handleSubmit, formState, reset, watch, control } = useForm<FilterForm>({
     defaultValues: {
       type: FilterType.INCOMING,
       from: undefined,
@@ -54,7 +56,8 @@ const HistoryFilter = () => {
     reset({ type })
   }
 
-  const onSubmit = ({ type: _, ...filter }: FilterForm) => {
+  const onSubmit = ({ type: _, ...rest }: FilterForm) => {
+    const filter = Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined))
     console.log(filter)
   }
 
@@ -80,19 +83,21 @@ const HistoryFilter = () => {
             <ParamsFormControl>
               <StyledFormLabel>Parameters</StyledFormLabel>
               <ParametersFormWrapper>
-                <RHFTextField name="from" control={control} label="From" />
-                <RHFTextField name="to" control={control} label="To" />
-                <RHFTextField name="recipient" control={control} label="Recipient" />
+                <RHFTextField name="from" label="From" type="date" control={control} />
+                <RHFTextField name="to" label="To" type="date" control={control} />
+                {/* <RHFTextField name="recipient" label="Recipient" />
+                 */}
+                <RHFAddressSearchField name="recipient" label="Recipient" control={control} />
                 {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
                   <>
-                    <RHFTextField name="amount" control={control} label="Amount" />
+                    <RHFTextField name="amount" label="Amount" control={control} />
                     {type === FilterType.INCOMING && (
-                      <RHFTextField name="tokenAddress" control={control} label="Token Address" />
+                      <RHFTextField name="tokenAddress" label="Token Address" control={control} />
                     )}
-                    {type === FilterType.MULTISIG && <RHFTextField name="nonce" control={control} label="Nonce" />}
+                    {type === FilterType.MULTISIG && <RHFTextField name="nonce" label="Nonce" control={control} />}
                   </>
                 )}
-                {type === FilterType.MODULE && <RHFTextField name="module" control={control} label="Module" />}
+                {type === FilterType.MODULE && <RHFTextField name="module" label="Module" control={control} />}
               </ParametersFormWrapper>
               <ButtonWrapper>
                 <Button type="submit" variant="contained" disabled={!isClearable} color="primary">

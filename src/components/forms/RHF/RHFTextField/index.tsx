@@ -1,5 +1,5 @@
 import { ComponentProps, HTMLInputTypeAttribute, ReactElement } from 'react'
-import { Controller, Control } from 'react-hook-form'
+import { Control, Controller } from 'react-hook-form'
 import TextField from '@material-ui/core/TextField/TextField'
 
 type Props = {
@@ -10,13 +10,20 @@ type Props = {
   type?: HTMLInputTypeAttribute
 }
 
-const RHFTextField = ({ name, control, rules, ...props }: Props): ReactElement => (
+const RHFTextField = ({ name, rules, control, ...props }: Props): ReactElement => (
   <Controller
     name={name}
     control={control}
     rules={rules}
     render={({ field: { ref, ...field }, fieldState }) => (
-      <TextField innerRef={ref} {...field} {...props} variant="outlined" error={!!fieldState.error} />
+      <TextField
+        innerRef={ref}
+        {...field}
+        {...props}
+        variant="outlined"
+        error={!!fieldState.error}
+        InputLabelProps={{ shrink: props.type === 'date' || Boolean(field.value) }}
+      />
     )}
   />
 )
