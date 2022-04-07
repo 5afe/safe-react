@@ -22,12 +22,6 @@ import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/fi
 
 import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
 
-enum FilterType {
-  INCOMING = 'Incoming',
-  MODULE = 'Module',
-  MULTISIG = 'Multisignature',
-}
-
 // Types cannot take computed property names
 const TYPE_FIELD_NAME = 'type'
 const FROM_FIELD_NAME = 'from'
@@ -37,6 +31,12 @@ const AMOUNT_FIELD_NAME = 'amount'
 const TOKEN_ADDRESS_FIELD_NAME = 'tokenAddress'
 const MODULE_FIELD_NAME = 'module'
 const NONCE_FIELD_NAME = 'nonce'
+
+enum FilterType {
+  INCOMING = 'Incoming',
+  MODULE = 'Module',
+  MULTISIG = 'Multisignature',
+}
 
 type FilterForm = {
   [TYPE_FIELD_NAME]: FilterType
@@ -76,7 +76,7 @@ const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
 }
 
 const Filter = (): ReactElement => {
-  const [showFilter, setShowFilter] = useState<boolean>(true)
+  const [showFilter, setShowFilter] = useState<boolean>(false)
 
   const onClickAway = () => setShowFilter(false)
 
@@ -100,9 +100,7 @@ const Filter = (): ReactElement => {
 
   const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
 
-  const onClear = () => {
-    reset({ type })
-  }
+  const onClear = () => reset({ type })
 
   const onSubmit = ({ type: _, ...rest }: FilterForm) => {
     const filter = Object.fromEntries(Object.entries(rest).filter(([, value]) => Boolean(value)))
