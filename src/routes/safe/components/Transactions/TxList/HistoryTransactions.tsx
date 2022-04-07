@@ -11,7 +11,7 @@ import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import Img from 'src/components/layout/Img'
 import NoTransactionsImage from './assets/no-transactions.svg'
 import Button from 'src/components/layout/Button'
-import HistoryFilter from './HistoryFilter'
+import Filter from './Filter'
 import filterIcon from './assets/filter-icon.svg'
 
 import { md, sm, primary300, primary200 } from 'src/theme/variables'
@@ -47,7 +47,7 @@ export const HistoryTransactions = (): ReactElement => {
         <StyledFilterIconImage src={filterIcon} /> Filters{' '}
         {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}
       </StyledFilterButton>
-      {showFilter && <HistoryFilter />}
+      {showFilter && <Filter />}
       <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
         <HistoryTxList transactions={transactions} />
       </TxsInfiniteScroll>

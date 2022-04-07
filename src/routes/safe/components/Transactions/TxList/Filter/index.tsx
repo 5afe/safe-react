@@ -13,6 +13,8 @@ import RHFTextField from 'src/components/forms/RHF/RHFTextField'
 import RHFAddressSearchField from 'src/components/forms/RHF/RHFAddressSearchField'
 
 import { lg, md, primary300, grey400, largeFontSize } from 'src/theme/variables'
+import RHFModuleSearchField from './RHFModuleSearchField'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 enum FilterType {
   INCOMING = 'Incoming',
@@ -33,7 +35,7 @@ type FilterForm = {
   nonce: number
 }
 
-const HistoryFilter = (): ReactElement => {
+const Filter = (): ReactElement => {
   const { handleSubmit, formState, reset, watch, control } = useForm<FilterForm>({
     defaultValues: {
       type: FilterType.INCOMING,
@@ -92,15 +94,23 @@ const HistoryFilter = (): ReactElement => {
                   <>
                     <RHFTextField name="amount" label="Amount" control={control} />
                     {type === FilterType.INCOMING && (
-                      <RHFTextField name="tokenAddress" label="Token Address" control={control} />
+                      <RHFTextField
+                        name="tokenAddress"
+                        label="Token Address"
+                        control={control}
+                        rules={{
+                          validate: (address: string) =>
+                            (address ? isValidAddress(address) : true) || 'Invalid address',
+                        }}
+                      />
                     )}
                     {type === FilterType.MULTISIG && <RHFTextField name="nonce" label="Nonce" control={control} />}
                   </>
                 )}
-                {type === FilterType.MODULE && <RHFTextField name="module" label="Module" control={control} />}
+                {type === FilterType.MODULE && <RHFModuleSearchField name="module" label="Module" control={control} />}
               </ParametersFormWrapper>
               <ButtonWrapper>
-                <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
+                <Button type="submit" variant="contained" color="primary">
                   Apply
                 </Button>
                 <Button variant="contained" onClick={onClear} disabled={!isClearable} color="gray">
@@ -115,7 +125,7 @@ const HistoryFilter = (): ReactElement => {
   )
 }
 
-export default HistoryFilter
+export default Filter
 
 const Wrapper = styled.div`
   box-sizing: border-box;

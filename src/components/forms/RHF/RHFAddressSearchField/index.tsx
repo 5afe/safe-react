@@ -1,5 +1,5 @@
-import { ComponentProps, HTMLInputTypeAttribute, ReactElement, useState } from 'react'
-import { Control, Controller, useController } from 'react-hook-form'
+import { HTMLInputTypeAttribute, ReactElement, useState } from 'react'
+import { Control, useController } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete'
 import { InputBaseComponentProps } from '@material-ui/core/InputBase/InputBase'
@@ -17,12 +17,11 @@ import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 type Props = {
   name: string
   control: Control<any, unknown>
-  rules?: ComponentProps<typeof Controller>['rules']
   label: string
   type?: HTMLInputTypeAttribute
 }
 
-const RHFAddressSearchField = ({ name, rules, control, ...props }: Props): ReactElement => {
+const RHFAddressSearchField = ({ name, control, ...props }: Props): ReactElement => {
   const showChainPrefix = useSelector(showShortNameSelector)
   const addressBookOnChain = useSelector(currentNetworkAddressBook)
 
@@ -32,7 +31,7 @@ const RHFAddressSearchField = ({ name, rules, control, ...props }: Props): React
   const { field, fieldState } = useController({
     name,
     control,
-    rules,
+    rules: { validate: (address: string) => (address ? isValidAddress(address) : true) || 'Recipient not found' },
   })
 
   const onInputChange = async (newValue: string) => {
@@ -47,7 +46,7 @@ const RHFAddressSearchField = ({ name, rules, control, ...props }: Props): React
       return
     }
 
-    const { address } = parsePrefixedAddress(newValue)
+    const { address } = parsePrefixedAddress(newValue.trim())
     if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
       setIsResolvingDomain(true)
       const resolvedAddress = await getAddressFromDomain(address)
@@ -80,32 +79,43 @@ const RHFAddressSearchField = ({ name, rules, control, ...props }: Props): React
       options={addressBookOnChain}
       getOptionLabel={({ name }) => name}
       onInputChange={(_, value) => onInputChange(value)}
-      renderInput={({ inputProps, InputProps, ...params }) => (
-        <TextField
-          innerRef={field.ref}
-          {...params}
-          {...props}
-          name={name}
-          variant="outlined"
-          error={!!fieldState.error}
-          inputProps={{
-            ...inputProps,
-            value: formatValue((inputProps as InputBaseComponentProps).value),
-            readOnly: isResolvingDomain,
-            className: undefined, // Remove style override
-          }}
-          InputProps={{
-            ...InputProps,
-            endAdornment: isResolvingDomain ? (
-              <InputAdornment position="end">
-                <CircularProgress size="16px" />
-              </InputAdornment>
-            ) : (
-              InputProps.endAdornment
-            ),
-          }}
-        />
-      )}
+      renderInput={({ inputProps, InputProps, ...params }) => {
+        const { value } = inputProps as InputBaseComponentProps
+        return (
+          <TextField
+            innerRef={field.ref}
+            {...params}
+            {...props}
+            name={name}
+            variant="outlined"
+            error={!!fieldState.error}
+            // Show the address as helperText if the input value is an address book entry or domain
+            helperText={
+              fieldState.error?.message
+                ? fieldState.error.message
+                : field.value && field.value !== value
+                ? formatValue(field.value)
+                : undefined
+            }
+            inputProps={{
+              ...inputProps,
+              value: formatValue(value),
+              readOnly: isResolvingDomain,
+              className: undefined, // Remove style override
+            }}
+            InputProps={{
+              ...InputProps,
+              endAdornment: isResolvingDomain ? (
+                <InputAdornment position="end">
+                  <CircularProgress size="16px" />
+                </InputAdornment>
+              ) : (
+                InputProps.endAdornment
+              ),
+            }}
+          />
+        )
+      }}
     />
   )
 }
