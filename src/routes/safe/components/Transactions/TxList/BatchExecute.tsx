@@ -185,33 +185,35 @@ export const BatchExecute = React.memo((): ReactElement => {
             />
           </Row>
           <Row margin="md">
-            {batchableTransactions.map((transaction) => {
-              if (!transaction.txDetails?.txData) return null
+            <div>
+              {batchableTransactions.map((transaction) => {
+                if (!transaction.txDetails?.txData) return null
 
-              const tx = {
-                to: getTxRecipient(transaction.txInfo, safeAddress),
-                value: getTxValue(transaction.txInfo, transaction.txDetails),
-                data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
-              }
-              const decodedDataParams: DecodedDataParameterValue = {
-                operation: 0,
-                to: tx.to,
-                value: tx.value,
-                data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
-                dataDecoded: null,
-              }
-
-              if (isCustomTxInfo(transaction.txInfo) && transaction.txInfo.isCancellation) {
-                decodedDataParams.dataDecoded = {
-                  method: 'On-chain rejection',
-                  parameters: [],
+                const tx = {
+                  to: getTxRecipient(transaction.txInfo, safeAddress),
+                  value: getTxValue(transaction.txInfo, transaction.txDetails),
+                  data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
                 }
-              }
+                const decodedDataParams: DecodedDataParameterValue = {
+                  operation: 0,
+                  to: tx.to,
+                  value: tx.value,
+                  data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
+                  dataDecoded: null,
+                }
 
-              const decodedData = transaction.txDetails?.txData.dataDecoded || decodedDataParams
+                if (isCustomTxInfo(transaction.txInfo) && transaction.txInfo.isCancellation) {
+                  decodedDataParams.dataDecoded = {
+                    method: 'On-chain rejection',
+                    parameters: [],
+                  }
+                }
 
-              return <DecodeTxs txs={[tx]} decodedData={decodedData as DecodedTxDetailType} key={transaction.id} />
-            })}
+                const decodedData = transaction.txDetails?.txData.dataDecoded || decodedDataParams
+
+                return <DecodeTxs txs={[tx]} decodedData={decodedData as DecodedTxDetailType} key={transaction.id} />
+              })}
+            </div>
           </Row>
           <Paragraph size="md" align="center" color="disabled" noMargin>
             This feature is still in experimental mode. Be aware, that if one of the included transactions fails, all
