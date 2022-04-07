@@ -43,11 +43,6 @@ const RHFAddressSearchField = ({ name, control, ...props }: Props): ReactElement
   })
 
   const onInputChange = async (newValue: string) => {
-    if (!newValue) {
-      field.onChange(undefined)
-      return
-    }
-
     const addressBookEntry = addressBookOnChain.find(({ name }) => name === newValue)
     if (addressBookEntry) {
       field.onChange(addressBookEntry.address)
@@ -68,11 +63,6 @@ const RHFAddressSearchField = ({ name, control, ...props }: Props): ReactElement
   }
 
   const formatValue = (value: string) => {
-    // Field has likely been reset
-    if (field.value === undefined) {
-      return ''
-    }
-
     const { prefix, address } = parsePrefixedAddress(value)
     if (isValidAddress(address)) {
       return showChainPrefix ? `${prefix}:${address}` : address

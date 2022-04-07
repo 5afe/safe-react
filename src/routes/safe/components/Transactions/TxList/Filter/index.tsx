@@ -14,7 +14,7 @@ import RHFTextField from 'src/components/forms/RHF/RHFTextField'
 import RHFAddressSearchField from 'src/components/forms/RHF/RHFAddressSearchField'
 
 import { lg, md, primary300, grey400, largeFontSize } from 'src/theme/variables'
-import RHFModuleSearchField from './RHFModuleSearchField'
+import RHFModuleSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFModuleSearchField'
 import { isValidAddress } from 'src/utils/isValidAddress'
 
 enum FilterType {
@@ -23,15 +23,25 @@ enum FilterType {
   MULTISIG = 'Multisignature',
 }
 
+// Types cannot take computed property names
+const TYPE_FIELD_NAME = 'type'
+const FROM_FIELD_NAME = 'from'
+const TO_FIELD_NAME = 'to'
+const RECIPIENT_FIELD_NAME = 'recipient'
+const AMOUNT_FIELD_NAME = 'amount'
+const TOKEN_ADDRESS_FIELD_NAME = 'tokenAddress'
+const MODULE_FIELD_NAME = 'module'
+const NONCE_FIELD_NAME = 'nonce'
+
 type FilterForm = {
-  type: FilterType
-  from: number
-  to: number
-  recipient: string
-  amount: number
-  tokenAddress: string
-  module: SettingsInfo['type']
-  nonce: number
+  [TYPE_FIELD_NAME]: FilterType
+  [FROM_FIELD_NAME]: string
+  [TO_FIELD_NAME]: string
+  [RECIPIENT_FIELD_NAME]: string
+  [AMOUNT_FIELD_NAME]: string
+  [TOKEN_ADDRESS_FIELD_NAME]: string
+  [MODULE_FIELD_NAME]: SettingsInfo['type']
+  [NONCE_FIELD_NAME]: string
 }
 
 const isValidAmount = (value: FilterForm['amount']): string | undefined => {
@@ -47,6 +57,10 @@ const isValidTokenAddress = (value: FilterForm['tokenAddress']): string | undefi
 }
 
 const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
+  if (value.length === 0) {
+    return
+  }
+
   const number = Number(value)
   if (isNaN(number)) {
     return 'Invalid number'
@@ -59,28 +73,28 @@ const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
 const Filter = (): ReactElement => {
   const { handleSubmit, formState, reset, watch, control } = useForm<FilterForm>({
     defaultValues: {
-      type: FilterType.INCOMING,
-      from: undefined,
-      to: undefined,
-      recipient: undefined,
-      amount: undefined,
-      tokenAddress: undefined,
-      module: undefined,
-      nonce: undefined,
+      [TYPE_FIELD_NAME]: FilterType.INCOMING,
+      [FROM_FIELD_NAME]: '',
+      [TO_FIELD_NAME]: '',
+      [RECIPIENT_FIELD_NAME]: '',
+      [AMOUNT_FIELD_NAME]: '',
+      [TOKEN_ADDRESS_FIELD_NAME]: '',
+      [MODULE_FIELD_NAME]: undefined,
+      [NONCE_FIELD_NAME]: '',
     },
     shouldUnregister: true, // Remove values of unmounted inputs
   })
 
-  const type = watch('type')
+  const type = watch(TYPE_FIELD_NAME)
 
-  const isClearable = formState.isDirty && !formState.dirtyFields.type
+  const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
 
   const onClear = () => {
     reset({ type })
   }
 
   const onSubmit = ({ type: _, ...rest }: FilterForm) => {
-    const filter = Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined))
+    const filter = Object.fromEntries(Object.entries(rest).filter(([, value]) => Boolean(value)))
     console.log(filter)
   }
 
@@ -92,7 +106,7 @@ const Filter = (): ReactElement => {
             <StyledTxTypeFormControl>
               <StyledFormLabel>Transaction type</StyledFormLabel>
               <Controller
-                name="type"
+                name={TYPE_FIELD_NAME}
                 control={control}
                 render={({ field }) => (
                   <RadioGroup {...field}>
@@ -106,15 +120,13 @@ const Filter = (): ReactElement => {
             <ParamsFormControl>
               <StyledFormLabel>Parameters</StyledFormLabel>
               <ParametersFormWrapper>
-                <RHFTextField name="from" label="From" type="date" control={control} />
-                <RHFTextField name="to" label="To" type="date" control={control} />
-                {/* <RHFTextField name="recipient" label="Recipient" />
-                 */}
-                <RHFAddressSearchField name="recipient" label="Recipient" control={control} />
+                <RHFTextField name={FROM_FIELD_NAME} label="From" type="date" control={control} />
+                <RHFTextField name={TO_FIELD_NAME} label="To" type="date" control={control} />
+                <RHFAddressSearchField name={RECIPIENT_FIELD_NAME} label="Recipient" control={control} />
                 {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
                   <>
                     <RHFTextField
-                      name="amount"
+                      name={AMOUNT_FIELD_NAME}
                       label="Amount"
                       control={control}
                       rules={{
@@ -123,7 +135,7 @@ const Filter = (): ReactElement => {
                     />
                     {type === FilterType.INCOMING && (
                       <RHFTextField
-                        name="tokenAddress"
+                        name={TOKEN_ADDRESS_FIELD_NAME}
                         label="Token Address"
                         control={control}
                         rules={{
@@ -133,7 +145,7 @@ const Filter = (): ReactElement => {
                     )}
                     {type === FilterType.MULTISIG && (
                       <RHFTextField
-                        name="nonce"
+                        name={NONCE_FIELD_NAME}
                         label="Nonce"
                         control={control}
                         rules={{
@@ -143,10 +155,12 @@ const Filter = (): ReactElement => {
                     )}
                   </>
                 )}
-                {type === FilterType.MODULE && <RHFModuleSearchField name="module" label="Module" control={control} />}
+                {type === FilterType.MODULE && (
+                  <RHFModuleSearchField name={MODULE_FIELD_NAME} label="Module" control={control} />
+                )}
               </ParametersFormWrapper>
               <ButtonWrapper>
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
                   Apply
                 </Button>
                 <Button variant="contained" onClick={onClear} disabled={!isClearable} color="gray">

@@ -78,23 +78,21 @@ const RHFModuleSearchField = ({ name, control, ...props }: Props): ReactElement 
       onChange={(_, module) => field.onChange(module?.type || undefined)}
       noOptionsText="No module found"
       fullWidth={false}
-      renderInput={({ inputProps, ...params }) => {
-        return (
-          <TextField
-            innerRef={field.ref}
-            {...params}
-            {...props}
-            name={name}
-            variant="outlined"
-            error={!!fieldState.error}
-            helperText={fieldState.error?.message}
-            inputProps={{
-              ...inputProps,
-              className: undefined, // Remove style override
-            }}
-          />
-        )
-      }}
+      renderInput={({ inputProps, ...params }) => (
+        <TextField
+          innerRef={field.ref}
+          {...params}
+          {...props}
+          name={name}
+          variant="outlined"
+          error={!!fieldState.error}
+          helperText={fieldState.error?.message}
+          inputProps={{
+            ...inputProps,
+            className: undefined, // Remove style override
+          }}
+        />
+      )}
     />
   )
 }

@@ -23,7 +23,7 @@ const RHFTextField = ({ name, rules, control, ...props }: Props): ReactElement =
         variant="outlined"
         error={!!fieldState.error}
         helperText={fieldState.error?.message}
-        InputLabelProps={{ shrink: props.type === 'date' || Boolean(field.value) }}
+        InputLabelProps={{ shrink: props.type === 'date' || !!field.value }}
       />
     )}
   />
