@@ -194,7 +194,7 @@ export const getSafeAppName = (safeApp?: SafeApp): string => {
   try {
     const parsedSafeApp = JSON.parse(safeApp.id)
 
-    return parsedSafeApp.name || parsedSafeApp.url || parsedSafeApp
+    return parsedSafeApp.name || parsedSafeApp.url
   } catch (error) {
     return EMPTY_SAFE_APP
   }
