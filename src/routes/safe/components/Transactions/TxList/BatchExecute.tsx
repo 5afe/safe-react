@@ -41,15 +41,50 @@ import { DecodedTxDetailType } from 'src/routes/safe/components/Apps/components/
 import { DecodeTxs } from 'src/components/DecodeTxs'
 import { DecodedDataParameterValue } from '@gnosis.pm/safe-react-gateway-sdk'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { Skeleton } from '@material-ui/lab'
 
-async function getBatchExecuteData(
-  dispatch: Dispatch,
-  transactions: Transaction[],
-  safeInstance: GnosisSafe,
-  safeAddress: string,
-  account: string,
-) {
-  const batchableTransactionsWithDetails = await Promise.all(
+const DecodedTransactions = ({
+  transactions,
+  safeAddress,
+}: {
+  transactions: Transaction[]
+  safeAddress: string
+}): ReactElement => {
+  return (
+    <div>
+      {transactions.map((transaction) => {
+        if (!transaction.txDetails?.txData) return null
+
+        const tx = {
+          to: getTxRecipient(transaction.txInfo, safeAddress),
+          value: getTxValue(transaction.txInfo, transaction.txDetails),
+          data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
+        }
+        const decodedDataParams: DecodedDataParameterValue = {
+          operation: 0,
+          to: tx.to,
+          value: tx.value,
+          data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
+          dataDecoded: null,
+        }
+
+        if (isCustomTxInfo(transaction.txInfo) && transaction.txInfo.isCancellation) {
+          decodedDataParams.dataDecoded = {
+            method: 'On-chain rejection',
+            parameters: [],
+          }
+        }
+
+        const decodedData = transaction.txDetails?.txData.dataDecoded || decodedDataParams
+
+        return <DecodeTxs txs={[tx]} decodedData={decodedData as DecodedTxDetailType} key={transaction.id} />
+      })}
+    </div>
+  )
+}
+
+async function getTxDetails(transactions: Transaction[], dispatch: Dispatch) {
+  return Promise.all(
     transactions.map(async (transaction) => {
       if (transaction.txDetails) return transaction
 
@@ -62,8 +97,16 @@ async function getBatchExecuteData(
       }
     }),
   )
+}
 
-  const txs: MultiSendTx[] = batchableTransactionsWithDetails.map((transaction) => {
+async function getBatchExecuteData(
+  dispatch: Dispatch,
+  transactions: Transaction[],
+  safeInstance: GnosisSafe,
+  safeAddress: string,
+  account: string,
+) {
+  const txs: MultiSendTx[] = transactions.map((transaction) => {
     const txInfo = getTxInfo(transaction, safeAddress)
     const confirmations = getTxConfirmations(transaction)
     const sigs = generateSignaturesFromTxConfirmations(confirmations)
@@ -90,6 +133,7 @@ export const BatchExecute = React.memo((): ReactElement => {
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, currentVersion)
   const multiSendContractAddress = getMultisendContractAddress()
   const batchableTransactions = useSelector(getBatchableTransactions)
+  const [txsWithDetails, setTxsWithDetails] = useState<Transaction[]>([])
   const [isModalOpen, setModalOpen] = useState(false)
   const [buttonStatus, setButtonStatus] = useState(ButtonStatus.LOADING)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
@@ -120,9 +164,12 @@ export const BatchExecute = React.memo((): ReactElement => {
       label: batchableTransactions.length,
     })
 
+    const transactionsWithDetails = await getTxDetails(batchableTransactions, dispatch)
+    setTxsWithDetails(transactionsWithDetails)
+
     const batchExecuteData = await getBatchExecuteData(
       dispatch,
-      batchableTransactions,
+      transactionsWithDetails,
       safeInstance,
       safeAddress,
       account,
@@ -185,35 +232,17 @@ export const BatchExecute = React.memo((): ReactElement => {
             />
           </Row>
           <Row margin="md">
-            <div>
-              {batchableTransactions.map((transaction) => {
-                if (!transaction.txDetails?.txData) return null
-
-                const tx = {
-                  to: getTxRecipient(transaction.txInfo, safeAddress),
-                  value: getTxValue(transaction.txInfo, transaction.txDetails),
-                  data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
-                }
-                const decodedDataParams: DecodedDataParameterValue = {
-                  operation: 0,
-                  to: tx.to,
-                  value: tx.value,
-                  data: transaction.txDetails?.txData.hexData || EMPTY_DATA,
-                  dataDecoded: null,
-                }
-
-                if (isCustomTxInfo(transaction.txInfo) && transaction.txInfo.isCancellation) {
-                  decodedDataParams.dataDecoded = {
-                    method: 'On-chain rejection',
-                    parameters: [],
-                  }
-                }
-
-                const decodedData = transaction.txDetails?.txData.dataDecoded || decodedDataParams
-
-                return <DecodeTxs txs={[tx]} decodedData={decodedData as DecodedTxDetailType} key={transaction.id} />
-              })}
-            </div>
+            <DecodeTxsWrapper>
+              {txsWithDetails.length ? (
+                <DecodedTransactions transactions={txsWithDetails} safeAddress={safeAddress} />
+              ) : (
+                batchableTransactions.map((transaction) => (
+                  <SkeletonWrapper key={transaction.id}>
+                    <Skeleton variant="rect" height="52px" />
+                  </SkeletonWrapper>
+                ))
+              )}
+            </DecodeTxsWrapper>
           </Row>
           <Paragraph size="md" align="center" color="disabled" noMargin>
             This feature is still in experimental mode. Be aware that if any of the included transactions reverts, none
@@ -248,4 +277,18 @@ const StyledButton = styled(Button)`
 
 const ModalContent = styled.div`
   padding: ${lg} ${lg} 0;
+`
+
+const DecodeTxsWrapper = styled.div`
+  width: 100%;
+`
+
+const SkeletonWrapper = styled.div`
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
