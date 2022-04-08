@@ -77,7 +77,7 @@ const RHFModuleSearchField = ({ name, control, ...props }: Props): ReactElement 
       getOptionLabel={({ label }) => label}
       onChange={(_, module) => field.onChange(module?.type)}
       noOptionsText="No module found"
-      renderInput={({ inputProps, ...params }) => (
+      renderInput={(params) => (
         <TextField
           innerRef={field.ref}
           {...params}
@@ -86,10 +86,6 @@ const RHFModuleSearchField = ({ name, control, ...props }: Props): ReactElement 
           variant="outlined"
           error={!!fieldState.error}
           helperText={fieldState.error?.message}
-          inputProps={{
-            ...inputProps,
-            className: undefined, // Remove style override
-          }}
         />
       )}
     />

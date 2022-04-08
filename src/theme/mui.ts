@@ -228,16 +228,6 @@ const theme = createTheme({
         },
       },
     },
-    MuiAutocomplete: {
-      inputRoot: {
-        padding: '0 !important',
-      },
-      root: {
-        input: {
-          padding: '16px',
-        },
-      },
-    },
     MuiOutlinedInput: {
       root: {
         padding: 0,

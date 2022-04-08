@@ -98,7 +98,6 @@ const RHFAddressSearchField = ({ name, control, label, ...props }: Props): React
               ...inputProps,
               value: formatValue(value),
               readOnly: isResolvingDomain,
-              className: undefined, // Remove style override
             }}
             InputProps={{
               ...InputProps,
