@@ -67,6 +67,17 @@ const useSidebarItems = (): ListItemType[] => {
       }),
     ]
 
+    const transactionsSubItems = [
+      makeEntryItem({
+        label: 'Queue',
+        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+      }),
+      makeEntryItem({
+        label: 'History',
+        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
+      }),
+    ]
+
     const settingsSubItems = [
       makeEntryItem({
         label: 'Safe Details',
@@ -104,6 +115,11 @@ const useSidebarItems = (): ListItemType[] => {
 
     return [
       makeEntryItem({
+        label: 'Home',
+        iconType: 'home',
+        href: currentSafeRoutes.DASHBOARD,
+      }),
+      makeEntryItem({
         label: 'Assets',
         iconType: 'assets',
         href: currentSafeRoutes.ASSETS_BALANCES,
@@ -112,7 +128,8 @@ const useSidebarItems = (): ListItemType[] => {
       makeEntryItem({
         label: 'Transactions',
         iconType: 'transactionsInactive',
-        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
+        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+        subItems: transactionsSubItems,
       }),
       makeEntryItem({
         label: 'Address Book',
