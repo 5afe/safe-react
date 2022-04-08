@@ -10,9 +10,8 @@ import Popper from '@material-ui/core/Popper'
 
 import SuccessSvg from 'src/assets/icons/safe-created.svg'
 import DemoSvg from 'src/assets/icons/demo.svg'
-import { getChainById } from 'src/config'
-import { getChains } from 'src/config/cache/chains'
-import { generateSafeRoute, history, OPEN_SAFE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { getChainById, isValidChainId } from 'src/config'
+import { demoSafeRoute, history, OPEN_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
@@ -25,13 +24,7 @@ import ConnectDetails from 'src/components/AppLayout/Header/components/ProviderD
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
-
-const DEMO_SAFE_MAINNET = '0xfF501B324DC6d78dC9F983f140B9211c3EdB4dc7'
-
-const demoSafeAppsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-  shortName: 'eth',
-  safeAddress: DEMO_SAFE_MAINNET,
-})
+import { black300, grey400, secondary } from 'src/theme/variables'
 
 function SafeAppLandingPage(): ReactElement {
   const { search } = useLocation()
@@ -41,14 +34,14 @@ function SafeAppLandingPage(): ReactElement {
 
   // if no valid chainId or Safe App is present in query params we redirect to the Welcome page
   useEffect(() => {
-    const isValidChainId = safeAppChainId && getChains().find((chain) => chain.chainId === safeAppChainId)
-    const redirectToWelcome = !safeAppUrl || !isValidChainId
+    const isValidChain = isValidChainId(safeAppChainId)
+    const redirectToWelcome = !safeAppUrl || !isValidChain
     if (redirectToWelcome) {
       history.push(WELCOME_ROUTE)
     }
 
     // we set the valid Safe App chainId in the state
-    if (isValidChainId) {
+    if (isValidChain) {
       setChainId(safeAppChainId)
     }
   }, [safeAppChainId, safeAppUrl])
@@ -114,13 +107,11 @@ function SafeAppLandingPage(): ReactElement {
           <>
             {/* Safe App details */}
             {safeAppDetails && (
-              <DetailsContainer>
-                <SafeIcon src={safeAppDetails.iconUrl} />
-                <DescriptionContainer>
-                  <SafeAppTitle size={'sm'}>{safeAppDetails.name}</SafeAppTitle>
-                  <div>{safeAppDetails?.description}</div>
-                </DescriptionContainer>
-              </DetailsContainer>
+              <SafeAppDetails
+                iconUrl={safeAppDetails.iconUrl}
+                name={safeAppDetails.name}
+                description={safeAppDetails?.description}
+              />
             )}
             <Separator />
 
@@ -141,11 +132,11 @@ function SafeAppLandingPage(): ReactElement {
 
             <ActionsContainer>
               <UserSafeContainer>
-                <Title size={'xs'}>Use the dapp with your Safe!</Title>
+                <Title size="xs">Use the dApp with your Safe!</Title>
                 {isWalletConnected ? (
                   <>
                     {userSafe ? (
-                      <div>not implemented</div>
+                      <div>Not implemented.</div>
                     ) : (
                       <>
                         {/* Create new Safe */}
@@ -153,14 +144,7 @@ function SafeAppLandingPage(): ReactElement {
                           <Img alt="Vault" height={92} src={SuccessSvg} />
                         </BodyImage>
 
-                        <Button
-                          data-testid={'create-new-safe-link'}
-                          size="lg"
-                          color="primary"
-                          variant="contained"
-                          component={Link}
-                          to={OPEN_SAFE_ROUTE}
-                        >
+                        <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
                           <Text size="xl" color="white">
                             Create new Safe
                           </Text>
@@ -201,17 +185,16 @@ function SafeAppLandingPage(): ReactElement {
 
               {/* Demo Safe */}
               <SafeDemoContainer>
-                <Title size={'xs'}>Want to try the app before using it?</Title>
+                <Title size="xs">Want to try the app before using it?</Title>
 
                 <BodyImage>
                   <Img alt="Demo" height={92} src={DemoSvg} />
                 </BodyImage>
                 {safeAppUrl && (
                   <StyledDemoButton
-                    data-testid={'open-demo-app-link'}
                     color="primary"
                     component={Link}
-                    to={`${demoSafeAppsPath}?appUrl=${encodeURI(safeAppUrl)}`}
+                    to={`${demoSafeRoute}?appUrl=${encodeURI(safeAppUrl)}`}
                     size="lg"
                     variant="outlined"
                   >
@@ -229,9 +212,21 @@ function SafeAppLandingPage(): ReactElement {
 
 export default SafeAppLandingPage
 
-function getUserSafe() {
+const getUserSafe = () => {
   // TODO: to be implemented in https://github.com/gnosis/safe-react-apps/issues/416
   return undefined
+}
+
+const SafeAppDetails = ({ iconUrl, name, description }) => {
+  return (
+    <DetailsContainer>
+      <SafeIcon src={iconUrl} />
+      <DescriptionContainer>
+        <SafeAppTitle size="sm">{name}</SafeAppTitle>
+        <div>{description}</div>
+      </DescriptionContainer>
+    </DetailsContainer>
+  )
 }
 
 const Container = styled.main`
@@ -278,7 +273,7 @@ const Separator = styled(Divider)`
 `
 
 const ChainLabel = styled(Text)`
-  color: #b2bbc0;
+  color: ${black300};
 `
 
 const ChainsContainer = styled.div`
@@ -309,7 +304,7 @@ const StyledProvider = styled.div`
   height: 56px;
   margin: 0 auto;
   border-radius: 8px;
-  border: 2px solid #eeeff0;
+  border: 2px solid ${grey400};
 `
 
 const BodyImage = styled.div`
@@ -317,5 +312,5 @@ const BodyImage = styled.div`
 `
 
 const StyledDemoButton = styled(Button)`
-  border: 2px solid #008c73;
+  border: 2px solid ${secondary};
 `

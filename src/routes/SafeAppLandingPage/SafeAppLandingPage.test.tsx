@@ -129,7 +129,7 @@ describe('<SafeAppLandingPage>', () => {
 
     // when the Loader is removed we show the create new safe button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
-    const createNewSafeLinkNode = screen.getByTestId('create-new-safe-link')
+    const createNewSafeLinkNode = screen.getByText('Create new Safe').closest('a')
     expect(createNewSafeLinkNode).toHaveAttribute('href', OPEN_SAFE_ROUTE)
   })
 
@@ -147,7 +147,7 @@ describe('<SafeAppLandingPage>', () => {
     // when the Loader is removed we show the Try Demo button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
 
-    const createTryDemoLinkNode = screen.getByTestId('open-demo-app-link')
+    const createTryDemoLinkNode = screen.getByText('Try Demo').closest('a')
 
     const demoSafeAppUrl = '/eth:0xfF501B324DC6d78dC9F983f140B9211c3EdB4dc7/apps'
     expect(createTryDemoLinkNode).toHaveAttribute('href', `${demoSafeAppUrl}?appUrl=${SAFE_APP_URL_FROM_MANIFEST}`)

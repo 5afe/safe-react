@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { useLocation, matchPath } from 'react-router-dom'
+import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
 
@@ -8,7 +8,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_APP_LANDPAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 
 const Container = styled.div`
@@ -102,9 +102,7 @@ const Layout: React.FC<Props> = ({
     path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
-  const showSideBar = !matchPath(pathname, {
-    path: [SAFE_APP_LANDPAGE_ROUTE],
-  })
+  const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
 
   return (
     <Container>

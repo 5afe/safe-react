@@ -16,7 +16,7 @@ import {
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
   extractSafeAddress,
-  SAFE_APP_LANDPAGE_ROUTE,
+  SAFE_APP_LANDING_PAGE_ROUTE,
 } from './routes'
 import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
@@ -113,7 +113,7 @@ const Routes = (): React.ReactElement => {
         }}
       />
       <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
-      <Route component={SafeAppLandingPage} path={SAFE_APP_LANDPAGE_ROUTE} />
+      <Route component={SafeAppLandingPage} path={SAFE_APP_LANDING_PAGE_ROUTE} />
       <Redirect to={ROOT_ROUTE} />
     </Switch>
   )

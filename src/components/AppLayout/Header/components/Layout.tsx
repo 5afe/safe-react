@@ -2,7 +2,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import { Link, matchPath, useLocation } from 'react-router-dom'
+import { Link, useRouteMatch } from 'react-router-dom'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
@@ -13,7 +13,7 @@ import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { SAFE_APP_LANDPAGE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { SAFE_APP_LANDING_PAGE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
@@ -93,11 +93,8 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
-  const { pathname } = useLocation()
 
-  const showWalletSection = !matchPath(pathname, {
-    path: [SAFE_APP_LANDPAGE_ROUTE],
-  })
+  const showWalletSection = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
 
   return (
     <Row className={classes.summary}>
