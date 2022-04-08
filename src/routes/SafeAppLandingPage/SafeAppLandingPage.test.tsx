@@ -161,8 +161,6 @@ describe('<SafeAppLandingPage>', () => {
     const loaderNode = screen.getByRole('progressbar')
     expect(loaderNode).toBeInTheDocument()
 
-    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
-
     await waitFor(() => {
       expect(window.location.pathname).toBe(WELCOME_ROUTE)
     })

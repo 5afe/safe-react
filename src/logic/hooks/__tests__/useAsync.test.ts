@@ -9,7 +9,7 @@ describe('useAsync tests', () => {
 
     await waitForNextUpdate()
 
-    expect(result.current).toEqual({ result: 'success', error: undefined })
+    expect(result.current).toEqual({ result: 'success', error: undefined, isLoading: false })
 
     expect(fakeCallback).toHaveBeenCalledTimes(1)
   })
@@ -49,6 +49,7 @@ describe('useAsync tests', () => {
 
     expect(result.current.result).toBe(undefined)
     expect(result.current.error).toBe(undefined)
+    expect(result.current.isLoading).toBe(true)
 
     rerender() // re-render immediately
 
@@ -56,6 +57,7 @@ describe('useAsync tests', () => {
 
     expect(result.current.result).toBe('success 2')
     expect(result.current.error).toBe(undefined)
+    expect(result.current.isLoading).toBe(false)
 
     expect(fakeCallback1).toHaveBeenCalledTimes(1)
     expect(fakeCallback2).toHaveBeenCalledTimes(1)

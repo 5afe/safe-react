@@ -3,24 +3,33 @@ import { useEffect, useState } from 'react'
 type AsyncResult<T> = {
   error: Error | undefined
   result: T | undefined
+  isLoading: boolean
 }
 
 const useAsync = <T>(asyncCall: () => Promise<T>): AsyncResult<T> => {
-  const [asyncVal, setAsyncVal] = useState<T>()
-  const [err, setErr] = useState<Error>()
+  const [result, setResult] = useState<T>()
+  const [error, setError] = useState<Error>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     let isCurrent = true
 
-    setAsyncVal(undefined)
-    setErr(undefined)
+    setResult(undefined)
+    setError(undefined)
+    setIsLoading(true)
 
     asyncCall()
       .then((val: T) => {
-        if (isCurrent) setAsyncVal(val)
+        if (isCurrent) {
+          setResult(val)
+          setIsLoading(false)
+        }
       })
       .catch((error) => {
-        if (isCurrent) setErr(error)
+        if (isCurrent) {
+          setError(error)
+          setIsLoading(false)
+        }
       })
 
     return () => {
@@ -28,7 +37,7 @@ const useAsync = <T>(asyncCall: () => Promise<T>): AsyncResult<T> => {
     }
   }, [asyncCall])
 
-  return { error: err, result: asyncVal }
+  return { error, result, isLoading }
 }
 
 export default useAsync

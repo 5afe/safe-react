@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
@@ -25,6 +25,7 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
 import { black300, grey400, secondary } from 'src/theme/variables'
+import useAsync from 'src/logic/hooks/useAsync'
 
 function SafeAppLandingPage(): ReactElement {
   const { search } = useLocation()
@@ -32,7 +33,7 @@ function SafeAppLandingPage(): ReactElement {
   const safeAppChainId = query.get('chainId')
   const safeAppUrl = query.get('appUrl')
 
-  // if no valid chainId or Safe App is present in query params we redirect to the Welcome page
+  // if no valid chainId or Safe App url is present in query params we redirect to the Welcome page
   useEffect(() => {
     const isValidChain = isValidChainId(safeAppChainId)
     const redirectToWelcome = !safeAppUrl || !isValidChain
@@ -54,27 +55,19 @@ function SafeAppLandingPage(): ReactElement {
   const safeAppDetailsFromConfigService = appList.find(({ url }) => safeAppUrl === url)
 
   // fetch Safe App details from Manifest.json
-  const [safeAppDetailsFromManifest, setSafeAppDetailsFromManifest] = useState<SafeApp>()
-  const [isManifestLoading, setIsManifestLoading] = useState(false)
-  const [isManifestError, setIsManifestError] = useState(false)
-  useEffect(() => {
-    const fetchManifest = !isManifestLoading && !safeAppDetailsFromManifest && safeAppUrl && !isManifestError
-    if (fetchManifest) {
-      const fetchSafeAppDetailsFromManifest = async () => {
-        setIsManifestLoading(true)
-        try {
-          const safeAppDetailsFromManifest = await getAppInfoFromUrl(safeAppUrl)
-          setIsManifestLoading(false)
-          setSafeAppDetailsFromManifest(safeAppDetailsFromManifest)
-        } catch (e) {
-          setIsManifestLoading(false)
-          setIsManifestError(true)
-        }
-      }
-
-      fetchSafeAppDetailsFromManifest()
+  const fetchManifest = useCallback(async () => {
+    if (safeAppUrl) {
+      return getAppInfoFromUrl(safeAppUrl)
     }
-  }, [isManifestLoading, safeAppDetailsFromManifest, safeAppUrl, isManifestError])
+
+    throw 'No Safe App url provided'
+  }, [safeAppUrl])
+
+  const {
+    result: safeAppDetailsFromManifest,
+    error: isManifestError,
+    isLoading: isManifestLoading,
+  } = useAsync<SafeApp>(fetchManifest)
 
   const safeAppDetails = safeAppDetailsFromConfigService || safeAppDetailsFromManifest
   const isLoading = isConfigServiceLoading || isManifestLoading
