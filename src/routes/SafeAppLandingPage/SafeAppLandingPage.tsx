@@ -48,7 +48,6 @@ function SafeAppLandingPage(): ReactElement {
 
   const userAddress = useSelector(userAccountSelector)
   const isWalletConnected = !!userAddress
-  const { clickAway, open, toggle } = useStateHandler()
 
   // fetch Safe App details from the Config service
   const { appList, isLoading: isConfigServiceLoading } = useAppList()
@@ -90,9 +89,6 @@ function SafeAppLandingPage(): ReactElement {
   }, [isLoading, appList, safeAppDetails, isManifestError])
 
   const availableChains = safeAppDetails?.chainIds
-  const showAvailableChains = availableChains && availableChains.length > 0
-
-  const userSafe = getUserSafe()
 
   const showLoader = isLoading || !safeAppDetails
 
@@ -111,97 +107,18 @@ function SafeAppLandingPage(): ReactElement {
                 iconUrl={safeAppDetails.iconUrl}
                 name={safeAppDetails.name}
                 description={safeAppDetails?.description}
+                availableChains={availableChains}
               />
-            )}
-            <Separator />
-
-            {/* Available chains */}
-            {showAvailableChains && (
-              <>
-                <ChainLabel size="lg">Available networks</ChainLabel>
-                <ChainsContainer>
-                  {availableChains.map((chainId) => (
-                    <div key={chainId}>
-                      <NetworkLabel networkInfo={getChainById(chainId)} />
-                    </div>
-                  ))}
-                </ChainsContainer>
-                <Separator />
-              </>
             )}
 
             <ActionsContainer>
               <UserSafeContainer>
                 <Title size="xs">Use the dApp with your Safe!</Title>
-                {isWalletConnected ? (
-                  <>
-                    {userSafe ? (
-                      <div>Not implemented.</div>
-                    ) : (
-                      <>
-                        {/* Create new Safe */}
-                        <BodyImage>
-                          <Img alt="Vault" height={92} src={SuccessSvg} />
-                        </BodyImage>
-
-                        <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
-                          <Text size="xl" color="white">
-                            Create new Safe
-                          </Text>
-                        </Button>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {/* Connect your Wallet */}
-                    <StyledProvider>
-                      <Provider
-                        info={<ProviderDisconnected />}
-                        open={open}
-                        toggle={toggle}
-                        render={(providerRef) =>
-                          providerRef.current && (
-                            <Popper
-                              anchorEl={providerRef.current}
-                              style={{ zIndex: 1301 }}
-                              open={open}
-                              placement="bottom"
-                              popperOptions={{ positionFixed: true }}
-                            >
-                              <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                                <List component="div">
-                                  <ConnectDetails />
-                                </List>
-                              </ClickAwayListener>
-                            </Popper>
-                          )
-                        }
-                      />
-                    </StyledProvider>
-                  </>
-                )}
+                {isWalletConnected ? <CreateNewSafe /> : <ConnectWallet />}
               </UserSafeContainer>
 
-              {/* Demo Safe */}
-              <SafeDemoContainer>
-                <Title size="xs">Want to try the app before using it?</Title>
-
-                <BodyImage>
-                  <Img alt="Demo" height={92} src={DemoSvg} />
-                </BodyImage>
-                {safeAppUrl && (
-                  <StyledDemoButton
-                    color="primary"
-                    component={Link}
-                    to={`${demoSafeRoute}?appUrl=${encodeURI(safeAppUrl)}`}
-                    size="lg"
-                    variant="outlined"
-                  >
-                    Try Demo
-                  </StyledDemoButton>
-                )}
-              </SafeDemoContainer>
+              {/* Demo Safe Section */}
+              <TryDemoSafe safeAppUrl={safeAppUrl} />
             </ActionsContainer>
           </>
         )}
@@ -212,23 +129,106 @@ function SafeAppLandingPage(): ReactElement {
 
 export default SafeAppLandingPage
 
-const getUserSafe = () => {
-  // TODO: to be implemented in https://github.com/gnosis/safe-react-apps/issues/416
-  return undefined
-}
+const SafeAppDetails = ({ iconUrl, name, description, availableChains }) => {
+  const showAvailableChains = availableChains && availableChains.length > 0
 
-const SafeAppDetails = ({ iconUrl, name, description }) => {
   return (
-    <DetailsContainer>
-      <SafeIcon src={iconUrl} />
-      <DescriptionContainer>
-        <SafeAppTitle size="sm">{name}</SafeAppTitle>
-        <div>{description}</div>
-      </DescriptionContainer>
-    </DetailsContainer>
+    <>
+      <DetailsContainer>
+        <SafeIcon src={iconUrl} />
+        <DescriptionContainer>
+          <SafeAppTitle size="sm">{name}</SafeAppTitle>
+          <div>{description}</div>
+        </DescriptionContainer>
+      </DetailsContainer>
+      <Separator />
+
+      {/* Available chains */}
+      {showAvailableChains && (
+        <>
+          <ChainLabel size="lg">Available networks</ChainLabel>
+          <ChainsContainer>
+            {availableChains.map((chainId) => (
+              <div key={chainId}>
+                <NetworkLabel networkInfo={getChainById(chainId)} />
+              </div>
+            ))}
+          </ChainsContainer>
+          <Separator />
+        </>
+      )}
+    </>
   )
 }
 
+const CreateNewSafe = () => {
+  return (
+    <>
+      <BodyImage>
+        <Img alt="Vault" height={92} src={SuccessSvg} />
+      </BodyImage>
+
+      <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+        <Text size="xl" color="white">
+          Create new Safe
+        </Text>
+      </Button>
+    </>
+  )
+}
+
+const ConnectWallet = () => {
+  const { clickAway, open, toggle } = useStateHandler()
+
+  return (
+    <StyledProvider>
+      <Provider
+        info={<ProviderDisconnected />}
+        open={open}
+        toggle={toggle}
+        render={(providerRef) =>
+          providerRef.current && (
+            <StyledPopper
+              anchorEl={providerRef.current}
+              open={open}
+              placement="bottom"
+              popperOptions={{ positionFixed: true }}
+            >
+              <ClickAwayListener onClickAway={clickAway} touchEvent={false}>
+                <List component="div">
+                  <ConnectDetails />
+                </List>
+              </ClickAwayListener>
+            </StyledPopper>
+          )
+        }
+      />
+    </StyledProvider>
+  )
+}
+
+const TryDemoSafe = ({ safeAppUrl }) => {
+  return (
+    <SafeDemoContainer>
+      <Title size="xs">Want to try the app before using it?</Title>
+
+      <BodyImage>
+        <Img alt="Demo" height={92} src={DemoSvg} />
+      </BodyImage>
+      {safeAppUrl && (
+        <StyledDemoButton
+          color="primary"
+          component={Link}
+          to={`${demoSafeRoute}?appUrl=${encodeURI(safeAppUrl)}`}
+          size="lg"
+          variant="outlined"
+        >
+          Try Demo
+        </StyledDemoButton>
+      )}
+    </SafeDemoContainer>
+  )
+}
 const Container = styled.main`
   display: flex;
   justify-content: center;
@@ -286,6 +286,9 @@ const ChainsContainer = styled.div`
   }
 `
 
+const StyledPopper = styled(Popper)`
+  z-index: 1301;
+`
 const ActionsContainer = styled.div`
   display: flex;
 `
