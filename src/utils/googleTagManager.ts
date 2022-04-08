@@ -181,7 +181,6 @@ type SafeAppEventDataLayer = {
   chainId: string
   safeAppName: string
   safeAppMethod: string
-  safeAppParams?: string
   safeAppEthMethod?: string
   safeAppSDKVersion?: string
 }
