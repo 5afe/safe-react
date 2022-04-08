@@ -124,7 +124,11 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       let currentOpenCount = trackData[currentApp.id]?.openCount
       saveToStorage(APPS_DASHBOARD, {
         ...trackData,
-        [currentApp.id]: { timestamp: Date.now(), openCount: currentOpenCount ? ++currentOpenCount : 1 },
+        [currentApp.id]: {
+          ...trackData[currentApp.id],
+          timestamp: Date.now(),
+          openCount: currentOpenCount ? ++currentOpenCount : 1,
+        },
       })
       timer.current = window.setTimeout(() => {
         setIsLoadingSlow(true)
