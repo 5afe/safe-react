@@ -14,7 +14,11 @@ const Container = styled.div`
   z-index: 2;
   top: -6px;
   left: 50%;
-  transform: translateX(-110%);
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  margin-left: -15px;
 `
 
 const Threshold = (): React.ReactElement | null => {

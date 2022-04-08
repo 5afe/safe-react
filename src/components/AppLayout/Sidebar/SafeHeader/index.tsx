@@ -16,7 +16,7 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo, getExplorerInfo } from 'src/config'
-import { border, fontColor } from 'src/theme/variables'
+import { border, fontColor, background, primaryGreen200, secondaryBackground, black400 } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
@@ -24,6 +24,7 @@ import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
 import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -33,25 +34,26 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 12px;
 `
 
 const IdenticonContainer = styled.div`
   width: 100%;
   margin: 14px 8px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: relative;
-
-  div:first-of-type {
-    width: 32px;
-  }
 `
 const StyledIcon = styled(Icon)`
   svg {
-    height: 26px;
-    width: 26px;
+    height: 24px;
+    width: 24px;
     transform: rotateZ(-90deg);
+
+    .icon-color {
+      fill: ${black400};
+    }
 
     path:nth-child(2) {
       display: none;
@@ -68,10 +70,9 @@ const IconContainer = styled.div`
 `
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
+    width: 100%;
+    height: 38px;
     padding: 0 12px;
-  }
-  *:first-child {
-    margin: 0 4px 0 0;
   }
 `
 
@@ -79,17 +80,14 @@ const StyledExplorerButton = styled(ExplorerButton)`
   border-radius: 5px;
   width: 32px;
   height: 32px;
-  background-color: #f0efee;
+  background-color: ${background};
 
   & .icon-color {
-    transition: fill 0.2s ease-in-out;
+    fill: #008c73;
   }
 
   &:hover {
     background-color: #effaf8;
-    & .icon-color {
-      fill: #008c73;
-    }
   }
 `
 
@@ -97,17 +95,14 @@ const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
   border-radius: 5px;
   width: 32px;
   height: 32px;
-  background-color: #f0efee;
+  background-color: ${background};
 
   & .icon-color {
-    transition: fill 0.2s ease-in-out;
+    fill: #008c73;
   }
 
   &:hover {
     background-color: #effaf8;
-    & .icon-color {
-      fill: #008c73;
-    }
   }
 `
 
@@ -117,17 +112,15 @@ const StyledQRCodeButton = styled.button`
   border-radius: 5px;
   width: 32px;
   height: 32px;
-  background-color: #f0efee;
+  background-color: ${background};
+  transition: background-color 0.2s ease-in-out;
 
   & .icon-color {
-    transition: fill 0.2s ease-in-out;
+    fill: #008c73;
   }
 
   &:hover {
     background-color: #effaf8;
-    & .icon-color {
-      fill: #008c73;
-    }
   }
 `
 
@@ -154,21 +147,42 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   p {
     color: ${({ theme }) => theme.colors.placeHolder};
     font-size: 14px;
+    line-height: 20px;
   }
 `
 
 const StyledLabel = styled.div`
-  background-color: ${({ theme }) => theme.colors.icon};
-  margin: 0 0 14px 0 !important;
-  padding: 4px 8px;
-  border-radius: 4px;
-  letter-spacing: 1px;
+  background-color: #e2e3e3;
+  margin-top: 14px;
+  width: 100%;
+  padding: 3px 8px;
+  box-sizing: border-box;
   p {
+    text-align: center;
     line-height: 18px;
   }
 `
 const StyledText = styled(Title)`
   margin: 0 0 14px 0;
+`
+
+const ToggleSafeListButton = styled.button`
+  cursor: pointer;
+  border: 0;
+  background-color: ${secondaryBackground};
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  right: -40px;
+
+  & span {
+    margin-left: -20px;
+  }
+
+  &:hover {
+    background-color: ${primaryGreen200};
+  }
 `
 
 type Props = {
@@ -195,6 +209,11 @@ const SafeHeader = ({
 
   const hasSafeOpen = useRouteMatch(ADDRESSED_ROUTE)
 
+  const handleNewTransactionClick = () => {
+    trackEvent({ ...OVERVIEW_EVENTS.NEW_TRANSACTION })
+    onNewTransactionClick()
+  }
+
   if (!address || !hasSafeOpen) {
     return (
       <Container>
@@ -220,12 +239,11 @@ const SafeHeader = ({
       <Container>
         {/* Identicon */}
         <IdenticonContainer>
-          <FlexSpacer />
           <Threshold />
           <Identicon address={address} size="lg" />
-          <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
-          </ButtonHelper>
+          </ToggleSafeListButton>
         </IdenticonContainer>
 
         {/* SafeInfo */}
@@ -247,32 +265,29 @@ const SafeHeader = ({
           </Track>
         </IconContainer>
 
-        {!granted && (
-          <StyledLabel>
-            <Text size="sm" color="white">
-              READ ONLY
-            </Text>
-          </StyledLabel>
-        )}
-
         <Paragraph color="black400" noMargin size="md">
           Total Balance
         </Paragraph>
         <StyledText size="xs">{balance}</StyledText>
-        <Track {...OVERVIEW_EVENTS.NEW_TRANSACTION}>
-          <StyledButton
-            size="md"
-            disabled={!granted}
-            color="primary"
-            variant="contained"
-            onClick={onNewTransactionClick}
-          >
-            <FixedIcon type="arrowSentWhite" />
-            <Text size="lg" color="white" strong>
-              New transaction
+        <StyledButton
+          size="md"
+          disabled={!granted}
+          color="primary"
+          variant="contained"
+          onClick={handleNewTransactionClick}
+        >
+          <Text size="lg" color="white" strong>
+            New Transaction
+          </Text>
+        </StyledButton>
+
+        {!granted && (
+          <StyledLabel>
+            <Text size="sm" strong>
+              READ ONLY
             </Text>
-          </StyledButton>
-        </Track>
+          </StyledLabel>
+        )}
       </Container>
     </>
   )

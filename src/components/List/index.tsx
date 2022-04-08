@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Link, useHistory } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
 
 import ListMui from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { FixedIcon } from '@gnosis.pm/safe-react-components'
 import { secondary, primaryGreen200 } from 'src/theme/variables'
 
 const ListItemWrapper = styled.div`
@@ -29,6 +30,11 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
     border-radius: 8px;
   }
 
+  &.MuiListItem-gutters {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
   &.MuiListItem-root {
     padding-top: 9px;
     padding-bottom: 9px;
@@ -40,6 +46,10 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
     color: ${({ theme }) => theme.colors.primary};
     span {
       color: ${({ theme }) => theme.colors.primary};
+
+      & svg {
+        fill: ${({ theme }) => theme.colors.primary};
+      }
     }
     .icon-color {
       fill: ${({ theme }) => theme.colors.primary};
@@ -78,12 +88,12 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    background-color: ${primaryGreen200};
+    background-color: #f6f7f8;
     border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    background-color: ${primaryGreen200};
+    background-color: #f6f7f8;
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
@@ -220,7 +230,11 @@ const List = ({ items }: Props): React.ReactElement => {
         </TextAndBadgeWrapper>
 
         {item.subItems &&
-          (groupCollapseStatus[item.href] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
+          (groupCollapseStatus[item.href] ? (
+            <KeyboardArrowUp fontSize="small" />
+          ) : (
+            <KeyboardArrowDown fontSize="small" />
+          ))}
       </ListItemAux>
     )
   }
