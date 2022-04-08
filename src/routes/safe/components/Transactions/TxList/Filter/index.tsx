@@ -21,6 +21,8 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
 
 import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 // Types cannot take computed property names
 const TYPE_FIELD_NAME = 'type'
@@ -110,6 +112,8 @@ const Filter = (): ReactElement => {
 
   const onSubmit = ({ [TYPE_FIELD_NAME]: _t, [HIDDEN_RECIPIENT_FIELD_NAME]: _hr, ...filter }: FilterForm) => {
     console.log(filter)
+
+    trackEvent(TX_LIST_EVENTS.FILTER)
     hideFilter()
   }
 

@@ -26,6 +26,10 @@ const TX_LIST = {
     event: GTM_EVENT.CLICK,
     action: 'Reject transaction',
   },
+  FILTER: {
+    event: GTM_EVENT.CLICK,
+    action: 'Filter transactions',
+  },
 }
 
 const TX_LIST_CATEGORY = 'tx-list'
