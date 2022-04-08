@@ -5,7 +5,7 @@ import { getPairingUri } from 'src/logic/wallets/pairing/utils'
 import onboard from 'src/logic/wallets/onboard'
 import { getPairingProvider, PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
 
-let preservedOnboardEvents: IEventEmitter[]
+let defaultEvents: IEventEmitter[]
 
 // These handful of events relate to the session lifecycle
 enum WC_EVENT {
@@ -17,13 +17,8 @@ enum WC_EVENT {
 
 const usePairing = (): { uri: string } => {
   const provider = useMemo(getPairingProvider, [])
-  const WC_EVENTS = useMemo(() => Object.values(WC_EVENT), [])
 
   const [uri, setUri] = useState<string>(getPairingUri(provider.wc.uri))
-  const updatePairingUri = useCallback(() => {
-    const pairingUri = getPairingUri(provider.wc.uri)
-    setUri(pairingUri)
-  }, [provider])
 
   // Pairing session lifecycle
   const createPairingSession = useCallback(() => {
@@ -33,12 +28,23 @@ const usePairing = (): { uri: string } => {
     }
   }, [provider])
 
-  // Event listeners
-  const addCustomEventListeners = useCallback(() => {
-    // Watch for URI change
-    WC_EVENTS.forEach((event) => provider.wc.on(event, updatePairingUri))
+  useEffect(() => {
+    if (!defaultEvents) {
+      defaultEvents = (provider.wc as any)._eventManager._eventEmitters as IEventEmitter[]
+    }
 
-    // Handle connection
+    // Resest event listeners to default
+    ;(provider.wc as any)._eventManager._eventEmitters = defaultEvents
+
+    // Watch for URI change
+    Object.values(WC_EVENT).forEach((event) =>
+      provider.wc.on(event, () => {
+        const pairingUri = getPairingUri(provider.wc.uri)
+        setUri(pairingUri)
+      }),
+    )
+
+    // Watch for connection
     provider.wc.on(WC_EVENT.CONNECT, () => {
       onboard().walletSelect(PAIRING_MODULE_NAME)
     })
@@ -51,26 +57,10 @@ const usePairing = (): { uri: string } => {
         createPairingSession()
       }
     })
-  }, [WC_EVENTS, provider, updatePairingUri, createPairingSession])
 
-  const cleanupCustomEventListeners = useCallback(() => {
-    if (!preservedOnboardEvents) {
-      preservedOnboardEvents = (provider.wc as any)._eventManager._eventEmitters as IEventEmitter[]
-    }
-
-    // @ts-expect-error - `.off()` is missing in `IConnector` type
-    WC_EVENTS.forEach((event) => provider.wc.off(event))
-
-    // WalletConnect removes all event listeners by event name so we must add onboard's back
-    preservedOnboardEvents.forEach(({ event, callback }) => provider.wc.on(event, callback))
-  }, [WC_EVENTS, provider])
-
-  useEffect(() => {
-    cleanupCustomEventListeners()
-    addCustomEventListeners()
-
+    // Create pairing session if one isn't already active
     createPairingSession()
-  }, [cleanupCustomEventListeners, addCustomEventListeners, createPairingSession])
+  }, [createPairingSession])
 
   return { uri }
 }
