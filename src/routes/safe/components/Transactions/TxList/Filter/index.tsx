@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -77,9 +77,7 @@ const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
 
 const Filter = (): ReactElement => {
   const [showFilter, setShowFilter] = useState<boolean>(false)
-
-  const onClickAway = () => setShowFilter(false)
-
+  const hideFilter = () => setShowFilter(false)
   const toggleFilter = () => setShowFilter((prev) => !prev)
 
   const { handleSubmit, formState, reset, watch, control } = useForm<FilterForm>({
@@ -93,24 +91,28 @@ const Filter = (): ReactElement => {
       [MODULE_FIELD_NAME]: undefined,
       [NONCE_FIELD_NAME]: '',
     },
-    shouldUnregister: true, // Remove values of unmounted inputs
   })
 
   const type = watch(TYPE_FIELD_NAME)
 
   const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
+  const clearParameters = useCallback(() => {
+    reset({ type })
+  }, [reset, type])
 
-  const onClear = () => reset({ type })
+  useEffect(() => {
+    clearParameters()
+  }, [clearParameters])
 
-  const onSubmit = ({ type: _, ...rest }: FilterForm) => {
-    const filter = Object.fromEntries(Object.entries(rest).filter(([, value]) => Boolean(value)))
+  const onSubmit = ({ type: _, ...filter }: FilterForm) => {
     console.log(filter)
+    hideFilter()
   }
 
   return (
     <>
       <BackdropLayout isOpen={showFilter} />
-      <ClickAwayListener onClickAway={onClickAway}>
+      <ClickAwayListener onClickAway={hideFilter}>
         <Wrapper>
           <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
             <StyledFilterIconImage src={filterIcon} /> Filters{' '}
@@ -120,7 +122,7 @@ const Filter = (): ReactElement => {
             <StyledPaper elevation={0} variant="outlined">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FilterWrapper>
-                  <StyledTxTypeFormControl>
+                  <TxTypeFormControl>
                     <StyledFormLabel>Transaction type</StyledFormLabel>
                     <Controller
                       name={TYPE_FIELD_NAME}
@@ -133,7 +135,7 @@ const Filter = (): ReactElement => {
                         </RadioGroup>
                       )}
                     />
-                  </StyledTxTypeFormControl>
+                  </TxTypeFormControl>
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
@@ -141,36 +143,34 @@ const Filter = (): ReactElement => {
                       <RHFTextField name={TO_FIELD_NAME} label="To" type="date" control={control} />
                       <RHFAddressSearchField name={RECIPIENT_FIELD_NAME} label="Recipient" control={control} />
                       {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
-                        <>
-                          <RHFTextField
-                            name={AMOUNT_FIELD_NAME}
-                            label="Amount"
-                            control={control}
-                            rules={{
-                              validate: isValidAmount,
-                            }}
-                          />
-                          {type === FilterType.INCOMING && (
-                            <RHFTextField
-                              name={TOKEN_ADDRESS_FIELD_NAME}
-                              label="Token Address"
-                              control={control}
-                              rules={{
-                                validate: isValidTokenAddress,
-                              }}
-                            />
-                          )}
-                          {type === FilterType.MULTISIG && (
-                            <RHFTextField
-                              name={NONCE_FIELD_NAME}
-                              label="Nonce"
-                              control={control}
-                              rules={{
-                                validate: isValidNonce,
-                              }}
-                            />
-                          )}
-                        </>
+                        <RHFTextField
+                          name={AMOUNT_FIELD_NAME}
+                          label="Amount"
+                          control={control}
+                          rules={{
+                            validate: isValidAmount,
+                          }}
+                        />
+                      )}
+                      {type === FilterType.INCOMING && (
+                        <RHFTextField
+                          name={TOKEN_ADDRESS_FIELD_NAME}
+                          label="Token Address"
+                          control={control}
+                          rules={{
+                            validate: isValidTokenAddress,
+                          }}
+                        />
+                      )}
+                      {type === FilterType.MULTISIG && (
+                        <RHFTextField
+                          name={NONCE_FIELD_NAME}
+                          label="Nonce"
+                          control={control}
+                          rules={{
+                            validate: isValidNonce,
+                          }}
+                        />
                       )}
                       {type === FilterType.MODULE && (
                         <RHFModuleSearchField name={MODULE_FIELD_NAME} label="Module" control={control} />
@@ -180,7 +180,7 @@ const Filter = (): ReactElement => {
                       <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={onClear} disabled={!isClearable} color="gray">
+                      <Button variant="contained" onClick={clearParameters} disabled={!isClearable} color="default">
                         Clear
                       </Button>
                     </ButtonWrapper>
@@ -241,7 +241,7 @@ const FilterWrapper = styled.div`
   gap: ${lg};
 `
 
-const StyledTxTypeFormControl = styled(FormControl)`
+const TxTypeFormControl = styled(FormControl)`
   &.MuiFormControl-root {
     box-sizing: border-box;
     padding: ${lg};
