@@ -1,16 +1,16 @@
-import { ComponentProps, HTMLInputTypeAttribute, ReactElement } from 'react'
-import { Control, Controller, useController } from 'react-hook-form'
+import { HTMLInputTypeAttribute, ReactElement } from 'react'
+import { Control, FieldValues, Path, useController, UseControllerProps } from 'react-hook-form'
 import TextField from '@material-ui/core/TextField/TextField'
 
-type Props = {
-  name: string
-  control: Control<any, unknown>
-  rules?: ComponentProps<typeof Controller>['rules']
+type Props<T> = {
+  name: Path<T>
+  control: Control<T, unknown>
+  rules?: UseControllerProps<T>['rules']
   label: string
   type?: HTMLInputTypeAttribute
 }
 
-const RHFTextField = ({ name, rules, control, ...props }: Props): ReactElement => {
+const RHFTextField = <T extends FieldValues>({ name, rules, control, ...props }: Props<T>): ReactElement => {
   const {
     field: { ref, ...field },
     fieldState,

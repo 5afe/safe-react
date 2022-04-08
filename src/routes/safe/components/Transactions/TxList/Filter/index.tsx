@@ -124,7 +124,7 @@ const Filter = (): ReactElement => {
                 <FilterWrapper>
                   <TxTypeFormControl>
                     <StyledFormLabel>Transaction type</StyledFormLabel>
-                    <Controller
+                    <Controller<FilterForm>
                       name={TYPE_FIELD_NAME}
                       control={control}
                       render={({ field }) => (
@@ -139,11 +139,15 @@ const Filter = (): ReactElement => {
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
-                      <RHFTextField name={FROM_FIELD_NAME} label="From" type="date" control={control} />
-                      <RHFTextField name={TO_FIELD_NAME} label="To" type="date" control={control} />
-                      <RHFAddressSearchField name={RECIPIENT_FIELD_NAME} label="Recipient" control={control} />
+                      <RHFTextField<FilterForm> name={FROM_FIELD_NAME} label="From" type="date" control={control} />
+                      <RHFTextField<FilterForm> name={TO_FIELD_NAME} label="To" type="date" control={control} />
+                      <RHFAddressSearchField<FilterForm>
+                        name={RECIPIENT_FIELD_NAME}
+                        label="Recipient"
+                        control={control}
+                      />
                       {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
-                        <RHFTextField
+                        <RHFTextField<FilterForm>
                           name={AMOUNT_FIELD_NAME}
                           label="Amount"
                           control={control}
@@ -153,7 +157,7 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {type === FilterType.INCOMING && (
-                        <RHFTextField
+                        <RHFTextField<FilterForm>
                           name={TOKEN_ADDRESS_FIELD_NAME}
                           label="Token Address"
                           control={control}
@@ -163,7 +167,7 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {type === FilterType.MULTISIG && (
-                        <RHFTextField
+                        <RHFTextField<FilterForm>
                           name={NONCE_FIELD_NAME}
                           label="Nonce"
                           control={control}
@@ -173,7 +177,7 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {type === FilterType.MODULE && (
-                        <RHFModuleSearchField name={MODULE_FIELD_NAME} label="Module" control={control} />
+                        <RHFModuleSearchField<FilterForm> name={MODULE_FIELD_NAME} label="Module" control={control} />
                       )}
                     </ParametersFormWrapper>
                     <ButtonWrapper>

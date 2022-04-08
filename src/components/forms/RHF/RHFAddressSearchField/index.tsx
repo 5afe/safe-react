@@ -1,5 +1,5 @@
 import { HTMLInputTypeAttribute, ReactElement, useState } from 'react'
-import { Control, useController } from 'react-hook-form'
+import { Control, FieldValues, Path, useController } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete'
 import { InputBaseComponentProps } from '@material-ui/core/InputBase/InputBase'
@@ -14,21 +14,21 @@ import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
-type Props = {
-  name: string
-  control: Control<any, unknown>
+type Props<T> = {
+  name: Path<T>
+  control: Control<T, unknown>
   label: string
   type?: HTMLInputTypeAttribute
 }
 
-const RHFAddressSearchField = ({ name, control, label, ...props }: Props): ReactElement => {
+const RHFAddressSearchField = <T extends FieldValues>({ name, control, label, ...props }: Props<T>): ReactElement => {
   const showChainPrefix = useSelector(showShortNameSelector)
   const addressBookOnChain = useSelector(currentNetworkAddressBook)
 
   const [isResolvingDomain, setIsResolvingDomain] = useState<boolean>(false)
 
   // RHF's `field` value stores the address, whereas the uncontrolled Autocomplete stores the input value
-  const { field, fieldState } = useController({
+  const { field, fieldState } = useController<T>({
     name,
     control,
     rules: {
@@ -70,49 +70,51 @@ const RHFAddressSearchField = ({ name, control, label, ...props }: Props): React
   }
 
   return (
-    <Autocomplete
-      freeSolo
-      options={addressBookOnChain}
-      getOptionLabel={({ name }) => name}
-      onInputChange={(_, value) => onInputChange(value)}
-      renderInput={({ inputProps, InputProps, ...params }) => {
-        const { value } = inputProps as InputBaseComponentProps
-        return (
-          <TextField
-            innerRef={field.ref}
-            {...params}
-            {...props}
-            label={label}
-            name={name}
-            variant="outlined"
-            error={!!fieldState.error}
-            // Show the address as helperText if the input value is an address book entry or domain
-            helperText={
-              fieldState.error?.message
-                ? fieldState.error.message
-                : field.value && field.value !== value
-                ? formatValue(field.value)
-                : undefined
-            }
-            inputProps={{
-              ...inputProps,
-              value: formatValue(value),
-              readOnly: isResolvingDomain,
-            }}
-            InputProps={{
-              ...InputProps,
-              endAdornment: isResolvingDomain ? (
-                <InputAdornment position="end">
-                  <CircularProgress size="16px" />
-                </InputAdornment>
-              ) : (
-                InputProps.endAdornment
-              ),
-            }}
-          />
-        )
-      }}
-    />
+    <>
+      <Autocomplete
+        freeSolo
+        options={addressBookOnChain}
+        getOptionLabel={({ name }) => name}
+        onInputChange={(_, value) => onInputChange(value)}
+        renderInput={({ inputProps, InputProps, ...params }) => {
+          const { value } = inputProps as InputBaseComponentProps
+          return (
+            <TextField
+              innerRef={field.ref}
+              {...params}
+              {...props}
+              label={label}
+              name={name}
+              variant="outlined"
+              error={!!fieldState.error}
+              // Show the address as helperText if the input value is an address book entry or domain
+              helperText={
+                fieldState.error?.message
+                  ? fieldState.error.message
+                  : field.value && field.value !== value
+                  ? formatValue(field.value)
+                  : undefined
+              }
+              inputProps={{
+                ...inputProps,
+                value: formatValue(value),
+                readOnly: isResolvingDomain,
+              }}
+              InputProps={{
+                ...InputProps,
+                endAdornment: isResolvingDomain ? (
+                  <InputAdornment position="end">
+                    <CircularProgress size="16px" />
+                  </InputAdornment>
+                ) : (
+                  InputProps.endAdornment
+                ),
+              }}
+            />
+          )
+        }}
+      />
+    </>
   )
 }
 
