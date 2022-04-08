@@ -104,6 +104,7 @@
     "bnc-onboard": "^1.37.3",
     "classnames": "^2.2.6",
     "currency-flags": "3.2.1",
+    "date-fns": "^2.20.2",
     "eth-sig-util": "^2.5.3",
     "ethereumjs-abi": "0.6.8",
     "ethereumjs-util": "^7.0.10",
