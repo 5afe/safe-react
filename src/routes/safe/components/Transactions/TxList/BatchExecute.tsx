@@ -193,18 +193,16 @@ export const BatchExecute = React.memo((): ReactElement => {
 
   return (
     <>
-      {multiSendContractAddress && (
-        <StyledButton
-          color="primary"
-          variant="contained"
-          onClick={handleOpenModal}
-          disabled={!isBatchable || hasPendingTx}
-          onMouseEnter={handleOnMouseEnter}
-          onMouseLeave={handleOnMouseLeave}
-        >
-          Execute Batch {isBatchable ? `(${batchableTransactions.length})` : ''}
-        </StyledButton>
-      )}
+      <StyledButton
+        color="primary"
+        variant="contained"
+        onClick={handleOpenModal}
+        disabled={!isBatchable || hasPendingTx}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
+      >
+        Execute Batch {isBatchable ? `(${batchableTransactions.length})` : ''}
+      </StyledButton>
       <Modal description="Execute Batch" handleClose={toggleModal} open={isModalOpen} title="Execute Batch">
         <ModalHeader onClose={toggleModal} title="Batch-Execute transactions" />
         <Hairline />

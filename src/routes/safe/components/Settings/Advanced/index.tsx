@@ -16,6 +16,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabe
 import Checkbox from '@material-ui/core/Checkbox/Checkbox'
 import { toggleBatchExecute } from 'src/logic/appearance/actions/toggleBatchExecute'
 import { batchExecuteSelector } from 'src/logic/appearance/selectors'
+import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -44,6 +45,7 @@ const Advanced = (): ReactElement => {
   const classes = useStyles()
   const { nonce, modules, guard, currentVersion } = useSelector(currentSafe) ?? {}
   const batchExecute = useSelector(batchExecuteSelector)
+  const multiSendContractAddress = getMultisendContractAddress()
 
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const isVersionWithGuards = semverSatisfies(currentVersion, '>=1.3.0')
@@ -106,22 +108,24 @@ const Advanced = (): ReactElement => {
           {!guard ? <NoTransactionGuardLegend /> : <TransactionGuard address={guard} />}
         </Block>
       )}
-      <Block className={classes.container}>
-        <Title size="xs" withoutMargin>
-          Transactions (experimental)
-        </Title>
-        <FormGroup>
-          <InfoText size="lg">
-            This feature allows you to batch execute queued transactions. They must be fully signed and strictly
-            sequential in safeNonce. Be aware that if any of the included transactions reverts, none of them will be
-            executed. This will result in the loss of the allocated transaction fees.
-          </InfoText>
-          <FormControlLabel
-            control={<Checkbox checked={batchExecute} onChange={handleToggleBatchExecute} name="batchExecute" />}
-            label="Batch execution"
-          />
-        </FormGroup>
-      </Block>
+      {multiSendContractAddress && (
+        <Block className={classes.container}>
+          <Title size="xs" withoutMargin>
+            Transactions (experimental)
+          </Title>
+          <FormGroup>
+            <InfoText size="lg">
+              This feature allows you to batch execute queued transactions. They must be fully signed and strictly
+              sequential in safeNonce. Be aware that if any of the included transactions reverts, none of them will be
+              executed. This will result in the loss of the allocated transaction fees.
+            </InfoText>
+            <FormControlLabel
+              control={<Checkbox checked={batchExecute} onChange={handleToggleBatchExecute} name="batchExecute" />}
+              label="Batch execution"
+            />
+          </FormGroup>
+        </Block>
+      )}
     </>
   )
 }
