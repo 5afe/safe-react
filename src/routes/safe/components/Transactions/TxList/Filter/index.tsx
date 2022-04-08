@@ -1,5 +1,5 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { ReactElement, useRef, useState } from 'react'
+import { Controller, DefaultValues, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
@@ -13,8 +13,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabe
 import type { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Button from 'src/components/layout/Button'
-import RHFTextField from 'src/components/forms/RHF/RHFTextField'
-import RHFAddressSearchField from 'src/components/forms/RHF/RHFAddressSearchField'
+import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFTextField'
+import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
 import RHFModuleSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFModuleSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
 import { isValidAddress } from 'src/utils/isValidAddress'
@@ -27,6 +27,7 @@ const TYPE_FIELD_NAME = 'type'
 const FROM_FIELD_NAME = 'from'
 const TO_FIELD_NAME = 'to'
 const RECIPIENT_FIELD_NAME = 'recipient'
+const HIDDEN_RECIPIENT_FIELD_NAME = `__recipient`
 const AMOUNT_FIELD_NAME = 'amount'
 const TOKEN_ADDRESS_FIELD_NAME = 'tokenAddress'
 const MODULE_FIELD_NAME = 'module'
@@ -43,6 +44,7 @@ type FilterForm = {
   [FROM_FIELD_NAME]: string
   [TO_FIELD_NAME]: string
   [RECIPIENT_FIELD_NAME]: string
+  [HIDDEN_RECIPIENT_FIELD_NAME]: string
   [AMOUNT_FIELD_NAME]: string
   [TOKEN_ADDRESS_FIELD_NAME]: string
   [MODULE_FIELD_NAME]: SettingsInfo['type']
@@ -80,31 +82,33 @@ const Filter = (): ReactElement => {
   const hideFilter = () => setShowFilter(false)
   const toggleFilter = () => setShowFilter((prev) => !prev)
 
-  const { handleSubmit, formState, reset, watch, control } = useForm<FilterForm>({
-    defaultValues: {
-      [TYPE_FIELD_NAME]: FilterType.INCOMING,
-      [FROM_FIELD_NAME]: '',
-      [TO_FIELD_NAME]: '',
-      [RECIPIENT_FIELD_NAME]: '',
-      [AMOUNT_FIELD_NAME]: '',
-      [TOKEN_ADDRESS_FIELD_NAME]: '',
-      [MODULE_FIELD_NAME]: undefined,
-      [NONCE_FIELD_NAME]: '',
-    },
+  // We cannot rely on the default values in `useForm` because they are updated on unmount
+  // meaning that each `reset` does not retain the 'original' default values
+  const defaultValues = useRef<DefaultValues<FilterForm>>({
+    [TYPE_FIELD_NAME]: FilterType.INCOMING,
+    [FROM_FIELD_NAME]: '',
+    [TO_FIELD_NAME]: '',
+    [RECIPIENT_FIELD_NAME]: '',
+    [HIDDEN_RECIPIENT_FIELD_NAME]: '',
+    [AMOUNT_FIELD_NAME]: '',
+    [TOKEN_ADDRESS_FIELD_NAME]: '',
+    [MODULE_FIELD_NAME]: undefined,
+    [NONCE_FIELD_NAME]: '',
   })
+
+  const methods = useForm<FilterForm>({
+    defaultValues: defaultValues.current,
+  })
+  const { handleSubmit, formState, reset, watch, control } = methods
 
   const type = watch(TYPE_FIELD_NAME)
 
   const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
-  const clearParameters = useCallback(() => {
-    reset({ type }, { keepDefaultValues: true })
-  }, [reset, type])
+  const clearParameters = () => {
+    reset({ ...defaultValues.current, type })
+  }
 
-  useEffect(() => {
-    clearParameters()
-  }, [clearParameters])
-
-  const onSubmit = ({ type: _, ...filter }: FilterForm) => {
+  const onSubmit = ({ [TYPE_FIELD_NAME]: _t, [HIDDEN_RECIPIENT_FIELD_NAME]: _hr, ...filter }: FilterForm) => {
     console.log(filter)
     hideFilter()
   }
@@ -143,8 +147,9 @@ const Filter = (): ReactElement => {
                       <RHFTextField<FilterForm> name={TO_FIELD_NAME} label="To" type="date" control={control} />
                       <RHFAddressSearchField<FilterForm>
                         name={RECIPIENT_FIELD_NAME}
+                        hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
                         label="Recipient"
-                        control={control}
+                        methods={methods}
                       />
                       {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
                         <RHFTextField<FilterForm>

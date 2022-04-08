@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { Control, FieldValues, Path, useController, UseControllerProps } from 'react-hook-form'
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete'
 import TextField from '@material-ui/core/TextField/TextField'
@@ -9,7 +9,6 @@ type Props<T> = {
   control: Control<T, unknown>
   rules?: UseControllerProps<T>['rules']
   label: string
-  type?: HTMLInputTypeAttribute
 }
 
 // TODO: Create enum in the types for these types
