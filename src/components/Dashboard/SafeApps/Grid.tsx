@@ -7,6 +7,10 @@ import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useApp
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 import Card from 'src/components/Dashboard/SafeApps/Card'
 import ExploreIcon from 'src/assets/icons/explore.svg'
+import local from 'src/utils/storage/local'
+import { AppTrackData, SafeApp } from 'src/routes/safe/components/Apps/types'
+import { APPS_DASHBOARD } from 'src/routes/safe/components/Apps/utils'
+import { rankTrackedSafeApps } from 'src/components/Dashboard/SafeApps/utils'
 
 const StyledGrid = styled.div`
   display: flex;
@@ -38,16 +42,24 @@ const StyledLink = styled(Link)`
 
 // Transactions Builder && Wallet connect
 const officialAppIds = ['29', '11']
-const MAX_APPS = 3
 
-const Grid = (): ReactElement => {
+const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin, isLoading } = useAppList()
 
   const displayedApps = useMemo(() => {
-    const pinnedSafeAppIds = pinnedSafeApps.map((app) => app.id)
-    const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !pinnedSafeAppIds.includes(app.id))
-    return pinnedSafeApps.concat(officialApps).slice(0, MAX_APPS)
-  }, [allApps, pinnedSafeApps])
+    const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
+    const rankedSafeAppIds = rankTrackedSafeApps(trackData)
+
+    const topRankedSafeApps: SafeApp[] = []
+    rankedSafeAppIds.forEach((id) => {
+      const sortedApp = allApps.find((app) => app.id === id)
+      if (sortedApp) topRankedSafeApps.push(sortedApp)
+    })
+
+    // Do not repeat top ranked apps
+    const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !rankedSafeAppIds.includes(app.id))
+    return topRankedSafeApps.concat(officialApps).slice(0, size)
+  }, [allApps, size])
 
   const path = generatePath(GENERIC_APPS_ROUTE)
 
@@ -69,7 +81,7 @@ const Grid = (): ReactElement => {
               onPin={() => togglePin(safeApp)}
             />
           ))}
-          {displayedApps.length < MAX_APPS && (
+          {displayedApps.length < size && (
             <StyledExplorerButton>
               <img alt="Explore Safe Apps" src={ExploreIcon} />
               <StyledLink to={path}>

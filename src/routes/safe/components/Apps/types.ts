@@ -14,7 +14,7 @@ export type StoredSafeApp = {
 
 export type AppTrackData = {
   [safeAppId: string]: {
-    timestamp: Date
+    timestamp: number
     openCount: number
     txCount: number
   }
