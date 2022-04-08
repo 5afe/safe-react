@@ -13,11 +13,11 @@ import ListIcon from 'src/components/List/ListIcon'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { loadFromCookie } from 'src/logic/cookies/utils'
 import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS } from 'src/logic/cookies/model/cookie'
-import { primaryGreen200 } from 'src/theme/variables'
+import { background, primaryLite } from 'src/theme/variables'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
-  border-top: 1px solid #f6f7f8;
+  border-top: 1px solid ${background};
 `
 
 const HelpContainer = styled.div`
@@ -42,7 +42,7 @@ const HelpCenterLink = styled.a`
   border-radius: 8px;
 
   &:hover {
-    background-color: ${primaryGreen200};
+    background-color: ${primaryLite};
   }
   p {
     font-family: ${({ theme }) => theme.fonts.fontFamily};

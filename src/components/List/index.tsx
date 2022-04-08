@@ -10,7 +10,7 @@ import ListMui from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { secondary, primaryGreen200 } from 'src/theme/variables'
+import { background, secondary, primaryLite } from 'src/theme/variables'
 
 const ListItemWrapper = styled.div`
   padding: 0 12px;
@@ -26,7 +26,7 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    background-color: ${primaryGreen200};
+    background-color: ${primaryLite};
     border-radius: 8px;
   }
 
@@ -41,7 +41,7 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-root.Mui-selected {
-    background-color: ${primaryGreen200};
+    background-color: ${primaryLite};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
@@ -88,12 +88,12 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    background-color: #f6f7f8;
+    background-color: ${background};
     border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    background-color: #f6f7f8;
+    background-color: ${background};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
