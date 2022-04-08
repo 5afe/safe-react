@@ -75,9 +75,8 @@ const RHFModuleSearchField = ({ name, control, ...props }: Props): ReactElement 
     <Autocomplete
       options={MODULES}
       getOptionLabel={({ label }) => label}
-      onChange={(_, module) => field.onChange(module?.type || undefined)}
+      onChange={(_, module) => field.onChange(module?.type)}
       noOptionsText="No module found"
-      fullWidth={false}
       renderInput={({ inputProps, ...params }) => (
         <TextField
           innerRef={field.ref}

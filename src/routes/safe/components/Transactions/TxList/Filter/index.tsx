@@ -97,7 +97,7 @@ const Filter = (): ReactElement => {
 
   const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
   const clearParameters = useCallback(() => {
-    reset({ type })
+    reset({ type }, { keepDefaultValues: true })
   }, [reset, type])
 
   useEffect(() => {
