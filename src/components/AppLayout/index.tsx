@@ -66,6 +66,24 @@ const SidebarWrapper = styled.aside`
     transition: transform 200ms ease-out;
     transform: translateX(${({ $expanded }: { $expanded: boolean }) => ($expanded ? '0' : '-95%')});
     animation: ${slideIn} 300ms ease-in;
+
+    &:before {
+      content: '';
+      position: absolute;
+      right: -42px;
+      top: 100vh;
+      margin-top: -167px;
+      width: 40px;
+      height: 40px;
+      background-color: ${({ theme }) => theme.colors.white};
+      border: 2px solid #ececeb;
+      border-width: ${({ $expanded }: { $expanded: boolean }) => ($expanded ? '2px 2px 0 2px' : '0 2px 2px 2px')};
+      border-radius: ${({ $expanded }: { $expanded: boolean }) => ($expanded ? '6px 6px 0 0' : '0 0 6px 6px')};
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23B2B5B2' d='M7.295 10.293c.36-.36.928-.388 1.32-.083l.094.083 3.292 3.293 3.294-3.293c.36-.36.928-.388 1.32-.083l.094.083c.36.361.389.928.084 1.32l-.084.095-4 4c-.361.36-.928.388-1.32.083l-.095-.083-3.999-4c-.39-.391-.39-1.024 0-1.415z'%3E%3C/path%3E%3C/svg%3E");
+      background-size: 100%;
+      transform: rotate(${({ $expanded }: { $expanded: boolean }) => ($expanded ? '90' : '-90')}deg);
+      transform-origin: center center;
+    }
   }
 `
 
