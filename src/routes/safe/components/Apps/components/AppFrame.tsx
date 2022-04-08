@@ -37,7 +37,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import local from 'src/utils/storage/local'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 
 const AppWrapper = styled.div`
@@ -120,9 +120,9 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     }
 
     if (appIsLoading && currentApp) {
-      const trackData = loadFromStorage<AppTrackData>(APPS_DASHBOARD) || {}
+      const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
       let currentOpenCount = trackData[currentApp.id]?.openCount
-      saveToStorage(APPS_DASHBOARD, {
+      local.setItem(APPS_DASHBOARD, {
         ...trackData,
         [currentApp.id]: {
           ...trackData[currentApp.id],

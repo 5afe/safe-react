@@ -26,7 +26,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import local from 'src/utils/storage/local'
 import { AppTrackData } from 'src/routes/safe/components/Apps/types'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { APPS_DASHBOARD } from 'src/routes/safe/components/Apps/utils'
@@ -118,9 +118,9 @@ export const ReviewConfirm = ({
   }
 
   const confirmTransactions = (txParameters: TxParameters, delayExecution: boolean) => {
-    const trackData = loadFromStorage<AppTrackData>(APPS_DASHBOARD) || {}
+    const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
     let currentTxCount = trackData[currentApp.id]?.txCount
-    saveToStorage(APPS_DASHBOARD, {
+    local.setItem(APPS_DASHBOARD, {
       ...trackData,
       [currentApp.id]: { ...trackData[currentApp.id], txCount: currentTxCount ? ++currentTxCount : 1 },
     })
