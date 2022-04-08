@@ -14,7 +14,6 @@ const primaryActive = '#008C73'
 const secondary = '#008C73'
 const secondaryTextOrSvg = '#B2B5B2'
 const secondaryBackground = '#f0efee'
-const primaryGreen200 = '#EFFAF8'
 const sm = '8px'
 const warningColor = '#ffc05f'
 const alertWarningColor = '#FBE5C5'
@@ -60,7 +59,6 @@ module.exports = {
   primary200: primaryLite,
   primary300: '#92C9BE',
   primary400: primaryActive,
-  primaryGreen200,
   regularFont: 400,
   red400: '#C31717',
   screenLg: 1200,

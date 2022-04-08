@@ -16,7 +16,15 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo, getExplorerInfo } from 'src/config'
-import { border, fontColor, background, primaryGreen200, secondaryBackground, black400 } from 'src/theme/variables'
+import {
+  secondary,
+  border,
+  fontColor,
+  background,
+  primaryLite,
+  secondaryBackground,
+  black400,
+} from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
@@ -83,11 +91,11 @@ const StyledExplorerButton = styled(ExplorerButton)`
   background-color: ${background};
 
   & .icon-color {
-    fill: #008c73;
+    fill: ${secondary};
   }
 
   &:hover {
-    background-color: #effaf8;
+    background-color: ${primaryLite};
   }
 `
 
@@ -98,11 +106,11 @@ const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
   background-color: ${background};
 
   & .icon-color {
-    fill: #008c73;
+    fill: ${secondary};
   }
 
   &:hover {
-    background-color: #effaf8;
+    background-color: ${primaryLite};
   }
 `
 
@@ -116,11 +124,11 @@ const StyledQRCodeButton = styled.button`
   transition: background-color 0.2s ease-in-out;
 
   & .icon-color {
-    fill: #008c73;
+    fill: ${secondary};
   }
 
   &:hover {
-    background-color: #effaf8;
+    background-color: ${primaryLite};
   }
 `
 
@@ -181,7 +189,7 @@ const ToggleSafeListButton = styled.button`
   }
 
   &:hover {
-    background-color: ${primaryGreen200};
+    background-color: ${primaryLite};
   }
 `
 
