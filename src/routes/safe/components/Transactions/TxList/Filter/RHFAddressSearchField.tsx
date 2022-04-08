@@ -7,11 +7,11 @@ import InputAdornment from '@material-ui/core/InputAdornment/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress'
 
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
-import { showShortNameSelector } from 'src/logic/appearance/selectors'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
+import { formatInputValue, getFilterHelperText } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
 
 type Props<T> = {
   name: Path<T>
@@ -27,7 +27,6 @@ const RHFAddressSearchField = <T extends FieldValues>({
   label,
   ...props
 }: Props<T>): ReactElement => {
-  const showChainPrefix = useSelector(showShortNameSelector)
   const addressBookOnChain = useSelector(currentNetworkAddressBook)
 
   const [isResolving, setIsResolving] = useState<boolean>(false)
@@ -79,15 +78,6 @@ const RHFAddressSearchField = <T extends FieldValues>({
     field.onChange(newValue)
   }
 
-  const formatRenderedValue = (value: string) => {
-    const { prefix, address } = parsePrefixedAddress(value)
-    if (isValidAddress(address)) {
-      return showChainPrefix ? `${prefix}:${address}` : address
-    }
-
-    return value
-  }
-
   return (
     <>
       <input type="hidden" {...register(hiddenName)} />
@@ -105,17 +95,10 @@ const RHFAddressSearchField = <T extends FieldValues>({
             name={name}
             variant="outlined"
             error={!!fieldState.error}
-            // Show the address as helperText if the hidden value is an address book entry or domain
-            helperText={
-              fieldState.error?.message
-                ? fieldState.error.message
-                : field.value !== hiddenField.value
-                ? formatRenderedValue(field.value)
-                : undefined
-            }
+            helperText={getFilterHelperText(field.value, fieldState.error)}
             inputProps={{
               ...inputProps,
-              value: formatRenderedValue(hiddenField.value),
+              value: formatInputValue(hiddenField.value),
               readOnly: isResolving,
             }}
             InputProps={{

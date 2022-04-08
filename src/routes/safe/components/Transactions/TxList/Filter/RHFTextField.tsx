@@ -2,6 +2,8 @@ import { HTMLInputTypeAttribute, ReactElement } from 'react'
 import { Control, FieldValues, Path, useController, UseControllerProps } from 'react-hook-form'
 import TextField from '@material-ui/core/TextField/TextField'
 
+import { formatInputValue, getFilterHelperText } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
+
 type Props<T> = {
   name: Path<T>
   control: Control<T, unknown>
@@ -10,10 +12,10 @@ type Props<T> = {
   type?: HTMLInputTypeAttribute
 }
 
-const RHFTextField = <T extends FieldValues>({ name, rules, control, ...props }: Props<T>): ReactElement => {
+const RHFTextField = <T extends FieldValues>({ name, rules, control, type, ...props }: Props<T>): ReactElement => {
   const {
-    field: { ref, ...field },
-    fieldState,
+    field: { ref, value, ...field },
+    fieldState: { error },
   } = useController({
     name,
     rules,
@@ -23,12 +25,14 @@ const RHFTextField = <T extends FieldValues>({ name, rules, control, ...props }:
   return (
     <TextField
       innerRef={ref}
+      value={formatInputValue(value)}
       {...field}
+      type={type}
       {...props}
       variant="outlined"
-      error={!!fieldState.error}
-      helperText={fieldState.error?.message}
-      InputLabelProps={{ shrink: props.type === 'date' || !!field.value }}
+      error={!!error}
+      helperText={getFilterHelperText(value, error)}
+      InputLabelProps={{ shrink: type === 'date' || !!value }}
     />
   )
 }
