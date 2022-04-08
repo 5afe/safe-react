@@ -19,7 +19,8 @@ import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getLegacyChainName } from '../utils'
 import { THIRD_PARTY_COOKIES_CHECK_URL } from './useThirdPartyCookies'
-import { trackSafeAppEvent } from 'src/utils/googleTagManager'
+import { getSafeAppName, trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -66,10 +67,7 @@ const useIframeMessageHandler = (
         return
       }
 
-      trackSafeAppEvent({
-        app: selectedApp,
-        method: messageId,
-      })
+      trackEvent({ ...SAFE_APPS_EVENTS.LEGACY_API_CALL, label: `${getSafeAppName(selectedApp)}-${messageId}` })
 
       switch (messageId) {
         // typescript doesn't narrow type in switch/case statements

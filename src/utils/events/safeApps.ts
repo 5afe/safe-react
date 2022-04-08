@@ -30,6 +30,10 @@ const SAFE_APPS = {
     event: GTM_EVENT.META,
     action: 'Transaction Rejected',
   },
+  LEGACY_API_CALL: {
+    event: GTM_EVENT.META,
+    action: 'Legacy Api call',
+  },
 }
 
 const SAFE_APPS_CATEGORY = 'safe-apps'

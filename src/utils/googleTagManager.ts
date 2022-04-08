@@ -186,7 +186,13 @@ type SafeAppEventDataLayer = {
   safeAppSDKVersion?: string
 }
 
-export const trackSafeAppEvent = ({
+export const getSafeAppName = (safeApp?: SafeApp): string => {
+  const parsedSafeApp = JSON.parse(safeApp?.id || 'Unknown Safe App')
+
+  return parsedSafeApp.name || parsedSafeApp.url || parsedSafeApp
+}
+
+export const trackSafeAppMessage = ({
   app,
   method,
   params,
@@ -197,12 +203,10 @@ export const trackSafeAppEvent = ({
   params?: any
   sdkVersion?: string
 }): void => {
-  const safeApp = JSON.parse(app?.id || 'Unknown Safe App')
-
   const dataLayer: SafeAppEventDataLayer = {
     event: GTM_EVENT.SAFE_APP,
     chainId: _getChainId(),
-    safeAppName: safeApp.name || safeApp.url || safeApp,
+    safeAppName: getSafeAppName(app),
     safeAppMethod: method,
     safeAppEthMethod: params?.call || undefined,
     safeAppSDKVersion: sdkVersion,
