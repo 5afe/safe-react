@@ -16,6 +16,7 @@ import { _getChainId } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { Cookie, removeCookies } from 'src/logic/cookies/utils'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { EMPTY_SAFE_APP } from 'src/routes/safe/components/Apps/utils'
 
 export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
@@ -177,7 +178,7 @@ export const trackEvent = ({
 }
 
 type SafeAppEventDataLayer = {
-  event: GTM_EVENT
+  event: GTM_EVENT.SAFE_APP
   chainId: string
   safeAppName: string
   safeAppMethod: string
@@ -186,9 +187,17 @@ type SafeAppEventDataLayer = {
 }
 
 export const getSafeAppName = (safeApp?: SafeApp): string => {
-  const parsedSafeApp = JSON.parse(safeApp?.id || 'Unknown Safe App')
+  if (!safeApp?.id) {
+    return EMPTY_SAFE_APP
+  }
 
-  return parsedSafeApp.name || parsedSafeApp.url || parsedSafeApp
+  try {
+    const parsedSafeApp = JSON.parse(safeApp.id)
+
+    return parsedSafeApp.name || parsedSafeApp.url || parsedSafeApp
+  } catch (error) {
+    return EMPTY_SAFE_APP
+  }
 }
 
 export const trackSafeAppMessage = ({
@@ -207,7 +216,7 @@ export const trackSafeAppMessage = ({
     chainId: _getChainId(),
     safeAppName: getSafeAppName(app),
     safeAppMethod: method,
-    safeAppEthMethod: params?.call || undefined,
+    safeAppEthMethod: params?.call,
     safeAppSDKVersion: sdkVersion,
   }
 

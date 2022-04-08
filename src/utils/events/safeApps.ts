@@ -32,7 +32,7 @@ const SAFE_APPS = {
   },
   LEGACY_API_CALL: {
     event: GTM_EVENT.META,
-    action: 'Legacy Api call',
+    action: 'Legacy API call',
   },
 }
 
