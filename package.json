@@ -40,8 +40,8 @@
     "update-mocks": "./scripts/update-mocks.sh",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/",
     "prepare": "husky install",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:open": "node ./scripts/cypress.js open",
+    "cypress:run": "node ./scripts/cypress.js run"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
