@@ -15,10 +15,13 @@ const Container = styled.div`
   top: -6px;
   left: 50%;
   transform: translateX(-50%);
-  width: 24px;
-  height: 24px;
+  min-width: 26px;
+  min-height: 26px;
   box-sizing: border-box;
   margin-left: -15px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
 `
 
 const Threshold = (): React.ReactElement | null => {
