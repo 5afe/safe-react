@@ -57,8 +57,10 @@ export const StyledTransactionsGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 16px 8px;
-  width: 98%;
+  margin: 16px 0;
+  padding: 0 8px;
+  box-sizing: border-box;
+  width: 100%;
 `
 
 export const H2 = styled.h2`
@@ -85,6 +87,10 @@ export const StyledTransactions = styled.div`
   flex-direction: column;
   row-gap: 6px;
 
+  & .MuiAccordion-root.highlight .MuiAccordionSummary-root {
+    background-color: ${primary200};
+  }
+
   & > .MuiAccordion-root {
     border: 2px solid ${grey400};
     border-radius: 8px;
@@ -106,7 +112,7 @@ export const StyledTransactions = styled.div`
 
 export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: boolean }>`
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: ${({ theme }) => theme.colors.white}};
+  background-color: ${({ theme }) => theme.colors.white};
 
   border: 2px solid ${({ expanded }) => (expanded ? `${primary300}` : `${grey400}`)};
   box-sizing: border-box;

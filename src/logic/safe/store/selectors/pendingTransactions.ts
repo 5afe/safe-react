@@ -20,16 +20,21 @@ export const pendingTxIdsByChain = createSelector(
   },
 )
 
-export const pendingTxByChain = createSelector(
+export const pendingTxsByChain = createSelector(
   (state: AppReduxState) => state,
   pendingTxIdsByChain,
-  (state: AppReduxState, pendingTxIds: PendingTransactionsState[ChainId]): Transaction | undefined => {
+  (state: AppReduxState, pendingTxIds: PendingTransactionsState[ChainId]): Transaction[] | undefined => {
     if (!pendingTxIds) {
       return
     }
 
-    const pendingTxId = Object.keys(pendingTxIds)[0]
-    return getTransactionByAttribute(state, { attributeValue: pendingTxId, attributeName: 'id' })
+    const pendingTxs = Object.keys(pendingTxIds).reduce<Transaction[]>((acc, txId) => {
+      const tx = getTransactionByAttribute(state, { attributeValue: txId, attributeName: 'id' })
+
+      return tx ? [...acc, tx] : acc
+    }, [])
+
+    return pendingTxs.length > 0 ? pendingTxs : undefined
   },
 )
 
