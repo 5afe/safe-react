@@ -9,8 +9,7 @@ import Card from 'src/components/Dashboard/SafeApps/Card'
 import ExploreIcon from 'src/assets/icons/explore.svg'
 import local from 'src/utils/storage/local'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
-import { rankTrackedSafeApps } from 'src/components/Dashboard/SafeApps/utils'
-import { APPS_DASHBOARD, AppTrackData } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import { APPS_DASHBOARD, AppTrackData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const StyledGrid = styled.div`
   display: flex;

@@ -1,5 +1,4 @@
-import { rankTrackedSafeApps } from 'src/components/Dashboard/SafeApps/utils'
-import { AppTrackData } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import { AppTrackData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 describe('rankTrackedSafeApps', () => {
   it('ranks more recent apps higher', () => {
