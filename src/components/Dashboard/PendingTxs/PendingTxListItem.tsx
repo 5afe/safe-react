@@ -23,13 +23,17 @@ const TransactionToConfirm = styled(Link)`
   align-items: center;
   grid-template-columns: 25px 1fr 1fr auto;
   gap: 4px;
-  margin: ${sm} auto;
+  margin-bottom: ${sm};
   padding: 4px 16px;
   text-decoration: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 2px solid ${grey400};
   color: ${({ theme }) => theme.colors.text};
   border-radius: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
 
 const StyledConfirmationsCount = styled.div`

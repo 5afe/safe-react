@@ -7,46 +7,63 @@ import AddSafeWidget from 'src/components/Dashboard/AddSafe'
 import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
 import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
 import Row from 'src/components/layout/Row'
+import Col from 'src/components/layout/Col'
+import { lg } from 'src/theme/variables'
 
 const Card = styled.div`
   background: #fff;
-  padding: 40px;
+  padding: ${lg};
   border-radius: 8px;
   flex: 1;
-  margin: 10px;
+  position: relative;
+`
 
-  & > h2 {
+const StyledRow = styled(Row)`
+  gap: 24px;
+  flex-wrap: inherit;
+
+  & h2 {
     margin-top: 0;
   }
+`
+
+const Container = styled.div`
+  padding: 12px 8px;
 `
 
 function Home(): ReactElement {
   return (
     <Page>
-      <Row>
-        <Card>
-          <AddSafeWidget />
-        </Card>
+      <Container>
+        <StyledRow margin="lg">
+          <Col layout="column" xs={12} md={6}>
+            <h2>Load Existing Safe</h2>
+            <Card>
+              <AddSafeWidget />
+            </Card>
+          </Col>
+          <Col layout="column" xs={12} md={6}>
+            <h2>Create Safe</h2>
+            <Card>
+              <CreateSafeWidget />
+            </Card>
+          </Col>
+        </StyledRow>
 
-        <Card>
-          <CreateSafeWidget />
-        </Card>
-      </Row>
+        <StyledRow margin="lg">
+          <Col layout="column" md={6}>
+            <h2>Safe Apps</h2>
+            <Card>
+              <SafeAppsGrid size={6} />
+            </Card>
+          </Col>
 
-      <Row>
-        <Card>
-          <h2>Owned Safes</h2>
-        </Card>
-
-        <Card>
-          <h2>Transactions to Sign</h2>
-          <PendingTxsList />
-        </Card>
-      </Row>
-
-      <Row>
-        <SafeAppsGrid size={6} />
-      </Row>
+          <Col layout="column" md={6}>
+            <h2>Transactions to Sign</h2>
+            <PendingTxsList />
+          </Col>
+        </StyledRow>
+      </Container>
     </Page>
   )
 }

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
-import { Button, Title, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Text } from '@gnosis.pm/safe-react-components'
 
 import Link from 'src/components/layout/Link'
 import { LOAD_SAFE_ROUTE } from 'src/routes/routes'
@@ -15,9 +15,6 @@ const StyledButtonLabel = styled(Text)`
 const AddSafeWidget = (): ReactElement => {
   return (
     <CardContentContainer>
-      <Title size="sm" strong withoutMargin>
-        Load Existing Safe
-      </Title>
       <CardDescriptionContainer>
         <Text size="xl">
           Already have a Safe or want to access it from a different device? Easily load your Safe using your Safe

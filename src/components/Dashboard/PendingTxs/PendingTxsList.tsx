@@ -56,7 +56,7 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   const { shortName } = getChainById(chainId)
   const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress: address, shortName })
   return (
-    <List component="div">
+    <List component="div" disablePadding>
       {queuedTxsToDisplay?.map((transaction) => (
         <PendingTxListItem transaction={transaction} url={url} key={transaction.id} />
       ))}

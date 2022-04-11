@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
-import { Button, Title, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Text } from '@gnosis.pm/safe-react-components'
 import Link from 'src/components/layout/Link'
 import Track from 'src/components/Track'
 import { OPEN_SAFE_ROUTE } from 'src/routes/routes'
@@ -14,16 +14,12 @@ export const CardContentContainer = styled.div`
 
 export const CardDescriptionContainer = styled.div`
   flex: 1;
-  margin: 1.5em 0;
+  margin: 0 0 1.5em 0;
 `
 
 const CreateSafeWidget = (): ReactElement => {
   return (
     <CardContentContainer>
-      <Title size="sm" strong withoutMargin>
-        Create Safe
-      </Title>
-
       <CardDescriptionContainer>
         <Text size="xl">Create a new Safe that is controlled by one or multiple owners.</Text>
         <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
