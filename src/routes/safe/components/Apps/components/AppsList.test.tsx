@@ -5,6 +5,9 @@ import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import * as clipboard from 'src/utils/clipboard'
+import { PUBLIC_URL } from 'src/utils/constants'
+import { SAFE_APP_LANDING_PAGE_ROUTE } from 'src/routes/routes'
 
 jest.mock('src/routes/routes', () => {
   const original = jest.requireActual('src/routes/routes')
@@ -275,5 +278,47 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     expect(updatedPinnedAppsInLocalStorage).toContain('14')
     expect(updatedPinnedAppsInLocalStorage).toContain('24')
     expect(updatedPinnedAppsInLocalStorage).not.toContain('228')
+  })
+})
+
+describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
+  it('Shows Share Safe app button in the Safe App Card', async () => {
+    render(<AppsList />)
+
+    await waitFor(() => {
+      const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
+      const compoundAppShareBtn = within(allAppsContainer).getByLabelText('Share Compound Safe App')
+
+      expect(compoundAppShareBtn).toBeInTheDocument()
+    })
+  })
+
+  it('Copies the Safe app url to the clipboard and shows a snackbar', async () => {
+    const copyToClipboardSpy = jest.spyOn(clipboard, 'copyToClipboard')
+
+    copyToClipboardSpy.mockImplementation(() => jest.fn())
+
+    render(<AppsList />)
+
+    await waitFor(() => {
+      const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
+      const compoundAppShareBtn = within(allAppsContainer).getByLabelText('Share Compound Safe App')
+
+      // snackbar is not present
+      expect(screen.queryByText('Safe App url copied to clipboard!')).not.toBeInTheDocument()
+
+      // snackbar is not present
+      fireEvent.click(compoundAppShareBtn)
+
+      const baseUrl = `${window.location.origin}${PUBLIC_URL}`
+      const compaundUrl = 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k'
+      const shareSafeAppUrl = `${baseUrl}${SAFE_APP_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(compaundUrl)}&chainId=4`
+
+      // share Safe app url is copied in the clipboard
+      expect(copyToClipboardSpy).toHaveBeenCalledWith(shareSafeAppUrl)
+
+      // we show a snackbar
+      expect(screen.getByText('Safe App url copied to clipboard!')).toBeInTheDocument()
+    })
   })
 })

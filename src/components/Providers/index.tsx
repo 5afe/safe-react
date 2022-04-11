@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components'
 import { Store } from 'redux'
 import { History } from 'history'
 import { theme } from '@gnosis.pm/safe-react-components'
+import SnackbarProvider from './SnackbarProvider'
 
 declare type Theme = typeof theme
 
@@ -22,7 +23,9 @@ function Providers({ children, store, styledTheme, muiTheme, history }: Provider
     <ThemeProvider theme={styledTheme}>
       <Provider store={store}>
         <MuiThemeProvider theme={muiTheme}>
-          <Router history={history}>{children}</Router>
+          <SnackbarProvider>
+            <Router history={history}>{children}</Router>
+          </SnackbarProvider>
         </MuiThemeProvider>
       </Provider>
     </ThemeProvider>
