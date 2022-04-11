@@ -1,4 +1,4 @@
-import { AppTrackData } from 'src/routes/safe/components/Apps/types'
+import { AppTrackData } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const TXCOUNT_WEIGHT = 2
 const OPENCOUNT_WEIGHT = 1

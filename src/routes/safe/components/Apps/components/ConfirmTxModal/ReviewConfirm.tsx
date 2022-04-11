@@ -26,10 +26,8 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import local from 'src/utils/storage/local'
-import { AppTrackData } from 'src/routes/safe/components/Apps/types'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
-import { APPS_DASHBOARD } from 'src/routes/safe/components/Apps/utils'
+import { countTxs } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const Container = styled.div`
   max-width: 480px;
@@ -118,12 +116,7 @@ export const ReviewConfirm = ({
   }
 
   const confirmTransactions = (txParameters: TxParameters, delayExecution: boolean) => {
-    const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
-    let currentTxCount = trackData[currentApp.id]?.txCount
-    local.setItem(APPS_DASHBOARD, {
-      ...trackData,
-      [currentApp.id]: { ...trackData[currentApp.id], txCount: currentTxCount ? ++currentTxCount : 1 },
-    })
+    countTxs(currentApp)
     dispatch(
       createTransaction(
         {

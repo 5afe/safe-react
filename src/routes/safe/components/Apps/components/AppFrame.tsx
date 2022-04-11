@@ -22,8 +22,8 @@ import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { LegacyMethods, useAppCommunicator } from '../communicator'
-import { APPS_DASHBOARD, EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
-import { AppTrackData, SafeApp } from '../types'
+import { SafeApp } from '../types'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
@@ -37,8 +37,8 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import local from 'src/utils/storage/local'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
+import { countOpen } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -141,17 +141,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   useEffect(() => {
     if (!currentApp) return
 
-    const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
-    let currentOpenCount = trackData[currentApp.id]?.openCount
-    local.setItem(APPS_DASHBOARD, {
-      ...trackData,
-      [currentApp.id]: {
-        ...trackData[currentApp.id],
-        timestamp: Date.now(),
-        openCount: currentOpenCount ? ++currentOpenCount : 1,
-        txCount: trackData[currentApp.id]?.txCount || 0,
-      },
-    })
+    countOpen(currentApp)
   }, [currentApp])
 
   const openConfirmationModal = useCallback(
