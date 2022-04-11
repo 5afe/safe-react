@@ -74,12 +74,12 @@ function SafeAppLandingPage(): ReactElement {
 
   // redirect to the Welcome page if the Safe App details are invalid
   useEffect(() => {
-    const isSafeAppMissing = !isLoading && appList.length > 0 && !safeAppDetails
+    const isSafeAppMissing = !isLoading && !safeAppDetails
 
     if (isSafeAppMissing && isManifestError) {
       history.push(WELCOME_ROUTE)
     }
-  }, [isLoading, appList, safeAppDetails, isManifestError])
+  }, [isLoading, safeAppDetails, isManifestError])
 
   const availableChains = safeAppDetails?.chainIds
 
