@@ -102,7 +102,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   return (
     <TxModalWrapper txData={txData} txTo={tx.assetAddress} onSubmit={submitTx} onBack={onPrev}>
-      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send NFT" />
       <Hairline />
       <Block className={classes.container}>
         <SafeInfo text="Sending from" />

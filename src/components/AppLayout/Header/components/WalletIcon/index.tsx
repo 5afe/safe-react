@@ -4,6 +4,7 @@ import * as React from 'react'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import WALLET_ICONS from './icons'
+import { screenSm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
   container: {
@@ -11,6 +12,9 @@ const useStyles = makeStyles({
     marginRight: '10px',
     letterSpacing: '-0.5px',
     flex: 'none',
+    [`@media (max-width: ${screenSm}px)`]: {
+      display: 'none',
+    },
   },
   icon: {
     maxWidth: 'none',

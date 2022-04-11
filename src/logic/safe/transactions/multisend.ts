@@ -10,8 +10,14 @@ export interface MultiSendTx {
 }
 
 export const encodeMultiSendCall = (txs: Transaction[]): string => {
-  const web3 = getWeb3()
   const multiSend = getMultisendContract()
+  const joinedTxs = getMultiSendJoinedTxs(txs)
+
+  return multiSend.methods.multiSend(joinedTxs).encodeABI()
+}
+
+export const getMultiSendJoinedTxs = (txs: Transaction[]): string => {
+  const web3 = getWeb3()
 
   const joinedTxs = txs
     .map((tx) =>
@@ -26,7 +32,5 @@ export const encodeMultiSendCall = (txs: Transaction[]): string => {
     )
     .join('')
 
-  const encodedMultiSendCallData = multiSend.methods.multiSend(`0x${joinedTxs}`).encodeABI()
-
-  return encodedMultiSendCallData
+  return `0x${joinedTxs}`
 }

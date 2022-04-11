@@ -116,7 +116,7 @@ const SendCollectible = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send NFT" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
@@ -212,7 +212,7 @@ const SendCollectible = ({
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph color="disabled" noMargin size="md">
-                      Collectible
+                      NFT collection
                     </Paragraph>
                   </Col>
                 </Row>

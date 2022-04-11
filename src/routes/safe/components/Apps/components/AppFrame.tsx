@@ -23,7 +23,7 @@ import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { SafeApp } from '../types'
-import { useAppCommunicator } from '../communicator'
+import { LegacyMethods, useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
@@ -36,6 +36,7 @@ import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -179,7 +180,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     /**
      * @deprecated: getEnvInfo is a legacy method. Should not be used
      */
-    communicator?.on('getEnvInfo', () => ({
+    communicator?.on(LegacyMethods.getEnvInfo, () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
 
@@ -244,7 +245,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.sendTransactions, (msg) => {
       // @ts-expect-error explore ways to fix this
-      openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
+      const transactions = (msg.data.params.txs as Transaction[]).map(({ to, ...rest }) => ({
+        to: checksumAddress(to),
+        ...rest,
+      }))
+      // @ts-expect-error explore ways to fix this
+      openConfirmationModal(transactions, msg.data.params.params, msg.data.id)
     })
 
     communicator?.on(Methods.signMessage, async (msg) => {
@@ -285,6 +291,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send({ safeTxHash }, requestId as string)
+
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_CONFIRMED, label: safeApp.name })
   }
 
   const onTxReject = (requestId: RequestId) => {
@@ -296,6 +304,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send('Transaction was rejected', requestId as string, true)
+
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
   }
 
   useEffect(() => {
