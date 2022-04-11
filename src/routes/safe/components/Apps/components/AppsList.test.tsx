@@ -6,8 +6,8 @@ import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import * as clipboard from 'src/utils/clipboard'
-import { PUBLIC_URL } from 'src/utils/constants'
-import { SAFE_APP_LANDING_PAGE_ROUTE } from 'src/routes/routes'
+import { getShareSafeAppUrl } from 'src/routes/routes'
+import { CHAIN_ID } from 'src/config/chain.d'
 
 jest.mock('src/routes/routes', () => {
   const original = jest.requireActual('src/routes/routes')
@@ -293,7 +293,7 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
     })
   })
 
-  it('Copies the Safe app url to the clipboard and shows a snackbar', async () => {
+  it('Copies the Safe app URL to the clipboard and shows a snackbar', async () => {
     const copyToClipboardSpy = jest.spyOn(clipboard, 'copyToClipboard')
 
     copyToClipboardSpy.mockImplementation(() => jest.fn())
@@ -305,20 +305,19 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
       const compoundAppShareBtn = within(allAppsContainer).getByLabelText('Share Compound Safe App')
 
       // snackbar is not present
-      expect(screen.queryByText('Safe App url copied to clipboard!')).not.toBeInTheDocument()
+      expect(screen.queryByText('Safe App URL copied to clipboard!')).not.toBeInTheDocument()
 
       // we click on the Share Safe App Button
       fireEvent.click(compoundAppShareBtn)
 
-      const baseUrl = `${window.location.origin}${PUBLIC_URL}`
       const compaundUrl = 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k'
-      const shareSafeAppUrl = `${baseUrl}${SAFE_APP_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(compaundUrl)}&chainId=4`
+      const shareSafeAppUrl = getShareSafeAppUrl(compaundUrl, CHAIN_ID.RINKEBY)
 
       // share Safe app url is copied in the clipboard
       expect(copyToClipboardSpy).toHaveBeenCalledWith(shareSafeAppUrl)
 
       // we show a snackbar
-      expect(screen.getByText('Safe App url copied to clipboard!')).toBeInTheDocument()
+      expect(screen.getByText('Safe App URL copied to clipboard!')).toBeInTheDocument()
     })
   })
 })

@@ -13,11 +13,10 @@ import { motion } from 'framer-motion'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeApp } from '../../types'
-import { PUBLIC_URL } from 'src/utils/constants'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { AppIconSK, DescriptionSK, TitleSK } from './skeleton'
 import { copyToClipboard } from 'src/utils/clipboard'
-import { SAFE_APP_LANDING_PAGE_ROUTE } from 'src/routes/routes'
+import { getShareSafeAppUrl } from 'src/routes/routes'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { enhanceSnackbarForAction, NOTIFICATIONS } from 'src/logic/notifications'
@@ -157,11 +156,7 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: 
           // prevent triggering the link event
           e.preventDefault()
 
-          const baseUrl = `${window.location.origin}${PUBLIC_URL}`
-          const shareSafeAppUrl = `${baseUrl}${SAFE_APP_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(
-            app.url,
-          )}&chainId=${chainId}`
-
+          const shareSafeAppUrl = getShareSafeAppUrl(app.url, chainId)
           copyToClipboard(shareSafeAppUrl)
 
           // we show a snackbar

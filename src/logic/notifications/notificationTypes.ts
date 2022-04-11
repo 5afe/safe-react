@@ -242,7 +242,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
 
   // Copy to clipboard
   SHARE_SAFE_APP_URL_COPIED: {
-    message: 'Safe App url copied to clipboard!',
+    message: 'Safe App URL copied to clipboard!',
     options: { variant: INFO, persist: false, preventDuplicate: true },
   },
 }
