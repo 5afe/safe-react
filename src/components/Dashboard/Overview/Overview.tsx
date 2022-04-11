@@ -7,7 +7,6 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
-import Button from 'src/components/layout/Button'
 import { primaryLite, primaryActive, smallFontSize, md } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
@@ -92,11 +91,7 @@ const Overview = (): ReactElement => {
           </Text>
           <StyledText size="xl">{nftTokens.length}</StyledText>
         </Col>
-        <Col end="xs" md={6}>
-          <Button size="md" variant="contained" color="primary">
-            Open Safe
-          </Button>
-        </Col>
+        <Col end="xs" md={6}></Col>
       </Row>
     </Container>
   )
