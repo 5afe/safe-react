@@ -10,11 +10,17 @@ import ExploreIcon from 'src/assets/icons/explore.svg'
 import local from 'src/utils/storage/local'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { APPS_DASHBOARD, AppTrackData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 
 const StyledGrid = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+`
+
+const SkeletonWrapper = styled.div`
+  border-radius: 8px;
+  overflow: hidden;
 `
 
 const StyledExplorerButton = styled.div`
@@ -66,7 +72,13 @@ const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
     <div>
       <h2>Safe Apps</h2>
       {isLoading ? (
-        <h2>Loading...</h2>
+        <StyledGrid>
+          {Array.from(Array(size).keys()).map((key) => (
+            <SkeletonWrapper key={key}>
+              <Skeleton variant="rect" width={308} height={248} />
+            </SkeletonWrapper>
+          ))}
+        </StyledGrid>
       ) : (
         <StyledGrid>
           {displayedApps.map((safeApp) => (
