@@ -68,10 +68,11 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 `
 
+const subItemLeftSpace = '10px'
 const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
-    margin: 4px 0 4px 10px;
-    width: calc(100% - 10px);
+    margin: 4px 0 4px ${subItemLeftSpace};
+    width: calc(100% - ${subItemLeftSpace});
 
     &::before {
       content: '';
@@ -79,7 +80,7 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
       height: 1px;
       background: ${gray500};
       position: absolute;
-      left: -10px;
+      left: -${subItemLeftSpace};
     }
   }
 

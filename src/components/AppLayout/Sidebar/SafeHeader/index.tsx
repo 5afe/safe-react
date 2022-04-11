@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
 import {
   Icon,
@@ -84,12 +84,7 @@ const StyledButton = styled(Button)`
   }
 `
 
-const StyledExplorerButton = styled(ExplorerButton)`
-  border-radius: 5px;
-  width: 32px;
-  height: 32px;
-  background-color: ${background};
-
+const innerButtonStyle = css`
   & span {
     transition: background-color 0.2s ease-in-out;
     border-radius: 5px;
@@ -110,30 +105,22 @@ const StyledExplorerButton = styled(ExplorerButton)`
   }
 `
 
+const StyledExplorerButton = styled(ExplorerButton)`
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: ${background};
+
+  ${innerButtonStyle}
+`
+
 const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
   border-radius: 5px;
   width: 32px;
   height: 32px;
   background-color: ${background};
 
-  & span {
-    transition: background-color 0.2s ease-in-out;
-    border-radius: 5px;
-    width: 32px;
-    height: 32px;
-    background-color: ${background};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  & .icon-color {
-    fill: ${secondary};
-  }
-
-  &:hover span {
-    background-color: ${primaryLite};
-  }
+  ${innerButtonStyle}
 `
 
 const StyledQRCodeButton = styled.button`
@@ -145,24 +132,7 @@ const StyledQRCodeButton = styled.button`
   background-color: ${background};
   padding: 0;
 
-  & span {
-    transition: background-color 0.2s ease-in-out;
-    border-radius: 5px;
-    width: 32px;
-    height: 32px;
-    background-color: ${background};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  & .icon-color {
-    fill: ${secondary};
-  }
-
-  &:hover span {
-    background-color: ${primaryLite};
-  }
+  ${innerButtonStyle}
 `
 
 type StyledTextLabelProps = {
