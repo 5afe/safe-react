@@ -258,7 +258,6 @@ const theme = createTheme({
         color: primary,
         display: 'flex',
         height: 'auto',
-        padding: md,
         lineHeight: '1.5',
         textOverflow: 'ellipsis',
         '&::-webkit-input-placeholder': {
