@@ -16,6 +16,7 @@ const StyledGrid = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
 `
 
 const SkeletonWrapper = styled.div`
