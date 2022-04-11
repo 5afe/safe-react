@@ -60,7 +60,7 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
     background-color: ${secondary} !important;
     top: auto;
     bottom: 8px;
-    left: 31px;
+    left: 28px;
     width: 6px;
     height: 6px;
     border: white solid 1px;

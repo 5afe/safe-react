@@ -12,7 +12,6 @@ import {
 } from '@gnosis.pm/safe-react-components'
 import { useRouteMatch } from 'react-router-dom'
 
-import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo, getExplorerInfo } from 'src/config'
@@ -90,11 +89,22 @@ const StyledExplorerButton = styled(ExplorerButton)`
   height: 32px;
   background-color: ${background};
 
+  & span {
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 5px;
+    width: 32px;
+    height: 32px;
+    background-color: ${background};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   & .icon-color {
     fill: ${secondary};
   }
 
-  &:hover {
+  &:hover span {
     background-color: ${primaryLite};
   }
 `
@@ -105,11 +115,22 @@ const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
   height: 32px;
   background-color: ${background};
 
+  & span {
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 5px;
+    width: 32px;
+    height: 32px;
+    background-color: ${background};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   & .icon-color {
     fill: ${secondary};
   }
 
-  &:hover {
+  &:hover span {
     background-color: ${primaryLite};
   }
 `
@@ -121,13 +142,24 @@ const StyledQRCodeButton = styled.button`
   width: 32px;
   height: 32px;
   background-color: ${background};
-  transition: background-color 0.2s ease-in-out;
+  padding: 0;
+
+  & span {
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 5px;
+    width: 32px;
+    height: 32px;
+    background-color: ${background};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   & .icon-color {
     fill: ${secondary};
   }
 
-  &:hover {
+  &:hover span {
     background-color: ${primaryLite};
   }
 `
@@ -183,9 +215,12 @@ const ToggleSafeListButton = styled.button`
   height: 42px;
   position: absolute;
   right: -40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   & span {
-    margin-left: -20px;
+    margin-left: -15px;
   }
 
   &:hover {
@@ -228,9 +263,9 @@ const SafeHeader = ({
         <IdenticonContainer>
           <FlexSpacer />
           <FixedIcon type="notConnected" />
-          <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
-          </ButtonHelper>
+          </ToggleSafeListButton>
         </IdenticonContainer>
       </Container>
     )
@@ -284,7 +319,7 @@ const SafeHeader = ({
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <Text size="lg" color="white" strong>
+          <Text size="xl" color="white">
             New Transaction
           </Text>
         </StyledButton>
