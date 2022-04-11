@@ -1,9 +1,10 @@
 import { ReactElement, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import { Modal } from 'src/components/Modal'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -11,7 +12,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
@@ -20,6 +20,7 @@ import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import { getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -32,6 +33,9 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const safeAddress = extractSafeAddress()
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const chainId = useSelector(currentChainId)
+
+  const spendingLimitAddress = getSpendingLimitModuleAddress(chainId)
 
   useEffect(() => {
     const {
@@ -47,7 +51,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       dispatch(
         createTransaction({
           safeAddress,
-          to: SPENDING_LIMIT_MODULE_ADDRESS,
+          to: spendingLimitAddress,
           valueInWei: '0',
           txData,
           txNonce: txParameters.safeNonce,
@@ -79,7 +83,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     >
       <TxModalWrapper
         txData={txData}
-        txTo={SPENDING_LIMIT_MODULE_ADDRESS}
+        txTo={spendingLimitAddress}
         onSubmit={removeSelectedSpendingLimit}
         onClose={onClose}
         submitText="Remove"
