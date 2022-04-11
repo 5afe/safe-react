@@ -162,6 +162,16 @@ const useStyles = makeStyles((theme: Theme) =>
     listMui: {
       marginLeft: '20px',
       borderLeft: `1px solid ${gray500}`,
+
+      '&::after': {
+        content: '""',
+        height: '18px',
+        width: '1px',
+        position: 'absolute',
+        bottom: 0,
+        left: '-1px',
+        background: 'white',
+      },
     },
     nested: {
       paddingLeft: theme.spacing(3),
