@@ -23,6 +23,7 @@ import {
   primaryLite,
   secondaryBackground,
   black400,
+  gray500,
 } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -192,7 +193,7 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
 `
 
 const StyledLabel = styled.div`
-  background-color: #e2e3e3;
+  background-color: ${gray500};
   margin-top: 14px;
   width: 100%;
   padding: 3px 8px;

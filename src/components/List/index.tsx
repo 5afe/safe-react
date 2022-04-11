@@ -10,7 +10,7 @@ import ListMui from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { background, secondary, primaryLite } from 'src/theme/variables'
+import { background, secondary, primaryLite, black500, gray500 } from 'src/theme/variables'
 
 const ListItemWrapper = styled.div`
   padding: 0 12px;
@@ -70,16 +70,16 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
 
 const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
-    margin: 4px 0 4px 15px;
-    width: calc(100% - 15px);
+    margin: 4px 0 4px 10px;
+    width: calc(100% - 10px);
 
     &::before {
       content: '';
       width: 6px;
       height: 1px;
-      background: #e1e1e1;
+      background: ${gray500};
       position: absolute;
-      left: -15px;
+      left: -10px;
     }
   }
 
@@ -112,7 +112,7 @@ export const StyledListItemText = styled(ListItemText)`
     font-weight: 600;
     line-height: 1.5;
     letter-spacing: 0.5px;
-    color: #162d45 !important;
+    color: ${black500} !important;
   }
 `
 
@@ -122,7 +122,7 @@ const StyledListSubItemText = styled(ListItemText)`
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0;
-    color: #162d45 !important;
+    color: ${black500} !important;
   }
 `
 
@@ -161,7 +161,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     listMui: {
       marginLeft: '20px',
-      borderLeft: '1px solid #e1e1e1',
+      borderLeft: `1px solid ${gray500}`,
     },
     nested: {
       paddingLeft: theme.spacing(3),
