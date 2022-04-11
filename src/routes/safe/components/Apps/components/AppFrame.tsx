@@ -119,18 +119,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       clearTimeout(errorTimer.current)
     }
 
-    if (appIsLoading && currentApp) {
-      const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
-      let currentOpenCount = trackData[currentApp.id]?.openCount
-      local.setItem(APPS_DASHBOARD, {
-        ...trackData,
-        [currentApp.id]: {
-          ...trackData[currentApp.id],
-          timestamp: Date.now(),
-          openCount: currentOpenCount ? ++currentOpenCount : 1,
-          txCount: trackData[currentApp.id]?.txCount || 0,
-        },
-      })
+    if (appIsLoading) {
       timer.current = window.setTimeout(() => {
         setIsLoadingSlow(true)
       }, SAFE_POLLING_INTERVAL)
@@ -147,7 +136,23 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     return () => {
       clearTimeouts()
     }
-  }, [appIsLoading, currentApp])
+  }, [appIsLoading])
+
+  useEffect(() => {
+    if (!currentApp) return
+
+    const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
+    let currentOpenCount = trackData[currentApp.id]?.openCount
+    local.setItem(APPS_DASHBOARD, {
+      ...trackData,
+      [currentApp.id]: {
+        ...trackData[currentApp.id],
+        timestamp: Date.now(),
+        openCount: currentOpenCount ? ++currentOpenCount : 1,
+        txCount: trackData[currentApp.id]?.txCount || 0,
+      },
+    })
+  }, [currentApp])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
