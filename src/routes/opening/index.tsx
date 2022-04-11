@@ -286,7 +286,7 @@ export const SafeDeployment = ({
           </BodyInstruction>
         )}
 
-        {creationTxHash && (
+        {steps[stepIndex].instruction && creationTxHash ? (
           <TxText>
             Your Safe creation transaction:
             <br />
@@ -294,7 +294,7 @@ export const SafeDeployment = ({
               <PrefixedEthHashInfo hash={creationTxHash} showCopyBtn explorerUrl={getExplorerInfo(creationTxHash)} />
             </Center>
           </TxText>
-        )}
+        ) : null}
 
         <BodyFooter>
           {FooterComponent ? (
