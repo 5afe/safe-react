@@ -2,7 +2,6 @@ import MuiTextField from '@material-ui/core/TextField'
 import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
 import { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -155,7 +154,7 @@ const BaseAddressBookInput = ({
   const inputStyles = useTextFieldInputStyle()
 
   return (
-    <StyledAutocomplete
+    <Autocomplete<AddressBookEntry, false, false, true>
       closeIcon={null}
       openOnFocus={false}
       filterOptions={filterAddressEntries}
@@ -184,15 +183,6 @@ const BaseAddressBookInput = ({
     />
   )
 }
-
-const StyledAutocomplete = styled(Autocomplete)`
-  .MuiAutocomplete-inputRoot {
-    padding: 0 !important;
-    &.root {
-      padding: 16px;
-    }
-  }
-`
 
 export const AddressBookInput = (props: AddressBookProps): ReactElement => {
   const addressBookEntries = useSelector(currentNetworkAddressBook)

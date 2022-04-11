@@ -104,7 +104,7 @@ const RHFAddressSearchField = <T extends FieldValues>({
             InputProps={{
               ...InputProps,
               endAdornment: isResolving ? (
-                <InputAdornment position="end">
+                <InputAdornment position="start">
                   <CircularProgress size="16px" />
                 </InputAdornment>
               ) : (
