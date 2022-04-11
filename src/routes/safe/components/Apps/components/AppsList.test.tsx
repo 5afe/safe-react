@@ -307,7 +307,7 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
       // snackbar is not present
       expect(screen.queryByText('Safe App url copied to clipboard!')).not.toBeInTheDocument()
 
-      // snackbar is not present
+      // we click on the Share Safe App Button
       fireEvent.click(compoundAppShareBtn)
 
       const baseUrl = `${window.location.origin}${PUBLIC_URL}`
