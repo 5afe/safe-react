@@ -45,7 +45,7 @@ function Home(): ReactElement {
       </Row>
 
       <Row>
-        <SafeApps />
+        <SafeApps size={6} />
       </Row>
     </Page>
   )

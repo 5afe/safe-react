@@ -64,7 +64,9 @@ const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
 
     // Do not repeat top ranked apps
     const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !rankedSafeAppIds.includes(app.id))
-    return topRankedSafeApps.concat(officialApps).slice(0, size)
+
+    // Display size - 1 in order to always display the "Explore Safe Apps" card
+    return topRankedSafeApps.concat(officialApps).slice(0, size - 1)
   }, [allApps, size])
 
   const path = generatePath(GENERIC_APPS_ROUTE)
@@ -93,16 +95,14 @@ const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
               onPin={() => togglePin(safeApp)}
             />
           ))}
-          {displayedApps.length < size && (
-            <StyledExplorerButton>
-              <img alt="Explore Safe Apps" src={ExploreIcon} />
-              <StyledLink to={path}>
-                <Button size="md" color="primary" variant="contained">
-                  Explore Safe Apps
-                </Button>
-              </StyledLink>
-            </StyledExplorerButton>
-          )}
+          <StyledExplorerButton>
+            <img alt="Explore Safe Apps" src={ExploreIcon} />
+            <StyledLink to={path}>
+              <Button size="md" color="primary" variant="contained">
+                Explore Safe Apps
+              </Button>
+            </StyledLink>
+          </StyledExplorerButton>
         </StyledGrid>
       )}
     </div>
