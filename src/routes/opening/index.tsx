@@ -219,6 +219,7 @@ export const SafeDeployment = ({
           }
           if (code !== EMPTY_DATA) {
             setStepIndex(5)
+            setError(false)
           }
         }, 1000)
       } catch (error) {
@@ -285,7 +286,7 @@ export const SafeDeployment = ({
           </BodyInstruction>
         )}
 
-        {steps[stepIndex].instruction && creationTxHash ? (
+        {creationTxHash && (
           <TxText>
             Your Safe creation transaction:
             <br />
@@ -293,7 +294,7 @@ export const SafeDeployment = ({
               <PrefixedEthHashInfo hash={creationTxHash} showCopyBtn explorerUrl={getExplorerInfo(creationTxHash)} />
             </Center>
           </TxText>
-        ) : null}
+        )}
 
         <BodyFooter>
           {FooterComponent ? (
