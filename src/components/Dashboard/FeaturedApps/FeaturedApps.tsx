@@ -1,7 +1,7 @@
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
-import { generateSafeRoute, SAFE_ROUTES, SafeRouteParams } from 'src/routes/routes'
+import { getSafeAppUrl, SafeRouteParams } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getShortName } from 'src/config'
@@ -41,7 +41,7 @@ export const FeaturedApps = (): ReactElement => {
   return (
     <>
       {featuredApps.map((app) => {
-        const appRoute = generateSafeRoute(SAFE_ROUTES.APPS, routesSlug) + `?appUrl=${app.url}`
+        const appRoute = getSafeAppUrl(app.url, routesSlug)
         return (
           <StyledRow key={app.id} margin="lg">
             <Col xs={2}>
