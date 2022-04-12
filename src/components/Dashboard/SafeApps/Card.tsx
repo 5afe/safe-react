@@ -88,8 +88,6 @@ const Card = (props: CardProps): ReactElement => {
 
         {/* Bookmark button */}
         <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
-
-        {/* TODO: Share button */}
       </StyledCard>
     </StyledLink>
   )

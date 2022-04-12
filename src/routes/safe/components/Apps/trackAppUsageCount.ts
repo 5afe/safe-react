@@ -41,6 +41,7 @@ export const trackSafeAppTxCount = (id: SafeApp['id']): void => {
 
   local.setItem(APPS_DASHBOARD, {
     ...trackData,
+    // The object contains the openCount when we are creating a transaction
     [id]: { ...trackData[id], txCount: currentTxCount + 1 },
   })
 }
