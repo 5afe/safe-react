@@ -17,7 +17,6 @@ import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/
 import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
 import RHFModuleSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFModuleSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
-import { isValidAddress } from 'src/utils/isValidAddress'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
 
 import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
@@ -29,16 +28,17 @@ const TYPE_FIELD_NAME = 'type'
 const FROM_FIELD_NAME = 'from'
 const TO_FIELD_NAME = 'to'
 const RECIPIENT_FIELD_NAME = 'recipient'
-const HIDDEN_RECIPIENT_FIELD_NAME = `__recipient`
+const HIDDEN_RECIPIENT_FIELD_NAME = '__recipient'
 const AMOUNT_FIELD_NAME = 'amount'
 const TOKEN_ADDRESS_FIELD_NAME = 'tokenAddress'
+const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__tokenAddress'
 const MODULE_FIELD_NAME = 'module'
 const NONCE_FIELD_NAME = 'nonce'
 
 enum FilterType {
   INCOMING = 'Incoming',
-  MODULE = 'Module',
-  MULTISIG = 'Multisignature',
+  MULTISIG = 'Outgoing',
+  MODULE = 'Safe modules',
 }
 
 type FilterForm = {
@@ -49,6 +49,7 @@ type FilterForm = {
   [HIDDEN_RECIPIENT_FIELD_NAME]: string
   [AMOUNT_FIELD_NAME]: string
   [TOKEN_ADDRESS_FIELD_NAME]: string
+  [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: string
   [MODULE_FIELD_NAME]: SettingsInfo['type']
   [NONCE_FIELD_NAME]: string
 }
@@ -56,12 +57,6 @@ type FilterForm = {
 const isValidAmount = (value: FilterForm['amount']): string | undefined => {
   if (value && isNaN(Number(value))) {
     return 'Invalid number'
-  }
-}
-
-const isValidTokenAddress = (value: FilterForm['tokenAddress']): string | undefined => {
-  if (value && !isValidAddress(value)) {
-    return 'Invalid address'
   }
 }
 
@@ -94,6 +89,7 @@ const Filter = (): ReactElement => {
     [HIDDEN_RECIPIENT_FIELD_NAME]: '',
     [AMOUNT_FIELD_NAME]: '',
     [TOKEN_ADDRESS_FIELD_NAME]: '',
+    [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: '',
     [MODULE_FIELD_NAME]: undefined,
     [NONCE_FIELD_NAME]: '',
   })
@@ -110,7 +106,12 @@ const Filter = (): ReactElement => {
     reset({ ...defaultValues.current, type })
   }
 
-  const onSubmit = ({ [TYPE_FIELD_NAME]: _t, [HIDDEN_RECIPIENT_FIELD_NAME]: _hr, ...filter }: FilterForm) => {
+  const onSubmit = ({
+    [TYPE_FIELD_NAME]: _t,
+    [HIDDEN_RECIPIENT_FIELD_NAME]: _hr,
+    [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: _hta,
+    ...filter
+  }: FilterForm) => {
     console.log(filter)
 
     trackEvent(TX_LIST_EVENTS.FILTER)
@@ -166,13 +167,11 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {type === FilterType.INCOMING && (
-                        <RHFTextField<FilterForm>
+                        <RHFAddressSearchField<FilterForm>
                           name={TOKEN_ADDRESS_FIELD_NAME}
-                          label="Token Address"
-                          control={control}
-                          rules={{
-                            validate: isValidTokenAddress,
-                          }}
+                          hiddenName={HIDDEN_TOKEN_ADDRESS_FIELD_NAME}
+                          label="Token address"
+                          methods={methods}
                         />
                       )}
                       {type === FilterType.MULTISIG && (

@@ -9,9 +9,10 @@ import CircularProgress from '@material-ui/core/CircularProgress/CircularProgres
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
-import { isValidAddress } from 'src/utils/isValidAddress'
+import { isValidAddress, isValidPrefixedAddress } from 'src/utils/isValidAddress'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 import { formatInputValue, getFilterHelperText } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 type Props<T> = {
   name: Path<T>
@@ -37,8 +38,8 @@ const RHFAddressSearchField = <T extends FieldValues>({
     control,
     rules: {
       validate: (address) => {
-        if (address && !isValidAddress(address)) {
-          return `${label} not found`
+        if (address && !isValidAddress(address) && !isValidPrefixedAddress(address)) {
+          return `Invalid ${label.toLowerCase()}. Please enter an address book entry, ENS domain, or valid address.`
         }
       },
     },
@@ -60,19 +61,26 @@ const RHFAddressSearchField = <T extends FieldValues>({
       return
     }
 
-    const { address } = parsePrefixedAddress(newValue.trim())
-    if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
+    if (isValidEnsName(newValue) || isValidCryptoDomainName(newValue)) {
       let resolvedAddress: string | undefined
       setIsResolving(true)
       try {
-        resolvedAddress = await getAddressFromDomain(address)
+        resolvedAddress = await getAddressFromDomain(newValue)
       } catch {}
       setIsResolving(false)
 
       if (resolvedAddress) {
-        field.onChange(resolvedAddress)
+        const checksummedAddress = checksumAddress(resolvedAddress)
+        field.onChange(checksummedAddress)
         return
       }
+    }
+
+    if (isValidAddress(newValue) || isValidPrefixedAddress(newValue)) {
+      const { address } = parsePrefixedAddress(newValue)
+      const checksummedAddress = checksumAddress(address)
+      field.onChange(checksummedAddress)
+      return
     }
 
     field.onChange(newValue)
