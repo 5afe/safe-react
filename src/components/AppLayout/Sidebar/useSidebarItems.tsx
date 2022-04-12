@@ -115,6 +115,11 @@ const useSidebarItems = (): ListItemType[] => {
 
     return [
       makeEntryItem({
+        label: 'Home',
+        iconType: 'home',
+        href: currentSafeRoutes.DASHBOARD,
+      }),
+      makeEntryItem({
         label: 'Assets',
         iconType: 'assets',
         href: currentSafeRoutes.ASSETS_BALANCES,
