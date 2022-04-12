@@ -1,9 +1,10 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
 import {
   Icon,
   FixedIcon,
   Text,
+  Title,
   Identicon,
   Button,
   CopyToClipboardBtn,
@@ -11,10 +12,18 @@ import {
 } from '@gnosis.pm/safe-react-components'
 import { useRouteMatch } from 'react-router-dom'
 
-import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
+import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo, getExplorerInfo } from 'src/config'
-import { border, fontColor } from 'src/theme/variables'
+import {
+  secondary,
+  border,
+  fontColor,
+  background,
+  primaryLite,
+  secondaryBackground,
+  black400,
+} from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
@@ -22,6 +31,7 @@ import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
 import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -31,25 +41,26 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 12px;
 `
 
 const IdenticonContainer = styled.div`
   width: 100%;
-  margin: 8px;
+  margin: 14px 8px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: relative;
-
-  div:first-of-type {
-    width: 32px;
-  }
 `
 const StyledIcon = styled(Icon)`
   svg {
-    height: 26px;
-    width: 26px;
+    height: 24px;
+    width: 24px;
     transform: rotateZ(-90deg);
+
+    .icon-color {
+      fill: ${black400};
+    }
 
     path:nth-child(2) {
       display: none;
@@ -60,16 +71,67 @@ const StyledIcon = styled(Icon)`
 const IconContainer = styled.div`
   width: 100px;
   display: flex;
-  padding: 4px 0;
+  gap: 8px;
   justify-content: space-evenly;
+  margin: 14px 0;
 `
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
+    width: 100%;
+    height: 38px;
     padding: 0 12px;
   }
-  *:first-child {
-    margin: 0 4px 0 0;
+`
+
+const innerButtonStyle = css`
+  & span {
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 5px;
+    width: 32px;
+    height: 32px;
+    background-color: ${background};
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+  & .icon-color {
+    fill: ${secondary};
+  }
+
+  &:hover span {
+    background-color: ${primaryLite};
+  }
+`
+
+const StyledExplorerButton = styled(ExplorerButton)`
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: ${background};
+
+  ${innerButtonStyle}
+`
+
+const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: ${background};
+
+  ${innerButtonStyle}
+`
+
+const StyledQRCodeButton = styled.button`
+  border: 0;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  background-color: ${background};
+  padding: 0;
+
+  ${innerButtonStyle}
 `
 
 type StyledTextLabelProps = {
@@ -77,7 +139,7 @@ type StyledTextLabelProps = {
 }
 
 const StyledTextLabel = styled(Text)`
-  margin: -8px 0 4px -8px;
+  margin: -8px 0 0 -8px;
   padding: 4px 8px;
   width: 100%;
   text-align: center;
@@ -95,21 +157,34 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   p {
     color: ${({ theme }) => theme.colors.placeHolder};
     font-size: 14px;
+    line-height: 20px;
   }
 `
 
-const StyledLabel = styled.div`
-  background-color: ${({ theme }) => theme.colors.icon};
-  margin: 4px 0 0 0 !important;
-  padding: 4px 8px;
-  border-radius: 4px;
-  letter-spacing: 1px;
-  p {
-    line-height: 18px;
-  }
+const StyledText = styled(Title)`
+  margin: 0 0 14px 0;
 `
-const StyledText = styled(Text)`
-  margin: 8px 0 16px 0;
+
+const ToggleSafeListButton = styled.button`
+  cursor: pointer;
+  border: 0;
+  background-color: ${secondaryBackground};
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  right: -40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & span {
+    margin-left: -15px;
+  }
+
+  &:hover {
+    background-color: ${primaryLite};
+  }
 `
 
 type Props = {
@@ -136,15 +211,20 @@ const SafeHeader = ({
 
   const hasSafeOpen = useRouteMatch(ADDRESSED_ROUTE)
 
+  const handleNewTransactionClick = () => {
+    trackEvent({ ...OVERVIEW_EVENTS.NEW_TRANSACTION })
+    onNewTransactionClick()
+  }
+
   if (!address || !hasSafeOpen) {
     return (
       <Container>
         <IdenticonContainer>
           <FlexSpacer />
           <FixedIcon type="notConnected" />
-          <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
-          </ButtonHelper>
+          </ToggleSafeListButton>
         </IdenticonContainer>
       </Container>
     )
@@ -161,56 +241,47 @@ const SafeHeader = ({
       <Container>
         {/* Identicon */}
         <IdenticonContainer>
-          <FlexSpacer />
           <Threshold />
           <Identicon address={address} size="lg" />
-          <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
-          </ButtonHelper>
+          </ToggleSafeListButton>
         </IdenticonContainer>
 
         {/* SafeInfo */}
-        <StyledTextSafeName size="lg" center>
+        <StyledTextSafeName size="xl" center>
           {safeName}
         </StyledTextSafeName>
         <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <Track {...OVERVIEW_EVENTS.SHOW_QR}>
-            <ButtonHelper onClick={onReceiveClick}>
+            <StyledQRCodeButton onClick={onReceiveClick}>
               <Icon size="sm" type="qrCode" tooltip="Show QR code" />
-            </ButtonHelper>
+            </StyledQRCodeButton>
           </Track>
           <Track {...OVERVIEW_EVENTS.COPY_ADDRESS}>
-            <CopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
+            <StyledCopyToClipboardBtn textToCopy={copyChainPrefix ? `${shortName}:${address}` : `${address}`} />
           </Track>
           <Track {...OVERVIEW_EVENTS.OPEN_EXPLORER}>
-            <ExplorerButton explorerUrl={getExplorerInfo(address)} />
+            <StyledExplorerButton explorerUrl={getExplorerInfo(address)} />
           </Track>
         </IconContainer>
 
-        {!granted && (
-          <StyledLabel>
-            <Text size="sm" color="white">
-              READ ONLY
-            </Text>
-          </StyledLabel>
-        )}
-
-        <StyledText size="xl">{balance}</StyledText>
-        <Track {...OVERVIEW_EVENTS.NEW_TRANSACTION}>
-          <StyledButton
-            size="md"
-            disabled={!granted}
-            color="primary"
-            variant="contained"
-            onClick={onNewTransactionClick}
-          >
-            <FixedIcon type="arrowSentWhite" />
-            <Text size="xl" color="white">
-              New transaction
-            </Text>
-          </StyledButton>
-        </Track>
+        <Paragraph color="black400" noMargin size="md">
+          Total Balance
+        </Paragraph>
+        <StyledText size="xs">{balance}</StyledText>
+        <StyledButton
+          size="md"
+          disabled={!granted}
+          color="primary"
+          variant="contained"
+          onClick={handleNewTransactionClick}
+        >
+          <Text size="xl" color="white">
+            {granted ? 'New Transaction' : 'Read Only'}
+          </Text>
+        </StyledButton>
       </Container>
     </>
   )
