@@ -5,7 +5,7 @@ import Page from 'src/components/layout/Page'
 import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
 import AddSafeWidget from 'src/components/Dashboard/AddSafe'
 import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
-import SafeApps from 'src/components/Dashboard/SafeApps/Grid'
+import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
 import Row from 'src/components/layout/Row'
 
 const Card = styled.div`
@@ -45,7 +45,7 @@ function Home(): ReactElement {
       </Row>
 
       <Row>
-        <SafeApps size={6} />
+        <SafeAppsGrid size={6} />
       </Row>
     </Page>
   )

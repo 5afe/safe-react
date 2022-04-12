@@ -46,12 +46,33 @@ const StyledLink = styled(Link)`
 `
 
 // Transactions Builder && Wallet connect
-const officialAppIds = ['29', '11']
+const featuredAppsId = ['29', '11']
 
-const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
+const getRandomApps = (allApps: SafeApp[], size: number) => {
+  const randomIndexes: string[] = []
+  for (let i = 1; randomIndexes.length < size; i++) {
+    const randomAppIndex = Math.floor(Math.random() * allApps.length).toString()
+    const randomAppId = allApps[randomAppIndex].id
+
+    // Do not repeat random apps or featured apps
+    if (!randomIndexes.includes(randomAppIndex) && !featuredAppsId.includes(randomAppId)) {
+      randomIndexes.push(randomAppIndex)
+    }
+  }
+
+  const randomSafeApps: SafeApp[] = []
+  randomIndexes.forEach((index) => {
+    randomSafeApps.push(allApps[index])
+  })
+
+  return randomSafeApps
+}
+
+const Grid = ({ size = 6 }: { size?: number }): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin, isLoading } = useAppList()
 
   const displayedApps = useMemo(() => {
+    if (!allApps.length) return []
     const trackData = getAppsUsageData()
     const rankedSafeAppIds = rankTrackedSafeApps(trackData)
 
@@ -61,11 +82,11 @@ const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
       if (sortedApp) topRankedSafeApps.push(sortedApp)
     })
 
-    // Do not repeat top ranked apps
-    const officialApps = allApps.filter((app) => officialAppIds.includes(app.id) && !rankedSafeAppIds.includes(app.id))
+    // Get random apps to fill the empty slots
+    const randomApps = getRandomApps(allApps, size - 1 - rankedSafeAppIds.length)
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
-    return topRankedSafeApps.concat(officialApps).slice(0, size - 1)
+    return topRankedSafeApps.concat(randomApps).slice(0, size - 1)
   }, [allApps, size])
 
   const path = generatePath(GENERIC_APPS_ROUTE)
