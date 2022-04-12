@@ -8,6 +8,7 @@ import Overview from 'src/components/Dashboard/Overview/Overview'
 import { lg } from 'src/theme/variables'
 import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
 import Row from 'src/components/layout/Row'
+import { FeaturedApps } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
 
 const Card = styled.div`
   background: #fff;
@@ -36,7 +37,8 @@ function Home(): ReactElement {
 
       <Row>
         <Card>
-          <h2>Owned Safes</h2>
+          <h2>Safe Apps</h2>
+          <FeaturedApps />
         </Card>
 
         <Card>
