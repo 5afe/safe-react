@@ -20,14 +20,14 @@ export const getAppsUsageData = (): AppTrackData => {
   return local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
 }
 
-export const trackSafeAppOpenCount = (app: SafeApp): void => {
+export const trackSafeAppOpenCount = (id: SafeApp['id']): void => {
   const trackData = getAppsUsageData()
-  const currentOpenCount = trackData[app.id]?.openCount || 0
-  const currentTxCount = trackData[app.id]?.txCount || 0
+  const currentOpenCount = trackData[id]?.openCount || 0
+  const currentTxCount = trackData[id]?.txCount || 0
 
   local.setItem(APPS_DASHBOARD, {
     ...trackData,
-    [app.id]: {
+    [id]: {
       timestamp: Date.now(),
       openCount: currentOpenCount + 1,
       txCount: currentTxCount,
@@ -35,13 +35,13 @@ export const trackSafeAppOpenCount = (app: SafeApp): void => {
   })
 }
 
-export const trackSafeAppTxCount = (app: SafeApp): void => {
+export const trackSafeAppTxCount = (id: SafeApp['id']): void => {
   const trackData = getAppsUsageData()
-  const currentTxCount = trackData[app.id]?.txCount || 0
+  const currentTxCount = trackData[id]?.txCount || 0
 
   local.setItem(APPS_DASHBOARD, {
     ...trackData,
-    [app.id]: { ...trackData[app.id], txCount: currentTxCount + 1 },
+    [id]: { ...trackData[id], txCount: currentTxCount + 1 },
   })
 }
 

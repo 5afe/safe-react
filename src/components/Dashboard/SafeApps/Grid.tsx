@@ -48,11 +48,11 @@ const StyledLink = styled(Link)`
 // Transactions Builder && Wallet connect
 const featuredAppsId = ['29', '11']
 
-const getRandomApps = (allApps: SafeApp[], size: number) => {
+const getRandomApps = (nonRankedApps: SafeApp[], size: number) => {
   const randomIndexes: string[] = []
   for (let i = 1; randomIndexes.length < size; i++) {
-    const randomAppIndex = Math.floor(Math.random() * allApps.length).toString()
-    const randomAppId = allApps[randomAppIndex].id
+    const randomAppIndex = Math.floor(Math.random() * nonRankedApps.length).toString()
+    const randomAppId = nonRankedApps[randomAppIndex].id
 
     // Do not repeat random apps or featured apps
     if (!randomIndexes.includes(randomAppIndex) && !featuredAppsId.includes(randomAppId)) {
@@ -62,7 +62,7 @@ const getRandomApps = (allApps: SafeApp[], size: number) => {
 
   const randomSafeApps: SafeApp[] = []
   randomIndexes.forEach((index) => {
-    randomSafeApps.push(allApps[index])
+    randomSafeApps.push(nonRankedApps[index])
   })
 
   return randomSafeApps
@@ -82,8 +82,9 @@ const Grid = ({ size = 6 }: { size?: number }): ReactElement => {
       if (sortedApp) topRankedSafeApps.push(sortedApp)
     })
 
-    // Get random apps to fill the empty slots
-    const randomApps = getRandomApps(allApps, size - 1 - rankedSafeAppIds.length)
+    const nonRankedApps = allApps.filter((app) => !rankedSafeAppIds.includes(app.id))
+    // Get random apps that are not ranked
+    const randomApps = getRandomApps(nonRankedApps, size - 1 - rankedSafeAppIds.length)
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
     return topRankedSafeApps.concat(randomApps).slice(0, size - 1)

@@ -55,6 +55,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -88,6 +89,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -117,6 +119,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -148,6 +151,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -179,6 +183,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -204,6 +209,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -236,6 +242,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -264,6 +271,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -297,6 +305,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 

@@ -141,7 +141,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   useEffect(() => {
     if (!currentApp) return
 
-    trackSafeAppOpenCount(currentApp)
+    trackSafeAppOpenCount(currentApp.id)
   }, [currentApp])
 
   const openConfirmationModal = useCallback(
@@ -376,6 +376,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         onUserConfirm={onUserTxConfirm}
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
+        appId={currentApp?.id}
       />
 
       <SignMessageModal

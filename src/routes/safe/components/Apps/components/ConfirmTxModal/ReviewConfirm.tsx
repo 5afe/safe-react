@@ -26,7 +26,6 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppTxCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const Container = styled.div`
@@ -70,6 +69,7 @@ export const ReviewConfirm = ({
   onClose,
   onReject,
   requestId,
+  appId,
 }: Props): ReactElement => {
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedTxDetailType>()
@@ -77,8 +77,6 @@ export const ReviewConfirm = ({
   const nativeCurrency = getNativeCurrency()
   const explorerUrl = getExplorerInfo(safeAddress)
   const isOwner = useSelector(grantedSelector)
-  const { remoteSafeApps } = useRemoteSafeApps()
-  const currentApp = remoteSafeApps.filter((remoteApp) => remoteApp.url === app.url)[0]
 
   const txRecipient: string | undefined = useMemo(
     () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
@@ -116,7 +114,7 @@ export const ReviewConfirm = ({
   }
 
   const confirmTransactions = (txParameters: TxParameters, delayExecution: boolean) => {
-    trackSafeAppTxCount(currentApp)
+    trackSafeAppTxCount(appId)
     dispatch(
       createTransaction(
         {
