@@ -38,7 +38,7 @@ const NONCE_FIELD_NAME = 'nonce'
 enum FilterType {
   INCOMING = 'Incoming',
   MULTISIG = 'Outgoing',
-  MODULE = 'Safe modules',
+  MODULE = 'Module-based',
 }
 
 type FilterForm = {
