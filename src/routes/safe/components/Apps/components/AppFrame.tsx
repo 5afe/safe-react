@@ -38,7 +38,7 @@ import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
-import { countOpen } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -141,7 +141,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   useEffect(() => {
     if (!currentApp) return
 
-    countOpen(currentApp)
+    trackSafeAppOpenCount(currentApp)
   }, [currentApp])
 
   const openConfirmationModal = useCallback(

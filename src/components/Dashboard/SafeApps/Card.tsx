@@ -11,13 +11,17 @@ const StyledLink = styled(Link)`
   color: black;
 `
 
+export const CARD_WIDTH = 260
+export const CARD_HEIGHT = 200
+export const CARD_PADDING = 24
+
 const StyledCard = styled.div`
   position: relative;
-  width: 260px;
-  height: 200px;
+  width: ${CARD_WIDTH}px;
+  height: ${CARD_HEIGHT}px;
   background-color: white;
   border-radius: 8px;
-  padding: 24px;
+  padding: ${CARD_PADDING}px;
 `
 
 const StyledLogo = styled.img`

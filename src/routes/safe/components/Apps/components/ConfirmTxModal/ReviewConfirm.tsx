@@ -27,7 +27,7 @@ import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
-import { countTxs } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import { trackSafeAppTxCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const Container = styled.div`
   max-width: 480px;
@@ -116,7 +116,7 @@ export const ReviewConfirm = ({
   }
 
   const confirmTransactions = (txParameters: TxParameters, delayExecution: boolean) => {
-    countTxs(currentApp)
+    trackSafeAppTxCount(currentApp)
     dispatch(
       createTransaction(
         {

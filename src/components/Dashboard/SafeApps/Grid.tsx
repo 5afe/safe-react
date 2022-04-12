@@ -2,15 +2,14 @@ import { ReactElement, useMemo } from 'react'
 import styled from 'styled-components'
 import { Button } from '@gnosis.pm/safe-react-components'
 import { generatePath, Link } from 'react-router-dom'
+import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
-import Card from 'src/components/Dashboard/SafeApps/Card'
+import Card, { CARD_HEIGHT, CARD_PADDING, CARD_WIDTH } from 'src/components/Dashboard/SafeApps/Card'
 import ExploreIcon from 'src/assets/icons/explore.svg'
-import local from 'src/utils/storage/local'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
-import { APPS_DASHBOARD, AppTrackData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
-import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
+import { getAppsUsageData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const StyledGrid = styled.div`
   display: flex;
@@ -53,7 +52,7 @@ const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin, isLoading } = useAppList()
 
   const displayedApps = useMemo(() => {
-    const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
+    const trackData = getAppsUsageData()
     const rankedSafeAppIds = rankTrackedSafeApps(trackData)
 
     const topRankedSafeApps: SafeApp[] = []
@@ -78,7 +77,7 @@ const Grid = ({ size = 3 }: { size?: number }): ReactElement => {
         <StyledGrid>
           {Array.from(Array(size).keys()).map((key) => (
             <SkeletonWrapper key={key}>
-              <Skeleton variant="rect" width={308} height={248} />
+              <Skeleton variant="rect" width={CARD_WIDTH + 2 * CARD_PADDING} height={CARD_HEIGHT + 2 * CARD_PADDING} />
             </SkeletonWrapper>
           ))}
         </StyledGrid>

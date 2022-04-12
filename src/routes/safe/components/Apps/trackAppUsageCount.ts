@@ -16,14 +16,18 @@ export type AppTrackData = {
   }
 }
 
-export const countOpen = (app: SafeApp): void => {
-  const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
+export const getAppsUsageData = (): AppTrackData => {
+  return local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
+}
+
+export const trackSafeAppOpenCount = (app: SafeApp): void => {
+  const trackData = getAppsUsageData()
   const currentOpenCount = trackData[app.id]?.openCount || 0
   const currentTxCount = trackData[app.id]?.txCount || 0
+
   local.setItem(APPS_DASHBOARD, {
     ...trackData,
     [app.id]: {
-      ...trackData[app.id],
       timestamp: Date.now(),
       openCount: currentOpenCount + 1,
       txCount: currentTxCount,
@@ -31,9 +35,10 @@ export const countOpen = (app: SafeApp): void => {
   })
 }
 
-export const countTxs = (app: SafeApp): void => {
-  const trackData = local.getItem<AppTrackData>(APPS_DASHBOARD) || {}
+export const trackSafeAppTxCount = (app: SafeApp): void => {
+  const trackData = getAppsUsageData()
   const currentTxCount = trackData[app.id]?.txCount || 0
+
   local.setItem(APPS_DASHBOARD, {
     ...trackData,
     [app.id]: { ...trackData[app.id], txCount: currentTxCount + 1 },
@@ -46,10 +51,8 @@ export const rankTrackedSafeApps = (apps: AppTrackData): string[] => {
   return appsMap
     .sort((a, b) => {
       // The more recently used app gets a bigger score/relevancy multiplier
-      const aTimeMultiplier =
-        a[1].timestamp.valueOf() - b[1].timestamp.valueOf() > 0 ? MORE_RECENT_MULTIPLIER : LESS_RECENT_MULTIPLIER
-      const bTimeMultiplier =
-        b[1].timestamp.valueOf() - a[1].timestamp.valueOf() > 0 ? MORE_RECENT_MULTIPLIER : LESS_RECENT_MULTIPLIER
+      const aTimeMultiplier = a[1].timestamp - b[1].timestamp > 0 ? MORE_RECENT_MULTIPLIER : LESS_RECENT_MULTIPLIER
+      const bTimeMultiplier = b[1].timestamp - a[1].timestamp > 0 ? MORE_RECENT_MULTIPLIER : LESS_RECENT_MULTIPLIER
 
       // The sorting score is a weighted function where the OPEN_COUNT weights differently than the TX_COUNT
       const aScore = (TX_COUNT_WEIGHT * a[1].txCount + OPEN_COUNT_WEIGHT * a[1].openCount) * aTimeMultiplier
