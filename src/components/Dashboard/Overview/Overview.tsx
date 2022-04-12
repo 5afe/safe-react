@@ -3,13 +3,17 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, Identicon } from '@gnosis.pm/safe-react-components'
 
-import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
+import Button from 'src/components/layout/Button'
 import { primaryLite, primaryActive, smallFontSize, md } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
+import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
+import { getShortName } from 'src/config'
+import { Skeleton } from '@material-ui/lab'
 
 const IdenticonContainer = styled.div`
   position: relative;
@@ -53,7 +57,18 @@ const Container = styled.div`
 
 const Overview = (): ReactElement => {
   const { address, name, owners, threshold, balances } = useSelector(currentSafeWithNames)
+  const balancesLoaded = useSelector(currentSafeLoaded)
   const nftTokens = useSelector(nftTokensSelector)
+  const nftLoaded = useSelector(nftLoadedSelector)
+
+  const navigateToBalances = () => {
+    history.push(
+      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+        shortName: getShortName(),
+        safeAddress: address,
+      }),
+    )
+  }
 
   return (
     <Container>
@@ -83,15 +98,19 @@ const Overview = (): ReactElement => {
           <Text color="inputDefault" size="md">
             Tokens
           </Text>
-          <StyledText size="xl">{balances.length}</StyledText>
+          <StyledText size="xl">{balancesLoaded ? balances.length : <Skeleton variant="text" width={30} />}</StyledText>
         </Col>
         <Col layout="column" md={3}>
           <Text color="inputDefault" size="md">
             NFTs
           </Text>
-          <StyledText size="xl">{nftTokens.length}</StyledText>
+          <StyledText size="xl">{nftLoaded ? nftTokens.length : <Skeleton variant="text" width={30} />}</StyledText>
         </Col>
-        <Col end="xs" md={6}></Col>
+        <Col end="xs" md={6}>
+          <Button size="md" variant="contained" color="primary" onClick={navigateToBalances}>
+            Open Safe
+          </Button>
+        </Col>
       </Row>
     </Container>
   )

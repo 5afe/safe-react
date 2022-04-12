@@ -38,6 +38,8 @@ export const currentSafeEthBalance = createSelector(currentSafe, safeFieldSelect
 
 export const currentSafeBalances = createSelector(currentSafe, safeFieldSelector('balances'))
 
+export const currentSafeLoaded = createSelector(currentSafe, safeFieldSelector('loaded'))
+
 export const currentSafeNeedsUpdate = createSelector(currentSafe, safeFieldSelector('needsUpdate'))
 
 export const currentSafeCurrentVersion = createSelector(currentSafe, safeFieldSelector('currentVersion'))

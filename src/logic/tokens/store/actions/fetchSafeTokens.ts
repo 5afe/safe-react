@@ -82,6 +82,7 @@ export const fetchSafeTokens =
       updateSafe({
         address: safeAddress,
         balances,
+        loaded: true,
         ethBalance,
         totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
       }),
