@@ -7,6 +7,7 @@ import { HistoryTxList } from './HistoryTxList'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import Img from 'src/components/layout/Img'
 import NoTransactionsImage from './assets/no-transactions.svg'
+import Filter from './Filter'
 
 export const HistoryTransactions = (): ReactElement => {
   const { count, hasMore, next, transactions, isLoading } = usePagedHistoryTransactions()
@@ -29,8 +30,11 @@ export const HistoryTransactions = (): ReactElement => {
   }
 
   return (
-    <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
-      <HistoryTxList transactions={transactions} />
-    </TxsInfiniteScroll>
+    <>
+      <Filter />
+      <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+        <HistoryTxList transactions={transactions} />
+      </TxsInfiniteScroll>
+    </>
   )
 }

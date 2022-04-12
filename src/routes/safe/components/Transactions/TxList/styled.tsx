@@ -53,12 +53,14 @@ export const ActionAccordion = styled(Accordion)`
 `
 
 export const StyledTransactionsGroup = styled.div`
+  box-sizing: border-box;
   align-items: flex-start;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 16px 8px;
-  width: 98%;
+  margin: 16px 0px;
+  width: 100%;
+  padding: 0px 8px;
 `
 
 export const H2 = styled.h2`
@@ -68,7 +70,7 @@ export const H2 = styled.h2`
 
 export const SubTitle = styled(Text)`
   margin-bottom: 8px;
-
+  margin-left: 2px;
   font-size: 0.76em;
   font-weight: 600;
   line-height: 1.5;
