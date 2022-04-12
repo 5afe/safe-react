@@ -60,7 +60,7 @@ function SafeAppLandingPage(): ReactElement {
       return getAppInfoFromUrl(safeAppUrl)
     }
 
-    throw 'No Safe App url provided'
+    throw new Error('No Safe App URL provided.')
   }, [safeAppUrl])
 
   const {
@@ -123,7 +123,7 @@ function SafeAppLandingPage(): ReactElement {
 export default SafeAppLandingPage
 
 const SafeAppDetails = ({ iconUrl, name, description, availableChains }) => {
-  const showAvailableChains = availableChains && availableChains.length > 0
+  const showAvailableChains = availableChains?.length > 0
 
   return (
     <>
@@ -179,22 +179,20 @@ const ConnectWallet = () => {
         info={<ProviderDisconnected />}
         open={open}
         toggle={toggle}
-        render={(providerRef) =>
-          providerRef.current && (
-            <StyledPopper
-              anchorEl={providerRef.current}
-              open={open}
-              placement="bottom"
-              popperOptions={{ positionFixed: true }}
-            >
-              <ClickAwayListener onClickAway={clickAway} touchEvent={false}>
-                <List component="div">
-                  <ConnectDetails />
-                </List>
-              </ClickAwayListener>
-            </StyledPopper>
-          )
-        }
+        render={(providerRef) => (
+          <StyledPopper
+            anchorEl={providerRef.current}
+            open={open}
+            placement="bottom"
+            popperOptions={{ positionFixed: true }}
+          >
+            <ClickAwayListener onClickAway={clickAway} touchEvent={false}>
+              <List component="div">
+                <ConnectDetails />
+              </List>
+            </ClickAwayListener>
+          </StyledPopper>
+        )}
       />
     </StyledProvider>
   )

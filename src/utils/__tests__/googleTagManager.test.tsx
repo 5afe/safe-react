@@ -77,10 +77,14 @@ describe('googleTagManager', () => {
   })
   describe('loadGoogleTagManager', () => {
     it('prevents init without a gtm id/auth', () => {
-      jest.doMock('src/utils/constants.ts', () => ({
-        GOOGLE_TAG_MANAGER_ID: '',
-        GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: '',
-      }))
+      jest.doMock('src/utils/constants.ts', () => {
+        const original = jest.requireActual('src/utils/constants.ts')
+        return {
+          ...original,
+          GOOGLE_TAG_MANAGER_ID: '',
+          GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: '',
+        }
+      })
 
       const mockInitialize = jest.fn()
       jest.doMock('react-gtm-module', () => ({
@@ -94,10 +98,14 @@ describe('googleTagManager', () => {
       expect(mockInitialize).not.toHaveBeenCalled()
     })
     it('inits gtm with a pageview event', () => {
-      jest.doMock('src/utils/constants.ts', () => ({
-        GOOGLE_TAG_MANAGER_ID: 'id123',
-        GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: 'auth123',
-      }))
+      jest.doMock('src/utils/constants.ts', () => {
+        const original = jest.requireActual('src/utils/constants.ts')
+        return {
+          ...original,
+          GOOGLE_TAG_MANAGER_ID: 'id123',
+          GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH: 'auth123',
+        }
+      })
 
       jest.doMock('src/config', () => ({
         _getChainId: jest.fn(() => '4'),
