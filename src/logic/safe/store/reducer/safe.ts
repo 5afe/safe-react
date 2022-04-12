@@ -18,6 +18,7 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
 
   return {
     ...storedSafe,
+    loaded: false,
     owners,
     modules: null,
   }
