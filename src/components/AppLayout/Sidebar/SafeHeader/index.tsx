@@ -23,7 +23,6 @@ import {
   primaryLite,
   secondaryBackground,
   black400,
-  gray500,
 } from 'src/theme/variables'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -162,17 +161,6 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   }
 `
 
-const StyledLabel = styled.div`
-  background-color: ${gray500};
-  margin-top: 14px;
-  width: 100%;
-  padding: 3px 8px;
-  box-sizing: border-box;
-  p {
-    text-align: center;
-    line-height: 18px;
-  }
-`
 const StyledText = styled(Title)`
   margin: 0 0 14px 0;
 `
@@ -291,17 +279,9 @@ const SafeHeader = ({
           onClick={handleNewTransactionClick}
         >
           <Text size="xl" color="white">
-            New Transaction
+            {granted ? 'New Transaction' : 'Read Only'}
           </Text>
         </StyledButton>
-
-        {!granted && (
-          <StyledLabel>
-            <Text size="sm" strong>
-              READ ONLY
-            </Text>
-          </StyledLabel>
-        )}
       </Container>
     </>
   )

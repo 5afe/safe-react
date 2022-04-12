@@ -36,7 +36,7 @@ const HelpCenterLink = styled.a`
   box-sizing: border-box;
   text-align: left;
   align-items: center;
-  padding: 8px 12px;
+  padding: 6px 12px;
   justify-content: flex-start;
   text-decoration: none;
   border-radius: 8px;
@@ -132,7 +132,7 @@ const Sidebar = ({
           {!isDesktop && BEAMER_ID && (
             <Track {...OVERVIEW_EVENTS.WHATS_NEW}>
               <StyledListItem id="whats-new-button" button onClick={handleClick}>
-                <ListIcon type="gift" color="secondary" />
+                <ListIcon type="gift" color="secondary" size="sm" />
                 <StyledListItemText>What&apos;s new</StyledListItemText>
               </StyledListItem>
             </Track>
@@ -140,7 +140,7 @@ const Sidebar = ({
 
           <Track {...OVERVIEW_EVENTS.HELP_CENTER}>
             <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-              <ListIcon type="question" color="secondary" />
+              <ListIcon type="question" color="secondary" size="sm" />
               <StyledListItemText>Help Center</StyledListItemText>
             </HelpCenterLink>
           </Track>
