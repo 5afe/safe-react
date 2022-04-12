@@ -16,6 +16,8 @@ import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCol
 import { currentChainId } from 'src/logic/config/store/selectors'
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import { addNftTokens } from 'src/logic/collectibles/store/actions/addCollectibles'
+import { NFTTokensDefaultState } from 'src/logic/collectibles/store/reducer/collectibles'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -58,6 +60,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
 export const fetchSafe =
   (safeAddress: string, isInitialLoad = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
+    dispatch(addNftTokens(NFTTokensDefaultState))
     let address = ''
     try {
       address = checksumAddress(safeAddress)

@@ -21,6 +21,11 @@ export const nftAssetReducer = handleActions<NFTAssets, NFTAssetsPayload>(
 
 type NFTTokensPayload = { nftTokens: NFTTokens }
 
+export const NFTTokensDefaultState = {
+  items: [],
+  loaded: false,
+}
+
 export const nftTokensReducer = handleActions<NFTTokens, NFTTokensPayload>(
   {
     [ADD_NFT_TOKENS]: (state, action) => {
@@ -29,5 +34,5 @@ export const nftTokensReducer = handleActions<NFTTokens, NFTTokensPayload>(
       return nftTokens
     },
   },
-  { items: [], loaded: false },
+  NFTTokensDefaultState,
 )
