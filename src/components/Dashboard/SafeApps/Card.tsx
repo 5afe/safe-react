@@ -26,8 +26,8 @@ const StyledCard = styled.div`
 
 const StyledLogo = styled.img`
   display: block;
-  width: 60px;
-  height: auto;
+  width: auto;
+  height: 60px;
 `
 
 const IconBtn = styled(IconButton)`
