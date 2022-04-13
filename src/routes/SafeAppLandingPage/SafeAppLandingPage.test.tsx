@@ -2,7 +2,7 @@ import * as safeAppsGatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
 
 import SafeAppLandingPage from './SafeAppLandingPage'
 import { render, screen, waitFor, waitForElementToBeRemoved } from 'src/utils/test-utils'
-import { history, OPEN_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { history, SAFE_ROUTES, OPEN_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { saveToStorage } from 'src/utils/storage'
@@ -131,7 +131,11 @@ describe('<SafeAppLandingPage>', () => {
     // when the Loader is removed we show the create new safe button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
     const createNewSafeLinkNode = screen.getByText('Create new Safe').closest('a')
-    expect(createNewSafeLinkNode).toHaveAttribute('href', OPEN_SAFE_ROUTE)
+    const openSafeRouteWithRedirect = `${OPEN_SAFE_ROUTE}?redirect=${encodeURIComponent(
+      `${SAFE_ROUTES.APPS}?appUrl=${SAFE_APP_URL_FROM_MANIFEST}`,
+    )}`
+
+    expect(createNewSafeLinkNode).toHaveAttribute('href', openSafeRouteWithRedirect)
   })
 
   it('Redirects to the Demo Safe App', async () => {
@@ -158,9 +162,6 @@ describe('<SafeAppLandingPage>', () => {
     history.push(`share/safe-app?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`)
 
     render(<SafeAppLandingPage />)
-
-    const loaderNode = screen.getByRole('progressbar')
-    expect(loaderNode).toBeInTheDocument()
 
     await waitFor(() => {
       expect(window.location.pathname).toBe(WELCOME_ROUTE)

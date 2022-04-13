@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import { Card, Title, Button, Text, Loader } from '@gnosis.pm/safe-react-components'
 import Divider from '@material-ui/core/Divider'
@@ -11,7 +11,7 @@ import Popper from '@material-ui/core/Popper'
 import SuccessSvg from 'src/assets/icons/safe-created.svg'
 import DemoSvg from 'src/assets/icons/demo.svg'
 import { getChainById, isValidChainId } from 'src/config'
-import { demoSafeRoute, history, OPEN_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { demoSafeRoute, history, OPEN_SAFE_ROUTE, WELCOME_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
@@ -26,10 +26,10 @@ import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
 import { black300, grey400, secondary } from 'src/theme/variables'
 import useAsync from 'src/logic/hooks/useAsync'
+import { useQuery } from 'src/logic/hooks/useQuery'
 
 function SafeAppLandingPage(): ReactElement {
-  const { search } = useLocation()
-  const query = new URLSearchParams(search)
+  const query = useQuery()
   const safeAppChainId = query.get('chainId')
   const safeAppUrl = query.get('appUrl')
 
@@ -85,6 +85,10 @@ function SafeAppLandingPage(): ReactElement {
 
   const showLoader = isLoading || !safeAppDetails
 
+  if (!safeAppUrl) {
+    return <Redirect to={WELCOME_ROUTE} />
+  }
+
   return (
     <Container>
       <StyledCard>
@@ -107,7 +111,7 @@ function SafeAppLandingPage(): ReactElement {
             <ActionsContainer>
               <UserSafeContainer>
                 <Title size="xs">Use the dApp with your Safe!</Title>
-                {isWalletConnected ? <CreateNewSafe /> : <ConnectWallet />}
+                {isWalletConnected ? <CreateNewSafe safeAppUrl={safeAppUrl} /> : <ConnectWallet />}
               </UserSafeContainer>
 
               {/* Demo Safe Section */}
@@ -154,14 +158,16 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }) => {
   )
 }
 
-const CreateNewSafe = () => {
+const CreateNewSafe = ({ safeAppUrl }: { safeAppUrl: string }) => {
+  const openSafeLink = `${OPEN_SAFE_ROUTE}?redirect=${encodeURIComponent(`${SAFE_ROUTES.APPS}?appUrl=${safeAppUrl}`)}`
+
   return (
     <>
       <BodyImage>
         <Img alt="Vault" height={92} src={SuccessSvg} />
       </BodyImage>
 
-      <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+      <Button size="lg" color="primary" variant="contained" component={Link} to={openSafeLink}>
         <Text size="xl" color="white">
           Create new Safe
         </Text>

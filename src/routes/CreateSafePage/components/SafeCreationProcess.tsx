@@ -43,6 +43,8 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import Track from 'src/components/Track'
 import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { useQuery } from 'src/logic/hooks/useQuery'
+import { ADDRESSED_ROUTE } from 'src/routes/routes'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -186,6 +188,8 @@ function SafeCreationProcess(): ReactElement {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)
+  const query = useQuery()
+  const redirect = query.get('redirect')
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
@@ -269,10 +273,29 @@ function SafeCreationProcess(): ReactElement {
     goToWelcomePage()
   }
 
-  function onClickModalButton() {
+  const onClickModalButton = () => {
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const { safeName, safeCreationTxHash, safeAddress } = modalData
+
+    if (redirect) {
+      // If the URL includes ADDRESSED_ROUTE template, then we need to replace it with the new safe address
+      if (redirect.includes(ADDRESSED_ROUTE)) {
+        history.push({
+          pathname: generateSafeRoute(redirect, {
+            shortName: getShortName(),
+            safeAddress,
+          }),
+        })
+      } else {
+        history.push({
+          pathname: redirect,
+        })
+      }
+
+      return
+    }
+
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
         shortName: getShortName(),
