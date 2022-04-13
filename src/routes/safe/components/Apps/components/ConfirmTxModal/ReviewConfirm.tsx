@@ -26,6 +26,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { trackSafeAppTxCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const Container = styled.div`
   max-width: 480px;
@@ -68,6 +69,7 @@ export const ReviewConfirm = ({
   onClose,
   onReject,
   requestId,
+  appId,
 }: Props): ReactElement => {
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedTxDetailType>()
@@ -112,6 +114,7 @@ export const ReviewConfirm = ({
   }
 
   const confirmTransactions = (txParameters: TxParameters, delayExecution: boolean) => {
+    trackSafeAppTxCount(appId)
     dispatch(
       createTransaction(
         {
