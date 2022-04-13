@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
+import { Breadcrumb, BreadcrumbElement, ButtonLink, Loader, Menu } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
@@ -7,9 +7,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { styles } from './style'
 import Block from 'src/components/layout/Block'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
@@ -97,9 +95,8 @@ const Settings = (): React.ReactElement => {
         {!loadedViaUrl ? (
           <Col end="sm" sm={6} xs={12}>
             <Track {...SETTINGS_EVENTS.OWNERS.REMOVE_SAFE}>
-              <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
-                <Span className={classes.links}>Remove Safe</Span>
-                <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
+              <ButtonLink color="error" onClick={onShow('RemoveSafe')} textSize="xl" iconType="delete" iconSize="sm">
+                Remove Safe
               </ButtonLink>
             </Track>
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />

@@ -6,7 +6,6 @@ import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from 
 import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible } from '../utils'
-import Bold from 'src/components/layout/Bold'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
 import Track from 'src/components/Track'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
@@ -76,7 +75,7 @@ export const TxEstimatedFeesDetail = ({
         <StyledAccordionSummary>
           <Text size="xl">Estimated fee price</Text>
           <Text size="xl">
-            <Bold>{gasCost}</Bold>
+            <b>{gasCost}</b>
           </Text>
         </StyledAccordionSummary>
       </Track>

@@ -1,3 +1,4 @@
+import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import { BigNumber } from 'bignumber.js'
@@ -18,7 +19,6 @@ import {
   required,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -310,8 +310,8 @@ const SendFunds = ({
                     <Paragraph color="disabled" noMargin size="md">
                       Amount
                     </Paragraph>
-                    <ButtonLink onClick={setMaxAllowedAmount} weight="bold" testId="send-max-btn">
-                      Send max
+                    <ButtonLink color="primary" textSize="lg" onClick={setMaxAllowedAmount} aria-label="Send max value">
+                      <b>Send max</b>
                     </ButtonLink>
                   </Col>
                 </Row>

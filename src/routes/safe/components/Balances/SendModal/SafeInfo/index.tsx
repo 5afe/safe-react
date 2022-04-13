@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
-import Bold from 'src/components/layout/Bold'
 import { border, xs } from 'src/theme/variables'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
@@ -50,7 +49,7 @@ const SafeInfo = ({ text }: SafeInfoProps): React.ReactElement => {
       {ethBalance && (
         <StyledBlock>
           <Paragraph noMargin>
-            Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ${nativeCurrency.symbol}`}</Bold>
+            Balance: <b data-testid="current-eth-balance">{`${ethBalance} ${nativeCurrency.symbol}`}</b>
           </Paragraph>
         </StyledBlock>
       )}

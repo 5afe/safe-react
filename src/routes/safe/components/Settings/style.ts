@@ -31,11 +31,6 @@ export const styles = createStyles({
       cursor: 'pointer',
     },
   },
-  removeSafeBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: '-1px', // to make it the same as row in Balances component
-  },
   counter: {
     background: border,
     borderRadius: '3px',

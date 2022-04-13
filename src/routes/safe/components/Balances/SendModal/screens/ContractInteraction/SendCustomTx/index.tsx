@@ -1,3 +1,4 @@
+import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
@@ -13,7 +14,6 @@ import { TextAreaField } from 'src/components/forms/TextAreaField'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, maxValue, minValue, mustBeFloat, mustBeHexData } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -101,8 +101,8 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
                     <Paragraph color="disabled" noMargin size="md">
                       Value
                     </Paragraph>
-                    <ButtonLink onClick={handleClickSendMax} weight="bold">
-                      Send max
+                    <ButtonLink color="primary" textSize="lg" onClick={handleClickSendMax} aria-label="Send max value">
+                      <b>Send max</b>
                     </ButtonLink>
                   </Col>
                 </Row>

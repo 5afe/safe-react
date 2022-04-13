@@ -1,10 +1,11 @@
+import { Link } from '@gnosis.pm/safe-react-components'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import { Fragment, ReactElement, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
 import Button from 'src/components/layout/Button'
-import Link from 'src/components/layout/Link'
 import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS, COOKIE_ALERTS } from 'src/logic/cookies/model/cookie'
 import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
@@ -65,12 +66,6 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
   },
-  link: {
-    textDecoration: 'underline',
-    '&:hover': {
-      textDecoration: 'none',
-    },
-  },
   intercomAlert: {
     fontWeight: 'bold',
     display: 'flex',
@@ -121,7 +116,7 @@ const CookiesBannerForm = (props: {
         <p className={classes.text}>
           We use cookies to provide you with the best experience and to help improve our website and application. Please
           read our{' '}
-          <Link className={classes.link} to="https://gnosis-safe.io/cookie">
+          <Link size="xl" href="https://gnosis-safe.io/cookie">
             Cookie Policy
           </Link>{' '}
           for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device

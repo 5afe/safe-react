@@ -1,3 +1,4 @@
+import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -7,7 +8,6 @@ import { useSelector } from 'react-redux'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, maxValue, mustBeFloat } from 'src/components/forms/validator'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -44,10 +44,10 @@ export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.React
         </Paragraph>
         <ButtonLink
           color={disabled ? 'disabled' : 'secondary'}
+          textSize="lg"
           onClick={() => !disabled && onSetMax(ethBalance)}
-          weight="bold"
         >
-          Send max
+          <b>Send max</b>
         </ButtonLink>
       </Row>
       <Row margin="md">

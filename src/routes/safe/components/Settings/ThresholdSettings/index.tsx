@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
-import Bold from 'src/components/layout/Bold'
 import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -35,7 +34,7 @@ const ThresholdSettings = (): React.ReactElement => {
         <Heading tag="h2">Required Confirmations</Heading>
         <Paragraph>Any transaction requires the confirmation of:</Paragraph>
         <Paragraph className={classes.ownersText} size="lg">
-          <Bold>{threshold}</Bold> out of <Bold>{owners?.length || 0}</Bold> owners
+          <b>{threshold}</b> out of <b>{owners?.length || 0}</b> owners
         </Paragraph>
         {owners && owners.length > 1 && granted && (
           <Row className={classes.buttonRow}>

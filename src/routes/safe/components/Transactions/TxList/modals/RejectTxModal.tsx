@@ -2,7 +2,6 @@ import { useDispatch } from 'react-redux'
 import { useStyles } from './style'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
-import Bold from 'src/components/layout/Bold'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -73,7 +72,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
             <Paragraph color="medium" size="sm">
               Transaction nonce:
               <br />
-              <Bold className={classes.nonceNumber}>{nonce}</Bold>
+              <b className={classes.nonceNumber}>{nonce}</b>
             </Paragraph>
           </Row>
         </Block>

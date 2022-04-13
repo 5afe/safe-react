@@ -1,9 +1,9 @@
+import { Link } from '@gnosis.pm/safe-react-components'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -69,7 +69,11 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
           </Paragraph>
           <Paragraph>
             To check details about updates added by this smart contract version please visit{' '}
-            <Link target="_blank" to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}>
+            <Link
+              size="lg"
+              target="_blank"
+              href={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}
+            >
               latest Gnosis Safe contracts changelog
             </Link>
           </Paragraph>
