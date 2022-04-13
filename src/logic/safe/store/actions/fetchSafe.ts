@@ -16,8 +16,6 @@ import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCol
 import { currentChainId } from 'src/logic/config/store/selectors'
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import { addNftTokens } from 'src/logic/collectibles/store/actions/addCollectibles'
-import { NFTTokensDefaultState } from 'src/logic/collectibles/store/reducer/collectibles'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -60,7 +58,8 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
 export const fetchSafe =
   (safeAddress: string, isInitialLoad = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
-    dispatch(addNftTokens(NFTTokensDefaultState))
+    const dispatchPromises: any[] = []
+
     let address = ''
     try {
       address = checksumAddress(safeAddress)
@@ -98,22 +97,24 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      dispatch(fetchSafeTokens(address))
+      dispatchPromises.push(dispatch(fetchSafeTokens(address)))
 
       if (shouldUpdateCollectibles || isInitialLoad) {
-        dispatch(fetchCollectibles(address))
+        dispatchPromises.push(dispatch(fetchCollectibles(address)))
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
-        dispatch(fetchTransactions(chainId, address))
+        dispatchPromises.push(dispatch(fetchTransactions(chainId, address)))
       }
 
       if (isInitialLoad) {
-        dispatch(addViewedSafe(address))
+        dispatchPromises.push(dispatch(addViewedSafe(address)))
       }
     }
 
     const owners = buildSafeOwners(remoteSafeInfo?.owners || [])
 
-    return dispatch(updateSafe({ address, ...safeInfo, owners }))
+    await Promise.all(dispatchPromises)
+
+    return dispatch(updateSafe({ address, ...safeInfo, owners, loaded: true }))
   }

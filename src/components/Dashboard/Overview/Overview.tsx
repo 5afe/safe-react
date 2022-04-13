@@ -7,12 +7,9 @@ import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/se
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
-import Button from 'src/components/layout/Button'
 import { primaryLite, primaryActive, smallFontSize, md } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
-import { getShortName } from 'src/config'
+import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Skeleton } from '@material-ui/lab'
 
 const IdenticonContainer = styled.div`
@@ -43,6 +40,10 @@ const StyledText = styled(Text)`
 `
 
 const NetworkLabelContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+
   & span {
     bottom: auto;
   }
@@ -53,39 +54,36 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  position: relative;
 `
+
+const ValueSkeleton = <Skeleton variant="text" width={30} />
 
 const Overview = (): ReactElement => {
   const { address, name, owners, threshold, balances } = useSelector(currentSafeWithNames)
-  const balancesLoaded = useSelector(currentSafeLoaded)
+  const loaded = useSelector(currentSafeLoaded)
   const nftTokens = useSelector(nftTokensSelector)
-  const nftLoaded = useSelector(nftLoadedSelector)
-
-  const navigateToBalances = () => {
-    history.push(
-      generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-        shortName: getShortName(),
-        safeAddress: address,
-      }),
-    )
-  }
 
   return (
     <Container>
       <Row margin="md">
         <Col layout="column">
           <IdenticonContainer>
-            {threshold && (
-              <SafeThreshold>
-                {threshold}/{owners.length}
-              </SafeThreshold>
+            {loaded ? (
+              <>
+                <SafeThreshold>
+                  {threshold}/{owners.length}
+                </SafeThreshold>
+                <Identicon address={address} size="lg" />
+              </>
+            ) : (
+              <Skeleton variant="circle" width="40px" height="40px" />
             )}
-            <Identicon address={address} size="lg" />
           </IdenticonContainer>
           <Text size="xl" strong>
-            {name}
+            {loaded ? name : <Skeleton variant="text" />}
           </Text>
-          <PrefixedEthHashInfo hash={address} shortenHash={4} textSize="lg" />
+          {loaded ? <PrefixedEthHashInfo hash={address} textSize="lg" /> : <Skeleton variant="text" />}
         </Col>
         <Col end="xs">
           <NetworkLabelContainer>
@@ -94,22 +92,17 @@ const Overview = (): ReactElement => {
         </Col>
       </Row>
       <Row>
-        <Col layout="column" md={3}>
+        <Col layout="column" xs={3}>
           <Text color="inputDefault" size="md">
             Tokens
           </Text>
-          <StyledText size="xl">{balancesLoaded ? balances.length : <Skeleton variant="text" width={30} />}</StyledText>
+          <StyledText size="xl">{loaded ? balances.length : ValueSkeleton}</StyledText>
         </Col>
-        <Col layout="column" md={3}>
+        <Col layout="column" xs={3}>
           <Text color="inputDefault" size="md">
             NFTs
           </Text>
-          <StyledText size="xl">{nftLoaded ? nftTokens.length : <Skeleton variant="text" width={30} />}</StyledText>
-        </Col>
-        <Col end="xs" md={6}>
-          <Button size="md" variant="contained" color="primary" onClick={navigateToBalances}>
-            Open Safe
-          </Button>
+          <StyledText size="xl">{loaded ? nftTokens.length : ValueSkeleton}</StyledText>
         </Col>
       </Row>
     </Container>
