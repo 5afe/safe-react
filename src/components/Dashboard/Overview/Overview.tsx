@@ -9,7 +9,7 @@ import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import { primaryLite, primaryActive, smallFontSize, md } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
-import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
+import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Skeleton } from '@material-ui/lab'
 
 const IdenticonContainer = styled.div`
@@ -63,6 +63,7 @@ const Overview = (): ReactElement => {
   const { address, name, owners, threshold, balances } = useSelector(currentSafeWithNames)
   const loaded = useSelector(currentSafeLoaded)
   const nftTokens = useSelector(nftTokensSelector)
+  const nftLoaded = useSelector(nftLoadedSelector)
 
   return (
     <Container>
@@ -102,7 +103,7 @@ const Overview = (): ReactElement => {
           <Text color="inputDefault" size="md">
             NFTs
           </Text>
-          <StyledText size="xl">{loaded ? nftTokens.length : ValueSkeleton}</StyledText>
+          <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>
         </Col>
       </Row>
     </Container>

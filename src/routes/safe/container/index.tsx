@@ -32,7 +32,7 @@ const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const { address, owners } = useSelector(currentSafe)
   const addressFromUrl = extractSafeAddress()
-  const safeAddress = address || addressFromUrl
+  const safeAddress = addressFromUrl || address
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 

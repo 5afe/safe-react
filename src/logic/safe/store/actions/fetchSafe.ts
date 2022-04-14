@@ -8,7 +8,6 @@ import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
@@ -60,13 +59,7 @@ export const fetchSafe =
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
     const dispatchPromises: any[] = []
 
-    let address = ''
-    try {
-      address = checksumAddress(safeAddress)
-    } catch (err) {
-      logError(Errors._102, safeAddress)
-      return
-    }
+    const address = checksumAddress(safeAddress)
 
     let safeInfo: Partial<SafeRecordProps> = {}
     let remoteSafeInfo: SafeInfo | null = null
@@ -100,7 +93,7 @@ export const fetchSafe =
       dispatchPromises.push(dispatch(fetchSafeTokens(address)))
 
       if (shouldUpdateCollectibles || isInitialLoad) {
-        dispatchPromises.push(dispatch(fetchCollectibles(address)))
+        dispatch(fetchCollectibles(address))
       }
 
       if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
