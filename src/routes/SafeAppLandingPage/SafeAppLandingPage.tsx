@@ -17,7 +17,7 @@ import CreateNewSafe from 'src/routes/SafeAppLandingPage/components/CreateNewSaf
 import ConnectWallet from 'src/routes/SafeAppLandingPage/components/ConnectWallet'
 import TryDemoSafe from 'src/routes/SafeAppLandingPage/components/TryDemoSafe'
 
-function SafeAppLandingPage(): ReactElement {
+const SafeAppLandingPage = (): ReactElement => {
   const { search } = useLocation()
   const query = new URLSearchParams(search)
   const safeAppChainId = query.get('chainId')
