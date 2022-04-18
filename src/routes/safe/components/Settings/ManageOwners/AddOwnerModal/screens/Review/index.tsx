@@ -1,3 +1,4 @@
+import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
@@ -19,7 +20,6 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { Overline } from 'src/components/layout/Typography'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
@@ -122,8 +122,8 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 <Hairline />
               </Fragment>
             ))}
-            <Row align="center" className={classes.info}>
-              <Overline noMargin>ADDING NEW OWNER &darr;</Overline>
+            <Row className={classes.info}>
+              <Typography variant={'overline'}>ADDING NEW OWNER &darr;</Typography>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwner} data-testid="add-owner-review">

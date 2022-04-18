@@ -1,3 +1,4 @@
+import Typography from '@material-ui/core/Typography'
 import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -19,7 +20,6 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { Overline } from 'src/components/layout/Typography'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
@@ -136,8 +136,8 @@ export const ReviewReplaceOwnerModal = ({
                   </Fragment>
                 ),
             )}
-            <Row align="center" className={classes.info}>
-              <Overline noMargin>REMOVING OWNER &darr;</Overline>
+            <Row className={classes.info}>
+              <Typography variant={'overline'}>REMOVING OWNER &darr;</Typography>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwnerRemoved} data-testid="remove-owner-review">
@@ -151,8 +151,8 @@ export const ReviewReplaceOwnerModal = ({
                 />
               </Col>
             </Row>
-            <Row align="center" className={classes.info}>
-              <Overline noMargin>ADDING NEW OWNER &darr;</Overline>
+            <Row className={classes.info}>
+              <Typography variant={'overline'}>ADDING NEW OWNER &darr;</Typography>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwnerAdded} data-testid="add-owner-review">

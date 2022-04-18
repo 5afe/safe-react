@@ -450,13 +450,6 @@ const theme = createTheme({
         whiteSpace: 'nowrap',
       },
     },
-    // MuiBackdrop: {
-    //   root: {
-    //     backdropFilter: 'blur(1px)',
-    //     backgroundColor: 'rgba(228, 232, 241, 0.75)',
-    //     top: '52px',
-    //   },
-    // },
     MuiMenuItem: {
       root: {
         fontFamily: secondaryFontFamily,

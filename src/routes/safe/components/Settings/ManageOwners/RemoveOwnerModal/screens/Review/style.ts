@@ -9,10 +9,7 @@ export const useStyles = makeStyles(
     },
     info: {
       backgroundColor: background,
-      padding: sm,
       justifyContent: 'center',
-      textAlign: 'center',
-      flexDirection: 'column',
     },
     details: {
       padding: lg,

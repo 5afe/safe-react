@@ -1,3 +1,4 @@
+import Typography from '@material-ui/core/Typography'
 import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -20,7 +21,6 @@ import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { logError } from 'src/logic/exceptions/CodedException'
 import ErrorCodes from 'src/logic/exceptions/registry'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { Overline } from 'src/components/layout/Typography'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 type ReviewRemoveOwnerProps = {
@@ -139,8 +139,8 @@ export const ReviewRemoveOwnerModal = ({
                   </Fragment>
                 ),
             )}
-            <Row align="center" className={classes.info}>
-              <Overline noMargin>REMOVING OWNER &darr;</Overline>
+            <Row className={classes.info}>
+              <Typography variant={'overline'}>REMOVING OWNER &darr;</Typography>
             </Row>
             <Hairline />
             <Row className={classes.selectedOwner} data-testid="remove-owner-review">

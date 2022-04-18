@@ -7,10 +7,7 @@ export const styles = createStyles({
   },
   info: {
     backgroundColor: background,
-    padding: sm,
     justifyContent: 'center',
-    textAlign: 'center',
-    flexDirection: 'column',
   },
   buttonRow: {
     height: '84px',
