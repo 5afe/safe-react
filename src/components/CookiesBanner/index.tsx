@@ -1,11 +1,11 @@
-import { Link } from '@gnosis.pm/safe-react-components'
+import { Button, Link } from '@gnosis.pm/safe-react-components'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import { Fragment, ReactElement, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
-import Button from 'src/components/layout/Button'
 import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS, COOKIE_ALERTS } from 'src/logic/cookies/model/cookie'
 import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
@@ -76,6 +76,12 @@ const useStyles = makeStyles({
     },
   },
 } as any)
+
+const StyledButton = styled(Button)`
+  &&.MuiButton-root {
+    width: 180px;
+  }
+`
 
 const CookiesBannerForm = (props: {
   onSubmit: (formNecessary: boolean, formSupportAndUpdates: boolean, formAnalytics: boolean) => void
@@ -153,14 +159,14 @@ const CookiesBannerForm = (props: {
             />
           </div>
           <div className={classes.formItem}>
-            <Button color="primary" component={Link} minWidth={180} onClick={onAccept} variant="outlined">
+            <StyledButton color="secondary" size="md" onClick={onAccept} variant="bordered">
               Accept selection
-            </Button>
+            </StyledButton>
           </div>
           <div className={classes.formItem}>
-            <Button color="primary" component={Link} minWidth={180} onClick={onAcceptAll} variant="contained">
+            <StyledButton color="primary" size="md" onClick={onAcceptAll} variant="contained">
               Accept all
-            </Button>
+            </StyledButton>
           </div>
         </div>
       </div>
