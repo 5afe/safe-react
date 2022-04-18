@@ -75,7 +75,7 @@ const Footer = (): React.ReactElement => {
         className={classes.buttonLink}
         type="button"
         color="primary"
-        aria-label="Cookie Preferences"
+        aria-aria-labelledby="Cookie Preferences"
         onClick={openCookiesHandler}
       >
         Preferences
