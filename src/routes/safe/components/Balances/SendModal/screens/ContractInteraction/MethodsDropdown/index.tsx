@@ -1,3 +1,4 @@
+import { Icon } from '@gnosis.pm/safe-react-components'
 import InputBase from '@material-ui/core/InputBase'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -13,7 +14,6 @@ import { AbiItem } from 'web3-utils'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { NO_CONTRACT } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
 import { extractUsefulMethods, AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
@@ -144,7 +144,7 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
                       <ListItemText primary={name} />
                       <ListItemIcon className={classes.iconRight}>
                         {signatureHash === (selectedMethod as Record<string, string>).signatureHash ? (
-                          <img alt="checked" src={CheckIcon} />
+                          <Icon size="sm" type="check" color="primary"></Icon>
                         ) : (
                           <span />
                         )}

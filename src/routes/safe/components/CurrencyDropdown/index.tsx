@@ -1,3 +1,4 @@
+import { Icon } from '@gnosis.pm/safe-react-components'
 import InputBase from '@material-ui/core/InputBase'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -8,8 +9,6 @@ import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import CheckIcon from './img/check.svg'
 
 import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
@@ -152,7 +151,7 @@ export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactEle
                 <ListItemText primary={currencyName} />
                 {currencyName === selectedCurrency ? (
                   <ListItemIcon className={classes.iconRight}>
-                    <img alt="checked" src={CheckIcon} />
+                    <Icon size="sm" type="check" color="primary"></Icon>
                   </ListItemIcon>
                 ) : null}
               </MenuItem>
