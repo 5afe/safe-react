@@ -1,3 +1,4 @@
+import { Divider } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
@@ -5,7 +6,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
 import { screenSm, sm } from 'src/theme/variables'
 
 const styles = () => ({
@@ -50,14 +50,14 @@ class Provider extends React.Component<any> {
     return (
       <>
         <div className={classes.root} ref={this.myRef}>
-          <Divider />
+          <Divider orientation="vertical" />
           <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
             {info}
             <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </Col>
-          <Divider />
+          <Divider orientation="vertical" />
         </div>
         {render(this.myRef)}
       </>

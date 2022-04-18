@@ -1,7 +1,9 @@
+import { Divider } from '@gnosis.pm/safe-react-components'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
@@ -15,9 +17,7 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
-import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
-import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 
@@ -109,7 +109,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       {isWrongChain && (
         <div className={classes.wallet}>
           <WalletSwitch />
-          <Divider />
+          <Divider orientation="vertical" />
         </div>
       )}
 
