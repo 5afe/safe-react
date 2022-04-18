@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { border, fontColor, lg, secondaryText, smallFontSize, xl } from 'src/theme/variables'
+import { border, fontColor, lg, secondaryText } from 'src/theme/variables'
 
 export const styles = createStyles({
   ownersText: {
@@ -20,9 +20,5 @@ export const styles = createStyles({
     width: '100%',
     justifyContent: 'flex-end',
     borderTop: `2px solid ${border}`,
-  },
-  modifyBtn: {
-    height: xl,
-    fontSize: smallFontSize,
   },
 })

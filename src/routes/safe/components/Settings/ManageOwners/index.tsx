@@ -1,5 +1,5 @@
 import { useState, ReactElement } from 'react'
-import { Icon } from '@gnosis.pm/safe-react-components'
+import { Button, Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -17,7 +17,6 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Heading from 'src/components/layout/Heading'
@@ -28,10 +27,10 @@ import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import Track from 'src/components/Track'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
-export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
-export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
-export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
-export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
+export const RENAME_OWNER_ARIA_LABEL = 'Rename owner'
+export const REMOVE_OWNER_ARIA_LABEL = 'Remove owner'
+export const ADD_OWNER_ARIA_LABEL = 'Add new owner'
+export const REPLACE_OWNER_ARIA_LABEL = 'Replace owner'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
 
 type Props = {
@@ -119,20 +118,20 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
                       <Track {...SETTINGS_EVENTS.OWNERS.EDIT_OWNER}>
-                        <ButtonHelper onClick={onShow('EditOwner', row)} dataTestId={RENAME_OWNER_BTN_TEST_ID}>
+                        <ButtonHelper onClick={onShow('EditOwner', row)} aria-label={RENAME_OWNER_ARIA_LABEL}>
                           <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
                         </ButtonHelper>
                       </Track>
                       {granted && (
                         <>
                           <Track {...SETTINGS_EVENTS.OWNERS.REPLACE_OWNER}>
-                            <ButtonHelper onClick={onShow('ReplaceOwner', row)} dataTestId={REPLACE_OWNER_BTN_TEST_ID}>
+                            <ButtonHelper onClick={onShow('ReplaceOwner', row)} aria-label={REPLACE_OWNER_ARIA_LABEL}>
                               <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
                             </ButtonHelper>
                           </Track>
                           {ownerData.length > 1 && (
                             <Track {...SETTINGS_EVENTS.OWNERS.REMOVE_OWNER}>
-                              <ButtonHelper onClick={onShow('RemoveOwner', row)} dataTestId={REMOVE_OWNER_BTN_TEST_ID}>
+                              <ButtonHelper onClick={onShow('RemoveOwner', row)} aria-label={REMOVE_OWNER_ARIA_LABEL}>
                                 <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
                               </ButtonHelper>
                             </Track>
@@ -156,8 +155,8 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                 <Button
                   color="primary"
                   onClick={onShow('AddOwner')}
-                  size="small"
-                  testId={ADD_OWNER_BTN_TEST_ID}
+                  size="md"
+                  aria-labelledby={ADD_OWNER_ARIA_LABEL}
                   variant="contained"
                 >
                   Add new owner

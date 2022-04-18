@@ -1,17 +1,13 @@
+import { Button, Icon, FixedIcon, Text } from '@gnosis.pm/safe-react-components'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
 import TableCell from '@material-ui/core/TableCell'
-import Tooltip from '@material-ui/core/Tooltip'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { Skeleton } from '@material-ui/lab'
 
-import InfoIcon from 'src/assets/icons/info_red.svg'
-import { FixedIcon, Text, Button } from '@gnosis.pm/safe-react-components'
-
-import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Row from 'src/components/layout/Row'
@@ -63,11 +59,13 @@ const CurrencyTooltip = (props: CurrencyTooltipProps): React.ReactElement | null
   const value = valueWithCurrency.replace(/[^\d.-]/g, '')
   if (!Number(value) && Number(balance)) {
     return (
-      <Tooltip placement="top" title="Value may be zero due to missing token price information">
-        <span>
-          <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
-        </span>
-      </Tooltip>
+      <Icon
+        className={classes.tooltipInfo}
+        size="sm"
+        type="info"
+        color="error"
+        tooltip="Value may be zero due to missing token price information"
+      />
     )
   }
   return null

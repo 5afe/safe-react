@@ -1,10 +1,10 @@
+import { Button } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -39,13 +39,7 @@ const ThresholdSettings = (): React.ReactElement => {
         {owners && owners.length > 1 && granted && (
           <Row className={classes.buttonRow}>
             <Track {...SETTINGS_EVENTS.THRESHOLD.CHANGE}>
-              <Button
-                className={classes.modifyBtn}
-                color="primary"
-                minWidth={120}
-                onClick={toggleModal}
-                variant="contained"
-              >
+              <Button color="primary" size="md" onClick={toggleModal} variant="contained">
                 Change
               </Button>
             </Track>
