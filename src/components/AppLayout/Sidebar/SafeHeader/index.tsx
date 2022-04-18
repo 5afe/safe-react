@@ -12,7 +12,6 @@ import {
 } from '@gnosis.pm/safe-react-components'
 import { useRouteMatch } from 'react-router-dom'
 
-import FlexSpacer from 'src/components/FlexSpacer'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo, getExplorerInfo } from 'src/config'
 import {
@@ -220,7 +219,6 @@ const SafeHeader = ({
     return (
       <Container>
         <IdenticonContainer>
-          <FlexSpacer />
           <FixedIcon type="notConnected" />
           <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
