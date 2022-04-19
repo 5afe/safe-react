@@ -44,7 +44,7 @@ import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
 import Divider from 'src/components/Divider'
 import { Modal } from 'src/components/Modal'
-import { ModalHeader } from '../../../../../../../components/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
