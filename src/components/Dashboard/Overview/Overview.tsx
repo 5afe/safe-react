@@ -73,7 +73,7 @@ const Overview = (): ReactElement => {
       <WidgetBody>
         <Card>
           <Container>
-            <Row margin="md">
+            <Row margin="lg">
               <Col layout="column">
                 <IdenticonContainer>
                   {loaded ? (

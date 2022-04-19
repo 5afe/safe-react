@@ -6,22 +6,20 @@ import { IconButton } from '@material-ui/core'
 import { Link, generatePath } from 'react-router-dom'
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: black;
-`
-
 export const CARD_WIDTH = 260
 export const CARD_HEIGHT = 200
 export const CARD_PADDING = 24
 
-const StyledCard = styled.div`
+const StyledLink = styled(Link)`
+  display: block;
+  text-decoration: none;
+  color: black;
+  height: 100%;
   position: relative;
-  width: ${CARD_WIDTH}px;
-  height: ${CARD_HEIGHT}px;
   background-color: white;
   border-radius: 8px;
   padding: ${CARD_PADDING}px;
+  box-sizing: border-box;
 `
 
 const StyledLogo = styled.img`
@@ -77,18 +75,16 @@ const Card = (props: CardProps): ReactElement => {
 
   return (
     <StyledLink to={appRoute}>
-      <StyledCard>
-        <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
+      <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
 
-        <Title size="xs">{props.name}</Title>
+      <Title size="xs">{props.name}</Title>
 
-        <Text size="md" color="inputFilled">
-          {props.description}
-        </Text>
+      <Text size="md" color="inputFilled">
+        {props.description}
+      </Text>
 
-        {/* Bookmark button */}
-        <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
-      </StyledCard>
+      {/* Bookmark button */}
+      <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
     </StyledLink>
   )
 }

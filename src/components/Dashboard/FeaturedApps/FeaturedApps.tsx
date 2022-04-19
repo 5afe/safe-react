@@ -14,8 +14,8 @@ import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/D
 const FEATURED_APPS_TAGS = 'dashboard-widgets'
 
 const StyledImage = styled.img`
-  max-width: 64px;
-  max-height: 64px;
+  width: 64px;
+  height: 64px;
 `
 
 const StyledLink = styled(Link)`
@@ -26,6 +26,7 @@ const StyledLink = styled(Link)`
 const StyledRow = styled(Row)`
   gap: 24px;
   flex-wrap: inherit;
+  align-items: center;
 `
 
 export const FeaturedApps = (): ReactElement => {
@@ -46,14 +47,12 @@ export const FeaturedApps = (): ReactElement => {
           const appRoute = getSafeAppUrl(app.url, routesSlug)
           return (
             <Card key={app.id}>
-              <StyledRow margin="lg">
+              <StyledRow>
                 <Col xs={2}>
                   <StyledImage src={app.iconUrl} alt={app.name} />
                 </Col>
                 <Col xs={10} layout="column">
-                  <Text size="lg" strong>
-                    {app.description}
-                  </Text>
+                  <Text size="xl">{app.description}</Text>
                   <StyledLink to={appRoute}>
                     <Text color="primary" size="lg" strong>
                       Use {app.name}

@@ -4,29 +4,31 @@ import Page from 'src/components/layout/Page'
 import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
 import Overview from 'src/components/Dashboard/Overview/Overview'
 import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
-import Row from 'src/components/layout/Row'
 import { FeaturedApps } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
-import Col from 'src/components/layout/Col'
+import { Grid } from '@material-ui/core'
 
 function Home(): ReactElement {
   return (
     <Page>
-      <Row>
-        <Overview />
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <Overview />
+        </Grid>
 
-        <PendingTxsList size={4} />
-        {/* <CreateSafeWidget /> */}
-      </Row>
+        <Grid item xs={12} md={6}></Grid>
 
-      <Row>
-        <FeaturedApps />
+        <Grid item xs={12} md={6}>
+          <FeaturedApps />
+        </Grid>
 
-        <Col layout="column" xs={12} md={6}></Col>
-      </Row>
+        <Grid item xs={12} md={6}>
+          <PendingTxsList size={4} />
+        </Grid>
 
-      <Row>
-        <SafeAppsGrid size={6} />
-      </Row>
+        <Grid item xs={12}>
+          <SafeAppsGrid size={6} />
+        </Grid>
+      </Grid>
     </Page>
   )
 }
