@@ -27,12 +27,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import {
-  addressBookAddOrUpdate,
-  addressBookFixEmptyNames,
-  addressBookImport,
-  addressBookRemove,
-} from 'src/logic/addressBook/store/actions'
+import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
@@ -101,11 +96,6 @@ const AddressBookTable = (): ReactElement => {
   const history = useHistory()
   const queryParams = Object.fromEntries(new URLSearchParams(history.location.search))
   const entryAddressToEditOrCreateNew = queryParams?.entryAddress
-
-  // Temporary fix that should be removed after a sufficient amount of time
-  useEffect(() => {
-    dispatch(addressBookFixEmptyNames())
-  }, [])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
