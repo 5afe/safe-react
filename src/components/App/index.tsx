@@ -18,7 +18,7 @@ import { currentCurrencySelector } from 'src/logic/currencyValues/store/selector
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
@@ -61,7 +61,7 @@ const App: React.FC = ({ children }) => {
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
-  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
+  const formattedTotalBalance = currentSafeBalance ? formatAmount(currentSafeBalance.toString()) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
 

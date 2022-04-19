@@ -39,11 +39,3 @@ export const formatAmount = (number: string): string => {
 
   return numberFloat
 }
-
-const options = { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 8 }
-const usNumberFormatter = new Intl.NumberFormat('en-US', options)
-
-export const formatAmountInUsFormat = (amount: string): string => {
-  const numberFloat: number = parseFloat(amount)
-  return usNumberFormatter.format(numberFloat).replace('$', '')
-}

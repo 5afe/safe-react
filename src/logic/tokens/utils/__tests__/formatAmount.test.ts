@@ -1,4 +1,4 @@
-import { formatAmount, formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 describe('formatAmount', () => {
   it('Given 0 returns 0', () => {
@@ -101,75 +101,6 @@ describe('formatAmount', () => {
 
     // when
     const result = formatAmount(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-})
-
-describe('FormatsAmountsInUsFormat', () => {
-  it('Given 0 returns 0.00', () => {
-    // given
-    const input = 0
-    const expectedResult = '0.00'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('Given 1 returns 1.00', () => {
-    // given
-    const input = 1
-    const expectedResult = '1.00'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX', () => {
-    // given
-    const input = 311137.3
-    const expectedResult = '311,137.30'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX', () => {
-    // given
-    const input = 19797.899
-    const expectedResult = '19,797.899'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX', () => {
-    // given
-    const input = 19797899.479
-    const expectedResult = '19,797,899.479'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX', () => {
-    // given
-    const input = 19797899479.999
-    const expectedResult = '19,797,899,479.999'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(expectedResult)
