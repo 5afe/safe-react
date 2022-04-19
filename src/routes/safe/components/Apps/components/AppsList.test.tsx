@@ -39,6 +39,7 @@ beforeEach(() => {
       accessControl: {
         type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
       },
+      tags: [],
     }),
   )
 
@@ -55,6 +56,7 @@ beforeEach(() => {
         accessControl: {
           type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
         },
+        tags: [],
       },
       {
         id: 3,
@@ -69,6 +71,7 @@ beforeEach(() => {
           type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.DomainAllowlist,
           value: ['https://gnosis-safe.io'],
         },
+        tags: [],
       },
       {
         id: 14,
@@ -81,6 +84,7 @@ beforeEach(() => {
         accessControl: {
           type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
         },
+        tags: [],
       },
       {
         id: 24,
@@ -94,6 +98,7 @@ beforeEach(() => {
           type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.DomainAllowlist,
           value: ['https://gnosis-safe.io'],
         },
+        tags: [],
       },
     ]),
   )

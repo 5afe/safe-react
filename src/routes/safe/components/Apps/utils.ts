@@ -62,6 +62,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
     accessControl: {
       type: SafeAppAccessPolicyTypes.NoRestrictions,
     },
+    tags: [],
   }
 }
 
