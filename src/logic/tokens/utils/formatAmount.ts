@@ -44,12 +44,12 @@ export const formatAmount = (number: string): string => {
   return numberFloat
 }
 
-export const formatCurrency = (amount: string, currencySelected: string): string => {
-  const formatter = new Intl.NumberFormat(LOCALE, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 8,
-  })
+const currencyFormatter = new Intl.NumberFormat(LOCALE, {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 8,
+})
 
+export const formatCurrency = (amount: string, currencySelected: string): string => {
   const numberFloat = parseFloat(amount)
-  return `${formatter.format(numberFloat)} ${currencySelected}`
+  return `${currencyFormatter.format(numberFloat)} ${currencySelected}`
 }
