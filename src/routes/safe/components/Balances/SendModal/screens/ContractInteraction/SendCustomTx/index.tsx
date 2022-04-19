@@ -1,12 +1,11 @@
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
-import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
-import Close from '@material-ui/icons/Close'
 
+import { ModalHeader } from 'src/components/ModalHeader'
 import Divider from 'src/components/Divider'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -66,15 +65,7 @@ const SendCustomTx = ({ initialValues, isABI, onClose, onNext, switchMethod }: P
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Contract interaction
-        </Paragraph>
-        <Paragraph className={classes.annotation}>{getStepTitle(1, 2)}</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} title="Contract interaction" subTitle={getStepTitle(1, 2)} />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}

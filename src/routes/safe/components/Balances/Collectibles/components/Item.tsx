@@ -1,13 +1,12 @@
+import { Button } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-// import CallMade from '@material-ui/icons/CallMade'
 import cn from 'classnames'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
-import Button from 'src/components/layout/Button'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { fontColor, sm, xs } from 'src/theme/variables'
+import { fontColor } from 'src/theme/variables'
 
 const useStyles = makeStyles({
   item: {
@@ -85,18 +84,6 @@ const useStyles = makeStyles({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  buttonIcon: {
-    fontSize: 16,
-    marginRight: sm,
-  },
-  sendButton: {
-    borderRadius: xs,
-    minWidth: '85px',
-
-    '& > span': {
-      fontSize: '14px',
-    },
-  },
 } as any)
 
 const Item = ({ data, onSend }: { data: NFTToken; onSend: (nftToken: NFTToken) => void }): ReactElement => {
@@ -122,8 +109,7 @@ const Item = ({ data, onSend }: { data: NFTToken; onSend: (nftToken: NFTToken) =
       </div>
       {granted && (
         <div className={cn(classes.extraContent, 'showOnHover')}>
-          <Button className={classes.sendButton} color="primary" onClick={onSend} size="small" variant="contained">
-            {/* <CallMade alt="Send" className={classes.buttonIcon} />  */}
+          <Button color="primary" onClick={() => onSend(data)} size="md" variant="contained">
             Send
           </Button>
         </div>
