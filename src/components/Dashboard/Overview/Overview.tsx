@@ -103,7 +103,7 @@ const Overview = (): ReactElement => {
           <Text color="inputDefault" size="md">
             NFTs
           </Text>
-          <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>
+          {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
         </Col>
       </Row>
     </Container>
