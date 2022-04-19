@@ -10,6 +10,8 @@ import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import styled from 'styled-components'
 
+const FEATURED_APPS_TAGS = 'dashboard-widgets'
+
 const StyledImage = styled.img`
   max-width: 64px;
   max-height: 64px;
@@ -28,7 +30,7 @@ const StyledRow = styled(Row)`
 export const FeaturedApps = (): ReactElement => {
   const { allApps } = useAppList()
   const { address } = useSelector(currentSafe) ?? {}
-  const featuredApps = useMemo(() => allApps.filter((app) => app.tags.includes('dashboard-widgets')), [allApps])
+  const featuredApps = useMemo(() => allApps.filter((app) => app.tags.includes(FEATURED_APPS_TAGS)), [allApps])
 
   const routesSlug: SafeRouteParams = {
     shortName: getShortName(),
