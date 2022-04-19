@@ -19,6 +19,12 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
     // exclude those entries with invalid name
     .filter(({ name }) => isValidAddressBookName(name))
     .forEach((addressBookEntry) => {
+      // TODO: Remove after a sufficient period of time
+      // If an entry is an empty name is loaded, set the name as the address
+      if (!addressBookEntry.name) {
+        addressBookEntry.name = addressBookEntry.address
+      }
+
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       if (entryIndex >= 0) {
@@ -39,8 +45,10 @@ const addressBookReducer = handleActions<AddressBookState, Payloads>(
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       if (!action.payload.address) return state
 
+      const { address, name } = action.payload
+
       const newState = [...state]
-      const addressBookEntry = { ...action.payload, name: action.payload.name.trim() }
+      const addressBookEntry = { ...action.payload, name: name.trim() || address }
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       // update
