@@ -30,7 +30,7 @@ const StyledRow = styled(Row)`
 export const FeaturedApps = (): ReactElement => {
   const { allApps } = useAppList()
   const { address } = useSelector(currentSafe) ?? {}
-  const featuredApps = useMemo(() => allApps.filter((app) => app.tags.includes(FEATURED_APPS_TAGS)), [allApps])
+  const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAGS)), [allApps])
 
   const routesSlug: SafeRouteParams = {
     shortName: getShortName(),
