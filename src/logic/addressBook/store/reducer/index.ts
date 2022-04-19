@@ -12,22 +12,19 @@ export const initialAddressBookState: AddressBookState = []
 
 type Payloads = AddressBookEntry | AddressBookState
 
-const getFallbackName = (address: string) => textShortener()(address)
+export const getAddressBookFallbackName = (address: string) => textShortener()(address)
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
   // We check that name exist before trimming
-  const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name ? entry.name.trim() : '' }))
+  const addressBookEntries = action.payload.map((entry) => ({
+    ...entry,
+    name: entry.name ? entry.name.trim() : getAddressBookFallbackName(entry.address),
+  }))
   addressBookEntries
     // exclude those entries with invalid name
     .filter(({ name }) => isValidAddressBookName(name))
     .forEach((addressBookEntry) => {
-      // TODO: Remove after a sufficient period of time
-      // If an entry is an empty name is loaded, set the name as the address
-      if (!addressBookEntry.name) {
-        addressBookEntry.name = getFallbackName(addressBookEntry.address)
-      }
-
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       if (entryIndex >= 0) {
@@ -51,7 +48,7 @@ const addressBookReducer = handleActions<AddressBookState, Payloads>(
       const { address, name } = action.payload
 
       const newState = [...state]
-      const addressBookEntry = { ...action.payload, name: name.trim() || getFallbackName(address) }
+      const addressBookEntry = { ...action.payload, name: name.trim() || getAddressBookFallbackName(address) }
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       // update
@@ -79,6 +76,15 @@ const addressBookReducer = handleActions<AddressBookState, Payloads>(
     [ADDRESS_BOOK_ACTIONS.SAFE_LOAD]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.IMPORT]: batchLoadEntries,
     [ADDRESS_BOOK_ACTIONS.SYNC]: (_, action: Action<AddressBookState>): AddressBookState => action.payload,
+    [ADDRESS_BOOK_ACTIONS.FIX_EMPTY_NAMES]: (state) => {
+      if (state.every(({ name }) => Boolean(name))) {
+        return state
+      }
+      return state.map((entry) => ({
+        ...entry,
+        name: entry.name || getAddressBookFallbackName(entry.address),
+      }))
+    },
   },
   initialAddressBookState,
 )
