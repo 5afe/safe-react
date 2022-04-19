@@ -1,5 +1,6 @@
 import { CHAIN_ID } from 'src/config/chain.d'
-import { batchLoadEntries } from '../reducer'
+import { addressBookFixEmptyNames } from '../actions'
+import addressBookReducer, { batchLoadEntries } from '../reducer'
 
 describe('Test AddressBook BatchLoadEntries Reducer', () => {
   it('returns an addressbook array', () => {
@@ -110,5 +111,63 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     }
     const newState = batchLoadEntries(initialState, action)
     expect(newState).toStrictEqual(addressBookEntries)
+  })
+
+  describe('addressBookFixEmptyNames', () => {
+    it('fixes empty names', () => {
+      const prevState = [
+        {
+          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          name: '',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          name: '',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ]
+
+      expect(addressBookReducer(prevState, addressBookFixEmptyNames())).toEqual([
+        {
+          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          name: '0x44625279...6AAD7aBcb2',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          name: '0x918925e5...7e5FF9d96F',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ])
+    })
+
+    it("doesn't 'fix' named contacts", () => {
+      const prevState = [
+        {
+          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          name: 'test',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          name: '',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ]
+
+      expect(addressBookReducer(prevState, addressBookFixEmptyNames())).toEqual([
+        {
+          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          name: 'test',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          name: '0x918925e5...7e5FF9d96F',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ])
+    })
   })
 })
