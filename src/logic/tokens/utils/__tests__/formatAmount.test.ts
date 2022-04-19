@@ -1,4 +1,4 @@
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount, formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 
 describe('formatAmount', () => {
   it('Given 0 returns 0', () => {
@@ -104,5 +104,83 @@ describe('formatAmount', () => {
 
     // then
     expect(result).toBe(expectedResult)
+  })
+})
+
+describe('formatCurrency', () => {
+  it('Given 0 returns 0.00', () => {
+    // given
+    const input = 0
+    const expectedResult = '0.00 EUR'
+
+    // when
+    const result = formatCurrency(input.toString(), 'EUR')
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given 1 returns 1.00', () => {
+    // given
+    const input = 1
+    const expectedResult = '1.00 EUR'
+
+    // when
+    const result = formatCurrency(input.toString(), 'EUR')
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX', () => {
+    // given
+    const input = 311137.3
+    const expectedResult = '311,137.30 EUR'
+
+    // when
+    const result = formatCurrency(input.toString(), 'EUR')
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX', () => {
+    // given
+    const input = 19797.899
+    const expectedResult = '19,797.899 EUR'
+
+    // when
+    const result = formatCurrency(input.toString(), 'EUR')
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX', () => {
+    // given
+    const input = 19797899.479
+    const expectedResult = '19,797,899.479 EUR'
+
+    // when
+    const result = formatCurrency(input.toString(), 'EUR')
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX', () => {
+    // given
+    const input = 19797899479.999
+    const expectedResult = '19,797,899,479.999 EUR'
+
+    // when
+    const result = formatCurrency(input.toString(), 'EUR')
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Accepts varied currencies', () => {
+    expect(formatCurrency('10', 'USD')).toBe('10.00 USD')
+    expect(formatCurrency('10', 'GBP')).toBe('10.00 GBP')
+  })
+
+  it('Accepts crypto currencies', () => {
+    expect(formatCurrency('10', 'xDai')).toBe('10.00 xDai')
+    expect(formatCurrency('10', 'GNO')).toBe('10.00 GNO')
   })
 })
