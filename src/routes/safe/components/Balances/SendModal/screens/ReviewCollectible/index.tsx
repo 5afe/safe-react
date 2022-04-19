@@ -23,7 +23,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)

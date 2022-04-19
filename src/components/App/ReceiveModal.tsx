@@ -1,12 +1,11 @@
 import { Button, Switch } from '@gnosis.pm/safe-react-components'
-import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
 import { ReactElement, useState } from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
 import { useSelector } from 'react-redux'
 
+import { ModalHeader } from 'src/components/ModalHeader'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -22,17 +21,6 @@ import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
 const useStyles = (chainInfo: ChainInfo) =>
   makeStyles(
     createStyles({
-      heading: {
-        padding: `${md} ${lg}`,
-        justifyContent: 'space-between',
-        height: '74px',
-        boxSizing: 'border-box',
-      },
-      close: {
-        height: lg,
-        width: lg,
-        fill: secondaryText,
-      },
       qrContainer: {
         backgroundColor: '#fff',
         padding: md,
@@ -90,14 +78,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph noMargin size="xl" weight="bolder">
-          Receive assets
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.close} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} title="Receive assets" />
       <Hairline />
       <Paragraph className={classes.networkInfo} noMargin size="lg" weight="bolder">
         {chainInfo.chainName} Network–only send {chainInfo.chainName} assets to this Safe.

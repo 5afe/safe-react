@@ -21,7 +21,7 @@ import { processTransaction } from 'src/logic/safe/store/actions/processTransact
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'

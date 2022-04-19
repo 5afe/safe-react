@@ -16,7 +16,7 @@ import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'

@@ -35,7 +35,7 @@ export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid
 export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 import { OwnerValues } from '../..'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators: Record<

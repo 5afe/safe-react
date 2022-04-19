@@ -17,7 +17,7 @@ import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe'

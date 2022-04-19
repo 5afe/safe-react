@@ -19,7 +19,7 @@ import { RenderOutputParams } from './RenderOutputParams'
 import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
-import { ModalHeader } from '../ModalHeader'
+import { ModalHeader } from '../../../../../../../components/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 

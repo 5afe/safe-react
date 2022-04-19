@@ -1,6 +1,6 @@
 import { ReactElement, useState, ChangeEvent, useCallback } from 'react'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import { Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
@@ -14,6 +14,7 @@ import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { composeValidators, maxValue, minValue } from 'src/components/forms/validator'
 import { Modal } from 'src/components/Modal'
+import { ModalHeader } from 'src/components/ModalHeader'
 import {
   ParametersStatus,
   areSafeParamsEnabled,
@@ -22,9 +23,6 @@ import {
 } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
-import Paragraph from 'src/components/layout/Paragraph'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CircularProgress from '@material-ui/core/CircularProgress'
 
 const StyledDivider = styled(Divider)`
   margin: 0;
@@ -133,15 +131,7 @@ export const EditTxParametersForm = ({
 
   return (
     <>
-      {/* Header */}
-      <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
-        <Paragraph size="xl" noMargin>
-          Advanced parameters
-        </Paragraph>
-        <IconButton disableRipple onClick={onCloseFormHandler}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onCloseFormHandler} title="Advanced parameters" data-testid="send-funds-review-step" />
 
       <StyledDivider />
 

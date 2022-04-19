@@ -21,7 +21,7 @@ import {
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'

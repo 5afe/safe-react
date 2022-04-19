@@ -1,9 +1,10 @@
-import styled from 'styled-components'
 import { Button, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
+import styled from 'styled-components'
 import { ReactElement, ReactNode } from 'react'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+
+import { ModalHeader } from 'src/components/ModalHeader'
 import { getModalEvent } from 'src/utils/events/modals'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { screenSm } from 'src/theme/variables'
@@ -34,14 +35,6 @@ const ModalStyled = styled(ModalMUI)`
 
     &:focus {
       outline: none;
-    }
-
-    // TODO: replace class-based styles by params
-    &.receive-modal {
-      height: auto;
-      max-width: calc(100% - 130px);
-      min-height: 544px;
-      overflow: hidden;
     }
 
     &.bigger-modal-window {

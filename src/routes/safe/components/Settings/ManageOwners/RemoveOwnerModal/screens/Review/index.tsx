@@ -16,7 +16,7 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 
 import { useStyles } from './style'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { getSafeSDK } from 'src/logic/wallets/getWeb3'
 import { logError } from 'src/logic/exceptions/CodedException'
 import ErrorCodes from 'src/logic/exceptions/registry'

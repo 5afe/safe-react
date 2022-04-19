@@ -5,7 +5,7 @@ import { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import ModalTitle from 'src/components/ModalTitle'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -121,7 +121,7 @@ export const ReviewMessage = ({
       operation={Operation.DELEGATE}
       isSubmitDisabled={!isOwner}
     >
-      <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+      <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 
       <Hairline />
 

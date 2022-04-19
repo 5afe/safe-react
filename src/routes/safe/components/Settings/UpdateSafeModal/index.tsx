@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import Block from 'src/components/layout/Block'
+import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
@@ -12,7 +13,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 import { useStyles } from './style'
@@ -62,6 +63,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
       submitText="Update Safe"
     >
       <ModalHeader onClose={onClose} title="Update safe version" />
+      <Hairline />
       <Block className={classes.modalContent}>
         <Row>
           <Paragraph noMargin>

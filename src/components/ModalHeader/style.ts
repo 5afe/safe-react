@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${md} ${lg} 12px`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '74px',
+    height: '68px',
     flexWrap: 'nowrap',
   },
   annotation: {

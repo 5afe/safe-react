@@ -26,7 +26,7 @@ import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
-import { ModalHeader } from '../ModalHeader'
+import { ModalHeader } from '../../../../../../../components/ModalHeader'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 

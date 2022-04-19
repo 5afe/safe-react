@@ -1,9 +1,9 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
+import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'
 import Modal, { Modal as GenericModal } from 'src/components/Modal'
+import { ModalHeader } from 'src/components/ModalHeader'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -16,7 +16,6 @@ import Col from 'src/components/layout/Col'
 import { WELCOME_ROUTE, history, SafeRouteParams, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import useLocalSafes, { LocalSafes } from 'src/logic/safe/hooks/useLocalSafes'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { useMemo } from 'react'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 
 type RemoveSafeModalProps = {
@@ -72,14 +71,7 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
       paperClassName="modal"
       title="Remove Safe"
     >
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Remove Safe
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.close} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} title="Remove Safe" />
       <Hairline />
       <Block className={classes.container}>
         <Row className={classes.owner}>

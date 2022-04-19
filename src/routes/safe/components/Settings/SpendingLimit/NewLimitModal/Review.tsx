@@ -29,7 +29,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import Hairline from 'src/components/layout/Hairline'
 import { isModuleEnabled } from 'src/logic/safe/utils/modules'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'

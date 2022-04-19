@@ -1,17 +1,15 @@
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import * as React from 'react'
 import QrReader from 'react-qr-reader'
 
 import { styles } from './style'
 
 import Modal from 'src/components/Modal'
+import { ModalHeader } from 'src/components/ModalHeader'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { useEffect, useState } from 'react'
 
@@ -62,14 +60,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
 
   return (
     <Modal description="Receive Tokens Form" handleClose={onClose} open={isOpen} title="Receive Tokens">
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph noMargin size="xl">
-          Scan QR
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.close} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} title="Scan QR" />
       <Hairline />
       <Col className={classes.detailsContainer} layout="column" middle="xs">
         {error && (

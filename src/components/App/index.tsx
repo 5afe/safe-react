@@ -114,7 +114,7 @@ const App: React.FC = ({ children }) => {
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
               open={safeActionsState.showReceive}
-              paperClassName="receive-modal"
+              paperClassName="modal"
               title="Receive Tokens"
             >
               <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />

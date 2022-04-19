@@ -1,9 +1,8 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 
+import { ModalHeader } from 'src/components/ModalHeader'
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -62,14 +61,7 @@ const ChooseTxType = ({
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} title="Send" />
       <Hairline />
       {!!recipientAddress && (
         <Row align="center" margin="md">

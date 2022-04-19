@@ -91,7 +91,7 @@ const Balances = (): ReactElement => {
         description="Receive Tokens Form"
         handleClose={closeReceive}
         open={showReceive}
-        paperClassName="receive-modal"
+        paperClassName="modal"
         title="Receive Tokens"
       >
         <ReceiveModal safeAddress={safeAddress} safeName={safeName} onClose={closeReceive} />

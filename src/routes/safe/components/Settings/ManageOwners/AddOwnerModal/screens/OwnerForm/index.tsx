@@ -29,7 +29,7 @@ import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { OwnerValues } from '../..'
 import { Modal } from 'src/components/Modal'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'

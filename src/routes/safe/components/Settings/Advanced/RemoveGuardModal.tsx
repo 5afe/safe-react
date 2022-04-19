@@ -13,7 +13,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { getRemoveGuardTxData } from 'src/logic/safe/utils/guardManager'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'

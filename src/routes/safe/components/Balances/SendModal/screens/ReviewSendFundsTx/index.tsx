@@ -29,7 +29,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
-import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { ModalHeader } from 'src/components/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
