@@ -32,7 +32,7 @@ const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const { address, owners } = useSelector(currentSafe)
   const addressFromUrl = extractSafeAddress()
-  const safeAddress = address || addressFromUrl
+  const safeAddress = addressFromUrl || address
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 
@@ -101,6 +101,7 @@ const Container = (): React.ReactElement => {
           )}
         />
 
+        <Route exact path={SAFE_ROUTES.DASHBOARD} render={() => wrapInSuspense(<Home />)} />
         <Route
           exact
           path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}

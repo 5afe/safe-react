@@ -33,6 +33,7 @@ export type SafeRecordProps = {
   modules?: ModulePair[] | null
   spendingLimits?: SpendingLimit[] | null
   balances: BalanceRecord[]
+  loaded: boolean
   nonce: number
   recurringUser?: boolean
   currentVersion: string
@@ -58,6 +59,7 @@ const makeSafe = Record<SafeRecordProps>({
   modules: [],
   spendingLimits: [],
   balances: [],
+  loaded: false,
   nonce: 0,
   recurringUser: undefined,
   currentVersion: '',
