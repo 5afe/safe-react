@@ -11,6 +11,8 @@ import { primaryLite, primaryActive, smallFontSize, md } from 'src/theme/variabl
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Skeleton } from '@material-ui/lab'
+import { Card } from 'src/components/Dashboard/styled'
+import { WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 
 const IdenticonContainer = styled.div`
   position: relative;
@@ -66,47 +68,54 @@ const Overview = (): ReactElement => {
   const nftLoaded = useSelector(nftLoadedSelector)
 
   return (
-    <Container>
-      <Row margin="md">
-        <Col layout="column">
-          <IdenticonContainer>
-            {loaded ? (
-              <>
-                <SafeThreshold>
-                  {threshold}/{owners.length}
-                </SafeThreshold>
-                <Identicon address={address} size="lg" />
-              </>
-            ) : (
-              <Skeleton variant="circle" width="40px" height="40px" />
-            )}
-          </IdenticonContainer>
-          <Text size="xl" strong>
-            {loaded ? name : <Skeleton variant="text" />}
-          </Text>
-          {loaded ? <PrefixedEthHashInfo hash={address} textSize="lg" /> : <Skeleton variant="text" />}
-        </Col>
-        <Col end="xs">
-          <NetworkLabelContainer>
-            <NetworkLabel />
-          </NetworkLabelContainer>
-        </Col>
-      </Row>
-      <Row>
-        <Col layout="column" xs={3}>
-          <Text color="inputDefault" size="md">
-            Tokens
-          </Text>
-          <StyledText size="xl">{loaded ? balances.length : ValueSkeleton}</StyledText>
-        </Col>
-        <Col layout="column" xs={3}>
-          <Text color="inputDefault" size="md">
-            NFTs
-          </Text>
-          {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
-        </Col>
-      </Row>
-    </Container>
+    <WidgetContainer>
+      <WidgetTitle>Dashboard</WidgetTitle>
+      <WidgetBody>
+        <Card>
+          <Container>
+            <Row margin="md">
+              <Col layout="column">
+                <IdenticonContainer>
+                  {loaded ? (
+                    <>
+                      <SafeThreshold>
+                        {threshold}/{owners.length}
+                      </SafeThreshold>
+                      <Identicon address={address} size="lg" />
+                    </>
+                  ) : (
+                    <Skeleton variant="circle" width="40px" height="40px" />
+                  )}
+                </IdenticonContainer>
+                <Text size="xl" strong>
+                  {loaded ? name : <Skeleton variant="text" />}
+                </Text>
+                {loaded ? <PrefixedEthHashInfo hash={address} textSize="lg" /> : <Skeleton variant="text" />}
+              </Col>
+              <Col end="xs">
+                <NetworkLabelContainer>
+                  <NetworkLabel />
+                </NetworkLabelContainer>
+              </Col>
+            </Row>
+            <Row>
+              <Col layout="column" xs={3}>
+                <Text color="inputDefault" size="md">
+                  Tokens
+                </Text>
+                <StyledText size="xl">{loaded ? balances.length : ValueSkeleton}</StyledText>
+              </Col>
+              <Col layout="column" xs={3}>
+                <Text color="inputDefault" size="md">
+                  NFTs
+                </Text>
+                {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+              </Col>
+            </Row>
+          </Container>
+        </Card>
+      </WidgetBody>
+    </WidgetContainer>
   )
 }
 

@@ -12,6 +12,7 @@ import { getChainById } from 'src/config'
 import PendingTxListItem from 'src/components/Dashboard/PendingTxs/PendingTxListItem'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 
 const SkeletonWrapper = styled.div`
   margin: ${sm} auto;
@@ -22,7 +23,6 @@ const SkeletonWrapper = styled.div`
 const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null => {
   const { address } = useSelector(currentSafe)
   const chainId = useSelector(currentChainId)
-
   const queueTxns = useSelector(pendingTransactions)
 
   const queuedTxsToDisplay: Transaction[] = useMemo(() => {
@@ -37,9 +37,10 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
     )
   }, [queueTxns, size])
 
+  let widgetBody: ReactElement
   if (!queueTxns) {
-    return (
-      <List component="div">
+    widgetBody = (
+      <List component="div" disablePadding>
         {Array.from(Array(size).keys()).map((key) => (
           <SkeletonWrapper key={key}>
             <Skeleton variant="rect" height={52} />
@@ -50,17 +51,24 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   }
 
   if (!queuedTxsToDisplay?.length) {
-    return <h3>This Safe has no queued transactions</h3>
+    widgetBody = <h3>This Safe has no queued transactions</h3>
+  } else {
+    const { shortName } = getChainById(chainId)
+    const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress: address, shortName })
+    widgetBody = (
+      <List component="div" disablePadding>
+        {queuedTxsToDisplay?.map((transaction) => (
+          <PendingTxListItem transaction={transaction} url={url} key={transaction.id} />
+        ))}
+      </List>
+    )
   }
 
-  const { shortName } = getChainById(chainId)
-  const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress: address, shortName })
   return (
-    <List component="div">
-      {queuedTxsToDisplay?.map((transaction) => (
-        <PendingTxListItem transaction={transaction} url={url} key={transaction.id} />
-      ))}
-    </List>
+    <WidgetContainer>
+      <WidgetTitle>Transactions to Sign</WidgetTitle>
+      <WidgetBody>{widgetBody}</WidgetBody>
+    </WidgetContainer>
   )
 }
 

@@ -30,6 +30,10 @@ const TransactionToConfirm = styled(Link)`
   border: 2px solid ${grey400};
   color: ${({ theme }) => theme.colors.text};
   border-radius: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
 
 const StyledConfirmationsCount = styled.div`

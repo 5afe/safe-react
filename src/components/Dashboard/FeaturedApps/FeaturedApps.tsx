@@ -9,6 +9,7 @@ import { ReactElement, useMemo } from 'react'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
 import styled from 'styled-components'
+import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 
 const FEATURED_APPS_TAGS = 'dashboard-widgets'
 
@@ -38,27 +39,32 @@ export const FeaturedApps = (): ReactElement => {
   }
 
   return (
-    <>
-      {featuredApps.map((app) => {
-        const appRoute = getSafeAppUrl(app.url, routesSlug)
-        return (
-          <StyledRow key={app.id} margin="lg">
-            <Col xs={2}>
-              <StyledImage src={app.iconUrl} alt={app.name} />
-            </Col>
-            <Col xs={10} layout="column">
-              <Text size="lg" strong>
-                {app.description}
-              </Text>
-              <StyledLink to={appRoute}>
-                <Text color="primary" size="lg" strong>
-                  Use {app.name}
-                </Text>
-              </StyledLink>
-            </Col>
-          </StyledRow>
-        )
-      })}
-    </>
+    <WidgetContainer>
+      <WidgetTitle>Safe Apps</WidgetTitle>
+      <WidgetBody>
+        {featuredApps.map((app) => {
+          const appRoute = getSafeAppUrl(app.url, routesSlug)
+          return (
+            <Card key={app.id}>
+              <StyledRow margin="lg">
+                <Col xs={2}>
+                  <StyledImage src={app.iconUrl} alt={app.name} />
+                </Col>
+                <Col xs={10} layout="column">
+                  <Text size="lg" strong>
+                    {app.description}
+                  </Text>
+                  <StyledLink to={appRoute}>
+                    <Text color="primary" size="lg" strong>
+                      Use {app.name}
+                    </Text>
+                  </StyledLink>
+                </Col>
+              </StyledRow>
+            </Card>
+          )
+        })}
+      </WidgetBody>
+    </WidgetContainer>
   )
 }

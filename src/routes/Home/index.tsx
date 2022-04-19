@@ -1,50 +1,27 @@
 import { ReactElement } from 'react'
-import styled from 'styled-components'
 
 import Page from 'src/components/layout/Page'
 import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
-import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
 import Overview from 'src/components/Dashboard/Overview/Overview'
-import { lg } from 'src/theme/variables'
 import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
 import Row from 'src/components/layout/Row'
 import { FeaturedApps } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
-
-const Card = styled.div`
-  background: #fff;
-  padding: ${lg};
-  border-radius: 8px;
-  flex: 1;
-  margin: 10px;
-
-  & > h2 {
-    margin-top: 0;
-  }
-`
+import Col from 'src/components/layout/Col'
 
 function Home(): ReactElement {
   return (
     <Page>
       <Row>
-        <Card>
-          <Overview />
-        </Card>
+        <Overview />
 
-        <Card>
-          <CreateSafeWidget />
-        </Card>
+        <PendingTxsList size={4} />
+        {/* <CreateSafeWidget /> */}
       </Row>
 
       <Row>
-        <Card>
-          <h2>Safe Apps</h2>
-          <FeaturedApps />
-        </Card>
+        <FeaturedApps />
 
-        <Card>
-          <h2>Transactions to Sign</h2>
-          <PendingTxsList />
-        </Card>
+        <Col layout="column" xs={12} md={6}></Col>
       </Row>
 
       <Row>

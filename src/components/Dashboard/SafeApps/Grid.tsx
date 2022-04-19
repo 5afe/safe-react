@@ -84,7 +84,7 @@ const Grid = ({ size = 6 }: { size?: number }): ReactElement => {
 
     const nonRankedApps = allApps.filter((app) => !rankedSafeAppIds.includes(app.id))
     // Get random apps that are not ranked
-    const randomApps = getRandomApps(nonRankedApps, size - 1 - rankedSafeAppIds.length)
+    const randomApps = getRandomApps(nonRankedApps, size - 1 - topRankedSafeApps.length)
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
     return topRankedSafeApps.concat(randomApps).slice(0, size - 1)
