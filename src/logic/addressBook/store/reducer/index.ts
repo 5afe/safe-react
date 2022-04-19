@@ -4,12 +4,15 @@ import uniqWith from 'lodash/uniqWith'
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
 import { getEntryIndex, hasSameAddressAndChainId, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { textShortener } from 'src/utils/strings'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
 export const initialAddressBookState: AddressBookState = []
 
 type Payloads = AddressBookEntry | AddressBookState
+
+const getFallbackName = (address: string) => textShortener()(address)
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
@@ -22,7 +25,7 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
       // TODO: Remove after a sufficient period of time
       // If an entry is an empty name is loaded, set the name as the address
       if (!addressBookEntry.name) {
-        addressBookEntry.name = addressBookEntry.address
+        addressBookEntry.name = getFallbackName(addressBookEntry.address)
       }
 
       const entryIndex = getEntryIndex(newState, addressBookEntry)
@@ -48,7 +51,7 @@ const addressBookReducer = handleActions<AddressBookState, Payloads>(
       const { address, name } = action.payload
 
       const newState = [...state]
-      const addressBookEntry = { ...action.payload, name: name.trim() || address }
+      const addressBookEntry = { ...action.payload, name: name.trim() || getFallbackName(address) }
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       // update
