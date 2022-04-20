@@ -94,10 +94,10 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given number > 10 ** 15 returns > 10,000T', () => {
+  it('Given number > 10 ** 15 returns > 1000T', () => {
     // given
-    const input = 10e15
-    const expectedResult = '> 10,000T'
+    const input = 10 ** 15 * 2
+    const expectedResult = '> 1000T'
 
     // when
     const result = formatAmount(input.toString())

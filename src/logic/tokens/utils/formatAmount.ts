@@ -34,11 +34,11 @@ export const formatAmount = (number: string): string => {
     numberFloat = lt10mFormatter.format(numberFloat)
   } else if (numberFloat < 100_000_000) {
     numberFloat = lt100mFormatter.format(numberFloat)
-  } else if (numberFloat < 10e15) {
+  } else if (numberFloat < 10 ** 15) {
     numberFloat = lt1000tFormatter.format(numberFloat)
   } else {
-    // Localized '> 10,000T'
-    numberFloat = `> ${gt1000tFormatter.format(10e15)}`
+    // Localized '> 1000T'
+    numberFloat = `> ${gt1000tFormatter.format(10 ** 15)}`
   }
 
   return numberFloat
