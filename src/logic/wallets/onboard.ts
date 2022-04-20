@@ -52,6 +52,7 @@ const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
     networkId: parseInt(chainId, 10),
     networkName: getNetworkName(chainId),
+    blockPollingInterval: 60_000 * 60, // 1 hour
     subscriptions: {
       wallet: async (wallet) => {
         store.dispatch(updateProviderWallet(wallet.name || ''))
