@@ -8,7 +8,7 @@ export const useCurrentSafeAddressSync = (): void => {
   const dispatch = useDispatch<Dispatch>()
 
   useEffect(() => {
-    dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(location.pathname).safeAddress))
+    dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(history.location.pathname).safeAddress))
 
     const unsubscribe = history.listen((location) => {
       dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(location.pathname).safeAddress))

@@ -8,3 +8,5 @@ export const lastViewedSafe = (state: AppReduxState['currentSession']): string |
   }
   return currentSession.viewedSafes[0] || ''
 }
+
+export const currentSafeAddress = (state: AppReduxState): string => state[CURRENT_SESSION_REDUCER_ID].currentSafeAddress

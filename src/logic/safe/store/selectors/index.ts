@@ -8,7 +8,7 @@ import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
-import { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const safesState = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -19,8 +19,6 @@ export const safesAsList = createSelector(safesAsMap, (safes): List<SafeRecord> 
 export const latestMasterContractVersion = createSelector(safesState, (safeState) =>
   safeState.get('latestMasterContractVersion'),
 )
-
-export const currentSafeAddress = (state: AppReduxState): string => state[CURRENT_SESSION_REDUCER_ID].currentSafeAddress
 
 export const currentSafe = createSelector([safesAsMap, currentSafeAddress], (safes: SafesMap, address: string) => {
   return safes.get(address, baseSafe(address)) ?? {}

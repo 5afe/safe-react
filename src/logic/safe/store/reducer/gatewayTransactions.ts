@@ -1,7 +1,6 @@
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
-import { LabelValue } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -119,7 +118,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
       // If there's no "Queued" label, put all the items into the "next" group.
       let nextItems = values
       let queuedItems = values.slice(0, 0)
-      const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === LabelValue.Queued)
+      const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === 'Queued')
       if (qLabelIndex >= 0) {
         nextItems = values.slice(0, qLabelIndex)
         queuedItems = values.slice(qLabelIndex)
