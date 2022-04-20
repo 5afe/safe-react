@@ -76,7 +76,7 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
     )
 
     // Get random apps that are not ranked and not featured
-    const randomApps = sampleSize(nonRankedApps, size - 1 - rankedSafeAppIds.length)
+    const randomApps = sampleSize(nonRankedApps, size - 1 - topRankedSafeApps.length)
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
     return topRankedSafeApps.concat(randomApps).slice(0, size - 1)
