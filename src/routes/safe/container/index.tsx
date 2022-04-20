@@ -101,7 +101,6 @@ const Container = (): React.ReactElement => {
           )}
         />
 
-        <Route exact path={SAFE_ROUTES.DASHBOARD} render={() => wrapInSuspense(<Home />)} />
         <Route
           exact
           path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}
