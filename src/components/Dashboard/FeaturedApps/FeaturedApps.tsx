@@ -1,20 +1,21 @@
+import { ReactElement, useMemo } from 'react'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
-import { getSafeAppUrl, SafeRouteParams } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
+import { Box, Grid } from '@material-ui/core'
+
+import styled from 'styled-components'
+import { getSafeAppUrl, SafeRouteParams } from 'src/routes/routes'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getShortName } from 'src/config'
-import { ReactElement, useMemo } from 'react'
-import Row from 'src/components/layout/Row'
-import Col from 'src/components/layout/Col'
-import styled from 'styled-components'
+import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 
-const FEATURED_APPS_TAGS = 'dashboard-widgets'
+export const FEATURED_APPS_TAG = 'dashboard-widgets'
 
 const StyledImage = styled.img`
-  max-width: 64px;
-  max-height: 64px;
+  width: 64px;
+  height: 64px;
 `
 
 const StyledLink = styled(Link)`
@@ -22,15 +23,10 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
-const StyledRow = styled(Row)`
-  gap: 24px;
-  flex-wrap: inherit;
-`
-
 export const FeaturedApps = (): ReactElement => {
   const { allApps } = useAppList()
   const { address } = useSelector(currentSafe) ?? {}
-  const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAGS)), [allApps])
+  const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)), [allApps])
 
   const routesSlug: SafeRouteParams = {
     shortName: getShortName(),
@@ -38,27 +34,32 @@ export const FeaturedApps = (): ReactElement => {
   }
 
   return (
-    <>
-      {featuredApps.map((app) => {
-        const appRoute = getSafeAppUrl(app.url, routesSlug)
-        return (
-          <StyledRow key={app.id} margin="lg">
-            <Col xs={2}>
-              <StyledImage src={app.iconUrl} alt={app.name} />
-            </Col>
-            <Col xs={10} layout="column">
-              <Text size="lg" strong>
-                {app.description}
-              </Text>
-              <StyledLink to={appRoute}>
-                <Text color="primary" size="lg" strong>
-                  Use {app.name}
-                </Text>
-              </StyledLink>
-            </Col>
-          </StyledRow>
-        )
-      })}
-    </>
+    <WidgetContainer>
+      <WidgetTitle>Safe Apps</WidgetTitle>
+      <WidgetBody>
+        {featuredApps.map((app) => {
+          const appRoute = getSafeAppUrl(app.url, routesSlug)
+          return (
+            <Card key={app.id}>
+              <Grid container alignItems="center" spacing={3}>
+                <Grid item xs={3} md={2}>
+                  <StyledImage src={app.iconUrl} alt={app.name} />
+                </Grid>
+                <Grid item xs={9} md={10}>
+                  <Box mb={1}>
+                    <Text size="xl">{app.description}</Text>
+                  </Box>
+                  <StyledLink to={appRoute}>
+                    <Text color="primary" size="lg" strong>
+                      Use {app.name}
+                    </Text>
+                  </StyledLink>
+                </Grid>
+              </Grid>
+            </Card>
+          )
+        })}
+      </WidgetBody>
+    </WidgetContainer>
   )
 }

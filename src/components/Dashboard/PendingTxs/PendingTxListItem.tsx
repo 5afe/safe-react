@@ -9,7 +9,7 @@ import { useAssetInfo } from 'src/routes/safe/components/Transactions/TxList/hoo
 import { useKnownAddress } from 'src/routes/safe/components/Transactions/TxList/hooks/useKnownAddress'
 import { useTransactionType } from 'src/routes/safe/components/Transactions/TxList/hooks/useTransactionType'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
-import { boldFont, grey400, primary200, sm, smallFontSize } from 'src/theme/variables'
+import { boldFont, grey400, primary200, smallFontSize } from 'src/theme/variables'
 import { isMultisigExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import Spacer from 'src/components/Spacer'
 import { CustomIconText } from 'src/components/CustomIconText'
@@ -17,19 +17,19 @@ import { TxInfo } from 'src/routes/safe/components/Transactions/TxList/TxCollaps
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
 const TransactionToConfirm = styled(Link)`
-  min-width: 270px;
-  height: 40px;
+  width: 100%;
   display: grid;
   align-items: center;
-  grid-template-columns: 25px 1fr 1fr auto;
+  grid-template-columns: 36px 1fr 1fr auto;
   gap: 4px;
-  margin: ${sm} auto;
-  padding: 4px 16px;
+  margin: 0 auto;
+  padding: 8px 24px;
   text-decoration: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 2px solid ${grey400};
   color: ${({ theme }) => theme.colors.text};
   border-radius: 8px;
+  box-sizing: border-box;
 `
 
 const StyledConfirmationsCount = styled.div`
@@ -44,6 +44,10 @@ const TxConfirmations = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
+
+  & svg {
+    margin-left: 8px;
+  }
 `
 
 type PendingTxType = {

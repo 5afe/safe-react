@@ -1,55 +1,34 @@
 import { ReactElement } from 'react'
-import styled from 'styled-components'
 
 import Page from 'src/components/layout/Page'
 import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
-import CreateSafeWidget from 'src/components/Dashboard/CreateSafe'
 import Overview from 'src/components/Dashboard/Overview/Overview'
-import { lg } from 'src/theme/variables'
 import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
-import Row from 'src/components/layout/Row'
 import { FeaturedApps } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
-
-const Card = styled.div`
-  background: #fff;
-  padding: ${lg};
-  border-radius: 8px;
-  flex: 1;
-  margin: 10px;
-
-  & > h2 {
-    margin-top: 0;
-  }
-`
+import { Grid } from '@material-ui/core'
 
 function Home(): ReactElement {
   return (
     <Page>
-      <Row>
-        <Card>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
           <Overview />
-        </Card>
+        </Grid>
 
-        <Card>
-          <CreateSafeWidget />
-        </Card>
-      </Row>
+        <Grid item xs={12} md={6}></Grid>
 
-      <Row>
-        <Card>
-          <h2>Safe Apps</h2>
+        <Grid item xs={12} md={6}>
           <FeaturedApps />
-        </Card>
+        </Grid>
 
-        <Card>
-          <h2>Transactions to Sign</h2>
-          <PendingTxsList />
-        </Card>
-      </Row>
+        <Grid item xs={12} md={6}>
+          <PendingTxsList size={4} />
+        </Grid>
 
-      <Row>
-        <SafeAppsGrid size={6} />
-      </Row>
+        <Grid item xs={12}>
+          <SafeAppsGrid size={6} />
+        </Grid>
+      </Grid>
     </Page>
   )
 }

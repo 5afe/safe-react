@@ -1,40 +1,40 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Text, Title } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { Bookmark, BookmarkBorder } from '@material-ui/icons'
-import { IconButton } from '@material-ui/core'
+import { Box, IconButton } from '@material-ui/core'
 import { Link, generatePath } from 'react-router-dom'
+
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
+import { md, lg } from 'src/theme/variables'
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: black;
-`
-
-export const CARD_WIDTH = 260
 export const CARD_HEIGHT = 200
 export const CARD_PADDING = 24
 
-const StyledCard = styled.div`
+const StyledLink = styled(Link)`
+  display: block;
+  text-decoration: none;
+  color: black;
+  height: 100%;
   position: relative;
-  width: ${CARD_WIDTH}px;
-  height: ${CARD_HEIGHT}px;
   background-color: white;
   border-radius: 8px;
   padding: ${CARD_PADDING}px;
+  box-sizing: border-box;
 `
 
 const StyledLogo = styled.img`
   display: block;
   width: auto;
   height: 60px;
+  margin-bottom: ${md};
 `
 
 const IconBtn = styled(IconButton)`
   &.MuiButtonBase-root {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: ${lg};
+    right: ${lg};
     z-index: 10;
     padding: 5px;
   }
@@ -77,18 +77,19 @@ const Card = (props: CardProps): ReactElement => {
 
   return (
     <StyledLink to={appRoute}>
-      <StyledCard>
-        <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
+      <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
 
-        <Title size="xs">{props.name}</Title>
-
-        <Text size="md" color="inputFilled">
-          {props.description}
+      <Box mb={1}>
+        <Text size="xl" strong>
+          {props.name}
         </Text>
+      </Box>
 
-        {/* Bookmark button */}
-        <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
-      </StyledCard>
+      <Text size="md" color="inputFilled">
+        {props.description}
+      </Text>
+
+      <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
     </StyledLink>
   )
 }
