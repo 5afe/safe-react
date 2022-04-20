@@ -58,6 +58,9 @@ describe('<CurrencyDropdown>', () => {
           },
         },
       },
+      currentSession: {
+        currentSafeAddress: safeAddress,
+      },
     }
     render(<CurrencyDropdown testId="testId" />, customState)
 
