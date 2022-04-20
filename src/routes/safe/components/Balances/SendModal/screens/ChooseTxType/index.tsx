@@ -1,22 +1,16 @@
-import classNames from 'classnames/bind'
+import { Button } from '@gnosis.pm/safe-react-components'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 
 import { ModalHeader } from 'src/components/ModalHeader'
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
-import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
-
-import Collectible from '../assets/collectibles.svg'
-import Token from '../assets/token.svg'
 
 import { getExplorerInfo } from 'src/config'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
@@ -86,13 +80,12 @@ const ChooseTxType = ({
             <Button
               className={classes.firstButton}
               color="primary"
-              minHeight={52}
-              minWidth={240}
+              iconType="assets"
+              size="lg"
               onClick={() => setActiveScreen('sendFunds')}
               variant="contained"
-              testId="modal-send-funds-btn"
+              aria-labelledby="Send funds"
             >
-              <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
               Send funds
             </Button>
           </Track>
@@ -101,13 +94,12 @@ const ChooseTxType = ({
               <Button
                 className={classes.firstButton}
                 color="primary"
-                minHeight={52}
-                minWidth={240}
+                iconType="collectibles"
+                size="lg"
                 onClick={() => setActiveScreen('sendCollectible')}
                 variant="contained"
-                testId="modal-send-collectible-btn"
+                aria-labelledby="Send NFT"
               >
-                <Img alt="Send NFT" className={classNames(classes.leftIcon, classes.iconSmall)} src={Collectible} />
                 Send NFT
               </Button>
             </Track>
@@ -115,19 +107,15 @@ const ChooseTxType = ({
           {contractInteractionEnabled && (
             <Track {...MODALS_EVENTS.CONTRACT_INTERACTION}>
               <Button
-                color="primary"
+                className={classes.lastButton}
+                color="secondary"
                 disabled={disableContractInteraction}
-                minHeight={52}
-                minWidth={240}
+                iconType="code"
+                size="lg"
                 onClick={() => setActiveScreen('contractInteraction')}
-                variant="outlined"
-                testId="modal-contract-interaction-btn"
+                variant="bordered"
+                aria-labelledby="Contract interaction"
               >
-                <Img
-                  alt="Contract Interaction"
-                  className={classNames(classes.leftIcon, classes.iconSmall)}
-                  src={ContractInteractionIcon}
-                />
                 Contract interaction
               </Button>
             </Track>

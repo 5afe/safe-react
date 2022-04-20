@@ -1,3 +1,4 @@
+import { Button } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
 import StepperMUI from '@material-ui/core/Stepper'
 import StepMUI from '@material-ui/core/Step'
@@ -7,10 +8,9 @@ import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/'
 
 import Hairline from 'src/components/layout/Hairline'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { boldFont, lg, sm } from 'src/theme/variables'
+import { lg, sm } from 'src/theme/variables'
 import { StepperProvider, useStepper } from './stepperContext'
 import Track from 'src/components/Track'
 
@@ -60,7 +60,7 @@ function StepperComponent(): ReactElement {
         const nextButtonLabel = customNextButtonLabel || 'Next'
 
         const backButton = (
-          <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
+          <Button onClick={onClickPreviousStep} size="md" className={classes.backButton} variant="outlined">
             {backButtonLabel}
           </Button>
         )
@@ -68,12 +68,9 @@ function StepperComponent(): ReactElement {
         const nextButton = (
           <Button
             onClick={onClickNextStep}
-            color="primary"
             type={nextButtonType || 'button'}
             disabled={disableNextButton || step.props.disableNextButton}
-            size="small"
-            className={classes.nextButton}
-            variant="contained"
+            size="md"
           >
             {nextButtonLabel}
           </Button>
@@ -124,7 +121,7 @@ export default function Stepper(props: StepperProps): ReactElement {
   )
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     margin: '10px 0 10px 10px',
     maxWidth: '770px',
@@ -137,11 +134,6 @@ const useStyles = makeStyles((theme) => ({
   },
   backButton: {
     marginRight: sm,
-    fontWeight: boldFont,
-    color: theme.palette.secondary.main,
-  },
-  nextButton: {
-    fontWeight: boldFont,
   },
   stepLabel: {
     cursor: ({ isStepLabelClickable }: any) => (isStepLabelClickable ? 'pointer' : 'inherit'),

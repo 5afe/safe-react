@@ -4,13 +4,12 @@ import styled from 'styled-components'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { useForm } from 'react-final-form'
 
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import AddressInput from 'src/components/forms/AddressInput'
-import Button from 'src/components/layout/Button'
 import Field from 'src/components/forms/Field'
 import ButtonHelper from 'src/components/ButtonHelper'
 import SelectField from 'src/components/forms/SelectField'
@@ -208,10 +207,8 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
           })}
         </RowHeader>
         <OwnerContainer align="center" grow>
-          <Button color="secondary" data-testid="add-new-owner" onClick={onClickAddNewOwner}>
-            <Paragraph noMargin size="lg">
-              + Add another owner
-            </Paragraph>
+          <Button variant="outlined" data-testid="add-new-owner" size="md" textSize="xl" onClick={onClickAddNewOwner}>
+            + Add another owner
           </Button>
         </OwnerContainer>
         <BlockWithPadding>

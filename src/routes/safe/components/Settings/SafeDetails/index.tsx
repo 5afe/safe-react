@@ -1,4 +1,4 @@
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,7 +12,6 @@ import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, required, validAddressBookName } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -40,8 +39,8 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
-export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
-export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
+export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'Save changes'
+export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'Start Safe version update process'
 
 const useStyles = makeStyles(styles)
 
@@ -149,11 +148,10 @@ const SafeDetails = (): ReactElement => {
               <Row align="end" grow>
                 <Paragraph>
                   <Button
-                    className={classes.saveBtn}
                     color="primary"
                     onClick={handleUpdateSafe}
-                    size="small"
-                    testId={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
+                    size="md"
+                    aria-labelledby={SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID}
                     variant="contained"
                   >
                     Update Safe
@@ -195,10 +193,9 @@ const SafeDetails = (): ReactElement => {
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
               <Button
-                className={classes.saveBtn}
                 color="primary"
-                size="small"
-                testId={SAFE_NAME_SUBMIT_BTN_TEST_ID}
+                size="md"
+                aria-labelledby={SAFE_NAME_SUBMIT_BTN_TEST_ID}
                 type="submit"
                 variant="contained"
               >
