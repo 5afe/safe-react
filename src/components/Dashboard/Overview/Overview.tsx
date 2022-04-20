@@ -122,7 +122,7 @@ const Overview = (): ReactElement => {
                   </SafeThreshold>
                   <Identicon address={address} size="xl" />
                 </IdenticonContainer>
-                <Box mb={2}>
+                <Box mb={2} overflow="hidden">
                   <Text size="xl" strong>
                     {name}
                   </Text>
@@ -146,10 +146,12 @@ const Overview = (): ReactElement => {
                 </Text>
                 {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
               </Grid>
-              <Grid container xs={6} alignItems="flex-end" justifyContent="flex-end">
-                <Button size="md" variant="contained" color="primary" onClick={handleOpenAssets}>
-                  View Assets
-                </Button>
+              <Grid item xs={6}>
+                <Box display="flex" height={1} alignItems="flex-end" justifyContent="flex-end">
+                  <Button size="medium" variant="contained" color="primary" onClick={handleOpenAssets}>
+                    View Assets
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </Card>
