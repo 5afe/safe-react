@@ -67,9 +67,9 @@ const SkeletonOverview = (
 
         <Box mb={2}>
           <Text size="xl" strong>
-            <Skeleton variant="text" />
+            <Skeleton variant="text" height={28} />
           </Text>
-          <Skeleton variant="text" />
+          <Skeleton variant="text" height={21} />
         </Box>
         <NetworkLabelContainer>
           <Skeleton variant="text" width="80px" />
