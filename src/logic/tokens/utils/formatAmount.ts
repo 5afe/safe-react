@@ -2,8 +2,8 @@
 // https://v8.dev/features/intl-numberformat
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
 
-// Locale is an empty array because we want it to use user's locale
-const LOCALE = []
+// Locale is undefined because we want it to use user's locale
+const LOCALE = undefined
 
 const lt1kFormatter = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 5 })
 const lt10kFormatter = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 4 })
