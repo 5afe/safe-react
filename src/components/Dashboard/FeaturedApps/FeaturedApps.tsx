@@ -11,7 +11,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getShortName } from 'src/config'
 import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 
-const FEATURED_APPS_TAGS = 'dashboard-widgets'
+export const FEATURED_APPS_TAG = 'dashboard-widgets'
 
 const StyledImage = styled.img`
   width: 64px;
@@ -26,7 +26,7 @@ const StyledLink = styled(Link)`
 export const FeaturedApps = (): ReactElement => {
   const { allApps } = useAppList()
   const { address } = useSelector(currentSafe) ?? {}
-  const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAGS)), [allApps])
+  const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)), [allApps])
 
   const routesSlug: SafeRouteParams = {
     shortName: getShortName(),

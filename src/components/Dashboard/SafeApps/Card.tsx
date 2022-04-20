@@ -1,12 +1,13 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Text, Title } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { Bookmark, BookmarkBorder } from '@material-ui/icons'
-import { IconButton } from '@material-ui/core'
+import { Box, IconButton } from '@material-ui/core'
 import { Link, generatePath } from 'react-router-dom'
-import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 
-export const CARD_WIDTH = 260
+import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
+import { md, lg } from 'src/theme/variables'
+
 export const CARD_HEIGHT = 200
 export const CARD_PADDING = 24
 
@@ -26,13 +27,14 @@ const StyledLogo = styled.img`
   display: block;
   width: auto;
   height: 60px;
+  margin-bottom: ${md};
 `
 
 const IconBtn = styled(IconButton)`
   &.MuiButtonBase-root {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: ${lg};
+    right: ${lg};
     z-index: 10;
     padding: 5px;
   }
@@ -77,13 +79,16 @@ const Card = (props: CardProps): ReactElement => {
     <StyledLink to={appRoute}>
       <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
 
-      <Title size="xs">{props.name}</Title>
+      <Box mb={1}>
+        <Text size="xl" strong>
+          {props.name}
+        </Text>
+      </Box>
 
       <Text size="md" color="inputFilled">
         {props.description}
       </Text>
 
-      {/* Bookmark button */}
       <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
     </StyledLink>
   )

@@ -4,13 +4,17 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import { generatePath, Link } from 'react-router-dom'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 import { Grid } from '@material-ui/core'
+import { sampleSize } from 'lodash'
 
+import { screenSm, screenMd } from 'src/theme/variables'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
-import Card, { CARD_HEIGHT, CARD_PADDING, CARD_WIDTH } from 'src/components/Dashboard/SafeApps/Card'
+import Card, { CARD_HEIGHT, CARD_PADDING } from 'src/components/Dashboard/SafeApps/Card'
 import ExploreIcon from 'src/assets/icons/explore.svg'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppsUsageData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import { FEATURED_APPS_TAG } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
+import { WidgetTitle, WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
 
 const SkeletonWrapper = styled.div`
   border-radius: 8px;
@@ -37,28 +41,20 @@ const StyledLink = styled(Link)`
   }
 `
 
-// Transactions Builder && Wallet connect
-const featuredAppsId = ['29', '11']
+const StyledGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 1fr);
+  gap: 24px;
 
-const getRandomApps = (nonRankedApps: SafeApp[], size: number) => {
-  const randomIndexes: string[] = []
-  for (let i = 1; randomIndexes.length < size; i++) {
-    const randomAppIndex = Math.floor(Math.random() * nonRankedApps.length).toString()
-    const randomAppId = nonRankedApps[randomAppIndex].id
-
-    // Do not repeat random apps or featured apps
-    if (!randomIndexes.includes(randomAppIndex) && !featuredAppsId.includes(randomAppId)) {
-      randomIndexes.push(randomAppIndex)
-    }
+  @media (max-width: ${screenMd}px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  const randomSafeApps: SafeApp[] = []
-  randomIndexes.forEach((index) => {
-    randomSafeApps.push(nonRankedApps[index])
-  })
-
-  return randomSafeApps
-}
+  @media (max-width: ${screenSm}px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+`
 
 const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
   const { allApps, pinnedSafeApps, togglePin, isLoading } = useAppList()
@@ -67,6 +63,7 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
     if (!allApps.length) return []
     const trackData = getAppsUsageData()
     const rankedSafeAppIds = rankTrackedSafeApps(trackData)
+    const featuredSafeAppIds = allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)).map((app) => app.id)
 
     const topRankedSafeApps: SafeApp[] = []
     rankedSafeAppIds.forEach((id) => {
@@ -74,9 +71,12 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
       if (sortedApp) topRankedSafeApps.push(sortedApp)
     })
 
-    const nonRankedApps = allApps.filter((app) => !rankedSafeAppIds.includes(app.id))
-    // Get random apps that are not ranked
-    const randomApps = getRandomApps(nonRankedApps, size - 1 - rankedSafeAppIds.length)
+    const nonRankedApps = allApps.filter(
+      (app) => !rankedSafeAppIds.includes(app.id) && !featuredSafeAppIds.includes(app.id),
+    )
+
+    // Get random apps that are not ranked and not featured
+    const randomApps = sampleSize(nonRankedApps, size - 1 - rankedSafeAppIds.length)
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
     return topRankedSafeApps.concat(randomApps).slice(0, size - 1)
@@ -84,42 +84,50 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
 
   const path = generatePath(GENERIC_APPS_ROUTE)
 
-  return isLoading ? (
-    <Grid container>
-      {Array.from(Array(size).keys()).map((key) => (
-        <Grid item xs={12} md={4} key={key}>
-          <SkeletonWrapper>
-            <Skeleton variant="rect" width={CARD_WIDTH + 2 * CARD_PADDING} height={CARD_HEIGHT + 2 * CARD_PADDING} />
-          </SkeletonWrapper>
-        </Grid>
-      ))}
-    </Grid>
-  ) : (
-    <Grid container spacing={3}>
-      {displayedApps.map((safeApp, idx) => (
-        <Grid item xs={12} md={4} key={idx}>
-          <Card
-            key={safeApp.id}
-            name={safeApp.name}
-            description={safeApp.description}
-            logoUri={safeApp.iconUrl}
-            appUri={safeApp.url}
-            isPinned={pinnedSafeApps.some((app) => app.id === safeApp.id)}
-            onPin={() => togglePin(safeApp)}
-          />
-        </Grid>
-      ))}
-      <Grid item xs={12} md={4}>
-        <StyledExplorerButton>
-          <img alt="Explore Safe Apps" src={ExploreIcon} />
-          <StyledLink to={path}>
-            <Button size="md" color="primary" variant="contained">
-              Explore Safe Apps
-            </Button>
-          </StyledLink>
-        </StyledExplorerButton>
+  const LoadingState = useMemo(
+    () => (
+      <Grid container spacing={3}>
+        {Array.from(Array(size).keys()).map((key) => (
+          <Grid item xs={12} md={4} key={key}>
+            <SkeletonWrapper>
+              <Skeleton variant="rect" height={CARD_HEIGHT + 2 * CARD_PADDING} />
+            </SkeletonWrapper>
+          </Grid>
+        ))}
       </Grid>
-    </Grid>
+    ),
+    [size],
+  )
+
+  if (isLoading) return LoadingState
+
+  return (
+    <WidgetContainer>
+      <WidgetTitle>Explore our DApp Ecosystem</WidgetTitle>
+      <WidgetBody>
+        <StyledGrid>
+          {displayedApps.map((safeApp) => (
+            <Card
+              key={safeApp.id}
+              name={safeApp.name}
+              description={safeApp.description}
+              logoUri={safeApp.iconUrl}
+              appUri={safeApp.url}
+              isPinned={pinnedSafeApps.some((app) => app.id === safeApp.id)}
+              onPin={() => togglePin(safeApp)}
+            />
+          ))}
+          <StyledExplorerButton>
+            <img alt="Explore Safe Apps" src={ExploreIcon} />
+            <StyledLink to={path}>
+              <Button size="md" color="primary" variant="contained">
+                Explore Safe Apps
+              </Button>
+            </StyledLink>
+          </StyledExplorerButton>
+        </StyledGrid>
+      </WidgetBody>
+    </WidgetContainer>
   )
 }
 
