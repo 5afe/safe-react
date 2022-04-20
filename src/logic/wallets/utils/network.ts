@@ -6,6 +6,7 @@ import { getChainInfo, getExplorerUrl, getPublicRpcUrl, _getChainId } from 'src/
 import { ChainId } from 'src/config/chain.d'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
+import { isHardwareWallet } from '../getWeb3'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
@@ -20,11 +21,9 @@ const WALLET_ERRORS = {
 const requestSwitch = async (wallet: Wallet, chainId: ChainId): Promise<void> => {
   // Note: This could support WC too
   if (isPairingModule(wallet.name)) {
-    if (wallet.provider) {
-      wallet.provider.wc.updateSession({ chainId: parseInt(chainId, 10), accounts: wallet.provider.wc.accounts })
-    }
+    wallet.provider?.wc.updateSession({ chainId: parseInt(chainId, 10), accounts: wallet.provider.wc.accounts })
   } else {
-    await wallet.provider.request({
+    await wallet.provider?.request({
       method: 'wallet_switchEthereumChain',
       params: [
         {
@@ -85,7 +84,7 @@ export const switchNetwork = async (wallet: Wallet, chainId: ChainId): Promise<v
 }
 
 export const shouldSwitchNetwork = (wallet: Wallet): boolean => {
-  if (!wallet.provider) {
+  if (!wallet.provider || isHardwareWallet(wallet)) {
     return false
   }
 
