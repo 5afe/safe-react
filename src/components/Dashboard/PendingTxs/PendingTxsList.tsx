@@ -1,7 +1,10 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
+import { Link } from 'react-router-dom'
+import { Text } from '@gnosis.pm/safe-react-components'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -11,7 +14,7 @@ import PendingTxListItem from 'src/components/Dashboard/PendingTxs/PendingTxList
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
-import { Text } from '@gnosis.pm/safe-react-components'
+import { sm } from 'src/theme/variables'
 
 const SkeletonWrapper = styled.div`
   border-radius: 8px;
@@ -23,6 +26,22 @@ const StyledList = styled.div`
   flex-direction: column;
   gap: 12px;
   width: 100%;
+`
+
+const StyledWidgetTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: ${sm};
+  margin-bottom: 10px;
+  padding-right: 24px;
 `
 
 const EmptyState = (
@@ -37,13 +56,16 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   const queueTxns = useSelector(pendingTransactions)
   const { shortName } = getChainById(chainId)
   const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress: address, shortName })
+  const [totalQueuedTxs, setTotalQueuedTxs] = useState<number>()
 
   const queuedTxsToDisplay: Transaction[] = useMemo(() => {
     if (!queueTxns) return []
 
+    const allQueuedTransactions = Object.values(queueTxns.next).concat(Object.values(queueTxns.queued))
+    setTotalQueuedTxs(allQueuedTransactions.length)
+
     return (
-      Object.values(queueTxns.next)
-        .concat(Object.values(queueTxns.queued))
+      allQueuedTransactions
         // take the first (i.e. newest) tx in a group of txns with the same nonce
         .map((group: Transaction[]) => group[0])
         .slice(0, size)
@@ -82,7 +104,13 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Transactions to Sign</WidgetTitle>
+      <StyledWidgetTitle>
+        <WidgetTitle>Transactions to Sign{totalQueuedTxs ? ` (${totalQueuedTxs})` : ''}</WidgetTitle>
+        <StyledLink to={url}>
+          View All
+          <ChevronRightIcon />
+        </StyledLink>
+      </StyledWidgetTitle>
       <WidgetBody>{getWidgetBody()}</WidgetBody>
     </WidgetContainer>
   )
