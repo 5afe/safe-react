@@ -2,17 +2,21 @@ import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, Identicon } from '@gnosis.pm/safe-react-components'
+import { useHistory } from 'react-router-dom'
+import { Box, Grid } from '@material-ui/core'
+import { Skeleton } from '@material-ui/lab'
 
 import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import Row from 'src/components/layout/Row'
-import Col from 'src/components/layout/Col'
-import { primaryLite, primaryActive, smallFontSize, md } from 'src/theme/variables'
+import { primaryLite, primaryActive, smallFontSize, md, lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { Skeleton } from '@material-ui/lab'
-import { Card } from 'src/components/Dashboard/styled'
-import { WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
+import { Card, DashboardTitle } from 'src/components/Dashboard/styled'
+import { WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
+import Button from 'src/components/layout/Button'
+import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { getChainById } from 'src/config'
 
 const IdenticonContainer = styled.div`
   position: relative;
@@ -36,84 +40,120 @@ const SafeThreshold = styled.div`
 `
 
 const StyledText = styled(Text)`
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 24px;
   font-weight: bold;
 `
 
 const NetworkLabelContainer = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: ${lg};
+  right: ${lg};
 
   & span {
     bottom: auto;
   }
 `
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  position: relative;
-`
-
 const ValueSkeleton = <Skeleton variant="text" width={30} />
+
+const SkeletonOverview = (
+  <Card>
+    <Grid container>
+      <Grid item xs={12}>
+        <IdenticonContainer>
+          <Skeleton variant="circle" width="48px" height="48px" />
+        </IdenticonContainer>
+
+        <Box mb={2}>
+          <Text size="xl" strong>
+            <Skeleton variant="text" />
+          </Text>
+          <Skeleton variant="text" />
+        </Box>
+        <NetworkLabelContainer>
+          <Skeleton variant="text" width="80px" />
+        </NetworkLabelContainer>
+      </Grid>
+    </Grid>
+    <Grid container>
+      <Grid item xs={3}>
+        <Text color="inputDefault" size="lg">
+          Tokens
+        </Text>
+        <StyledText size="xl">{ValueSkeleton}</StyledText>
+      </Grid>
+      <Grid item xs={3}>
+        <Text color="inputDefault" size="lg">
+          NFTs
+        </Text>
+        <StyledText size="xl">{ValueSkeleton}</StyledText>
+      </Grid>
+    </Grid>
+  </Card>
+)
 
 const Overview = (): ReactElement => {
   const { address, name, owners, threshold, balances } = useSelector(currentSafeWithNames)
+  const chainId = useSelector(currentChainId)
+  const { shortName } = getChainById(chainId)
   const loaded = useSelector(currentSafeLoaded)
   const nftTokens = useSelector(nftTokensSelector)
   const nftLoaded = useSelector(nftLoadedSelector)
+  const history = useHistory()
+
+  const handleOpenAssets = (): void => {
+    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName }))
+  }
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Dashboard</WidgetTitle>
+      <DashboardTitle>Dashboard</DashboardTitle>
       <WidgetBody>
-        <Card>
-          <Container>
-            <Row margin="lg">
-              <Col layout="column">
+        {!loaded ? (
+          SkeletonOverview
+        ) : (
+          <Card>
+            <Grid container>
+              <Grid item xs={12}>
                 <IdenticonContainer>
-                  {loaded ? (
-                    <>
-                      <SafeThreshold>
-                        {threshold}/{owners.length}
-                      </SafeThreshold>
-                      <Identicon address={address} size="lg" />
-                    </>
-                  ) : (
-                    <Skeleton variant="circle" width="40px" height="40px" />
-                  )}
+                  <SafeThreshold>
+                    {threshold}/{owners.length}
+                  </SafeThreshold>
+                  <Identicon address={address} size="xl" />
                 </IdenticonContainer>
-                <Text size="xl" strong>
-                  {loaded ? name : <Skeleton variant="text" />}
-                </Text>
-                {loaded ? <PrefixedEthHashInfo hash={address} textSize="lg" /> : <Skeleton variant="text" />}
-              </Col>
-              <Col end="xs">
+                <Box mb={2}>
+                  <Text size="xl" strong>
+                    {name}
+                  </Text>
+                  <PrefixedEthHashInfo hash={address} textSize="xl" textColor="placeHolder" />
+                </Box>
                 <NetworkLabelContainer>
                   <NetworkLabel />
                 </NetworkLabelContainer>
-              </Col>
-            </Row>
-            <Row>
-              <Col layout="column" xs={3}>
-                <Text color="inputDefault" size="md">
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={3}>
+                <Text color="inputDefault" size="lg">
                   Tokens
                 </Text>
-                <StyledText size="xl">{loaded ? balances.length : ValueSkeleton}</StyledText>
-              </Col>
-              <Col layout="column" xs={3}>
-                <Text color="inputDefault" size="md">
+                <StyledText size="xl">{balances.length}</StyledText>
+              </Grid>
+              <Grid item xs={3}>
+                <Text color="inputDefault" size="lg">
                   NFTs
                 </Text>
                 {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
-              </Col>
-            </Row>
-          </Container>
-        </Card>
+              </Grid>
+              <Grid container xs={6} alignItems="flex-end" justifyContent="flex-end">
+                <Button size="md" variant="contained" color="primary" onClick={handleOpenAssets}>
+                  View Assets
+                </Button>
+              </Grid>
+            </Grid>
+          </Card>
+        )}
       </WidgetBody>
     </WidgetContainer>
   )

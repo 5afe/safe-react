@@ -1,4 +1,4 @@
-import { lg, black500, extraLargeFontSize } from 'src/theme/variables'
+import { lg, black500, extraLargeFontSize, largeFontSize } from 'src/theme/variables'
 import styled from 'styled-components'
 
 export const WidgetContainer = styled.div`
@@ -7,9 +7,15 @@ export const WidgetContainer = styled.div`
   height: 100%;
 `
 
-export const WidgetTitle = styled.h2`
+export const DashboardTitle = styled.h1`
   color: ${black500};
   font-size: ${extraLargeFontSize};
+  margin-top: 0;
+`
+
+export const WidgetTitle = styled.h2`
+  color: ${black500};
+  font-size: ${largeFontSize};
   margin-top: 0;
 `
 
@@ -25,6 +31,7 @@ export const Card = styled.div`
   padding: ${lg};
   border-radius: 8px;
   flex-grow: 1;
+  position: relative;
 
   & > h2 {
     margin-top: 0;
