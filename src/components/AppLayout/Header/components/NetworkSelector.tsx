@@ -31,7 +31,6 @@ const styles = {
     height: '100%',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      flexBasis: '180px',
       marginRight: '20px',
     },
   },
