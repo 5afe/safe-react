@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
-import { addressBookSync } from 'src/logic/addressBook/store/actions'
+import { addressBookFixEmptyNames, addressBookSync } from 'src/logic/addressBook/store/actions'
 import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
@@ -26,6 +26,11 @@ const useAddressBookSync = (): void => {
     return () => {
       window.removeEventListener('storage', onStorageUpdate)
     }
+  }, [dispatch])
+
+  // Temporary fix that should be removed after a sufficient amount of time
+  useEffect(() => {
+    dispatch(addressBookFixEmptyNames())
   }, [dispatch])
 }
 

@@ -59,7 +59,7 @@ export const useEstimateSafeCreationGas = ({
 }: EstimateSafeCreationGasProps): SafeCreationEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<SafeCreationEstimationResult>({
     gasEstimation: 0,
-    gasCostFormatted: '< 0.001',
+    gasCostFormatted: '> 0.001',
     gasLimit: 0,
     gasPrice: '0',
     gasMaxPrioFee: 0,
