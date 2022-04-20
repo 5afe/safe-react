@@ -20,10 +20,10 @@ const TransactionToConfirm = styled(Link)`
   width: 100%;
   display: grid;
   align-items: center;
-  grid-template-columns: 25px 1fr 1fr auto;
+  grid-template-columns: 36px 1fr 1fr auto;
   gap: 4px;
   margin: 0 auto;
-  padding: 8px 16px;
+  padding: 8px 24px;
   text-decoration: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 2px solid ${grey400};
@@ -44,6 +44,10 @@ const TxConfirmations = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
+
+  & svg {
+    margin-left: 16px;
+  }
 `
 
 type PendingTxType = {
