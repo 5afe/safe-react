@@ -13,7 +13,7 @@ export const WidgetTitle = styled.h2`
   margin-top: 0;
 `
 
-export const WidgetBody = styled.div<{ filled?: boolean }>`
+export const WidgetBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
