@@ -1,21 +1,16 @@
 import { useEffect } from 'react'
-import { extractPrefixedSafeAddress, history } from 'src/routes/routes'
-import addCurrentSafeAddress from 'src/logic/currentSession/store/actions/addCurrentSafeAddress'
-import { useDispatch } from 'react-redux'
 import { Dispatch } from 'redux'
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+
+import { extractPrefixedSafeAddress } from 'src/routes/routes'
+import addCurrentSafeAddress from 'src/logic/currentSession/store/actions/addCurrentSafeAddress'
 
 export const useCurrentSafeAddressSync = (): void => {
   const dispatch = useDispatch<Dispatch>()
+  const location = useLocation()
 
   useEffect(() => {
-    dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(history.location.pathname).safeAddress))
-
-    const unsubscribe = history.listen((location) => {
-      dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(location.pathname).safeAddress))
-    })
-
-    return () => {
-      unsubscribe()
-    }
-  }, [dispatch])
+    dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(location.pathname).safeAddress))
+  }, [location, dispatch])
 }
