@@ -1,14 +1,14 @@
+import { ReactElement, useMemo } from 'react'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
-import { getSafeAppUrl, SafeRouteParams } from 'src/routes/routes'
 import { useSelector } from 'react-redux'
+import { Box, Grid } from '@material-ui/core'
+
+import styled from 'styled-components'
+import { getSafeAppUrl, SafeRouteParams } from 'src/routes/routes'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { getShortName } from 'src/config'
-import { ReactElement, useMemo } from 'react'
-import Row from 'src/components/layout/Row'
-import Col from 'src/components/layout/Col'
-import styled from 'styled-components'
 import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 
 const FEATURED_APPS_TAGS = 'dashboard-widgets'
@@ -21,12 +21,6 @@ const StyledImage = styled.img`
 const StyledLink = styled(Link)`
   margin-top: 10px;
   text-decoration: none;
-`
-
-const StyledRow = styled(Row)`
-  gap: 24px;
-  flex-wrap: inherit;
-  align-items: center;
 `
 
 export const FeaturedApps = (): ReactElement => {
@@ -47,19 +41,21 @@ export const FeaturedApps = (): ReactElement => {
           const appRoute = getSafeAppUrl(app.url, routesSlug)
           return (
             <Card key={app.id}>
-              <StyledRow>
-                <Col xs={2}>
+              <Grid container alignItems="center" spacing={3}>
+                <Grid item xs={2}>
                   <StyledImage src={app.iconUrl} alt={app.name} />
-                </Col>
-                <Col xs={10} layout="column">
-                  <Text size="xl">{app.description}</Text>
+                </Grid>
+                <Grid item xs={10}>
+                  <Box mb={1}>
+                    <Text size="xl">{app.description}</Text>
+                  </Box>
                   <StyledLink to={appRoute}>
                     <Text color="primary" size="lg" strong>
                       Use {app.name}
                     </Text>
                   </StyledLink>
-                </Col>
-              </StyledRow>
+                </Grid>
+              </Grid>
             </Card>
           )
         })}
