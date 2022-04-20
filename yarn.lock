@@ -1872,6 +1872,11 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.8.0.tgz#856c15517274f924539ea4df40fffe6f009249a7"
   integrity sha512-xK2ZZXxCEGOw+6UZAeUmvqE/4C/XTpYmv1a8KzKUgSOxcGkHsIDqcjdKjqif7gOdnwHl4+XXJUtDQEuSLT4Scg==
 
+"@gnosis.pm/safe-modules-deployments@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-modules-deployments/-/safe-modules-deployments-1.0.0.tgz#b4cfcf7782c3fa1491b84405ac06cfa4f7eff365"
+  integrity sha512-mZkGtfGmEym7l5w2K6d/mIaS8sDmy50uGWAfTj5Q/+Y1cU9fHYU6hzhb0QaeyNM7F7HM3jg5ZTJjartZJUqu3w==
+
 "@gnosis.pm/safe-react-components@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-1.1.2.tgz#26daeae23f5cd0811d79bfb3497d046b85441aa9"
