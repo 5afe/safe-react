@@ -12,7 +12,8 @@ export const initialAddressBookState: AddressBookState = []
 
 type Payloads = AddressBookEntry | AddressBookState
 
-export const getAddressBookFallbackName = (address: string) => textShortener({ charsStart: 6, charsEnd: 4 })(address)
+export const getAddressBookFallbackName = (address: string): string =>
+  textShortener({ charsStart: 6, charsEnd: 4 })(address)
 
 export const batchLoadEntries = (state: AddressBookState, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
