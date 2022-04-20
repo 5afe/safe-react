@@ -1,5 +1,7 @@
 import { formatAmount, formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 
+// The test environment defaults Intl.NumberFormat to en-US as Node doesn't ship with every locale
+// hence the tests hardcoding en-US formatting but the browser will format correctly
 describe('formatAmount', () => {
   it('Given 0 returns 0', () => {
     // given
