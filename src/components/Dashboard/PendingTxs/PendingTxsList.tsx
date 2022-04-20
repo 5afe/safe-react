@@ -14,7 +14,7 @@ import PendingTxListItem from 'src/components/Dashboard/PendingTxs/PendingTxList
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
-import { sm } from 'src/theme/variables'
+import { xs } from 'src/theme/variables'
 
 const SkeletonWrapper = styled.div`
   border-radius: 8px;
@@ -39,9 +39,9 @@ const StyledLink = styled(Link)`
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: ${sm};
+  gap: ${xs};
   margin-bottom: 10px;
-  padding-right: 24px;
+  padding-right: 26px;
 `
 
 const EmptyState = (

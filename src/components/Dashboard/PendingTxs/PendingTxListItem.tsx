@@ -46,7 +46,7 @@ const TxConfirmations = styled.div`
   margin-left: auto;
 
   & svg {
-    margin-left: 16px;
+    margin-left: 8px;
   }
 `
 
