@@ -1,4 +1,4 @@
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
@@ -37,13 +37,16 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   const queueTxns = useSelector(pendingTransactions)
   const { shortName } = getChainById(chainId)
   const url = generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, { safeAddress: address, shortName })
+  const [totalQueuedTxs, setTotalQueuedTxs] = useState<number>()
 
   const queuedTxsToDisplay: Transaction[] = useMemo(() => {
     if (!queueTxns) return []
 
+    const allQueuedTransactions = Object.values(queueTxns.next).concat(Object.values(queueTxns.queued))
+    setTotalQueuedTxs(allQueuedTransactions.length)
+
     return (
-      Object.values(queueTxns.next)
-        .concat(Object.values(queueTxns.queued))
+      allQueuedTransactions
         // take the first (i.e. newest) tx in a group of txns with the same nonce
         .map((group: Transaction[]) => group[0])
         .slice(0, size)
@@ -82,7 +85,7 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Transactions to Sign</WidgetTitle>
+      <WidgetTitle>Transactions to Sign{totalQueuedTxs ? ` (${totalQueuedTxs})` : ''}</WidgetTitle>
       <WidgetBody>{getWidgetBody()}</WidgetBody>
     </WidgetContainer>
   )
