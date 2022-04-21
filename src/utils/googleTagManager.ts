@@ -86,6 +86,11 @@ export const loadGoogleTagManager = (): void => {
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
       page,
+      // Allow only GA4 configuration and GA4 custom event tags
+      // @see https://developers.google.com/tag-platform/tag-manager/web/restrict
+      'gtm.allowlist': ['gaawc', 'gaawe'],
+      // Block JS variables and custom scripts
+      'gtm.blocklist': ['j', 'jsm', 'customScripts'],
     },
   })
 }
