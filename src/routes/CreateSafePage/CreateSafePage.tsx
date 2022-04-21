@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import queryString from 'query-string'
 import { useLocation } from 'react-router-dom'
-import { Loader } from '@gnosis.pm/safe-react-components'
 
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
@@ -33,7 +32,7 @@ import OwnersAndConfirmationsNewSafeStep, {
 } from './steps/OwnersAndConfirmationsNewSafeStep'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import ReviewNewSafeStep, { reviewNewSafeStepLabel } from './steps/ReviewNewSafeStep'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import local from 'src/utils/storage/local'
 import SafeCreationProcess from './components/SafeCreationProcess'
 import SelectWalletAndNetworkStep, { selectWalletAndNetworkStepLabel } from './steps/SelectWalletAndNetworkStep'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
@@ -42,25 +41,17 @@ import { trackEvent } from 'src/utils/googleTagManager'
 
 function CreateSafePage(): ReactElement {
   const [safePendingToBeCreated, setSafePendingToBeCreated] = useState<CreateSafeFormValues>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const providerName = useSelector(providerNameSelector)
   const isWrongNetwork = useSelector(shouldSwitchWalletChain)
   const provider = !!providerName && !isWrongNetwork
 
   useEffect(() => {
-    const checkIfSafeIsPendingToBeCreated = async (): Promise<void> => {
-      setIsLoading(true)
-
-      // Removing the await completely is breaking the tests for a mysterious reason
-      // @TODO: remove the promise
-      const safePendingToBeCreated = await Promise.resolve(
-        loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY),
-      )
+    const checkIfSafeIsPendingToBeCreated = () => {
+      const safePendingToBeCreated = local.getItem<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
       if (provider) {
         setSafePendingToBeCreated(safePendingToBeCreated)
       }
-      setIsLoading(false)
     }
     checkIfSafeIsPendingToBeCreated()
   }, [provider])
@@ -82,7 +73,7 @@ function CreateSafePage(): ReactElement {
       label: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
     })
 
-    saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
+    local.setItem(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
     setSafePendingToBeCreated(newSafeFormValues)
   }
 
@@ -103,14 +94,6 @@ function CreateSafePage(): ReactElement {
       isCurrent = false
     }
   }, [provider, userWalletAddress, addressBook, location, safeRandomName])
-
-  if (isLoading) {
-    return (
-      <LoaderContainer data-testid={'create-safe-loader'}>
-        <Loader size="md" />
-      </LoaderContainer>
-    )
-  }
 
   const isInitializing = !provider || !initialFormValues
 
@@ -213,13 +196,6 @@ async function getInitialValues(userAddress, addressBook, location, suggestedSaf
     [FIELD_NEW_SAFE_PROXY_SALT]: Date.now(),
   }
 }
-
-const LoaderContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`
 
 const BackIcon = styled(IconButton)`
   color: ${secondary};

@@ -41,19 +41,12 @@ describe('<CreateSafePage>', () => {
   it('renders CreateSafePage Form', async () => {
     render(<CreateSafePage />)
 
-    // we show a loader
-    expect(screen.getByTestId('create-safe-loader')).toBeInTheDocument()
-
-    // after that we show the form
-    await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
     await waitFor(() => expect(screen.getByTestId('create-safe-form')).toBeInTheDocument())
   })
 
   describe('Step 1: Connect wallet & select network', () => {
     it('Shows Connect Wallet Button if No wallet is connected', async () => {
       render(<CreateSafePage />)
-
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
       await waitFor(() => expect(screen.getByTestId('heading-connect-btn')).toBeInTheDocument())
     })
@@ -189,11 +182,14 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      expect(screen.getByText('Continue')).toBeInTheDocument()
+
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
 
-      await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
+      expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument()
     })
   })
   describe('Step 2: Safe Name', () => {
@@ -209,8 +205,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -230,8 +227,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -253,8 +251,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -278,8 +277,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -307,8 +307,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -345,8 +346,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -401,8 +403,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -445,8 +448,8 @@ describe('<CreateSafePage>', () => {
 
       render(<CreateSafePage />, customState)
 
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
-
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -474,8 +477,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -506,8 +510,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -550,8 +555,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -598,8 +604,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -656,8 +663,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -711,8 +719,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 
@@ -771,8 +780,9 @@ describe('<CreateSafePage>', () => {
       }
 
       render(<CreateSafePage />, customState)
-      await waitForElementToBeRemoved(() => screen.getByTestId('create-safe-loader'))
 
+      const continueButton = screen.getByText('Continue').parentElement as HTMLButtonElement
+      await waitFor(() => !continueButton.disabled)
       fireEvent.click(screen.getByText('Continue'))
       await waitFor(() => expect(screen.getByTestId('create-safe-name-step')).toBeInTheDocument())
 

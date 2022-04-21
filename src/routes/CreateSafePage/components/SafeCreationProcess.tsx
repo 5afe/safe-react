@@ -10,7 +10,7 @@ import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeDeployment } from 'src/routes/opening'
-import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import local from 'src/utils/storage/local'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
   SAFE_PENDING_CREATION_STORAGE_KEY,
@@ -91,7 +91,7 @@ const parseError = (err: Error): Error => {
 }
 
 const getSavedSafeCreation = (): CreateSafeFormValues | void => {
-  return loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+  return local.getItem<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
 }
 
 const loadSavedDataOrLeave = (): CreateSafeFormValues | void => {
@@ -130,7 +130,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
       .once('transactionHash', (txHash) => {
         onHash(txHash)
 
-        saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
+        local.setItem(SAFE_PENDING_CREATION_STORAGE_KEY, {
           ...safeCreationFormValues,
           [FIELD_NEW_SAFE_PROXY_SALT]: safeCreationSalt,
           [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
@@ -256,7 +256,7 @@ function SafeCreationProcess(): ReactElement {
 
     // Clear the previous tx hash
     setSafeCreationTxHash(undefined)
-    saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
+    local.setItem(SAFE_PENDING_CREATION_STORAGE_KEY, {
       ...safeCreationFormValues,
       safeCreationTxHash: undefined,
     })
@@ -265,12 +265,12 @@ function SafeCreationProcess(): ReactElement {
   }
 
   const onCancel = () => {
-    removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    local.removeItem(SAFE_PENDING_CREATION_STORAGE_KEY)
     goToWelcomePage()
   }
 
   function onClickModalButton() {
-    removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    local.removeItem(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const { safeName, safeCreationTxHash, safeAddress } = modalData
     history.push({
