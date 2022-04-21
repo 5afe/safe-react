@@ -27,8 +27,10 @@ const SkeletonWrapper = styled.div`
 const StyledList = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 12px;
   width: 100%;
+  height: 100%;
 `
 
 const StyledWidgetTitle = styled.div`
