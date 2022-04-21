@@ -36,7 +36,13 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeApp
           <ChainsContainer>
             {availableChains.map((chainId) => {
               const chainInfo = getChainById(chainId)
-              return <div key={chainId}>{chainInfo.chainName && <NetworkLabel networkInfo={chainInfo} />}</div>
+              return (
+                chainInfo.chainName && (
+                  <div key={chainId}>
+                    <NetworkLabel networkInfo={chainInfo} />
+                  </div>
+                )
+              )
             })}
           </ChainsContainer>
           <Separator />
