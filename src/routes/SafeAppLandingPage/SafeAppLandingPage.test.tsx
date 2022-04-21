@@ -105,7 +105,7 @@ describe('<SafeAppLandingPage>', () => {
 
     // when the Loader is removed we show the Connect Wallet button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
-    expect(screen.getByText('Connect Wallet')).toBeInTheDocument()
+    expect(screen.getByText('Connect')).toBeInTheDocument()
   })
 
   it('Renders the create new safe button if the user wallet is connected', async () => {

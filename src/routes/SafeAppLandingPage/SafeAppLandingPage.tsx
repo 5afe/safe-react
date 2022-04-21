@@ -1,21 +1,18 @@
 import { ReactElement, useCallback, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { Card, Title, Loader } from '@gnosis.pm/safe-react-components'
+import { Card, Loader } from '@gnosis.pm/safe-react-components'
 
 import { isValidChainId } from 'src/config'
 import { history, WELCOME_ROUTE } from 'src/routes/routes'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { setChainId } from 'src/logic/config/utils'
 import useAsync from 'src/logic/hooks/useAsync'
 import SafeAppDetails from 'src/routes/SafeAppLandingPage/components/SafeAppsDetails'
-import CreateNewSafe from 'src/routes/SafeAppLandingPage/components/CreateNewSafe'
-import ConnectWallet from 'src/routes/SafeAppLandingPage/components/ConnectWallet'
 import TryDemoSafe from 'src/routes/SafeAppLandingPage/components/TryDemoSafe'
+import UserSafe from './components/UserSafe'
 
 const SafeAppLandingPage = (): ReactElement => {
   const { search } = useLocation()
@@ -36,9 +33,6 @@ const SafeAppLandingPage = (): ReactElement => {
       setChainId(safeAppChainId)
     }
   }, [safeAppChainId, safeAppUrl])
-
-  const userAddress = useSelector(userAccountSelector)
-  const isWalletConnected = !!userAddress
 
   // fetch Safe App details from the Config service
   const { appList, isLoading: isConfigServiceLoading } = useAppList()
@@ -95,10 +89,8 @@ const SafeAppLandingPage = (): ReactElement => {
             )}
 
             <ActionsContainer>
-              <UserSafeContainer>
-                <Title size="xs">Use the dApp with your Safe!</Title>
-                {isWalletConnected ? <CreateNewSafe /> : <ConnectWallet />}
-              </UserSafeContainer>
+              {/* User Safe Section */}
+              <UserSafe />
 
               {/* Demo Safe Section */}
               <TryDemoSafe safeAppUrl={safeAppUrl} />
@@ -134,9 +126,4 @@ const LoaderContainer = styled.div`
 
 const ActionsContainer = styled.div`
   display: flex;
-`
-
-const UserSafeContainer = styled.div`
-  flex: 1 0 50%;
-  text-align: center;
 `
