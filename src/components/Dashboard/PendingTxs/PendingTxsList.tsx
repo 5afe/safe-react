@@ -5,6 +5,7 @@ import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 import { Link } from 'react-router-dom'
 import { Text } from '@gnosis.pm/safe-react-components'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import { Box } from '@material-ui/core'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -15,6 +16,8 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
 import { xs } from 'src/theme/variables'
+import NoTransactionsImage from 'src/routes/safe/components/Transactions/TxList/assets/no-transactions.svg'
+import Img from 'src/components/layout/Img'
 
 const SkeletonWrapper = styled.div`
   border-radius: 8px;
@@ -46,12 +49,15 @@ const StyledLink = styled(Link)`
 
 const EmptyState = (
   <Card>
-    <Text size="xl">This Safe has no queued transactions</Text>
+    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" height={1} gridGap="16px">
+      <Img alt="No Transactions yet" src={NoTransactionsImage} />
+      <Text size="xl">This Safe has no queued transactions</Text>
+    </Box>
   </Card>
 )
 
 const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null => {
-  const { address } = useSelector(currentSafe)
+  const { address, loaded } = useSelector(currentSafe)
   const chainId = useSelector(currentChainId)
   const queueTxns = useSelector(pendingTransactions)
   const { shortName } = getChainById(chainId)
@@ -88,7 +94,7 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   const ResultState = useMemo(
     () => (
       <StyledList>
-        {queuedTxsToDisplay?.map((transaction) => (
+        {queuedTxsToDisplay.map((transaction) => (
           <PendingTxListItem transaction={transaction} url={url} key={transaction.id} />
         ))}
       </StyledList>
@@ -97,8 +103,8 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   )
 
   const getWidgetBody = () => {
-    if (!queueTxns) return LoadingState
-    if (!queuedTxsToDisplay?.length) return EmptyState
+    if (!loaded) return LoadingState
+    if (!queuedTxsToDisplay.length) return EmptyState
     return ResultState
   }
 

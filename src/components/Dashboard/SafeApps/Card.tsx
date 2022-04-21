@@ -40,8 +40,8 @@ const IconBtn = styled(IconButton)`
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
   }
 `
 
@@ -85,11 +85,11 @@ const Card = (props: CardProps): ReactElement => {
         </Text>
       </Box>
 
-      <Text size="md" color="inputFilled">
+      <Text size="lg" color="inputFilled">
         {props.description}
       </Text>
 
-      <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark /> : <BookmarkBorder />}</IconBtn>
+      <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark fontSize="medium" /> : <BookmarkBorder />}</IconBtn>
     </StyledLink>
   )
 }
