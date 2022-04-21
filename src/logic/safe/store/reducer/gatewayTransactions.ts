@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
+import { LabelValue } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -15,8 +16,8 @@ import {
   StoreStructure,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
+import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
@@ -118,7 +119,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
       // If there's no "Queued" label, put all the items into the "next" group.
       let nextItems = values
       let queuedItems = values.slice(0, 0)
-      const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === 'Queued')
+      const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === LabelValue.Queued)
       if (qLabelIndex >= 0) {
         nextItems = values.slice(0, qLabelIndex)
         queuedItems = values.slice(qLabelIndex)
