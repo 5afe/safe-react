@@ -42,10 +42,10 @@ export const FeaturedApps = (): ReactElement => {
           return (
             <Card key={app.id}>
               <Grid container alignItems="center" spacing={3}>
-                <Grid item xs={3} md={2}>
+                <Grid item xs={12} md={3}>
                   <StyledImage src={app.iconUrl} alt={app.name} />
                 </Grid>
-                <Grid item xs={9} md={10}>
+                <Grid item xs={12} md={9}>
                   <Box mb={1}>
                     <Text size="xl">{app.description}</Text>
                   </Box>
