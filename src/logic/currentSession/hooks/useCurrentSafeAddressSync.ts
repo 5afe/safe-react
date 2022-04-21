@@ -12,5 +12,5 @@ export const useCurrentSafeAddressSync = (): void => {
 
   useEffect(() => {
     dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(location.pathname).safeAddress))
-  }, [location, dispatch])
+  }, [location.pathname, dispatch])
 }
