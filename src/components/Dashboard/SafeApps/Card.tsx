@@ -1,9 +1,9 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
-import { Bookmark, BookmarkBorder } from '@material-ui/icons'
 import { Box, IconButton } from '@material-ui/core'
 import { Link, generatePath } from 'react-router-dom'
+import { Icon } from '@gnosis.pm/safe-react-components'
 
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 import { md, lg } from 'src/theme/variables'
@@ -36,12 +36,13 @@ const IconBtn = styled(IconButton)`
     top: ${lg};
     right: ${lg};
     z-index: 10;
-    padding: 5px;
+    padding: 8px;
   }
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
+    padding-left: 2px;
   }
 `
 
@@ -89,7 +90,9 @@ const Card = (props: CardProps): ReactElement => {
         {props.description}
       </Text>
 
-      <IconBtn onClick={handlePinClick}>{localPinned ? <Bookmark fontSize="medium" /> : <BookmarkBorder />}</IconBtn>
+      <IconBtn onClick={handlePinClick}>
+        {localPinned ? <Icon type="bookmarkFilled" size="md" color="primary" /> : <Icon type="bookmark" size="md" />}
+      </IconBtn>
     </StyledLink>
   )
 }
