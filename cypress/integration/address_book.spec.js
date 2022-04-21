@@ -16,11 +16,11 @@ const GNO_CSV_ENTRY = {
     address:'0x61a0c717d18232711bC788F19C9Cd56a43cc8872'
 }
 
-describe('Address_book', () => {
-    it('Address book entries add/removal', () => {
+describe('Address book', () => {
+    it('should add and remove Address Book entries', () => {
         cy.visit(`/${RINKEBY_TEST_SAFE}/address-book`)
 
-        cy.findByText('Create entry', {timeout: 8000}).click()
+        cy.findByText('Create entry', {timeout: 6000}).click()
         cy.findByTestId('create-entry-input-name').type(NAME)
         cy.findByTestId('create-entry-input-address').type(ENS_NAME)
         cy.findByTestId('save-new-entry-btn-id').click()
