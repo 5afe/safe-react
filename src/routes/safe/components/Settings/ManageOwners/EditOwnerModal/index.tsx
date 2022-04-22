@@ -66,7 +66,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
                     name="ownerName"
                     placeholder="Owner name*"
                     testId={RENAME_OWNER_INPUT_TEST_ID}
-                    text="Owner name*"
+                    label="Owner name*"
                     type="text"
                     validate={composeValidators(required, validAddressBookName)}
                   />

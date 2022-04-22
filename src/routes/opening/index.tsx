@@ -11,7 +11,7 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
@@ -23,6 +23,8 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
+import { getExplorerInfo } from 'src/config'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -140,7 +142,7 @@ export const SafeDeployment = ({
     }
 
     const isTxMined = async (txHash: string) => {
-      const web3 = getWeb3()
+      const web3 = getWeb3ReadOnly()
 
       const txResult = await web3.eth.getTransaction(txHash)
       if (txResult?.blockNumber == null) {
@@ -194,7 +196,7 @@ export const SafeDeployment = ({
 
     const awaitUntilSafeIsDeployed = async (safeCreationTxHash: string) => {
       try {
-        const web3 = getWeb3()
+        const web3 = getWeb3ReadOnly()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
 
         let safeAddress = ''
@@ -282,6 +284,16 @@ export const SafeDeployment = ({
             </FullParagraph>
           </BodyInstruction>
         )}
+
+        {steps[stepIndex].instruction && creationTxHash ? (
+          <TxText>
+            Your Safe creation transaction:
+            <br />
+            <Center>
+              <PrefixedEthHashInfo hash={creationTxHash} showCopyBtn explorerUrl={getExplorerInfo(creationTxHash)} />
+            </Center>
+          </TxText>
+        ) : null}
 
         <BodyFooter>
           {FooterComponent ? (
@@ -372,6 +384,14 @@ const FullParagraph = styled(Paragraph)<FullParagraphProps>`
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
 
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: -10px;
+`
+
 const BodyImage = styled.div`
   grid-row: 1;
 `
@@ -382,8 +402,15 @@ const BodyInstruction = styled.div`
   grid-row: 3;
   margin: 27px 0;
 `
-const BodyFooter = styled.div`
+
+const TxText = styled.div`
   grid-row: 4;
+  margin: 3em 0;
+  font-size: 0.8em;
+`
+
+const BodyFooter = styled.div`
+  grid-row: 5;
 
   padding: 10px 0;
   display: flex;

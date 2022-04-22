@@ -56,7 +56,7 @@ const ContractABI = (): React.ReactElement => {
   return (
     <Row margin="sm">
       <Col>
-        <TextAreaField name="abi" placeholder="ABI*" text="ABI*" type="text" validate={hasUsefulMethods} />
+        <TextAreaField name="abi" placeholder="ABI*" label="ABI*" type="text" validate={hasUsefulMethods} />
       </Col>
     </Row>
   )

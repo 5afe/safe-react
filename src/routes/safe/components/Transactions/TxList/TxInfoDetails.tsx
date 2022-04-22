@@ -1,4 +1,4 @@
-import { Erc721Transfer, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Erc721Transfer, Transfer, TransactionTokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -38,7 +38,7 @@ export const TxInfoDetails = ({
     // is transfer type by context
     isTransferType &&
     // not a Collectible
-    txInfo?.transferInfo.type !== TokenType.ERC721 &&
+    txInfo?.transferInfo.type !== TransactionTokenType.ERC721 &&
     // in history list
     txLocation === 'history' &&
     // it's outgoing
@@ -66,7 +66,7 @@ export const TxInfoDetails = ({
 
   useEffect(() => {
     if (txInfo) {
-      const isCollectible = txInfo.transferInfo.type === TokenType.ERC721
+      const isCollectible = txInfo.transferInfo.type === TransactionTokenType.ERC721
       const { address, value, decimals } = getTxTokenData(txInfo)
 
       setSendModalParams((prev) => ({

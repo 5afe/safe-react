@@ -14,7 +14,7 @@ const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_
 
 export const fetchTransactionDetails =
   ({ transactionId }: { transactionId: Transaction['id'] }) =>
-  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<Transaction['txDetails']> => {
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<undefined | Transaction['txDetails']> => {
     const transaction = getTransactionByAttribute(getState(), {
       attributeValue: transactionId,
       attributeName: 'id',
@@ -22,14 +22,20 @@ export const fetchTransactionDetails =
     const safeAddress = extractSafeAddress()
     const chainId = currentChainId(getState())
 
-    if (transaction?.txDetails || !safeAddress) {
+    // @TODO: Believed to be based on legacy selector, might be able to remove now
+    if (!safeAddress) {
       return
+    }
+
+    if (transaction?.txDetails) {
+      return transaction.txDetails
     }
 
     try {
       const transactionDetails = await fetchSafeTransaction(transactionId)
 
       dispatch(updateTransactionDetails({ chainId, transactionId, safeAddress, value: transactionDetails }))
+      return transactionDetails
     } catch (error) {
       console.error(`Failed to retrieve transaction ${transactionId} details`, error.message)
     }

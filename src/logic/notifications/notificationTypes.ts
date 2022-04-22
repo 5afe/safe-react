@@ -27,6 +27,7 @@ enum NOTIFICATION_IDS {
   TX_CANCELLATION_EXECUTED_MSG,
   TX_FAILED_MSG,
   TX_PENDING_MSG,
+  TX_PENDING_FAILED_MSG,
   TX_WAITING_MSG,
   TX_CONFIRMATION_EXECUTED_MSG,
   TX_CONFIRMATION_FAILED_MSG,
@@ -96,6 +97,10 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
   TX_PENDING_MSG: {
     message: 'Transaction still pending. Consider resubmitting with a higher gas price.',
+    options: { variant: ERROR, persist: true, autoHideDuration: shortDuration },
+  },
+  TX_PENDING_FAILED_MSG: {
+    message: 'Transaction wasn’t mined, please make sure it was properly sent. Be aware that it might still be mined.',
     options: { variant: ERROR, persist: true, autoHideDuration: shortDuration },
   },
   TX_WAITING_MSG: {

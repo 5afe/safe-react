@@ -98,44 +98,35 @@ export const BasicTxInfo = ({
   )
 }
 
-export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
+export const getParameterElement = ({ name, type, value }: DecodedDataBasicParameter, index: number): ReactElement => {
   let valueElement
 
-  if (parameter.type === 'address') {
-    valueElement = (
-      <PrefixedEthHashInfo
-        hash={parameter.value}
-        showAvatar
-        textSize="lg"
-        showCopyBtn
-        explorerUrl={getExplorerInfo(parameter.value)}
-      />
-    )
-  }
-
-  if (parameter.type === 'bytes') {
-    valueElement = (
-      <FlexWrapper margin={5}>
-        <Text size="lg">{getByteLength(parameter.value)} bytes</Text>
-        <CopyToClipboardBtn textToCopy={parameter.value} />
-      </FlexWrapper>
-    )
+  if (!Array.isArray(value)) {
+    switch (type) {
+      case 'address':
+        valueElement = (
+          <PrefixedEthHashInfo hash={value} showAvatar textSize="lg" showCopyBtn explorerUrl={getExplorerInfo(value)} />
+        )
+        break
+      case 'bytes':
+        valueElement = (
+          <FlexWrapper margin={5}>
+            <Text size="lg">{getByteLength(value)} bytes</Text>
+            <CopyToClipboardBtn textToCopy={value} />
+          </FlexWrapper>
+        )
+        break
+    }
   }
 
   if (!valueElement) {
-    let value = parameter.value
-    if (parameter.type.endsWith('[]')) {
-      try {
-        value = JSON.stringify(parameter.value)
-      } catch (e) {}
-    }
-    valueElement = <Text size="lg">{value}</Text>
+    valueElement = <Text size="lg">{JSON.stringify(value)}</Text>
   }
 
   return (
     <ElementWrapper key={index}>
       <Text size="lg" strong>
-        {parameter.name} ({parameter.type})
+        {name} ({type})
       </Text>
       {valueElement}
     </ElementWrapper>

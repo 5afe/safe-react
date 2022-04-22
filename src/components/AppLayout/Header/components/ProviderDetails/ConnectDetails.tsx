@@ -10,7 +10,6 @@ import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-// We need lazy import because the component imports static css that should only be applied if the component is rendered
 const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
 
 const styles = () => ({
@@ -26,9 +25,6 @@ const styles = () => ({
   },
   justifyCenter: {
     justifyContent: 'center',
-  },
-  appStore: {
-    height: '35px',
   },
 })
 

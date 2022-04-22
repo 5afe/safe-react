@@ -10,9 +10,10 @@ type StepperFormProps = {
   onSubmit: (values) => void
   initialValues?: any
   children: (JSX.Element | false | null)[]
+  trackingCategory?: string
 }
 
-function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormProps): ReactElement {
+function StepperForm({ children, onSubmit, testId, initialValues, trackingCategory }: StepperFormProps): ReactElement {
   const [validate, setValidate] = useState<(values) => Validator>()
   const [onSubmitForm, setOnSubmitForm] = useState<(values) => void>()
   const steps = useMemo(
@@ -52,7 +53,7 @@ function StepperForm({ children, onSubmit, testId, initialValues }: StepperFormP
     >
       {({ handleSubmit, submitting }) => (
         <form data-testid={testId} onSubmit={handleSubmit}>
-          <Stepper disableNextButton={submitting} nextButtonType={'submit'}>
+          <Stepper disableNextButton={submitting} nextButtonType={'submit'} trackingCategory={trackingCategory}>
             {steps}
           </Stepper>
         </form>

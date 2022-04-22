@@ -14,6 +14,8 @@ import {
   TransactionListItem,
   TransactionListPage,
   TransactionStatus,
+  TransactionInfo,
+  SettingsChange,
 } from '@gnosis.pm/safe-react-gateway-sdk'
 
 /**

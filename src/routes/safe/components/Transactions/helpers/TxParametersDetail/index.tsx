@@ -25,6 +25,9 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getByteLength } from 'src/utils/getByteLength'
 import { md } from 'src/theme/variables'
+import Track from 'src/components/Track'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
+import { Skeleton } from '@material-ui/lab'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -118,15 +121,19 @@ export const TxParametersDetail = ({
 
   useEffect(() => {
     if (Number.isNaN(safeNonceNumber) || safeNonceNumber === nonce) {
+      setIsAccordionExpanded(false)
+      setIsTxNonceOutOfOrder(false)
       return
     }
     if (lastQueuedTxNonce === undefined && safeNonceNumber !== nonce) {
       setIsAccordionExpanded(true)
       setIsTxNonceOutOfOrder(true)
+      return
     }
     if (lastQueuedTxNonce && safeNonceNumber !== lastQueuedTxNonce + 1) {
       setIsAccordionExpanded(true)
       setIsTxNonceOutOfOrder(true)
+      return
     }
   }, [lastQueuedTxNonce, nonce, safeNonceNumber])
 
@@ -142,25 +149,31 @@ export const TxParametersDetail = ({
 
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
-      <AccordionSummary>
-        <Text size="xl">Advanced parameters</Text>
-      </AccordionSummary>
+      <Track {...MODALS_EVENTS.ADVANCED_PARAMS} label={isAccordionExpanded ? 'Close' : 'Open'}>
+        <AccordionSummary>
+          <Text size="xl">Advanced parameters</Text>
+        </AccordionSummary>
+      </Track>
       <AccordionDetails>
         <AccordionDetailsWrapper>
           <StyledText size="md" color="placeHolder">
             Safe transaction parameters
           </StyledText>
-          <TxParameter
-            name="Safe nonce"
-            value={txParameters.safeNonce || ''}
-            isError={isTxNonceOutOfOrder}
-            color={color}
-          />
+          <TxParameterWrapper>
+            <Text size="lg" color={isTxNonceOutOfOrder ? 'error' : color}>
+              Safe nonce
+            </Text>
+            <Text size="lg" color={isTxNonceOutOfOrder ? 'error' : color}>
+              {txParameters.safeNonce ? txParameters.safeNonce : <Skeleton animation="wave" width="30px" />}
+            </Text>
+          </TxParameterWrapper>
 
           {showSafeTxGas && <TxParameter name="SafeTxGas" value={txParameters.safeTxGas || '0'} color={color} />}
-          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
-            Edit
-          </StyledButtonLink>
+          <Track {...MODALS_EVENTS.EDIT_ADVANCED_PARAMS}>
+            <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
+              Edit
+            </StyledButtonLink>
+          </Track>
           {storedTx?.length > 0 && <TxAdvancedParametersDetail tx={storedTx[0]} />}
         </AccordionDetailsWrapper>
       </AccordionDetails>

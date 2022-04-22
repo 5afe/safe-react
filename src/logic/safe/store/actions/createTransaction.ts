@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import onboard, { checkWallet } from 'src/logic/wallets/onboard'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3, isHardwareWallet, isSmartContractWallet } from 'src/logic/wallets/getWeb3'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import {
@@ -25,7 +25,7 @@ import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { removePendingTransaction, addPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
+import { removePendingTransaction, setPendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { _getChainId } from 'src/config'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
@@ -33,6 +33,8 @@ import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransa
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { isWalletRejection } from 'src/logic/wallets/errors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { WALLET_EVENTS } from 'src/utils/events/wallet'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -101,18 +103,20 @@ export class TxSender {
     if (!isFinalization || !this.txId) {
       try {
         txDetails = await saveTxToHistory({ ...txArgs, signature, origin: txProps.origin })
+        this.txId = txDetails.txId
       } catch (err) {
         logError(Errors._816, err.message)
         return
       }
     }
 
-    const id = txDetails?.txId || this.txId
-    if (isFinalization && id && this.txHash) {
-      dispatch(addPendingTransaction({ id, txHash: this.txHash }))
+    if (isFinalization && this.txId && this.txHash) {
+      dispatch(setPendingTransaction({ id: this.txId, txHash: this.txHash }))
     }
 
     notifications.closePending()
+
+    trackEvent(signature ? WALLET_EVENTS.OFF_CHAIN_SIGNATURE : WALLET_EVENTS.ON_CHAIN_INTERACTION)
 
     // This is used to communicate the safeTxHash to a Safe App caller
     confirmCallback?.(safeTxHash)
@@ -126,7 +130,7 @@ export class TxSender {
   }
 
   async onError(err: Error & { code: number }, errorCallback?: ErrorEventHandler): Promise<void> {
-    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId, txHash } = this
+    const { txArgs, isFinalization, from, txProps, dispatch, notifications, safeInstance, txId } = this
 
     errorCallback?.()
 
@@ -159,7 +163,7 @@ export class TxSender {
             txArgs.sigs,
           )
           .encodeABI()
-      : txHash && safeInstance.methods.approveHash(txHash).encodeABI()
+      : this.txHash && safeInstance.methods.approveHash(this.txHash).encodeABI()
 
     if (!executeData) {
       return
@@ -177,55 +181,51 @@ export class TxSender {
     }
   }
 
-  async onlyConfirm(hardwareWallet: boolean): Promise<string | undefined> {
+  async onlyConfirm(): Promise<string | undefined> {
     const { txArgs, safeTxHash, txProps, safeVersion } = this
+    const { wallet } = onboard().getState()
 
     return await tryOffChainSigning(
       safeTxHash,
       { ...txArgs, sender: String(txArgs.sender), safeAddress: txProps.safeAddress },
-      hardwareWallet,
+      isHardwareWallet(wallet),
       safeVersion,
     )
   }
 
-  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<string> {
+  async sendTx(confirmCallback?: ConfirmEventHandler): Promise<void> {
     const { txArgs, isFinalization, from, safeTxHash, txProps } = this
 
     const tx = isFinalization ? getExecutionTransaction(txArgs) : getApprovalTransaction(this.safeInstance, safeTxHash)
     const sendParams = createSendParams(from, txProps.ethParameters || {})
 
-    return await tx
-      .send(sendParams)
-      .once('transactionHash', (hash) => {
-        this.txHash = hash
+    await tx.send(sendParams).once('transactionHash', (hash) => {
+      this.txHash = hash
 
-        if (isFinalization) {
-          aboutToExecuteTx.setNonce(txArgs.nonce)
-        }
-        this.onComplete(undefined, confirmCallback)
-      })
-      .then(({ transactionHash }) => transactionHash)
+      if (isFinalization) {
+        aboutToExecuteTx.setNonce(txArgs.nonce)
+      }
+      this.onComplete(undefined, confirmCallback)
+    })
   }
 
-  async canSignOffchain(state: AppReduxState): Promise<boolean> {
+  async canSignOffchain(): Promise<boolean> {
     const { isFinalization, safeVersion } = this
-    const { smartContractWallet } = providerSelector(state)
 
-    return checkIfOffChainSignatureIsPossible(isFinalization, smartContractWallet, safeVersion)
+    const isSmartContract = await isSmartContractWallet(this.from)
+    return checkIfOffChainSignatureIsPossible(isFinalization, isSmartContract, safeVersion)
   }
 
   async submitTx(
-    state: AppReduxState,
     confirmCallback?: ConfirmEventHandler,
     errorCallback?: ErrorEventHandler,
   ): Promise<string | undefined> {
-    const isOffchain = await this.canSignOffchain(state)
+    const isOffchain = await this.canSignOffchain()
 
     // Off-chain signature
     if (!this.isFinalization && isOffchain) {
       try {
-        const { hardwareWallet } = providerSelector(state)
-        const signature = await this.onlyConfirm(hardwareWallet)
+        const signature = await this.onlyConfirm()
 
         // WC + Safe receives "NaN" as a string instead of a sig
         if (signature && signature !== 'NaN') {
@@ -337,6 +337,6 @@ export const createTransaction = (
     sender.safeTxHash = generateSafeTxHash(txProps.safeAddress, sender.safeVersion, sender.txArgs)
 
     // Start the creation
-    sender.submitTx(state, confirmCallback, errorCallback)
+    sender.submitTx(confirmCallback, errorCallback)
   }
 }

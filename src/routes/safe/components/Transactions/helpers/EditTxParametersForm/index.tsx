@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState, ChangeEvent, useCallback } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -22,9 +22,9 @@ import {
 } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
-import { extractSafeAddress } from 'src/routes/routes'
-import useRecommendedNonce from 'src/logic/hooks/useRecommendedNonce'
 import Paragraph from 'src/components/layout/Paragraph'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const StyledDivider = styled(Divider)`
   margin: 0;
@@ -42,7 +42,7 @@ const SafeOptions = styled.div`
 const EthereumOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 20px 12px;
 `
 const StyledLink = styled(Link)`
   margin: 16px 0 0 0;
@@ -54,11 +54,13 @@ const StyledLink = styled(Link)`
   }
 `
 const StyledText = styled(Text)`
-  margin: 0 0 4px 0;
+  margin: 0 0 16px 0;
 `
+
 const StyledTextMt = styled(Text)`
-  margin: 16px 0 4px 0;
+  margin: 16px 0;
 `
+
 const useStyles = makeStyles(styles)
 
 interface Props {
@@ -102,8 +104,7 @@ export const EditTxParametersForm = ({
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
-  const safeAddress = extractSafeAddress()
-  const recommendedNonce = useRecommendedNonce(safeAddress)
+  const [manualSafeNonce, setManualSafeNonce] = useState<string>()
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -112,6 +113,23 @@ export const EditTxParametersForm = ({
   const onCloseFormHandler = () => {
     onClose()
   }
+
+  const handleSafeNonceChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => setManualSafeNonce(e.target.value),
+    [],
+  )
+
+  const hasChangedSafeNonce = manualSafeNonce !== undefined
+  const showAdornment = !safeNonce && !hasChangedSafeNonce
+  const loadingAdornment = showAdornment
+    ? {
+        endAdornment: (
+          <InputAdornment position="end">
+            <CircularProgress size="16px" />
+          </InputAdornment>
+        ),
+      }
+    : null
 
   return (
     <>
@@ -130,7 +148,7 @@ export const EditTxParametersForm = ({
       <Block className={classes.container}>
         <GnoForm
           initialValues={{
-            safeNonce: safeNonce || recommendedNonce || '0',
+            safeNonce: hasChangedSafeNonce ? manualSafeNonce : safeNonce || '',
             safeTxGas: safeTxGas || '',
             ethNonce: ethNonce || '',
             ethGasLimit: ethGasLimit || '',
@@ -151,18 +169,20 @@ export const EditTxParametersForm = ({
                   name="safeNonce"
                   defaultValue={safeNonce}
                   placeholder="Safe nonce"
-                  text="Safe nonce"
+                  label="Safe nonce"
                   type="number"
                   min="0"
                   component={TextField}
                   disabled={!areSafeParamsEnabled(parametersStatus)}
+                  onChange={handleSafeNonceChange}
+                  inputAdornment={loadingAdornment}
                 />
                 {showSafeTxGas && (
                   <Field
                     name="safeTxGas"
                     defaultValue={safeTxGas}
                     placeholder="SafeTxGas"
-                    text="SafeTxGas"
+                    label="SafeTxGas"
                     type="number"
                     min="0"
                     component={TextField}
@@ -182,7 +202,7 @@ export const EditTxParametersForm = ({
                       name="ethNonce"
                       defaultValue={ethNonce}
                       placeholder="Nonce"
-                      text="Nonce"
+                      label="Nonce"
                       type="number"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
@@ -191,7 +211,7 @@ export const EditTxParametersForm = ({
                       name="ethGasLimit"
                       defaultValue={ethGasLimit}
                       placeholder="Gas limit"
-                      text="Gas limit"
+                      label="Gas limit"
                       type="number"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
@@ -202,7 +222,7 @@ export const EditTxParametersForm = ({
                         defaultValue={ethGasPrice}
                         type="number"
                         placeholder={gasPriceText}
-                        text={gasPriceText}
+                        label={gasPriceText}
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
                       />
@@ -214,7 +234,7 @@ export const EditTxParametersForm = ({
                         defaultValue={ethMaxPrioFee}
                         type="number"
                         placeholder="Max priority fee"
-                        text="Max priority fee (GWEI)"
+                        label="Max priority fee (GWEI)"
                         component={TextField}
                         disabled={!areEthereumParamsVisible(parametersStatus)}
                       />

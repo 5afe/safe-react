@@ -52,7 +52,7 @@ function LoadSafeOwnersStep(): ReactElement {
                     initialValue={name}
                     name={ownerFieldName}
                     placeholder={ownerName}
-                    text="Owner Name"
+                    label="Owner Name"
                     type="text"
                     validate={minMaxLength(0, 50)}
                     testId={`load-safe-owner-name-${index}`}
@@ -86,7 +86,7 @@ const HeaderContainer = styled(Row)`
 
 const OwnerContainer = styled(Row)`
   padding: 0 ${lg};
-  margin-bottom: 12px;
+  margin-bottom: ${md};
 `
 
 const OwnerAddressContainer = styled(Row)`

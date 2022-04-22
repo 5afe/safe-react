@@ -11,12 +11,16 @@ export type LoadTransactionDetails = {
   loading: boolean
 }
 
-export const useTransactionDetails = (transactionId: string): LoadTransactionDetails => {
+export const useTransactionDetails = (
+  transactionId: string,
+  transactionDetails?: ExpandedTxDetails,
+): LoadTransactionDetails => {
   const dispatch = useRef(useDispatch())
   const [txDetails, setTxDetails] = useState<LoadTransactionDetails>({
-    loading: true,
-    data: undefined,
+    loading: transactionDetails ? false : true,
+    data: transactionDetails,
   })
+
   const data = useSelector((state: AppReduxState) =>
     getTransactionByAttribute(state, { attributeValue: transactionId, attributeName: 'id' }),
   )

@@ -33,6 +33,8 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
 
 const useStyles = makeStyles(styles)
 
@@ -99,6 +101,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimit = getSpendingLimitContract()
       try {
+        trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
+
         await spendingLimit.methods
           .executeAllowanceTransfer(
             safeAddress,

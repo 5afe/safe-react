@@ -1,15 +1,15 @@
-import { ReactElement, useState, useEffect, useCallback } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { backOff } from 'exponential-backoff'
 import { TransactionReceipt } from 'web3-core'
 import { GenericModal } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
+import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeDeployment } from 'src/routes/opening'
-import { useAnalytics, USER_EVENTS } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
@@ -39,9 +39,21 @@ import { getExplorerInfo, getShortName } from 'src/config'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import Track from 'src/components/Track'
+import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
+`
+
+const ButtonContainer = styled.div`
+  text-align: center;
+`
+
+const EmphasisLabel = styled.span`
+  font-weight: ${boldFont};
 `
 
 type ModalDataType = {
@@ -78,13 +90,101 @@ const parseError = (err: Error): Error => {
   return actualMessage ? new Error(actualMessage) : err
 }
 
+const getSavedSafeCreation = (): CreateSafeFormValues | void => {
+  return loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+}
+
+const loadSavedDataOrLeave = (): CreateSafeFormValues | void => {
+  return getSavedSafeCreation() || goToWelcomePage()
+}
+
+const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Promise<TransactionReceipt> => {
+  if (!userAddress) {
+    return Promise.reject(new Error('No user address'))
+  }
+
+  const safeCreationFormValues = loadSavedDataOrLeave()
+
+  if (!safeCreationFormValues) {
+    return Promise.reject(new Error('No saved Safe creation'))
+  }
+
+  return new Promise((resolve, reject) => {
+    const confirmations = safeCreationFormValues[FIELD_NEW_SAFE_THRESHOLD]
+    const ownerFields = safeCreationFormValues[FIELD_SAFE_OWNERS_LIST]
+    const ownerAddresses = ownerFields.map(({ addressFieldName }) => safeCreationFormValues[addressFieldName])
+    const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
+    const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
+    const gasMaxPrioFee = safeCreationFormValues[FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE]
+    const safeCreationSalt = Date.now() // never retry with the same salt
+    const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+
+    const sendParams = createSendParams(userAddress, {
+      ethGasLimit: gasLimit.toString(),
+      ethGasPriceInGWei: gasPrice,
+      ethMaxPrioFeeInGWei: gasMaxPrioFee.toString(),
+    })
+
+    deploymentTx
+      .send(sendParams)
+      .once('transactionHash', (txHash) => {
+        onHash(txHash)
+
+        saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
+          ...safeCreationFormValues,
+          [FIELD_NEW_SAFE_PROXY_SALT]: safeCreationSalt,
+          [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
+        })
+
+        // Monitor the latest block to find a potential speed-up tx
+        txMonitor({ sender: userAddress, hash: txHash, data: deploymentTx.encodeABI() })
+          .then((txReceipt) => {
+            // txMonitor returns the txReceipt from `getTransactionReceipt` which doesn't throw
+            // if it was reverted. We must check the status of the receipt manually.
+            if (didTxRevert(txReceipt)) {
+              reject(new Error('Sped-up tx reverted'))
+              return
+            }
+
+            console.log('Sped-up tx mined:', txReceipt)
+            trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
+            resolve(txReceipt)
+          })
+          .catch((error) => {
+            reject(parseError(error))
+          })
+      })
+      .then((txReceipt) => {
+        console.log('Original tx mined:', txReceipt)
+        trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
+        resolve(txReceipt)
+      })
+      .catch((error) => {
+        // `deploymentTx` will throw if the transaction was reverted
+        reject(parseError(error))
+      })
+  })
+}
+
+const pollSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
+  // exponential delay between attempts for around 4 min
+  return await backOff(() => getSafeInfo(safeAddress), {
+    startingDelay: 750,
+    maxDelay: 20000,
+    numOfAttempts: 19,
+    retry: (e) => {
+      console.info('waiting for client-gateway to provide safe information', e)
+      return true
+    },
+  })
+}
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
 
-  const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
-  const userAddressAccount = useSelector(userAccountSelector)
+  const userAddress = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)
 
   const [showModal, setShowModal] = useState(false)
@@ -92,88 +192,23 @@ function SafeCreationProcess(): ReactElement {
   const [showCouldNotLoadModal, setShowCouldNotLoadModal] = useState(false)
   const [newSafeAddress, setNewSafeAddress] = useState<string>('')
 
-  const createNewSafe = useCallback(() => {
-    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
-
-    if (!safeCreationFormValues) {
-      goToWelcomePage()
-      return
-    }
-
-    if (!userAddressAccount) return
-
-    setSafeCreationTxHash(safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH])
-
-    setCreationTxPromise(
-      new Promise((resolve, reject) => {
-        const confirmations = safeCreationFormValues[FIELD_NEW_SAFE_THRESHOLD]
-        const ownerFields = safeCreationFormValues[FIELD_SAFE_OWNERS_LIST]
-        const ownerAddresses = ownerFields.map(({ addressFieldName }) => safeCreationFormValues[addressFieldName])
-        const safeCreationSalt = safeCreationFormValues[FIELD_NEW_SAFE_PROXY_SALT]
-        const gasLimit = safeCreationFormValues[FIELD_NEW_SAFE_GAS_LIMIT]
-        const gasPrice = safeCreationFormValues[FIELD_NEW_SAFE_GAS_PRICE]
-        const gasMaxPrioFee = safeCreationFormValues[FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE]
-        const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-
-        const sendParams = createSendParams(userAddressAccount, {
-          ethGasLimit: gasLimit.toString(),
-          ethGasPriceInGWei: gasPrice,
-          ethMaxPrioFeeInGWei: gasMaxPrioFee.toString(),
-        })
-
-        deploymentTx
-          .send(sendParams)
-          .once('transactionHash', (txHash) => {
-            saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
-              [FIELD_NEW_SAFE_CREATION_TX_HASH]: txHash,
-              ...safeCreationFormValues,
-            })
-
-            // Monitor the latest block to find a potential speed-up tx
-            txMonitor({ sender: userAddressAccount, hash: txHash, data: deploymentTx.encodeABI() })
-              .then((txReceipt) => {
-                console.log('Speed up tx mined:', txReceipt)
-                resolve(txReceipt)
-              })
-              .catch((error) => {
-                reject(parseError(error))
-              })
-          })
-          .then((txReceipt) => {
-            console.log('First tx mined:', txReceipt)
-            resolve(txReceipt)
-          })
-          .catch((error) => {
-            reject(parseError(error))
-          })
-      }),
-    )
-  }, [userAddressAccount])
-
   useEffect(() => {
-    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const safeCreationFormValues = loadSavedDataOrLeave()
     if (!safeCreationFormValues) {
-      goToWelcomePage()
       return
     }
 
-    const safeCreationTxHash = safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
-    if (safeCreationTxHash) {
-      setSafeCreationTxHash(safeCreationTxHash)
+    const newCreationTxHash = safeCreationFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
+    if (newCreationTxHash) {
+      setSafeCreationTxHash(newCreationTxHash)
     } else {
-      createNewSafe()
+      setCreationTxPromise(createNewSafe(userAddress, setSafeCreationTxHash))
     }
-  }, [createNewSafe])
+  }, [userAddress])
 
-  const onSafeCreated = async (newSafeAddress: string): Promise<void> => {
-    const createSafeFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+  const onSafeCreated = async (safeAddress: string): Promise<void> => {
+    const createSafeFormValues = loadSavedDataOrLeave()
 
-    if (!createSafeFormValues) {
-      goToWelcomePage()
-      return
-    }
-
-    const safeCreationTxHash = createSafeFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH]
     const defaultSafeValue = createSafeFormValues[FIELD_CREATE_SUGGESTED_SAFE_NAME]
     const safeName = createSafeFormValues[FIELD_CREATE_CUSTOM_SAFE_NAME] || defaultSafeValue
     const owners = createSafeFormValues[FIELD_SAFE_OWNERS_LIST]
@@ -187,54 +222,46 @@ function SafeCreationProcess(): ReactElement {
         chainId,
       })
     })
-    const safeAddressBookEntry = makeAddressBookEntry({ address: newSafeAddress, name: safeName, chainId })
-    await dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
-
-    trackEvent(USER_EVENTS.CREATE_SAFE)
+    const safeAddressBookEntry = makeAddressBookEntry({ address: safeAddress, name: safeName, chainId })
+    dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
 
     // a default 5s wait before starting to request safe information
     await sleep(5000)
 
     try {
-      // exponential delay between attempts for around 4 min
-      await backOff(() => getSafeInfo(newSafeAddress), {
-        startingDelay: 750,
-        maxDelay: 20000,
-        numOfAttempts: 19,
-        retry: (e) => {
-          console.info('waiting for client-gateway to provide safe information', e)
-          return true
-        },
-      })
+      await pollSafeInfo(safeAddress)
     } catch (e) {
-      setNewSafeAddress(newSafeAddress)
+      setNewSafeAddress(safeAddress)
       setShowCouldNotLoadModal(true)
       return
     }
 
-    const safeProps = await buildSafe(newSafeAddress)
-    await dispatch(addOrUpdateSafe(safeProps))
+    const safeProps = await buildSafe(safeAddress)
+    dispatch(addOrUpdateSafe(safeProps))
 
     setShowModal(true)
     setModalData({
       safeAddress: safeProps.address,
       safeName,
-      safeCreationTxHash,
+      safeCreationTxHash: createSafeFormValues[FIELD_NEW_SAFE_CREATION_TX_HASH],
     })
   }
 
   const onRetry = (): void => {
-    const safeCreationFormValues = loadFromStorage<CreateSafeFormValues>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const safeCreationFormValues = loadSavedDataOrLeave()
 
     if (!safeCreationFormValues) {
-      goToWelcomePage()
       return
     }
 
+    // Clear the previous tx hash
     setSafeCreationTxHash(undefined)
-    delete safeCreationFormValues.safeCreationTxHash
-    saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, safeCreationFormValues)
-    createNewSafe()
+    saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
+      ...safeCreationFormValues,
+      safeCreationTxHash: undefined,
+    })
+
+    setCreationTxPromise(createNewSafe(userAddress, setSafeCreationTxHash))
   }
 
   const onCancel = () => {
@@ -287,16 +314,18 @@ function SafeCreationProcess(): ReactElement {
           }
           footer={
             <ButtonContainer>
-              <Button
-                testId="safe-created-button"
-                onClick={onClickModalButton}
-                color="primary"
-                type={'button'}
-                size="small"
-                variant="contained"
-              >
-                Continue
-              </Button>
+              <Track {...CREATE_SAFE_EVENTS.GO_TO_SAFE}>
+                <Button
+                  testId="safe-created-button"
+                  onClick={onClickModalButton}
+                  color="primary"
+                  type={'button'}
+                  size="small"
+                  variant="contained"
+                >
+                  Continue
+                </Button>
+              </Track>
             </ButtonContainer>
           }
         />
@@ -332,11 +361,3 @@ function SafeCreationProcess(): ReactElement {
 }
 
 export default SafeCreationProcess
-
-const ButtonContainer = styled.div`
-  text-align: center;
-`
-
-const EmphasisLabel = styled.span`
-  font-weight: ${boldFont};
-`

@@ -1,5 +1,6 @@
 import { Loader, Title } from '@gnosis.pm/safe-react-components'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 
 import Img from 'src/components/layout/Img'
 import NoTransactionsImage from './assets/no-transactions.svg'
@@ -8,9 +9,28 @@ import { QueueTxList } from './QueueTxList'
 import { Centered, NoTransactions } from './styled'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
+import { batchExecuteSelector } from 'src/logic/appearance/selectors'
+import { BatchExecute } from 'src/routes/safe/components/Transactions/TxList/BatchExecute'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import { BatchExecuteHoverProvider } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
 
 export const QueueTransactions = (): ReactElement => {
+  const batchExecute = useSelector(batchExecuteSelector)
   const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
+
+  const queuedTxCount = useMemo(
+    () => (transactions ? transactions.next.count + transactions.queue.count : 0),
+    [transactions],
+  )
+  useEffect(() => {
+    if (queuedTxCount > 0) {
+      trackEvent({
+        ...TX_LIST_EVENTS.QUEUED_TXS,
+        label: queuedTxCount,
+      })
+    }
+  }, [queuedTxCount])
 
   if (count === 0 && isLoading) {
     return (
@@ -26,22 +46,25 @@ export const QueueTransactions = (): ReactElement => {
     return (
       <NoTransactions>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />
-        <Title size="xs">Queue transactions will appear here </Title>
+        <Title size="xs">Queued transactions will appear here </Title>
       </NoTransactions>
     )
   }
 
   return (
-    <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
-      {/* Next list */}
-      <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-        {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
-      </TxLocationContext.Provider>
+    <BatchExecuteHoverProvider>
+      {batchExecute && <BatchExecute />}
+      <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+        {/* Next list */}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
+          {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
+        </TxLocationContext.Provider>
 
-      {/* Queue list */}
-      <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-        {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
-      </TxLocationContext.Provider>
-    </TxsInfiniteScroll>
+        {/* Queue list */}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+          {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
+        </TxLocationContext.Provider>
+      </TxsInfiniteScroll>
+    </BatchExecuteHoverProvider>
   )
 }

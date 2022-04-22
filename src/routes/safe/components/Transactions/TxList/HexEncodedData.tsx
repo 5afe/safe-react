@@ -30,7 +30,7 @@ export const HexEncodedData = ({
   const classes = useStyles()
   const [showTxData, setShowTxData] = useState(false)
   const showExpandBtn = hexData.length > limit
-  const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
+  const shortener = textShortener({ charsStart: 25, charsEnd: 0 })
 
   return (
     <div className="tx-hexData">

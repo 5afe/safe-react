@@ -15,7 +15,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { isChecksumAddress } from 'src/utils/checksumAddress'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { lg, secondary } from 'src/theme/variables'
+import { lg, secondary, md } from 'src/theme/variables'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import {
@@ -31,6 +31,8 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -129,6 +131,16 @@ function LoadSafeAddressStep(): ReactElement {
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
   const safeName = getLoadSafeName(formValues, addressBook)
+  const hasCustomSafeName = !!formValues[FIELD_LOAD_CUSTOM_SAFE_NAME]
+
+  useEffect(() => {
+    // On unmount, e.g. go back/next
+    return () => {
+      if (hasCustomSafeName) {
+        trackEvent(LOAD_SAFE_EVENTS.NAME_SAFE)
+      }
+    }
+  }, [hasCustomSafeName])
 
   return (
     <Container data-testid={'load-safe-address-step'}>
@@ -159,7 +171,7 @@ function LoadSafeAddressStep(): ReactElement {
             component={TextField}
             name={FIELD_LOAD_CUSTOM_SAFE_NAME}
             placeholder={safeName}
-            text="Safe name"
+            label="Safe name"
             type="text"
             testId="load-safe-name-field"
           />
@@ -201,8 +213,7 @@ function LoadSafeAddressStep(): ReactElement {
           <StyledLink href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </StyledLink>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          .
         </Paragraph>
       </Block>
     </Container>
@@ -256,7 +267,7 @@ const Container = styled(Block)`
 const FieldContainer = styled(Block)`
   display: flex;
   max-width: 480px;
-  margin-top: 12px;
+  margin-top: ${md};
 `
 
 const CheckIconAddressAdornment = styled(CheckCircle)`

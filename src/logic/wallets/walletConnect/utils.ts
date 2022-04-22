@@ -56,7 +56,10 @@ export const getWCWalletInterface = (
     // (prevents us from accessing balance via Onboard, but via web3 works)
     balance: {},
     disconnect: () => {
-      provider.disconnect()
+      // Only disconnect if connected
+      if (provider.wc.peerId) {
+        provider.disconnect()
+      }
     },
   }
 }

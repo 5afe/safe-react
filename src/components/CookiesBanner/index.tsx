@@ -10,7 +10,6 @@ import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/act
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { loadGoogleAnalytics, unloadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import AlertRedIcon from './assets/alert-red.svg'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
@@ -110,7 +109,7 @@ const CookiesBannerForm = (props: {
       <div className={classes.content}>
         {key && (
           <div className={classes.intercomAlert}>
-            <img src={AlertRedIcon} />
+            <img src={AlertRedIcon} alt="" />
             {COOKIE_ALERTS[key]}
           </div>
         )}
@@ -241,28 +240,6 @@ const CookiesBanner = isDesktop
         setLocalNecessary(acceptedNecessary)
         setLocalAnalytics(acceptedAnalytics)
       }, [setLocalNecessary, setLocalAnalytics, openBanner])
-
-      // Load or unload analytics depending on user choice
-      useEffect(() => {
-        localAnalytics ? loadGoogleAnalytics() : unloadGoogleAnalytics()
-      }, [localAnalytics])
-
-      // // Toggle Intercom
-      // useEffect(() => {
-      //   if (isSafeAppView || !localSupportAndUpdates) {
-      //     isIntercomLoaded() && closeIntercom()
-      //     return
-      //   }
-
-      //   if (!isSafeAppView && localSupportAndUpdates) {
-      //     !isIntercomLoaded() && loadIntercom()
-      //   }
-      // }, [localSupportAndUpdates, isSafeAppView])
-
-      // Toggle Beamer
-      // useEffect(() => {
-      //   localSupportAndUpdates ? loadBeamer() : unloadBeamer()
-      // }, [localSupportAndUpdates])
 
       return (
         <>

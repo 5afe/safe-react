@@ -15,6 +15,8 @@ import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
 import { sm } from 'src/theme/variables'
+import Track from 'src/components/Track'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 const StyledButtonLink = styled(ButtonLink)`
   margin-top: ${sm};
@@ -58,11 +60,12 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {isMultiSigExecutionDetails(txDetails.detailedExecutionInfo) && (
-        <div className="tx-share">
-          <TxShareButton safeTxHash={txDetails.detailedExecutionInfo.safeTxHash} />
-        </div>
-      )}
+      <div className="tx-share">
+        <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
+          <TxShareButton txId={txDetails.txId} />
+        </Track>
+      </div>
+
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <DelegateCallWarning showWarning={!txData.trustedDelegateCallTarget} />
