@@ -72,8 +72,8 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
 
     return (
       allQueuedTransactions
-        // take the first (i.e. newest) tx in a group of txns with the same nonce
-        .map((group: Transaction[]) => group[0])
+        // take the most recent tx in a group of txns with the same nonce
+        .map((group: Transaction[]) => group.reduce((acc, tx) => (tx.timestamp > acc.timestamp ? tx : acc), group[0]))
         .slice(0, size)
     )
   }, [queueTxns, size])
