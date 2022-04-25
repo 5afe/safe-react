@@ -6,6 +6,7 @@ import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
 import { getEntryIndex, hasSameAddressAndChainId, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { textShortener } from 'src/utils/strings'
 import { isValidAddress } from 'src/utils/isValidAddress'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
@@ -21,10 +22,20 @@ export const batchLoadEntries = (state: AddressBookState, action: Action<Address
   // We check that name exist before trimming
   const addressBookEntries = action.payload.map((entry) => ({
     ...entry,
+    address: checksumAddress(entry.address) || entry.address,
     name: entry.name ? entry.name.trim() : getAddressBookFallbackName(entry.address),
   }))
+
   addressBookEntries
-    .filter(({ address, name }) => isValidAddress(address) && isValidAddressBookName(name))
+    .filter(({ address, name }) => {
+      const isValid = isValidAddress(address) && isValidAddressBookName(name)
+
+      if (!isValid) {
+        console.warn(`We are unable to import the entry for ${name} (${address}) as it is invalid.`)
+      }
+
+      return isValid
+    })
     .forEach((addressBookEntry) => {
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
