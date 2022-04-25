@@ -11,7 +11,13 @@ export const useSafeAppUrl = (): AppUrlReturnType => {
 
   const getAppUrl = useCallback(() => {
     const query = new URLSearchParams(search)
-    return sanitizeUrl(query.get('appUrl'))
+    try {
+      const url = query.get('appUrl')
+
+      return sanitizeUrl(url)
+    } catch {
+      throw new Error('Detected javascript injection in the URL. Check the appUrl parameter')
+    }
   }, [search])
 
   return {

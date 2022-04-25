@@ -71,7 +71,7 @@ describe('sanitizeUrl', () => {
   describe('invalid protocols', () => {
     describe.each(['javascript', 'data', 'vbscript'])('%s', (protocol) => {
       it(`replaces ${protocol} urls with an empty space`, () => {
-        expect(sanitizeUrl(`${protocol}:alert(document.domain)`)).toBe('')
+        expect(() => sanitizeUrl(`${protocol}:alert(document.domain)`)).toThrow(/invalid protocol/i)
       })
 
       it(`allows ${protocol} urls that start with a letter prefix`, () => {
@@ -79,7 +79,7 @@ describe('sanitizeUrl', () => {
       })
 
       it(`disallows ${protocol} urls that start with non-\w characters as a suffix for the protocol`, () => {
-        expect(sanitizeUrl(`&!*${protocol}:alert(document.domain)`)).toBe('')
+        expect(() => sanitizeUrl(`&!*${protocol}:alert(document.domain)`)).toThrow(/invalid protocol/i)
       })
 
       it(`disregards capitalization for ${protocol} urls`, () => {
@@ -94,7 +94,7 @@ describe('sanitizeUrl', () => {
           })
           .join('')
 
-        expect(sanitizeUrl(`${mixedCapitalizationProtocol}:alert(document.domain)`)).toBe('')
+        expect(() => sanitizeUrl(`${mixedCapitalizationProtocol}:alert(document.domain)`)).toThrow(/invalid protocol/i)
       })
 
       it(`ignores invisible ctrl characters in ${protocol} urls`, () => {
@@ -110,15 +110,19 @@ describe('sanitizeUrl', () => {
           })
           .join('')
 
-        expect(sanitizeUrl(decodeURIComponent(`${protocolWithControlCharacters}:alert(document.domain)`))).toBe('')
+        expect(() =>
+          sanitizeUrl(decodeURIComponent(`${protocolWithControlCharacters}:alert(document.domain)`)),
+        ).toThrow(/invalid protocol/i)
       })
 
-      it(`replaces ${protocol} urls with about:blank when url begins with %20`, () => {
-        expect(sanitizeUrl(decodeURIComponent(`%20%20%20%20${protocol}:alert(document.domain)`))).toBe('')
+      it(`replaces ${protocol} urls with empty space when url begins with %20`, () => {
+        expect(() => sanitizeUrl(decodeURIComponent(`%20%20%20%20${protocol}:alert(document.domain)`))).toThrow(
+          /invalid protocol/i,
+        )
       })
 
-      it(`replaces ${protocol} urls with about:blank when ${protocol} url begins with an empty space`, () => {
-        expect(sanitizeUrl(`    ${protocol}:alert(document.domain)`)).toBe('')
+      it(`replaces ${protocol} urls with empty space when ${protocol} url begins with an empty space`, () => {
+        expect(() => sanitizeUrl(`    ${protocol}:alert(document.domain)`)).toThrow(/invalid protocol/i)
       })
 
       it(`does not replace ${protocol}: if it is not in the scheme of the URL`, () => {

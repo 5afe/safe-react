@@ -27,7 +27,7 @@ export function sanitizeUrl(url: string | null): string {
   const urlScheme = urlSchemeParseResults[0]
 
   if (invalidProtocolRegex.test(urlScheme)) {
-    return ''
+    throw new Error('Invalid protocol')
   }
 
   return sanitizedUrl
