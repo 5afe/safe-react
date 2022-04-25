@@ -23,6 +23,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
+import { useCurrentSafeAddressSync } from 'src/logic/currentSession/hooks/useCurrentSafeAddressSync'
 
 const notificationStyles = {
   success: {
@@ -58,6 +59,7 @@ const App: React.FC = ({ children }) => {
   const sidebarItems = useSidebarItems()
   const { address: safeAddress } = useSelector(currentSafeWithNames)
 
+  useCurrentSafeAddressSync()
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
