@@ -1,4 +1,4 @@
-import { ReactElement, useCallback } from 'react'
+import { ReactElement, SyntheticEvent, useCallback } from 'react'
 import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Box, IconButton } from '@material-ui/core'
@@ -7,6 +7,7 @@ import { Icon } from '@gnosis.pm/safe-react-components'
 
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 import { md, lg } from 'src/theme/variables'
+import appsIconSvg from 'src/assets/icons/apps.svg'
 
 export const CARD_HEIGHT = 200
 export const CARD_PADDING = 24
@@ -67,9 +68,14 @@ const Card = (props: CardProps): ReactElement => {
     [onPin],
   )
 
+  const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
+    error.currentTarget.onerror = null
+    error.currentTarget.src = appsIconSvg
+  }
+
   return (
     <StyledLink to={appRoute}>
-      <StyledLogo src={props.logoUri} alt={`${props.name} logo`} />
+      <StyledLogo src={props.logoUri} alt={`${props.name} logo`} onError={setAppImageFallback} />
 
       <Box mb={1}>
         <Text size="xl" strong>
