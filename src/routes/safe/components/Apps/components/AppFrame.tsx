@@ -44,7 +44,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin: 0 -16px;
+  margin: -24px -40px;
 `
 
 const StyledCard = styled(Card)`

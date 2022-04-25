@@ -5,30 +5,30 @@ import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
 import Overview from 'src/components/Dashboard/Overview/Overview'
 import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
 import { FeaturedApps } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
-import { Grid } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 
 function Home(): ReactElement {
   return (
     <Page>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Overview />
-        </Grid>
+      <Box pb={3}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Overview />
+          </Grid>
 
-        <Grid item xs={12} md={6}></Grid>
+          <Grid item xs={12} md={6}></Grid>
 
-        <Grid item xs={12} md={6}>
           <FeaturedApps />
-        </Grid>
 
-        <Grid item xs={12} md={6}>
-          <PendingTxsList size={4} />
-        </Grid>
+          <Grid item xs={12} md={6}>
+            <PendingTxsList size={4} />
+          </Grid>
 
-        <Grid item xs={12}>
-          <SafeAppsGrid size={6} />
+          <Grid item xs={12}>
+            <SafeAppsGrid size={6} />
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Page>
   )
 }

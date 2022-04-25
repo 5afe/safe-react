@@ -65,15 +65,14 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
     const rankedSafeAppIds = rankTrackedSafeApps(trackData)
     const featuredSafeAppIds = allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)).map((app) => app.id)
 
+    const nonFeaturedApps = allApps.filter((app) => !featuredSafeAppIds.includes(app.id))
+    const nonRankedApps = nonFeaturedApps.filter((app) => !rankedSafeAppIds.includes(app.id))
+
     const topRankedSafeApps: SafeApp[] = []
     rankedSafeAppIds.forEach((id) => {
-      const sortedApp = allApps.find((app) => app.id === id)
+      const sortedApp = nonFeaturedApps.find((app) => app.id === id)
       if (sortedApp) topRankedSafeApps.push(sortedApp)
     })
-
-    const nonRankedApps = allApps.filter(
-      (app) => !rankedSafeAppIds.includes(app.id) && !featuredSafeAppIds.includes(app.id),
-    )
 
     // Get random apps that are not ranked and not featured
     const randomApps = sampleSize(nonRankedApps, size - 1 - topRankedSafeApps.length)
@@ -103,7 +102,7 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Explore our DApp Ecosystem</WidgetTitle>
+      <WidgetTitle>Safe Apps</WidgetTitle>
       <WidgetBody>
         <StyledGrid>
           {displayedApps.map((safeApp) => (
