@@ -5,11 +5,9 @@ import { useSelector } from 'react-redux'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useAsync from 'src/logic/hooks/useAsync'
-import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 
 type UseEstimateSafeTxGasProps = {
-  isCreation: boolean
-  isRejectTx: boolean
+  isExecution: boolean
   txData: string
   txRecipient: string
   txAmount: string
@@ -17,8 +15,7 @@ type UseEstimateSafeTxGasProps = {
 }
 
 export const useEstimateSafeTxGas = ({
-  isCreation,
-  isRejectTx,
+  isExecution,
   txData,
   txRecipient,
   txAmount,
@@ -26,12 +23,9 @@ export const useEstimateSafeTxGas = ({
 }: UseEstimateSafeTxGasProps): { error: Error | undefined; result: string } => {
   const defaultEstimation = '0'
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
-  const needSafeTxGas = useSafeTxGas()
 
   const requestSafeTxGas = useCallback((): Promise<string> => {
-    if (!isCreation || isRejectTx || !txData || !needSafeTxGas) {
-      return Promise.resolve(defaultEstimation)
-    }
+    if (!isExecution || !txData) return Promise.resolve(defaultEstimation)
 
     return estimateSafeTxGas(
       {
@@ -43,7 +37,7 @@ export const useEstimateSafeTxGas = ({
       },
       safeVersion,
     )
-  }, [isCreation, isRejectTx, operation, safeAddress, safeVersion, txAmount, txData, txRecipient, needSafeTxGas])
+  }, [isExecution, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
 
   const { result, error } = useAsync<string>(requestSafeTxGas)
 

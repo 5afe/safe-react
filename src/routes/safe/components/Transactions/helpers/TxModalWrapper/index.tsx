@@ -118,13 +118,13 @@ export const TxModalWrapper = ({
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
 
   const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
-    isCreation,
-    isRejectTx,
+    isExecution: doExecute,
     txData,
     txRecipient: txTo || safeAddress,
     txAmount: txValue,
     operation,
   })
+
   if (safeTxGas == null) safeTxGas = safeTxGasEstimation
 
   const { gasCostFormatted, gasPriceFormatted, gasMaxPrioFeeFormatted, gasLimit, txEstimationExecutionStatus } =
