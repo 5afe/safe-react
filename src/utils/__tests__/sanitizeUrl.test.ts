@@ -60,7 +60,6 @@ describe('sanitizeUrl', () => {
   })
 
   it('replaces null values with an empty space', () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     expect(sanitizeUrl(null)).toBe('')
   })
