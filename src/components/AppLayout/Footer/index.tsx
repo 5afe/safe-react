@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import * as React from 'react'
 import { useDispatch } from 'react-redux'
-import AppstoreButton from 'src/components/AppstoreButton'
 
 import GnoButtonLink from 'src/components/layout/ButtonLink'
 import Link from 'src/components/layout/Link'
@@ -45,7 +44,6 @@ const useStyles = makeStyles({
 } as any)
 
 const Footer = (): React.ReactElement => {
-  const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION} ` : 'Versions'
   const date = new Date()
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -56,41 +54,19 @@ const Footer = (): React.ReactElement => {
 
   return (
     <footer className={classes.footer}>
-      <span className={classes.item}>©{date.getFullYear()} Gnosis</span>
+      <span className={classes.item}>©{date.getFullYear()} Evmos</span>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/terms">
-        Terms
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://evmos.org/">
+        Evmos Network
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/privacy">
-        Privacy
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://evmos.dev/">
+        Evmos Documentation
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/licenses">
-        Licenses
-      </Link>
-      <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/imprint">
-        Imprint
-      </Link>
-      <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/cookie">
-        Cookie Policy
-      </Link>
-      <span className={classes.sep}>-</span>
       <GnoButtonLink className={cn(classes.item, classes.link, classes.buttonLink)} onClick={openCookiesHandler}>
-        Preferences
+        Cookies Preference
       </GnoButtonLink>
-      <span className={classes.sep}>|</span>
-      <Link
-        className={cn(classes.item, classes.link)}
-        target="_blank"
-        to="https://github.com/gnosis/safe-react/releases"
-      >
-        {appVersion}
-      </Link>
-      <span className={classes.sep}>|</span>
-      <AppstoreButton light placement="footer" />
     </footer>
   )
 }
