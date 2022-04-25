@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Box, IconButton } from '@material-ui/core'
@@ -58,23 +58,14 @@ type CardProps = {
 const Card = (props: CardProps): ReactElement => {
   const appRoute = generatePath(GENERIC_APPS_ROUTE) + `?appUrl=${props.appUri}`
   const { isPinned, onPin } = props
-  const [localPinned, setLocalPinned] = useState<boolean>(isPinned)
 
   const handlePinClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault()
-      setLocalPinned((prev) => !prev)
+      onPin()
     },
-    [setLocalPinned],
+    [onPin],
   )
-
-  useEffect(() => {
-    if (localPinned === isPinned) return
-
-    // Add a small delay when pinning/unpinning for visual feedback
-    const delay = setTimeout(onPin, 500)
-    return () => clearTimeout(delay)
-  }, [localPinned, isPinned, onPin])
 
   return (
     <StyledLink to={appRoute}>
@@ -91,7 +82,7 @@ const Card = (props: CardProps): ReactElement => {
       </Text>
 
       <IconBtn onClick={handlePinClick}>
-        {localPinned ? <Icon type="bookmarkFilled" size="md" color="primary" /> : <Icon type="bookmark" size="md" />}
+        {isPinned ? <Icon type="bookmarkFilled" size="md" color="primary" /> : <Icon type="bookmark" size="md" />}
       </IconBtn>
     </StyledLink>
   )
