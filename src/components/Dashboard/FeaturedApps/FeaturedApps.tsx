@@ -23,8 +23,8 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
-export const FeaturedApps = (): ReactElement => {
-  const { allApps } = useAppList()
+export const FeaturedApps = (): ReactElement | null => {
+  const { allApps, isLoading } = useAppList()
   const { address } = useSelector(currentSafe) ?? {}
   const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)), [allApps])
 
@@ -33,7 +33,7 @@ export const FeaturedApps = (): ReactElement => {
     safeAddress: address,
   }
 
-  if (!featuredApps.length) return <></>
+  if (!featuredApps.length && !isLoading) return null
 
   return (
     <Grid item xs={12} md={6}>
