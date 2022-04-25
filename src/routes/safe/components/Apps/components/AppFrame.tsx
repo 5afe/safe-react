@@ -43,7 +43,7 @@ import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppU
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100% + 48px);
   margin: -24px -40px;
 `
 
