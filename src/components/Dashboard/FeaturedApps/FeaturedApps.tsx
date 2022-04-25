@@ -38,7 +38,7 @@ export const FeaturedApps = (): ReactElement => {
   return (
     <Grid item xs={12} md={6}>
       <WidgetContainer>
-        <WidgetTitle>Safe Apps</WidgetTitle>
+        <WidgetTitle>Connect & Transact</WidgetTitle>
         <WidgetBody>
           {featuredApps.map((app) => {
             const appRoute = getSafeAppUrl(app.url, routesSlug)

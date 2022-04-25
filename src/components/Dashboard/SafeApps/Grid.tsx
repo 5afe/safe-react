@@ -102,7 +102,7 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Explore our DApp Ecosystem</WidgetTitle>
+      <WidgetTitle>Safe Apps</WidgetTitle>
       <WidgetBody>
         <StyledGrid>
           {displayedApps.map((safeApp) => (

@@ -113,7 +113,7 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
   return (
     <WidgetContainer>
       <StyledWidgetTitle>
-        <WidgetTitle>Transactions to Sign{totalQueuedTxs ? ` (${totalQueuedTxs})` : ''}</WidgetTitle>
+        <WidgetTitle>Transaction Queue {totalQueuedTxs ? ` (${totalQueuedTxs})` : ''}</WidgetTitle>
         <StyledLink to={url}>
           View All
           <ChevronRightIcon />
