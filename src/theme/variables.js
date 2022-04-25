@@ -25,6 +25,7 @@ module.exports = {
   background: '#F6F7F8',
   black300: '#B2BBC0',
   black400: '#566976',
+  black500: '#162D45',
   black600: '#111B22',
   boldFont: 700,
   bolderFont: 500,

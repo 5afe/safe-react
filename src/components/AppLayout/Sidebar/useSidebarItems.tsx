@@ -35,7 +35,7 @@ const useSidebarItems = (): ListItemType[] => {
       label,
       badge,
       disabled,
-      icon: <ListIcon type={iconType} />,
+      icon: <ListIcon type={iconType} size="sm" color="text" />,
       selected: href === matchSafeWithSidebarSection?.url,
       href,
       subItems,
@@ -64,6 +64,17 @@ const useSidebarItems = (): ListItemType[] => {
         label: 'NFTs',
         iconType: 'collectibles',
         href: currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES,
+      }),
+    ]
+
+    const transactionsSubItems = [
+      makeEntryItem({
+        label: 'Queue',
+        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+      }),
+      makeEntryItem({
+        label: 'History',
+        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
       }),
     ]
 
@@ -104,18 +115,19 @@ const useSidebarItems = (): ListItemType[] => {
 
     return [
       makeEntryItem({
-        label: 'ASSETS',
+        label: 'Assets',
         iconType: 'assets',
         href: currentSafeRoutes.ASSETS_BALANCES,
         subItems: assetsSubItems,
       }),
       makeEntryItem({
-        label: 'TRANSACTIONS',
+        label: 'Transactions',
         iconType: 'transactionsInactive',
-        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
+        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+        subItems: transactionsSubItems,
       }),
       makeEntryItem({
-        label: 'ADDRESS BOOK',
+        label: 'Address Book',
         iconType: 'addressBook',
         href: currentSafeRoutes.ADDRESS_BOOK,
       }),

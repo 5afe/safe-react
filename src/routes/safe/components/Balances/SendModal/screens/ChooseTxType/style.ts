@@ -28,6 +28,7 @@ export const useStyles = makeStyles(
     },
     buttonColumn: {
       margin: '52px 0 44px 0',
+      alignItems: 'center',
     },
     firstButton: {
       marginBottom: 12,

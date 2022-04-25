@@ -18,11 +18,12 @@ import { currentCurrencySelector } from 'src/logic/currencyValues/store/selector
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
+import { useCurrentSafeAddressSync } from 'src/logic/currentSession/hooks/useCurrentSafeAddressSync'
 
 const notificationStyles = {
   success: {
@@ -58,12 +59,11 @@ const App: React.FC = ({ children }) => {
   const sidebarItems = useSidebarItems()
   const { address: safeAddress } = useSelector(currentSafeWithNames)
 
+  useCurrentSafeAddressSync()
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
-  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
-  const balance =
-    !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
+  const balance = formatCurrency(currentSafeBalance.toString(), currentCurrency)
 
   const onReceiveShow = () => onShow('Receive')
   const onReceiveHide = () => onHide('Receive')

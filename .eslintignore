@@ -1,7 +1,6 @@
 !.eslintrc.js
 build
 config
-contracts
 flow-typed
 flow-typed/npm
 migrations

@@ -1,7 +1,4 @@
-import { CSSProperties, ReactElement } from 'react'
-import Skeleton from '@material-ui/lab/Skeleton'
-import RefreshIcon from '@material-ui/icons/Refresh'
-import IconButton from '@material-ui/core/IconButton'
+import { ReactElement } from 'react'
 import { Divider, Link } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import QRCode from 'qrcode.react'
@@ -9,8 +6,6 @@ import QRCode from 'qrcode.react'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
-import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
-import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import AppstoreButton from 'src/components/AppstoreButton'
@@ -22,15 +17,8 @@ const StyledDivider = styled(Divider)`
 
 const QR_DIMENSION = 120
 
-const qrRefresh: CSSProperties = {
-  width: QR_DIMENSION,
-  height: QR_DIMENSION,
-}
-
 const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
-  const uri = useGetPairingUri()
-  const isPairingLoaded = isPairingModule()
-  usePairing()
+  const { uri } = usePairing()
 
   return (
     <>
@@ -43,15 +31,7 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
       </Row>
 
       <Row className={classes.justifyCenter}>
-        {uri ? (
-          <QRCode value={uri} size={QR_DIMENSION} />
-        ) : isPairingLoaded ? (
-          <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
-        ) : (
-          <IconButton disableRipple style={qrRefresh} onClick={initPairing}>
-            <RefreshIcon fontSize="large" />
-          </IconButton>
-        )}
+        <QRCode value={uri} size={QR_DIMENSION} />
       </Row>
 
       <Row>

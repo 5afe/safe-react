@@ -72,7 +72,7 @@ export const getDefaultGasEstimation = ({
   return {
     txEstimationExecutionStatus,
     gasCost: '0',
-    gasCostFormatted: '< 0.001',
+    gasCostFormatted: '> 0.001',
     gasPrice,
     gasPriceFormatted,
     gasMaxPrioFee,
