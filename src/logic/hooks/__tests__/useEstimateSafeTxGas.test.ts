@@ -1,6 +1,8 @@
+import { waitFor } from '@testing-library/react'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import * as gas from 'src/logic/safe/transactions/gas'
+import * as safeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 
 jest.mock('react-redux', () => {
   const original = jest.requireActual('react-redux')
@@ -20,46 +22,8 @@ const actResolve = async (callback: () => unknown): Promise<void> => {
 }
 
 describe('useEstimateSafeTxGas', () => {
-  it(`should return 0 if it is not a tx creation`, async () => {
-    const spy = jest.spyOn(gas, 'estimateSafeTxGas')
-
-    await actResolve(() => {
-      const { result } = renderHook(() =>
-        useEstimateSafeTxGas({
-          txAmount: '',
-          txData: '0x',
-          txRecipient: '',
-          isCreation: false,
-          isRejectTx: false,
-        }),
-      )
-
-      expect(result.current).toBe('0')
-    })
-
-    expect(spy).toHaveBeenCalledTimes(0)
-  })
-
-  it(`should return 0 if it is a reject tx`, async () => {
-    const spy = jest.spyOn(gas, 'estimateSafeTxGas')
-
-    await actResolve(() => {
-      const { result } = renderHook(() =>
-        useEstimateSafeTxGas({
-          txAmount: '',
-          txData: '0x',
-          txRecipient: '',
-          isCreation: false,
-          isRejectTx: true,
-        }),
-      )
-      expect(result.current).toBe('0')
-    })
-
-    expect(spy).toHaveBeenCalledTimes(0)
-  })
-
-  it(`should return 0 if tx data is not passed`, async () => {
+  it(`should return 0 if the Safe does not require safeTxGas (is an older version)`, async () => {
+    jest.spyOn(safeTxGas, 'default').mockImplementation(() => false)
     const spy = jest.spyOn(gas, 'estimateSafeTxGas')
 
     await actResolve(() => {
@@ -73,13 +37,75 @@ describe('useEstimateSafeTxGas', () => {
         }),
       )
 
-      expect(result.current).toBe('0')
+      expect(result.current.result).toBe('0')
+    })
+
+    expect(spy).toHaveBeenCalledTimes(0)
+  })
+  it(`should return 0 if it is not a tx creation`, async () => {
+    jest.spyOn(safeTxGas, 'default').mockImplementation(() => true)
+    const spy = jest.spyOn(gas, 'estimateSafeTxGas')
+
+    await actResolve(() => {
+      const { result } = renderHook(() =>
+        useEstimateSafeTxGas({
+          txAmount: '',
+          txData: '0x',
+          txRecipient: '',
+          isCreation: false,
+          isRejectTx: false,
+        }),
+      )
+
+      expect(result.current.result).toBe('0')
+    })
+
+    expect(spy).toHaveBeenCalledTimes(0)
+  })
+
+  it(`should return 0 if it is a reject tx`, async () => {
+    jest.spyOn(safeTxGas, 'default').mockImplementation(() => true)
+    const spy = jest.spyOn(gas, 'estimateSafeTxGas')
+
+    await actResolve(() => {
+      const { result } = renderHook(() =>
+        useEstimateSafeTxGas({
+          txAmount: '',
+          txData: '0x',
+          txRecipient: '',
+          isCreation: false,
+          isRejectTx: true,
+        }),
+      )
+      expect(result.current.result).toBe('0')
+    })
+
+    expect(spy).toHaveBeenCalledTimes(0)
+  })
+
+  it(`should return 0 if tx data is not passed`, async () => {
+    jest.spyOn(safeTxGas, 'default').mockImplementation(() => true)
+    const spy = jest.spyOn(gas, 'estimateSafeTxGas')
+
+    await actResolve(() => {
+      const { result } = renderHook(() =>
+        useEstimateSafeTxGas({
+          txAmount: '',
+          txData: '',
+          txRecipient: '',
+          isCreation: true,
+          isRejectTx: false,
+        }),
+      )
+
+      expect(result.current.result).toBe('0')
     })
 
     expect(spy).toHaveBeenCalledTimes(0)
   })
 
   it(`calls estimateSafeTxGas if it is a tx creation`, async () => {
+    jest.spyOn(safeTxGas, 'default').mockImplementation(() => true)
     const spy = jest.spyOn(gas, 'estimateSafeTxGas')
 
     await actResolve(() => {
@@ -97,12 +123,13 @@ describe('useEstimateSafeTxGas', () => {
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
-  it(`returns 0 if estimateSafeTxGas throws`, async () => {
+  it(`return the error object and 0 if estimateSafeTxGas throws`, async () => {
+    jest.spyOn(safeTxGas, 'default').mockImplementation(() => true)
     const spy = jest.spyOn(gas, 'estimateSafeTxGas').mockImplementation(() => {
-      throw new Error()
+      throw new Error('Estimation failed')
     })
 
-    await actResolve(() => {
+    await actResolve(async () => {
       const { result } = renderHook(() =>
         useEstimateSafeTxGas({
           txAmount: '',
@@ -112,7 +139,11 @@ describe('useEstimateSafeTxGas', () => {
           isRejectTx: false,
         }),
       )
-      expect(result.current).toBe('0')
+
+      await waitFor(() => {
+        expect(result.current.result).toBe('0')
+        expect(result.current.error?.message).toBe('Estimation failed')
+      })
     })
 
     expect(spy).toHaveBeenCalledTimes(1)
