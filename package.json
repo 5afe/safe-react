@@ -44,15 +44,7 @@
     "cypress:run": "node ./scripts/cypress.js run"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "public/**/*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "scripts/**/*.{js,jsx,ts,tsx}": [
+    "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ]
