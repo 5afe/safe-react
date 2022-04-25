@@ -33,33 +33,37 @@ export const FeaturedApps = (): ReactElement => {
     safeAddress: address,
   }
 
+  if (!featuredApps.length) return <></>
+
   return (
-    <WidgetContainer>
-      <WidgetTitle>Safe Apps</WidgetTitle>
-      <WidgetBody>
-        {featuredApps.map((app) => {
-          const appRoute = getSafeAppUrl(app.url, routesSlug)
-          return (
-            <Card key={app.id}>
-              <Grid container alignItems="center" spacing={3}>
-                <Grid item xs={12} md={3}>
-                  <StyledImage src={app.iconUrl} alt={app.name} />
+    <Grid item xs={12} md={6}>
+      <WidgetContainer>
+        <WidgetTitle>Safe Apps</WidgetTitle>
+        <WidgetBody>
+          {featuredApps.map((app) => {
+            const appRoute = getSafeAppUrl(app.url, routesSlug)
+            return (
+              <Card key={app.id}>
+                <Grid container alignItems="center" spacing={3}>
+                  <Grid item xs={12} md={3}>
+                    <StyledImage src={app.iconUrl} alt={app.name} />
+                  </Grid>
+                  <Grid item xs={12} md={9}>
+                    <Box mb={1}>
+                      <Text size="xl">{app.description}</Text>
+                    </Box>
+                    <StyledLink to={appRoute}>
+                      <Text color="primary" size="lg" strong>
+                        Use {app.name}
+                      </Text>
+                    </StyledLink>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={9}>
-                  <Box mb={1}>
-                    <Text size="xl">{app.description}</Text>
-                  </Box>
-                  <StyledLink to={appRoute}>
-                    <Text color="primary" size="lg" strong>
-                      Use {app.name}
-                    </Text>
-                  </StyledLink>
-                </Grid>
-              </Grid>
-            </Card>
-          )
-        })}
-      </WidgetBody>
-    </WidgetContainer>
+              </Card>
+            )
+          })}
+        </WidgetBody>
+      </WidgetContainer>
+    </Grid>
   )
 }

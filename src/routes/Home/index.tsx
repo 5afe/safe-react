@@ -18,9 +18,7 @@ function Home(): ReactElement {
 
           <Grid item xs={12} md={6}></Grid>
 
-          <Grid item xs={12} md={6}>
-            <FeaturedApps />
-          </Grid>
+          <FeaturedApps />
 
           <Grid item xs={12} md={6}>
             <PendingTxsList size={4} />
