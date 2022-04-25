@@ -7,12 +7,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     it('returns an addressbook array', () => {
       const addressBookEntries = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'Entry 1',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: 'Entry 2',
           chainId: CHAIN_ID.RINKEBY,
         },
@@ -29,24 +29,24 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     it('merges entries from different chains', () => {
       const addressBookEntries = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'Entry 1',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: 'Entry 2',
           chainId: CHAIN_ID.RINKEBY,
         },
       ]
       const initialState = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'Entry 1',
           chainId: CHAIN_ID.VOLTA,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: 'Entry 2',
           chainId: CHAIN_ID.VOLTA,
         },
@@ -62,12 +62,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     it('skips entries with wrong name format', () => {
       const addressBookEntries = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'OWNER # 1',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: 'OWNER # 2',
           chainId: CHAIN_ID.RINKEBY,
         },
@@ -81,27 +81,54 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
       expect(newState).toStrictEqual(initialState)
     })
 
-    it('replaces name when entries share address and chain', () => {
+    it('skips entries with invalid addresses', () => {
+      const warnSpy = jest.spyOn(console, 'warn')
+
       const addressBookEntries = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: 'invalid',
           name: 'NewEntry 1',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
+          name: 'NewEntry 2',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ]
+      const initialState = []
+      const action = {
+        type: 'addressBook/import',
+        payload: addressBookEntries,
+      }
+      const newState = batchLoadEntries(initialState, action)
+      expect(warnSpy).toHaveBeenCalledWith(
+        'We are unable to import the entry for NewEntry 1 (invalid) as it is invalid.',
+      )
+      expect(newState).toStrictEqual([addressBookEntries[1]])
+    })
+
+    it('replaces name when entries share address and chain', () => {
+      const addressBookEntries = [
+        {
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
+          name: 'NewEntry 1',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: 'New Entry 2',
           chainId: CHAIN_ID.RINKEBY,
         },
       ]
       const initialState = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'Entry 1',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: 'Entry 2',
           chainId: CHAIN_ID.RINKEBY,
         },
@@ -115,33 +142,68 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     })
 
     it('fixes empty names upon import', () => {
+      const payloadAddressBookEntries = [
+        {
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
+          name: '',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
+          name: '',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ]
       const addressBookEntries = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
-          name: '0x4462...Bcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
+          name: '0x5fb5...0A00',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
-          name: '0x9189...d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
+          name: '0xF5A2...e88f',
           chainId: CHAIN_ID.RINKEBY,
         },
       ]
-      const initialState = [
-        {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
-          name: '',
-          chainId: CHAIN_ID.RINKEBY,
-        },
-        {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
-          name: '',
-          chainId: CHAIN_ID.RINKEBY,
-        },
-      ]
+      const initialState = []
       const action = {
         type: 'addressBook/import',
-        payload: addressBookEntries,
+        payload: payloadAddressBookEntries,
+      }
+      const newState = batchLoadEntries(initialState, action)
+      expect(newState).toStrictEqual(addressBookEntries)
+    })
+
+    it('checksums addresses upon import', () => {
+      const payloadAddressBookEntries = [
+        {
+          address: '0x4462527986c3fd47f498ef25b4d01e6aad7abcb2',
+          name: 'Entry 1',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0x918925e548c7208713a965a8cda0287e5ff9d96f',
+          name: 'Entry 2',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ]
+      const addressBookEntries = [
+        {
+          address: '0x4462527986c3FD47F498Ef25b4d01e6aad7AbcB2',
+          name: 'Entry 1',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+        {
+          address: '0x918925e548c7208713a965a8CDA0287e5fF9D96F',
+          name: 'Entry 2',
+          chainId: CHAIN_ID.RINKEBY,
+        },
+      ]
+      const initialState = []
+      const action = {
+        type: 'addressBook/import',
+        payload: payloadAddressBookEntries,
       }
       const newState = batchLoadEntries(initialState, action)
       expect(newState).toStrictEqual(addressBookEntries)
@@ -152,12 +214,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     it('fixes empty names', () => {
       const prevState = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: '',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: '',
           chainId: CHAIN_ID.RINKEBY,
         },
@@ -165,13 +227,13 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
 
       expect(addressBookReducer(prevState, addressBookFixEmptyNames())).toEqual([
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
-          name: '0x4462...Bcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
+          name: '0x5fb5...0A00',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
-          name: '0x9189...d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
+          name: '0xF5A2...e88f',
           chainId: CHAIN_ID.RINKEBY,
         },
       ])
@@ -180,12 +242,12 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
     it("doesn't 'fix' named contacts", () => {
       const prevState = [
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'test',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
           name: '',
           chainId: CHAIN_ID.RINKEBY,
         },
@@ -193,13 +255,13 @@ describe('Test AddressBook BatchLoadEntries Reducer', () => {
 
       expect(addressBookReducer(prevState, addressBookFixEmptyNames())).toEqual([
         {
-          address: '0x4462527986c3fD47f498eF25B4D01e6AAD7aBcb2',
+          address: '0x5fb582FD320ab1CBf055F65ED74D01b9DdB90A00',
           name: 'test',
           chainId: CHAIN_ID.RINKEBY,
         },
         {
-          address: '0x918925e548C7208713a965A8cdA0287e5FF9d96F',
-          name: '0x9189...d96F',
+          address: '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f',
+          name: '0xF5A2...e88f',
           chainId: CHAIN_ID.RINKEBY,
         },
       ])
