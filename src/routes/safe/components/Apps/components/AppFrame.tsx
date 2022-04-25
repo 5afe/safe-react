@@ -21,7 +21,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName, sanitizeUrl } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
@@ -343,7 +343,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
           frameBorder="0"
           id={`iframe-${appUrl}`}
           ref={iframeRef}
-          src={appUrl}
+          src={sanitizeUrl(appUrl)}
           title={safeApp.name}
           onLoad={onIframeLoad}
           allow="camera"
