@@ -76,7 +76,7 @@ const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: numb
     // Get random apps that are not ranked and not featured
     const randomApps = sampleSize(nonRankedApps, size - 1 - topRankedSafeApps.length)
 
-    const resultApps = uniqBy(topRankedSafeApps.concat(pinnedSafeApps).concat(randomApps), 'id')
+    const resultApps = uniqBy(topRankedSafeApps.concat(pinnedSafeApps, randomApps), 'id')
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
     return resultApps.slice(0, size - 1)
