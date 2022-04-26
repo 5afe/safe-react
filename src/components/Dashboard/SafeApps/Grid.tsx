@@ -4,7 +4,7 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import { generatePath, Link } from 'react-router-dom'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 import { Grid } from '@material-ui/core'
-import { sampleSize } from 'lodash'
+import { sampleSize, uniqBy } from 'lodash'
 
 import { screenSm, screenMd } from 'src/theme/variables'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
@@ -56,11 +56,10 @@ const StyledGrid = styled.div`
   }
 `
 
-const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
-  const { allApps, pinnedSafeApps, togglePin, isLoading } = useAppList()
-
-  const displayedApps = useMemo(() => {
+const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: number): SafeApp[] => {
+  return useMemo(() => {
     if (!allApps.length) return []
+
     const trackData = getAppsUsageData()
     const rankedSafeAppIds = rankTrackedSafeApps(trackData)
     const featuredSafeAppIds = allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)).map((app) => app.id)
@@ -77,9 +76,16 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
     // Get random apps that are not ranked and not featured
     const randomApps = sampleSize(nonRankedApps, size - 1 - topRankedSafeApps.length)
 
+    const resultApps = uniqBy(topRankedSafeApps.concat(pinnedSafeApps, randomApps), 'id')
+
     // Display size - 1 in order to always display the "Explore Safe Apps" card
-    return topRankedSafeApps.concat(randomApps).slice(0, size - 1)
-  }, [allApps, size])
+    return resultApps.slice(0, size - 1)
+  }, [allApps, pinnedSafeApps, size])
+}
+
+const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
+  const { allApps, pinnedSafeApps, isLoading, togglePin } = useAppList()
+  const displayedApps = useRankedApps(allApps, pinnedSafeApps, size)
 
   const path = generatePath(GENERIC_APPS_ROUTE)
 
