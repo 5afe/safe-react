@@ -5,7 +5,6 @@ import { Integrations } from '@sentry/tracing'
 import Root from 'src/components/Root'
 import { SENTRY_DSN } from './utils/constants'
 import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
-import { RESIZE_OBSERVER_ERRORS } from './components/VirtualizedList'
 
 disableMMAutoRefreshWarning()
 
@@ -24,7 +23,8 @@ Sentry.init({
     // Duplicate of Errors._800 emitted by promiEvent
     'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!',
     // Insignificant ResizeObserver errors
-    ...RESIZE_OBSERVER_ERRORS,
+    'ResizeObserver loop completed with undelivered notifications.',
+    'ResizeObserver loop limit exceeded',
   ],
 })
 
