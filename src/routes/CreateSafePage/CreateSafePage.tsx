@@ -73,7 +73,7 @@ function CreateSafePage(): ReactElement {
       label: newSafeFormValues[FIELD_NEW_SAFE_THRESHOLD],
     })
 
-    local.setItem(SAFE_PENDING_CREATION_STORAGE_KEY, { ...newSafeFormValues })
+    local.setItem(SAFE_PENDING_CREATION_STORAGE_KEY, newSafeFormValues)
     setSafePendingToBeCreated(newSafeFormValues)
   }
 
