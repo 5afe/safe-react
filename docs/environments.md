@@ -29,6 +29,6 @@ After a feature enters the development cycle (i.e. is in a sprint), it goes thro
 3. Once a sufficient amount of features are ready for a release (at least once in a sprint), a release branch is made (normally from the HEAD of `dev`) and a PR to `main` is created.
 4. QA does regression testing on the release branch. The backend APIs are pointing to production on this branch so that all chains can be tested.
 5. Once QA passes, the branch is merged to `main` and is automatically deployed to the [staging site](https://safe-team.staging.gnosisdev.com/app/).
-6. It sits on staging for a short while where QA and release manager briefly do a final check before going live.
+6. It sits on staging for a short while where QA and the release manager briefly do a final check before going live.
 7. Devops are requested to deploy the code from `main` to production.
 8. Once it's done, brief sanity checks are done on [production](https://gnosis-safe.io/app/).
