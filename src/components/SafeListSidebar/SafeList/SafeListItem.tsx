@@ -5,6 +5,7 @@ import ListItem from '@material-ui/core/ListItem/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction'
 import styled from 'styled-components'
 
+import { primaryLite, primaryActive } from 'src/theme/variables'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -21,6 +22,7 @@ import {
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain.d'
 import { getChainById } from 'src/config'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -54,6 +56,30 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   }
 `
 
+const AddressContainer = styled.div`
+  position: relative;
+`
+
+const Threshold = styled.div`
+  background: ${primaryLite};
+  color: ${primaryActive};
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 100%;
+  padding: 2px;
+  position: absolute;
+  z-index: 2;
+  top: -5px;
+  left: -5px;
+  min-width: 20px;
+  min-height: 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+`
+
 type Props = {
   onSafeClick: () => void
   onNetworkSwitch?: () => void
@@ -62,6 +88,8 @@ type Props = {
   showAddSafeLink?: boolean
   networkId: ChainId
   shouldScrollToSafe?: boolean
+  threshold?: number
+  owners?: SafeOwner[]
 }
 
 const SafeListItem = ({
@@ -72,6 +100,8 @@ const SafeListItem = ({
   showAddSafeLink = false,
   networkId,
   shouldScrollToSafe = false,
+  threshold,
+  owners,
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
@@ -112,7 +142,14 @@ const SafeListItem = ({
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
-      <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
+      <AddressContainer>
+        {threshold && owners && (
+          <Threshold>
+            {threshold}/{owners.length}
+          </Threshold>
+        )}
+        <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
+      </AddressContainer>
       <ListItemSecondaryAction>
         {ethBalance ? (
           <StyledText size="lg">
