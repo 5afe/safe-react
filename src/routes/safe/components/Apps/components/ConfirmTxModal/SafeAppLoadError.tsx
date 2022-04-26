@@ -42,7 +42,7 @@ export const SafeAppLoadError = ({ onTxReject, onClose, requestId }: ConfirmTxMo
           cancelText="Cancel"
           handleCancel={() => handleTxRejection()}
           handleOk={() => {}}
-          okDisabled={true}
+          okDisabled
           okText="Submit"
         />
       </FooterWrapper>
