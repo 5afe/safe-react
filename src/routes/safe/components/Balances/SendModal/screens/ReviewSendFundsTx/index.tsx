@@ -35,7 +35,7 @@ import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/Tr
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -87,7 +87,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
   const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])

@@ -24,7 +24,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -46,7 +46,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const nftTokens = useSelector(nftTokensSelector)
 
   const txToken = nftTokens.find(

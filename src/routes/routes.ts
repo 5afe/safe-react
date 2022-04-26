@@ -98,9 +98,6 @@ export const extractPrefixedSafeAddress = (
   }
 }
 
-export const extractShortChainName = (): ShortName => extractPrefixedSafeAddress().shortName
-export const extractSafeAddress = (): string => extractPrefixedSafeAddress().safeAddress
-
 export const getPrefixedSafeAddressSlug = ({
   safeAddress,
   shortName,

@@ -12,7 +12,7 @@ import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import SafeLoadError from '../components/SafeLoadError'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -31,9 +31,8 @@ const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBo
 
 const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const { address, owners } = useSelector(currentSafe)
-  const curSafeAddress = useSelector(currentSafeAddress)
-  const safeAddress = curSafeAddress || address
+  const { owners } = useSelector(currentSafe)
+  const { safeAddress } = useSafeAddress()
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 

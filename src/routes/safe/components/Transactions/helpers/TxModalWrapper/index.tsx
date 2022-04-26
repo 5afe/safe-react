@@ -25,7 +25,7 @@ import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type Props = {
   children: ReactNode
@@ -101,7 +101,7 @@ export const TxModalWrapper = ({
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
   const isOwner = useSelector(grantedSelector)
   const userAddress = useSelector(userAccountSelector)
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
   const confirmationsLen = Array.from(txConfirmations || []).length

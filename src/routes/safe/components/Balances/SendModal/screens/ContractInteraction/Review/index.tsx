@@ -25,7 +25,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -49,7 +49,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
   const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
 

@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -21,7 +21,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -41,7 +41,7 @@ const useStyles = makeStyles(styles)
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
 
   const txRecipient = tx.contractAddress

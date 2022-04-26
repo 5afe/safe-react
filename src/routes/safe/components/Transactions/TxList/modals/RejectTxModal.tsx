@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useStyles } from './style'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
@@ -14,7 +14,7 @@ import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/scree
 import { Overwrite } from 'src/types/helpers'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type Props = {
   isOpen: boolean
@@ -24,7 +24,7 @@ type Props = {
 
 export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const classes = useStyles()
   const executionInfo = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo : undefined
 

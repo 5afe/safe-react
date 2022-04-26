@@ -18,7 +18,7 @@ import { currentSafe, currentSafeCurrentVersion } from 'src/logic/safe/store/sel
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 import { store } from 'src/store'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type OwnerValues = OwnerData & {
   threshold: string
@@ -69,7 +69,7 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<OwnerValues>({ ...owner, threshold: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion)
   const connectedWalletAddress = useSelector(userAccountSelector)
 

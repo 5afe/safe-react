@@ -2,14 +2,12 @@ import { ReactElement, useMemo } from 'react'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Box, Grid } from '@material-ui/core'
 
 import styled from 'styled-components'
 import { getSafeAppUrl, SafeRouteParams } from 'src/routes/routes'
-import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getShortName } from 'src/config'
 import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const FEATURED_APPS_TAG = 'dashboard-widgets'
 
@@ -24,12 +22,13 @@ const StyledLink = styled(Link)`
 
 export const FeaturedApps = (): ReactElement | null => {
   const { allApps, isLoading } = useAppList()
-  const { address } = useSelector(currentSafe) ?? {}
+
+  const { shortName, safeAddress } = useSafeAddress()
   const featuredApps = useMemo(() => allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)), [allApps])
 
   const routesSlug: SafeRouteParams = {
-    shortName: getShortName(),
-    safeAddress: address,
+    shortName,
+    safeAddress,
   }
 
   if (!featuredApps.length && !isLoading) return null

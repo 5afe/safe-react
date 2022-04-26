@@ -20,7 +20,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import {
-  extractShortChainName,
+  extractPrefixedSafeAddress,
   getPrefixedSafeAddressSlug,
   history,
   SAFE_ADDRESS_SLUG,
@@ -140,7 +140,8 @@ export const navigateToTx = (safeAddress: string, txDetails: TransactionDetails)
   if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
     return
   }
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
+  const { shortName } = extractPrefixedSafeAddress()
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName, safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
     [TRANSACTION_ID_SLUG]: txDetails.txId,

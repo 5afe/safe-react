@@ -16,7 +16,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -32,7 +32,7 @@ const Appearance = (): ReactElement => {
   const dispatch = useDispatch()
   const copyShortName = useSelector(copyShortNameSelector)
   const showShortName = useSelector(showShortNameSelector)
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const [darkMode, setDarkMode] = useDarkMode()
 
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {

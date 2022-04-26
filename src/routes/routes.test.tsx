@@ -94,9 +94,6 @@ describe('extractPrefixedSafeAddress', () => {
   })
 })
 
-// Not testing extractShortChainName or extractSafeAddress because
-// they return from { [key]: extractPrefixedSafeAddress()[key] }
-
 describe('getPrefixedSafeAddressSlug', () => {
   it('returns a chain-specific address slug with provided safeAddress/shortName', () => {
     const shortName = 'matic'

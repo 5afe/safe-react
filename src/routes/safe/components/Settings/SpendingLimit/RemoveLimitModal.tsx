@@ -20,7 +20,7 @@ import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/Tr
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 import { getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -30,7 +30,7 @@ interface RemoveSpendingLimitModalProps {
 
 export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): ReactElement => {
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const chainId = useSelector(currentChainId)

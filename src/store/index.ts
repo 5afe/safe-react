@@ -121,5 +121,5 @@ export type AppReduxState = CombinedState<{
 
 export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
 
-export const createPreloadedStore = (localState = {} as PreloadedState<unknown>): typeof store =>
+export const createPreloadedStore = (localState = {} as PreloadedState<Record<string, unknown>>): typeof store =>
   createStore(rootReducer, localState, enhancer)

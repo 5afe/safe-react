@@ -5,12 +5,15 @@ import { useLocation } from 'react-router-dom'
 
 import { extractPrefixedSafeAddress } from 'src/routes/routes'
 import addCurrentSafeAddress from 'src/logic/currentSession/store/actions/addCurrentSafeAddress'
+import addCurrentShortName from '../store/actions/addCurrentShortName'
 
 export const useCurrentSafeAddressSync = (): void => {
   const dispatch = useDispatch<Dispatch>()
   const location = useLocation()
 
   useEffect(() => {
-    dispatch(addCurrentSafeAddress(extractPrefixedSafeAddress(location.pathname).safeAddress))
+    const { shortName, safeAddress } = extractPrefixedSafeAddress(location.pathname)
+    dispatch(addCurrentShortName(shortName))
+    dispatch(addCurrentSafeAddress(safeAddress))
   }, [location.pathname, dispatch])
 }

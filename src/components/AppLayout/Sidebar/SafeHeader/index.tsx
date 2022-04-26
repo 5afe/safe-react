@@ -27,11 +27,12 @@ import {
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
-import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
+import { ADDRESSED_ROUTE } from 'src/routes/routes'
 import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 import { trackEvent } from 'src/utils/googleTagManager'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -207,7 +208,7 @@ const SafeHeader = ({
   onNewTransactionClick,
 }: Props): React.ReactElement => {
   const copyChainPrefix = useSelector(copyShortNameSelector)
-  const shortName = extractShortChainName()
+  const { shortName } = useSafeAddress()
 
   const hasSafeOpen = useRouteMatch(ADDRESSED_ROUTE)
 

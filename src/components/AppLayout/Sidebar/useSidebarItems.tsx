@@ -3,14 +3,13 @@ import { useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getShortName } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ADDRESSED_ROUTE, SAFE_SUBSECTION_ROUTE, generatePrefixedAddressRoutes } from 'src/routes/routes'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
@@ -18,7 +17,7 @@ const useSidebarItems = (): ListItemType[] => {
   const isCollectiblesEnabled = hasFeature(FEATURES.ERC721)
   const isSpendingLimitEnabled = hasFeature(FEATURES.SPENDING_LIMIT)
   const { needsUpdate } = useSelector(currentSafeWithNames)
-  const safeAddress = useSelector(currentSafeAddress)
+  const { shortName, safeAddress } = useSafeAddress()
   const granted = useSelector(grantedSelector)
 
   const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
@@ -45,7 +44,7 @@ const useSidebarItems = (): ListItemType[] => {
     }
 
     const currentSafeRoutes = generatePrefixedAddressRoutes({
-      shortName: getShortName(),
+      shortName,
       safeAddress,
     })
 
@@ -156,6 +155,7 @@ const useSidebarItems = (): ListItemType[] => {
     needsUpdate,
     safeAddress,
     safeAppsEnabled,
+    shortName,
   ])
 }
 

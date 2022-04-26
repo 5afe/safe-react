@@ -1,7 +1,7 @@
 import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 import { isCustomTxInfo, isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
@@ -21,7 +21,7 @@ export type TransactionActions = {
 
 export const useTransactionActions = (transaction: Transaction): TransactionActions => {
   const currentUser = useSelector(userAccountSelector)
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
   const isUserAnOwner = useSelector(grantedSelector)
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const { txLocation } = useContext(TxLocationContext)

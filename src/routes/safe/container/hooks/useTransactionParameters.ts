@@ -7,7 +7,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { getRecommendedNonce } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type TxParameters = {
   safeNonce?: string
@@ -41,7 +41,7 @@ type Props = {
  */
 export const useTransactionParameters = (props?: Props): TxParameters => {
   const connectedWalletAddress = useSelector(userAccountSelector)
-  const safeAddress = useSelector(currentSafeAddress)
+  const { safeAddress } = useSafeAddress()
 
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)

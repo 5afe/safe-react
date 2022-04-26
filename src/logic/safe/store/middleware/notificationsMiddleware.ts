@@ -22,9 +22,7 @@ import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { history, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
-import { getShortName } from 'src/config'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
-import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -79,6 +77,8 @@ const notificationsMiddleware =
     if (watchedActions.includes(action.type)) {
       const state = store.getState()
 
+      const { currentShortName, currentSafeAddress } = state.currentSession
+
       switch (action.type) {
         case ADD_HISTORY_TRANSACTIONS: {
           const userAddress: string = userAccountSelector(state)
@@ -124,7 +124,7 @@ const notificationsMiddleware =
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
               generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_HISTORY, {
-                shortName: getShortName(),
+                shortName: currentShortName,
                 safeAddress,
               }),
             )
@@ -142,7 +142,7 @@ const notificationsMiddleware =
         }
         case ADD_OR_UPDATE_SAFE: {
           const safe = action.payload
-          const curSafeAddress = currentSafeAddress(state) || safe.address
+          const curSafeAddress = currentSafeAddress || safe.address
           if (!curSafeAddress || !safe.currentVersion) {
             break
           }
@@ -154,7 +154,7 @@ const notificationsMiddleware =
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
               generateSafeRoute(ADDRESSED_ROUTE, {
-                shortName: getShortName(),
+                shortName: currentShortName,
                 safeAddress: curSafeAddress,
               }),
             )
