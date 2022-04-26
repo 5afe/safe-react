@@ -78,6 +78,7 @@ export const handleChunkError = (error: Error): boolean => {
 const GlobalErrorBoundaryFallback: FallbackRender = ({ error, componentStack }) => {
   if (handleChunkError(error)) {
     // FallbackRender type does not allow null to be returned
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>
   }
 

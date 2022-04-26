@@ -105,15 +105,13 @@ export const ChangeThresholdModal = ({
                   name={THRESHOLD_FIELD_NAME}
                   onChange={handleThreshold}
                   render={(props) => (
-                    <>
-                      <SelectField {...props} disableError>
-                        {[...Array(Number(ownersCount))].map((x, index) => (
-                          <MenuItem key={index} value={`${index + 1}`}>
-                            {index + 1}
-                          </MenuItem>
-                        ))}
-                      </SelectField>
-                    </>
+                    <SelectField {...props} disableError>
+                      {[...Array(Number(ownersCount))].map((x, index) => (
+                        <MenuItem key={index} value={`${index + 1}`}>
+                          {index + 1}
+                        </MenuItem>
+                      ))}
+                    </SelectField>
                   )}
                   validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
                 />
