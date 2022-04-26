@@ -128,7 +128,7 @@ const useSidebarItems = (): ListItemType[] => {
       makeEntryItem({
         label: 'Transactions',
         iconType: 'transactionsInactive',
-        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
         subItems: transactionsSubItems,
       }),
       makeEntryItem({
