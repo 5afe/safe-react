@@ -4,7 +4,7 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import { generatePath, Link } from 'react-router-dom'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 import { Grid } from '@material-ui/core'
-import { sampleSize, uniq } from 'lodash'
+import { sampleSize, uniqBy } from 'lodash'
 
 import { screenSm, screenMd } from 'src/theme/variables'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
@@ -76,7 +76,7 @@ const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: numb
     // Get random apps that are not ranked and not featured
     const randomApps = sampleSize(nonRankedApps, size - 1 - topRankedSafeApps.length)
 
-    const resultApps = uniq(topRankedSafeApps.concat(pinnedSafeApps).concat(randomApps))
+    const resultApps = uniqBy(topRankedSafeApps.concat(pinnedSafeApps).concat(randomApps), 'id')
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
     return resultApps.slice(0, size - 1)
