@@ -57,6 +57,7 @@ enum NOTIFICATION_IDS {
   ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS,
   ADDRESS_BOOK_EXPORT_ENTRIES_ERROR,
   SAFE_NEW_VERSION_AVAILABLE,
+  SHARE_SAFE_APP_URL_COPIED,
 }
 
 export const NOTIFICATIONS: Record<NotificationId, Notification> = {
@@ -237,5 +238,11 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   SAFE_NEW_VERSION_AVAILABLE: {
     message: 'There is a new version available for this Safe. Update now!',
     options: { variant: WARNING, persist: false, preventDuplicate: true },
+  },
+
+  // Copy to clipboard
+  SHARE_SAFE_APP_URL_COPIED: {
+    message: 'Safe App URL copied to clipboard!',
+    options: { variant: INFO, persist: false, preventDuplicate: true },
   },
 }

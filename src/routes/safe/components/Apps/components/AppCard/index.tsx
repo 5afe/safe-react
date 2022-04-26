@@ -1,18 +1,25 @@
 import { SyntheticEvent } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import ShareIcon from '@material-ui/icons/Share'
 import Bookmark from '@material-ui/icons/Bookmark'
 import BookmarkBorder from '@material-ui/icons/BookmarkBorder'
 import { alpha } from '@material-ui/core/styles/colorManipulator'
 import IconButton from '@material-ui/core/IconButton'
 import { Title, Text, Button, Card, Icon } from '@gnosis.pm/safe-react-components'
 import { motion } from 'framer-motion'
+
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeApp } from '../../types'
-
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { AppIconSK, DescriptionSK, TitleSK } from './skeleton'
+import { copyToClipboard } from 'src/utils/clipboard'
+import { getShareSafeAppUrl } from 'src/routes/routes'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { enhanceSnackbarForAction, NOTIFICATIONS } from 'src/logic/notifications'
 
 const StyledAppCard = styled(Card)`
   display: flex;
@@ -41,7 +48,6 @@ const IconBtn = styled(IconButton)`
   &.MuiButtonBase-root {
     position: absolute;
     top: 10px;
-    right: 10px;
     z-index: 10;
     padding: 5px;
     opacity: 0;
@@ -52,6 +58,17 @@ const IconBtn = styled(IconButton)`
   svg {
     width: 16px;
     height: 16px;
+  }
+`
+const RightIconBtn = styled(IconBtn)`
+  &.MuiButtonBase-root {
+    right: 10px;
+  }
+`
+
+const LeftIconBtn = styled(IconBtn)`
+  &.MuiButtonBase-root {
+    left: 10px;
   }
 `
 
@@ -112,6 +129,9 @@ type RemoteAppProps = Shared & { onPin?: (app: SafeApp) => void; onRemove?: unde
 type Props = CustomAppProps | RemoteAppProps
 
 const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: Props): React.ReactElement => {
+  const chainId = useSelector(currentChainId)
+  const dispatch = useDispatch()
+
   if (isAppLoading(app)) {
     return (
       <AppContainer layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -125,15 +145,33 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: 
     )
   }
 
+  const shareSafeAppLabel = `Share ${app.name} Safe App`
+
   const content = (
     <>
+      <LeftIconBtn
+        aria-label={shareSafeAppLabel}
+        title={shareSafeAppLabel}
+        onClick={(e) => {
+          // prevent triggering the link event
+          e.preventDefault()
+
+          const shareSafeAppUrl = getShareSafeAppUrl(app.url, chainId)
+          copyToClipboard(shareSafeAppUrl)
+
+          // we show a snackbar
+          dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SHARE_SAFE_APP_URL_COPIED)))
+        }}
+      >
+        <ShareIcon />
+      </LeftIconBtn>
       <StyledAppCard>
         <IconImg alt={`${app.name || 'App'} Logo`} src={app.iconUrl} onError={setAppImageFallback} size={iconSize} />
         <AppName size="xs">{app.name}</AppName>
         <AppDescription size="lg">{app.description} </AppDescription>
       </StyledAppCard>
       {onPin && (
-        <IconBtn
+        <RightIconBtn
           aria-label={getPinLabel(app.name, pinned)}
           title={getPinLabel(app.name, pinned)}
           onClick={(e) => {
@@ -144,11 +182,11 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: 
           }}
         >
           {pinned ? <Bookmark /> : <BookmarkBorder />}
-        </IconBtn>
+        </RightIconBtn>
       )}
 
       {onRemove && (
-        <IconBtn
+        <RightIconBtn
           aria-label="Remove an app"
           title="Remove app"
           onClick={(e) => {
@@ -158,7 +196,7 @@ const AppCard = ({ app, iconSize = 'md', to, onPin, onRemove, pinned = false }: 
           }}
         >
           <Icon size="sm" type="delete" color="error" />
-        </IconBtn>
+        </RightIconBtn>
       )}
     </>
   )
