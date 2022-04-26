@@ -6,12 +6,13 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { currentSafeFeaturesEnabled, currentSafe } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES, extractSafeAddress } from 'src/routes/routes'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import SafeLoadError from '../components/SafeLoadError'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -31,8 +32,8 @@ const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBo
 const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const { address, owners } = useSelector(currentSafe)
-  const addressFromUrl = extractSafeAddress()
-  const safeAddress = addressFromUrl || address
+  const curSafeAddress = useSelector(currentSafeAddress)
+  const safeAddress = curSafeAddress || address
   const isSafeLoaded = owners.length > 0
   const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
 

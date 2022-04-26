@@ -32,9 +32,9 @@ import {
   isMultisigExecutionInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
@@ -58,7 +58,7 @@ const getModalTitleAndDescription = (thresholdReached: boolean): { title: string
 
 const useTxInfo = (transaction: Props['transaction']) => {
   const t = useRef(transaction)
-  const safeAddress = extractSafeAddress()
+  const safeAddress = useSelector(currentSafeAddress)
 
   const confirmations = useMemo(
     () =>
@@ -197,7 +197,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
   const userAddress = useSelector(userAccountSelector)
   const isOwner = useSelector(grantedSelector)
   const classes = useStyles()
-  const safeAddress = extractSafeAddress()
+  const safeAddress = useSelector(currentSafeAddress)
   const txInfo = useTxInfo(transaction)
 
   const { executionInfo } = transaction

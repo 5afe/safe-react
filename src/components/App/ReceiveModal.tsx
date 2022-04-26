@@ -17,7 +17,7 @@ import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/va
 import { getChainInfo, getExplorerInfo } from 'src/config'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
-import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
+import { extractShortChainName, getPrefixedSafeAddressSlug } from 'src/routes/routes'
 
 const useStyles = (chainInfo: ChainInfo) =>
   makeStyles(
@@ -86,7 +86,9 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
   const copyShortName = useSelector(copyShortNameSelector)
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
 
-  const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
+  const qrCodeString = shouldEncodePrefix
+    ? getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
+    : safeAddress
 
   return (
     <>

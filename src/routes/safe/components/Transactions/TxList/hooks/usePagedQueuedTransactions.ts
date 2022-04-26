@@ -6,7 +6,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
-import { extractSafeAddress } from 'src/routes/routes'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 type PagedQueuedTransactions = {
   count: number
@@ -21,7 +21,7 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
   const chainId = useSelector(currentChainId)
 
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const safeAddress = useSelector(currentSafeAddress)
   const [hasMore, setHasMore] = useState(true)
 
   const nextPage = async () => {

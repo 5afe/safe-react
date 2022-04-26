@@ -11,8 +11,8 @@ import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTra
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
 import { AppReduxState } from 'src/store'
-import { extractSafeAddress } from 'src/routes/routes'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors/index'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const BATCH_LIMIT = 10
 
@@ -23,8 +23,8 @@ export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewa
 export const historyTransactions = createHashBasedSelector(
   gatewayTransactions,
   currentChainId,
-  (gatewayTransactions, chainId): StoreStructure['history'] | undefined => {
-    const safeAddress = extractSafeAddress()
+  currentSafeAddress,
+  (gatewayTransactions, chainId, safeAddress): StoreStructure['history'] | undefined => {
     return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.history : undefined
   },
 )
@@ -32,8 +32,8 @@ export const historyTransactions = createHashBasedSelector(
 export const pendingTransactions = createSelector(
   gatewayTransactions,
   currentChainId,
-  (gatewayTransactions, chainId): StoreStructure['queued'] | undefined => {
-    const safeAddress = extractSafeAddress()
+  currentSafeAddress,
+  (gatewayTransactions, chainId, safeAddress): StoreStructure['queued'] | undefined => {
     return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.queued : undefined
   },
 )
@@ -64,7 +64,7 @@ const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
 export const getTransactionWithLocationByAttribute = createSelector(
   gatewayTransactions,
   currentChainId,
-  extractSafeAddress,
+  currentSafeAddress,
   (
     _: AppReduxState,
     attrDetails: { attributeName: keyof Transaction; attributeValue: Transaction[keyof Transaction] },
@@ -96,7 +96,7 @@ export const getTransactionWithLocationByAttribute = createSelector(
 export const getTransactionByAttribute = createSelector(
   gatewayTransactions,
   currentChainId,
-  extractSafeAddress,
+  currentSafeAddress,
   getTransactionWithLocationByAttribute,
   (_gatewayTransactions, _chainId, _safeAddress, txWithLocation) => {
     return txWithLocation?.transaction
@@ -106,7 +106,7 @@ export const getTransactionByAttribute = createSelector(
 export const getTransactionsByNonce = createSelector(
   gatewayTransactions,
   currentChainId,
-  extractSafeAddress,
+  currentSafeAddress,
   (_: AppReduxState, nonce: number) => nonce,
   (gatewayTransactions, chainId, safeAddress, nonce): Transaction[] => {
     let txsByNonce: Transaction[] = []

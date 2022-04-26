@@ -11,10 +11,11 @@ import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBo
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { SAFE_ROUTES, history, extractSafeAddress, generateSafeRoute } from 'src/routes/routes'
+import { SAFE_ROUTES, history, generateSafeRoute } from 'src/routes/routes'
 import { getShortName } from 'src/config'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const useStyles = makeStyles(
   createStyles({
@@ -48,6 +49,7 @@ export const EllipsisTransactionDetails = ({
 }: EllipsisTransactionDetailsProps): React.ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
+  const safeAddress = useSelector(currentSafeAddress)
 
   const isOwnerConnected = useSelector(grantedSelector)
 
@@ -67,7 +69,7 @@ export const EllipsisTransactionDetails = ({
     history.push({
       pathname: generateSafeRoute(SAFE_ROUTES.ADDRESS_BOOK, {
         shortName: getShortName(),
-        safeAddress: extractSafeAddress(),
+        safeAddress,
       }),
       search: `?entryAddress=${address}`,
     })

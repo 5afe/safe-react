@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
+import { currentSafeAddress, lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 import {
   generateSafeRoute,
   LOAD_SPECIFIC_SAFE_ROUTE,
@@ -14,7 +14,6 @@ import {
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
-  extractSafeAddress,
   SAFE_ROUTES,
   GENERIC_APPS_ROUTE,
 } from './routes'
@@ -32,6 +31,7 @@ const Routes = (): React.ReactElement => {
   const location = useLocation()
   const { pathname } = location
   const lastSafe = useSelector(lastViewedSafe)
+  const safeAddress = useSelector(currentSafeAddress)
 
   // Google Tag Manager page tracking
   usePageTracking()
@@ -123,7 +123,6 @@ const Routes = (): React.ReactElement => {
           // Routes with a shortName prefix
           const validShortName = setChainIdFromUrl(pathname)
           // Safe address is used as a key to re-render the entire SafeContainer
-          const safeAddress = extractSafeAddress()
           return validShortName ? <SafeContainer key={safeAddress} /> : <Redirect to={WELCOME_ROUTE} />
         }}
       />

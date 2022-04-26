@@ -21,9 +21,10 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { history, extractSafeAddress, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
+import { history, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 import { getShortName } from 'src/config'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -140,22 +141,21 @@ const notificationsMiddleware =
           break
         }
         case ADD_OR_UPDATE_SAFE: {
-          const state = store.getState()
           const safe = action.payload
-          const currentSafeAddress = extractSafeAddress() || safe.address
-          if (!currentSafeAddress || !safe.currentVersion) {
+          const curSafeAddress = currentSafeAddress(state) || safe.address
+          if (!curSafeAddress || !safe.currentVersion) {
             break
           }
           const isUserOwner = grantedSelector(state)
           const version = await getSafeVersionInfo(safe.currentVersion)
 
-          const notificationKey = `${currentSafeAddress}-update`
+          const notificationKey = `${curSafeAddress}-update`
           const onNotificationClicked = () => {
             dispatch(closeSnackbarAction({ key: notificationKey }))
             history.push(
               generateSafeRoute(ADDRESSED_ROUTE, {
                 shortName: getShortName(),
-                safeAddress: currentSafeAddress,
+                safeAddress: curSafeAddress,
               }),
             )
           }

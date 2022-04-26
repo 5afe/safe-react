@@ -115,7 +115,7 @@ describe('getPrefixedSafeAddressSlug', () => {
     // Check for route change as function references this
     expect(history.location.pathname).toBe(route)
 
-    const slug = getPrefixedSafeAddressSlug({ safeAddress: validSafeAddress })
+    const slug = getPrefixedSafeAddressSlug({ shortName, safeAddress: validSafeAddress })
 
     expect(slug).toBe(`${shortName}:${validSafeAddress}`)
   })
@@ -131,7 +131,7 @@ describe('getPrefixedSafeAddressSlug', () => {
     // Check for route change as function references this
     expect(history.location.pathname).toBe(route)
 
-    const slug = getPrefixedSafeAddressSlug()
+    const slug = getPrefixedSafeAddressSlug({ shortName, safeAddress: fakeAddress })
 
     expect(slug).toBe(`${shortName}:${fakeAddress}`)
   })
