@@ -7,10 +7,16 @@ import styled from 'styled-components'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
 import SuccessSvg from 'src/assets/icons/safe-created.svg'
-import { OPEN_SAFE_ROUTE } from 'src/routes/routes'
+import { OPEN_SAFE_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 
-const UserSafe = (): ReactElement => {
+type UserSafeProps = {
+  safeAppUrl: string
+}
+
+const UserSafe = ({ safeAppUrl }: UserSafeProps): ReactElement => {
   const userAddress = useSelector(userAccountSelector)
+
+  const openSafeLink = `${OPEN_SAFE_ROUTE}?redirect=${encodeURIComponent(`${SAFE_ROUTES.APPS}?appUrl=${safeAppUrl}`)}`
 
   const isWalletConnected = !!userAddress
   return (
@@ -20,7 +26,7 @@ const UserSafe = (): ReactElement => {
         <>
           <img alt="Vault" height={92} src={SuccessSvg} />
 
-          <StyledCreateButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+          <StyledCreateButton size="lg" color="primary" variant="contained" component={Link} to={openSafeLink}>
             <Text size="xl" color="white">
               Create new Safe
             </Text>
