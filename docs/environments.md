@@ -10,7 +10,7 @@ We have several environments where the app can be deployed:
 |release PRs|`https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app`|pre-release regression testing|in PRs to `main`|**production** (sic!)|
 |dev  |https://safe-team.dev.gnosisdev.com/app/|preview of all WIP features|on push to the `dev` branch|staging|
 |staging|https://safe-team.staging.gnosisdev.com/app/|preview of features before a release|on push to `main`|staging|
-|production|https://gnosis-safe.io/app/|live app|deployed by devops (see the [Release Procedure](https://github.com/safe-global/safe-react/blob/ee39ef932d58e67db96756577814c1bfaf396d75/docs/release-procedure.md))|**production**|
+|production|https://gnosis-safe.io/app/|live app|deployed by DevOps (see the [Release Procedure](https://github.com/safe-global/safe-react/blob/ee39ef932d58e67db96756577814c1bfaf396d75/docs/release-procedure.md))|**production**|
 
 ## Lifecycle of a feature
 
@@ -30,5 +30,5 @@ After a feature enters the development cycle (i.e. is in a sprint), it goes thro
 4. QA does regression testing on the release branch. The backend APIs are pointing to production on this branch so that all chains can be tested.
 5. Once QA passes, the branch is merged to `main` and is automatically deployed to the [staging site](https://safe-team.staging.gnosisdev.com/app/).
 6. It sits on staging for a short while where QA and the release manager briefly do a final check before going live.
-7. Devops are requested to deploy the code from `main` to production.
-8. Once it's done, brief sanity checks are done on [production](https://gnosis-safe.io/app/).
+7. DevOps are requested to deploy the code from `main` to the production env.
+8. Once it's done, brief sanity checks are done on the [production site](https://gnosis-safe.io/app/).
