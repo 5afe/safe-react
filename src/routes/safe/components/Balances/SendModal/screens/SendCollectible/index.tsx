@@ -192,22 +192,20 @@ const SendCollectible = ({
                     </Row>
                   </div>
                 ) : (
-                  <>
-                    <Row margin="md">
-                      <Col xs={11}>
-                        <AddressBookInput
-                          fieldMutator={mutators.setRecipient}
-                          pristine={pristine}
-                          errorMsg={addressErrorMsg}
-                          setIsValidAddress={setIsValidAddress}
-                          setSelectedEntry={setSelectedEntry}
-                        />
-                      </Col>
-                      <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <ScanQRWrapper handleScan={handleScan} />
-                      </Col>
-                    </Row>
-                  </>
+                  <Row margin="md">
+                    <Col xs={11}>
+                      <AddressBookInput
+                        fieldMutator={mutators.setRecipient}
+                        pristine={pristine}
+                        errorMsg={addressErrorMsg}
+                        setIsValidAddress={setIsValidAddress}
+                        setSelectedEntry={setSelectedEntry}
+                      />
+                    </Col>
+                    <Col center="xs" className={classes} middle="xs" xs={1}>
+                      <ScanQRWrapper handleScan={handleScan} />
+                    </Col>
+                  </Row>
                 )}
                 <Row margin="xs">
                   <Col between="lg">
