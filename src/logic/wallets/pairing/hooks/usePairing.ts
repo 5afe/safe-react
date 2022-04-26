@@ -60,7 +60,7 @@ const usePairing = (): { uri: string } => {
 
     // Create pairing session if one isn't already active
     createPairingSession()
-  }, [createPairingSession])
+  }, [createPairingSession, provider.wc])
 
   return { uri }
 }
