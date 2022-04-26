@@ -1,4 +1,5 @@
 import 'cypress-file-upload';
+import { deleteDownloadsFolder } from '../utils/deleteDownloadsFolder'
 const path = require("path");
 
 const NAME = "Owner1"
@@ -17,6 +18,9 @@ const GNO_CSV_ENTRY = {
 }
 
 describe('Address book', () => {
+
+    beforeEach(deleteDownloadsFolder)
+
     it('should add and remove Address Book entries', () => {
         cy.visit(`/${RINKEBY_TEST_SAFE}/address-book`)
 
