@@ -5,6 +5,7 @@ import { Integrations } from '@sentry/tracing'
 import Root from 'src/components/Root'
 import { SENTRY_DSN } from './utils/constants'
 import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
+import { RESIZE_OBSERVER_ERRORS } from './components/VirtualizedList'
 
 disableMMAutoRefreshWarning()
 
@@ -15,8 +16,16 @@ Sentry.init({
   release: `safe-react@${process.env.REACT_APP_APP_VERSION}`,
   integrations: [new Integrations.BrowserTracing()],
   sampleRate: 0.1,
-  // ignore MetaMask errors we don't control
-  ignoreErrors: ['Internal JSON-RPC error', 'JsonRpcEngine', 'Non-Error promise rejection captured with keys: code'],
+  ignoreErrors: [
+    // MetaMask errors we don't control
+    'Internal JSON-RPC error',
+    'JsonRpcEngine',
+    'Non-Error promise rejection captured with keys: code',
+    // Duplicate of Errors._800 emitted by promiEvent
+    'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!',
+    // Insignificant ResizeObserver errors
+    ...RESIZE_OBSERVER_ERRORS,
+  ],
 })
 
 const root = document.getElementById('root')
