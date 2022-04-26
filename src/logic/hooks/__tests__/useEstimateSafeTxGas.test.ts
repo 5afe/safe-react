@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import * as gas from 'src/logic/safe/transactions/gas'
@@ -82,7 +83,7 @@ describe('useEstimateSafeTxGas', () => {
       throw new Error('Estimation failed')
     })
 
-    await actResolve(() => {
+    await actResolve(async () => {
       const { result } = renderHook(() =>
         useEstimateSafeTxGas({
           txAmount: '',
@@ -91,8 +92,11 @@ describe('useEstimateSafeTxGas', () => {
           isRejectTx: false,
         }),
       )
-      expect(result.current.result).toBe('0')
-      expect(result.current.error?.message).toBe('Estimation failed')
+
+      await waitFor(() => {
+        expect(result.current.result).toBe('0')
+        expect(result.current.error?.message).toBe('Estimation failed')
+      })
     })
 
     expect(spy).toHaveBeenCalledTimes(1)
