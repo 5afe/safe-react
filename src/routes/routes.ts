@@ -130,3 +130,9 @@ export const demoSafeRoute = generateSafeRoute(SAFE_ROUTES.APPS, {
   shortName: 'eth',
   safeAddress: DEMO_SAFE_MAINNET,
 })
+
+export const getShareSafeAppUrl = (appUrl: string, chainId: string): string => {
+  const baseUrl = `${window.location.origin}${PUBLIC_URL}`
+
+  return `${baseUrl}${SAFE_APP_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(appUrl)}&chainId=${chainId}`
+}

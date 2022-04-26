@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
 import Divider from '@material-ui/core/Divider'
 import { Title, Text } from '@gnosis.pm/safe-react-components'
@@ -6,6 +6,7 @@ import { Title, Text } from '@gnosis.pm/safe-react-components'
 import { getChainById } from 'src/config'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { black300 } from 'src/theme/variables'
+import fallbackSafeAppLogoSvg from 'src/assets/icons/apps.svg'
 
 type SafeAppDetailsTypes = {
   iconUrl: string
@@ -20,7 +21,7 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeApp
   return (
     <>
       <DetailsContainer>
-        <SafeIcon src={iconUrl} />
+        <SafeIcon src={iconUrl} onError={setSafeAppLogoFallback} alt={`${name || 'Safe App'} Logo`} />
         <DescriptionContainer>
           <SafeAppTitle size="sm">{name}</SafeAppTitle>
           <div>{description}</div>
@@ -33,11 +34,16 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeApp
         <>
           <ChainLabel size="lg">Available networks</ChainLabel>
           <ChainsContainer>
-            {availableChains.map((chainId) => (
-              <div key={chainId}>
-                <NetworkLabel networkInfo={getChainById(chainId)} />
-              </div>
-            ))}
+            {availableChains.map((chainId) => {
+              const chainInfo = getChainById(chainId)
+              return (
+                chainInfo.chainName && (
+                  <div key={chainId}>
+                    <NetworkLabel networkInfo={chainInfo} />
+                  </div>
+                )
+              )
+            })}
           </ChainsContainer>
           <Separator />
         </>
@@ -47,6 +53,11 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeApp
 }
 
 export default SafeAppDetails
+
+const setSafeAppLogoFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
+  error.currentTarget.onerror = null
+  error.currentTarget.src = fallbackSafeAppLogoSvg
+}
 
 const DetailsContainer = styled.div`
   display: flex;
