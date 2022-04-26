@@ -95,7 +95,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   overflow-x: auto;
 
-  padding: 0 16px;
+  padding: 8px 24px;
 
   > :nth-child(1) {
     flex-grow: 1;
