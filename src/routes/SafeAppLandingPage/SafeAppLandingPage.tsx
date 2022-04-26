@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect } from 'react'
+import { ReactElement, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import styled from 'styled-components'
@@ -22,20 +22,15 @@ const SafeAppLandingPage = (): ReactElement => {
   const query = useQuery()
   const safeAppChainId = query.get('chainId')
   const safeAppUrl = query.get('appUrl')
+  const isValidChain = useMemo(() => isValidChainId(safeAppChainId), [safeAppChainId])
 
-  // if no valid chainId or Safe App url is present in query params we redirect to the Welcome page
+  // if no valid chainId is present in query params we redirect to the Welcome page
   useEffect(() => {
-    const isValidChain = isValidChainId(safeAppChainId)
-    const redirectToWelcome = !safeAppUrl || !isValidChain
-    if (redirectToWelcome) {
-      history.push(WELCOME_ROUTE)
-    }
-
     // we set the valid Safe App chainId in the state
     if (isValidChain) {
-      setChainId(safeAppChainId)
+      setChainId(safeAppChainId as string)
     }
-  }, [safeAppChainId, safeAppUrl])
+  }, [safeAppChainId, isValidChain])
 
   const userAddress = useSelector(userAccountSelector)
   const isWalletConnected = !!userAddress
@@ -75,7 +70,7 @@ const SafeAppLandingPage = (): ReactElement => {
 
   const showLoader = isLoading || !safeAppDetails
 
-  if (!safeAppUrl) {
+  if (!safeAppUrl || !isValidChain) {
     return <Redirect to={WELCOME_ROUTE} />
   }
 
