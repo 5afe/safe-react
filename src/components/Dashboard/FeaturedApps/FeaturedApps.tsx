@@ -19,7 +19,6 @@ const StyledImage = styled.img`
 `
 
 const StyledLink = styled(Link)`
-  margin-top: 10px;
   text-decoration: none;
 `
 
@@ -44,21 +43,21 @@ export const FeaturedApps = (): ReactElement | null => {
             const appRoute = getSafeAppUrl(app.url, routesSlug)
             return (
               <Card key={app.id}>
-                <Grid container alignItems="center" spacing={3}>
-                  <Grid item xs={12} md={3}>
-                    <StyledImage src={app.iconUrl} alt={app.name} />
-                  </Grid>
-                  <Grid item xs={12} md={9}>
-                    <Box mb={1}>
-                      <Text size="xl">{app.description}</Text>
-                    </Box>
-                    <StyledLink to={appRoute}>
+                <StyledLink to={appRoute}>
+                  <Grid container alignItems="center" spacing={3}>
+                    <Grid item xs={12} md={3}>
+                      <StyledImage src={app.iconUrl} alt={app.name} />
+                    </Grid>
+                    <Grid item xs={12} md={9}>
+                      <Box mb={1.01}>
+                        <Text size="xl">{app.description}</Text>
+                      </Box>
                       <Text color="primary" size="lg" strong>
                         Use {app.name}
                       </Text>
-                    </StyledLink>
+                    </Grid>
                   </Grid>
-                </Grid>
+                </StyledLink>
               </Card>
             )
           })}
