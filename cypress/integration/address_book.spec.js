@@ -23,7 +23,7 @@ describe('Address book', () => {
 
     it('should add and remove Address Book entries', () => {
         cy.visit(`/${RINKEBY_TEST_SAFE}/address-book`)
-
+        cy.log("something")
         cy.findByText('Create entry', {timeout: 6000}).click()
         cy.findByTestId('create-entry-input-name').type(NAME)
         cy.findByTestId('create-entry-input-address').type(ENS_NAME)
