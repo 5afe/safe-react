@@ -2,14 +2,15 @@ import * as safeAppsGatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
 
 import SafeAppLandingPage from './SafeAppLandingPage'
 import { render, screen, waitFor, waitForElementToBeRemoved } from 'src/utils/test-utils'
-import { history, OPEN_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
+import { history, SAFE_ROUTES, OPEN_SAFE_ROUTE, WELCOME_ROUTE } from 'src/routes/routes'
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { saveToStorage } from 'src/utils/storage'
+import { CHAIN_ID } from 'src/config/chain.d'
 
 const SAFE_APP_URL_FROM_CONFIG_SERVICE = 'https://safe-app.gnosis-safe.io/test-safe-app-from-config-service'
 const SAFE_APP_URL_FROM_MANIFEST = 'https://safe-app.gnosis-safe.io/test-safe-app-from-manifest'
-const SAFE_APP_CHAIN_ID = '4'
+const SAFE_APP_CHAIN_ID = CHAIN_ID.RINKEBY
 
 describe('<SafeAppLandingPage>', () => {
   beforeEach(() => {
@@ -22,7 +23,7 @@ describe('<SafeAppLandingPage>', () => {
           name: 'Test App safe from config service',
           iconUrl: 'icon/logo.svg',
           description: 'Test Safe App description from config service',
-          chainIds: ['4', '1'], // available chains Ethereum & Rinkeby
+          chainIds: [CHAIN_ID.RINKEBY, '1'], // available chains Ethereum & Rinkeby
           provider: undefined,
           accessControl: {
             type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
@@ -104,7 +105,7 @@ describe('<SafeAppLandingPage>', () => {
 
     // when the Loader is removed we show the Connect Wallet button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
-    expect(screen.getByText('Connect Wallet')).toBeInTheDocument()
+    expect(screen.getByText('Connect')).toBeInTheDocument()
   })
 
   it('Renders the create new safe button if the user wallet is connected', async () => {
@@ -114,7 +115,7 @@ describe('<SafeAppLandingPage>', () => {
         loaded: true,
         available: true,
         account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
-        network: '4',
+        network: CHAIN_ID.RINKEBY,
       },
     }
     const SHARE_SAFE_APP_LINK = `share/safe-app?appUrl=${SAFE_APP_URL_FROM_MANIFEST}&chainId=${SAFE_APP_CHAIN_ID}`
@@ -130,7 +131,11 @@ describe('<SafeAppLandingPage>', () => {
     // when the Loader is removed we show the create new safe button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
     const createNewSafeLinkNode = screen.getByText('Create new Safe').closest('a')
-    expect(createNewSafeLinkNode).toHaveAttribute('href', OPEN_SAFE_ROUTE)
+    const openSafeRouteWithRedirect = `${OPEN_SAFE_ROUTE}?redirect=${encodeURIComponent(
+      `${SAFE_ROUTES.APPS}?appUrl=${SAFE_APP_URL_FROM_MANIFEST}`,
+    )}`
+
+    expect(createNewSafeLinkNode).toHaveAttribute('href', openSafeRouteWithRedirect)
   })
 
   it('Redirects to the Demo Safe App', async () => {
@@ -157,9 +162,6 @@ describe('<SafeAppLandingPage>', () => {
     history.push(`share/safe-app?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`)
 
     render(<SafeAppLandingPage />)
-
-    const loaderNode = screen.getByRole('progressbar')
-    expect(loaderNode).toBeInTheDocument()
 
     await waitFor(() => {
       expect(window.location.pathname).toBe(WELCOME_ROUTE)

@@ -22,12 +22,15 @@ const useAsync = <T>(asyncCall: () => Promise<T>): AsyncResult<T> => {
       .then((val: T) => {
         if (isCurrent) {
           setResult(val)
-          setIsLoading(false)
         }
       })
-      .catch((error) => {
+      .catch((err: Error) => {
         if (isCurrent) {
-          setError(error)
+          setError(err)
+        }
+      })
+      .finally(() => {
+        if (isCurrent) {
           setIsLoading(false)
         }
       })

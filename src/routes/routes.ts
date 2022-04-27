@@ -4,7 +4,7 @@ import { generatePath, matchPath } from 'react-router-dom'
 import { getChains } from 'src/config/cache/chains'
 import { ChainId, ShortName } from 'src/config/chain.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { PUBLIC_URL } from 'src/utils/constants'
+import { DEMO_SAFE_MAINNET, PUBLIC_URL } from 'src/utils/constants'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
 export const history = createBrowserHistory({
@@ -39,7 +39,7 @@ export type SafeRouteSlugs = {
 
 export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = optional slug
 
-// Routes independant of safe/network
+// Routes independent of safe/network
 export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
 export const OPEN_SAFE_ROUTE = '/open'
@@ -125,8 +125,6 @@ export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof S
     {} as typeof STANDARD_SAFE_ROUTES,
   )
 }
-
-const DEMO_SAFE_MAINNET = '0xfF501B324DC6d78dC9F983f140B9211c3EdB4dc7'
 
 export const demoSafeRoute = generateSafeRoute(SAFE_ROUTES.APPS, {
   shortName: 'eth',
