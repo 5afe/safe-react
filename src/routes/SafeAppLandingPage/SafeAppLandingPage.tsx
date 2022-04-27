@@ -59,7 +59,7 @@ const SafeAppLandingPage = (): ReactElement => {
   const showLoader = isLoading || !safeAppDetails
 
   useEffect(() => {
-    if (safeAppDetails) {
+    if (!isLoading && safeAppDetails) {
       trackEvent({
         ...SAFE_APPS_EVENTS.SHARED_APP_LANDING,
         label: safeAppDetails?.name,
@@ -69,7 +69,7 @@ const SafeAppLandingPage = (): ReactElement => {
         label: safeAppChainId,
       })
     }
-  }, [safeAppDetails, safeAppChainId])
+  }, [isLoading, safeAppDetails, safeAppChainId])
 
   if (!safeAppUrl || !isValidChain || isSafeAppMissing) {
     return <Redirect to={WELCOME_ROUTE} />
