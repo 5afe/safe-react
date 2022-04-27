@@ -2,10 +2,10 @@ import { WalletInitOptions, WalletModule, WalletSelectModuleOptions } from 'bnc-
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
-import { FORTMATIC_KEY, PORTIS_ID, WC_BRIDGE } from 'src/utils/constants'
+import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 import getPairingModule from 'src/logic/wallets/pairing/module'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import { getChains } from 'src/config/cache/chains'
+import getPatchedWCModule from 'src/logic/wallets/walletConnect/module'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean // Whether wallet supports desktop app
@@ -19,18 +19,8 @@ const wallets = (chainId: ChainId): Wallet[] => {
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    {
-      walletName: WALLETS.WALLET_CONNECT,
-      rpc: getChains().reduce((map, { chainId, rpcUri }) => {
-        return {
-          ...map,
-          [chainId]: getRpcServiceUrl(rpcUri),
-        }
-      }, {}),
-      bridge: WC_BRIDGE,
-      preferred: true,
-      desktop: true,
-    },
+    // A patched version of WalletConnect is spliced in at this index
+    // { preferred: true, desktop: true }
     {
       walletName: WALLETS.TREZOR,
       appUrl: 'gnosis-safe.io',
@@ -95,6 +85,12 @@ export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions
       return window.isDesktop ? desktop : true
     })
     .map(({ desktop: _, ...rest }) => rest)
+
+  if (isSupportedWallet(WALLETS.WALLET_CONNECT)) {
+    const wc = getPatchedWCModule(chainId)
+    // Inset patched WC module at index 1
+    supportedWallets?.splice(1, 0, wc)
+  }
 
   // Pairing must be 1st in list (to hide via CSS)
   return isPairingSupported() ? [getPairingModule(), ...supportedWallets] : supportedWallets
