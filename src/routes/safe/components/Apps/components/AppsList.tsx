@@ -136,7 +136,7 @@ const AppsList = (): React.ReactElement => {
                     key={pinnedSafeApp.id}
                     safeApp={pinnedSafeApp}
                     togglePin={togglePin}
-                    size={'md'}
+                    size="md"
                     isPinned
                   />
                 ))}
@@ -163,7 +163,7 @@ const AppsList = (): React.ReactElement => {
                     togglePin={togglePin}
                     onRemove={setAppToRemove}
                     isCustomSafeApp
-                    size={'md'}
+                    size="md"
                   />
                 ))}
               </CardsWrapper>
@@ -192,7 +192,7 @@ const AppsList = (): React.ReactElement => {
                 safeApp={safeApp}
                 togglePin={togglePin}
                 isPinned={pinnedSafeApps.some((pinnedSafeApp) => pinnedSafeApp.id === safeApp.id)}
-                size={'md'}
+                size="md"
               />
             ))}
           </CardsWrapper>

@@ -113,7 +113,7 @@ const SafeAppCard = ({
                     tooltip={`Unpin ${safeApp.name} Safe App`}
                   />
                 ) : (
-                  <PinnedIcon size="md" type={'bookmark'} tooltip={`Pin ${safeApp.name} Safe App`} />
+                  <PinnedIcon size="md" type="bookmark" tooltip={`Pin ${safeApp.name} Safe App`} />
                 )}
               </IconBtn>
             )}
