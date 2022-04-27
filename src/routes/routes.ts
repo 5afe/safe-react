@@ -43,12 +43,15 @@ export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = op
 export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
 export const OPEN_SAFE_ROUTE = '/open'
+export const GENERIC_APPS_ROUTE = '/apps'
 export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By providing no slug, we get '/load'
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {
+  DASHBOARD: `${ADDRESSED_ROUTE}/home`,
   ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
-  ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
+  ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/nfts`, // [SAFE_SUBSECTION_SLUG] === 'nfts'
+  LEGACY_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`,
   TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
@@ -122,4 +125,8 @@ export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof S
     (routes, [key, route]) => ({ ...routes, [key]: generateSafeRoute(route, params) }),
     {} as typeof STANDARD_SAFE_ROUTES,
   )
+}
+
+export const getSafeAppUrl = (appUrl: string, routesSlug: SafeRouteParams): string => {
+  return generateSafeRoute(SAFE_ROUTES.APPS, routesSlug) + `?appUrl=${appUrl}`
 }

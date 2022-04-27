@@ -88,9 +88,7 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
           }
         </Table>
       </TableContainer>
-      {selectedRow && (
-        <RemoveLimitModal onClose={() => setSelectedRow(undefined)} spendingLimit={selectedRow} open={true} />
-      )}
+      {selectedRow && <RemoveLimitModal onClose={() => setSelectedRow(undefined)} spendingLimit={selectedRow} open />}
     </>
   )
 }

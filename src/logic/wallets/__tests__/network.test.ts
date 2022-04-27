@@ -2,6 +2,7 @@ import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
 import { ChainId } from 'src/config/chain.d'
 import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
+import { WALLET_PROVIDER } from '../getWeb3'
 
 class CodedError extends Error {
   public code: number
@@ -83,6 +84,25 @@ describe('src/logic/wallets/utils/network', () => {
       }
 
       expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+    })
+    it('should return false when it is a hardware wallet', () => {
+      expect(
+        shouldSwitchNetwork({
+          name: WALLET_PROVIDER.LEDGER,
+        } as Wallet),
+      ).toBe(false)
+
+      expect(
+        shouldSwitchNetwork({
+          name: WALLET_PROVIDER.TREZOR,
+        } as Wallet),
+      ).toBe(false)
+
+      expect(
+        shouldSwitchNetwork({
+          type: 'hardware',
+        } as Wallet),
+      ).toBe(false)
     })
     describe('should return true when networks mismatch', () => {
       it('for numeric `chainId`s', () => {
