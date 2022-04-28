@@ -5,9 +5,7 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Dalfox scan
-        uses: hahwul/action-dalfox@main
-        id: xss-result
+      - name: OWASP ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.3.0
         with:
           target: 'https://safe-team.dev.gnosisdev.com/app/rin:0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A/apps'
-          mode: url
