@@ -25,8 +25,8 @@ import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 // Types cannot take computed property names
 const TYPE_FIELD_NAME = 'type'
-const FROM_FIELD_NAME = 'execution_date__gte'
-const TO_FIELD_NAME = 'execution_date__lte'
+const DATE_FROM_FIELD_NAME = 'execution_date__gte'
+const DATE_TO_FIELD_NAME = 'execution_date__lte'
 const RECIPIENT_FIELD_NAME = 'to'
 const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
 const AMOUNT_FIELD_NAME = 'value'
@@ -43,8 +43,8 @@ enum FilterType {
 
 type FilterForm = {
   [TYPE_FIELD_NAME]: FilterType
-  [FROM_FIELD_NAME]: string
-  [TO_FIELD_NAME]: string
+  [DATE_FROM_FIELD_NAME]: string
+  [DATE_TO_FIELD_NAME]: string
   [RECIPIENT_FIELD_NAME]: string
   [HIDDEN_RECIPIENT_FIELD_NAME]: string
   [AMOUNT_FIELD_NAME]: string
@@ -112,8 +112,8 @@ const Filter = (): ReactElement => {
   // meaning that each `reset` does not retain the 'original' default values
   const defaultValues = useRef<DefaultValues<FilterForm>>({
     [TYPE_FIELD_NAME]: FilterType.INCOMING,
-    [FROM_FIELD_NAME]: '',
-    [TO_FIELD_NAME]: '',
+    [DATE_FROM_FIELD_NAME]: '',
+    [DATE_TO_FIELD_NAME]: '',
     [RECIPIENT_FIELD_NAME]: '',
     [HIDDEN_RECIPIENT_FIELD_NAME]: '',
     [AMOUNT_FIELD_NAME]: '',
@@ -181,8 +181,18 @@ const Filter = (): ReactElement => {
                     <ParametersFormWrapper>
                       {type !== FilterType.MODULE && (
                         <>
-                          <RHFTextField<FilterForm> name={FROM_FIELD_NAME} label="From" type="date" control={control} />
-                          <RHFTextField<FilterForm> name={TO_FIELD_NAME} label="To" type="date" control={control} />
+                          <RHFTextField<FilterForm>
+                            name={DATE_FROM_FIELD_NAME}
+                            label="From"
+                            type="date"
+                            control={control}
+                          />
+                          <RHFTextField<FilterForm>
+                            name={DATE_TO_FIELD_NAME}
+                            label="To"
+                            type="date"
+                            control={control}
+                          />
                           <RHFAddressSearchField<FilterForm>
                             name={RECIPIENT_FIELD_NAME}
                             hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
