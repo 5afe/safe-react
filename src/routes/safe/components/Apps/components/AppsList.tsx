@@ -81,6 +81,7 @@ const AddCustomSafeAppCard = styled(Card)`
   height: 190px;
   padding: 0;
   flex-direction: column;
+  box-shadow: none;
 `
 
 const AddCustomAppLogo = styled.img`

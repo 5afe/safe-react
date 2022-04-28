@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import IconButton from '@material-ui/core/IconButton'
-import { alpha } from '@material-ui/core/styles/colorManipulator'
 import { Card, Title, Text, Icon } from '@gnosis.pm/safe-react-components'
 
 import { extractSafeAddress, generateSafeRoute, getShareSafeAppUrl, SAFE_ROUTES } from 'src/routes/routes'
@@ -17,6 +16,7 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { copyToClipboard } from 'src/utils/clipboard'
 import { getShortName } from 'src/config'
 import { SafeAppDescriptionSK, SafeAppLogoSK, SafeAppTitleSK } from './SafeAppSkeleton'
+import { primary200, primary300 } from 'src/theme/variables'
 
 type SafeAppCardSize = 'md' | 'lg'
 
@@ -157,16 +157,15 @@ const StyledAppCard = styled(Card)`
   padding: 16px;
   display: flex;
   flex-direction: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? 'row' : 'column')};
+  box-shadow: none;
+  border: 2px solid transparent;
+
+  transition: all 0.3s ease-in-out 0s;
+  transition-property: border-color, background-color;
 
   :hover {
-    box-shadow: 1px 2px 16px 0 ${({ theme }) => alpha(theme.colors.shadow.color, 0.35)};
-    transition: box-shadow 0.3s ease-in-out;
-    background-color: ${({ theme }) => theme.colors.background};
-    cursor: pointer;
-
-    h5 {
-      color: ${({ theme }) => theme.colors.primary};
-    }
+    background-color: ${primary200};
+    border: 2px solid ${primary300};
   }
 `
 
