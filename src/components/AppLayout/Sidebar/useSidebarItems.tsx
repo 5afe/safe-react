@@ -115,6 +115,11 @@ const useSidebarItems = (): ListItemType[] => {
 
     return [
       makeEntryItem({
+        label: 'Home',
+        iconType: 'home',
+        href: currentSafeRoutes.DASHBOARD,
+      }),
+      makeEntryItem({
         label: 'Assets',
         iconType: 'assets',
         href: currentSafeRoutes.ASSETS_BALANCES,
@@ -123,7 +128,7 @@ const useSidebarItems = (): ListItemType[] => {
       makeEntryItem({
         label: 'Transactions',
         iconType: 'transactionsInactive',
-        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
         subItems: transactionsSubItems,
       }),
       makeEntryItem({

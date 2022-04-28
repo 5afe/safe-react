@@ -84,6 +84,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -138,6 +141,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -166,6 +172,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -199,6 +208,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -264,6 +276,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -294,6 +309,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 

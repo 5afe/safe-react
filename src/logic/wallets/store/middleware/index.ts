@@ -13,13 +13,11 @@ import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import onboard, { removeLastUsedProvider, saveLastUsedProvider } from 'src/logic/wallets/onboard'
+import { WALLET_CONNECT_MODULE_NAME } from 'src/logic/wallets/patchedWalletConnect'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 const UNKNOWN_PEER = 'Unknown'
-
-// https://github.com/blocknative/web3-onboard/blob/1cfcd6fb6f7b599f01b51ef56a2ec38250854938/src/modules/select/wallets/wallet-connect.ts#L30
-const WALLET_CONNECT_MODULE_NAME = 'WalletConnect'
 
 const providerMiddleware =
   (store: ReturnType<typeof reduxStore>) =>

@@ -105,7 +105,7 @@ const Settings = (): React.ReactElement => {
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
           </Col>
         ) : (
-          <Col end="sm" sm={6} xs={12}></Col>
+          <Col end="sm" sm={6} xs={12} />
         )}
       </Menu>
       <Block className={classes.root}>

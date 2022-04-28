@@ -66,7 +66,7 @@ const SpendingLimit = (): ReactElement => {
               </Track>
             </Col>
           </Row>
-          {showNewSpendingLimitModal && <NewLimitModal close={closeNewSpendingLimitModal} open={true} />}
+          {showNewSpendingLimitModal && <NewLimitModal close={closeNewSpendingLimitModal} open />}
         </>
       )}
     </>

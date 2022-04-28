@@ -22,6 +22,7 @@ export type ConfirmTxModalProps = {
   onUserConfirm: (safeTxHash: string, requestId: RequestId) => void
   onTxReject: (requestId: RequestId) => void
   onClose: () => void
+  appId: string
 }
 
 const isTxValid = (t: Transaction): boolean => {
