@@ -4,11 +4,8 @@ import { WalletModule, Helpers } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl } from 'src/config'
 import { getChains } from 'src/config/cache/chains'
-import { INFURA_TOKEN } from 'src/utils/constants'
+import { INFURA_TOKEN, WC_BRIDGE } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
-
-// TODO: When desktop pairing is merged, import these into there
-export const WC_BRIDGE = 'https://safe-walletconnect.gnosis.io/'
 
 // Modified version of the built in WC module in Onboard v1.35.5, including:
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts

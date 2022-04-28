@@ -4976,10 +4976,10 @@ bnb-javascript-sdk-nobroadcast@^2.16.14:
     uuid "^3.3.2"
     websocket-stream "^5.5.0"
 
-bnc-onboard@^1.37.3:
-  version "1.37.3"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.37.3.tgz#e4c3ae94ab44b3053a6dea07057447feb9b9da14"
-  integrity sha512-G5pHatWvJf/r7gB7A38p7BlQfbzNJhND2nr0tPKqGtpXucTZJ0cl0bPvrh2nRNMs22ajd2wG29N88bWrWU5Vcw==
+bnc-onboard@^1.38.2:
+  version "1.38.2"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.38.2.tgz#23aa7f10546e15d595b4420e5959732c9a485c71"
+  integrity sha512-ObRQaHV1HXXOVuUJMHVYhmsz8T804hl+cl47t12ZRVG3HtF8Pf/22jGjrG2mWkgdx4h3RVLvxOqW5V1nwHTdaw==
   dependencies:
     "@cvbb/eth-keyring" "^1.1.0"
     "@ensdomains/ensjs" "^2.0.1"
@@ -4999,7 +4999,7 @@ bnc-onboard@^1.37.3:
     "@walletconnect/web3-provider" "^1.7.1"
     authereum "^0.1.12"
     bignumber.js "^9.0.0"
-    bnc-sdk "^3.4.1"
+    bnc-sdk "^4.1.0"
     bowser "^2.10.0"
     eth-lattice-keyring "^0.2.7"
     eth-provider "^0.6.1"
@@ -5010,15 +5010,16 @@ bnc-onboard@^1.37.3:
     hdkey "^2.0.1"
     regenerator-runtime "^0.13.7"
     trezor-connect "^8.1.9"
-    walletlink "^2.4.6"
+    walletlink "^2.5.0"
     web3-provider-engine "^15.0.4"
 
-bnc-sdk@^3.4.1:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-3.7.0.tgz#b6472067baad41e102c4fe748ba3cc32793fca9e"
-  integrity sha512-o8vd+LLL+sBU3aE+/tmhilbtkKQpGvA9rBhvT/bszvBpAgSNzVaP3vdmNPaglDmE2WymcrqvQGf57z5l9v+rrw==
+bnc-sdk@^4.1.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-4.2.0.tgz#cabc70eaf4a49dd2f695c6fcee50c833aa2af6b2"
+  integrity sha512-uoe40jLL+eYxeCAOqLgWLOowU9kyUuXyLURVgSSfIBjUNuszlz+I2wZYtvdWF+YkYphSr7L3E6WFtmwFrne+Pw==
   dependencies:
     crypto-es "^1.2.2"
+    nanoid "^3.3.1"
     rxjs "^6.6.3"
     sturdy-websocket "^0.1.12"
 
@@ -12470,6 +12471,11 @@ nanoid@^3.1.30:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
   integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
 
+nanoid@^3.3.1:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.2.tgz#c89622fafb4381cd221421c69ec58547a1eec557"
+  integrity sha512-CuHBogktKwpm5g2sRgv83jEy2ijFzBwMoYA60orPDR7ynsLijJDqgsi4RDGj3OJpy3Ieb+LYwiRmIOGyytgITA==
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -17775,10 +17781,10 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.12"
 
-walletlink@^2.4.6:
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/walletlink/-/walletlink-2.4.7.tgz#3dd034f7cd6e9d9f4cc1d677bb951869dc743e20"
-  integrity sha512-jhLVOMly9oWiSE8mZ4/+uMyVsAKHw71kGbgC1xYp50SQpuLT2pfa6Hiw2VQ0omP/WHsDAPFuBo8hJGxggr768w==
+walletlink@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/walletlink/-/walletlink-2.5.0.tgz#b8db10f4d9f124084feb16d1e2b2d08ba8c20d21"
+  integrity sha512-PBJmK5tZmonwKPABBI2/optaZ11O4kKmkmnU5eLKhk4XRlal5qJ1igZ4U5j3w6w8wxxdhCWpLMHzGWt3n/p7mw==
   dependencies:
     "@metamask/safe-event-emitter" "2.0.0"
     bind-decorator "^1.0.11"
