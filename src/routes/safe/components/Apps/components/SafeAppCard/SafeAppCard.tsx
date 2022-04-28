@@ -89,14 +89,16 @@ const SafeAppCard = ({
           {/* Safe App Description */}
           <DescriptionContainer size={size}>
             <SafeAppTitle size="xs">{safeApp.name}</SafeAppTitle>
-            <SafeAppDescription size="lg">{safeApp.description}</SafeAppDescription>
+            <SafeAppDescription size="lg" color="inputFilled">
+              {safeApp.description}
+            </SafeAppDescription>
           </DescriptionContainer>
 
           {/* Safe App Actions */}
           <ActionsContainer onClick={(e) => e.preventDefault()}>
             {/* Share Safe App button */}
             <IconBtn onClick={shareSafeApp} aria-label={`copy ${safeApp.name} Safe App share link to clipboard`}>
-              <Icon size="md" type="share" tooltip="copy share link to clipboard" />
+              <Icon size="md" type="share" tooltip="Copy share link" />
             </IconBtn>
 
             {/* Pin & Unpin Safe App button */}
@@ -106,14 +108,9 @@ const SafeAppCard = ({
                 aria-label={`${isPinned ? 'Unpin' : 'Pin'} ${safeApp.name} Safe App`}
               >
                 {isPinned ? (
-                  <PinnedIcon
-                    size="md"
-                    type="bookmarkFilled"
-                    color="primary"
-                    tooltip={`Unpin ${safeApp.name} Safe App`}
-                  />
+                  <PinnedIcon size="md" type="bookmarkFilled" color="primary" tooltip="Unpin from the Safe Apps" />
                 ) : (
-                  <PinnedIcon size="md" type="bookmark" tooltip={`Pin ${safeApp.name} Safe App`} />
+                  <PinnedIcon size="md" type="bookmark" tooltip="Pin from the Safe Apps" />
                 )}
               </IconBtn>
             )}
@@ -121,7 +118,7 @@ const SafeAppCard = ({
             {/* Remove custom Safe App button */}
             {isCustomSafeApp && (
               <IconBtn onClick={() => onRemove?.(safeApp)} aria-label={`Remove ${safeApp.name} custom Safe App`}>
-                <Icon size="md" type="delete" color="error" tooltip={`Remove ${safeApp.name} custom Safe App`} />
+                <Icon size="md" type="delete" color="error" tooltip="Remove Custom Safe App" />
               </IconBtn>
             )}
           </ActionsContainer>
@@ -138,7 +135,7 @@ const setSafeAppLogoFallback = (error: SyntheticEvent<HTMLImageElement, Event>):
   error.currentTarget.src = fallbackSafeAppLogoSvg
 }
 
-const SAFE_APP_CARD_HEIGHT = 164
+const SAFE_APP_CARD_HEIGHT = 190
 
 const SafeAppContainer = styled(motion.div)`
   position: relative;
@@ -199,17 +196,16 @@ const DescriptionContainer = styled.div`
 `
 
 const SafeAppTitle = styled(Title)`
-  margin: 12px 0px 8px;
-  font-size: 14px;
-  line-height: initial;
+  margin: 8px 0px;
+  font-size: 16px;
+  line-height: 22px;
   font-weight: bold;
   color: initial;
 `
 
 const SafeAppDescription = styled(Text)`
   margin: 0;
-  font-size: 12px;
-  line-height: initial;
+  line-height: 22px;
 
   overflow: hidden;
   display: -webkit-box;

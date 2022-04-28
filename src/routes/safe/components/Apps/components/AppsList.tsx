@@ -78,7 +78,7 @@ const AddCustomSafeAppCard = styled(Card)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 164px;
+  height: 190px;
   padding: 0;
   flex-direction: column;
 `
