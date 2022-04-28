@@ -219,6 +219,7 @@ export const SafeDeployment = ({
           }
           if (code !== EMPTY_DATA) {
             setStepIndex(5)
+            setError(false)
           }
         }, 1000)
       } catch (error) {

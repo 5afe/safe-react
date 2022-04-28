@@ -71,13 +71,10 @@ export const ReviewInfoText = ({
   return (
     <ReviewInfoTextWrapper data-testid={testId}>
       {getWarning() || (
-        <>
-          <Paragraph size="md" align="center" color="disabled" noMargin>
-            You&apos;re about to {isCreation ? 'create' : isExecution ? 'execute' : 'approve'} a{' '}
-            {isRejection ? 'rejection ' : ''}transaction and will have to confirm it with your currently connected
-            wallet.
-          </Paragraph>
-        </>
+        <Paragraph size="md" align="center" color="disabled" noMargin>
+          You&apos;re about to {isCreation ? 'create' : isExecution ? 'execute' : 'approve'} a{' '}
+          {isRejection ? 'rejection ' : ''}transaction and will have to confirm it with your currently connected wallet.
+        </Paragraph>
       )}
       <TransactionFailText
         estimationStatus={txEstimationExecutionStatus}

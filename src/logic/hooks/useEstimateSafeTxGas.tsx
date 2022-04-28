@@ -7,7 +7,6 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import useAsync from 'src/logic/hooks/useAsync'
 
 type UseEstimateSafeTxGasProps = {
-  isCreation: boolean
   isRejectTx: boolean
   txData: string
   txRecipient: string
@@ -16,18 +15,17 @@ type UseEstimateSafeTxGasProps = {
 }
 
 export const useEstimateSafeTxGas = ({
-  isCreation,
   isRejectTx,
   txData,
   txRecipient,
   txAmount,
   operation,
-}: UseEstimateSafeTxGasProps): string => {
+}: UseEstimateSafeTxGasProps): { result: string; error: Error | undefined } => {
   const defaultEstimation = '0'
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
 
   const requestSafeTxGas = useCallback((): Promise<string> => {
-    if (!isCreation || isRejectTx || !txData) return Promise.resolve(defaultEstimation)
+    if (isRejectTx || !txData) return Promise.resolve(defaultEstimation)
 
     return estimateSafeTxGas(
       {
@@ -39,9 +37,9 @@ export const useEstimateSafeTxGas = ({
       },
       safeVersion,
     )
-  }, [isCreation, isRejectTx, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
+  }, [isRejectTx, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
 
-  const { result } = useAsync<string>(requestSafeTxGas)
+  const { result, error } = useAsync<string>(requestSafeTxGas)
 
-  return result || defaultEstimation
+  return { result: result || defaultEstimation, error }
 }

@@ -297,7 +297,7 @@ function SafeCreationProcess(): ReactElement {
     }
 
     history.push({
-      pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+      pathname: generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
         shortName: getShortName(),
         safeAddress,
       }),

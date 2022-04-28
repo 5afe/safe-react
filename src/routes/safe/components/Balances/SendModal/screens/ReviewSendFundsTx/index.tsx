@@ -12,7 +12,8 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { getSpendingLimitContract, getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
@@ -95,11 +96,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCurrency.decimals) : '0'
   const txData = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
   const isSpendingLimitTx = isSpendingLimit(tx.txType)
+  const chainId = useSelector(currentChainId)
 
   const submitTx = async (txParameters: TxParameters, delayExecution: boolean) => {
     if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
-      const spendingLimit = getSpendingLimitContract()
+      const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
+      const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
       try {
         trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
 

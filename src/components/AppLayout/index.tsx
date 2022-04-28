@@ -54,10 +54,12 @@ const SidebarWrapper = styled.aside`
   flex-direction: column;
   flex-shrink: 0;
   z-index: 1;
+  overflow: hidden;
 
   padding: 8px 8px 0 8px;
   background-color: ${({ theme }) => theme.colors.white};
-  box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
+  border-right: 1px solid #f0efee;
+  box-shadow: 1px 2px 12px rgba(40, 54, 61, 0.08);
 
   @media (max-width: ${screenSm}px) {
     position: fixed;
@@ -93,7 +95,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   overflow-x: auto;
 
-  padding: 0 16px;
+  padding: 8px 24px;
 
   > :nth-child(1) {
     flex-grow: 1;
