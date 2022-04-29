@@ -25,13 +25,13 @@ import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 // Types cannot take computed property names
 const TYPE_FIELD_NAME = 'type'
-const FROM_FIELD_NAME = 'from'
-const TO_FIELD_NAME = 'to'
-const RECIPIENT_FIELD_NAME = 'recipient'
-const HIDDEN_RECIPIENT_FIELD_NAME = '__recipient'
-const AMOUNT_FIELD_NAME = 'amount'
-const TOKEN_ADDRESS_FIELD_NAME = 'tokenAddress'
-const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__tokenAddress'
+const DATE_FROM_FIELD_NAME = 'execution_date__gte'
+const DATE_TO_FIELD_NAME = 'execution_date__lte'
+const RECIPIENT_FIELD_NAME = 'to'
+const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
+const AMOUNT_FIELD_NAME = 'value'
+const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
+const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
 const MODULE_FIELD_NAME = 'module'
 const NONCE_FIELD_NAME = 'nonce'
 
@@ -43,8 +43,8 @@ enum FilterType {
 
 type FilterForm = {
   [TYPE_FIELD_NAME]: FilterType
-  [FROM_FIELD_NAME]: string
-  [TO_FIELD_NAME]: string
+  [DATE_FROM_FIELD_NAME]: string
+  [DATE_TO_FIELD_NAME]: string
   [RECIPIENT_FIELD_NAME]: string
   [HIDDEN_RECIPIENT_FIELD_NAME]: string
   [AMOUNT_FIELD_NAME]: string
@@ -54,7 +54,7 @@ type FilterForm = {
   [NONCE_FIELD_NAME]: string
 }
 
-const isValidAmount = (value: FilterForm['amount']): string | undefined => {
+const isValidAmount = (value: FilterForm['value']): string | undefined => {
   if (value && isNaN(Number(value))) {
     return 'Invalid number'
   }
@@ -74,6 +74,35 @@ const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
   }
 }
 
+const getTransactionFilter = ({ execution_date__gte, execution_date__lte, to, value }: FilterForm) => {
+  return {
+    execution_date__gte: execution_date__gte ? new Date(execution_date__gte).toISOString() : undefined,
+    execution_date__lte: execution_date__lte ? new Date(execution_date__lte).toISOString() : undefined,
+    to: to || undefined,
+    value: value ? Number(value) : undefined,
+  }
+}
+
+const getIncomingFilter = (filter: FilterForm) => {
+  return {
+    ...getTransactionFilter(filter),
+    token_address: filter.token_address || undefined,
+  }
+}
+
+const getOutgoingFilter = (filter: FilterForm) => {
+  return {
+    ...getTransactionFilter(filter),
+    nonce: filter.nonce ? Number(filter.nonce) : undefined,
+  }
+}
+
+const getModuleFilter = ({ module }: FilterForm) => {
+  return {
+    module,
+  }
+}
+
 const Filter = (): ReactElement => {
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
@@ -83,8 +112,8 @@ const Filter = (): ReactElement => {
   // meaning that each `reset` does not retain the 'original' default values
   const defaultValues = useRef<DefaultValues<FilterForm>>({
     [TYPE_FIELD_NAME]: FilterType.INCOMING,
-    [FROM_FIELD_NAME]: '',
-    [TO_FIELD_NAME]: '',
+    [DATE_FROM_FIELD_NAME]: '',
+    [DATE_TO_FIELD_NAME]: '',
     [RECIPIENT_FIELD_NAME]: '',
     [HIDDEN_RECIPIENT_FIELD_NAME]: '',
     [AMOUNT_FIELD_NAME]: '',
@@ -106,13 +135,15 @@ const Filter = (): ReactElement => {
     reset({ ...defaultValues.current, type })
   }
 
-  const onSubmit = ({
-    [TYPE_FIELD_NAME]: _t,
-    [HIDDEN_RECIPIENT_FIELD_NAME]: _hr,
-    [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: _hta,
-    ...filter
-  }: FilterForm) => {
-    console.log(filter)
+  const onSubmit = (filter: FilterForm) => {
+    const params =
+      type === FilterType.INCOMING
+        ? getIncomingFilter(filter)
+        : FilterType.MULTISIG
+        ? getOutgoingFilter(filter)
+        : getModuleFilter(filter)
+
+    console.log(params)
 
     trackEvent(TX_LIST_EVENTS.FILTER)
     hideFilter()
@@ -148,23 +179,35 @@ const Filter = (): ReactElement => {
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
-                      <RHFTextField<FilterForm> name={FROM_FIELD_NAME} label="From" type="date" control={control} />
-                      <RHFTextField<FilterForm> name={TO_FIELD_NAME} label="To" type="date" control={control} />
-                      <RHFAddressSearchField<FilterForm>
-                        name={RECIPIENT_FIELD_NAME}
-                        hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
-                        label="Recipient"
-                        methods={methods}
-                      />
-                      {[FilterType.INCOMING, FilterType.MULTISIG].includes(type) && (
-                        <RHFTextField<FilterForm>
-                          name={AMOUNT_FIELD_NAME}
-                          label="Amount"
-                          control={control}
-                          rules={{
-                            validate: isValidAmount,
-                          }}
-                        />
+                      {type !== FilterType.MODULE && (
+                        <>
+                          <RHFTextField<FilterForm>
+                            name={DATE_FROM_FIELD_NAME}
+                            label="From"
+                            type="date"
+                            control={control}
+                          />
+                          <RHFTextField<FilterForm>
+                            name={DATE_TO_FIELD_NAME}
+                            label="To"
+                            type="date"
+                            control={control}
+                          />
+                          <RHFAddressSearchField<FilterForm>
+                            name={RECIPIENT_FIELD_NAME}
+                            hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
+                            label="Recipient"
+                            methods={methods}
+                          />
+                          <RHFTextField<FilterForm>
+                            name={AMOUNT_FIELD_NAME}
+                            label="Amount"
+                            control={control}
+                            rules={{
+                              validate: isValidAmount,
+                            }}
+                          />
+                        </>
                       )}
                       {type === FilterType.INCOMING && (
                         <RHFAddressSearchField<FilterForm>
