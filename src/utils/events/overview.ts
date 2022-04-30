@@ -41,15 +41,7 @@ const OVERVIEW = {
   ADDED_SAFES_ON_NETWORK: {
     event: GTM_EVENT.META,
     action: 'Added Safes on', // Safe name is appended in trackEvent
-  },
-  WHATS_NEW: {
-    event: GTM_EVENT.CLICK,
-    action: "Open What's New",
-  },
-  HELP_CENTER: {
-    event: GTM_EVENT.CLICK,
-    action: 'Open Help Center',
-  },
+  },  
   OPEN_INTERCOM: {
     event: GTM_EVENT.CLICK,
     action: 'Open Intercom',
