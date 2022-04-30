@@ -14,6 +14,7 @@ import operaIcon from './icon-opera.png'
 import squarelinkIcon from './icon-squarelink.png'
 import keystoneIcon from './icon-keystone.png'
 import safeMobileIcon from './icon-safe-mobile.svg'
+import tokenpocketIcon from './icon-tokenpocket.svg'
 
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
@@ -76,6 +77,10 @@ const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } 
   },
   [WALLET_PROVIDER.SAFE_MOBILE]: {
     src: safeMobileIcon,
+    height: 25,
+  },
+  [WALLET_PROVIDER.TOKENPOCKET]: {
+    src: tokenpocketIcon,
     height: 25,
   },
 }

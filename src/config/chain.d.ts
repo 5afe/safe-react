@@ -33,4 +33,5 @@ export enum WALLETS {
   OPERA_TOUCH = 'operaTouch',
   LATTICE = 'lattice',
   KEYSTONE = 'keystone',
+  TOKENPOCKET = 'tokenpocket',
 }

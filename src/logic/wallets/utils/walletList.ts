@@ -43,6 +43,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
       appName: 'Gnosis Safe',
     },
     { walletName: WALLETS.TRUST, preferred: true, desktop: false },
+    { walletName: WALLETS.TOKENPOCKET, preferred: true, desktop: true },
     {
       walletName: WALLETS.LATTICE,
       rpcUrl,
