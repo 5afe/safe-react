@@ -8,9 +8,11 @@ import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
+import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
+import SafeLogo from '../assets/collab0rca_logo.png'
 import { WELCOME_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
@@ -97,7 +99,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={WELCOME_ROUTE}>
-            <span>Collab0rca</span>
+            <Img alt="Collab0rca" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="collab0rca-logo" />
           </Link>
         </Track>
       </Col>

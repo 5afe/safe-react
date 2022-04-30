@@ -50,7 +50,7 @@ html[class="darkMode"],
 html[class="darkMode"] iframe,
 html[class="darkMode"] div[style*="background-image"],
 html[class="darkMode"] svg[color],
-html[class="darkMode"] img:not([id="safe-logo"]),
+html[class="darkMode"] img:not([id="collab0rca-logo"]),
 html[class="darkMode"] [class*="networkLabel"] {
   filter: invert(0.9) hue-rotate(180deg);
 }
