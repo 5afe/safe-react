@@ -137,12 +137,6 @@ const useSidebarItems = (): ListItemType[] => {
         href: currentSafeRoutes.ADDRESS_BOOK,
       }),
       makeEntryItem({
-        disabled: !safeAppsEnabled,
-        label: 'Apps',
-        iconType: 'apps',
-        href: currentSafeRoutes.APPS,
-      }),
-      makeEntryItem({
         label: 'Settings',
         iconType: 'settings',
         href: currentSafeRoutes.SETTINGS_DETAILS,
