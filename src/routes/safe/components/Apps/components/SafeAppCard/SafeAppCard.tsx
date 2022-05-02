@@ -57,7 +57,7 @@ const SafeAppCard = ({
 
   if (isSafeAppLoading) {
     return (
-      <SafeAppContainer size={size} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <SafeAppContainer size={size}>
         <StyledAppCard size={size}>
           <LogoContainer size={size}>
             <SafeAppLogoSK size={size} />
@@ -73,7 +73,7 @@ const SafeAppCard = ({
   }
 
   return (
-    <SafeAppContainer size={size} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+    <SafeAppContainer size={size}>
       <StyledLink to={openSafeAppLink} aria-label={`open ${safeApp.name} Safe App`}>
         <StyledAppCard size={size}>
           {/* Safe App Logo */}
@@ -137,7 +137,12 @@ const setSafeAppLogoFallback = (error: SyntheticEvent<HTMLImageElement, Event>):
 
 const SAFE_APP_CARD_HEIGHT = 190
 
-const SafeAppContainer = styled(motion.div)`
+const SafeAppContainer = styled(motion.div).attrs({
+  layout: true,
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+})`
   position: relative;
   display: flex;
   height: ${SAFE_APP_CARD_HEIGHT}px;
