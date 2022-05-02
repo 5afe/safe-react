@@ -1,18 +1,10 @@
 import { List } from 'immutable'
-import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 import { TableColumn } from 'src/components/Table/types.d'
 import { Token } from 'src/logic/tokens/store/model/token'
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
-
-const getTokenPriceInCurrency = (balance: string, currencySelected?: string): string => {
-  if (!currencySelected) {
-    return Number('').toFixed(2)
-  }
-  return `${formatAmountInUsFormat(Number(balance).toFixed(2))} ${currencySelected}`
-}
-
 export interface BalanceData {
   asset: { name: string; logoUri: string; address: string; symbol: string }
   assetOrder: string
@@ -22,7 +14,7 @@ export interface BalanceData {
   valueOrder: number
 }
 
-export const getBalanceData = (safeTokens: List<Token>, currencySelected?: string): List<BalanceData> => {
+export const getBalanceData = (safeTokens: List<Token>, currencySelected: string): List<BalanceData> => {
   return safeTokens.map((token) => {
     const { tokenBalance, fiatBalance } = token.balance
 
@@ -34,9 +26,9 @@ export const getBalanceData = (safeTokens: List<Token>, currencySelected?: strin
         symbol: token.symbol,
       },
       assetOrder: token.name,
-      [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(tokenBalance?.toString() || '0')} ${token.symbol}`,
+      [BALANCE_TABLE_BALANCE_ID]: formatCurrency(tokenBalance?.toString() || '0', token.symbol),
       balanceOrder: Number(tokenBalance),
-      [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(fiatBalance || '0', currencySelected),
+      [BALANCE_TABLE_VALUE_ID]: formatCurrency(fiatBalance?.toString() || '0', currencySelected),
       valueOrder: Number(tokenBalance),
     }
   })

@@ -45,6 +45,7 @@ import Track from 'src/components/Track'
 import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { useQuery } from 'src/logic/hooks/useQuery'
 import { ADDRESSED_ROUTE } from 'src/routes/routes'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -181,6 +182,8 @@ const pollSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
   })
 }
 
+const APP_URL_QUERY_PARAM = 'appUrl'
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
@@ -293,11 +296,15 @@ function SafeCreationProcess(): ReactElement {
         })
       }
 
+      if (redirect.includes(APP_URL_QUERY_PARAM)) {
+        trackEvent({ ...SAFE_APPS_EVENTS.SHARED_APP_OPEN_AFTER_SAFE_CREATION })
+      }
+
       return
     }
 
     history.push({
-      pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+      pathname: generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
         shortName: getShortName(),
         safeAddress,
       }),

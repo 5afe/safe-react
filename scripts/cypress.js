@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { exec } = require('child_process')
 
 const DEPLOYMENTS = {

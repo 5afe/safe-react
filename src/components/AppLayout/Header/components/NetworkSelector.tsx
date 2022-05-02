@@ -122,22 +122,20 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
-            <>
-              <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                <List className={classes.network} component="div">
-                  {getNetworkRootRoutes().map((network) => (
-                    <Fragment key={network.chainId}>
-                      <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
-                        <NetworkLabel networkInfo={getChainById(network.chainId)} />
+            <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
+              <List className={classes.network} component="div">
+                {getNetworkRootRoutes().map((network) => (
+                  <Fragment key={network.chainId}>
+                    <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
+                      <NetworkLabel networkInfo={getChainById(network.chainId)} />
 
-                        {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
-                      </StyledLink>
-                      <StyledDivider />
-                    </Fragment>
-                  ))}
-                </List>
-              </ClickAwayListener>
-            </>
+                      {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
+                    </StyledLink>
+                    <StyledDivider />
+                  </Fragment>
+                ))}
+              </List>
+            </ClickAwayListener>
           </Grow>
         )}
       </Popper>

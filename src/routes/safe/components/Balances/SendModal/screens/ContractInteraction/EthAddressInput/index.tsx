@@ -68,34 +68,32 @@ export const EthAddressInput = ({
   }
 
   return (
-    <>
-      <Row margin="md">
-        <Col xs={11}>
-          {selectedEntry?.address ? (
-            <Field
-              component={TextField}
-              name={name}
-              placeholder={text}
-              onChange={handleInputChange}
-              testId={name}
-              label={text}
-              type="text"
-              validate={validate}
-            />
-          ) : (
-            <ContractsAddressBookInput
-              setSelectedEntry={setSelectedEntry}
-              setIsValidAddress={() => {}}
-              fieldMutator={onScannedValue}
-              pristine={pristine}
-              label="Contract address"
-            />
-          )}
-        </Col>
-        <Col center="xs" className={classes} middle="xs" xs={1}>
-          <ScanQRWrapper handleScan={handleScan} />
-        </Col>
-      </Row>
-    </>
+    <Row margin="md">
+      <Col xs={11}>
+        {selectedEntry?.address ? (
+          <Field
+            component={TextField}
+            name={name}
+            placeholder={text}
+            onChange={handleInputChange}
+            testId={name}
+            label={text}
+            type="text"
+            validate={validate}
+          />
+        ) : (
+          <ContractsAddressBookInput
+            setSelectedEntry={setSelectedEntry}
+            setIsValidAddress={() => {}}
+            fieldMutator={onScannedValue}
+            pristine={pristine}
+            label="Contract address"
+          />
+        )}
+      </Col>
+      <Col center="xs" className={classes} middle="xs" xs={1}>
+        <ScanQRWrapper handleScan={handleScan} />
+      </Col>
+    </Row>
   )
 }
