@@ -1,66 +1,48 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { IEventEmitter } from '@walletconnect/types'
+import { useEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { getPairingUri } from 'src/logic/wallets/pairing/utils'
-import onboard from 'src/logic/wallets/onboard'
-import { getPairingProvider, PAIRING_MODULE_NAME } from 'src/logic/wallets/pairing/module'
+import { getPairingProvider } from 'src/logic/wallets/pairing/module'
+import { configState } from 'src/logic/config/store/selectors'
 
-let defaultEvents: IEventEmitter[]
-
-// These handful of events relate to the session lifecycle
-enum WC_EVENT {
-  CONNECT = 'connect',
-  DISCONNECT = 'disconnect',
-  DISPLAY_URI = 'display_uri',
-  SESSION_UPDATE = 'wc_sessionUpdate',
-}
+let isProviderEnabled = false
 
 const usePairing = (): { uri: string } => {
-  const provider = useMemo(getPairingProvider, [])
+  const provider = useMemo(() => {
+    const provider = getPairingProvider()
+    isProviderEnabled = provider.wc.session.connected
+    return provider
+  }, [])
 
-  const [uri, setUri] = useState<string>(getPairingUri(provider.wc.uri))
-
-  // Pairing session lifecycle
-  const createPairingSession = useCallback(() => {
-    if (!provider.wc.connected) {
-      provider.enable()
-      provider.wc.createSession()
-    }
-  }, [provider])
-
+  // Sync provider with chainId of the UI
+  const { chainId } = useSelector(configState)
   useEffect(() => {
-    if (!defaultEvents) {
-      defaultEvents = (provider.wc as any)._eventManager._eventEmitters as IEventEmitter[]
-    }
+    provider.chainId = parseInt(chainId, 10)
+  }, [provider, chainId])
 
-    // Resest event listeners to default
-    ;(provider.wc as any)._eventManager._eventEmitters = defaultEvents
+  // Update QR code
+  const [uri, setUri] = useState<string>(getPairingUri(provider.wc.uri))
+  useEffect(() => {
+    let isCurrent = true
 
-    // Watch for URI change
-    Object.values(WC_EVENT).forEach((event) =>
-      provider.wc.on(event, () => {
-        const pairingUri = getPairingUri(provider.wc.uri)
+    provider.wc.on('display_uri', (_, { params }) => {
+      if (isCurrent) {
+        const pairingUri = getPairingUri(params[0])
         setUri(pairingUri)
-      }),
-    )
-
-    // Watch for connection
-    provider.wc.on(WC_EVENT.CONNECT, () => {
-      onboard().walletSelect(PAIRING_MODULE_NAME)
-    })
-
-    // Handle disconnection (`walletReset()` occurs inside pairing module)
-    provider.wc.on(WC_EVENT.DISCONNECT, createPairingSession)
-    provider.wc.on(WC_EVENT.SESSION_UPDATE, (_, { params }) => {
-      const didRevokeSession = params[0]?.approved === false
-      if (didRevokeSession) {
-        createPairingSession()
       }
     })
 
-    // Create pairing session if one isn't already active
-    createPairingSession()
-  }, [createPairingSession, provider.wc])
+    return () => {
+      isCurrent = false
+    }
+  }, [provider.wc])
+
+  useEffect(() => {
+    if (!isProviderEnabled && !provider.connected) {
+      provider.enable()
+      isProviderEnabled = true
+    }
+  }, [provider])
 
   return { uri }
 }

@@ -6,7 +6,7 @@ import UAParser from 'ua-parser-js'
 import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
 import { getRpcServiceUrl, _getChainId } from 'src/config'
 import { getChains } from 'src/config/cache/chains'
-import { BLOCK_POLLING_INTERVAL } from '../onboard'
+import onboard, { BLOCK_POLLING_INTERVAL } from '../onboard'
 
 // Modified version of the built in WC module in Onboard v1.35.5
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
@@ -63,6 +63,14 @@ const createPairingProvider = (): WalletConnectProvider => {
 
   provider.autoRefreshOnNetworkChange = false
 
+  provider.wc.on('disconnect', () => {
+    provider.wc.createSession()
+  })
+
+  provider.wc.on('connect', () => {
+    onboard().walletSelect(PAIRING_MODULE_NAME)
+  })
+
   return provider
 }
 
@@ -89,10 +97,15 @@ const getPairingModule = (): WalletModule => {
       }
 
       const onDisconnect = () => resetWalletState({ walletName: name, disconnected: true })
-      provider.wc.on('disconnect', onDisconnect)
 
-      // Kill session if module unmounts (a non-pairing wallet connects)
-      window.addEventListener('unload', onDisconnect, { once: true })
+      provider.wc.on('disconnect', onDisconnect)
+      provider.wc.on('wc_sessionUpdate', (_, { params }) => {
+        // Mobile revokes session upon disconnection
+        const didMobileDisconnect = params[0]?.approved === false
+        if (didMobileDisconnect) {
+          onDisconnect
+        }
+      })
 
       return {
         provider,
