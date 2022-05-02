@@ -1,4 +1,4 @@
 export const deleteDownloadsFolder = () => {
-    const downloadsFolder = Cypress.config('downloadsFolder')
-    cy.task('deleteFolder', downloadsFolder)
-  }
+  const downloadsFolder = Cypress.config('downloadsFolder')
+  cy.task('deleteFolder', downloadsFolder)
+}

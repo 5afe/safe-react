@@ -16,14 +16,14 @@
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = (on, config) => {
+module.exports = () => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 }
 
-const { rmdir } = require('fs')
+import { rmdir } from 'fs'
 
-module.exports = (on, config) => {
+module.exports = (on) => {
   on('task', {
     deleteFolder(folderName) {
       console.log('deleting folder %s', folderName)
