@@ -1,13 +1,25 @@
-import { ReactElement } from 'react'
-import { Link } from 'react-router-dom'
+import { MouseEvent, ReactElement } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { Title, Button } from '@gnosis.pm/safe-react-components'
 
 import { demoSafeRoute } from 'src/routes/routes'
 import { secondary } from 'src/theme/variables'
 import DemoSvg from 'src/assets/icons/demo.svg'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 const TryDemoSafe = ({ safeAppUrl }: { safeAppUrl: string | null }): ReactElement => {
+  const history = useHistory()
+  const demoSafeUrl = `${demoSafeRoute}?appUrl=${encodeURI(safeAppUrl || '')}`
+
+  const handleDemoSafeClick = (event: MouseEvent) => {
+    event.preventDefault()
+
+    trackEvent({ ...SAFE_APPS_EVENTS.SHARED_APP_OPEN_DEMO, label: safeAppUrl })
+    history.push(demoSafeUrl)
+  }
+
   return (
     <SafeDemoContainer>
       <Title size="xs">Want to try the app before using it?</Title>
@@ -16,9 +28,10 @@ const TryDemoSafe = ({ safeAppUrl }: { safeAppUrl: string | null }): ReactElemen
 
       {safeAppUrl && (
         <StyledDemoButton
+          onClick={handleDemoSafeClick}
+          to={demoSafeUrl}
           color="primary"
           component={Link}
-          to={`${demoSafeRoute}?appUrl=${encodeURI(safeAppUrl)}`}
           size="lg"
           variant="outlined"
         >

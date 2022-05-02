@@ -242,17 +242,21 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     })
 
     const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
-    const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
+    const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound Safe App')
     act(() => {
       fireEvent.click(compoundAppPinBtn)
     })
 
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
-      expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
+      expect(
+        within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound Safe App'),
+      ).toBeInTheDocument()
     })
 
-    const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')
+    const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText(
+      'Unpin Compound Safe App',
+    )
     act(() => {
       fireEvent.click(compoundAppUnpinBtn)
     })
@@ -292,7 +296,9 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
 
     await waitFor(() => {
       const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
-      const compoundAppShareBtn = within(allAppsContainer).getByLabelText('Share Compound Safe App')
+      const compoundAppShareBtn = within(allAppsContainer).getByLabelText(
+        'copy Compound Safe App share link to clipboard',
+      )
 
       expect(compoundAppShareBtn).toBeInTheDocument()
     })
@@ -307,7 +313,9 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
 
     await waitFor(() => {
       const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
-      const compoundAppShareBtn = within(allAppsContainer).getByLabelText('Share Compound Safe App')
+      const compoundAppShareBtn = within(allAppsContainer).getByLabelText(
+        'copy Compound Safe App share link to clipboard',
+      )
 
       // snackbar is not present
       expect(screen.queryByText('Safe App URL copied to clipboard!')).not.toBeInTheDocument()
