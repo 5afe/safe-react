@@ -11,7 +11,7 @@ const OWNER_ENS_DEFAULT_NAME = "francoledger.eth"
 const OWNER_ADDRESS = "0x6f965E48347AF3Df65c14CCc176A9CbeCEa0eDb5"
 
 describe("Load Safe", () => {
-    it("Load safe", () => {
+    it('Should load an existing Safe', () => {
         cy.visit("/")
         cy.findByText('Accept selection').click()
 
@@ -20,29 +20,29 @@ describe("Load Safe", () => {
         cy.wait(1000) //Have to wait because clicking the switch network fails sometimes if not
 
         //Step 1
-        cy.get('[data-testid="select-network-step"]').find('button').click()
+        cy.findByTestId('select-network-step').find('button').click()
         cy.get('[aria-labelledby="select-network"]').should('exist')
         cy.findByText('Ethereum').click()
         cy.get('nav').findByText('Ethereum').should('exist')
-        cy.get('[data-testid="select-network-step"]').findByText('Ethereum').should('exist')
-        cy.get('[data-testid="select-network-step"]').find('button').click()
+        cy.findByTestId('select-network-step').findByText('Ethereum').should('exist')
+        cy.findByTestId('select-network-step').find('button').click()
         cy.findByText('Rinkeby').click()
         cy.get('[data-track="load-safe: Continue"]').click()
 
         //Step2
-        cy.get('[data-testid="load-safe-name-field"]').should('have.attr', 'placeholder').should('contain','rinkeby-safe')
-        cy.get('[data-testid="load-safe-name-field"]').type('Test safe name').should('have.value', 'Test safe name')
+        cy.findByTestId('load-safe-name-field').should('have.attr', 'placeholder').should('contain','rinkeby-safe')
+        cy.findByTestId('load-safe-name-field').type('Test safe name').should('have.value', 'Test safe name')
 
-        cy.get('[data-testid="load-safe-address-field"]').type('RandomText')
+        cy.findByTestId('load-safe-address-field').type('RandomText')
         cy.findByText(INVALID_INPUT_ERROR_MSG).should('exist')
-        cy.get('[data-testid="load-safe-address-field"]').clear().type(NON_CONTRACT_ADDRESS)
+        cy.findByTestId('load-safe-address-field').clear().type(NON_CONTRACT_ADDRESS)
         cy.findByText(INVALID_ADDRESS_ERROR_MSG).should('exist')
-        cy.get('[data-testid="load-safe-address-field"]').clear().type(SAFE_ENS_NAME).should('have.value', SAFE_ENS_NAME_TRANSLATED)
-        cy.get('[data-testid="qr-icon"]').click()
+        cy.findByTestId('load-safe-address-field').clear().type(SAFE_ENS_NAME).should('have.value', SAFE_ENS_NAME_TRANSLATED)
+        cy.findByTestId('qr-icon').click()
         cy.get('[class="paper"]').find('button').contains('Upload an image').click()
         cy.get('[type="file"]').attachFile('../utils/files/rinkeby_safe_QR.png')
-        cy.get('[data-testid="load-safe-address-field"]').should('have.value', SAFE_QR_CODE_ADDRESS)
-        cy.get('[data-testid="safeAddress-valid-address-adornment"]').should('exist')
+        cy.findByTestId('load-safe-address-field').should('have.value', SAFE_QR_CODE_ADDRESS)
+        cy.findByTestId('safeAddress-valid-address-adornment').should('exist')
         cy.wait(3000) //have to wait or after clicking next what loads is the owners of the previous valids safe, not the one from the QR code
         cy.get('[type="submit"]').click()
 
@@ -57,9 +57,9 @@ describe("Load Safe", () => {
         cy.get('[data-track="load-safe: Add"]').click()
 
         //Safe Loaded
-        cy.get('[data-testid="sidebar"]').findByText('Test safe name')
-        cy.get('[data-testid="sidebar"]').find('nav').findByText('Settings').click()
-        cy.get('[data-testid="sidebar"]').find('nav').findByText('Owners').click()
+        cy.findByTestId('sidebar').findByText('Test safe name')
+        cy.findByTestId('sidebar').find('nav').findByText('Settings').click()
+        cy.findByTestId('sidebar').find('nav').findByText('Owners').click()
         cy.findByText('Test Owner Name')
     })
 })
