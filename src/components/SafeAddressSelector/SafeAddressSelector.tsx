@@ -25,7 +25,7 @@ const SafeAddressSelector = ({
     <FormControl>
       <StyledSafeSelector value={value} onChange={onChange} autoWidth disableUnderline IconComponent={ExpandMore}>
         {safes.map((safe) => (
-          <StyledMenuItem key={safe.address} value={safe.address}>
+          <StyledMenuItem key={`${safe.address}-${safe.chainId}`} value={safe.address}>
             <EthHashInfo
               shouldShowShortName={shouldShowShortName}
               shortName={getChainById(safe.chainId).shortName}
