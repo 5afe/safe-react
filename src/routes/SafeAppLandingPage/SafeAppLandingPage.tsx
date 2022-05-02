@@ -81,7 +81,7 @@ const SafeAppLandingPage = (): ReactElement => {
 
             <ActionsContainer>
               {/* User Safe Section */}
-              <UserSafe safeAppUrl={safeAppUrl} />
+              <UserSafe safeAppUrl={safeAppUrl} availableChains={availableChains} safeAppChainId={safeAppChainId} />
 
               {/* Demo Safe Section */}
               <TryDemoSafe safeAppUrl={safeAppUrl} />
