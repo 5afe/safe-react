@@ -106,8 +106,8 @@ const Overview = (): ReactElement => {
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName }))
   }
 
-  // Ether is always returned even when its balance is 0
-  const tokenCount = useMemo(() => balances.filter((token) => token.tokenBalance === '0').length, [balances])
+  // Native token is always returned even when its balance is 0
+  const tokenCount = useMemo(() => balances.filter((token) => token.tokenBalance !== '0').length, [balances])
 
   return (
     <WidgetContainer>
