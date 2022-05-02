@@ -5,7 +5,6 @@ import ListItem from '@material-ui/core/ListItem/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction'
 import styled from 'styled-components'
 
-import { primaryLite, primaryActive } from 'src/theme/variables'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -23,6 +22,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain.d'
 import { getChainById } from 'src/config'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
+import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -58,26 +58,6 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
 
 const AddressContainer = styled.div`
   position: relative;
-`
-
-const Threshold = styled.div`
-  background: ${primaryLite};
-  color: ${primaryActive};
-  font-size: 10px;
-  font-weight: bold;
-  border-radius: 100%;
-  padding: 2px;
-  position: absolute;
-  z-index: 2;
-  top: -5px;
-  left: -5px;
-  min-width: 20px;
-  min-height: 20px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
 `
 
 type Props = {
@@ -143,11 +123,7 @@ const SafeListItem = ({
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <AddressContainer>
-        {threshold && owners && (
-          <Threshold>
-            {threshold}/{owners.length}
-          </Threshold>
-        )}
+        {threshold && owners && <Threshold threshold={threshold} owners={owners.length} size={11} />}
         <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
       </AddressContainer>
       <ListItemSecondaryAction>
