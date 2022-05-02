@@ -1,18 +1,18 @@
 import 'cypress-file-upload';
-const path = require("path");
+const path = require('path');
 
-const SAFE_ENS_NAME = "safe.test"
-const SAFE_ENS_NAME_TRANSLATED = "0x83eC7B0506556a7749306D69681aDbDbd08f0769"
-const SAFE_QR_CODE_ADDRESS = "0x9913B9180C20C6b0F21B6480c84422F6ebc4B808"
-const NON_CONTRACT_ADDRESS = "0x61a0c717d18232711bC788F19C9Cd56a43cc8872"
-const INVALID_INPUT_ERROR_MSG = "Must be a valid address, ENS or Unstoppable domain"
-const INVALID_ADDRESS_ERROR_MSG = "Address given is not a valid Safe address"
-const OWNER_ENS_DEFAULT_NAME = "francoledger.eth"
-const OWNER_ADDRESS = "0x6f965E48347AF3Df65c14CCc176A9CbeCEa0eDb5"
+const SAFE_ENS_NAME = 'safe.test'
+const SAFE_ENS_NAME_TRANSLATED = '0x83eC7B0506556a7749306D69681aDbDbd08f0769'
+const SAFE_QR_CODE_ADDRESS = '0x9913B9180C20C6b0F21B6480c84422F6ebc4B808'
+const NON_CONTRACT_ADDRESS = '0x61a0c717d18232711bC788F19C9Cd56a43cc8872'
+const INVALID_INPUT_ERROR_MSG = 'Must be a valid address, ENS or Unstoppable domain'
+const INVALID_ADDRESS_ERROR_MSG = 'Address given is not a valid Safe address'
+const OWNER_ENS_DEFAULT_NAME = 'francoledger.eth'
+const OWNER_ADDRESS = '0x6f965E48347AF3Df65c14CCc176A9CbeCEa0eDb5'
 
-describe("Load Safe", () => {
+describe('Load Safe', () => {
     it('Should load an existing Safe', () => {
-        cy.visit("/")
+        cy.visit('/')
         cy.findByText('Accept selection').click()
 
         cy.get('[data-track="load-safe: Open stepper"]').click()
