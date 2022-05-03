@@ -11,16 +11,11 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { useSelector } from 'react-redux'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 import { setChainId } from 'src/logic/config/utils'
-import {
-  generateSafeRoute,
-  extractSafeAddress,
-  LOAD_SPECIFIC_SAFE_ROUTE,
-  SAFE_ROUTES,
-  SafeRouteParams,
-} from 'src/routes/routes'
+import { generateSafeRoute, LOAD_SPECIFIC_SAFE_ROUTE, SAFE_ROUTES, SafeRouteParams } from 'src/routes/routes'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain.d'
 import { getChainById } from 'src/config'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
@@ -85,7 +80,7 @@ const SafeListItem = ({
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
-  const currentSafeAddress = extractSafeAddress()
+  const { safeAddress: currentSafeAddress } = useSafeAddress()
   const currChainId = useSelector(currentChainId)
   const isCurrentSafe = currChainId === networkId && sameAddress(currentSafeAddress, address)
   const safeRef = useRef<HTMLDivElement>(null)

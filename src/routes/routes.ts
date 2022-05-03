@@ -98,15 +98,13 @@ export const extractPrefixedSafeAddress = (
   }
 }
 
-export const extractShortChainName = (): ShortName => extractPrefixedSafeAddress().shortName
-export const extractSafeAddress = (): string => extractPrefixedSafeAddress().safeAddress
-
-export const getPrefixedSafeAddressSlug = (
-  { safeAddress = extractSafeAddress(), shortName = extractShortChainName() } = {
-    safeAddress: extractSafeAddress(),
-    shortName: extractShortChainName(),
-  },
-): string => `${shortName}:${safeAddress}`
+export const getPrefixedSafeAddressSlug = ({
+  safeAddress,
+  shortName,
+}: {
+  safeAddress: string
+  shortName: string
+}): string => `${shortName}:${safeAddress}`
 
 // Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortName:safeAddress'
 export const generateSafeRoute = (
