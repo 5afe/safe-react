@@ -84,8 +84,8 @@ const getCompatibleSafes = (
 
     const safesFromLocalstorage =
       localSafes[chainId]
-        .filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter the already added safes provided by the config service
-        .map(({ address }) => ({
+        ?.filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter the already added safes provided by the config service
+        ?.map(({ address }) => ({
           address,
           chainId,
           name: getNameFromAddressBook(addressBook, address, chainId),
