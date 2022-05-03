@@ -8,7 +8,7 @@ import { Skeleton } from '@material-ui/lab'
 
 import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { primaryLite, primaryActive, smallFontSize, md, lg } from 'src/theme/variables'
+import { md, lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Card, DashboardTitle } from 'src/components/Dashboard/styled'
@@ -17,26 +17,11 @@ import Button from 'src/components/layout/Button'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { getChainById } from 'src/config'
+import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
 const IdenticonContainer = styled.div`
   position: relative;
   margin-bottom: ${md};
-`
-
-const SafeThreshold = styled.div`
-  position: absolute;
-  left: -6px;
-  top: -6px;
-  background: ${primaryLite};
-  color: ${primaryActive};
-  font-size: ${smallFontSize};
-  font-weight: bold;
-  border-radius: 100%;
-  padding: 4px;
-  z-index: 2;
-  min-width: 24px;
-  min-height: 24px;
-  box-sizing: border-box;
 `
 
 const StyledText = styled(Text)`
@@ -120,9 +105,7 @@ const Overview = (): ReactElement => {
             <Grid container>
               <Grid item xs={12}>
                 <IdenticonContainer>
-                  <SafeThreshold>
-                    {threshold}/{owners.length}
-                  </SafeThreshold>
+                  <Threshold threshold={threshold} owners={owners.length} size={14} />
                   <Identicon address={address} size="xl" />
                 </IdenticonContainer>
                 <Box mb={2} overflow="hidden">

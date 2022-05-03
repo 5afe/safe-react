@@ -32,6 +32,8 @@ import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 import { trackEvent } from 'src/utils/googleTagManager'
+import { Box } from '@material-ui/core'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -206,6 +208,7 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const { owners, threshold } = useSelector(currentSafe)
   const copyChainPrefix = useSelector(copyShortNameSelector)
   const shortName = extractShortChainName()
 
@@ -241,8 +244,10 @@ const SafeHeader = ({
       <Container>
         {/* Identicon */}
         <IdenticonContainer>
-          <Threshold />
-          <Identicon address={address} size="lg" />
+          <Box position="relative">
+            <Threshold threshold={threshold} owners={owners.length} />
+            <Identicon address={address} size="lg" />
+          </Box>
           <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
           </ToggleSafeListButton>
