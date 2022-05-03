@@ -22,6 +22,7 @@ export const SAFE_POLLING_INTERVAL = process.env.NODE_ENV === 'test' ? 4500 : 15
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY || ''
 export const ETHGASSTATION_API_KEY = process.env.REACT_APP_ETHGASSTATION_API_KEY
 export const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
+export const WC_BRIDGE = process.env.REACT_APP_WC_BRIDGE || 'https://safe-walletconnect.gnosis.io/'
 
 // Google Tag Manager
 export const GOOGLE_TAG_MANAGER_ID = process.env.REACT_APP_GOOGLE_TAG_MANAGER_ID || ''
