@@ -15,6 +15,7 @@ jest.mock('src/routes/safe/container/selector', () => {
   return {
     ...original,
     grantedSelector: () => true,
+    sameAddressAsSafeSelector: () => false,
   }
 })
 
@@ -79,5 +80,18 @@ describe('TransactionFailText', () => {
     })
 
     expect(() => screen.getByAltText('Info Tooltip')).toThrow()
+  })
+
+  it('shows an error if the safe itself is connected', async () => {
+    const sel = require('src/routes/safe/container/selector')
+    ;(sel.sameAddressAsSafeSelector as jest.Mocked<unknown>) = jest.fn(() => true)
+    ;(sel.grantedSelector as jest.Mocked<unknown>) = jest.fn(() => true)
+
+    await act(async () => {
+      render(<TransactionFailText isExecution isCreation estimationStatus={EstimationStatus.FAILURE} />)
+    })
+
+    expect(screen.getByAltText('Info Tooltip')).toBeDefined()
+    expect(screen.getByText(_ErrorMessage.sameAddress)).toBeDefined()
   })
 })

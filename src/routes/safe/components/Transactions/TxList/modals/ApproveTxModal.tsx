@@ -24,7 +24,7 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import {
   ExpandedTxDetails,
@@ -200,6 +200,8 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
   const safeAddress = extractSafeAddress()
   const txInfo = useTxInfo(transaction)
 
+  const submitDisabled = sameAddress(userAddress, safeAddress)
+
   const { executionInfo } = transaction
   const { confirmationsSubmitted = 0, confirmationsRequired = 0 } = isMultisigExecutionInfo(executionInfo)
     ? executionInfo
@@ -240,6 +242,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
         safeTxGas={txInfo.safeTxGas}
         onSubmit={approveTx}
         onClose={onClose}
+        isSubmitDisabled={submitDisabled}
       >
         <ModalHeader onClose={onClose} title={title} />
 
