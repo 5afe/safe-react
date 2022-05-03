@@ -7,14 +7,6 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 
-jest.mock('src/routes/routes', () => {
-  const original = jest.requireActual('src/routes/routes')
-  return {
-    ...original,
-    extractSafeAddress: () => '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
-  }
-})
-
 const mockStore = {
   [CURRENT_SESSION_REDUCER_ID]: {
     currentSafeAddress: '0xbc2BB26a6d821e69A38016f3858561a1D80d4182',
