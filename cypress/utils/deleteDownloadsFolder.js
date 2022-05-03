@@ -1,5 +1,5 @@
 /**
- * @returns void
+ * @type () => void
  */
 export const deleteDownloadsFolder = () => {
   const downloadsFolder = Cypress.config('downloadsFolder')

@@ -26,7 +26,7 @@
     "generate-types:erc721": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' './node_modules/@openzeppelin/contracts/build/contracts/ERC721.json'",
     "generate-types:spendingLimit": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./node_modules/@gnosis.pm/safe-modules-deployments/dist/assets/**/*.json",
     "generate-types:safeDeployments": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./node_modules/@gnosis.pm/safe-deployments/dist/assets/**/*.json",
-    "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
+    "lint:check": "eslint './src/**/*.{ts,tsx}'",
     "lint:fix": "yarn lint:check --fix",
     "postinstall": "patch-package && yarn generate-types",
     "prettier:check": "yarn prettier --check",
@@ -44,7 +44,7 @@
     "cypress:run": "node ./scripts/cypress.js run"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ]
