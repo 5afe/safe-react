@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, Identicon } from '@gnosis.pm/safe-react-components'
@@ -106,6 +106,9 @@ const Overview = (): ReactElement => {
     history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName }))
   }
 
+  // Native token is always returned even when its balance is 0
+  const tokenCount = useMemo(() => balances.filter((token) => token.tokenBalance !== '0').length, [balances])
+
   return (
     <WidgetContainer>
       <DashboardTitle>Dashboard</DashboardTitle>
@@ -138,7 +141,7 @@ const Overview = (): ReactElement => {
                 <Text color="inputDefault" size="lg">
                   Tokens
                 </Text>
-                <StyledText size="xl">{balances.length}</StyledText>
+                <StyledText size="xl">{tokenCount}</StyledText>
               </Grid>
               <Grid item xs={3}>
                 <Text color="inputDefault" size="lg">
