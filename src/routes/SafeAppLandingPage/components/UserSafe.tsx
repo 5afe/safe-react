@@ -31,8 +31,7 @@ const UserSafe = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps
 
   const compatibleUserSafes = getCompatibleSafes(ownedSafes, localSafes, availableChains, safeAppChainId, addressBook)
 
-  const selectedUserSafe =
-    compatibleUserSafes.find((safe) => safe.address === lastViewedSafeAddress) || compatibleUserSafes[0]
+  const selectedUserSafe = getDefaultSafe(compatibleUserSafes, lastViewedSafeAddress, safeAppChainId)
 
   const isWalletConnected = !!userAddress
 
@@ -84,7 +83,7 @@ const getCompatibleSafes = (
 
     const safesFromLocalstorage =
       localSafes[chainId]
-        ?.filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter the already added safes provided by the config service
+        ?.filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter the already added safes provided from the Config Service
         ?.map(({ address }) => ({
           address,
           chainId,
@@ -103,6 +102,31 @@ const getNameFromAddressBook = (addressBook: AddressBookEntry[], address: string
   )
 
   return addressBookEntry?.name || ''
+}
+
+const getDefaultSafe = (
+  compatibleUserSafes: CompatibleSafe[],
+  lastViewedSafeAddress: string | null,
+  safeAppChainId: string | null,
+) => {
+  // as a first option, we use the last viewed user Safe in the provided chain
+  const lastViewedSafe = compatibleUserSafes.find(
+    (safe) => safe.address === lastViewedSafeAddress && safe.chainId === safeAppChainId,
+  )
+
+  if (lastViewedSafe) {
+    return lastViewedSafe
+  }
+
+  // as a second option, we use any user Safe in the provided chain
+  const safeInTheSameChain = compatibleUserSafes.find((safe) => safe.chainId === safeAppChainId)
+
+  if (safeInTheSameChain) {
+    return safeInTheSameChain
+  }
+
+  // as a fallback we salect a random compatible user Safe
+  return compatibleUserSafes[0]
 }
 
 const UserSafeContainer = styled.div`
