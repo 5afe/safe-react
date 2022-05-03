@@ -1,7 +1,8 @@
 import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { ReactElement } from 'react'
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory, useRouteMatch, Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 import Col from 'src/components/layout/Col'
 import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
@@ -16,9 +17,24 @@ const TRANSACTION_TABS: Item[] = [
   { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
 ]
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  & * {
+    cursor: pointer !important;
+  }
+`
+
 const GatewayTransactions = (): ReactElement => {
   const history = useHistory()
   const { path } = useRouteMatch()
+  const isTxDetails = isDeeplinkedTx()
+
+  let breadcrumbText = 'History'
+  if (isTxDetails) {
+    breadcrumbText = 'Details'
+  } else if (path === SAFE_ROUTES.TRANSACTIONS_QUEUE) {
+    breadcrumbText = 'Queue'
+  }
 
   const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 
@@ -27,12 +43,22 @@ const GatewayTransactions = (): ReactElement => {
       <Menu>
         <Col start="sm" xs={12}>
           <Breadcrumb>
-            <BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />
-            {isDeeplinkedTx() && <BreadcrumbElement text="DETAILS" color="placeHolder" />}
+            {((parentCrumb) =>
+              !isTxDetails ? (
+                parentCrumb
+              ) : (
+                <StyledLink to={generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, extractPrefixedSafeAddress())}>
+                  {parentCrumb}
+                </StyledLink>
+              ))(<BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />)}
+
+            <BreadcrumbElement text={breadcrumbText.toUpperCase()} color="placeHolder" />
           </Breadcrumb>
         </Col>
       </Menu>
-      {!isDeeplinkedTx() && <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={path} />}
+
+      {!isTxDetails && <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={path} />}
+
       <ContentWrapper>
         <Switch>
           <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />

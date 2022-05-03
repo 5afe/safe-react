@@ -16,6 +16,8 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { ChainId } from 'src/config/chain.d'
 import { getChainById } from 'src/config'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
+import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 
 const StyledIcon = styled(Icon)<{ checked: boolean }>`
   ${({ checked }) => (checked ? { marginRight: '4px' } : { visibility: 'hidden', width: '28px' })}
@@ -49,6 +51,10 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   }
 `
 
+const AddressContainer = styled.div`
+  position: relative;
+`
+
 type Props = {
   onSafeClick: () => void
   onNetworkSwitch?: () => void
@@ -57,6 +63,8 @@ type Props = {
   showAddSafeLink?: boolean
   networkId: ChainId
   shouldScrollToSafe?: boolean
+  threshold?: number
+  owners?: SafeOwner[]
 }
 
 const SafeListItem = ({
@@ -67,6 +75,8 @@ const SafeListItem = ({
   showAddSafeLink = false,
   networkId,
   shouldScrollToSafe = false,
+  threshold,
+  owners,
 }: Props): ReactElement => {
   const history = useHistory()
   const safeName = useSelector((state) => addressBookName(state, { address, chainId: networkId }))
@@ -107,7 +117,10 @@ const SafeListItem = ({
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
-      <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
+      <AddressContainer>
+        {threshold && owners && <Threshold threshold={threshold} owners={owners.length} size={11} />}
+        <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
+      </AddressContainer>
       <ListItemSecondaryAction>
         {ethBalance ? (
           <StyledText size="lg">
