@@ -70,19 +70,13 @@ const ConnectWalletButton = styled(ConnectButton)`
   height: 52px;
 `
 
-type CompatibleSafe = {
-  address: string
-  chainId: string
-  name: string
-}
-
 const getCompatibleSafes = (
   ownedSafes: Record<string, string[]>,
   localSafes: LocalSafes,
   availableChains: string[],
   safeAppChainId: string | null,
   addressBook: AddressBookEntry[],
-): CompatibleSafe[] => {
+): AddressBookEntry[] => {
   // we include the chainId provided in the query params in the available chains list
   const compatibleChains =
     safeAppChainId && !availableChains.includes(safeAppChainId) ? [...availableChains, safeAppChainId] : availableChains
@@ -122,7 +116,7 @@ const getNameFromAddressBook = (addressBook: AddressBookEntry[], address: string
 }
 
 const getDefaultSafe = (
-  compatibleUserSafes: CompatibleSafe[],
+  compatibleUserSafes: AddressBookEntry[],
   lastViewedSafeAddress: string | null,
   safeAppChainId: string | null,
 ) => {
