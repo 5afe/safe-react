@@ -59,4 +59,6 @@ const SelectorContainer = styled.div`
   flex-grow: 1;
   justify-content: center;
   margin-top: 24px;
+  max-width: 320px;
+  width: 100%;
 `

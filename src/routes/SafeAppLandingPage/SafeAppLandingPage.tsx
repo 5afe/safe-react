@@ -136,4 +136,5 @@ const LoaderContainer = styled.div`
 
 const ActionsContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `

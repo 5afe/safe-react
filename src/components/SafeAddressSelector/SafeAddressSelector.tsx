@@ -34,6 +34,7 @@ const SafeAddressSelector = ({
         autoWidth
         disableUnderline
         IconComponent={ExpandMore}
+        fullWidth
       >
         {safes.map((safe) => (
           <StyledMenuItem key={`${safe.address}-${safe.chainId}`} value={safe.address}>
@@ -54,12 +55,9 @@ const SafeAddressSelector = ({
 
 export default SafeAddressSelector
 
-const SELECTOR_WIDTH = 320
-
 const StyledSafeSelector = styled(Select)`
   &.MuiInput-root {
     margin: 0;
-    width: ${SELECTOR_WIDTH}px;
     padding: 8px 16px;
     border-radius: 8px;
     border: 2px solid ${({ theme }) => theme.colors.separator};
@@ -77,6 +75,5 @@ const StyledSafeSelector = styled(Select)`
 `
 
 const StyledMenuItem = styled(MenuItem)`
-  width: ${SELECTOR_WIDTH}px;
   padding: 12px;
 `
