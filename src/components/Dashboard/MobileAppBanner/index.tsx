@@ -113,14 +113,16 @@ const MobileAppBanner = (): ReactElement | null => {
 
   const onClick = useCallback(() => {
     setCount((prevCount) => (prevCount === MAX_SLIDES ? 1 : prevCount + 1))
-  }, [])
-
-  const onClose = useCallback(() => {
-    setClosing(true)
+    trackEvent(MOBILE_APP_EVENTS.dashboardBannerClick)
   }, [])
 
   const onBack = useCallback(() => {
     setCount((prevCount) => (prevCount === 1 ? MAX_SLIDES : prevCount - 1))
+    trackEvent(MOBILE_APP_EVENTS.dashboardBannerClick)
+  }, [])
+
+  const onClose = useCallback(() => {
+    setClosing(true)
   }, [])
 
   const onDone = useCallback(() => {
