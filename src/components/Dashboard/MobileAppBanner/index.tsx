@@ -2,16 +2,9 @@ import { ReactElement, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from '@gnosis.pm/safe-react-components'
 import AppstoreButton from 'src/components/AppstoreButton'
-import { trackCustomClick } from 'src/utils/googleTagManager'
+import { trackEvent, CustomEvent } from 'src/utils/googleTagManager'
 import useCachedState from 'src/utils/storage/useCachedState'
-
-// Tracking
-const eventCategory = 'mobile-app-promotion'
-const eventAction = 'dashboard-banner'
-const eventLabels = {
-  alreadyUse: 'already-use',
-  notInterested: 'not-interested',
-}
+import MOBILE_APP_EVENTS from 'src/utils/events/mobile-app-promotion'
 
 const MAX_SLIDES = 5
 const CLOSE_SLIDE = 6
@@ -24,6 +17,8 @@ const StyledContainer = styled.div`
 `
 
 const StyledBanner = styled.div`
+  background-color: ${(props) => props.theme.colors.white};
+  border-radius: 8px;
   background-position: 0 0;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -84,8 +79,9 @@ const StyledButtons = styled.div`
 
 const UserSurvey = ({ onDone }: { onDone: () => void }): ReactElement => {
   const onReply = useCallback(
-    (label: string) => {
-      trackCustomClick(eventCategory, eventAction, label)
+    (event: CustomEvent) => {
+      trackEvent(event)
+
       setTimeout(() => {
         onDone()
       }, 300)
@@ -98,11 +94,11 @@ const UserSurvey = ({ onDone }: { onDone: () => void }): ReactElement => {
       <StyledBanner $count={CLOSE_SLIDE} />
 
       <StyledButtons>
-        <Button size="md" variant="outlined" color="primary" onClick={() => onReply(eventLabels.alreadyUse)}>
+        <Button size="md" variant="outlined" color="primary" onClick={() => onReply(MOBILE_APP_EVENTS.alreadyUse)}>
           Already use it!
         </Button>
 
-        <Button size="md" variant="outlined" color="primary" onClick={() => onReply(eventLabels.notInterested)}>
+        <Button size="md" variant="outlined" color="primary" onClick={() => onReply(MOBILE_APP_EVENTS.notInterested)}>
           Not interested
         </Button>
       </StyledButtons>

@@ -160,17 +160,14 @@ type EventDataLayer = {
   eventLabel?: EventLabel
 }
 
-export const trackEvent = ({
-  event,
-  category,
-  action,
-  label,
-}: {
+export type CustomEvent = {
   event: GTM_EVENT
   category: string
   action: string
   label?: EventLabel
-}): void => {
+}
+
+export const trackEvent = ({ event, category, action, label }: CustomEvent): void => {
   const dataLayer: EventDataLayer = {
     event,
     chainId: _getChainId(),
@@ -180,15 +177,6 @@ export const trackEvent = ({
   }
 
   track(dataLayer)
-}
-
-export const trackCustomClick = (category: string, action: string, label?: EventLabel): void => {
-  trackEvent({
-    event: GTM_EVENT.CLICK,
-    category,
-    action,
-    label,
-  })
 }
 
 type SafeAppEventDataLayer = {
