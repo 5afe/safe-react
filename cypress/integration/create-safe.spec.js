@@ -10,6 +10,7 @@ describe('Create Safe', () => {
     cy.get('[data-testid=create-safe-name-field]').type('Test Safe')
     cy.contains('button', 'Continue').click({ force: true })
     cy.contains('button', 'Continue').click({ force: true })
+    cy.wait(500) // TODO: Not sure why without this ends with "Transaction underpriced"
     cy.contains('button', 'Create').click({ force: true })
     cy.contains('Your Safe was created successfully', { timeout: 60000 })
   })
