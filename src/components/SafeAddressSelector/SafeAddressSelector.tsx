@@ -77,3 +77,10 @@ const StyledSafeSelector = styled(Select)`
 const StyledMenuItem = styled(MenuItem)`
   padding: 12px;
 `
+
+export const getAddressLabel = (address: string): string => {
+  const firstPart = address.slice(0, 6)
+  const lastPart = address.slice(38)
+
+  return `${firstPart}...${lastPart}`
+}
