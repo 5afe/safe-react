@@ -322,8 +322,8 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
       // we click on the Share Safe App Button
       fireEvent.click(compoundAppShareBtn)
 
-      const compaundUrl = 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k'
-      const shareSafeAppUrl = getShareSafeAppUrl(compaundUrl, CHAIN_ID.RINKEBY)
+      const compoundUrl = 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k'
+      const shareSafeAppUrl = getShareSafeAppUrl(compoundUrl, CHAIN_ID.RINKEBY)
 
       // share Safe app url is copied in the clipboard
       expect(copyToClipboardSpy).toHaveBeenCalledWith(shareSafeAppUrl)
