@@ -24,6 +24,8 @@ import { styles } from './style'
 import { ModalHeader } from '../ModalHeader'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { Field } from 'react-final-form'
+import { InputAdornment, TextField } from '@material-ui/core'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -96,7 +98,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send NFT" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Mint NFT" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
@@ -134,7 +136,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
             <>
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
-                <SafeInfo text="Sending from" />
+                <SafeInfo text="Minting with" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -186,23 +188,59 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md">
-                      NFT collection
+                    <Paragraph color="" noMargin size="md">
+                      Contract Name
                     </Paragraph>
+                  </Col>
+                </Row>
+                <Row margin="md">
+                  <Col>
+                    <Field
+                      component={TextField}
+                      // inputAdornment={{
+                      //   endAdornment: (
+                      //     <InputAdornment position="end">
+                      //       <InputAdornmentChildSymbol symbol={selectedToken?.symbol} />
+                      //     </InputAdornment>
+                      //   ),
+                      // }}
+                      name="name"
+                      placeholder="Name*"
+                      type="text"
+                      testId="name-input"
+                    />
                   </Col>
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md">
-                      Token ID
+                    <Paragraph color="" noMargin size="md">
+                      Symbol
                     </Paragraph>
+                  </Col>
+                </Row>
+                <Row margin="md">
+                  <Col>
+                    <Field
+                      component={TextField}
+                      // inputAdornment={{
+                      //   endAdornment: (
+                      //     <InputAdornment position="end">
+                      //       <InputAdornmentChildSymbol symbol={selectedToken?.symbol} />
+                      //     </InputAdornment>
+                      //   ),
+                      // }}
+                      name="symbol"
+                      placeholder="Symbol*"
+                      type="text"
+                      testId="symbol-input"
+                    />
                   </Col>
                 </Row>
               </Block>
               <Modal.Footer>
                 <Modal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
-                  confirmButtonProps={{ disabled: shouldDisableSubmitButton, testId: 'review-tx-btn', text: 'Review' }}
+                  confirmButtonProps={{ disabled: shouldDisableSubmitButton, testId: 'mint-tx-btn', text: 'Mint' }}
                 />
               </Modal.Footer>
             </>
