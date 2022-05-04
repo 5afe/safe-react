@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import PendingTxsList from 'src/components/Dashboard/PendingTxs/PendingTxsList'
 import Overview from 'src/components/Dashboard/Overview/Overview'
-import SafeAppsGrid from 'src/components/Dashboard/SafeApps/Grid'
+import SafeApps from 'src/components/Dashboard/SafeApps'
 import { FeaturedApps } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
 import { Grid } from '@material-ui/core'
 
@@ -21,7 +21,7 @@ const Dashboard = (): ReactElement => {
       </Grid>
 
       <Grid item xs={12}>
-        <SafeAppsGrid size={6} />
+        <SafeApps />
       </Grid>
     </Grid>
   )

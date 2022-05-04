@@ -9,28 +9,25 @@ import { sampleSize, uniqBy } from 'lodash'
 import { screenSm, screenMd } from 'src/theme/variables'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
-import Card, { CARD_HEIGHT, CARD_PADDING } from 'src/components/Dashboard/SafeApps/Card'
+import DashboardAppCard, { CARD_HEIGHT, CARD_PADDING } from 'src/components/Dashboard/SafeApps/DashboardAppCard'
 import ExploreIcon from 'src/assets/icons/explore.svg'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppsUsageData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import { FEATURED_APPS_TAG } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
-import { WidgetTitle, WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
+import { WidgetTitle, WidgetBody, WidgetContainer, Card } from 'src/components/Dashboard/styled'
 
 const SkeletonWrapper = styled.div`
   border-radius: 8px;
   overflow: hidden;
 `
 
-const StyledExplorerButton = styled.div`
-  background-color: white;
-  border-radius: 8px;
-  padding: 24px;
-
+const StyledExploreBlock = styled.div`
+  background: url(${ExploreIcon}) center top no-repeat;
+  padding-top: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
 `
 
 const StyledLink = styled(Link)`
@@ -39,6 +36,11 @@ const StyledLink = styled(Link)`
   > button {
     width: 200px;
   }
+`
+
+const StyledWidgetTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 const StyledGrid = styled.div`
@@ -83,11 +85,10 @@ const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: numb
   }, [allApps, pinnedSafeApps, size])
 }
 
-const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
+const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
   const { allApps, pinnedSafeApps, isLoading, togglePin } = useAppList()
   const displayedApps = useRankedApps(allApps, pinnedSafeApps, size)
-
-  const path = generatePath(GENERIC_APPS_ROUTE)
+  const allAppsUrl = generatePath(GENERIC_APPS_ROUTE)
 
   const LoadingState = useMemo(
     () => (
@@ -108,11 +109,14 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
 
   return (
     <WidgetContainer>
-      <WidgetTitle>Safe Apps</WidgetTitle>
+      <StyledWidgetTitle>
+        <WidgetTitle>Safe Apps</WidgetTitle>
+      </StyledWidgetTitle>
+
       <WidgetBody>
         <StyledGrid>
           {displayedApps.map((safeApp) => (
-            <Card
+            <DashboardAppCard
               key={safeApp.id}
               name={safeApp.name}
               description={safeApp.description}
@@ -122,18 +126,20 @@ const SafeAppsGrid = ({ size = 6 }: { size?: number }): ReactElement => {
               onPin={() => togglePin(safeApp)}
             />
           ))}
-          <StyledExplorerButton>
-            <img alt="Explore Safe Apps" src={ExploreIcon} />
-            <StyledLink to={path}>
-              <Button size="md" color="primary" variant="contained">
-                Explore Safe Apps
-              </Button>
-            </StyledLink>
-          </StyledExplorerButton>
+
+          <StyledLink to={allAppsUrl}>
+            <Card>
+              <StyledExploreBlock>
+                <Button size="md" color="primary" variant="contained">
+                  Explore Safe Apps
+                </Button>
+              </StyledExploreBlock>
+            </Card>
+          </StyledLink>
         </StyledGrid>
       </WidgetBody>
     </WidgetContainer>
   )
 }
 
-export default SafeAppsGrid
+export default SafeApps
