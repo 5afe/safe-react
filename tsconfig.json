@@ -21,7 +21,13 @@
     "downlevelIteration": true
   },
   "paths": {
-    "src/*": ["./*"]
+    "contracts/*": ["./contracts/*"],
+    "src/*": ["./*"],
+    "components/*": ["./src/components/*"],
+    "config/*": ["./src/config/*"],
+    "logic/*": ["./src/logic/*"],
+    "routes/*": ["./src/routes/*"],
+    "store/*": ["./src/store/*"],
   },
   "include": ["src/**/*", "public/**/*"],
   "exclude": ["node_modules"]
