@@ -30,12 +30,16 @@ import React from 'react'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { ethers } from 'ethers'
 
-import { abi as chocofactoryAbi } from 'contracts/artifacts/contracts/Chocofactory.sol/Chocofactory.json'
-import { abi as chocomoldAbi } from 'contracts/artifacts/contracts/Chocomold.sol/Chocomold.json'
-import chainIdConfig from 'contracts/chainId.json'
-import { NetworkName, ChainId } from 'contracts/helpers/types'
-import networkConfig from 'contracts/network.json'
-import { Chocomold, Chocofactory } from 'contracts/typechain'
+import { abi as chocofactoryAbi } from 'src/utils/Chocofactory.json'
+import { abi as chocomoldAbi } from 'src/utils/Chocomold.json'
+import chainIdConfig from 'src/utils/chainId.json'
+import { NetworkName, ChainId } from 'src/utils/helpers/types'
+import networkConfig from 'src/utils/network.json'
+import { Chocomold, Chocofactory } from 'src/utils/typechain'
+
+import { functions } from 'src/modules/firebase'
+import { history } from 'src/routes/routes'
+import { useWallet } from 'src/logic/hooks/useWallet'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -69,9 +73,9 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
 
   const [addressErrorMsg, setAddressErrorMsg] = useState('')
   const [name, setName] = React.useState('')
-  const [nameError, setNameError] = React.useState('')
   const [symbol, setSymbol] = React.useState('')
-  const [symbolError, setSymbolError] = React.useState('')
+
+  const { connectWallet } = useWallet()
 
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
@@ -129,7 +133,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
   const createNFTContract = async () => {
     // if (!validateForm()) return
     const { signer, signerAddress } = await connectWallet()
-    const signerNetwork = await signer.provider.getNetwork()
+    // const signerNetwork = await signer.provider.getNetwork()
     // if (chainId != signerNetwork.chainId.toString()) {
     //   const networkName = getNetworkNameFromChainId(chainId)
     //   // openNotificationToast({ type: 'error', text: `Please connect ${networkName} network` })
@@ -183,7 +187,6 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
       //   type: 'button',
       //   name: 'create_nft_contract',
       // })
-
       history.push(`/${chainId}/${nftContractAddress}`)
     } catch (err) {
       console.log(err)
@@ -305,6 +308,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
                       placeholder="Name*"
                       type="text"
                       testId="name-input"
+                      setState={setName}
                     />
                   </Col>
                 </Row>
@@ -331,6 +335,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
                       placeholder="Symbol*"
                       type="text"
                       testId="symbol-input"
+                      setState={setSymbol}
                     />
                   </Col>
                 </Row>
@@ -338,7 +343,12 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
               <Modal.Footer>
                 <Modal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
-                  confirmButtonProps={{ disabled: shouldDisableSubmitButton, testId: 'mint-tx-btn', text: 'Mint' }}
+                  confirmButtonProps={{
+                    onClick: createNFTContract,
+                    disabled: shouldDisableSubmitButton,
+                    testId: 'mint-tx-btn',
+                    text: 'Mint',
+                  }}
                 />
               </Modal.Footer>
             </>

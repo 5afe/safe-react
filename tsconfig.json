@@ -21,7 +21,6 @@
     "downlevelIteration": true
   },
   "paths": {
-    "contracts/*": ["./contracts/*"],
     "src/*": ["./*"],
     "components/*": ["./src/components/*"],
     "config/*": ["./src/config/*"],
