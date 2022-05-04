@@ -11,7 +11,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { Card, DashboardTitle } from 'src/components/Dashboard/styled'
+import { Card } from 'src/components/Dashboard/styled'
 import { WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
 import Button from 'src/components/layout/Button'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
@@ -96,7 +96,6 @@ const Overview = (): ReactElement => {
 
   return (
     <WidgetContainer>
-      <DashboardTitle>Dashboard</DashboardTitle>
       <WidgetBody>
         {!loaded ? (
           SkeletonOverview
