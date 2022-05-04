@@ -5,8 +5,7 @@ export const APPS_DASHBOARD = 'APPS_DASHBOARD'
 
 const TX_COUNT_WEIGHT = 2
 const OPEN_COUNT_WEIGHT = 1
-const MORE_RECENT_MULTIPLIER = 2
-const LESS_RECENT_MULTIPLIER = 1
+const PINNED_WEIGHT = 10
 
 export type AppTrackData = {
   [safeAppId: string]: {
@@ -46,20 +45,46 @@ export const trackSafeAppTxCount = (id: SafeApp['id']): void => {
   })
 }
 
-export const rankTrackedSafeApps = (apps: AppTrackData): string[] => {
-  const appsMap = Object.entries(apps)
+// https://stackoverflow.com/a/55212064
+const normalizeBetweenTwoRanges = (
+  val: number,
+  minVal: number,
+  maxVal: number,
+  newMin: number,
+  newMax: number,
+): number => {
+  return newMin + ((val - minVal) * (newMax - newMin)) / (maxVal - minVal)
+}
 
-  return appsMap
-    .sort((a, b) => {
-      // The more recently used app gets a bigger score/relevancy multiplier
-      const aTimeMultiplier = a[1].timestamp - b[1].timestamp > 0 ? MORE_RECENT_MULTIPLIER : LESS_RECENT_MULTIPLIER
-      const bTimeMultiplier = b[1].timestamp - a[1].timestamp > 0 ? MORE_RECENT_MULTIPLIER : LESS_RECENT_MULTIPLIER
+export const rankSafeApps = (apps: AppTrackData, pinnedSafeApps: SafeApp[]): string[] => {
+  const appsWithScore = computeTrackedSafeAppsScore(apps)
 
-      // The sorting score is a weighted function where the OPEN_COUNT weights differently than the TX_COUNT
-      const aScore = (TX_COUNT_WEIGHT * a[1].txCount + OPEN_COUNT_WEIGHT * a[1].openCount) * aTimeMultiplier
-      const bScore = (TX_COUNT_WEIGHT * b[1].txCount + OPEN_COUNT_WEIGHT * b[1].openCount) * bTimeMultiplier
+  for (const app of pinnedSafeApps) {
+    if (appsWithScore[app.id]) {
+      appsWithScore[app.id] += PINNED_WEIGHT
+    } else {
+      appsWithScore[app.id] = PINNED_WEIGHT
+    }
+  }
 
-      return bScore - aScore
-    })
-    .map((values) => values[0])
+  return Object.entries(appsWithScore)
+    .sort((a, b) => b[1] - a[1])
+    .map((app) => app[0])
+}
+
+export const computeTrackedSafeAppsScore = (apps: AppTrackData): Record<string, number> => {
+  const scoredApps: Record<string, number> = {}
+
+  const sortedByTimestamp = Object.entries(apps).sort((a, b) => {
+    return a[1].timestamp - b[1].timestamp
+  })
+
+  for (const [idx, app] of sortedByTimestamp.entries()) {
+    // UNIX Timestamps add too much weight, so we normalize by uniformly distributing them to range [1..2]
+    const timeMultiplier = normalizeBetweenTwoRanges(idx, 0, sortedByTimestamp.length, 1, 2)
+
+    scoredApps[app[0]] = (TX_COUNT_WEIGHT * app[1].txCount + OPEN_COUNT_WEIGHT * app[1].openCount) * timeMultiplier
+  }
+
+  return scoredApps
 }
