@@ -22,7 +22,7 @@ const useStyles = makeStyles(styles)
 const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
-  const { address: safeAddress = '', owners, threshold = 1 } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress = '', owners, threshold = 1 } = useSelector(currentSafe)
   const granted = useSelector(grantedSelector)
 
   const toggleModal = () => {

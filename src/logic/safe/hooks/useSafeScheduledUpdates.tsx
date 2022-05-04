@@ -4,7 +4,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 
-export const useSafeScheduledUpdates = (safeAddress?: string): void => {
+export const useSafeScheduledUpdates = (safeAddress?: string, isInitialLoad = false): void => {
   const dispatch = useDispatch()
   const [pollCount, setPollCount] = useState<number>(0)
   const chainId = useSelector(currentChainId)
@@ -12,7 +12,7 @@ export const useSafeScheduledUpdates = (safeAddress?: string): void => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (safeAddress) {
-        dispatch(fetchSafe(safeAddress))
+        dispatch(fetchSafe(safeAddress, isInitialLoad))
       }
       setPollCount((prev) => prev + 1)
     }, SAFE_POLLING_INTERVAL)
@@ -20,5 +20,5 @@ export const useSafeScheduledUpdates = (safeAddress?: string): void => {
     return () => {
       clearTimeout(timer)
     }
-  }, [dispatch, safeAddress, chainId, pollCount, setPollCount])
+  }, [dispatch, safeAddress, chainId, pollCount, setPollCount, isInitialLoad])
 }

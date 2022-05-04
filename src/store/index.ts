@@ -44,7 +44,7 @@ import appearanceReducer, {
   initialAppearanceState,
   AppearanceState,
 } from 'src/logic/appearance/reducer/appearance'
-import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
+import { NFTAssets, NFTTokensStore } from 'src/logic/collectibles/sources/collectibles'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
@@ -106,7 +106,7 @@ export type AppReduxState = CombinedState<{
   [PROVIDER_REDUCER_ID]: ProvidersState
   [SAFE_REDUCER_ID]: SafeReducerMap
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
-  [NFT_TOKENS_REDUCER_ID]: NFTTokens
+  [NFT_TOKENS_REDUCER_ID]: NFTTokensStore
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: GatewayTransactionsState
   [PENDING_TRANSACTIONS_ID]: PendingTransactionsState
@@ -121,5 +121,5 @@ export type AppReduxState = CombinedState<{
 
 export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
 
-export const createPreloadedStore = (localState = {} as PreloadedState<unknown>): typeof store =>
+export const createPreloadedStore = (localState = {} as PreloadedState<Record<string, unknown>>): typeof store =>
   createStore(rootReducer, localState, enhancer)

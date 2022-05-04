@@ -20,8 +20,8 @@ import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResol
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
 import { ModalHeader } from '../ModalHeader'
-import { extractSafeAddress } from 'src/routes/routes'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -54,7 +54,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   switchMethod,
 }) => {
   const classes = useStyles()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   let setCallResults
 
   useMemo(() => {

@@ -21,9 +21,9 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { LegacyMethods, useAppCommunicator } from '../communicator'
 import { SafeApp } from '../types'
-import { useAppCommunicator } from '../communicator'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
@@ -37,12 +37,14 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
+import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  margin: 0 -16px;
+  height: calc(100% + 16px);
+  margin: -8px -24px;
 `
 
 const StyledCard = styled(Card)`
@@ -102,6 +104,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const errorTimer = useRef<number>()
   const [, setAppLoadError] = useState<boolean>(false)
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
+  const { remoteSafeApps } = useRemoteSafeApps()
+  const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
 
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
@@ -133,6 +137,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       clearTimeouts()
     }
   }, [appIsLoading])
+
+  useEffect(() => {
+    if (!currentApp) return
+
+    trackSafeAppOpenCount(currentApp.id)
+  }, [currentApp])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
@@ -180,7 +190,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     /**
      * @deprecated: getEnvInfo is a legacy method. Should not be used
      */
-    communicator?.on('getEnvInfo', () => ({
+    communicator?.on(LegacyMethods.getEnvInfo, () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
 
@@ -291,6 +301,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send({ safeTxHash }, requestId as string)
+
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_CONFIRMED, label: safeApp.name })
   }
 
   const onTxReject = (requestId: RequestId) => {
@@ -302,6 +314,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send('Transaction was rejected', requestId as string, true)
+
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
   }
 
   useEffect(() => {
@@ -362,6 +376,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         onUserConfirm={onUserTxConfirm}
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
+        appId={currentApp?.id}
       />
 
       <SignMessageModal

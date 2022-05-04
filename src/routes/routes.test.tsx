@@ -94,9 +94,6 @@ describe('extractPrefixedSafeAddress', () => {
   })
 })
 
-// Not testing extractShortChainName or extractSafeAddress because
-// they return from { [key]: extractPrefixedSafeAddress()[key] }
-
 describe('getPrefixedSafeAddressSlug', () => {
   it('returns a chain-specific address slug with provided safeAddress/shortName', () => {
     const shortName = 'matic'
@@ -115,7 +112,7 @@ describe('getPrefixedSafeAddressSlug', () => {
     // Check for route change as function references this
     expect(history.location.pathname).toBe(route)
 
-    const slug = getPrefixedSafeAddressSlug({ safeAddress: validSafeAddress })
+    const slug = getPrefixedSafeAddressSlug({ shortName, safeAddress: validSafeAddress })
 
     expect(slug).toBe(`${shortName}:${validSafeAddress}`)
   })
@@ -131,7 +128,7 @@ describe('getPrefixedSafeAddressSlug', () => {
     // Check for route change as function references this
     expect(history.location.pathname).toBe(route)
 
-    const slug = getPrefixedSafeAddressSlug()
+    const slug = getPrefixedSafeAddressSlug({ shortName, safeAddress: fakeAddress })
 
     expect(slug).toBe(`${shortName}:${fakeAddress}`)
   })

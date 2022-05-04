@@ -11,10 +11,10 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { ExpandedTxDetails, isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { extractSafeAddress } from 'src/routes/routes'
 import { Overwrite } from 'src/types/helpers'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type Props = {
   isOpen: boolean
@@ -24,7 +24,7 @@ type Props = {
 
 export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const classes = useStyles()
   const executionInfo = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo : undefined
 

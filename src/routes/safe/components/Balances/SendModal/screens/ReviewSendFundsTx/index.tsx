@@ -12,7 +12,8 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { getSpendingLimitContract, getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
@@ -27,7 +28,6 @@ import { styles } from './style'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
@@ -35,6 +35,7 @@ import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/Tr
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -86,7 +87,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
   const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
@@ -95,11 +96,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCurrency.decimals) : '0'
   const txData = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
   const isSpendingLimitTx = isSpendingLimit(tx.txType)
+  const chainId = useSelector(currentChainId)
 
   const submitTx = async (txParameters: TxParameters, delayExecution: boolean) => {
     if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
-      const spendingLimit = getSpendingLimitContract()
+      const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
+      const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
       try {
         trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
 

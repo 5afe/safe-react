@@ -72,7 +72,7 @@ export const getDefaultGasEstimation = ({
   return {
     txEstimationExecutionStatus,
     gasCost: '0',
-    gasCostFormatted: '< 0.001',
+    gasCostFormatted: '> 0.001',
     gasPrice,
     gasPriceFormatted,
     gasMaxPrioFee,
@@ -120,7 +120,7 @@ export const useEstimateTransactionGas = ({
     }),
   )
   const nativeCurrency = getNativeCurrency()
-  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
   const { account: from } = useSelector(providerSelector)
 
   useEffect(() => {

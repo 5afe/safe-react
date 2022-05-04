@@ -116,7 +116,7 @@ const SendCollectible = ({
 
   return (
     <>
-      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send collectible" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send NFT" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
@@ -192,27 +192,25 @@ const SendCollectible = ({
                     </Row>
                   </div>
                 ) : (
-                  <>
-                    <Row margin="md">
-                      <Col xs={11}>
-                        <AddressBookInput
-                          fieldMutator={mutators.setRecipient}
-                          pristine={pristine}
-                          errorMsg={addressErrorMsg}
-                          setIsValidAddress={setIsValidAddress}
-                          setSelectedEntry={setSelectedEntry}
-                        />
-                      </Col>
-                      <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <ScanQRWrapper handleScan={handleScan} />
-                      </Col>
-                    </Row>
-                  </>
+                  <Row margin="md">
+                    <Col xs={11}>
+                      <AddressBookInput
+                        fieldMutator={mutators.setRecipient}
+                        pristine={pristine}
+                        errorMsg={addressErrorMsg}
+                        setIsValidAddress={setIsValidAddress}
+                        setSelectedEntry={setSelectedEntry}
+                      />
+                    </Col>
+                    <Col center="xs" className={classes} middle="xs" xs={1}>
+                      <ScanQRWrapper handleScan={handleScan} />
+                    </Col>
+                  </Row>
                 )}
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph color="disabled" noMargin size="md">
-                      Collectible
+                      NFT collection
                     </Paragraph>
                   </Col>
                 </Row>

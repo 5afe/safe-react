@@ -1,7 +1,7 @@
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import { Action, handleActions } from 'redux-actions'
-import merge from 'lodash/merge'
+import { LabelValue } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -9,7 +9,6 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import {
   HistoryGatewayResponse,
-  isConflictHeader,
   isLabel,
   isMultisigExecutionInfo,
   isTransactionSummary,
@@ -17,8 +16,8 @@ import {
   StoreStructure,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
+import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
@@ -43,32 +42,20 @@ export type TransactionDetailsPayload = {
 
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
 
-const getSingularUpdatedQueueTx = (storedTx: Transaction, newTx: Transaction) => {
-  const isUpdatedTx =
-    isMultisigExecutionInfo(storedTx.executionInfo) &&
-    isMultisigExecutionInfo(newTx.executionInfo) &&
-    storedTx.executionInfo.confirmationsSubmitted !== newTx.executionInfo.confirmationsSubmitted
+/**
+ * Create a hash map of transactions by nonce.
+ * Each nonce maps to one or more transactions (e.g. original tx and a rejection tx).
+ */
+const makeQueueByNonce = (items: QueuedGatewayResponse['results']): Record<string, Transaction[]> => {
+  return items.reduce((result, item) => {
+    if (!(isTransactionSummary(item) && isMultisigExecutionInfo(item.transaction.executionInfo))) return result
 
-  return isUpdatedTx
-    ? // Will remove txDetails as they will have changed because of new confirmations
-      newTx
-    : // Create new object, preserving txDetails
-      merge({}, storedTx, newTx)
-}
+    const { nonce } = item.transaction.executionInfo
+    if (!result[nonce]) result[nonce] = []
+    result[nonce].push(item.transaction)
 
-const getUpdatedQueueTxs = (txs: Transaction[], newTx: Transaction) => {
-  const newTxs = txs.slice()
-  const txIndex = txs.findIndex(({ id }) => sameString(id, newTx.id))
-
-  if (txIndex >= 0) {
-    const storedTx = newTxs[txIndex]
-    newTxs[txIndex] = getSingularUpdatedQueueTx(storedTx, newTx)
-  } else {
-    newTxs.push(newTx)
-    newTxs.sort((a, b) => a.timestamp - b.timestamp)
-  }
-
-  return newTxs
+    return result
+  }, {})
 }
 
 export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState, Payload>(
@@ -118,68 +105,24 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         },
       }
     },
-    // If a queued transaction summary is added, it will either be added to the singular `queued.next`
-    // list or the pushed/update the `queued.queued` list by nonce in descending date order. If the
-    // number of confirmations differs in comparison to the stored one, the tx will be overwritten
+
+    // Queue is overwritten completely on every update
+    // CGW sends a list of items where some items are LABELS (next and queued),
+    // some are CONFLICT_HEADERS (ignored),
+    // and some are actual TRANSACTIONS.
+    // We split the queue into next and queued by the index of the "Queued" LABEL.
+    // Then group TRANSACTIONS by their nonces.
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
       const { chainId, safeAddress, values } = action.payload
-      let newNext = state[chainId]?.[safeAddress]?.queued?.next || {}
-      // We must clone as we delete transactions that move from queue to next
-      let newQueued = { ...(state[chainId]?.[safeAddress]?.queued?.queued || {}) }
 
-      let label: 'next' | 'queued' | undefined
-
-      values.forEach((value) => {
-        if (isLabel(value)) {
-          // we're assuming that the first page will always provide `next` and `queued` labels
-          label = value.label.toLowerCase() as 'next' | 'queued'
-          return
-        }
-
-        if (
-          // Conflict headers are not needed in the current implementation
-          isConflictHeader(value) ||
-          !isMultisigExecutionInfo(value.transaction.executionInfo)
-        ) {
-          return
-        }
-
-        const txNonce = value.transaction.executionInfo?.nonce
-
-        if (txNonce === undefined) {
-          console.warn('A transaction without nonce was provided by client-gateway:', JSON.stringify(value))
-          return
-        }
-
-        if (!label) {
-          const oldNext = state[chainId]?.[safeAddress]?.queued?.next
-          label = oldNext?.[txNonce] ? 'next' : 'queued'
-        }
-
-        const newTx = value.transaction
-
-        if (label === 'queued') {
-          if (newQueued?.[txNonce]) {
-            newQueued[txNonce] = getUpdatedQueueTxs(newQueued[txNonce], newTx)
-          } else {
-            newQueued = { ...newQueued, [txNonce]: [newTx] }
-          }
-        } else {
-          if (newNext?.[txNonce]) {
-            newNext[txNonce] = getUpdatedQueueTxs(newNext[txNonce], newTx)
-          } else {
-            newNext = { [txNonce]: [newTx] }
-          }
-          // Remove queued transaction from queue that moved to next
-          if (newQueued?.[txNonce]) {
-            delete newQueued[txNonce]
-          }
-        }
-      })
-
-      // No new txs, empty queue list, cleanup
-      if (!values.length && !Object.keys(newQueued).length && Object.keys(newNext).length === 1) {
-        newNext = {}
+      // From the list of TransactionItems, create two sub-lists split by where the "Queued" label is.
+      // If there's no "Queued" label, put all the items into the "next" group.
+      let nextItems = values
+      let queuedItems = values.slice(0, 0)
+      const qLabelIndex = values.findIndex((item) => isLabel(item) && item.label === LabelValue.Queued)
+      if (qLabelIndex >= 0) {
+        nextItems = values.slice(0, qLabelIndex)
+        queuedItems = values.slice(qLabelIndex)
       }
 
       return {
@@ -190,10 +133,10 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
           [safeAddress]: {
             // keep history list
             ...state[chainId]?.[safeAddress],
-            // overwrites queued lists
+            // overwrite queued lists
             queued: {
-              next: newNext,
-              queued: newQueued,
+              next: makeQueueByNonce(nextItems),
+              queued: makeQueueByNonce(queuedItems),
             },
           },
         },
@@ -220,7 +163,7 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
         for (const [timestamp, transactions] of Object.entries(txGroup)) {
           const txIndex = transactions.findIndex(({ id }) => sameString(id, transactionId))
 
-          if (txIndex !== -1) {
+          if (txIndex >= 0) {
             txGroup[timestamp][txIndex]['txDetails'] = value
             break txLocationLoop
           }
