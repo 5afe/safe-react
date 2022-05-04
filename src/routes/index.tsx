@@ -14,15 +14,14 @@ import {
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
-  extractSafeAddress,
   SAFE_ROUTES,
   GENERIC_APPS_ROUTE,
   SAFE_APP_LANDING_PAGE_ROUTE,
 } from './routes'
-import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
 import { usePageTracking } from 'src/utils/googleTagManager'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -34,6 +33,7 @@ const Routes = (): React.ReactElement => {
   const location = useLocation()
   const { pathname } = location
   const lastSafe = useSelector(lastViewedSafe)
+  const { shortName, safeAddress } = useSafeAddress()
 
   // Google Tag Manager page tracking
   usePageTracking()
@@ -88,7 +88,7 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
-                  shortName: getShortName(),
+                  shortName,
                   safeAddress: lastSafe,
                 })}
               />
@@ -108,7 +108,7 @@ const Routes = (): React.ReactElement => {
             return <Redirect to={WELCOME_ROUTE} />
           }
           const redirectPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-            shortName: getShortName(),
+            shortName,
             safeAddress: lastSafe,
           })
           return <Redirect to={`${redirectPath}${location.search}`} />
@@ -125,7 +125,6 @@ const Routes = (): React.ReactElement => {
           // Routes with a shortName prefix
           const validShortName = setChainIdFromUrl(pathname)
           // Safe address is used as a key to re-render the entire SafeContainer
-          const safeAddress = extractSafeAddress()
           return validShortName ? <SafeContainer key={safeAddress} /> : <Redirect to={WELCOME_ROUTE} />
         }}
       />

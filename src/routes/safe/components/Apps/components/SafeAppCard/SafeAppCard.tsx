@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import IconButton from '@material-ui/core/IconButton'
 import { Card, Title, Text, Icon } from '@gnosis.pm/safe-react-components'
 
-import { extractSafeAddress, generateSafeRoute, getShareSafeAppUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { generateSafeRoute, getShareSafeAppUrl, SAFE_ROUTES } from 'src/routes/routes'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import fallbackSafeAppLogoSvg from 'src/assets/icons/apps.svg'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -17,6 +17,7 @@ import { copyToClipboard } from 'src/utils/clipboard'
 import { getShortName } from 'src/config'
 import { SafeAppDescriptionSK, SafeAppLogoSK, SafeAppTitleSK } from './SafeAppSkeleton'
 import { primary200, primary300 } from 'src/theme/variables'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type SafeAppCardSize = 'md' | 'lg'
 
@@ -40,7 +41,7 @@ const SafeAppCard = ({
   const chainId = useSelector(currentChainId)
   const dispatch = useDispatch()
 
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
     shortName: getShortName(),
     safeAddress,

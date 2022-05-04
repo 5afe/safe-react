@@ -11,8 +11,8 @@ import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
-import { getShortName } from 'src/config'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -26,7 +26,8 @@ enum SECTION_NAME {
 }
 
 const Balances = (): ReactElement => {
-  const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
+  const { shortName, safeAddress } = useSafeAddress()
+  const { featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const [showReceive, setShowReceive] = useState<boolean>(false)
   const [sentToken, setSentToken] = useState<string>('')
@@ -35,7 +36,7 @@ const Balances = (): ReactElement => {
   const matchSafeWithBalancesSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const currentSafeRoutes = generatePrefixedAddressRoutes({
-    shortName: getShortName(),
+    shortName,
     safeAddress,
   })
 

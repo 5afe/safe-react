@@ -10,7 +10,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { extractSafeAddress } from 'src/routes/routes'
 
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
@@ -22,6 +21,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 import { store } from 'src/store'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -72,7 +72,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const safeVersion = useSelector(currentSafeCurrentVersion)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)

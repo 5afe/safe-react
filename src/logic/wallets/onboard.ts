@@ -48,10 +48,13 @@ const hasENSSupport = (chainId: ChainId): boolean => {
   return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
 }
 
+export const BLOCK_POLLING_INTERVAL = 1000 * 60 * 60 // 1 hour
+
 const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
     networkId: parseInt(chainId, 10),
     networkName: getNetworkName(chainId),
+    blockPollingInterval: BLOCK_POLLING_INTERVAL,
     subscriptions: {
       wallet: async (wallet) => {
         store.dispatch(updateProviderWallet(wallet.name || ''))

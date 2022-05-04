@@ -10,7 +10,7 @@ import uniqBy from 'lodash/uniqBy'
 import Collapse from 'src/components/Collapse'
 import SafeListItem from './SafeListItem'
 import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
-import { extractSafeAddress, WELCOME_ROUTE } from 'src/routes/routes'
+import { WELCOME_ROUTE } from 'src/routes/routes'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { setChainId } from 'src/logic/config/utils'
 import { useSelector } from 'react-redux'
@@ -20,6 +20,7 @@ import { getChains } from 'src/config/cache/chains'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { getChainById } from 'src/config'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const MAX_EXPANDED_SAFES = 3
 
@@ -73,7 +74,7 @@ const isSameAddress = (addrA: string, addrB: string): boolean => addrA.toLowerCa
 
 export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
-  const currentSafeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const ownedSafes = useOwnerSafes()
   const localSafes = useLocalSafes()
   const curChainId = useSelector(currentChainId)
@@ -105,11 +106,9 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
         }
 
         let shouldExpandOwnedSafes = false
-        if (isCurrentNetwork && ownedSafesOnNetwork.includes(currentSafeAddress)) {
+        if (isCurrentNetwork && ownedSafesOnNetwork.includes(safeAddress)) {
           // Expand the Owned Safes if the current Safe is owned, but not added
-          shouldExpandOwnedSafes = !localSafesOnNetwork.some(({ address }) =>
-            isSameAddress(address, currentSafeAddress),
-          )
+          shouldExpandOwnedSafes = !localSafesOnNetwork.some(({ address }) => isSameAddress(address, safeAddress))
         } else {
           // Expand the Owned Safes if there are no added Safes
           shouldExpandOwnedSafes = !localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES

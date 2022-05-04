@@ -23,9 +23,9 @@ import { SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
-import { extractSafeAddress } from 'src/routes/routes'
-import { PinnedAppsTutorial } from './PinnedAppsTutorial'
 import SafeAppCard from 'src/routes/safe/components/Apps/components/SafeAppCard/SafeAppCard'
+import { PinnedAppsTutorial } from './PinnedAppsTutorial'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const PINNED_APPS_LIST_TEST_ID = 'safe_apps__pinned-apps-container'
 export const ALL_APPS_LIST_TEST_ID = 'safe_apps__all-apps-container'
@@ -90,7 +90,7 @@ const AddCustomAppLogo = styled.img`
 `
 
 const AppsList = (): React.ReactElement => {
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const [appSearch, setAppSearch] = useState('')
   const { allApps, appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
   const apps = useAppsSearch(appList, appSearch)

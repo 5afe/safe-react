@@ -15,12 +15,12 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
-import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 import { getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -30,7 +30,7 @@ interface RemoveSpendingLimitModalProps {
 
 export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): ReactElement => {
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const chainId = useSelector(currentChainId)
