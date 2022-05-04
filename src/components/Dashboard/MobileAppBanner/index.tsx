@@ -61,6 +61,18 @@ const StyledCloseButton = styled.button`
   opacity: 0;
 `
 
+const StyledBackButton = styled.button`
+  position: absolute;
+  z-index: 2;
+  left: 38px;
+  bottom: 30px;
+  opacity: 0.5;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  opacity: 0;
+`
+
 const StyledButtons = styled.div`
   position: absolute;
   z-index: 2;
@@ -111,6 +123,10 @@ const MobileAppBanner = (): ReactElement | null => {
     setClosing(true)
   }, [])
 
+  const onBack = useCallback(() => {
+    setCount((prevCount) => (prevCount === 1 ? MAX_SLIDES : prevCount - 1))
+  }, [])
+
   const onDone = useCallback(() => {
     setClosed(true)
   }, [setClosed])
@@ -124,6 +140,8 @@ const MobileAppBanner = (): ReactElement | null => {
           <StyledBanner $count={count} onClick={onClick} />
 
           <StyledCloseButton onClick={onClose} />
+
+          <StyledBackButton onClick={onBack} />
 
           {count === 1 && (
             <StyledAppstoreButton>
