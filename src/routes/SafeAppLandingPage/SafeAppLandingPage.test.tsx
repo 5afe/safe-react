@@ -308,6 +308,14 @@ describe('<SafeAppLandingPage>', () => {
       expect(queryByText(selectorModal, getAddressLabel(ownedSafe2))).toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(storedSafe))).toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(incompatibleSafe))).not.toBeInTheDocument()
+
+      // redirect button
+      const openSafeAppLinkNode = screen.getByText('Connect Safe').closest('a')
+
+      expect(openSafeAppLinkNode).toHaveAttribute(
+        'href',
+        `/rin:${ownedSafe2}/apps?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`,
+      )
     })
 
     it('Selects a Safe in the provided chain as a default option if no last viewed Safe is defined', async () => {
@@ -378,6 +386,14 @@ describe('<SafeAppLandingPage>', () => {
       expect(queryByText(selectorModal, getAddressLabel(ownedSafe2))).toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(storedSafe))).toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(incompatibleSafe))).not.toBeInTheDocument()
+
+      // redirect button
+      const openSafeAppLinkNode = screen.getByText('Connect Safe').closest('a')
+
+      expect(openSafeAppLinkNode).toHaveAttribute(
+        'href',
+        `/rin:${ownedSafe1}/apps?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`,
+      )
     })
 
     it('Selects a Safe from local storage if no owned safe is returned from service', async () => {
@@ -503,6 +519,14 @@ describe('<SafeAppLandingPage>', () => {
       expect(queryByText(selectorModal, getAddressLabel(ownedSafe2))).toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(storedSafe))).not.toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(incompatibleSafe))).not.toBeInTheDocument()
+
+      // redirect button
+      const openSafeAppLinkNode = screen.getByText('Connect Safe').closest('a')
+
+      expect(openSafeAppLinkNode).toHaveAttribute(
+        'href',
+        `/rin:${ownedSafe1}/apps?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`,
+      )
     })
 
     it('Shows Create Safe Button if no Safe is compatible', async () => {
@@ -623,10 +647,23 @@ describe('<SafeAppLandingPage>', () => {
       expect(queryByText(selectorModal, getAddressLabel(storedSafe))).toBeInTheDocument()
       expect(queryByText(selectorModal, getAddressLabel(incompatibleSafe))).not.toBeInTheDocument()
 
+      // redirect button
+      const openSafeAppLinkNode = screen.getByText('Connect Safe').closest('a')
+
+      expect(openSafeAppLinkNode).toHaveAttribute(
+        'href',
+        `/rin:${ownedSafe2}/apps?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`,
+      )
+
       // we select a different Safe
       fireEvent.click(getByText(selectorModal, getAddressLabel(ownedSafe1)))
 
       expect(screen.getByRole('textbox', { hidden: true })).toHaveValue(ownedSafe1)
+
+      expect(openSafeAppLinkNode).toHaveAttribute(
+        'href',
+        `/rin:${ownedSafe1}/apps?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`,
+      )
     })
   })
 })
