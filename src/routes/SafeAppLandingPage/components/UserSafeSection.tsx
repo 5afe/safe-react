@@ -1,20 +1,17 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
-import { Title, Button, Text } from '@gnosis.pm/safe-react-components'
-import { Link } from 'react-router-dom'
+import { Title } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
-import SuccessSvg from 'src/assets/icons/safe-created.svg'
-import { generateSafeRoute, OPEN_SAFE_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import SafeAddressSelector from 'src/components/SafeAddressSelector/SafeAddressSelector'
 import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import useLocalSafes, { LocalSafes } from 'src/logic/safe/hooks/useLocalSafes'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
 import { addressBookState } from 'src/logic/addressBook/store/selectors'
-import { getChainById } from 'src/config'
+import CreateNewSafe from './CreateNewSafe'
+import UseYourSafe from './UseYourSafe'
 
 type UserSafeProps = {
   safeAppUrl: string
@@ -22,7 +19,7 @@ type UserSafeProps = {
   safeAppChainId: string | null
 }
 
-const UserSafe = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps): ReactElement => {
+const UserSafeSection = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps): ReactElement => {
   const userAddress = useSelector(userAccountSelector)
   const lastViewedSafeAddress = useSelector(lastViewedSafe)
   const ownedSafes = useOwnerSafes()
@@ -40,7 +37,7 @@ const UserSafe = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps
       <Title size="xs">Use the dApp with your Safe!</Title>
       {isWalletConnected ? (
         selectedUserSafe ? (
-          <SelectedUserSafe safeAppUrl={safeAppUrl} defaultSafe={selectedUserSafe} safes={compatibleUserSafes} />
+          <UseYourSafe safeAppUrl={safeAppUrl} defaultSafe={selectedUserSafe} safes={compatibleUserSafes} />
         ) : (
           <CreateNewSafe safeAppUrl={safeAppUrl} />
         )
@@ -53,7 +50,25 @@ const UserSafe = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps
   )
 }
 
-export default UserSafe
+export default UserSafeSection
+
+const UserSafeContainer = styled.div`
+  flex: 1 0 50%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const ConnectWalletContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`
+const ConnectWalletButton = styled(ConnectButton)`
+  height: 52px;
+`
 
 type CompatibleSafe = {
   address: string
@@ -130,93 +145,3 @@ const getDefaultSafe = (
   // as a fallback we salect a random compatible user Safe
   return compatibleUserSafes[0]
 }
-
-const UserSafeContainer = styled.div`
-  flex: 1 0 50%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-const StyledCreateButton = styled(Button)`
-  margin-top: 30px;
-`
-
-const ConnectWalletContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-`
-const ConnectWalletButton = styled(ConnectButton)`
-  height: 52px;
-`
-
-type CreateNewSafeProps = {
-  safeAppUrl: string
-}
-
-const CreateNewSafe = ({ safeAppUrl }: CreateNewSafeProps): ReactElement => {
-  const createSafeLink = `${OPEN_SAFE_ROUTE}?redirect=${encodeURIComponent(`${SAFE_ROUTES.APPS}?appUrl=${safeAppUrl}`)}`
-
-  return (
-    <>
-      <img alt="Vault" height={92} src={SuccessSvg} />
-
-      <StyledCreateButton size="lg" color="primary" variant="contained" component={Link} to={createSafeLink}>
-        <Text size="xl" color="white">
-          Create new Safe
-        </Text>
-      </StyledCreateButton>
-    </>
-  )
-}
-
-type SelectedUserSafeTypes = {
-  defaultSafe: AddressBookEntry
-  safeAppUrl: string
-  safes: AddressBookEntry[]
-}
-
-const SelectedUserSafe = ({ safeAppUrl, defaultSafe, safes }: SelectedUserSafeTypes): ReactElement => {
-  const [selectedSafe, setSelectedSafe] = useState<AddressBookEntry>(defaultSafe)
-
-  useEffect(() => {
-    setSelectedSafe(defaultSafe)
-  }, [defaultSafe])
-
-  const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-    shortName: getChainById(selectedSafe.chainId).shortName,
-    safeAddress: selectedSafe.address,
-  })
-  const openSafeAppLink = `${appsPath}?appUrl=${encodeURI(safeAppUrl)}`
-
-  return (
-    <>
-      <SelectorContainer>
-        <SafeAddressSelector
-          value={selectedSafe.address}
-          safes={safes}
-          onChange={(event) => {
-            const newSelectedSafe = safes.find(({ address }) => address === event.target.value)
-            if (newSelectedSafe) {
-              setSelectedSafe(newSelectedSafe)
-            }
-          }}
-        />
-      </SelectorContainer>
-
-      <StyledCreateButton size="lg" color="primary" variant="contained" component={Link} to={openSafeAppLink}>
-        <Text size="xl" color="white">
-          Connect Safe
-        </Text>
-      </StyledCreateButton>
-    </>
-  )
-}
-
-const SelectorContainer = styled.div`
-  flex-grow: 1;
-  justify-content: center;
-  margin-top: 24px;
-`

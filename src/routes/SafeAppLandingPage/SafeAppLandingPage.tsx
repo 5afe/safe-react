@@ -15,7 +15,7 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import SafeAppDetails from 'src/routes/SafeAppLandingPage/components/SafeAppsDetails'
 import TryDemoSafe from 'src/routes/SafeAppLandingPage/components/TryDemoSafe'
-import UserSafe from './components/UserSafe'
+import UserSafeSection from './components/UserSafeSection'
 
 const SafeAppLandingPage = (): ReactElement => {
   const query = useQuery()
@@ -96,7 +96,11 @@ const SafeAppLandingPage = (): ReactElement => {
 
             <ActionsContainer>
               {/* User Safe Section */}
-              <UserSafe safeAppUrl={safeAppUrl} availableChains={availableChains} safeAppChainId={safeAppChainId} />
+              <UserSafeSection
+                safeAppUrl={safeAppUrl}
+                availableChains={availableChains}
+                safeAppChainId={safeAppChainId}
+              />
 
               {/* Demo Safe Section */}
               <TryDemoSafe safeAppUrl={safeAppUrl} />
