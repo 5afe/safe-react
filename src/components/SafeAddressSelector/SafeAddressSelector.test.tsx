@@ -61,7 +61,6 @@ describe('<SafeAddressSelector />', () => {
     // opens the selector
     fireEvent.mouseDown(getByRole(selectorNode, 'button'))
 
-    // selector options open
     const selectorModal = screen.getByRole('presentation')
     expect(selectorModal).toBeInTheDocument()
 
@@ -85,7 +84,6 @@ describe('<SafeAddressSelector />', () => {
     // opens the selector
     fireEvent.mouseDown(getByRole(selectorNode, 'button'))
 
-    // selector options open
     const selectorModal = screen.getByRole('presentation')
     expect(selectorModal).toBeInTheDocument()
 
