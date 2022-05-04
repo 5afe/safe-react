@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Title, Button, Text } from '@gnosis.pm/safe-react-components'
 import { Link } from 'react-router-dom'
@@ -74,6 +74,7 @@ const getCompatibleSafes = (
 
   // we collect all compatible safes from the Config Service & Local Storage
   const compatibleSafes = compatibleChains.reduce((compatibleSafes, chainId) => {
+    // Safes from Config Service
     const safesFromConfigService =
       ownedSafes[chainId]?.map((address) => ({
         address,
@@ -81,9 +82,10 @@ const getCompatibleSafes = (
         name: getNameFromAddressBook(addressBook, address, chainId),
       })) || []
 
+    // Safes from Local Storage
     const safesFromLocalstorage =
       localSafes[chainId]
-        ?.filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter the already added safes provided from the Config Service
+        ?.filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter Safes already included
         ?.map(({ address }) => ({
           address,
           chainId,
@@ -178,6 +180,10 @@ type SelectedUserSafeTypes = {
 
 const SelectedUserSafe = ({ safeAppUrl, defaultSafe, safes }: SelectedUserSafeTypes): ReactElement => {
   const [selectedSafe, setSelectedSafe] = useState<AddressBookEntry>(defaultSafe)
+
+  useEffect(() => {
+    setSelectedSafe(defaultSafe)
+  }, [defaultSafe])
 
   const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
     shortName: getChainById(selectedSafe.chainId).shortName,

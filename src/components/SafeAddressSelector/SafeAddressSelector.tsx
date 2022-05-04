@@ -4,7 +4,9 @@ import styled from 'styled-components'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { FormControl, MenuItem, Select } from '@material-ui/core'
+import FormControl from '@material-ui/core/FormControl'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import { black300 } from 'src/theme/variables'
 import { getChainById } from 'src/config'
 
@@ -13,6 +15,7 @@ type SafeAddressSelectorProps = {
   value: string
   onChange: (event: ChangeEvent<{ value: string }>) => void
   shouldShowShortName?: boolean
+  dataTestid?: string
 }
 
 const SafeAddressSelector = ({
@@ -20,10 +23,18 @@ const SafeAddressSelector = ({
   value,
   onChange,
   shouldShowShortName = true,
+  dataTestid,
 }: SafeAddressSelectorProps): ReactElement => {
   return (
     <FormControl>
-      <StyledSafeSelector value={value} onChange={onChange} autoWidth disableUnderline IconComponent={ExpandMore}>
+      <StyledSafeSelector
+        data-testid={dataTestid || 'safe-selector'}
+        value={value}
+        onChange={onChange}
+        autoWidth
+        disableUnderline
+        IconComponent={ExpandMore}
+      >
         {safes.map((safe) => (
           <StyledMenuItem key={`${safe.address}-${safe.chainId}`} value={safe.address}>
             <EthHashInfo
