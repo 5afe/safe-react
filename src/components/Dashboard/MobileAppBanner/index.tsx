@@ -5,6 +5,18 @@ import AppstoreButton from 'src/components/AppstoreButton'
 import { trackCustomClick } from 'src/utils/googleTagManager'
 import useCachedState from 'src/utils/storage/useCachedState'
 
+// Tracking
+const eventCategory = 'mobile-app-promotion'
+const eventAction = 'dashboard-banner'
+const eventLabels = {
+  alreadyUse: 'already-use',
+  notInterested: 'not-interested',
+}
+
+const MAX_SLIDES = 5
+const CLOSE_SLIDE = 6
+const localStorageKey = 'mobileBannerClosed'
+
 const StyledContainer = styled.div`
   position: relative;
   width: 480px;
@@ -20,6 +32,12 @@ const StyledBanner = styled.div`
   cursor: pointer;
   height: 100%;
   width: 100%;
+
+  &:after {
+    content: '';
+    background-image: ${({ $count }: { $count: number }) =>
+      $count !== CLOSE_SLIDE ? `url(./mobile-banner/${$count + 1}.png)` : 'none'};
+  }
 `
 
 const StyledAppstoreButton = styled.div`
@@ -52,17 +70,33 @@ const StyledButtons = styled.div`
   opacity: 0;
 `
 
-// Tracking
-const eventCategory = 'mobile-app-promotion'
-const eventAction = 'dashboard-banner'
-const eventLabels = {
-  alreadyUse: 'already-use',
-  notInterested: 'not-interested',
-}
+const UserSurvey = ({ onDone }: { onDone: () => void }): ReactElement => {
+  const onReply = useCallback(
+    (label: string) => {
+      trackCustomClick(eventCategory, eventAction, label)
+      setTimeout(() => {
+        onDone()
+      }, 300)
+    },
+    [onDone],
+  )
 
-const MAX_SLIDES = 5
-const CLOSE_SLIDE = 6
-const localStorageKey = 'mobileBannerClosed'
+  return (
+    <>
+      <StyledBanner $count={CLOSE_SLIDE} />
+
+      <StyledButtons>
+        <Button size="md" variant="outlined" color="primary" onClick={() => onReply(eventLabels.alreadyUse)}>
+          Already use it!
+        </Button>
+
+        <Button size="md" variant="outlined" color="primary" onClick={() => onReply(eventLabels.notInterested)}>
+          Not interested
+        </Button>
+      </StyledButtons>
+    </>
+  )
+}
 
 const MobileAppBanner = (): ReactElement | null => {
   const [count, setCount] = useState<number>(1)
@@ -77,32 +111,14 @@ const MobileAppBanner = (): ReactElement | null => {
     setClosing(true)
   }, [])
 
-  const onReply = useCallback(
-    (label: string) => {
-      trackCustomClick(eventCategory, eventAction, label)
-      setTimeout(() => {
-        setClosed(true)
-      }, 300)
-    },
-    [setClosed],
-  )
+  const onDone = useCallback(() => {
+    setClosed(true)
+  }, [setClosed])
 
   return closed ? null : (
     <StyledContainer>
       {closing ? (
-        <>
-          <StyledBanner $count={CLOSE_SLIDE} />
-
-          <StyledButtons>
-            <Button size="md" variant="outlined" color="primary" onClick={() => onReply(eventLabels.alreadyUse)}>
-              Already use it!
-            </Button>
-
-            <Button size="md" variant="outlined" color="primary" onClick={() => onReply(eventLabels.notInterested)}>
-              Not interested
-            </Button>
-          </StyledButtons>
-        </>
+        <UserSurvey onDone={onDone} />
       ) : (
         <>
           <StyledBanner $count={count} onClick={onClick} />
