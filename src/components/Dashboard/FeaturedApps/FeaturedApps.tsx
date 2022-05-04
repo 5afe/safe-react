@@ -41,8 +41,8 @@ export const FeaturedApps = (): ReactElement | null => {
           {featuredApps.map((app) => {
             const appRoute = getSafeAppUrl(app.url, routesSlug)
             return (
-              <Card key={app.id}>
-                <StyledLink to={appRoute}>
+              <StyledLink to={appRoute} key={app.id}>
+                <Card>
                   <Grid container alignItems="center" spacing={3}>
                     <Grid item xs={12} md={3}>
                       <StyledImage src={app.iconUrl} alt={app.name} />
@@ -56,8 +56,8 @@ export const FeaturedApps = (): ReactElement | null => {
                       </Text>
                     </Grid>
                   </Grid>
-                </StyledLink>
-              </Card>
+                </Card>
+              </StyledLink>
             )
           })}
         </WidgetBody>
