@@ -25,7 +25,17 @@ import { ModalHeader } from '../ModalHeader'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 import { Field } from 'react-final-form'
-import { InputAdornment, TextField } from '@material-ui/core'
+import { TextField } from '@material-ui/core'
+import React from 'react'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { ethers } from 'ethers'
+
+import { abi as chocofactoryAbi } from 'contracts/artifacts/contracts/Chocofactory.sol/Chocofactory.json'
+import { abi as chocomoldAbi } from 'contracts/artifacts/contracts/Chocomold.sol/Chocomold.json'
+import chainIdConfig from 'contracts/chainId.json'
+import { NetworkName, ChainId } from 'contracts/helpers/types'
+import networkConfig from 'contracts/network.json'
+import { Chocomold, Chocofactory } from 'contracts/typechain'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -55,7 +65,14 @@ export type MintNFTTxInfo = {
 const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): React.ReactElement => {
   const classes = useStyles()
   const addressBook = useSelector(currentNetworkAddressBook)
+  const chainId = useSelector(currentChainId)
+
   const [addressErrorMsg, setAddressErrorMsg] = useState('')
+  const [name, setName] = React.useState('')
+  const [nameError, setNameError] = React.useState('')
+  const [symbol, setSymbol] = React.useState('')
+  const [symbolError, setSymbolError] = React.useState('')
+
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -94,6 +111,85 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
     }
 
     // onNext(values)
+  }
+
+  const getNetworkNameFromChainId = (chainId: string): NetworkName => {
+    return chainIdConfig[chainId as ChainId] as NetworkName
+  }
+
+  const getContractsForChainId = (chainId: string) => {
+    const networkName = getNetworkNameFromChainId(chainId)
+    const { chocofactory, chocomold, rpc, explore } = networkConfig[networkName]
+    const provider = new ethers.providers.JsonRpcProvider(rpc)
+    const chocomoldContract = new ethers.Contract(chocomold, chocomoldAbi, provider) as Chocomold
+    const chocofactoryContract = new ethers.Contract(chocofactory, chocofactoryAbi, provider) as Chocofactory
+    return { chocofactoryContract, chocomoldContract, explore, provider }
+  }
+
+  const createNFTContract = async () => {
+    // if (!validateForm()) return
+    const { signer, signerAddress } = await connectWallet()
+    const signerNetwork = await signer.provider.getNetwork()
+    // if (chainId != signerNetwork.chainId.toString()) {
+    //   const networkName = getNetworkNameFromChainId(chainId)
+    //   // openNotificationToast({ type: 'error', text: `Please connect ${networkName} network` })
+    //   return
+    // }
+    // openLoadingOverlay()
+    try {
+      const ownerAddress = signerAddress.toLowerCase()
+      const { chocomoldContract, chocofactoryContract } = getContractsForChainId(chainId)
+      const domain = {
+        name: 'Chocofactory',
+        version: '1',
+        chainId,
+        verifyingContract: chocofactoryContract.address,
+      }
+      const types = {
+        Choco: [
+          { name: 'implementation', type: 'address' },
+          { name: 'name', type: 'string' },
+          { name: 'symbol', type: 'string' },
+        ],
+      }
+      const value = {
+        test: 'chocomoldContract',
+        implementation: chocomoldContract.address,
+        name: name,
+        symbol: symbol,
+      }
+      let signature = await signer._signTypedData(domain, types, value)
+
+      const vInInt = parseInt(signature.slice(-2), 16)
+      if (vInInt < 27) {
+        const modifiedVInInt = vInInt + 27
+        signature = signature.slice(0, signature.length - 2) + modifiedVInInt.toString(16)
+      }
+
+      const result = await functions.httpsCallable('createNFTContract')({
+        chainId,
+        factoryAddress: chocofactoryContract.address,
+        moldAddress: chocomoldContract.address.toLowerCase(),
+        signature,
+        name,
+        symbol,
+        ownerAddress,
+      })
+      const { nftContractAddress } = result.data
+      // closeLoadingOverlay()
+      // openNotificationToast({ type: 'success', text: 'NFT is created!' })
+
+      // analytics.logEvent('click', {
+      //   type: 'button',
+      //   name: 'create_nft_contract',
+      // })
+
+      history.push(`/${chainId}/${nftContractAddress}`)
+    } catch (err) {
+      console.log(err)
+      // closeLoadingOverlay()
+      // openNotificationToast({ type: 'error', text: err.message })
+    }
   }
 
   return (
@@ -204,6 +300,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
                       //     </InputAdornment>
                       //   ),
                       // }}
+                      label="Name"
                       name="name"
                       placeholder="Name*"
                       type="text"
@@ -229,6 +326,7 @@ const MintNFT = ({ initialValues, onClose, recipientAddress }: MintNFTProps): Re
                       //     </InputAdornment>
                       //   ),
                       // }}
+                      label="Symbol"
                       name="symbol"
                       placeholder="Symbol*"
                       type="text"
