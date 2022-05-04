@@ -10,6 +10,10 @@ const MODALS = {
     event: GTM_EVENT.CLICK,
     action: 'Send collectible',
   },
+  MINT_NFT: {
+    event: GTM_EVENT.CLICK,
+    action: 'Mint NFT',
+  },
   CONTRACT_INTERACTION: {
     event: GTM_EVENT.CLICK,
     action: 'Contract interaction',

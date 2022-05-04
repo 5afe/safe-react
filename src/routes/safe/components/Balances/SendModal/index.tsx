@@ -18,6 +18,8 @@ const SendFunds = lazy(() => import('./screens/SendFunds'))
 
 const SendCollectible = lazy(() => import('./screens/SendCollectible'))
 
+const MintNFT = lazy(() => import('./screens/MintNFT'))
+
 const ReviewCollectible = lazy(() => import('./screens/ReviewCollectible'))
 
 const ReviewSendFundsTx = lazy(() => import('./screens/ReviewSendFundsTx'))
@@ -48,6 +50,7 @@ export type TxType =
   | 'contractInteractionReview'
   | 'reviewCustomTx'
   | 'sendCollectible'
+  | 'mintNFT'
   | 'reviewCollectible'
   | ''
 
@@ -200,6 +203,8 @@ const SendModal = ({
             selectedToken={selectedToken as NFTToken | undefined}
           />
         )}
+
+        {activeScreen === 'mintNFT' && <MintNFT initialValues={tx} onClose={onClose} />}
 
         {activeScreen === 'reviewCollectible' && (
           <ReviewCollectible
