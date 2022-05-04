@@ -1,9 +1,10 @@
-import { Text, Icon, Button } from '@gnosis.pm/safe-react-components'
+import { Text, Icon, Button, Identicon } from '@gnosis.pm/safe-react-components'
 import { useEffect, useRef, ReactElement } from 'react'
 import { useHistory } from 'react-router'
 import ListItem from '@material-ui/core/ListItem/ListItem'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction'
 import styled from 'styled-components'
+import { Box } from '@material-ui/core'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -52,7 +53,13 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
 `
 
 const AddressContainer = styled.div`
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  & img {
+    display: block;
+  }
 `
 
 type Props = {
@@ -118,8 +125,11 @@ const SafeListItem = ({
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <AddressContainer>
-        {threshold && owners && <Threshold threshold={threshold} owners={owners.length} size={11} />}
-        <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} showAvatar shortenHash={4} />
+        <Box position="relative">
+          {threshold && owners && <Threshold threshold={threshold} owners={owners.length} size={11} />}
+          <Identicon address={address} size="md" />
+        </Box>
+        <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} shortenHash={4} />
       </AddressContainer>
       <ListItemSecondaryAction>
         {ethBalance ? (
