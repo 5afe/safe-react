@@ -6,7 +6,7 @@ import AppstoreLightBadge from 'src/assets/icons/appstore-alt.svg'
 enum LINKS {
   footer = 'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Footer&mt=8',
   pairing = 'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Connect&mt=8',
-  dashboard = 'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Connect&mt=8',
+  dashboard = 'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Dashboard&mt=8',
 }
 
 type AppstoreButtonProps = {
