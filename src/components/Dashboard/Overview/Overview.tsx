@@ -2,8 +2,7 @@ import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, Identicon } from '@gnosis.pm/safe-react-components'
-import { useHistory } from 'react-router-dom'
-import { Box, Grid } from '@material-ui/core'
+import { Box, Grid, Link } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 
 import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -28,6 +27,12 @@ const StyledText = styled(Text)`
   margin-top: 8px;
   font-size: 24px;
   font-weight: bold;
+`
+
+const StyledLink = styled(Link)`
+  :hover {
+    text-decoration: none;
+  }
 `
 
 const NetworkLabelContainer = styled.div`
@@ -85,11 +90,9 @@ const Overview = (): ReactElement => {
   const loaded = useSelector(currentSafeLoaded)
   const nftTokens = useSelector(nftTokensSelector)
   const nftLoaded = useSelector(nftLoadedSelector)
-  const history = useHistory()
 
-  const handleOpenAssets = (): void => {
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName }))
-  }
+  const assetsLink = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName })
+  const nftsLink = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES, { safeAddress: address, shortName })
 
   // Native token is always returned even when its balance is 0
   const tokenCount = useMemo(() => balances.filter((token) => token.tokenBalance !== '0').length, [balances])
@@ -118,24 +121,33 @@ const Overview = (): ReactElement => {
                 </NetworkLabelContainer>
               </Grid>
             </Grid>
+
             <Grid container>
               <Grid item xs={3}>
-                <Text color="inputDefault" size="lg">
-                  Tokens
-                </Text>
-                <StyledText size="xl">{tokenCount}</StyledText>
+                <StyledLink href={assetsLink}>
+                  <Text color="inputDefault" size="lg">
+                    Tokens
+                  </Text>
+                  <StyledText size="xl">{tokenCount}</StyledText>
+                </StyledLink>
               </Grid>
+
               <Grid item xs={3}>
-                <Text color="inputDefault" size="lg">
-                  NFTs
-                </Text>
-                {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+                <StyledLink href={nftsLink}>
+                  <Text color="inputDefault" size="lg">
+                    NFTs
+                  </Text>
+                  {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+                </StyledLink>
               </Grid>
+
               <Grid item xs={6}>
                 <Box display="flex" height={1} alignItems="flex-end" justifyContent="flex-end">
-                  <Button size="medium" variant="contained" color="primary" onClick={handleOpenAssets}>
-                    View Assets
-                  </Button>
+                  <StyledLink href={assetsLink}>
+                    <Button size="medium" variant="contained" color="primary">
+                      View Assets
+                    </Button>
+                  </StyledLink>
                 </Box>
               </Grid>
             </Grid>
