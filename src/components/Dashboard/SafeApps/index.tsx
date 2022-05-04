@@ -12,7 +12,7 @@ import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 import DashboardAppCard, { CARD_HEIGHT, CARD_PADDING } from 'src/components/Dashboard/SafeApps/DashboardAppCard'
 import ExploreIcon from 'src/assets/icons/explore.svg'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
-import { getAppsUsageData, rankTrackedSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import { getAppsUsageData, rankSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import { FEATURED_APPS_TAG } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
 import { WidgetTitle, WidgetBody, WidgetContainer, Card } from 'src/components/Dashboard/styled'
 
@@ -63,7 +63,7 @@ const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: numb
     if (!allApps.length) return []
 
     const trackData = getAppsUsageData()
-    const rankedSafeAppIds = rankTrackedSafeApps(trackData)
+    const rankedSafeAppIds = rankSafeApps(trackData, pinnedSafeApps)
     const featuredSafeAppIds = allApps.filter((app) => app.tags?.includes(FEATURED_APPS_TAG)).map((app) => app.id)
 
     const nonFeaturedApps = allApps.filter((app) => !featuredSafeAppIds.includes(app.id))
