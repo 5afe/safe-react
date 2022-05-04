@@ -16,7 +16,6 @@ import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { saveToStorage, storage } from 'src/utils/storage'
 import { CHAIN_ID } from 'src/config/chain.d'
-import { SAFES_KEY } from 'src/logic/safe/utils'
 
 const SAFE_APP_URL_FROM_CONFIG_SERVICE = 'https://safe-app.gnosis-safe.io/test-safe-app-from-config-service'
 const SAFE_APP_URL_FROM_MANIFEST = 'https://safe-app.gnosis-safe.io/test-safe-app-from-manifest'
@@ -164,10 +163,15 @@ describe('<SafeAppLandingPage>', () => {
     // when the Loader is removed we show the Try Demo button
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
 
-    const createTryDemoLinkNode = screen.getByText('Try Demo').closest('a')
+    const historySpy = jest.spyOn(history, 'push')
+
+    fireEvent.click(screen.getByText('Try Demo'))
 
     const demoSafeAppUrl = '/eth:0xfF501B324DC6d78dC9F983f140B9211c3EdB4dc7/apps'
-    expect(createTryDemoLinkNode).toHaveAttribute('href', `${demoSafeAppUrl}?appUrl=${SAFE_APP_URL_FROM_MANIFEST}`)
+
+    expect(historySpy).toHaveBeenCalledWith(`${demoSafeAppUrl}?appUrl=${SAFE_APP_URL_FROM_MANIFEST}`)
+
+    historySpy.mockRestore()
   })
 
   it('Redirects to the Welcome Page if no Chain Id is provided in the query params', async () => {
