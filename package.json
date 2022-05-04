@@ -90,7 +90,7 @@
     "@openzeppelin/contracts": "4.4.2",
     "@sentry/react": "^6.10.0",
     "@sentry/tracing": "^6.10.0",
-    "@truffle/hdwallet-provider": "^2.0.4",
+    "@truffle/hdwallet-provider": "^2.0.8",
     "@unstoppabledomains/resolution": "^1.17.0",
     "abi-decoder": "^2.4.0",
     "axios": "0.21.4",

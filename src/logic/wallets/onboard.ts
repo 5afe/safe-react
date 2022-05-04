@@ -18,6 +18,7 @@ import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/netw
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HDWalletProvider from '@truffle/hdwallet-provider'
+import { INFURA_TOKEN } from 'src/utils/constants'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
@@ -60,8 +61,8 @@ const customSDKWallet: any = {
   wallet: async (helpers) => {
     const { createModernProviderInterface } = helpers
     const provider = new HDWalletProvider({
-      mnemonic: 'XXX',
-      providerOrUrl: 'https://rinkeby.infura.io/v3/xxx',
+      mnemonic: 'xxx',
+      providerOrUrl: `https://rinkeby.infura.io/v3/${INFURA_TOKEN}`,
     })
 
     return {
