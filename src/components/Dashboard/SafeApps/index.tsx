@@ -38,11 +38,6 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledWidgetTitle = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
 const StyledGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -109,9 +104,7 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
 
   return (
     <WidgetContainer>
-      <StyledWidgetTitle>
-        <WidgetTitle>Safe Apps</WidgetTitle>
-      </StyledWidgetTitle>
+      <WidgetTitle>Safe Apps</WidgetTitle>
 
       <WidgetBody>
         <StyledGrid>
