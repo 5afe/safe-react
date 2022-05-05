@@ -26,7 +26,7 @@ const StyledBanner = styled.div`
   background-size: 100%;
   background-image: ${({ $count }: { $count: number }) => `url(./mobile-banner/${$count}.png)`};
   transition: background-image 100ms linear;
-  cursor: pointer;
+  cursor: ${({ $count }: { $count: number }) => ($count === 1 ? 'default' : 'pointer')};
   height: 100%;
   width: 100%;
 
@@ -34,6 +34,17 @@ const StyledBanner = styled.div`
     content: '';
     background-image: ${({ $count }: { $count: number }) =>
       $count !== CLOSE_SLIDE ? `url(./mobile-banner/${$count + 1}.png)` : 'none'};
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    right: 24px;
+    bottom: 27px;
+    width: 119px;
+    height: 38px;
+    cursor: pointer;
   }
 `
 
