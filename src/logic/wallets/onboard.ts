@@ -1,4 +1,5 @@
 import Onboard from 'bnc-onboard'
+import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -18,7 +19,7 @@ import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/netw
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HDWalletProvider from '@truffle/hdwallet-provider'
-import { INFURA_TOKEN } from 'src/utils/constants'
+import { E2E_MNEMONIC, E2E_PROVIDER_URL } from 'src/utils/constants'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
@@ -28,8 +29,12 @@ export const saveLastUsedProvider = (name: string): void => {
   saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
 }
 
+const isCypressAskingForConnectedState = (): boolean => {
+  return window.Cypress && window.cypressConfig?.connected
+}
+
 export const loadLastUsedProvider = (): string | undefined => {
-  if (window['Cypress']) {
+  if (isCypressAskingForConnectedState()) {
     return 'e2e-wallet'
   }
 
@@ -56,13 +61,14 @@ const hasENSSupport = (chainId: ChainId): boolean => {
 
 export const BLOCK_POLLING_INTERVAL = 1000 * 60 * 60 // 1 hour
 
-const customSDKWallet: any = {
+const customSDKWallet: WalletModule = {
   name: 'e2e-wallet',
+  type: 'injected',
   wallet: async (helpers) => {
     const { createModernProviderInterface } = helpers
     const provider = new HDWalletProvider({
-      mnemonic: 'xxx',
-      providerOrUrl: `https://rinkeby.infura.io/v3/${INFURA_TOKEN}`,
+      mnemonic: E2E_MNEMONIC,
+      providerOrUrl: E2E_PROVIDER_URL,
     })
 
     return {
@@ -98,7 +104,7 @@ const getOnboard = (chainId: ChainId): API => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: window['Cypress'] ? [customSDKWallet] : getSupportedWallets(chainId),
+      wallets: isCypressAskingForConnectedState() ? [customSDKWallet] : getSupportedWallets(chainId),
     },
     walletCheck: [
       { checkName: 'derivationPath' },
