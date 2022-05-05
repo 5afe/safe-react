@@ -44,7 +44,7 @@ describe('TransactionFailText', () => {
 
   it('shows a wrong chain error', async () => {
     const sel = require('src/logic/wallets/store/selectors')
-    ;(sel.shouldSwitchWalletChain as jest.Mocked<() => boolean>) = jest.fn(() => true)
+    ;(sel.shouldSwitchWalletChain as jest.Mocked<unknown>) = jest.fn(() => true)
 
     await act(async () => {
       render(<TransactionFailText isExecution isCreation={false} estimationStatus={EstimationStatus.FAILURE} />)
@@ -56,7 +56,7 @@ describe('TransactionFailText', () => {
 
   it('shows an owner error', async () => {
     const sel = require('src/routes/safe/container/selector')
-    ;(sel.grantedSelector as jest.Mocked<() => boolean>) = jest.fn(() => false)
+    ;(sel.grantedSelector as jest.Mocked<unknown>) = jest.fn(() => false)
 
     await act(async () => {
       render(<TransactionFailText isExecution isCreation estimationStatus={EstimationStatus.FAILURE} />)
@@ -84,8 +84,8 @@ describe('TransactionFailText', () => {
 
   it('shows an error if the safe itself is connected', async () => {
     const sel = require('src/routes/safe/container/selector')
-    ;(sel.sameAddressAsSafeSelector as jest.Mocked<() => boolean>) = jest.fn(() => true)
-    ;(sel.grantedSelector as jest.Mocked<() => boolean>) = jest.fn(() => true)
+    ;(sel.sameAddressAsSafeSelector as jest.Mocked<unknown>) = jest.fn(() => true)
+    ;(sel.grantedSelector as jest.Mocked<unknown>) = jest.fn(() => true)
 
     await act(async () => {
       render(<TransactionFailText isExecution isCreation estimationStatus={EstimationStatus.FAILURE} />)

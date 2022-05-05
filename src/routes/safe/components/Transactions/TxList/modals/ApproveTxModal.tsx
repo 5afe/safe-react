@@ -24,7 +24,7 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { Overwrite } from 'src/types/helpers'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import {
   ExpandedTxDetails,
@@ -34,7 +34,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
-import { grantedSelector, sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
@@ -199,7 +199,8 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
   const classes = useStyles()
   const safeAddress = extractSafeAddress()
   const txInfo = useTxInfo(transaction)
-  const submitDisabled = useSelector(sameAddressAsSafeSelector)
+
+  const submitDisabled = sameAddress(userAddress, safeAddress)
 
   const { executionInfo } = transaction
   const { confirmationsSubmitted = 0, confirmationsRequired = 0 } = isMultisigExecutionInfo(executionInfo)

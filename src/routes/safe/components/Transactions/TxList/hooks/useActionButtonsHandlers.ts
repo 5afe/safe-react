@@ -18,7 +18,6 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
-import { sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -32,7 +31,6 @@ type ActionButtonsHandlers = {
 
 export const useActionButtonsHandlers = (transaction: Transaction): ActionButtonsHandlers => {
   const currentUser = useSelector(userAccountSelector)
-  const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
   const actionContext = useRef(useContext(TransactionActionStateContext))
   const hoverContext = useRef(useContext(TxHoverContext))
   const locationContext = useContext(TxLocationContext)
@@ -98,8 +96,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     !currentUser ||
     isPending ||
     (txStatus === LocalTransactionStatus.AWAITING_EXECUTION && locationContext.txLocation === 'queued.queued') ||
-    (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser)) ||
-    isSameAddressAsSafe
+    (txStatus === LocalTransactionStatus.AWAITING_CONFIRMATIONS && !signaturePending(currentUser))
 
   return {
     canCancel,
