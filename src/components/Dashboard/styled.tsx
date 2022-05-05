@@ -13,7 +13,8 @@ export const WidgetContainer = styled.div`
 export const DashboardTitle = styled.h1`
   color: ${black500};
   font-size: ${extraLargeFontSize};
-  margin: 0 0 -11px;
+  width: 100%;
+  margin: 12px 12px -33px;
 `
 
 export const WidgetTitle = styled.h2`

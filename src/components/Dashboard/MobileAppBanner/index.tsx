@@ -5,6 +5,7 @@ import AppstoreButton from 'src/components/AppstoreButton'
 import { trackEvent, CustomEvent } from 'src/utils/googleTagManager'
 import useCachedState from 'src/utils/storage/useCachedState'
 import MOBILE_APP_EVENTS from 'src/utils/events/mobile-app-promotion'
+import { WidgetTitle } from '../styled'
 
 const MAX_SLIDES = 5
 const CLOSE_SLIDE = 6
@@ -130,25 +131,29 @@ const MobileAppBanner = (): ReactElement | null => {
   }, [setClosed])
 
   return closed ? null : (
-    <StyledContainer>
-      {closing ? (
-        <UserSurvey onDone={onDone} />
-      ) : (
-        <>
-          <StyledBanner $count={count} onClick={onClick} />
+    <>
+      <WidgetTitle>&nbsp;</WidgetTitle>
 
-          <StyledCloseButton onClick={onClose} />
+      <StyledContainer>
+        {closing ? (
+          <UserSurvey onDone={onDone} />
+        ) : (
+          <>
+            <StyledBanner $count={count} onClick={onClick} />
 
-          <StyledBackButton onClick={onBack} />
+            <StyledCloseButton onClick={onClose} />
 
-          {count === 1 && (
-            <StyledAppstoreButton>
-              <AppstoreButton placement="dashboard" />
-            </StyledAppstoreButton>
-          )}
-        </>
-      )}
-    </StyledContainer>
+            <StyledBackButton onClick={onBack} />
+
+            {count === 1 && (
+              <StyledAppstoreButton>
+                <AppstoreButton placement="dashboard" />
+              </StyledAppstoreButton>
+            )}
+          </>
+        )}
+      </StyledContainer>
+    </>
   )
 }
 

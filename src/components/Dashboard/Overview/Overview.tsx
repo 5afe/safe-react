@@ -10,7 +10,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { Card } from 'src/components/Dashboard/styled'
+import { Card, WidgetTitle } from 'src/components/Dashboard/styled'
 import { WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
 import Button from 'src/components/layout/Button'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
@@ -30,7 +30,7 @@ const StyledText = styled(Text)`
 `
 
 const StyledLink = styled(Link)`
-  :hover {
+  &:hover {
     text-decoration: none;
   }
 `
@@ -99,6 +99,8 @@ const Overview = (): ReactElement => {
 
   return (
     <WidgetContainer>
+      <WidgetTitle>&nbsp;</WidgetTitle>
+
       <WidgetBody>
         {!loaded ? (
           SkeletonOverview
