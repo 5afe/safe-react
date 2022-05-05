@@ -22,7 +22,6 @@ const StyledLink = styled(Link)`
 
 const StyledGrid = styled(Grid)`
   gap: 24px;
-  height: 100%;
 `
 
 const StyledGridItem = styled(Grid)`
