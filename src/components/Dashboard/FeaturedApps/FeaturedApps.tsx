@@ -20,6 +20,15 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
+const StyledGrid = styled(Grid)`
+  gap: 24px;
+  height: 100%;
+`
+
+const StyledGridItem = styled(Grid)`
+  min-width: 300px;
+`
+
 export const FeaturedApps = (): ReactElement | null => {
   const { allApps, isLoading } = useAppList()
 
@@ -38,9 +47,9 @@ export const FeaturedApps = (): ReactElement | null => {
       <WidgetContainer>
         <WidgetTitle>Connect & Transact</WidgetTitle>
         <WidgetBody>
-          <Grid container style={{ gap: '24px' }}>
+          <StyledGrid container>
             {featuredApps.map((app) => (
-              <Grid item xs md key={app.id} style={{ minWidth: '300px' }}>
+              <StyledGridItem item xs md key={app.id}>
                 <StyledLink to={getSafeAppUrl(app.url, routesSlug)}>
                   <Card>
                     <Grid container alignItems="center" spacing={3}>
@@ -58,9 +67,9 @@ export const FeaturedApps = (): ReactElement | null => {
                     </Grid>
                   </Card>
                 </StyledLink>
-              </Grid>
+              </StyledGridItem>
             ))}
-          </Grid>
+          </StyledGrid>
         </WidgetBody>
       </WidgetContainer>
     </Grid>
