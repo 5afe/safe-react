@@ -27,6 +27,9 @@ import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import TxModuleInfo from './TxModuleInfo'
+import Track from 'src/components/Track'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import TxShareButton from './TxShareButton'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -135,6 +138,11 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     isMultiSend ? (
       <>
         <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <div className="tx-share">
+            <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
+              <TxShareButton txId={data.txId} />
+            </Track>
+          </div>
           <TxSummary txDetails={data} />
         </div>
         {getModuleDetails()}
@@ -157,6 +165,11 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
             'will-be-replaced': willBeReplaced,
           })}
         >
+          <div className="tx-share">
+            <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
+              <TxShareButton txId={data.txId} />
+            </Track>
+          </div>
           <TxDataGroup txDetails={data} />
         </div>
         {getModuleDetails()}
