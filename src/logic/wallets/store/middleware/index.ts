@@ -13,7 +13,6 @@ import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import onboard, { removeLastUsedProvider, saveLastUsedProvider } from 'src/logic/wallets/onboard'
-import { WALLET_CONNECT_MODULE_NAME } from 'src/logic/wallets/patchedWalletConnect'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
@@ -78,7 +77,7 @@ const providerMiddleware =
     if (account === checksumAddress(address) && !shouldSwitchNetwork(wallet)) {
       trackEvent({ ...WALLET_EVENTS.CONNECT, label: name })
       // Track WalletConnect peer wallet
-      if (name === WALLET_CONNECT_MODULE_NAME) {
+      if (name.toUpperCase() === 'WALLETCONNECT') {
         trackEvent({
           ...WALLET_EVENTS.WALLET_CONNECT,
           label: (wallet.provider as InstanceType<typeof WalletConnectProvider>)?.wc?.peerMeta?.name || UNKNOWN_PEER,

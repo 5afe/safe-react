@@ -28,7 +28,6 @@ import { styles } from './style'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
@@ -36,6 +35,7 @@ import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/Tr
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -87,7 +87,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
   const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])

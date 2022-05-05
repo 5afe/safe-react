@@ -12,11 +12,11 @@ import { copyShortNameSelector, showShortNameSelector } from 'src/logic/appearan
 import { useDispatch, useSelector } from 'react-redux'
 import { setShowShortName } from 'src/logic/appearance/actions/setShowShortName'
 import { setCopyShortName } from 'src/logic/appearance/actions/setCopyShortName'
-import { extractSafeAddress } from 'src/routes/routes'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 // Other settings sections use MUI createStyles .container
 // will adjust that during dark mode implementation
@@ -32,7 +32,7 @@ const Appearance = (): ReactElement => {
   const dispatch = useDispatch()
   const copyShortName = useSelector(copyShortNameSelector)
   const showShortName = useSelector(showShortNameSelector)
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const [darkMode, setDarkMode] = useDarkMode()
 
   const handleShowChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
