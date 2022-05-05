@@ -34,32 +34,33 @@ export const FeaturedApps = (): ReactElement | null => {
   if (!featuredApps.length && !isLoading) return null
 
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={12} md>
       <WidgetContainer>
         <WidgetTitle>Connect & Transact</WidgetTitle>
         <WidgetBody>
-          {featuredApps.map((app) => {
-            const appRoute = getSafeAppUrl(app.url, routesSlug)
-            return (
-              <StyledLink to={appRoute} key={app.id}>
-                <Card>
-                  <Grid container alignItems="center" spacing={3}>
-                    <Grid item xs={12} md={3}>
-                      <StyledImage src={app.iconUrl} alt={app.name} />
+          <Grid container style={{ gap: '24px' }}>
+            {featuredApps.map((app) => (
+              <Grid item xs md key={app.id} style={{ minWidth: '300px' }}>
+                <StyledLink to={getSafeAppUrl(app.url, routesSlug)}>
+                  <Card>
+                    <Grid container alignItems="center" spacing={3}>
+                      <Grid item xs={12} md={3}>
+                        <StyledImage src={app.iconUrl} alt={app.name} />
+                      </Grid>
+                      <Grid item xs={12} md={9}>
+                        <Box mb={1.01}>
+                          <Text size="xl">{app.description}</Text>
+                        </Box>
+                        <Text color="primary" size="lg" strong>
+                          Use {app.name}
+                        </Text>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} md={9}>
-                      <Box mb={1.01}>
-                        <Text size="xl">{app.description}</Text>
-                      </Box>
-                      <Text color="primary" size="lg" strong>
-                        Use {app.name}
-                      </Text>
-                    </Grid>
-                  </Grid>
-                </Card>
-              </StyledLink>
-            )
-          })}
+                  </Card>
+                </StyledLink>
+              </Grid>
+            ))}
+          </Grid>
         </WidgetBody>
       </WidgetContainer>
     </Grid>

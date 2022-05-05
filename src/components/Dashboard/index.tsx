@@ -17,15 +17,13 @@ const Dashboard = (): ReactElement => {
         <Overview />
       </Grid>
 
-      <Grid item xs={12} lg={6}>
-        <MobileAppBanner />
-      </Grid>
-
-      <FeaturedApps />
+      <MobileAppBanner />
 
       <Grid item xs={12} md={6}>
         <PendingTxsList size={4} />
       </Grid>
+
+      <FeaturedApps />
 
       <Grid item xs={12}>
         <SafeApps />

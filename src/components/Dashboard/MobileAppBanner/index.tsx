@@ -1,5 +1,6 @@
 import { ReactElement, useCallback, useState } from 'react'
 import styled from 'styled-components'
+import { Grid } from '@material-ui/core'
 import { Button } from '@gnosis.pm/safe-react-components'
 import AppstoreButton from 'src/components/AppstoreButton'
 import { trackEvent, CustomEvent } from 'src/utils/googleTagManager'
@@ -131,7 +132,7 @@ const MobileAppBanner = (): ReactElement | null => {
   }, [setClosed])
 
   return closed ? null : (
-    <>
+    <Grid item xs={12} lg={6}>
       <WidgetTitle>&nbsp;</WidgetTitle>
 
       <StyledContainer>
@@ -153,7 +154,7 @@ const MobileAppBanner = (): ReactElement | null => {
           </>
         )}
       </StyledContainer>
-    </>
+    </Grid>
   )
 }
 
