@@ -16,6 +16,17 @@ const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
   border-radius: 4px;
   height: 32px;
   width: 32px;
+
+  & span {
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  & svg {
+    padding-right: 2px;
+  }
 `
 
 const TxShareButton = ({ txId }: Props): ReactElement => {
