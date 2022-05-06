@@ -37,7 +37,7 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
             name={settingsInfo.owner?.name || undefined}
             avatarUrl={settingsInfo.owner?.logoUri || undefined}
           />
-          <InfoDetails title="Increase/descrease confirmation policy to:">{settingsInfo.threshold}</InfoDetails>
+          <InfoDetails title="Increase/decrease confirmation policy to:">{settingsInfo.threshold}</InfoDetails>
         </InfoDetails>
       )
     }
@@ -61,7 +61,7 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     }
     case 'CHANGE_THRESHOLD': {
       return (
-        <InfoDetails title="Increase/descrease confirmation policy to:" header={<ThresholdWarning />}>
+        <InfoDetails title="Increase/decrease confirmation policy to:" header={<ThresholdWarning />}>
           {settingsInfo.threshold}
         </InfoDetails>
       )
