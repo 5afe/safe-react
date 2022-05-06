@@ -30,6 +30,10 @@ export const GOOGLE_TAG_MANAGER_AUTH_LIVE = process.env.REACT_APP_GOOGLE_TAG_MAN
 export const GOOGLE_TAG_MANAGER_AUTH_LATEST = process.env.REACT_APP_GOOGLE_TAG_MANAGER_LATEST_AUTH || ''
 export const GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH = process.env.REACT_APP_GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH || ''
 
+// Cypress tests
+export const E2E_MNEMONIC = process.env.REACT_APP_E2E_MNEMONIC || ''
+export const E2E_PROVIDER_URL = process.env.REACT_APP_E2E_PROVIDER_URL || ''
+
 // localStorage-related constants
 export const LS_NAMESPACE = 'SAFE'
 export const LS_SEPARATOR = '__'
