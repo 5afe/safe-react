@@ -131,6 +131,16 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
+  const TrackedShareButton = () => {
+    return (
+      <div className="tx-share">
+        <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
+          <TxShareButton txId={data.txId} />
+        </Track>
+      </div>
+    )
+  }
+
   const customTxNoData = isCustomTxInfo(data.txInfo) && !data.txInfo.methodName && !parseInt(data.txInfo.dataSize, 10)
   const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
   const noTxDataBlock = customTxNoData && !onChainRejection
@@ -138,11 +148,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     isMultiSend ? (
       <>
         <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
-          <div className="tx-share">
-            <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
-              <TxShareButton txId={data.txId} />
-            </Track>
-          </div>
+          <TrackedShareButton />
           <TxSummary txDetails={data} />
         </div>
         {getModuleDetails()}
@@ -165,11 +171,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
             'will-be-replaced': willBeReplaced,
           })}
         >
-          <div className="tx-share">
-            <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
-              <TxShareButton txId={data.txId} />
-            </Track>
-          </div>
+          <TrackedShareButton />
           <TxDataGroup txDetails={data} />
         </div>
         {getModuleDetails()}
