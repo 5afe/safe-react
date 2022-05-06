@@ -34,6 +34,7 @@ import TxShareButton from './TxShareButton'
 const NormalBreakingText = styled(Text)`
   line-break: normal;
   word-break: normal;
+  padding-right: 32px;
 `
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
