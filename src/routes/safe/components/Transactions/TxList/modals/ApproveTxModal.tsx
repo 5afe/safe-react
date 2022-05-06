@@ -33,7 +33,8 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+
+import { grantedSelector, sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -199,6 +200,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
   const classes = useStyles()
   const { safeAddress } = useSafeAddress()
   const txInfo = useTxInfo(transaction)
+  const submitDisabled = useSelector(sameAddressAsSafeSelector)
 
   const { executionInfo } = transaction
   const { confirmationsSubmitted = 0, confirmationsRequired = 0 } = isMultisigExecutionInfo(executionInfo)
@@ -240,6 +242,7 @@ export const ApproveTxModal = ({ onClose, isOpen, transaction }: Props): React.R
         safeTxGas={txInfo.safeTxGas}
         onSubmit={approveTx}
         onClose={onClose}
+        isSubmitDisabled={submitDisabled}
       >
         <ModalHeader onClose={onClose} title={title} />
 
