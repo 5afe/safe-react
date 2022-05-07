@@ -166,10 +166,8 @@ const SendModal = ({
           <DeployNFTContract
             contractAddress={recipient}
             initialValues={tx as DeployNFTContractTx}
-            isABI={isABI}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
-            switchMethod={handleSwitchMethod}
           />
         )}
 

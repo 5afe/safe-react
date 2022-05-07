@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { useMemo } from 'react'
-import Switch from '@material-ui/core/Switch'
 
 import { styles } from './style'
 import Divider from 'src/components/Divider'
@@ -8,7 +7,6 @@ import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import { EthAddressInput } from './EthAddressInput'
@@ -39,20 +37,11 @@ export type DeployNFTContractTx = {
 export interface DeployNFTContractProps {
   contractAddress?: string
   initialValues: DeployNFTContractTx
-  isABI: boolean
   onClose: () => void
-  switchMethod: () => void
   onNext: (tx: CreatedTx, submit: boolean) => void
 }
 
-const DeployNFTContract: React.FC<DeployNFTContractProps> = ({
-  contractAddress,
-  initialValues,
-  isABI,
-  onClose,
-  onNext,
-  switchMethod,
-}) => {
+const DeployNFTContract: React.FC<DeployNFTContractProps> = ({ contractAddress, initialValues, onClose, onNext }) => {
   const classes = useStyles()
   const { safeAddress } = useSafeAddress()
   let setCallResults
@@ -62,11 +51,6 @@ const DeployNFTContract: React.FC<DeployNFTContractProps> = ({
       initialValues.contractAddress = contractAddress
     }
   }, [contractAddress, initialValues])
-
-  const saveForm = async (values: CreatedTx): Promise<void> => {
-    await handleSubmit(values, false)
-    switchMethod()
-  }
 
   const handleSubmit = async (
     { contractAddress, selectedMethod, value, ...values },
@@ -121,10 +105,6 @@ const DeployNFTContract: React.FC<DeployNFTContractProps> = ({
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
-                <Paragraph color="disabled" noMargin size="lg">
-                  <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
-                  Use custom data (hex encoded)
-                </Paragraph>
               </Block>
               <Buttons onClose={onClose} requiresMethod />
             </>
