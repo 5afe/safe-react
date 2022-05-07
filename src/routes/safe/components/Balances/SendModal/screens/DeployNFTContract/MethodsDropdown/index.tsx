@@ -12,7 +12,6 @@ import { AbiItem } from 'web3-utils'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { NO_CONTRACT } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
@@ -37,7 +36,6 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
   const buttonClasses = useButtonStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },
-    meta: { valid },
   } = useField('abi', { subscription: { value: true, valid: true } })
   const {
     initialValues: { selectedMethod: selectedMethodByDefault },
@@ -75,10 +73,6 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
     setSelectedMethod(chosenMethod)
     onChange(chosenMethod)
     handleClose()
-  }
-
-  if (!valid || !abi || abi === NO_CONTRACT) {
-    return null
   }
 
   return (

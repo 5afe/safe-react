@@ -4,13 +4,6 @@ import { useFormState, useField } from 'react-final-form'
 import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import {
-  composeValidators,
-  mustBeEthereumAddress,
-  mustBeEthereumContractAddress,
-  required,
-  Validator,
-} from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 
@@ -22,19 +15,7 @@ export interface EthAddressInputProps {
   text: string
 }
 
-export const EthAddressInput = ({
-  isContract = true,
-  isRequired = true,
-  name,
-  onScannedValue,
-  text,
-}: EthAddressInputProps): React.ReactElement => {
-  const validatorsList = [
-    isRequired && required,
-    mustBeEthereumAddress,
-    isContract && mustBeEthereumContractAddress,
-  ] as Validator[]
-  const validate = composeValidators(...validatorsList.filter((validator) => validator))
+export const EthAddressInput = ({ name, onScannedValue, text }: EthAddressInputProps): React.ReactElement => {
   const { pristine } = useFormState({ subscription: { pristine: true } })
   const {
     input: { value },
@@ -61,7 +42,6 @@ export const EthAddressInput = ({
             testId={name}
             label={text}
             type="text"
-            validate={validate}
           />
         ) : (
           <ContractsAddressBookInput
