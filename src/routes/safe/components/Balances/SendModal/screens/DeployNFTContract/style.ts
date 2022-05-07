@@ -2,6 +2,9 @@ import { lg, md, sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
+  hidden: {
+    display: 'none',
+  },
   qrCodeBtn: {
     cursor: 'pointer',
   },

@@ -1,7 +1,11 @@
+import { makeStyles } from '@material-ui/core'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import { styles } from '../style'
+
+const useStyles = makeStyles(styles)
 
 export interface EthAddressInputProps {
   isContract?: boolean
@@ -12,8 +16,9 @@ export interface EthAddressInputProps {
 }
 
 export const EthAddressInput = ({ name, text }: EthAddressInputProps): React.ReactElement => {
+  const classes = useStyles()
   return (
-    <Row margin="md">
+    <Row margin="md" className={classes.hidden}>
       <Col xs={11}>
         <Field
           component={TextField}

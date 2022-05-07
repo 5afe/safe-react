@@ -9,6 +9,10 @@ import { getContractABI } from 'src/config'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 
+import { styles } from '../style'
+import { makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles(styles)
 export const NO_DATA = 'no data'
 
 const hasUsefulMethods = (abi: string): undefined | string => {
@@ -24,6 +28,7 @@ const hasUsefulMethods = (abi: string): undefined | string => {
 }
 
 const ContractABI = (): React.ReactElement => {
+  const classes = useStyles()
   const {
     input: { value: contractAddress },
   } = useField('contractAddress', { subscription: { value: true } })
@@ -54,7 +59,7 @@ const ContractABI = (): React.ReactElement => {
   }, [contractAddress])
 
   return (
-    <Row margin="sm">
+    <Row margin="sm" className={classes.hidden}>
       <Col>
         <TextAreaField name="abi" placeholder="ABI*" label="ABI*" type="text" validate={hasUsefulMethods} />
       </Col>

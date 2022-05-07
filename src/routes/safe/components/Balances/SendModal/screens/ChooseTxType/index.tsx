@@ -123,18 +123,19 @@ const ChooseTxType = ({
           {contractInteractionEnabled && (
             <Track {...MODALS_EVENTS.DEPLOY_NFT_CONTRACT}>
               <Button
+                className={classes.firstButton}
                 color="primary"
                 disabled={disableContractInteraction}
                 minHeight={52}
                 minWidth={240}
                 onClick={() => setActiveScreen('deployNFTContract')}
-                variant="outlined"
+                variant="contained"
                 testId="modal-contract-interaction-btn"
               >
                 <Img
                   alt="Deploy NFT Contract"
                   className={classNames(classes.leftIcon, classes.iconSmall)}
-                  src={ContractInteractionIcon}
+                  src={Collectible}
                 />
                 Deploy NFT Contract
               </Button>
