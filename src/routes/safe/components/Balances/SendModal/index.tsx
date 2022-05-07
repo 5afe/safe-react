@@ -6,6 +6,7 @@ import Modal from 'src/components/Modal'
 import { CollectibleTx } from './screens/ReviewCollectible'
 import { ReviewCustomTxProps } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
+import { DeployNFTContractTx } from './screens/DeployNFTContract'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
@@ -21,6 +22,8 @@ const SendCollectible = lazy(() => import('./screens/SendCollectible'))
 const ReviewCollectible = lazy(() => import('./screens/ReviewCollectible'))
 
 const ReviewSendFundsTx = lazy(() => import('./screens/ReviewSendFundsTx'))
+
+const DeployNFTContract = lazy(() => import('./screens/DeployNFTContract'))
 
 const ContractInteraction = lazy(() => import('./screens/ContractInteraction'))
 
@@ -44,6 +47,7 @@ export type TxType =
   | 'chooseTxType'
   | 'sendFunds'
   | 'sendFundsReviewTx'
+  | 'deployNFTContract'
   | 'contractInteraction'
   | 'contractInteractionReview'
   | 'reviewCustomTx'
@@ -158,6 +162,17 @@ const SendModal = ({
           />
         )}
 
+        {activeScreen === 'deployNFTContract' && isABI && (
+          <DeployNFTContract
+            contractAddress={recipient}
+            initialValues={tx as DeployNFTContractTx}
+            isABI={isABI}
+            onClose={onClose}
+            onNext={handleContractInteractionCreation}
+            switchMethod={handleSwitchMethod}
+          />
+        )}
+
         {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction
             contractAddress={recipient}
@@ -172,6 +187,16 @@ const SendModal = ({
         {activeScreen === 'contractInteractionReview' && isABI && tx && (
           <ContractInteractionReview onClose={onClose} onPrev={() => handleOnPrev('contractInteraction')} tx={tx} />
         )}
+
+        {/* {activeScreen === 'deployNFTContract' && !isABI && (
+          <DeployNFTContractTx
+            initialValues={tx as CustomTxProps}
+            isABI={isABI}
+            onClose={onClose}
+            onNext={handleCustomTxCreation}
+            switchMethod={handleSwitchMethod}
+          />
+        )} */}
 
         {activeScreen === 'contractInteraction' && !isABI && (
           <SendCustomTx

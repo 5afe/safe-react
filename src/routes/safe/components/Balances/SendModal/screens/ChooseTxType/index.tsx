@@ -24,7 +24,7 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
 import Track from 'src/components/Track'
 
-type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
+type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'deployNFTContract' | 'contractInteraction'
 
 interface ChooseTxTypeProps {
   onClose: () => void
@@ -117,6 +117,26 @@ const ChooseTxType = ({
               >
                 <Img alt="Send NFT" className={classNames(classes.leftIcon, classes.iconSmall)} src={Collectible} />
                 Send NFT
+              </Button>
+            </Track>
+          )}
+          {contractInteractionEnabled && (
+            <Track {...MODALS_EVENTS.DEPLOY_NFT_CONTRACT}>
+              <Button
+                color="primary"
+                disabled={disableContractInteraction}
+                minHeight={52}
+                minWidth={240}
+                onClick={() => setActiveScreen('deployNFTContract')}
+                variant="outlined"
+                testId="modal-contract-interaction-btn"
+              >
+                <Img
+                  alt="Deploy NFT Contract"
+                  className={classNames(classes.leftIcon, classes.iconSmall)}
+                  src={ContractInteractionIcon}
+                />
+                Deploy NFT Contract
               </Button>
             </Track>
           )}
