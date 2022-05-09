@@ -127,7 +127,6 @@ export default function Stepper(props: StepperProps): ReactElement {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: '10px 0 10px 10px',
-    maxWidth: '770px',
     boxShadow: '0 0 10px 0 rgba(33,48,77,0.10)',
   },
   controlStyle: {

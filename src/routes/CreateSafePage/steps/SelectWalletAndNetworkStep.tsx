@@ -20,6 +20,7 @@ import { availableSelector, shouldSwitchWalletChain } from 'src/logic/wallets/st
 import ConnectButton from 'src/components/ConnectButton'
 import WalletSwitch from 'src/components/WalletSwitch'
 import { getChains } from 'src/config/cache/chains'
+import MobilePairing from 'src/components/MobilePairing'
 
 export const selectWalletAndNetworkStepLabel = 'Connect wallet & select network'
 
@@ -61,7 +62,11 @@ function SelectWalletAndNetworkStep(): ReactElement {
             Switch Network
           </ButtonLink>
         ) : (
-          <ConnectButton data-testid="heading-connect-btn" />
+          <>
+            <ConnectButton data-testid="heading-connect-btn" />
+
+            <MobilePairing />
+          </>
         )}
       </SwitchNetworkContainer>
 
@@ -104,6 +109,8 @@ const SwitchNetworkContainer = styled.div`
   margin: ${lg};
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: ${lg};
 `
 
 const StyledDialogTitle = styled(DialogTitle)`

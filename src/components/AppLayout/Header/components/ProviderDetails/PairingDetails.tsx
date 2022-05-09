@@ -1,9 +1,9 @@
 import { CSSProperties, ReactElement } from 'react'
+import { withStyles } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import IconButton from '@material-ui/core/IconButton'
-import { Divider, Link } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { Link } from '@gnosis.pm/safe-react-components'
 import QRCode from 'qrcode.react'
 
 import Paragraph from 'src/components/layout/Paragraph'
@@ -15,11 +15,6 @@ import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import AppstoreButton from 'src/components/AppstoreButton'
 
-const StyledDivider = styled(Divider)`
-  width: calc(100% + 40px);
-  margin-left: -20px;
-`
-
 const QR_DIMENSION = 120
 
 const qrRefresh: CSSProperties = {
@@ -27,15 +22,29 @@ const qrRefresh: CSSProperties = {
   height: QR_DIMENSION,
 }
 
+const styles = () => ({
+  header: {
+    letterSpacing: '0.4px',
+    flexGrow: 1,
+    textAlign: 'center',
+    fontWeight: 600,
+    fontSize: '18px',
+  },
+  centerText: {
+    textAlign: 'center',
+  },
+  justifyCenter: {
+    justifyContent: 'center',
+  },
+})
+
 const PairingDetails = ({ classes }: { classes: Record<string, string> }): ReactElement => {
   const uri = useGetPairingUri()
   const isPairingLoaded = isPairingModule()
   usePairing()
 
   return (
-    <>
-      <StyledDivider />
-
+    <div>
       <Row align="center" margin="lg">
         <Paragraph className={classes.header} noMargin>
           Connect to Mobile
@@ -74,8 +83,8 @@ const PairingDetails = ({ classes }: { classes: Record<string, string> }): React
           <AppstoreButton placement="pairing" />
         </Track>
       </Row>
-    </>
+    </div>
   )
 }
 
-export default PairingDetails
+export default withStyles(styles as any)(PairingDetails)

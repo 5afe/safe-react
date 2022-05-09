@@ -1,6 +1,6 @@
-import { lazy, ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { Card } from '@gnosis.pm/safe-react-components'
+import { Card, Divider } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import ConnectButton from 'src/components/ConnectButton'
@@ -8,9 +8,7 @@ import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
+import MobilePairing from 'src/components/MobilePairing'
 
 const styles = () => ({
   header: {
@@ -33,6 +31,11 @@ const StyledCard = styled(Card)`
   max-width: 240px;
 `
 
+const StyledDivider = styled(Divider)`
+  width: calc(100% + 40px);
+  margin-left: -20px;
+`
+
 const ConnectDetails = ({ classes }): ReactElement => (
   <StyledCard>
     <Row align="center" margin="lg">
@@ -49,7 +52,9 @@ const ConnectDetails = ({ classes }): ReactElement => (
       <ConnectButton data-testid="heading-connect-btn" />
     </Block>
 
-    {isPairingSupported() && wrapInSuspense(<PairingDetails classes={classes} />)}
+    <StyledDivider />
+
+    <MobilePairing />
   </StyledCard>
 )
 
