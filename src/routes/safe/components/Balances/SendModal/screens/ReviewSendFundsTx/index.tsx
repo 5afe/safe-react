@@ -36,6 +36,7 @@ import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/util
 import { trackEvent } from 'src/utils/googleTagManager'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { createSendParams } from 'src/logic/safe/transactions/gas'
 
 const useStyles = makeStyles(styles)
 
@@ -106,22 +107,24 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       try {
         trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
 
-        await spendingLimit.methods
-          .executeAllowanceTransfer(
-            safeAddress,
-            spendingLimitTokenAddress,
-            tx.recipientAddress,
-            toTokenUnit(tx.amount, txToken.decimals),
-            ZERO_ADDRESS,
-            0,
-            tx.tokenSpendingLimit.delegate,
-            EMPTY_DATA,
-          )
-          .send({ from: tx.tokenSpendingLimit.delegate })
-          .on('transactionHash', () => onClose())
+        const allowanceTransferTx = await spendingLimit.methods.executeAllowanceTransfer(
+          safeAddress,
+          spendingLimitTokenAddress,
+          tx.recipientAddress,
+          toTokenUnit(tx.amount, txToken.decimals),
+          ZERO_ADDRESS,
+          0,
+          tx.tokenSpendingLimit.delegate,
+          EMPTY_DATA,
+        )
+
+        const sendParams = createSendParams(tx.tokenSpendingLimit.delegate, txParameters)
+
+        await allowanceTransferTx.send(sendParams).on('transactionHash', () => onClose())
       } catch (err) {
         logError(Errors._801, err.message)
       }
+      onClose()
       return
     }
 

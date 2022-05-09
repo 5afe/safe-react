@@ -196,6 +196,7 @@ export const TxModalWrapper = ({
       safeNonce={txNonce}
       parametersStatus={parametersStatus}
       closeEditModalCallback={onEditClose}
+      txType={txType}
     >
       {(txParameters: TxParameters, toggleEditMode: () => void) => (
         <>
@@ -204,7 +205,7 @@ export const TxModalWrapper = ({
           <Container>
             {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
 
-            {!isSpendingLimitTx && doExecute && (
+            {doExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
                 gasCost={canTxExecute ? gasCost : ''}
@@ -215,8 +216,6 @@ export const TxModalWrapper = ({
               />
             )}
 
-            {/* Tx Parameters */}
-            {/* FIXME TxParameters should be updated to be used with spending limits */}
             {!isSpendingLimitTx && (
               <TxParametersDetail
                 onEdit={toggleEditMode}
@@ -228,15 +227,13 @@ export const TxModalWrapper = ({
             )}
           </Container>
 
-          {!isSpendingLimitTx && (
-            <ReviewInfoText
-              isCreation={isCreation}
-              isExecution={doExecute}
-              isRejection={isRejectTx}
-              safeNonce={txParameters.safeNonce}
-              txEstimationExecutionStatus={safeTxGasError ? EstimationStatus.FAILURE : txEstimationExecutionStatus}
-            />
-          )}
+          <ReviewInfoText
+            isCreation={isCreation}
+            isExecution={doExecute}
+            isRejection={isRejectTx}
+            safeNonce={txParameters.safeNonce}
+            txEstimationExecutionStatus={safeTxGasError ? EstimationStatus.FAILURE : txEstimationExecutionStatus}
+          />
 
           {/* Footer */}
           <Modal.Footer withoutBorder>
