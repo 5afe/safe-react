@@ -2,13 +2,10 @@ import { lazy, useMemo } from 'react'
 import styled from 'styled-components'
 import { Divider } from '@gnosis.pm/safe-react-components'
 
-import List, { ListItemType, StyledListItemText } from 'src/components/List'
+import List, { ListItemType } from 'src/components/List'
 import SafeHeader from './SafeHeader'
 import { IS_PRODUCTION } from 'src/utils/constants'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import Track from 'src/components/Track'
-import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
-import ListIcon from 'src/components/List/ListIcon'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -16,37 +13,6 @@ const StyledDivider = styled(Divider)`
 
 const HelpContainer = styled.div`
   margin-top: auto;
-`
-
-const HelpList = styled.div`
-  margin: 24px 0;
-`
-
-const HelpCenterLink = styled.a`
-  width: 100%;
-  display: flex;
-  position: relative;
-  box-sizing: border-box;
-  text-align: left;
-  align-items: center;
-  padding: 8px 16px;
-  justify-content: flex-start;
-  text-decoration: none;
-  border-radius: 8px;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.background};
-  }
-  p {
-    font-family: ${({ theme }) => theme.fonts.fontFamily};
-    font-size: 0.76em;
-    font-weight: 600;
-    line-height: 1.5;
-    letter-spacing: 1px;
-    color: ${({ theme }) => theme.colors.placeHolder};
-    text-transform: uppercase;
-    padding: 0 0 0 4px;
-  }
 `
 type Props = {
   safeAddress?: string
@@ -101,15 +67,6 @@ const Sidebar = ({
         {debugToggle}
 
         <StyledDivider />
-
-        <HelpList>
-          <Track {...OVERVIEW_EVENTS.HELP_CENTER}>
-            <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-              <ListIcon type="question" />
-              <StyledListItemText>Help Center</StyledListItemText>
-            </HelpCenterLink>
-          </Track>
-        </HelpList>
       </HelpContainer>
     </>
   )
