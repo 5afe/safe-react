@@ -99,11 +99,11 @@ function SelectWalletAndNetworkStep(): ReactElement {
 
 const Container = styled(Block)`
   padding: ${lg};
-  max-width: 960px;
 `
 
 const SwitchNetworkContainer = styled.div`
-  padding: 30px 45px;
+  padding: 30px 0;
+  padding-left: 45px;
 
   > button {
     margin: auto;

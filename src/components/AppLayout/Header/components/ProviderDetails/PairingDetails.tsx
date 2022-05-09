@@ -33,6 +33,7 @@ const StyledContainer = styled.div<{
 
   div {
     align-items: ${(props) => (props.$vertical ? 'center' : '')};
+    text-align: ${(props) => (props.$vertical ? 'center' : '')};
   }
 `
 
