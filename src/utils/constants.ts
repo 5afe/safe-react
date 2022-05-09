@@ -47,4 +47,4 @@ const isProdGateway = () => {
 
 export const GATEWAY_URL =
   process.env.REACT_APP_GATEWAY_URL ||
-  (IS_PRODUCTION || isProdGateway() ? 'https://gateway.safe.evmos.dev' : 'https://gateway.safe.evmos.dev')
+  (IS_PRODUCTION || isProdGateway() ? 'https://gateway.safe.evmos.org' : 'https://gateway.safe.evmos.dev')
