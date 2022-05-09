@@ -1,5 +1,7 @@
 import { lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+import { Card } from '@gnosis.pm/safe-react-components'
 
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
@@ -22,6 +24,11 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 const HidePairingModule = lazy(
   () => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule'),
 )
+
+const StyledCard = styled(Card)`
+  padding: 20px;
+  max-width: 240px;
+`
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -62,7 +69,7 @@ const HeaderComponent = (): React.ReactElement => {
 
   const getProviderDetailsBased = () => {
     if (!loaded) {
-      return <ConnectDetails />
+      return <ConnectDetails vertical />
     }
 
     return (
@@ -78,7 +85,7 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const info = getProviderInfoBased()
-  const details = getProviderDetailsBased()
+  const details = <StyledCard>{getProviderDetailsBased()}</StyledCard>
 
   return (
     <>

@@ -4,8 +4,8 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 const PairingDetails = lazy(() => import('src/components/AppLayout/Header/components/ProviderDetails/PairingDetails'))
 
-const MobilePairing = (): ReactElement | null => {
-  return isPairingSupported() ? wrapInSuspense(<PairingDetails />) : null
+const MobilePairing = (props: { vertical?: boolean }): ReactElement | null => {
+  return isPairingSupported() ? wrapInSuspense(<PairingDetails {...props} />) : null
 }
 
 export default MobilePairing

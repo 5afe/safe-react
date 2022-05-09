@@ -1,61 +1,23 @@
 import { ReactElement } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import { Card, Divider } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import ConnectButton from 'src/components/ConnectButton'
-import Block from 'src/components/layout/Block'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
-import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import MobilePairing from 'src/components/MobilePairing'
+import MobilePairing from 'src/components/AppLayout/Header/components/ProviderDetails/MobilePairing'
 
-const styles = () => ({
-  header: {
-    letterSpacing: '0.4px',
-    flexGrow: 1,
-    textAlign: 'center',
-    fontWeight: 600,
-    fontSize: '18px',
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  justifyCenter: {
-    justifyContent: 'center',
-  },
-})
-
-const StyledCard = styled(Card)`
-  padding: 20px;
-  max-width: 240px;
+const StyledContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  box-sizing: border-box;
+  justify-content: space-between;
 `
 
-const StyledDivider = styled(Divider)`
-  width: calc(100% + 40px);
-  margin-left: -20px;
-`
+const ConnectDetails = ({ vertical = false }: { vertical?: boolean }): ReactElement => (
+  <StyledContainer>
+    <ConnectButton data-testid="heading-connect-btn" />
 
-const ConnectDetails = ({ classes }): ReactElement => (
-  <StyledCard>
-    <Row align="center" margin="lg">
-      <Paragraph className={classes.header} noMargin>
-        Connect a Wallet
-      </Paragraph>
-    </Row>
-
-    <Row className={classes.justifyCenter} margin="lg">
-      <KeyRing center circleSize={60} dotRight={20} dotSize={20} dotTop={50} keySize={28} mode="error" />
-    </Row>
-
-    <Block className={classes.centerText}>
-      <ConnectButton data-testid="heading-connect-btn" />
-    </Block>
-
-    <StyledDivider />
-
-    <MobilePairing />
-  </StyledCard>
+    <MobilePairing vertical={vertical} />
+  </StyledContainer>
 )
 
-export default withStyles(styles as any)(ConnectDetails)
+export default ConnectDetails
