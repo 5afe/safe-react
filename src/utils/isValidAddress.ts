@@ -13,7 +13,7 @@ export const isValidAddress = (address?: string): boolean => {
 }
 
 export const isValidPrefixedAddress = (value?: string): boolean => {
-  if (!value) {
+  if (!value || typeof value !== 'string') {
     return false
   }
 

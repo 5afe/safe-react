@@ -20,21 +20,19 @@ export const HistoryTransactions = (): ReactElement => {
     )
   }
 
-  if (count === 0 || !transactions.length) {
-    return (
-      <NoTransactions>
-        <Img alt="No Transactions yet" src={NoTransactionsImage} />
-        <Title size="xs">History transactions will appear here </Title>
-      </NoTransactions>
-    )
-  }
-
   return (
     <>
       <Filter />
-      <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
-        <HistoryTxList transactions={transactions} />
-      </TxsInfiniteScroll>
+      {count === 0 || !transactions.length ? (
+        <NoTransactions>
+          <Img alt="No Transactions yet" src={NoTransactionsImage} />
+          <Title size="xs">History transactions will appear here </Title>
+        </NoTransactions>
+      ) : (
+        <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+          <HistoryTxList transactions={transactions} />
+        </TxsInfiniteScroll>
+      )}
     </>
   )
 }
