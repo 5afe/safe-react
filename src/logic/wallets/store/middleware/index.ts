@@ -18,9 +18,6 @@ import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 const UNKNOWN_PEER = 'Unknown'
 
-// https://github.com/blocknative/web3-onboard/blob/1cfcd6fb6f7b599f01b51ef56a2ec38250854938/src/modules/select/wallets/wallet-connect.ts#L30
-const WALLET_CONNECT_MODULE_NAME = 'WalletConnect'
-
 const providerMiddleware =
   (store: ReturnType<typeof reduxStore>) =>
   (next: Dispatch) =>
@@ -80,7 +77,7 @@ const providerMiddleware =
     if (account === checksumAddress(address) && !shouldSwitchNetwork(wallet)) {
       trackEvent({ ...WALLET_EVENTS.CONNECT, label: name })
       // Track WalletConnect peer wallet
-      if (name === WALLET_CONNECT_MODULE_NAME) {
+      if (name.toUpperCase() === 'WALLETCONNECT') {
         trackEvent({
           ...WALLET_EVENTS.WALLET_CONNECT,
           label: (wallet.provider as InstanceType<typeof WalletConnectProvider>)?.wc?.peerMeta?.name || UNKNOWN_PEER,

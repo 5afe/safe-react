@@ -2,9 +2,7 @@ import { ReactElement, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
-import { Link } from 'react-router-dom'
 import { Text } from '@gnosis.pm/safe-react-components'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { Box } from '@material-ui/core'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
@@ -14,8 +12,7 @@ import { getChainById } from 'src/config'
 import PendingTxListItem from 'src/components/Dashboard/PendingTxs/PendingTxListItem'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { pendingTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { Card, WidgetBody, WidgetContainer, WidgetTitle } from 'src/components/Dashboard/styled'
-import { xs } from 'src/theme/variables'
+import { Card, WidgetBody, WidgetContainer, WidgetTitle, ViewAllLink } from 'src/components/Dashboard/styled'
 import NoTransactionsImage from 'src/routes/safe/components/Transactions/TxList/assets/no-transactions.svg'
 import Img from 'src/components/layout/Img'
 
@@ -27,26 +24,13 @@ const SkeletonWrapper = styled.div`
 const StyledList = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 15px;
   width: 100%;
-  height: 100%;
 `
 
 const StyledWidgetTitle = styled.div`
   display: flex;
   justify-content: space-between;
-`
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: ${({ theme }) => theme.colors.primary};
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: ${xs};
-  margin-bottom: 10px;
-  padding-right: 26px;
 `
 
 const EmptyState = (
@@ -114,10 +98,7 @@ const PendingTxsList = ({ size = 5 }: { size?: number }): ReactElement | null =>
     <WidgetContainer>
       <StyledWidgetTitle>
         <WidgetTitle>Transaction Queue {totalQueuedTxs ? ` (${totalQueuedTxs})` : ''}</WidgetTitle>
-        <StyledLink to={url}>
-          View All
-          <ChevronRightIcon />
-        </StyledLink>
+        <ViewAllLink url={url} />
       </StyledWidgetTitle>
       <WidgetBody>{getWidgetBody()}</WidgetBody>
     </WidgetContainer>

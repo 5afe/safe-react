@@ -97,5 +97,5 @@ export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions
     .map(({ desktop: _, ...rest }) => rest)
 
   // Pairing must be 1st in list (to hide via CSS)
-  return isPairingSupported() ? [getPairingModule(), ...supportedWallets] : supportedWallets
+  return isPairingSupported() ? [getPairingModule(chainId), ...supportedWallets] : supportedWallets
 }

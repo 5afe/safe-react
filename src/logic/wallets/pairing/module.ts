@@ -1,10 +1,11 @@
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import { IClientMeta } from '@walletconnect/types'
+import { IClientMeta, IRPCMap } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
 import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
-import { getRpcServiceUrl, _getChainId } from 'src/config'
+import { ChainId } from 'src/config/chain'
+import { getRpcServiceUrl } from 'src/config'
 import { getChains } from 'src/config/cache/chains'
 import { BLOCK_POLLING_INTERVAL } from '../onboard'
 
@@ -35,64 +36,46 @@ const getClientMeta = (): IClientMeta => {
   }
 }
 
-const createPairingProvider = (): WalletConnectProvider => {
+const getPairingModule = (chainId: ChainId): WalletModule => {
   const STORAGE_ID = 'SAFE__pairingProvider'
-
-  const rpc = getChains().reduce((map, { chainId, rpcUri }) => {
-    return {
-      ...map,
-      [parseInt(chainId, 10)]: getRpcServiceUrl(rpcUri),
-    }
-  }, {})
   const clientMeta = getClientMeta()
 
-  const provider = new WalletConnectProvider({
-    bridge: WC_BRIDGE,
-    pollingInterval: BLOCK_POLLING_INTERVAL,
-    infuraId: INFURA_TOKEN,
-    rpc,
-    chainId: parseInt(_getChainId(), 10),
-    storageId: STORAGE_ID,
-    qrcode: false, // Don't show QR modal
-    clientMeta,
-  })
-
-  // WalletConnect overrides the clientMeta, so we need to set it back
-  ;(provider.wc as any).clientMeta = clientMeta
-  ;(provider.wc as any)._clientMeta = clientMeta
-
-  provider.autoRefreshOnNetworkChange = false
-
-  return provider
-}
-
-let _pairingProvider: WalletConnectProvider | undefined
-
-export const getPairingProvider = (): WalletConnectProvider => {
-  // We cannot initialize provider immediately as we need to wait for chains to load RPCs
-  if (!_pairingProvider) {
-    _pairingProvider = createPairingProvider()
-  }
-  return _pairingProvider
-}
-
-const getPairingModule = (): WalletModule => {
-  const name = PAIRING_MODULE_NAME
-  const provider = getPairingProvider()
-
   return {
-    name,
+    name: PAIRING_MODULE_NAME,
     wallet: async ({ resetWalletState }) => {
-      // Enable provider when a previously interrupted session exists
-      if (provider.wc.session.connected) {
-        provider.enable()
+      const RPC_MAP: IRPCMap = getChains().reduce((map, { chainId, rpcUri }) => {
+        return {
+          ...map,
+          [parseInt(chainId, 10)]: getRpcServiceUrl(rpcUri),
+        }
+      }, {})
+
+      const provider = new WalletConnectProvider({
+        bridge: WC_BRIDGE,
+        pollingInterval: BLOCK_POLLING_INTERVAL,
+        infuraId: INFURA_TOKEN,
+        rpc: RPC_MAP,
+        chainId: parseInt(chainId, 10),
+        storageId: STORAGE_ID,
+        qrcode: false, // Don't show QR modal
+        clientMeta,
+      })
+
+      provider.autoRefreshOnNetworkChange = false
+
+      // WalletConnect overrides the clientMeta, so we need to set it back(provider.wc as any).clientMeta = clientMeta
+      ;(provider.wc as any)._clientMeta = clientMeta
+
+      const onDisconnect = () => {
+        resetWalletState({ disconnected: true, walletName: PAIRING_MODULE_NAME })
       }
 
-      const onDisconnect = () => resetWalletState({ walletName: name, disconnected: true })
       provider.wc.on('disconnect', onDisconnect)
 
-      // Kill session if module unmounts (a non-pairing wallet connects)
       window.addEventListener('unload', onDisconnect, { once: true })
+
+      // Establish WC connection
+      provider.enable()
 
       return {
         provider,
@@ -109,7 +92,7 @@ const getPairingModule = (): WalletModule => {
               provider.on('chainChanged', func)
             },
           },
-          // We never access the balance via onboard
+          // We never request balance from onboard
           balance: {},
           disconnect: () => {
             // Only disconnect if connected
@@ -117,7 +100,7 @@ const getPairingModule = (): WalletModule => {
               provider.disconnect()
             }
           },
-          name,
+          name: PAIRING_MODULE_NAME,
         },
       }
     },

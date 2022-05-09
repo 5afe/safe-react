@@ -13,4 +13,4 @@ export const lastViewedSafe = (state: AppReduxState['currentSession']): string |
 
 export const currentSession = (state: AppReduxState): CurrentSessionState => state[CURRENT_SESSION_REDUCER_ID]
 
-export const currentSafeAddress = createSelector(currentSession, (session) => session.currentSafeAddress)
+export const currentSafeAddress = createSelector(currentSession, ({ currentSafeAddress }) => currentSafeAddress)

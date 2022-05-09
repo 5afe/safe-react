@@ -4,24 +4,16 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Box, IconButton } from '@material-ui/core'
 import { Link, generatePath } from 'react-router-dom'
 import { Icon } from '@gnosis.pm/safe-react-components'
-
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
 import { md, lg } from 'src/theme/variables'
 import appsIconSvg from 'src/assets/icons/apps.svg'
+import { Card } from 'src/components/Dashboard/styled'
 
 export const CARD_HEIGHT = 200
 export const CARD_PADDING = 24
 
 const StyledLink = styled(Link)`
-  display: block;
   text-decoration: none;
-  color: black;
-  height: 100%;
-  position: relative;
-  background-color: white;
-  border-radius: 8px;
-  padding: ${CARD_PADDING}px;
-  box-sizing: border-box;
 `
 
 const StyledLogo = styled.img`
@@ -56,7 +48,7 @@ type CardProps = {
   onPin: () => void
 }
 
-const Card = (props: CardProps): ReactElement => {
+const DashboardAppCard = (props: CardProps): ReactElement => {
   const appRoute = generatePath(GENERIC_APPS_ROUTE) + `?appUrl=${props.appUri}`
   const { isPinned, onPin } = props
 
@@ -75,23 +67,25 @@ const Card = (props: CardProps): ReactElement => {
 
   return (
     <StyledLink to={appRoute}>
-      <StyledLogo src={props.logoUri} alt={`${props.name} logo`} onError={setAppImageFallback} />
+      <Card>
+        <StyledLogo src={props.logoUri} alt={`${props.name} logo`} onError={setAppImageFallback} />
 
-      <Box mb={1}>
-        <Text size="xl" strong>
-          {props.name}
+        <Box mb={1}>
+          <Text size="xl" strong>
+            {props.name}
+          </Text>
+        </Box>
+
+        <Text size="lg" color="inputFilled">
+          {props.description}
         </Text>
-      </Box>
 
-      <Text size="lg" color="inputFilled">
-        {props.description}
-      </Text>
-
-      <IconBtn onClick={handlePinClick}>
-        {isPinned ? <Icon type="bookmarkFilled" size="md" color="primary" /> : <Icon type="bookmark" size="md" />}
-      </IconBtn>
+        <IconBtn onClick={handlePinClick}>
+          {isPinned ? <Icon type="bookmarkFilled" size="md" color="primary" /> : <Icon type="bookmark" size="md" />}
+        </IconBtn>
+      </Card>
     </StyledLink>
   )
 }
 
-export default Card
+export default DashboardAppCard

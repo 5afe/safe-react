@@ -7,7 +7,7 @@ import { getTransactionByAttribute } from 'src/logic/safe/store/selectors/gatewa
 import { AppReduxState } from 'src/store'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import { extractSafeAddress } from 'src/routes/routes'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 export const UPDATE_TRANSACTION_DETAILS = 'UPDATE_TRANSACTION_DETAILS'
 const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_TRANSACTION_DETAILS)
@@ -15,12 +15,15 @@ const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_
 export const fetchTransactionDetails =
   ({ transactionId }: { transactionId: Transaction['id'] }) =>
   async (dispatch: Dispatch, getState: () => AppReduxState): Promise<undefined | Transaction['txDetails']> => {
-    const transaction = getTransactionByAttribute(getState(), {
+    const state = getState()
+
+    const transaction = getTransactionByAttribute(state, {
       attributeValue: transactionId,
       attributeName: 'id',
     })
-    const safeAddress = extractSafeAddress()
-    const chainId = currentChainId(getState())
+
+    const safeAddress = currentSafeAddress(state)
+    const chainId = currentChainId(state)
 
     // @TODO: Believed to be based on legacy selector, might be able to remove now
     if (!safeAddress) {

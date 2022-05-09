@@ -27,11 +27,14 @@ import {
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
-import { ADDRESSED_ROUTE, extractShortChainName } from 'src/routes/routes'
+import { ADDRESSED_ROUTE } from 'src/routes/routes'
 import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
 import { trackEvent } from 'src/utils/googleTagManager'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { Box } from '@material-ui/core'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -46,7 +49,7 @@ const Container = styled.div`
 
 const IdenticonContainer = styled.div`
   width: 100%;
-  margin: 14px 8px;
+  margin: 14px 8px 9px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -206,8 +209,9 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const { owners, threshold } = useSelector(currentSafe)
   const copyChainPrefix = useSelector(copyShortNameSelector)
-  const shortName = extractShortChainName()
+  const { shortName } = useSafeAddress()
 
   const hasSafeOpen = useRouteMatch(ADDRESSED_ROUTE)
 
@@ -241,8 +245,10 @@ const SafeHeader = ({
       <Container>
         {/* Identicon */}
         <IdenticonContainer>
-          <Threshold />
-          <Identicon address={address} size="lg" />
+          <Box position="relative">
+            <Threshold threshold={threshold} owners={owners.length} />
+            <Identicon address={address} size="lg" />
+          </Box>
           <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
           </ToggleSafeListButton>
