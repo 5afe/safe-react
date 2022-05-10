@@ -19,8 +19,6 @@ const wallets = (chainId: ChainId): Wallet[] => {
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    // A patched version of WalletConnect is spliced in at this index
-    // { preferred: true, desktop: true }
     { walletName: WALLETS.TALLYHO, preferred: false, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,
