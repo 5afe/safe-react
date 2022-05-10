@@ -81,9 +81,10 @@ const getTransactionFilter = ({
   to,
   value,
 }: FilterForm): Record<string, string> => {
+  const getTimestampString = (date: string): string => new Date(date).getTime().toString()
   return {
-    ...(execution_date__gte && { execution_date__gte: new Date(execution_date__gte).toISOString() }),
-    ...(execution_date__lte && { execution_date__lte: new Date(execution_date__lte).toISOString() }),
+    ...(execution_date__gte && { execution_date__gte: getTimestampString(execution_date__gte) }),
+    ...(execution_date__lte && { execution_date__lte: getTimestampString(execution_date__lte) }),
     ...(to && { to }),
     ...(value && { value }),
   }
@@ -155,9 +156,13 @@ const Filter = (): ReactElement => {
         ? getOutgoingFilter(filter)
         : getModuleFilter(filter)
 
-    setSearchParams(params)
+    // Set more than just the 'type' as it clears the history
+    if (Object.keys(params).length > 1) {
+      setSearchParams(params)
 
-    trackEvent(TX_LIST_EVENTS.FILTER)
+      trackEvent(TX_LIST_EVENTS.FILTER)
+    }
+
     hideFilter()
   }
 
