@@ -58,7 +58,7 @@ describe('<OnboardingWidget>', () => {
     expect(screen.getByText(/Second Button/)).toBeInTheDocument()
   })
 
-  test('renders widget which is already hidden', () => {
+  test('renders only children if the widget has been hidden', () => {
     const widgetStorageId = 'alreadyHiddenId'
     local.setItem(widgetStorageId, true)
     const text = 'New feature available!'

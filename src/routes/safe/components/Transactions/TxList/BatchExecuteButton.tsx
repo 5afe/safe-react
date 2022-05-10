@@ -14,7 +14,7 @@ interface BatchExecuteButtonProps {
   onClick: () => void
 }
 
-const helpLocalStorageId = 'batchExecutionButtonSeen'
+const HELP_STORAGE_KEY = 'batchExecutionButtonSeen'
 
 export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactElement => {
   const batchableTransactions = useSelector(getBatchableTransactions)
@@ -36,34 +36,32 @@ export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactE
   }, [hoverContext])
 
   return (
-    <OnboardingWidget
-      text="Queued transactions can now be executed in batch!"
-      widgetLocalStorageId={helpLocalStorageId}
-    >
-      {/* Button wrapper needed, because the Tooltip otherwise can't correctly bind its mouseEnter and mouseLeave events to the button */}
-      <StyledTooltip
-        interactive
-        title={
-          isDisabled
-            ? 'Batch execution is only available for transactions that have been fully signed and which are strictly sequential in Safe Nonce.'
-            : 'All transactions highlighted in light green will be included in the batch execution.'
-        }
-        arrow
-        placement="top-start"
-      >
-        <ButtonWrapper>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={onClick}
-            disabled={isDisabled}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          >
-            Execute Batch {isBatchable && `(${batchableTransactions.length})`}
-          </Button>
-        </ButtonWrapper>
-      </StyledTooltip>
+    <OnboardingWidget text="Queued transactions can now be executed in batch!" widgetLocalStorageId={HELP_STORAGE_KEY}>
+      <ButtonWrapper>
+        <StyledTooltip
+          interactive
+          title={
+            isDisabled
+              ? 'Batch execution is only available for transactions that have been fully signed and which are strictly sequential in Safe Nonce.'
+              : 'All transactions highlighted in light green will be included in the batch execution.'
+          }
+          arrow
+          placement="top-start"
+        >
+          <span>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={onClick}
+              disabled={isDisabled}
+              onMouseEnter={handleOnMouseEnter}
+              onMouseLeave={handleOnMouseLeave}
+            >
+              Execute Batch {isBatchable && `(${batchableTransactions.length})`}
+            </Button>
+          </span>
+        </StyledTooltip>
+      </ButtonWrapper>
     </OnboardingWidget>
   )
 }
