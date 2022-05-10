@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Icon } from '@gnosis.pm/safe-react-components'
 import { useForm } from 'react-final-form'
 
 import Block from 'src/components/layout/Block'
@@ -16,7 +16,7 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import SelectField from 'src/components/forms/SelectField'
 import { useStepper } from 'src/components/Stepper/stepperContext'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { disabled, extraSmallFontSize, lg, sm, xs, md } from 'src/theme/variables'
+import { disabled, extraSmallFontSize, lg, sm, md } from 'src/theme/variables'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import Col from 'src/components/layout/Col'
@@ -110,19 +110,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
         <Paragraph color="primary" size="lg">
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
           transaction before it gets executed. In general, the more confirmations required, the more secure your Safe
-          is.
-          <StyledLink
-            href="https://help.gnosis-safe.io/en/articles/4772567-what-gnosis-safe- setup-should-i-use"
-            target="_blank"
-            rel="noreferrer"
-            title="Learn about which Safe setup to use"
-          >
-            <Text size="xl" as="span" color="primary">
-              Learn about which Safe setup to use
-            </Text>
-            <Icon size="sm" type="externalLink" color="primary" />
-          </StyledLink>
-          . The new Safe will ONLY be available on <NetworkLabel />
+          is. The new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
       </BlockWithPadding>
       <Hairline />
@@ -262,16 +250,6 @@ const ParagraphWithMargin = styled(Paragraph)`
   margin-bottom: 12px;
 `
 
-const StyledLink = styled(Link)`
-  padding: 0 ${xs};
-  & svg {
-    position: relative;
-    top: 1px;
-    left: ${xs};
-    height: 14px;
-    width: 14px;
-  }
-`
 const RowHeader = styled(Row)`
   padding: ${sm} ${lg};
   font-size: ${extraSmallFontSize};
