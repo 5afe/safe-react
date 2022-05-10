@@ -78,7 +78,7 @@ const DescriptionContainer = styled.div`
 `
 
 const Separator = styled(Divider)`
-  margin: 32px 0;
+  margin: 24px 0;
 `
 
 const ChainLabel = styled(Text)`
