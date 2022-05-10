@@ -26,11 +26,11 @@ export const OnboardingWidget = ({
       arrow
       title={
         <StyledOnboardingContent>
-          <StyledIcon size="md" type="info" color="primary" />
+          <Icon size="md" type="info" color="primary" />
           <span>{text}</span>
-          <StyledOnboardingConfirmButton color="primary" variant="contained" onClick={() => setWidgetHidden(true)}>
+          <Button color="primary" variant="contained" onClick={() => setWidgetHidden(true)}>
             Got it
-          </StyledOnboardingConfirmButton>
+          </Button>
         </StyledOnboardingContent>
       }
     >
@@ -43,7 +43,6 @@ const OnboardingTooltip = withStyles(({ palette }: Theme) => ({
     '&::before': {
       backgroundColor: palette.common.white,
       bottom: '5px',
-      zIndex: 1500,
     },
   },
   tooltip: {
@@ -54,21 +53,14 @@ const OnboardingTooltip = withStyles(({ palette }: Theme) => ({
     fontSize: '14px',
     padding: '16px',
     maxWidth: '500px',
-    zIndex: -1,
+  },
+  popper: {
+    zIndex: 1300,
   },
 }))(Tooltip)
-
-const StyledIcon = styled(Icon)`
-  float: inline-start;
-  align-self: flex-start;
-`
 
 const StyledOnboardingContent = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`
-
-const StyledOnboardingConfirmButton = styled(Button)`
-  align-self: flex-end;
 `
