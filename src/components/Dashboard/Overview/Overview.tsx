@@ -1,8 +1,9 @@
 import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Text, Identicon } from '@gnosis.pm/safe-react-components'
-import { Box, Grid, Link } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 
 import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -30,9 +31,7 @@ const StyledText = styled(Text)`
 `
 
 const StyledLink = styled(Link)`
-  &:hover {
-    text-decoration: none;
-  }
+  text-decoration: none;
 `
 
 const NetworkLabelContainer = styled.div`
@@ -126,7 +125,7 @@ const Overview = (): ReactElement => {
 
             <Grid container>
               <Grid item xs={3}>
-                <StyledLink href={assetsLink}>
+                <StyledLink to={assetsLink}>
                   <Text color="inputDefault" size="lg">
                     Tokens
                   </Text>
@@ -135,7 +134,7 @@ const Overview = (): ReactElement => {
               </Grid>
 
               <Grid item xs={3}>
-                <StyledLink href={nftsLink}>
+                <StyledLink to={nftsLink}>
                   <Text color="inputDefault" size="lg">
                     NFTs
                   </Text>
@@ -145,7 +144,7 @@ const Overview = (): ReactElement => {
 
               <Grid item xs={6}>
                 <Box display="flex" height={1} alignItems="flex-end" justifyContent="flex-end">
-                  <StyledLink href={assetsLink}>
+                  <StyledLink to={assetsLink}>
                     <Button size="medium" variant="contained" color="primary">
                       View Assets
                     </Button>
