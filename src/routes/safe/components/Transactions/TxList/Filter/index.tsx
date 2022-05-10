@@ -10,12 +10,10 @@ import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import type { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFTextField'
 import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
-import RHFModuleSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFModuleSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
 
@@ -24,7 +22,7 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import useSearchParams from 'src/routes/safe/container/hooks/useSearchParams'
 
-// Types cannot take computed property names
+// We use 'hidden' fields for the ENS domain/address book name
 const TYPE_FIELD_NAME = 'type'
 const DATE_FROM_FIELD_NAME = 'execution_date__gte'
 const DATE_TO_FIELD_NAME = 'execution_date__lte'
@@ -34,6 +32,7 @@ const AMOUNT_FIELD_NAME = 'value'
 const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
 const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
 const MODULE_FIELD_NAME = 'module'
+const HIDDEN_MODULE_FIELD_NAME = '__module'
 const NONCE_FIELD_NAME = 'nonce'
 
 export enum FilterType {
@@ -42,6 +41,7 @@ export enum FilterType {
   MODULE = 'Module-based',
 }
 
+// Types cannot take computed property names
 export type FilterForm = {
   [TYPE_FIELD_NAME]: FilterType
   [DATE_FROM_FIELD_NAME]: string
@@ -51,7 +51,8 @@ export type FilterForm = {
   [AMOUNT_FIELD_NAME]: string
   [TOKEN_ADDRESS_FIELD_NAME]: string
   [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: string
-  [MODULE_FIELD_NAME]: SettingsInfo['type']
+  [MODULE_FIELD_NAME]: string
+  [HIDDEN_MODULE_FIELD_NAME]: string
   [NONCE_FIELD_NAME]: string
 }
 
@@ -156,7 +157,7 @@ const Filter = (): ReactElement => {
         ? getOutgoingFilter(filter)
         : getModuleFilter(filter)
 
-    // Set more than just the 'type' as it clears the history
+    // Set more than just the 'type' as we clear the history for filtered results
     if (Object.keys(params).length > 1) {
       setSearchParams(params)
 
@@ -245,7 +246,12 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {type === FilterType.MODULE && (
-                        <RHFModuleSearchField<FilterForm> name={MODULE_FIELD_NAME} label="Module" control={control} />
+                        <RHFAddressSearchField<FilterForm>
+                          name={MODULE_FIELD_NAME}
+                          hiddenName={HIDDEN_MODULE_FIELD_NAME}
+                          label="Module"
+                          methods={methods}
+                        />
                       )}
                     </ParametersFormWrapper>
                     <ButtonWrapper>
