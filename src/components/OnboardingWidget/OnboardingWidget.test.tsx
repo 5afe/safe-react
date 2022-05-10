@@ -9,9 +9,7 @@ describe('<OnboardingWidget>', () => {
 
     render(
       <OnboardingWidget text={text} widgetLocalStorageId="someTestId">
-        <span>
-          <Button>Testbutton</Button>
-        </span>
+        <Button>Testbutton</Button>
       </OnboardingWidget>,
     )
 
@@ -30,14 +28,10 @@ describe('<OnboardingWidget>', () => {
     render(
       <div>
         <OnboardingWidget text={text1} widgetLocalStorageId="someTestId1">
-          <span>
-            <Button>First Button</Button>
-          </span>
+          <Button>First Button</Button>
         </OnboardingWidget>
         <OnboardingWidget text={text2} widgetLocalStorageId="someTestId2">
-          <span>
-            <Button>Second Button</Button>
-          </span>
+          <Button>Second Button</Button>
         </OnboardingWidget>
       </div>,
     )
@@ -65,9 +59,7 @@ describe('<OnboardingWidget>', () => {
 
     render(
       <OnboardingWidget text={text} widgetLocalStorageId={widgetStorageId}>
-        <span>
-          <Button>Testbutton</Button>
-        </span>
+        <Button>Testbutton</Button>
       </OnboardingWidget>,
     )
     expect(screen.queryByText(new RegExp(text))).not.toBeInTheDocument()
