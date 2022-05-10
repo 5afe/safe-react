@@ -21,7 +21,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
     // A patched version of WalletConnect is spliced in at this index
     // { preferred: true, desktop: true }
-    { walletName: WALLETS.TALLYHO, preferred: true, desktop: false },
+    { walletName: WALLETS.TALLYHO, preferred: false, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,
       rpc: getChains().reduce((map, { chainId, rpcUri }) => {
