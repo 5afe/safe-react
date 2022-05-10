@@ -1,7 +1,4 @@
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -15,6 +12,7 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -28,6 +26,9 @@ import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ModalHeader } from '../ModalHeader'
+import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -70,6 +71,7 @@ const SendCollectible = ({
   const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
+  const [addressErrorMsg, setAddressErrorMsg] = useState('')
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -114,15 +116,7 @@ const SendCollectible = ({
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send collectible
-        </Paragraph>
-        <Paragraph className={classes.annotation}>1 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Send NFT" />
       <Hairline />
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
@@ -137,15 +131,19 @@ const SendCollectible = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName =
-              addressBook.find(({ address }) => {
-                return sameAddress(scannedAddress, address)
-              })?.name ?? ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName ?? '',
-              address: scannedAddress,
-            })
+            const scannedName = addressBook.find(({ address }) => {
+              return sameAddress(scannedAddress, address)
+            })?.name
+            const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
+            if (!addressErrorMessage) {
+              mutators.setRecipient(scannedAddress)
+              setSelectedEntry({
+                name: scannedName || '',
+                address: scannedAddress,
+              })
+              setAddressErrorMsg('')
+            } else setAddressErrorMsg(addressErrorMessage)
+
             closeQrModal()
           }
 
@@ -159,7 +157,7 @@ const SendCollectible = ({
             <>
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
-                <SafeInfo />
+                <SafeInfo text="Sending from" />
                 <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
@@ -176,15 +174,16 @@ const SendCollectible = ({
                     tabIndex={0}
                   >
                     <Row margin="xs">
-                      <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                      <Paragraph color="disabled" noMargin size="lg">
                         Recipient
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
                       <Col xs={12}>
-                        <EthHashInfo
+                        <PrefixedEthHashInfo
                           hash={selectedEntry.address}
                           name={selectedEntry.name}
+                          strongName
                           showAvatar
                           showCopyBtn
                           explorerUrl={getExplorerInfo(selectedEntry.address)}
@@ -193,30 +192,29 @@ const SendCollectible = ({
                     </Row>
                   </div>
                 ) : (
-                  <>
-                    <Row margin="md">
-                      <Col xs={11}>
-                        <AddressBookInput
-                          fieldMutator={mutators.setRecipient}
-                          pristine={pristine}
-                          setIsValidAddress={setIsValidAddress}
-                          setSelectedEntry={setSelectedEntry}
-                        />
-                      </Col>
-                      <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <ScanQRWrapper handleScan={handleScan} />
-                      </Col>
-                    </Row>
-                  </>
+                  <Row margin="md">
+                    <Col xs={11}>
+                      <AddressBookInput
+                        fieldMutator={mutators.setRecipient}
+                        pristine={pristine}
+                        errorMsg={addressErrorMsg}
+                        setIsValidAddress={setIsValidAddress}
+                        setSelectedEntry={setSelectedEntry}
+                      />
+                    </Col>
+                    <Col center="xs" className={classes} middle="xs" xs={1}>
+                      <ScanQRWrapper handleScan={handleScan} />
+                    </Col>
+                  </Row>
                 )}
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                      Collectible
+                    <Paragraph color="disabled" noMargin size="md">
+                      NFT collection
                     </Paragraph>
                   </Col>
                 </Row>
-                <Row margin="sm">
+                <Row margin="md">
                   <Col>
                     <TokenSelectField
                       assets={nftAssets}
@@ -228,7 +226,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="xs">
                   <Col between="lg">
-                    <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                    <Paragraph color="disabled" noMargin size="md">
                       Token ID
                     </Paragraph>
                   </Col>

@@ -1,30 +1,11 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 
-import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { background, border, lg, sm } from 'src/theme/variables'
 
 export const useStyles = makeStyles(
   createStyles({
     root: {
       height: '372px',
-    },
-    heading: {
-      padding: `${sm} ${lg}`,
-      justifyContent: 'flex-start',
-      boxSizing: 'border-box',
-      height: '74px',
-    },
-    annotation: {
-      lineHeight: 'normal',
-      color: secondaryText,
-      marginRight: 'auto',
-      marginLeft: '20px',
-    },
-    manage: {
-      fontSize: lg,
-    },
-    closeIcon: {
-      height: '35px',
-      width: '35px',
     },
     info: {
       backgroundColor: background,
@@ -43,10 +24,10 @@ export const useStyles = makeStyles(
       height: '100%',
     },
     ownersTitle: {
-      padding: lg,
+      padding: `${sm} ${lg}`,
     },
     owner: {
-      padding: sm,
+      padding: `${sm} ${lg}`,
       alignItems: 'center',
     },
     name: {
@@ -54,17 +35,9 @@ export const useStyles = makeStyles(
       overflow: 'hidden',
     },
     selectedOwner: {
-      padding: sm,
+      padding: `${sm} ${lg}`,
       alignItems: 'center',
       backgroundColor: '#ffe6ea',
-    },
-    gasCostsContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-      width: '100%',
-      backgroundColor: background,
     },
   }),
 )

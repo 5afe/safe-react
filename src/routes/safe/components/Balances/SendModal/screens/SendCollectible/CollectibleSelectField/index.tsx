@@ -3,7 +3,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { selectStyles, selectedTokenStyles } from './style'
+import { selectStyles, selectedTokenStyles } from '../style'
 
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
@@ -27,7 +27,7 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): Rea
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
-    <MenuItem className={classes.container}>
+    <MenuItem className={classes.container} disableRipple>
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
@@ -40,7 +40,7 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): Rea
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
+        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light" noMargin>
           Select a token*
         </Paragraph>
       )}
@@ -65,6 +65,7 @@ export const CollectibleSelectField = ({ initialValue, tokens }: CollectibleSele
       disabled={!tokens.length}
       initialValue={initialValue}
       name="nftTokenId"
+      displayEmpty
       renderValue={(nftTokenId) => <SelectedCollectible tokenId={nftTokenId} tokens={tokens} />}
       validate={required}
     >

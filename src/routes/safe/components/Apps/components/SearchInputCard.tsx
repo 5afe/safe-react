@@ -5,6 +5,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import ClearIcon from '@material-ui/icons/Clear'
 import styled from 'styled-components'
 import { Card } from '@gnosis.pm/safe-react-components'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 const Container = styled(Card)`
   width: 100%;
@@ -31,9 +33,14 @@ const SearchInputCard = ({ value, onValueChange }: Props): React.ReactElement =>
         )
       }
       onChange={(event: React.ChangeEvent<HTMLInputElement>) => onValueChange(event.target.value)}
-      placeholder="e.g Compound"
+      placeholder="e.g. Compound"
       value={value}
       style={{ width: '100%' }}
+      onBlur={() => {
+        if (value) {
+          trackEvent({ ...SAFE_APPS_EVENTS.SEARCH, label: value })
+        }
+      }}
     />
   </Container>
 )

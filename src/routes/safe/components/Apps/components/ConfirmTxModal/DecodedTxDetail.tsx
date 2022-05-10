@@ -1,38 +1,35 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
+import { DecodedDataParameterValue, DecodedDataResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { md, lg } from 'src/theme/variables'
-import ModalTitle from 'src/components/ModalTitle'
-import Hairline from 'src/components/layout/Hairline'
-import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode.d'
 import { BasicTxInfo, getParameterElement } from 'src/components/DecodeTxs'
-
-const { nativeCoin } = getNetworkInfo()
+import { DecodedTxDetailType } from 'src/routes/safe/components/Apps/components/ConfirmTxModal/index'
 
 const Container = styled.div`
-  max-width: 480px;
-  padding: ${md} ${lg};
   word-break: break-word;
+
+  & > div:last-child {
+    margin: 0;
+  }
 `
 
-function isDataDecodedParameterValue(arg: any): arg is DecodedDataParameterValue {
-  return arg.operation !== undefined
+export function isDataDecodedParameterValue(arg: DecodedTxDetailType): arg is DecodedDataParameterValue {
+  return arg ? arg.hasOwnProperty('operation') : false
 }
 
 type Props = {
-  hideDecodedTxData: () => void
-  onClose: () => void
-  decodedTxData: DecodedDataParameterValue | DecodedData
+  decodedTxData: DecodedDataParameterValue | DecodedDataResponse
 }
 
-export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
+export const DecodedTxDetail = ({ decodedTxData: tx }: Props): ReactElement => {
+  const nativeCurrency = getNativeCurrency()
   let body
   // If we are dealing with a multiSend
   // decodedTxData is of type DataDecodedParameter
   if (isDataDecodedParameterValue(tx)) {
-    const txValue = fromTokenUnit(tx.value, nativeCoin.decimals)
+    const txValue = fromTokenUnit(tx.value, nativeCurrency.decimals)
 
     body = (
       <>
@@ -46,17 +43,5 @@ export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx 
     body = <>{tx.parameters.map((p, index) => getParameterElement(p, index))}</>
   }
 
-  return (
-    <>
-      <ModalTitle
-        title={(tx as DecodedDataParameterValue).dataDecoded?.method || (tx as DecodedData).method}
-        onClose={onClose}
-        goBack={hideDecodedTxData}
-      />
-
-      <Hairline />
-
-      <Container>{body}</Container>
-    </>
-  )
+  return <Container>{body}</Container>
 }

@@ -1,21 +1,19 @@
-import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import { useState, Fragment } from 'react'
-
 import { useSelector } from 'react-redux'
 
 import { generateColumns, ModuleAddressColumn, MODULES_TABLE_ADDRESS_ID } from './dataFetcher'
 import { RemoveModuleModal } from './RemoveModuleModal'
 import { useStyles } from './style'
-
 import ButtonHelper from 'src/components/ButtonHelper'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ModulePair } from 'src/logic/safe/store/models/safe'
 import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { getExplorerInfo } from 'src/config'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
@@ -36,9 +34,9 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
-  const [selectedModulePair, setSelectedModulePair] = useState<ModulePair>()
-  const triggerRemoveSelectedModule = (modulePair: ModulePair): void => {
-    setSelectedModulePair(modulePair)
+  const [selectedModuleAddress, setSelectedModuleAddress] = useState<string>()
+  const triggerRemoveSelectedModule = (moduleAddress: string): void => {
+    setSelectedModuleAddress(moduleAddress)
     setViewRemoveModuleModal(true)
   }
 
@@ -73,7 +71,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                       <TableCell align={column.align} component="td" key={columnId}>
                         {columnId === MODULES_TABLE_ADDRESS_ID ? (
                           <Block justify="left">
-                            <EthHashInfo
+                            <PrefixedEthHashInfo
                               hash={moduleAddress}
                               showCopyBtn
                               showAvatar
@@ -88,8 +86,8 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                         <Row align="end" className={classes.actions}>
                           {granted && (
                             <ButtonHelper
-                              onClick={() => triggerRemoveSelectedModule(rowElement)}
-                              data-testid={REMOVE_MODULE_BTN_TEST_ID}
+                              onClick={() => triggerRemoveSelectedModule(moduleAddress)}
+                              dataTestId={`${moduleAddress}-${REMOVE_MODULE_BTN_TEST_ID}`}
                             >
                               <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
                             </ButtonHelper>
@@ -104,8 +102,8 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
           }
         </Table>
       </TableContainer>
-      {viewRemoveModuleModal && selectedModulePair && (
-        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModulePair={selectedModulePair} />
+      {viewRemoveModuleModal && selectedModuleAddress && (
+        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModuleAddress={selectedModuleAddress} />
       )}
     </>
   )

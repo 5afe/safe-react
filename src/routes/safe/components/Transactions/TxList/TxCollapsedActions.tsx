@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
+import useTxStatus from 'src/logic/hooks/useTxStatus'
+import { isAwaitingExecution } from './utils'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
@@ -32,9 +34,16 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
     disabledActions,
   } = useActionButtonsHandlers(transaction)
   const nonce = useSelector(currentSafeNonce)
+  const txStatus = useTxStatus(transaction)
+  const isAwaitingEx = isAwaitingExecution(txStatus)
+
+  const onExecuteOrConfirm = (event) => {
+    handleOnMouseLeave()
+    handleConfirmButtonClick(event)
+  }
 
   const getTitle = () => {
-    if (transaction.txStatus === 'AWAITING_EXECUTION') {
+    if (isAwaitingEx) {
       return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
@@ -49,12 +58,12 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
           <IconButton
             size="small"
             type="button"
-            onClick={handleConfirmButtonClick}
+            onClick={onExecuteOrConfirm}
             disabled={disabledActions}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           >
-            <Icon type={transaction.txStatus === 'AWAITING_EXECUTION' ? 'rocket' : 'check'} color="primary" size="sm" />
+            <Icon type={isAwaitingEx ? 'rocket' : 'check'} color="primary" size="sm" />
           </IconButton>
         </span>
       </Tooltip>

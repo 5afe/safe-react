@@ -1,38 +1,29 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
-import { useRouteMatch, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import AlertIcon from 'src/assets/icons/alert.svg'
 import CheckIcon from 'src/assets/icons/check.svg'
 import ErrorIcon from 'src/assets/icons/error.svg'
 import InfoIcon from 'src/assets/icons/info.svg'
-
 import AppLayout from 'src/components/AppLayout'
 import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
-import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
-import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-
 import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import useAddressBookSync from 'src/logic/addressBook/hooks/useAddressBookSync'
+import { useCurrentSafeAddressSync } from 'src/logic/currentSession/hooks/useCurrentSafeAddressSync'
 
 const notificationStyles = {
   success: {
@@ -56,45 +47,29 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const desiredNetwork = getNetworkId()
-
 const useStyles = makeStyles(notificationStyles)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
-  const currentNetwork = useSelector(networkSelector)
-  const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-  const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
-  const history = useHistory()
   const { name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(currentSafeWithNames)
-  const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-  const safeLoaded = useLoadSafe(addressFromUrl)
-  useSafeScheduledUpdates(safeLoaded, addressFromUrl)
+  const { address: safeAddress } = useSelector(currentSafeWithNames)
+
+  useCurrentSafeAddressSync()
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
-  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
-  const balance =
-    !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
-
-  useEffect(() => {
-    if (matchSafe?.isExact) {
-      history.push(WELCOME_ADDRESS)
-      return
-    }
-  }, [matchSafe, history])
+  const balance = formatCurrency(currentSafeBalance.toString(), currentCurrency)
 
   const onReceiveShow = () => onShow('Receive')
   const onReceiveHide = () => onHide('Receive')
 
   return (
     <Frame>
-      <Backdrop isOpen={isWrongNetwork} />
       <SnackbarProvider
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         classes={{
@@ -116,7 +91,7 @@ const App: React.FC = ({ children }) => {
 
           <AppLayout
             sidebarItems={sidebarItems}
-            safeAddress={addressFromUrl}
+            safeAddress={safeAddress}
             safeName={safeName}
             balance={balance}
             granted={granted}
@@ -134,7 +109,7 @@ const App: React.FC = ({ children }) => {
             selectedToken={sendFunds.selectedToken}
           />
 
-          {addressFromUrl && (
+          {safeAddress && (
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
@@ -142,7 +117,7 @@ const App: React.FC = ({ children }) => {
               paperClassName="receive-modal"
               title="Receive Tokens"
             >
-              <ReceiveModal onClose={onReceiveHide} safeAddress={addressFromUrl} safeName={safeName} />
+              <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
             </Modal>
           )}
         </>

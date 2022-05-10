@@ -21,6 +21,8 @@ import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import SuccessSvg from './assets/success.svg'
 import ErrorSvg from './assets/error.svg'
 import LoadingSvg from './assets/wait.svg'
+import { ADDRESS_BOOK_EVENTS } from 'src/utils/events/addressBook'
+import Track from 'src/components/Track'
 
 type ExportEntriesModalProps = {
   isOpen: boolean
@@ -133,11 +135,13 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
             Retry
           </Button>
         ) : (
-          <CSVDownloader data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
-            <Button color="primary" size="md" disabled={loading} onClick={handleClose}>
-              {loading && <StyledLoader color="secondaryLight" size="xs" />}
-              Download
-            </Button>
+          <CSVDownloader data={csvData} bom filename={`gnosis-safe-address-book-${date}`} type="link">
+            <Track {...ADDRESS_BOOK_EVENTS.DOWNLOAD_BUTTON} label={addressBook.length}>
+              <Button color="primary" size="md" disabled={loading} onClick={handleClose}>
+                {loading && <StyledLoader color="secondaryLight" size="xs" />}
+                Download
+              </Button>
+            </Track>
           </CSVDownloader>
         )}
       </Modal.Footer>

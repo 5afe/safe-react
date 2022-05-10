@@ -1,13 +1,16 @@
-import { getSafeInfo as fetchSafeInfo, GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
-import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { getClientGatewayUrl, getNetworkId } from 'src/config'
+import { getSafeInfo as fetchSafeInfo, SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
-export type SafeInfo = GatewayDefinitions['SafeAppInfo']
+import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
+import { _getChainId } from 'src/config'
+import { GATEWAY_URL } from 'src/utils/constants'
+
+const GATEWAY_ERROR = /1337|42/
 
 export const getSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
   try {
-    return await fetchSafeInfo(getClientGatewayUrl(), getNetworkId().toString(), safeAddress)
+    return await fetchSafeInfo(GATEWAY_URL, _getChainId(), safeAddress)
   } catch (e) {
-    throw new CodedException(Errors._605, e.message)
+    const safeNotFound = GATEWAY_ERROR.test(e.message)
+    throw new CodedException(safeNotFound ? Errors._605 : Errors._613, e.message)
   }
 }

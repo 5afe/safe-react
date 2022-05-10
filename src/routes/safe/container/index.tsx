@@ -1,13 +1,18 @@
 import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
-import { useState, lazy } from 'react'
+import { useState, lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { currentSafeFeaturesEnabled, currentSafeOwners, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafe } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { SAFE_ROUTES } from 'src/routes/routes'
-import { FEATURES } from 'src/config/networks/network.d'
 import { LoadingContainer } from 'src/components/LoaderContainer'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
+import SafeLoadError from '../components/SafeLoadError'
+import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
+import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -17,6 +22,7 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
+const Home = lazy(() => import('src/routes/Home'))
 const Apps = lazy(() => import('src/routes/safe/components/Apps'))
 const Settings = lazy(() => import('src/routes/safe/components/Settings'))
 const Balances = lazy(() => import('src/routes/safe/components/Balances'))
@@ -24,10 +30,28 @@ const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList
 const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
-  const safeAddress = useSelector(safeAddressFromUrl)
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const owners = useSelector(currentSafeOwners)
+  const { owners } = useSelector(currentSafe)
+  const { safeAddress } = useSafeAddress()
   const isSafeLoaded = owners.length > 0
+  const [hasLoadFailed, setHasLoadFailed] = useState<boolean>(false)
+
+  useLoadSafe(safeAddress) // load initially
+  useSafeScheduledUpdates(safeAddress, hasLoadFailed) // load every X seconds
+
+  useEffect(() => {
+    if (isSafeLoaded) {
+      setHasLoadFailed(false)
+      return
+    }
+
+    const failedTimeout = setTimeout(() => {
+      setHasLoadFailed(true)
+    }, SAFE_POLLING_INTERVAL)
+    return () => {
+      clearTimeout(failedTimeout)
+    }
+  }, [isSafeLoaded])
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -37,6 +61,10 @@ const Container = (): React.ReactElement => {
     onClose: () => {},
   })
 
+  if (hasLoadFailed) {
+    return <SafeLoadError />
+  }
+
   if (!isSafeLoaded) {
     return (
       <LoadingContainer>
@@ -44,13 +72,6 @@ const Container = (): React.ReactElement => {
       </LoadingContainer>
     )
   }
-
-  const balancesBaseRoute = generatePath(SAFE_ROUTES.ASSETS_BASE_ROUTE, {
-    safeAddress,
-  })
-  const settingsBaseRoute = generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
-    safeAddress,
-  })
 
   const closeGenericModal = () => {
     if (modal.onClose) {
@@ -69,47 +90,48 @@ const Container = (): React.ReactElement => {
   return (
     <>
       <Switch>
-        <Route exact path={`${balancesBaseRoute}/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
+        <Route exact path={SAFE_ROUTES.DASHBOARD} render={() => wrapInSuspense(<Home />)} />
+
+        {/* Legacy redirect */}
+        <Route
+          path={SAFE_ROUTES.LEGACY_COLLECTIBLES}
+          exact
+          render={() => (
+            <Redirect to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES, extractPrefixedSafeAddress())} />
+          )}
+        />
+
         <Route
           exact
-          path={generatePath(SAFE_ROUTES.TRANSACTIONS, {
-            safeAddress,
-          })}
-          render={() => wrapInSuspense(<TxList />, null)}
+          path={[SAFE_ROUTES.ASSETS_BALANCES, SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES]}
+          render={() => wrapInSuspense(<Balances />)}
         />
         <Route
           exact
-          path={generatePath(SAFE_ROUTES.APPS, {
-            safeAddress,
-          })}
+          path={[
+            SAFE_ROUTES.TRANSACTIONS,
+            SAFE_ROUTES.TRANSACTIONS_HISTORY,
+            SAFE_ROUTES.TRANSACTIONS_QUEUE,
+            SAFE_ROUTES.TRANSACTIONS_SINGULAR,
+          ]}
+          render={() => wrapInSuspense(<TxList />)}
+        />
+        <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />)} />
+        <Route
+          exact
+          path={SAFE_ROUTES.APPS}
           render={({ history }) => {
             if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
-              history.push(
-                generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                  safeAddress,
-                }),
-              )
+              history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, extractPrefixedSafeAddress()))
             }
-            return wrapInSuspense(<Apps />, null)
+            return wrapInSuspense(<Apps />)
           }}
         />
-        <Route exact path={`${settingsBaseRoute}/:section`} render={() => wrapInSuspense(<Settings />, null)} />
-        <Route
-          exact
-          path={generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-            safeAddress,
-          })}
-          render={() => wrapInSuspense(<AddressBookTable />, null)}
-        />
-        <Redirect
-          to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            safeAddress,
-          })}
-        />
+        <Route path={SAFE_ROUTES.SETTINGS} render={() => wrapInSuspense(<Settings />)} />
+        <Redirect to={SAFE_ROUTES.ASSETS_BALANCES} />
       </Switch>
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>
   )
 }
-
 export default Container

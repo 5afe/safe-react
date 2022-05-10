@@ -1,4 +1,4 @@
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { BatchRequest } from 'web3-core'
 import { AbiItem } from 'web3-utils'
 
@@ -29,6 +29,7 @@ const generateBatchRequests = <ReturnValues>({
   context,
   methods,
 }: Props): Promise<ReturnValues> => {
+  const web3 = getWeb3ReadOnly()
   const contractInstance = new web3.eth.Contract(abi, address)
   const localBatch = new web3.BatchRequest()
 

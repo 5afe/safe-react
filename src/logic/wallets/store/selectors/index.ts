@@ -1,31 +1,40 @@
 import { createSelector } from 'reselect'
+import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { PROVIDER_REDUCER_ID, ProvidersState } from 'src/logic/wallets/store/reducer'
 import { AppReduxState } from 'src/store'
 
-export const providerSelector = (state: AppReduxState): ProviderState => state[PROVIDER_REDUCER_ID]
+export const providerSelector = (state: AppReduxState): ProvidersState => state[PROVIDER_REDUCER_ID]
 
-export const userAccountSelector = createSelector(providerSelector, (provider: ProviderState): string => {
-  const account = provider.get('account')
-  return account || ''
+export const userAccountSelector = createSelector(providerSelector, ({ account }: ProvidersState): string => {
+  return account
 })
 
-export const providerNameSelector = createSelector(providerSelector, (provider: ProviderState): string | undefined => {
-  const name = provider.get('name')
-  return name ? name.toLowerCase() : undefined
+export const userEnsSelector = createSelector(providerSelector, ({ ensDomain }: ProvidersState): string => {
+  return ensDomain
 })
 
-export const networkSelector = createSelector(providerSelector, (provider: ProviderState): ETHEREUM_NETWORK => {
-  const networkId = provider.get('network')
-
-  return networkId ?? ETHEREUM_NETWORK.UNKNOWN
+export const providerNameSelector = createSelector(providerSelector, ({ name }: ProvidersState): string | undefined => {
+  return name
 })
 
-export const loadedSelector = createSelector(providerSelector, (provider: ProviderState): boolean =>
-  provider.get('loaded'),
+export const networkSelector = createSelector(providerSelector, ({ network }: ProvidersState): ChainId => {
+  return network ?? CHAIN_ID.UNKNOWN
+})
+
+export const shouldSwitchWalletChain = createSelector(
+  providerSelector,
+  currentChainId,
+  ({ account, network }: ProvidersState, currentChainId: ChainId): boolean => {
+    return !!account && network !== currentChainId
+  },
 )
 
-export const availableSelector = createSelector(providerSelector, (provider: ProviderState): boolean =>
-  provider.get('available'),
-)
+export const loadedSelector = createSelector(providerSelector, ({ loaded }: ProvidersState): boolean => {
+  return loaded
+})
+
+export const availableSelector = createSelector(providerSelector, ({ available }: ProvidersState): boolean => {
+  return available
+})

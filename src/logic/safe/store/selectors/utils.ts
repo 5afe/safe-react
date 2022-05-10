@@ -1,6 +1,6 @@
 import hash from 'object-hash'
-import isEqual from 'lodash.isequal'
-import memoize from 'lodash.memoize'
+import isEqual from 'lodash/isEqual'
+import memoize from 'lodash/memoize'
 import { createSelectorCreator, defaultMemoize } from 'reselect'
 
 import { AppReduxState } from 'src/store'

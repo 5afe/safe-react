@@ -1,37 +1,16 @@
 import { List } from 'immutable'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
-import {
-  checkIfOffChainSignatureIsPossible,
-  generateSignaturesFromTxConfirmations,
-  getPreValidatedSignatures,
-} from 'src/logic/safe/safeTxSigner'
-import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
-import { tryOffChainSigning } from 'src/logic/safe/transactions/offchainSigner'
-import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
+import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { providerSelector } from 'src/logic/wallets/store/selectors'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
-import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
 import { Dispatch, DispatchReturn } from './types'
-import { PayableTx } from 'src/types/contracts/types'
-
-import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation, TransactionStatus } from '@gnosis.pm/safe-react-gateway-sdk'
-import { isTxPendingError } from 'src/logic/wallets/getWeb3'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { TxSender } from './createTransaction'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -53,174 +32,64 @@ interface ProcessTransactionArgs {
     gasToken: string
     refundReceiver: string
   }
-  userAddress: string
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei' | 'ethMaxPrioFeeInGWei'>
+  preApprovingOwner?: string
   thresholdReached: boolean
 }
 
 type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
-export const processTransaction =
-  ({
-    approveAndExecute,
-    notifiedTransaction,
-    safeAddress,
-    tx,
-    userAddress,
-    ethParameters,
-    thresholdReached,
-  }: ProcessTransactionArgs): ProcessTransactionAction =>
-  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
+export const processTransaction = (props: ProcessTransactionArgs): ProcessTransactionAction => {
+  return async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+    const sender = new TxSender()
+
+    // Selectors
     const state = getState()
 
-    const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const safeVersion = currentSafeCurrentVersion(state) as string
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+    const { tx, approveAndExecute } = props
 
-    const lastTx = await getLastTx(safeAddress)
-    const nonce = await getNewTxNonce(lastTx, safeInstance)
-    const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
+    // Set specific transaction being finalised
+    sender.txId = tx.id
 
-    const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
-    let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-
-    if (!sigs) {
-      sigs = getPreValidatedSignatures(from)
-    }
-
-    const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
-    const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
-
-    let txHash
-    let transaction
-    const txArgs = {
-      ...tx, // merge the previous tx with new data
-      safeInstance,
-      to: tx.to,
-      valueInWei: tx.value,
-      data: tx.data ?? EMPTY_DATA,
+    const txProps = {
+      navigateToTransactionsTab: false,
+      notifiedTransaction: props.notifiedTransaction,
       operation: tx.operation,
-      nonce: tx.nonce,
+      origin: tx.origin,
+      safeAddress: props.safeAddress,
+      to: tx.to,
+      txData: tx.data ?? EMPTY_DATA,
+      txNonce: tx.nonce,
+      valueInWei: tx.value,
       safeTxGas: tx.safeTxGas,
-      baseGas: tx.baseGas,
-      gasPrice: tx.gasPrice || '0',
-      gasToken: tx.gasToken,
-      refundReceiver: tx.refundReceiver,
-      sender: from,
-      sigs,
+      ethParameters: props.ethParameters,
     }
 
+    // Populate instance vars
     try {
-      if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
-        const signature = await tryOffChainSigning(
-          tx.safeTxHash,
-          { ...txArgs, safeAddress },
-          hardwareWallet,
-          safeVersion,
-        )
-
-        if (signature) {
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-          dispatch(
-            updateTransactionStatus({ txStatus: TransactionStatus.PENDING, safeAddress, nonce: tx.nonce, id: tx.id }),
-          )
-          await saveTxToHistory({ ...txArgs, signature })
-
-          dispatch(fetchTransactions(safeAddress))
-          return
-        }
-      }
-
-      transaction = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, tx.safeTxHash)
-
-      const sendParams: PayableTx = {
-        from,
-        value: 0,
-        gas: ethParameters?.ethGasLimit,
-        gasPrice: ethParameters?.ethGasPriceInGWei,
-        nonce: ethParameters?.ethNonce,
-      }
-
-      await transaction
-        .send(sendParams)
-        .once('transactionHash', async (hash: string) => {
-          txHash = hash
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-          dispatch(
-            updateTransactionStatus({
-              txStatus: TransactionStatus.PENDING,
-              safeAddress,
-              nonce: tx.nonce,
-              // if we provide the tx ID that sole tx will have the _pending_ status.
-              // if not, all the txs that share the same nonce will have the _pending_ status.
-              id: tx.id,
-            }),
-          )
-
-          try {
-            await saveTxToHistory({ ...txArgs })
-
-            // store the pending transaction's nonce
-            isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
-
-            dispatch(fetchTransactions(safeAddress))
-          } catch (e) {
-            logError(Errors._804, e.message)
-          }
-        })
-        .on('error', () => {
-          dispatch(
-            updateTransactionStatus({
-              txStatus: TransactionStatus.PENDING_FAILED,
-              safeAddress,
-              nonce: tx.nonce,
-              id: tx.id,
-            }),
-          )
-        })
-        .then(async (receipt) => {
-          dispatch(fetchTransactions(safeAddress))
-
-          if (isExecution) {
-            dispatch(fetchSafe(safeAddress))
-          }
-
-          return receipt.transactionHash
-        })
+      await sender.prepare(dispatch, state, txProps)
     } catch (err) {
-      const notification = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationsQueue.afterExecutionError,
-            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
-          }
-
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
-
-      dispatch(
-        updateTransactionStatus({
-          txStatus: TransactionStatus.PENDING_FAILED,
-          safeAddress,
-          nonce: tx.nonce,
-          id: tx.id,
-        }),
-      )
-
-      logError(Errors._804, err.message)
-
-      if (txHash) {
-        const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
-        try {
-          const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
-          logError(Errors._804, errMsg)
-        } catch (e) {
-          logError(Errors._804, e.message)
-        }
-      }
+      logError(Errors._815, err.message)
+      return
     }
 
-    return txHash
+    sender.isFinalization = approveAndExecute && !!(props.thresholdReached || props.preApprovingOwner)
+
+    sender.txArgs = {
+      ...tx, // Merge previous tx with new data
+      safeInstance: sender.safeInstance,
+      valueInWei: tx.value,
+      data: txProps.txData,
+      gasPrice: tx.gasPrice || '0',
+      sender: sender.from,
+      sigs: generateSignaturesFromTxConfirmations(
+        tx.confirmations,
+        approveAndExecute ? props.preApprovingOwner : undefined,
+      ),
+    }
+
+    sender.safeTxHash = tx.safeTxHash
+
+    sender.submitTx()
   }
+}

@@ -1,18 +1,32 @@
-import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
-import { OPEN_COOKIE_BANNER } from 'src/logic/cookies/store/actions/openCookieBanner'
-import { AppReduxState } from 'src/store'
+
+import { COOKIE_IDS } from 'src/logic/cookies/model/cookie'
+import { COOKIE_ACTIONS } from 'src/logic/cookies/store/actions/openCookieBanner'
 
 export const COOKIES_REDUCER_ID = 'cookies'
 
-export type OpenCookieBannerPayload = { cookieBannerOpen: boolean; intercomAlertDisplayed?: boolean }
+export type CookieState = {
+  cookieBannerOpen: boolean
+  key?: COOKIE_IDS
+}
 
-export default handleActions<AppReduxState['cookies'], OpenCookieBannerPayload>(
+const initialState: CookieState = {
+  cookieBannerOpen: false,
+  key: undefined,
+}
+
+export type OpenCookieBannerPayload = CookieState
+
+const cookiesReducer = handleActions<CookieState, OpenCookieBannerPayload>(
   {
-    [OPEN_COOKIE_BANNER]: (state, action) => {
-      const { intercomAlertDisplayed = false, cookieBannerOpen } = action.payload
-      return state.set('cookieBannerOpen', { intercomAlertDisplayed, cookieBannerOpen })
+    [COOKIE_ACTIONS.OPEN_BANNER]: (_, action) => {
+      return action.payload
+    },
+    [COOKIE_ACTIONS.CLOSE_BANNER]: () => {
+      return initialState
     },
   },
-  Map(),
+  initialState,
 )
+
+export default cookiesReducer

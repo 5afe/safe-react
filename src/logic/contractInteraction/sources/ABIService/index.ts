@@ -1,6 +1,4 @@
-import { AbiItem } from 'web3-utils'
-
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { AbiItem, keccak256 } from 'web3-utils'
 
 export interface AllowedAbiItem extends AbiItem {
   name: string
@@ -19,7 +17,7 @@ export const getMethodSignature = ({ inputs, name }: AbiItem): string => {
 }
 
 export const getSignatureHash = (signature: string): string => {
-  return web3.utils.keccak256(signature).toString()
+  return keccak256(signature).toString()
 }
 
 export const getMethodHash = (method: AbiItem): string => {

@@ -1,36 +1,25 @@
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
 import fetchLatestMasterContractVersion from 'src/logic/safe/store/actions/fetchLatestMasterContractVersion'
 import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { updateAvailableCurrencies } from 'src/logic/currencyValues/store/actions/updateAvailableCurrencies'
-import { fetchSelectedCurrency } from 'src/logic/currencyValues/store/actions/fetchSelectedCurrency'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
-export const useLoadSafe = (safeAddress?: string): boolean => {
+export const useLoadSafe = (safeAddress?: string): void => {
   const dispatch = useDispatch<Dispatch>()
-  const [isSafeLoaded, setIsSafeLoaded] = useState(false)
+  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
-    setIsSafeLoaded(false)
-  }, [safeAddress])
+    if (!safeAddress) return
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (safeAddress) {
-        await dispatch(fetchSelectedCurrency())
-        await dispatch(fetchLatestMasterContractVersion())
-        await dispatch(fetchSafe(safeAddress, isSafeLoaded))
-        setIsSafeLoaded(true)
-        await dispatch(updateAvailableCurrencies())
-        await dispatch(fetchTransactions(safeAddress))
-        dispatch(addViewedSafe(safeAddress))
-      }
+    const load = async () => {
+      dispatch(fetchLatestMasterContractVersion())
+      dispatch(fetchSafe(safeAddress, true))
+      dispatch(updateAvailableCurrencies())
     }
-    fetchData()
-  }, [dispatch, safeAddress, isSafeLoaded])
 
-  return isSafeLoaded
+    load()
+  }, [dispatch, safeAddress, chainId])
 }

@@ -1,78 +1,75 @@
 import { useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, useRouteMatch } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { isFeatureEnabled } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
-import { SAFELIST_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
-import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-
-type SafeRouteWithAction = {
-  url: string
-  params: Record<string, string>
-}
-
-type IsSelectedProps = {
-  route: string
-  matchSafeWithAction: SafeRouteWithAction
-}
-
-const isSelected = ({ route, matchSafeWithAction }: IsSelectedProps): boolean => {
-  const currentRoute = matchSafeWithAction.url
-  const expectedRoute = generatePath(route, {
-    safeAddress: matchSafeWithAction.params.safeAddress,
-  })
-
-  return currentRoute === expectedRoute
-}
+import { ADDRESSED_ROUTE, SAFE_SUBSECTION_ROUTE, generatePrefixedAddressRoutes } from 'src/routes/routes'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
-  const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
-  const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
-  const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
-  const { address: safeAddress, needsUpdate } = useSelector(currentSafeWithNames)
+  const safeAppsEnabled = hasFeature(FEATURES.SAFE_APPS)
+  const isCollectiblesEnabled = hasFeature(FEATURES.ERC721)
+  const isSpendingLimitEnabled = hasFeature(FEATURES.SPENDING_LIMIT)
+  const { needsUpdate } = useSelector(currentSafeWithNames)
+  const { shortName, safeAddress } = useSafeAddress()
   const granted = useSelector(grantedSelector)
 
-  const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
-  const matchSafeWithAction = useRouteMatch({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
-  }) as SafeRouteWithAction
+  const matchSafe = useRouteMatch(ADDRESSED_ROUTE)
+
+  // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
+  const matchSafeWithSidebarSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
 
   const makeEntryItem = useCallback(
-    ({ label, disabled, badge, iconType, route, subItems }) => {
-      return {
-        label,
-        badge,
-        disabled,
-        icon: <ListIcon type={iconType} />,
-        selected: isSelected({ route, matchSafeWithAction }),
-        href: generatePath(route, { safeAddress }),
-        subItems,
-      }
-    },
-    [matchSafeWithAction, safeAddress],
+    ({ label, disabled, badge, iconType, href, subItems }) => ({
+      label,
+      badge,
+      disabled,
+      icon: <ListIcon type={iconType} size="sm" color="text" />,
+      selected: href === matchSafeWithSidebarSection?.url,
+      href,
+      subItems,
+    }),
+    [matchSafeWithSidebarSection],
   )
 
   return useMemo((): ListItemType[] => {
-    if (!matchSafe || !matchSafeWithAction || !featuresEnabled || !safeAddress) {
+    if (!matchSafe || !matchSafeWithSidebarSection || !featuresEnabled || !safeAddress) {
       return []
     }
+
+    const currentSafeRoutes = generatePrefixedAddressRoutes({
+      shortName,
+      safeAddress,
+    })
 
     const assetsSubItems = [
       makeEntryItem({
         label: 'Coins',
         iconType: 'assets',
-        route: SAFE_ROUTES.ASSETS_BALANCES,
+        href: currentSafeRoutes.ASSETS_BALANCES,
       }),
       makeEntryItem({
         disabled: !isCollectiblesEnabled,
-        label: 'Collectibles',
+        label: 'NFTs',
         iconType: 'collectibles',
-        route: SAFE_ROUTES.ASSETS_COLLECTIBLES,
+        href: currentSafeRoutes.ASSETS_BALANCES_COLLECTIBLES,
+      }),
+    ]
+
+    const transactionsSubItems = [
+      makeEntryItem({
+        label: 'Queue',
+        href: currentSafeRoutes.TRANSACTIONS_QUEUE,
+      }),
+      makeEntryItem({
+        label: 'History',
+        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
       }),
     ]
 
@@ -81,58 +78,69 @@ const useSidebarItems = (): ListItemType[] => {
         label: 'Safe Details',
         badge: needsUpdate && granted,
         iconType: 'info',
-        route: SAFE_ROUTES.SETTINGS_DETAILS,
+        href: currentSafeRoutes.SETTINGS_DETAILS,
+      }),
+      makeEntryItem({
+        label: 'Appearance',
+        iconType: 'eye',
+        href: currentSafeRoutes.SETTINGS_APPEARANCE,
       }),
       makeEntryItem({
         label: 'Owners',
         iconType: 'owners',
-        route: SAFE_ROUTES.SETTINGS_OWNERS,
+        href: currentSafeRoutes.SETTINGS_OWNERS,
       }),
       makeEntryItem({
         label: 'Policies',
         iconType: 'requiredConfirmations',
-        route: SAFE_ROUTES.SETTINGS_POLICIES,
+        href: currentSafeRoutes.SETTINGS_POLICIES,
       }),
       makeEntryItem({
         disabled: !isSpendingLimitEnabled,
         label: 'Spending Limit',
         iconType: 'fuelIndicator',
-        route: SAFE_ROUTES.SETTINGS_SPENDING_LIMIT,
+        href: currentSafeRoutes.SETTINGS_SPENDING_LIMIT,
       }),
       makeEntryItem({
         label: 'Advanced',
         iconType: 'settingsTool',
-        route: SAFE_ROUTES.SETTINGS_ADVANCED,
+        href: currentSafeRoutes.SETTINGS_ADVANCED,
       }),
-    ]
+    ].filter(Boolean)
 
     return [
       makeEntryItem({
-        label: 'ASSETS',
+        label: 'Home',
+        iconType: 'home',
+        href: currentSafeRoutes.DASHBOARD,
+      }),
+      makeEntryItem({
+        label: 'Assets',
         iconType: 'assets',
-        route: SAFE_ROUTES.ASSETS_BALANCES,
+        href: currentSafeRoutes.ASSETS_BALANCES,
         subItems: assetsSubItems,
       }),
       makeEntryItem({
-        label: 'TRANSACTIONS',
+        label: 'Transactions',
         iconType: 'transactionsInactive',
-        route: SAFE_ROUTES.TRANSACTIONS,
+        href: currentSafeRoutes.TRANSACTIONS_HISTORY,
+        subItems: transactionsSubItems,
       }),
       makeEntryItem({
-        label: 'ADDRESS BOOK',
+        label: 'Address Book',
         iconType: 'addressBook',
-        route: SAFE_ROUTES.ADDRESS_BOOK,
+        href: currentSafeRoutes.ADDRESS_BOOK,
       }),
       makeEntryItem({
         disabled: !safeAppsEnabled,
         label: 'Apps',
         iconType: 'apps',
-        route: SAFE_ROUTES.APPS,
+        href: currentSafeRoutes.APPS,
       }),
       makeEntryItem({
         label: 'Settings',
         iconType: 'settings',
-        route: SAFE_ROUTES.SETTINGS_DETAILS,
+        href: currentSafeRoutes.SETTINGS_DETAILS,
         subItems: settingsSubItems,
       }),
     ]
@@ -143,10 +151,11 @@ const useSidebarItems = (): ListItemType[] => {
     isSpendingLimitEnabled,
     makeEntryItem,
     matchSafe,
-    matchSafeWithAction,
+    matchSafeWithSidebarSection,
     needsUpdate,
     safeAddress,
     safeAppsEnabled,
+    shortName,
   ])
 }
 

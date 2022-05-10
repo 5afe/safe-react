@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Modal } from 'src/components/Modal'
+import { _getChainId } from 'src/config'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -21,20 +22,21 @@ import { MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
-import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
+import { AddressInfo, ResetTimeInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-
-import { ActionCallback, CREATE } from '.'
-import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { TransactionFees } from 'src/components/TransactionsFees'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import Hairline from 'src/components/layout/Hairline'
 import { isModuleEnabled } from 'src/logic/safe/utils/modules'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
+import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -66,16 +68,11 @@ const useExistentSpendingLimit = ({
   }, [spendingLimits, txToken.decimals, values.beneficiary, values.token])
 }
 
-const calculateSpendingLimitsTxData = (
-  safeAddress: string,
-  safeVersion: string,
-  spendingLimits: SpendingLimit[] | null | undefined,
-  existentSpendingLimit: SpendingLimit | null,
-  txToken: Token,
-  values: Record<string, string>,
-  modules: string[],
-  txParameters?: TxParameters,
-): {
+const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
+  getResetTimeOptions().find(({ value }) => value === existentSpendingLimit.resetTimeMin)?.label ??
+  'One-time spending limit'
+
+type SpendingLimitsTxData = {
   spendingLimitTxData: CreateTransactionArgs
   transactions: MultiSendTx[]
   spendingLimitArgs: {
@@ -85,13 +82,32 @@ const calculateSpendingLimitsTxData = (
     resetTimeMin: number
     resetBaseMin: number
   }
-} => {
-  const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
+}
+const calculateSpendingLimitsTxData = async (
+  safeAddress: string,
+  safeVersion: string,
+  connectedWalletAddress: string,
+  spendingLimits: SpendingLimit[] | null | undefined,
+  existentSpendingLimit: SpendingLimit | null,
+  txToken: Token,
+  values: Record<string, string>,
+  modules: string[],
+  txParameters?: TxParameters,
+): Promise<SpendingLimitsTxData> => {
+  const chainId = _getChainId()
+  const moduleAddress = getSpendingLimitModuleAddress(chainId)
+  const isSpendingLimitEnabled = isModuleEnabled(modules, moduleAddress)
   const transactions: MultiSendTx[] = []
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
   if (!isSpendingLimitEnabled && safeAddress) {
-    transactions.push(enableSpendingLimitModuleMultiSendTx(safeAddress, safeVersion))
+    const enableSpendingLimitTx = await enableSpendingLimitModuleMultiSendTx(
+      safeAddress,
+      safeVersion,
+      connectedWalletAddress,
+      moduleAddress,
+    )
+    transactions.push(enableSpendingLimitTx)
   }
 
   // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
@@ -101,11 +117,11 @@ const calculateSpendingLimitsTxData = (
 
   // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
   if (!isDelegateAlreadyAdded && values?.beneficiary) {
-    transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
+    transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary, moduleAddress))
   }
 
   if (existentSpendingLimit && existentSpendingLimit.spent !== '0') {
-    transactions.push(getResetSpendingLimitTx(existentSpendingLimit.delegate, txToken.address))
+    transactions.push(getResetSpendingLimitTx(existentSpendingLimit.delegate, txToken.address, moduleAddress))
   }
 
   // prepare the setAllowance tx
@@ -122,9 +138,9 @@ const calculateSpendingLimitsTxData = (
   if (safeAddress) {
     // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
     if (transactions.length === 0) {
-      spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress })
+      spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress, moduleAddress })
     } else {
-      const encodedTxForMultisend = setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress })
+      const encodedTxForMultisend = setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress, moduleAddress })
       transactions.push(encodedTxForMultisend)
       spendingLimitTxData = spendingLimitMultiSendTx({ transactions, safeAddress })
     }
@@ -151,7 +167,6 @@ interface ReviewSpendingLimitProps {
 }
 
 export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
-  const classes = useStyles()
   const dispatch = useDispatch()
 
   const {
@@ -159,65 +174,56 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     spendingLimits,
     currentVersion: safeVersion = '',
     modules,
-  } = useSelector(currentSafe) ?? {}
+  } = useSelector(currentSafe)
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',
     txData: '',
   })
-  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
-  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
-  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isExecution,
-    isCreation,
-    isOffChainSignature,
-    gasPrice,
-    gasPriceFormatted,
-    gasLimit,
-    gasEstimation,
-  } = useEstimateTransactionGas({
-    txData: estimateGasArgs.txData as string,
-    txRecipient: estimateGasArgs.to as string,
-    operation: estimateGasArgs.operation,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-  })
-
-  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const safeModules = useMemo(() => modules?.map((pair) => pair[1]) || [], [modules])
 
   useEffect(() => {
-    const { spendingLimitTxData } = calculateSpendingLimitsTxData(
-      safeAddress,
-      safeVersion,
-      spendingLimits,
-      existentSpendingLimit,
-      txToken,
-      values,
-      safeModules,
-    )
-    setEstimateGasArgs(spendingLimitTxData)
-  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values, safeModules])
+    const calculateSpendingLimit = async () => {
+      const { spendingLimitTxData } = await calculateSpendingLimitsTxData(
+        safeAddress,
+        safeVersion,
+        connectedWalletAddress,
+        spendingLimits,
+        existentSpendingLimit,
+        txToken,
+        values,
+        safeModules,
+      )
+      setEstimateGasArgs(spendingLimitTxData)
+    }
+    calculateSpendingLimit()
+  }, [
+    safeAddress,
+    safeVersion,
+    connectedWalletAddress,
+    spendingLimits,
+    existentSpendingLimit,
+    txToken,
+    values,
+    safeModules,
+  ])
 
-  const handleSubmit = (txParameters: TxParameters): void => {
+  const handleSubmit = async (txParameters: TxParameters, delayExecution: boolean): Promise<void> => {
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
     const advancedOptionsTxParameters = {
       ...txParameters,
-      ethGasPrice: ethGasPrice || gasPrice,
-      ethGasPriceInGWei: ethGasPriceInGWei || gasPriceFormatted,
-      ethGasLimit: ethGasLimit || gasLimit,
+      ethGasPrice,
+      ethGasPriceInGWei,
+      ethGasLimit,
     }
 
     if (safeAddress) {
-      const { spendingLimitTxData } = calculateSpendingLimitsTxData(
+      const { spendingLimitTxData } = await calculateSpendingLimitsTxData(
         safeAddress,
         safeVersion,
+        connectedWalletAddress,
         spendingLimits,
         existentSpendingLimit,
         txToken,
@@ -226,7 +232,12 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         advancedOptionsTxParameters,
       )
 
-      dispatch(createTransaction(spendingLimitTxData))
+      dispatch(createTransaction({ ...spendingLimitTxData, delayExecution }))
+
+      trackEvent({
+        ...SETTINGS_EVENTS.SPENDING_LIMIT.RESET_PERIOD,
+        label: values.withResetTime ? `${values.resetTime} minutes` : 'never',
+      })
     }
   }
 
@@ -235,123 +246,53 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     [values.resetTime, values.withResetTime],
   )
 
-  const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
-    getResetTimeOptions().find(({ value }) => value === (+existentSpendingLimit.resetTimeMin).toString())?.label ??
-    'One-time spending limit'
-
-  const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = gasPriceFormatted
-    const newGasPrice = txParameters.ethGasPrice
-    const oldSafeTxGas = gasEstimation
-    const newSafeTxGas = txParameters.safeTxGas
-
-    if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(txParameters.ethGasPrice)
-    }
-
-    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit)
-    }
-
-    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
-      setManualSafeTxGas(newSafeTxGas)
-    }
-  }
-
-  let confirmButtonText = 'Submit'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
-    <EditableTxParameters
-      isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation}
-      closeEditModalCallback={closeEditModalCallback}
+    <TxModalWrapper
+      txData={estimateGasArgs.txData || ''}
+      txTo={estimateGasArgs.to}
+      operation={estimateGasArgs.operation}
+      onSubmit={handleSubmit}
+      onBack={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}
+      submitText="Submit"
+      isSubmitDisabled={existentSpendingLimit === undefined}
     >
-      {(txParameters, toggleEditMode) => (
-        <>
-          <Modal.Header onClose={onClose}>
-            <Modal.Header.Title>
-              New spending limit
-              <Text size="lg" color="secondaryLight" as="span">
-                2 of 2
+      <ModalHeader onClose={onClose} title="New spending limit" subTitle={getStepTitle(2, 2)} />
+      <Hairline />
+
+      <Modal.Body>
+        <Col align="center" margin="md">
+          <TransferAmount
+            token={txToken}
+            text={`${fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)} ${txToken.symbol}`}
+          />
+          {existentSpendingLimit && (
+            <Text size="lg" color="error" center>
+              Previous Amount: {existentSpendingLimit.amount}
+            </Text>
+          )}
+        </Col>
+        <Col margin="md">
+          <AddressInfo address={values.beneficiary} title="Beneficiary" color="placeHolder" />
+        </Col>
+        <Col margin="md">
+          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
+          {existentSpendingLimit && (
+            <Row align="center" margin="md">
+              <Text size="lg" color="error">
+                Previous Reset Time: {previousResetTime(existentSpendingLimit)}
               </Text>
-            </Modal.Header.Title>
-          </Modal.Header>
+            </Row>
+          )}
+        </Col>
 
-          <Modal.Body>
-            <Col margin="lg">
-              <AddressInfo address={values.beneficiary} title="Beneficiary" />
-            </Col>
-            <Col margin="lg">
-              <TokenInfo
-                amount={fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)}
-                title="Amount"
-                token={txToken}
-              />
-              {existentSpendingLimit && (
-                <Text size="lg" color="error">
-                  Previous Amount: {existentSpendingLimit.amount}
-                </Text>
-              )}
-            </Col>
-            <Col margin="lg">
-              <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
-              {existentSpendingLimit && (
-                <Row align="center" margin="md">
-                  <Text size="lg" color="error">
-                    Previous Reset Time: {previousResetTime(existentSpendingLimit)}
-                  </Text>
-                </Row>
-              )}
-            </Col>
-
-            {existentSpendingLimit && (
-              <Col margin="md">
-                <Text size="xl" color="error" center strong>
-                  You are about to replace an existent spending limit
-                </Text>
-              </Col>
-            )}
-            {/* Tx Parameters */}
-            <TxParametersDetail
-              txParameters={txParameters}
-              onEdit={toggleEditMode}
-              isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
-            />
-          </Modal.Body>
-          <div className={classes.gasCostsContainer}>
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </div>
-
-          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
-            <Modal.Footer.Buttons
-              cancelButtonProps={{
-                onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
-                text: 'Back',
-              }}
-              confirmButtonProps={{
-                onClick: () => handleSubmit(txParameters),
-                disabled: existentSpendingLimit === undefined,
-                status: buttonStatus,
-                text: confirmButtonText,
-              }}
-            />
-          </Modal.Footer>
-        </>
-      )}
-    </EditableTxParameters>
+        {existentSpendingLimit && (
+          <Col>
+            <Text size="xl" color="error" center strong>
+              You are about to replace an existent spending limit
+            </Text>
+          </Col>
+        )}
+      </Modal.Body>
+    </TxModalWrapper>
   )
 }

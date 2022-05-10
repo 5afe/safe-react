@@ -3,21 +3,44 @@
 We prepare at least one release every sprint. Sprints are two weeks long.
 
 ### Prepare a branch
-* A code-freeze branch named `release/X.Y.Z` is created
-* A commit that bumps the version in the `package.json` is made
+* Create a code-freeze branch named `release/X.Y.Z`
+  * If it's a regular release, this branch is typically based off of `dev`
+  * For hot fixes, it would be `main` + cherry-picked commits
+* Bump the version in the `package.json`
+* Create a PR with the list of changes
+
+💡 To generate a quick changelog:
+```
+git log origin/main..origin/dev --pretty=format:'* %s'
+```
 
 ### QA
 * The QA team do regression testing on this branch
 * If issues are found, bugfixes are merged into this branch
-* Once the QA is done, we push the branch to `main`
-* `main` is automatically deployed to staging – some extra QA can be done there if needed
+* Once the QA is done, proceed to the next step
 
 ### Tag & release
-* A version tag must be created and pushed.
+Wait for all the checks on GitHub to pass.
+* Switch to the main branch and make sure it's up to date:
 ```
-git tag v3.7.0
+git checkout main
+git fetch --all
+git reset --hard origin/main
+```
+* Pull from the release branch:
+```
+git pull origin release/3.15.0
+```
+* Push to main:
+```
+git push origin main
+```
+* Create and push a new version tag :
+```
+git tag v3.15.0
 git push --tags
 ```
-* Devops are notified on Slack to deploy the tag to production
-* A [GitHub release](https://github.com/gnosis/safe-react/releases) is created
-* `main` is back-merged into the `dev` branch
+
+* Create a [GitHub release](https://github.com/gnosis/safe-react/releases) for this tag
+* Notify devops on Slack and send them the release link to deploy to production
+* Back-merge `main` into the `dev` branch to keep them in sync

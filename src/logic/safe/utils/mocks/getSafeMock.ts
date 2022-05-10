@@ -1,4 +1,5 @@
 export const mockGetSafeInfoResponse = {
+  chainId: '4',
   address: { value: '0x57CB13cbef735FbDD65f5f2866638c546464E45F' },
   nonce: 0,
   threshold: 1,

@@ -1,4 +1,4 @@
-import { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
+import { ReactElement, useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { Loader, Card, Title } from '@gnosis.pm/safe-react-components'
 import {
@@ -10,38 +10,41 @@ import {
   SignMessageParams,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { getChainInfo, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { isSameURL } from 'src/utils/url'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
-import { TIMEOUT } from 'src/utils/constants'
-
+import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
-import { useLegalConsent } from '../hooks/useLegalConsent'
-import LegalDisclaimer from './LegalDisclaimer'
-import { getAppInfoFromUrl } from '../utils'
+import { LegacyMethods, useAppCommunicator } from '../communicator'
 import { SafeApp } from '../types'
-import { useAppCommunicator } from '../communicator'
+import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
+import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
+import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
+import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
+import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  margin: 0 -16px;
+  height: calc(100% + 16px);
+  margin: -8px -24px;
 `
 
 const StyledCard = styled(Card)`
@@ -73,8 +76,6 @@ type Props = {
   appUrl: string
 }
 
-const NETWORK_NAME = getNetworkName()
-const NETWORK_ID = getNetworkId()
 const APP_LOAD_ERROR_TIMEOUT = 30000
 
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
@@ -84,35 +85,33 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
-const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), {
-  timeout: 10_000,
-})
+const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
+const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
+  const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
-  const { trackEvent } = useAnalytics()
-  const history = useHistory()
-  const { consentReceived, onConsentReceipt } = useLegalConsent()
-
+  const granted = useSelector(grantedSelector)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
-  const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
+  const [safeApp, setSafeApp] = useState<SafeApp>(() => getEmptySafeApp(appUrl))
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
-
-  const redirectToBalance = () =>
-    history.push(
-      generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        safeAddress,
-      }),
-    )
   const timer = useRef<number>()
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
-
   const errorTimer = useRef<number>()
-  const [appLoadError, setAppLoadError] = useState<boolean>(false)
+  const [, setAppLoadError] = useState<boolean>(false)
+  const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
+  const { remoteSafeApps } = useRemoteSafeApps()
+  const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
+
+  const safeAppsRpc = getSafeAppsRpcServiceUrl()
+  const safeAppWeb3Provider = useMemo(
+    () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),
+    [safeAppsRpc],
+  )
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -123,20 +122,27 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     if (appIsLoading) {
       timer.current = window.setTimeout(() => {
         setIsLoadingSlow(true)
-      }, TIMEOUT)
+      }, SAFE_POLLING_INTERVAL)
       errorTimer.current = window.setTimeout(() => {
-        setAppLoadError(true)
+        setAppLoadError(() => {
+          throw Error(APP_LOAD_ERROR)
+        })
       }, APP_LOAD_ERROR_TIMEOUT)
     } else {
       clearTimeouts()
       setIsLoadingSlow(false)
-      setAppLoadError(false)
     }
 
     return () => {
       clearTimeouts()
     }
   }, [appIsLoading])
+
+  useEffect(() => {
+    if (!currentApp) return
+
+    trackSafeAppOpenCount(currentApp.id)
+  }, [currentApp])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
@@ -171,16 +177,20 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
+        // FIXME `network` is deprecated. we should find how many apps are still using it
+        network: getLegacyChainName(chainName, chainId).toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
-  }, [ethBalance, safeAddress, appUrl, sendMessageToIframe])
+  }, [chainName, chainId, ethBalance, safeAddress, appUrl, sendMessageToIframe])
 
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
   useEffect(() => {
-    communicator?.on('getEnvInfo', () => ({
+    /**
+     * @deprecated: getEnvInfo is a legacy method. Should not be used
+     */
+    communicator?.on(LegacyMethods.getEnvInfo, () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
 
@@ -192,12 +202,19 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return tx
     })
 
+    communicator?.on(Methods.getEnvironmentInfo, async () => ({
+      origin: document.location.origin,
+    }))
+
     communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
-      network: NETWORK_NAME,
-      chainId: parseInt(NETWORK_ID, 10),
+      // FIXME `network` is deprecated. we should find how many apps are still using it
+      // Apps using this property expect this to be in UPPERCASE
+      network: getLegacyChainName(chainName, chainId).toUpperCase(),
+      chainId: parseInt(chainId, 10),
       owners,
       threshold,
+      isReadOnly: !granted,
     }))
 
     communicator?.on(Methods.getSafeBalances, async (msg) => {
@@ -238,7 +255,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.sendTransactions, (msg) => {
       // @ts-expect-error explore ways to fix this
-      openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
+      const transactions = (msg.data.params.txs as Transaction[]).map(({ to, ...rest }) => ({
+        to: checksumAddress(to),
+        ...rest,
+      }))
+      // @ts-expect-error explore ways to fix this
+      openConfirmationModal(transactions, msg.data.params.params, msg.data.id)
     })
 
     communicator?.on(Methods.signMessage, async (msg) => {
@@ -246,7 +268,29 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       openSignMessageModal(message, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress, owners, threshold, openSignMessageModal])
+
+    communicator?.on(Methods.getChainInfo, async () => {
+      return {
+        chainName,
+        chainId,
+        shortName,
+        nativeCurrency,
+      }
+    })
+  }, [
+    communicator,
+    openConfirmationModal,
+    safeAddress,
+    owners,
+    threshold,
+    openSignMessageModal,
+    nativeCurrency,
+    chainId,
+    chainName,
+    shortName,
+    safeAppWeb3Provider,
+    granted,
+  ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
     // Safe Apps SDK V1 Handler
@@ -257,6 +301,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send({ safeTxHash }, requestId as string)
+
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_CONFIRMED, label: safeApp.name })
   }
 
   const onTxReject = (requestId: RequestId) => {
@@ -268,54 +314,36 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     // Safe Apps SDK V2 Handler
     communicator?.send('Transaction was rejected', requestId as string, true)
+
+    trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
   }
 
   useEffect(() => {
+    if (!appUrl) {
+      throw Error(URL_NOT_PROVIDED_ERROR)
+    }
+
     const loadApp = async () => {
       try {
-        const app = await getAppInfoFromUrl(appUrl)
+        const app = await getAppInfoFromUrl(appUrl, false)
         setSafeApp(app)
       } catch (err) {
         logError(Errors._900, `${appUrl}, ${err.message}`)
       }
     }
+
     loadApp()
   }, [appUrl])
 
-  //track GA
   useEffect(() => {
-    if (safeApp) {
-      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: safeApp.name })
+    if (safeApp && safeApp.name !== EMPTY_SAFE_APP) {
+      trackEvent({ ...SAFE_APPS_EVENTS.OPEN_APP, label: safeApp.name })
     }
-  }, [safeApp, trackEvent])
-
-  if (!appUrl) {
-    throw Error('App url No provided or it is invalid.')
-  }
-
-  if (appLoadError) {
-    throw Error('There was an error loading the Safe App. There might be a problem with the App provider.')
-  }
-
-  if (!safeApp) {
-    return (
-      <LoadingContainer style={{ flexDirection: 'column' }}>
-        {isLoadingSlow && (
-          <Title size="xs">
-            The Safe App is taking too long to load. There might be a problem with the App provider.
-          </Title>
-        )}
-        <Loader size="md" />
-      </LoadingContainer>
-    )
-  }
-
-  if (consentReceived === false) {
-    return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
-  }
+  }, [safeApp])
 
   return (
     <AppWrapper>
+      {thirdPartyCookiesDisabled && <ThirdPartyCookiesWarning onClose={() => setThirdPartyCookiesDisabled(false)} />}
       <StyledCard>
         {appIsLoading && (
           <LoadingContainer style={{ flexDirection: 'column' }}>
@@ -332,6 +360,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
           src={appUrl}
           title={safeApp.name}
           onLoad={onIframeLoad}
+          allow="camera"
         />
       </StyledCard>
 
@@ -347,6 +376,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         onUserConfirm={onUserTxConfirm}
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
+        appId={currentApp?.id}
       />
 
       <SignMessageModal

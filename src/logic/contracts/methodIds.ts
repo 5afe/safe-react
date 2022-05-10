@@ -7,7 +7,7 @@ import {
   TOKEN_TRANSFER_METHOD_ID_TO_NAME,
   TOKEN_TRANSFER_METHODS_NAMES,
 } from 'src/logic/safe/store/models/types/transactions.d'
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { sameString } from 'src/utils/strings'
 
 type DecodeInfoProps = {
@@ -16,6 +16,7 @@ type DecodeInfoProps = {
 }
 
 const decodeInfo = ({ paramsHash, params }: DecodeInfoProps): DataDecoded['parameters'] => {
+  const web3 = getWeb3ReadOnly()
   const decodedParameters = web3.eth.abi.decodeParameters(Object.values(params), paramsHash)
 
   return Object.keys(params).map((name, index) => ({

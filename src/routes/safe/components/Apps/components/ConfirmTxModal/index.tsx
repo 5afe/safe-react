@@ -1,6 +1,7 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { RequestId } from '@gnosis.pm/safe-apps-sdk'
+import { DecodedDataParameterValue, DecodedDataResponse } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
@@ -8,8 +9,6 @@ import { TransactionParams } from 'src/routes/safe/components/Apps/components/Ap
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { SafeAppLoadError } from './SafeAppLoadError'
 import { ReviewConfirm } from './ReviewConfirm'
-import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode'
-import { DecodedTxDetail } from './DecodedTxDetail'
 
 export type ConfirmTxModalProps = {
   isOpen: boolean
@@ -23,6 +22,7 @@ export type ConfirmTxModalProps = {
   onUserConfirm: (safeTxHash: string, requestId: RequestId) => void
   onTxReject: (requestId: RequestId) => void
   onClose: () => void
+  appId: string
 }
 
 const isTxValid = (t: Transaction): boolean => {
@@ -38,18 +38,14 @@ const isTxValid = (t: Transaction): boolean => {
   return isAddressValid && !!t.data && typeof t.data === 'string'
 }
 
-export type DecodedTxDetail = DecodedDataParameterValue | DecodedData | undefined
+export type DecodedTxDetailType = DecodedDataParameterValue | DecodedDataResponse | undefined
 
 export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
-  const [decodedTxDetails, setDecodedTxDetails] = useState<DecodedTxDetail>()
   const invalidTransactions = !props.txs.length || props.txs.some((t) => !isTxValid(t))
 
-  const showDecodedTxData = setDecodedTxDetails
-  const hideDecodedTxData = () => setDecodedTxDetails(undefined)
-
-  const closeDecodedTxDetail = () => {
-    hideDecodedTxData()
+  const rejectTransaction = () => {
     props.onClose()
+    props.onTxReject(props.requestId)
   }
 
   if (invalidTransactions) {
@@ -62,15 +58,7 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
 
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
-      {decodedTxDetails && (
-        <DecodedTxDetail
-          onClose={closeDecodedTxDetail}
-          hideDecodedTxData={hideDecodedTxData}
-          decodedTxData={decodedTxDetails}
-        />
-      )}
-
-      <ReviewConfirm {...props} showDecodedTxData={showDecodedTxData} hidden={!!decodedTxDetails} />
+      <ReviewConfirm {...props} onReject={rejectTransaction} />
     </Modal>
   )
 }

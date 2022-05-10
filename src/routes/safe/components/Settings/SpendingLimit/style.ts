@@ -21,7 +21,7 @@ export const useStyles = makeStyles(
     },
     hide: {
       '&:hover': {
-        backgroundColor: '#f7f5f5',
+        backgroundColor: `${background}`,
       },
       '&:hover $actions': {
         visibility: 'initial',
@@ -121,10 +121,6 @@ export const useStyles = makeStyles(
     },
     amountInput: {
       width: '100% !important',
-    },
-    gasCostsContainer: {
-      backgroundColor: background,
-      padding: `0 ${lg}`,
     },
   }),
 )

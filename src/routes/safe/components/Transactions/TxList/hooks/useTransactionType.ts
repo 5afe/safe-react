@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { isTxQueued, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
@@ -10,6 +7,7 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type TxTypeProps = {
   icon?: string
@@ -19,13 +17,9 @@ export type TxTypeProps = {
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const { safeAddress } = useSafeAddress()
   const toAddress = getTxTo(tx)
-  // Fixed casting because known address only works for Custom tx
-  const knownAddressBookAddress = useKnownAddress(toAddress?.value || '0x', {
-    name: toAddress?.name || undefined,
-    image: toAddress?.logoUri || undefined,
-  })
+  const knownAddressBookAddress = useKnownAddress(toAddress)
 
   useEffect(() => {
     switch (tx.txInfo.type) {
@@ -38,12 +32,15 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         setType({
           icon: isSendTx ? OutgoingTxIcon : IncomingTxIcon,
-          text: knownAddressBookAddress.name || toAddress?.name || (isSendTx ? 'Send' : 'Receive'),
+          text: isSendTx ? (isTxQueued(tx.txStatus) ? 'Send' : 'Sent') : 'Received',
         })
         break
       }
       case 'SettingsChange': {
-        setType({ icon: SettingsTxIcon, text: tx.txInfo.dataDecoded.method })
+        // deleteGuard doesn't exist in Solidity
+        // It is decoded as 'setGuard' with a settingsInfo.type of 'DELETE_GUARD'
+        const isDeleteGuard = tx.txInfo.settingsInfo?.type === 'DELETE_GUARD'
+        setType({ icon: SettingsTxIcon, text: isDeleteGuard ? 'deleteGuard' : tx.txInfo.dataDecoded.method })
         break
       }
       case 'Custom': {
@@ -64,10 +61,10 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         setType({
-          icon: knownAddressBookAddress.isAddressBook
+          icon: knownAddressBookAddress.isInAddressBook
             ? CustomTxIcon
-            : knownAddressBookAddress.image || toAddress?.logoUri || CustomTxIcon,
-          fallbackIcon: knownAddressBookAddress.isAddressBook ? undefined : CustomTxIcon,
+            : knownAddressBookAddress.logoUri || toAddress?.logoUri || CustomTxIcon,
+          fallbackIcon: knownAddressBookAddress.isInAddressBook ? undefined : CustomTxIcon,
           text: knownAddressBookAddress.name || toAddress?.name || 'Contract interaction',
         })
         break
@@ -77,8 +74,10 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
     tx,
     safeAddress,
     knownAddressBookAddress.name,
-    knownAddressBookAddress.image,
-    knownAddressBookAddress.isAddressBook,
+    knownAddressBookAddress.logoUri,
+    knownAddressBookAddress.isInAddressBook,
+    toAddress?.logoUri,
+    toAddress?.name,
   ])
 
   return type

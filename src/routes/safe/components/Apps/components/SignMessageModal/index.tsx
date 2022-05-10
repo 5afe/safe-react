@@ -1,13 +1,15 @@
+import { RequestId } from '@gnosis.pm/safe-apps-sdk'
 import { ReactElement } from 'react'
-import { RequestId, calculateMessageHash } from '@gnosis.pm/safe-apps-sdk'
+import { useSelector } from 'react-redux'
+import { hexToUtf8, isHexStrict } from 'web3-utils'
 
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getSignMessageLibContractInstance, getSignMessageLibAddress } from 'src/logic/contracts/safeContracts'
 import Modal from 'src/components/Modal'
-import { getNetworkId } from 'src/config'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { ReviewMessage } from './ReviewMessage'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 export type SignMessageModalProps = {
   isOpen: boolean
@@ -22,15 +24,13 @@ export type SignMessageModalProps = {
   onClose: () => void
 }
 
-const networkId = getNetworkId()
-
 const convertToHumanReadableMessage = (message: string): string => {
-  const isHex = web3ReadOnly.utils.isHexStrict(message.toString())
+  const isHex = isHexStrict(message.toString())
 
   let humanReadableMessage = message
   if (isHex) {
     try {
-      humanReadableMessage = web3ReadOnly.utils.hexToUtf8(message)
+      humanReadableMessage = hexToUtf8(message)
     } catch (e) {
       // do nothing
     }
@@ -40,9 +40,11 @@ const convertToHumanReadableMessage = (message: string): string => {
 }
 
 export const SignMessageModal = ({ message, isOpen, ...rest }: SignMessageModalProps): ReactElement => {
+  const web3 = getWeb3ReadOnly()
+  const networkId = useSelector(currentChainId)
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
-  const txData = getSignMessageLibContractInstance(web3ReadOnly, networkId)
-    .methods.signMessage(calculateMessageHash(message))
+  const txData = getSignMessageLibContractInstance(web3, networkId)
+    .methods.signMessage(web3.eth.accounts.hashMessage(message))
     .encodeABI()
 
   const readableData = convertToHumanReadableMessage(message)

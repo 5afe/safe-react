@@ -32,9 +32,12 @@ import {
   latestMasterContractVersion as latestMasterContractVersionSelector,
   safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
+import ChainIndicator from 'src/components/ChainIndicator'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -50,21 +53,25 @@ const StyledIcon = styled(Icon)`
   top: 3px;
   left: 6px;
 `
+const StyledParagraph = styled(Paragraph)`
+  margin-bottom: 0;
+`
 
 const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
+  const curChainId = useSelector(currentChainId)
   const {
     address: safeAddress,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
+    chainId = curChainId,
   } = useSelector(currentSafe)
   const safeNamesMap = useSelector(safesWithNamesAsMap)
   const safeName = safeNamesMap[safeAddress]?.name
 
   const dispatch = useDispatch()
-  const { trackEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = useState(false)
   const [safeInfo, setSafeInfo] = useState<MasterCopy | undefined>()
@@ -74,7 +81,13 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    trackEvent(SETTINGS_EVENTS.DETAILS.SAFE_NAME)
+
+    dispatch(
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({ address: safeAddress, name: values.safeName, chainId: curChainId }),
+      ),
+    )
     // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
     dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 
@@ -103,10 +116,6 @@ const SafeDetails = (): ReactElement => {
       ? ` (there's a newer version: ${latestMasterContractVersion})`
       : ''
   }
-
-  useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Details' })
-  }, [trackEvent])
 
   useEffect(() => {
     const getMasterCopyInfo = async () => {
@@ -153,9 +162,17 @@ const SafeDetails = (): ReactElement => {
               </Row>
             ) : null}
           </Block>
+
+          <Block className={classes.formContainer}>
+            <Heading tag="h2">Blockchain Network</Heading>
+            <StyledParagraph>
+              <ChainIndicator chainId={chainId} />
+            </StyledParagraph>
+          </Block>
+
           {safeName != null && (
             <Block className={classes.formContainer}>
-              <Heading tag="h2">Modify Safe name</Heading>
+              <Heading tag="h2">Modify Safe Name</Heading>
               <Paragraph>
                 You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
                 any third parties.
@@ -167,13 +184,14 @@ const SafeDetails = (): ReactElement => {
                   name="safeName"
                   placeholder="Safe name*"
                   testId={SAFE_NAME_INPUT_TEST_ID}
-                  text="Safe name*"
+                  label="Safe name*"
                   type="text"
                   validate={composeValidators(required, validAddressBookName)}
                 />
               </Block>
             </Block>
           )}
+
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
               <Button

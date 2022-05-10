@@ -5,16 +5,14 @@ import { addOrUpdateSafe } from './addOrUpdateSafe'
 
 const loadSafesFromStorage =
   () =>
-  async (dispatch: Dispatch): Promise<void> => {
-    const safes = await getLocalSafes()
+  (dispatch: Dispatch): void => {
+    const safes = getLocalSafes()
 
     if (safes) {
       safes.forEach((safeProps) => {
         dispatch(addOrUpdateSafe(buildSafe(safeProps)))
       })
     }
-
-    return Promise.resolve()
   }
 
 export default loadSafesFromStorage

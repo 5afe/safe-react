@@ -1,115 +1,179 @@
-import { Fragment } from 'react'
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import { makeStyles } from '@material-ui/core/styles'
-import { Icon } from '@gnosis.pm/safe-react-components'
-
-import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import { Fragment, ReactElement, useEffect } from 'react'
+import { Text } from '@gnosis.pm/safe-react-components'
+import { Link } from 'react-router-dom'
+import uniqBy from 'lodash/uniqBy'
 
-import Hairline from 'src/components/layout/Hairline'
-import Link from 'src/components/layout/Link'
 import Collapse from 'src/components/Collapse'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_ROUTES } from 'src/routes/routes'
-import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
-import { OwnedAddress } from 'src/components/SafeListSidebar/SafeList/OwnedAddress'
-import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
-import { background } from 'src/theme/variables'
+import SafeListItem from './SafeListItem'
+import useLocalSafes from 'src/logic/safe/hooks/useLocalSafes'
+import { WELCOME_ROUTE } from 'src/routes/routes'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { setChainId } from 'src/logic/config/utils'
+import { useSelector } from 'react-redux'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
+import { getChains } from 'src/config/cache/chains'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { getChainById } from 'src/config'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
-export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
+const MAX_EXPANDED_SAFES = 3
 
-const StyledIcon = styled(Icon)`
-  margin-right: 4px;
+const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
+  width: 15px;
+  height: 15px;
+  color: ${({ textColor }) => textColor};
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+`
+
+const StyledList = styled(MuiList)`
+  height: '100%';
+  overflow-x: 'hidden';
+  overflow-y: 'auto';
+  padding: 0;
+
+  & p > a {
+    color: inherit;
+  }
 `
 
 const useStyles = makeStyles({
-  list: {
-    height: '100%',
-    overflowX: 'hidden',
-    overflowY: 'auto',
-    padding: 0,
-  },
-  listItemRoot: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    '&:hover': {
-      backgroundColor: background,
-    },
-  },
   listItemCollapse: {
-    paddingTop: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: '50px',
+    '&:not(:first-child)': {
+      paddingTop: '10px',
+    },
+
+    padding: '0 0 0 0',
     '& > div > div:first-child': {
       paddingLeft: '44px',
+      paddingTop: '8px',
+      paddingBottom: '8px',
     },
-  },
-  noIcon: {
-    visibility: 'hidden',
-    width: '28px',
   },
 })
 
+const PlaceholderText = styled(Text)`
+  padding: 16px 44px;
+`
+
 type Props = {
-  currentSafeAddress: string | undefined
-  safes: SafeRecordWithNames[]
-  ownedSafes: string[]
   onSafeClick: () => void
 }
 
-const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean => {
-  return addedSafes.some((safe) => sameAddress(safe.address, address))
-}
+const isNotLoadedViaUrl = ({ loadedViaUrl }: SafeRecordProps) => loadedViaUrl === false
 
-export const SafeList = ({ currentSafeAddress, onSafeClick, safes, ownedSafes }: Props): React.ReactElement => {
+const isSameAddress = (addrA: string, addrB: string): boolean => addrA.toLowerCase() === addrB.toLowerCase()
+
+export const SafeList = ({ onSafeClick }: Props): ReactElement => {
   const classes = useStyles()
-  const ownedSafesExpanded = ownedSafes.some((address) => {
-    return address === currentSafeAddress && !isAddressAdded(safes, address)
-  })
+  const { safeAddress } = useSafeAddress()
+  const ownedSafes = useOwnerSafes()
+  const localSafes = useLocalSafes()
+  const curChainId = useSelector(currentChainId)
 
-  const getLink = (address: string): React.ReactElement =>
-    sameAddress(currentSafeAddress, address) ? (
-      <StyledIcon type="check" size="md" color="primary" />
-    ) : (
-      <div className={classes.noIcon}>placeholder</div>
-    )
+  useEffect(() => {
+    const addedSafes = localSafes?.[curChainId]?.length || 0
+    if (addedSafes === 0) {
+      return
+    }
+    const event = OVERVIEW_EVENTS.ADDED_SAFES_ON_NETWORK
+    trackEvent({
+      ...event,
+      action: `${event.action} ${getChainById(curChainId).chainName}`,
+      label: addedSafes,
+    })
+  }, [localSafes, curChainId])
 
   return (
-    <MuiList className={classes.list}>
-      {safes.map((safe) => (
-        <Fragment key={safe.address}>
-          <Link
-            data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
-            onClick={onSafeClick}
-            to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-              safeAddress: safe.address,
-            })}
-          >
-            <ListItem classes={{ root: classes.listItemRoot }}>
-              {getLink(safe.address)}
-              <AddressWrapper safe={safe} />
-            </ListItem>
-          </Link>
-          <Hairline />
-        </Fragment>
-      ))}
+    <StyledList>
+      {getChains().map(({ chainId, theme, chainName }) => {
+        const isCurrentNetwork = chainId === curChainId
+        const ownedSafesOnNetwork = ownedSafes[chainId] || []
+        const localSafesOnNetwork = uniqBy(localSafes[chainId].filter(isNotLoadedViaUrl), ({ address }) =>
+          address.toLowerCase(),
+        )
 
-      {ownedSafes.length > 0 && (
-        <ListItem classes={{ root: classes.listItemCollapse }}>
-          <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
-            {ownedSafes.map((address: string) => (
-              <Fragment key={address}>
-                <OwnedAddress address={address} onClick={onSafeClick} isAdded={isAddressAdded(safes, address)}>
-                  {getLink(address)}
-                </OwnedAddress>
-                <Hairline />
-              </Fragment>
-            ))}
-          </Collapse>
-        </ListItem>
-      )}
-    </MuiList>
+        if (!isCurrentNetwork && !ownedSafesOnNetwork.length && !localSafesOnNetwork.length) {
+          return null
+        }
+
+        let shouldExpandOwnedSafes = false
+        if (isCurrentNetwork && ownedSafesOnNetwork.includes(safeAddress)) {
+          // Expand the Owned Safes if the current Safe is owned, but not added
+          shouldExpandOwnedSafes = !localSafesOnNetwork.some(({ address }) => isSameAddress(address, safeAddress))
+        } else {
+          // Expand the Owned Safes if there are no added Safes
+          shouldExpandOwnedSafes = !localSafesOnNetwork.length && ownedSafesOnNetwork.length <= MAX_EXPANDED_SAFES
+        }
+
+        return (
+          <Fragment key={chainId}>
+            <ListItem selected>
+              <StyledDot {...theme} className="networkLabel" />
+              {chainName}
+            </ListItem>
+            <MuiList>
+              {localSafesOnNetwork.map((safe) => (
+                <SafeListItem
+                  key={safe.address}
+                  networkId={chainId}
+                  onNetworkSwitch={() => setChainId(chainId)}
+                  onSafeClick={onSafeClick}
+                  shouldScrollToSafe
+                  {...safe}
+                />
+              ))}
+
+              {!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && (
+                <PlaceholderText size="lg" color="placeHolder">
+                  <Link to={WELCOME_ROUTE} onClick={onSafeClick}>
+                    Create or add
+                  </Link>{' '}
+                  an existing Safe on this network
+                </PlaceholderText>
+              )}
+
+              {ownedSafesOnNetwork.length > 0 && (
+                <ListItem classes={{ root: classes.listItemCollapse }} component="div">
+                  <Collapse
+                    title={
+                      <Text
+                        size="lg"
+                        color="placeHolder"
+                      >{`Safes owned on ${chainName} (${ownedSafesOnNetwork.length})`}</Text>
+                    }
+                    key={String(shouldExpandOwnedSafes)}
+                    defaultExpanded={shouldExpandOwnedSafes}
+                  >
+                    {ownedSafesOnNetwork.map((ownedAddress) => {
+                      const isAdded = localSafesOnNetwork.some(({ address }) => isSameAddress(address, ownedAddress))
+
+                      return (
+                        <SafeListItem
+                          key={ownedAddress}
+                          address={ownedAddress}
+                          networkId={chainId}
+                          onSafeClick={onSafeClick}
+                          showAddSafeLink={!isAdded}
+                          shouldScrollToSafe={shouldExpandOwnedSafes && !isAdded}
+                        />
+                      )
+                    })}
+                  </Collapse>
+                </ListItem>
+              )}
+            </MuiList>
+          </Fragment>
+        )
+      })}
+    </StyledList>
   )
 }

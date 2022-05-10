@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { fetchSafesByOwner } from 'src/logic/safe/api/fetchSafesByOwner'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import useCachedState from 'src/utils/storage/useCachedState'
 
-const useOwnerSafes = (): string[] => {
+type OwnedSafesCache = Record<string, Record<string, string[]>>
+
+const storageKey = 'ownedSafes'
+
+const useOwnerSafes = (): Record<string, string[]> => {
   const connectedWalletAddress = useSelector(userAccountSelector)
-  const [ownerSafes, setOwnerSafes] = useState<string[]>([])
+  const chainId = useSelector(currentChainId)
+  const [cache = {}, setCache] = useCachedState<OwnedSafesCache>(storageKey)
+  const ownerSafes = cache[connectedWalletAddress] || {}
 
   useEffect(() => {
-    setOwnerSafes([])
-
     if (!connectedWalletAddress) {
       return
     }
@@ -18,13 +24,21 @@ const useOwnerSafes = (): string[] => {
     const load = async () => {
       try {
         const safes = await fetchSafesByOwner(connectedWalletAddress)
-        setOwnerSafes(safes)
+
+        setCache((prev = {}) => ({
+          ...prev,
+          [connectedWalletAddress]: {
+            ...(prev[connectedWalletAddress] || {}),
+            [chainId]: safes,
+          },
+        }))
       } catch (err) {
         logError(Errors._610, err.message)
       }
     }
+
     load()
-  }, [connectedWalletAddress])
+  }, [chainId, connectedWalletAddress, setCache])
 
   return ownerSafes
 }

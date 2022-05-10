@@ -34,7 +34,7 @@ export const RenderOutputParams = (): ReactElement | null => {
   return (
     <>
       <Row align="left" margin="xs">
-        <Paragraph color="primary" size="lg" style={{ letterSpacing: '-0.5px' }}>
+        <Paragraph color="primary" size="lg">
           Call result:
         </Paragraph>
       </Row>

@@ -4,18 +4,17 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
-import { push } from 'connected-react-router'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { generatePath } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { sameString } from 'src/utils/strings'
 import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { SAFE_ROUTES } from 'src/routes/routes'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { SAFE_ROUTES, history, generateSafeRoute } from 'src/routes/routes'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(
   createStyles({
@@ -49,9 +48,8 @@ export const EllipsisTransactionDetails = ({
 }: EllipsisTransactionDetailsProps): React.ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
+  const { safeAddress, shortName } = useSafeAddress()
 
-  const dispatch = useDispatch()
-  const currentSafeAddress = useSelector(safeAddressFromUrl)
   const isOwnerConnected = useSelector(grantedSelector)
 
   const recipientName = useSelector((state) => addressBookEntryName(state, { address }))
@@ -63,11 +61,17 @@ export const EllipsisTransactionDetails = ({
   const closeMenuHandler = () => setAnchorEl(null)
 
   const addOrEditEntryHandler = () => {
-    const addressBookPath = generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-      safeAddress: currentSafeAddress,
+    trackEvent({
+      ...TX_LIST_EVENTS.ADDRESS_BOOK,
+      label: isStoredInAddressBook ? 'Edit' : 'Add',
     })
-
-    dispatch(push(`${addressBookPath}?entryAddress=${address}`))
+    history.push({
+      pathname: generateSafeRoute(SAFE_ROUTES.ADDRESS_BOOK, {
+        shortName,
+        safeAddress,
+      }),
+      search: `?entryAddress=${address}`,
+    })
     closeMenuHandler()
   }
 

@@ -1,5 +1,7 @@
 import 'styled-components'
 import { theme } from '@gnosis.pm/safe-react-components'
+import { DataLayerArgs } from 'react-gtm-module'
+import { BeamerConfig, BeamerMethods } from './Beamer.d'
 
 type Theme = typeof theme
 
@@ -10,6 +12,13 @@ declare global {
     ethereum?: {
       autoRefreshOnNetworkChange: boolean
       isMetaMask: boolean
+    }
+    beamer_config?: BeamerConfig
+    Beamer?: BeamerMethods
+    dataLayer?: DataLayerArgs['dataLayer']
+    Cypress?
+    cypressConfig?: {
+      connected: boolean
     }
   }
 }

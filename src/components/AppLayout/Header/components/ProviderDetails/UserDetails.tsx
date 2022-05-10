@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
-import { EthHashInfo, Identicon, Card } from '@gnosis.pm/safe-react-components'
+import { Identicon, Card } from '@gnosis.pm/safe-react-components'
 import { createStyles } from '@material-ui/core'
 
 import Spacer from 'src/components/Spacer'
@@ -11,12 +11,14 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getExplorerInfo, getNetworkId, getNetworkLabel } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
 import WalletIcon from '../../assets/wallet.svg'
+import { useSelector } from 'react-redux'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
+import ChainIndicator from 'src/components/ChainIndicator'
 
 const styles = createStyles({
   container: {
@@ -34,6 +36,10 @@ const styles = createStyles({
     margin: '0 auto',
     padding: '9px',
     lineHeight: 1,
+  },
+  ens: {
+    paddingBottom: md,
+    fontWeight: 'bold',
   },
   details: {
     padding: `0 ${md}`,
@@ -79,11 +85,6 @@ const styles = createStyles({
   logo: {
     margin: `0px ${xs}`,
   },
-  dot: {
-    marginRight: xs,
-    height: '15px',
-    width: '15px',
-  },
   warning: {
     color: warning,
   },
@@ -97,28 +98,24 @@ const StyledCard = styled(Card)`
 `
 type Props = {
   connected: boolean
-  network: ETHEREUM_NETWORK
   onDisconnect: () => void
-  onNetworkChange?: () => unknown
   openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
+  ensName: string
 }
 
 const useStyles = makeStyles(styles)
 
 export const UserDetails = ({
   connected,
-  network,
   onDisconnect,
-  onNetworkChange,
   openDashboard,
   provider,
   userAddress,
+  ensName,
 }: Props): React.ReactElement => {
-  const explorerUrl = getExplorerInfo(userAddress)
-  const networkLabel = getNetworkLabel(network)
-  const desiredNetwork = getNetworkId()
+  const connectedNetwork = useSelector(networkSelector)
   const classes = useStyles()
 
   return (
@@ -131,9 +128,19 @@ export const UserDetails = ({
             <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
+        {ensName && (
+          <Block className={classes.ens} justify="center">
+            {ensName}
+          </Block>
+        )}
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
+            <PrefixedEthHashInfo
+              hash={userAddress}
+              showCopyBtn
+              explorerUrl={getExplorerInfo(userAddress)}
+              shortenHash={4}
+            />
           ) : (
             'Address not available'
           )}
@@ -156,10 +163,7 @@ export const UserDetails = ({
           Connected network
         </Paragraph>
         <Spacer />
-        {networkLabel && <CircleDot networkId={network} className={classes.dot} />}
-        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {networkLabel || 'unknown'}
-        </Paragraph>
+        {connectedNetwork && <ChainIndicator chainId={connectedNetwork} />}
       </Row>
       <Hairline margin="xs" />
       {openDashboard && (
@@ -167,15 +171,6 @@ export const UserDetails = ({
           <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
             <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
               {provider} Wallet
-            </Paragraph>
-          </Button>
-        </Row>
-      )}
-      {network !== desiredNetwork && onNetworkChange && (
-        <Row className={classes.buttonRow}>
-          <Button fullWidth onClick={onNetworkChange} size="medium" variant="outlined" color="primary">
-            <Paragraph noMargin size="lg">
-              Switch to {getNetworkLabel(desiredNetwork)}
             </Paragraph>
           </Button>
         </Row>

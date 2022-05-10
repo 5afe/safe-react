@@ -1,7 +1,7 @@
 import { TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { ExpandedTxDetails, isCustomTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import {
@@ -16,8 +16,7 @@ import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
 import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
-
-const { nativeCoin } = getNetworkInfo()
+import { getInteractionTitle } from '../helpers/utils'
 
 type DetailsWithTxInfoProps = {
   children: ReactNode
@@ -26,7 +25,8 @@ type DetailsWithTxInfoProps = {
 }
 
 const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps): ReactElement => {
-  const amount = txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'
+  const nativeCurrency = getNativeCurrency()
+  const amount = txData.value ? fromTokenUnit(txData.value, nativeCurrency.decimals) : 'n/a'
   let name
   let avatarUrl
 
@@ -37,13 +37,7 @@ const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps)
 
   return (
     <>
-      <TxInfoDetails
-        address={txData.to.value}
-        name={name}
-        avatarUrl={avatarUrl}
-        title={`Send ${amount} ${nativeCoin.symbol} to:`}
-      />
-
+      <TxInfoDetails address={txData.to.value} name={name} avatarUrl={avatarUrl} title={getInteractionTitle(amount)} />
       {children}
     </>
   )
@@ -82,12 +76,12 @@ export const TxData = ({ txData, txInfo }: TxDataProps): ReactElement | null => 
 
   // FixMe: this way won't scale well
   if (isSetAllowance(txData.dataDecoded.method)) {
-    return <ModifySpendingLimitDetails data={txData.dataDecoded} />
+    return <ModifySpendingLimitDetails txData={txData} txInfo={txInfo} />
   }
 
   // FixMe: this way won't scale well
   if (isDeleteAllowance(txData.dataDecoded.method)) {
-    return <DeleteSpendingLimitDetails data={txData.dataDecoded} />
+    return <DeleteSpendingLimitDetails txData={txData} txInfo={txInfo} />
   }
 
   // we render the decoded data

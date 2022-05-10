@@ -1,16 +1,14 @@
 import { List } from 'immutable'
-import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
-
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AppReduxState } from 'src/store'
-import { checksumAddress } from 'src/utils/checksumAddress'
 import { Overwrite } from 'src/types/helpers'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const safesState = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -22,21 +20,9 @@ export const latestMasterContractVersion = createSelector(safesState, (safeState
   safeState.get('latestMasterContractVersion'),
 )
 
-export const safeAddressFromUrl = (state: AppReduxState): string => {
-  const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
-    path: `${SAFELIST_ADDRESS}/:safeAddress`,
-  })
-
-  if (match) {
-    return checksumAddress(match.params.safeAddress).toString()
-  }
-
-  return ''
-}
-
-export const currentSafe = createSelector([safesAsMap, safeAddressFromUrl], (safes: SafesMap, address: string) =>
-  safes.get(address, baseSafe(address)),
-)
+export const currentSafe = createSelector([safesAsMap, currentSafeAddress], (safes: SafesMap, address: string) => {
+  return safes.get(address, baseSafe(address)) ?? {}
+})
 
 const baseSafe = (address = '') => makeSafe({ address })
 
@@ -48,6 +34,8 @@ export const safeFieldSelector =
 export const currentSafeEthBalance = createSelector(currentSafe, safeFieldSelector('ethBalance'))
 
 export const currentSafeBalances = createSelector(currentSafe, safeFieldSelector('balances'))
+
+export const currentSafeLoaded = createSelector(currentSafe, safeFieldSelector('loaded'))
 
 export const currentSafeNeedsUpdate = createSelector(currentSafe, safeFieldSelector('needsUpdate'))
 
@@ -75,15 +63,15 @@ const baseSafeWithName = (address = '') => ({ ...baseSafe(address).toJS(), name:
 export type SafeRecordWithNames = Overwrite<SafeRecordProps, { owners: AddressBookEntry[] }> & { name: string }
 
 export const safesWithNamesAsList = createSelector(
-  [safesAsList, currentNetworkAddressBookAsMap],
-  (safesList, addressBookMap): SafeRecordWithNames[] => {
+  [safesAsList, currentNetworkAddressBookAsMap, currentChainId],
+  (safesList, addressBookMap, chainId): SafeRecordWithNames[] => {
     return safesList
       .map((safeRecord) => {
         const safe = safeRecord.toObject()
         const name = addressBookMap?.[safe.address]?.name ?? ''
 
         const owners = safe.owners.map((ownerAddress) => {
-          return addressBookMap?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '' })
+          return addressBookMap?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '', chainId })
         })
 
         return { ...safe, name, owners }

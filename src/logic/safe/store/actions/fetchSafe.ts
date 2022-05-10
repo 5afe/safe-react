@@ -1,16 +1,20 @@
 import { Dispatch } from 'redux'
 import { Action } from 'redux-actions'
+
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
-import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { SafeInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { currentSafeWithNames } from '../selectors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
+import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -26,13 +30,11 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
   // setting `loadedViaUrl` to false, as `buildSafe` is called on safe Load or Open flows
   const safeInfo: Partial<SafeRecordProps> = { address, loadedViaUrl: false }
 
-  const [remote, local] = await Promise.all([
-    getSafeInfo(safeAddress).catch((err) => {
-      err.log()
-      return null
-    }),
-    getLocalSafe(safeAddress),
-  ])
+  const local = getLocalSafe(safeAddress)
+  const remote = await getSafeInfo(safeAddress).catch((err) => {
+    err.log()
+    return null
+  })
 
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
@@ -51,34 +53,36 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  * @note It's being used by the app when it loads for the first time and for the Safe's data polling
  *
  * @param {string} safeAddress
- * @param {boolean} isSafeLoaded
+ * @param {boolean} isInitialLoad
  */
 export const fetchSafe =
-  (safeAddress: string, isSafeLoaded = false) =>
+  (safeAddress: string, isInitialLoad = false) =>
   async (dispatch: Dispatch<any>): Promise<Action<Partial<SafeRecordProps>> | void> => {
-    let address = ''
-    try {
-      address = checksumAddress(safeAddress)
-    } catch (err) {
-      logError(Errors._102, safeAddress)
-      return
-    }
+    const dispatchPromises: ((dispatch: Dispatch, getState: () => AppReduxState) => Promise<void> | void)[] = []
+
+    const address = checksumAddress(safeAddress)
 
     let safeInfo: Partial<SafeRecordProps> = {}
     let remoteSafeInfo: SafeInfo | null = null
 
-    // if there's no remote info, we keep what's in memory
     try {
       remoteSafeInfo = await getSafeInfo(address)
     } catch (err) {
       err.log()
     }
 
+    const state = store.getState()
+    const chainId = currentChainId(state)
+
     // remote (client-gateway)
     if (remoteSafeInfo) {
-      safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
+      // If the network has changed while the safe was being loaded,
+      // ignore the result
+      if (remoteSafeInfo.chainId !== chainId) {
+        return
+      }
 
-      const state = store.getState()
+      safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
 
       // If these polling timestamps have changed, fetch again
       const { collectiblesTag, txQueuedTag, txHistoryTag } = currentSafeWithNames(state)
@@ -87,16 +91,24 @@ export const fetchSafe =
       const shouldUpdateTxHistory = txHistoryTag !== safeInfo.txHistoryTag
       const shouldUpdateTxQueued = txQueuedTag !== safeInfo.txQueuedTag
 
-      if (shouldUpdateCollectibles || !isSafeLoaded) {
-        dispatch(fetchCollectibles(safeAddress))
+      dispatchPromises.push(dispatch(fetchSafeTokens(address)))
+
+      if (shouldUpdateCollectibles || isInitialLoad) {
+        dispatch(fetchCollectibles(address))
       }
 
-      if (shouldUpdateTxHistory || shouldUpdateTxQueued || !isSafeLoaded) {
-        dispatch(fetchTransactions(safeAddress))
+      if (shouldUpdateTxHistory || shouldUpdateTxQueued || isInitialLoad) {
+        dispatchPromises.push(dispatch(fetchTransactions(chainId, address)))
+      }
+
+      if (isInitialLoad) {
+        dispatchPromises.push(dispatch(addViewedSafe(address)))
       }
     }
 
-    const owners = buildSafeOwners(remoteSafeInfo?.owners)
+    const owners = buildSafeOwners(remoteSafeInfo?.owners || [])
 
-    return dispatch(updateSafe({ address, ...safeInfo, owners }))
+    await Promise.all(dispatchPromises)
+
+    return dispatch(updateSafe({ address, ...safeInfo, owners, loaded: true }))
   }

@@ -1,25 +1,22 @@
 import { IconText, Loader, Menu, Text, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { generatePath } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import Collapse from 'src/components/Collapse'
 import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { AppCard, AddCustomAppCard } from 'src/routes/safe/components/Apps/components/AppCard'
-import { SAFE_ROUTES } from 'src/routes/routes'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-
 import { SearchInputCard } from './SearchInputCard'
 import { NoAppsFound } from './NoAppsFound'
 import { SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
+import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { PinnedAppsTutorial } from './PinnedAppsTutorial'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export const PINNED_APPS_LIST_TEST_ID = 'safe_apps__pinned-apps-container'
 export const ALL_APPS_LIST_TEST_ID = 'safe_apps__all-apps-container'
@@ -65,12 +62,13 @@ const SectionHeading = styled(Text)`
 
 const CenterIconText = styled(IconText)`
   justify-content: center;
-  margin-right: 55px;
+  margin: 16px 55px 20px 0;
 `
 
 const AppsList = (): React.ReactElement => {
-  const safeAddress = useSelector(safeAddressFromUrl)
-  const appsPath = generatePath(SAFE_ROUTES.APPS, {
+  const { shortName, safeAddress } = useSafeAddress()
+  const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
+    shortName,
     safeAddress,
   })
   const [appSearch, setAppSearch] = useState('')
@@ -160,7 +158,7 @@ const AppsList = (): React.ReactElement => {
             {!appSearch && <AddCustomAppCard onClick={openAddAppModal} />}
             {apps.map((a) => (
               <AppCard
-                to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
+                to={`${appsPath}?appUrl=${encodeURIComponent(a.url)}`}
                 key={a.id}
                 app={a}
                 onPin={handleAppPin}

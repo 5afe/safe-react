@@ -16,3 +16,4 @@ src/types/gateway/
 tsconfig.tsbuildinfo
 public/**/*.js
 jest.results.json
+*.#*

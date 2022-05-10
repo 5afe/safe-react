@@ -7,7 +7,7 @@ import styles from './index.module.scss'
 const cx = classNames.bind(styles)
 
 class Block extends React.PureComponent<any> {
-  render() {
+  render(): React.ReactElement {
     const { children, className, justify, margin, padding, ...props } = this.props
 
     const paddingStyle = padding ? capitalize(padding, 'padding') : undefined

@@ -5,6 +5,7 @@ services:
     build: ./
     volumes:
       - /app/node_modules
+      - /app/src/types/contracts
       - ./:/app
     ports:
       - 3000:3000

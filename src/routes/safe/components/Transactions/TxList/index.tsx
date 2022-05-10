@@ -1,40 +1,71 @@
-import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement } from 'react'
+import { Redirect, Route, Switch, useHistory, useRouteMatch, Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 import Col from 'src/components/layout/Col'
-import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
+import { extractPrefixedSafeAddress, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
+import TxSingularDetails from './TxSingularDetails'
+import { isDeeplinkedTx } from './utils'
 
-const items: Item[] = [
-  { id: 'queue', label: 'Queue' },
-  { id: 'history', label: 'History' },
+const TRANSACTION_TABS: Item[] = [
+  { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
+  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
 ]
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  & * {
+    cursor: pointer !important;
+  }
+`
+
 const GatewayTransactions = (): ReactElement => {
-  const [tab, setTab] = useState(items[0].id)
+  const history = useHistory()
+  const { path } = useRouteMatch()
+  const isTxDetails = isDeeplinkedTx()
 
-  const { trackEvent } = useAnalytics()
+  let breadcrumbText = 'History'
+  if (isTxDetails) {
+    breadcrumbText = 'Details'
+  } else if (path === SAFE_ROUTES.TRANSACTIONS_QUEUE) {
+    breadcrumbText = 'Queue'
+  }
 
-  useEffect(() => {
-    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
-  }, [trackEvent])
+  const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 
   return (
     <Wrapper>
       <Menu>
         <Col start="sm" xs={12}>
           <Breadcrumb>
-            <BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />
+            {((parentCrumb) =>
+              !isTxDetails ? (
+                parentCrumb
+              ) : (
+                <StyledLink to={generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, extractPrefixedSafeAddress())}>
+                  {parentCrumb}
+                </StyledLink>
+              ))(<BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />)}
+
+            <BreadcrumbElement text={breadcrumbText.toUpperCase()} color="placeHolder" />
           </Breadcrumb>
         </Col>
       </Menu>
-      <Tab items={items} onChange={setTab} selectedTab={tab} />
+
+      {!isTxDetails && <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={path} />}
+
       <ContentWrapper>
-        {tab === 'queue' && <QueueTransactions />}
-        {tab === 'history' && <HistoryTransactions />}
+        <Switch>
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_QUEUE} render={() => <QueueTransactions />} />
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_HISTORY} render={() => <HistoryTransactions />} />
+          <Route exact path={SAFE_ROUTES.TRANSACTIONS_SINGULAR} render={() => <TxSingularDetails />} />
+          <Redirect to={SAFE_ROUTES.TRANSACTIONS_HISTORY} />
+        </Switch>
       </ContentWrapper>
     </Wrapper>
   )

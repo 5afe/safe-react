@@ -1,25 +1,19 @@
-import axios from 'axios'
-import { getTxServiceUrl } from 'src/config'
-import memoize from 'lodash.memoize'
+import { MasterCopyReponse, getMasterCopies } from '@gnosis.pm/safe-react-gateway-sdk'
+
+import { _getChainId } from 'src/config'
+import { GATEWAY_URL } from 'src/utils/constants'
 
 export enum MasterCopyDeployer {
   GNOSIS = 'Gnosis',
   CIRCLES = 'Circles',
 }
 
-type MasterCopyFetch = {
-  address: string
-  version: string
-}
-
-export type MasterCopy = {
-  address: string
-  version: string
+export type MasterCopy = MasterCopyReponse[number] & {
   deployer: MasterCopyDeployer
   deployerRepoUrl: string
 }
 
-const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
+const extractMasterCopyInfo = (mc: MasterCopyReponse[number]): MasterCopy => {
   const isCircles = mc.version.toLowerCase().includes(MasterCopyDeployer.CIRCLES.toLowerCase())
   const dashIndex = mc.version.indexOf('-')
 
@@ -34,12 +28,11 @@ const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
   return masterCopy
 }
 
-export const fetchMasterCopies = memoize(async (): Promise<MasterCopy[] | undefined> => {
-  const url = `${getTxServiceUrl()}/about/master-copies/`
+export const fetchMasterCopies = async (): Promise<MasterCopy[] | undefined> => {
   try {
-    const res = await axios.get<{ address: string; version: string }[]>(url)
-    return res.data.map(extractMasterCopyInfo)
+    const res = await getMasterCopies(GATEWAY_URL, _getChainId())
+    return res.map(extractMasterCopyInfo)
   } catch (error) {
     console.error('Fetching data from master-copies errored', error)
   }
-})
+}

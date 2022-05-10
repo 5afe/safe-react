@@ -1,70 +1,80 @@
 import React from 'react'
 import { Loader } from '@gnosis.pm/safe-react-components'
-import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
-
-import {
-  LOAD_ADDRESS,
-  OPEN_ADDRESS,
-  SAFELIST_ADDRESS,
-  SAFE_PARAM_ADDRESS,
-  SAFE_ROUTES,
-  WELCOME_ADDRESS,
-} from 'src/routes/routes'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import { useAnalytics } from 'src/utils/googleAnalytics'
 import { lastViewedSafe } from 'src/logic/currentSession/store/selectors'
+import {
+  generateSafeRoute,
+  LOAD_SPECIFIC_SAFE_ROUTE,
+  OPEN_SAFE_ROUTE,
+  ADDRESSED_ROUTE,
+  WELCOME_ROUTE,
+  ROOT_ROUTE,
+  LOAD_SAFE_ROUTE,
+  getNetworkRootRoutes,
+  SAFE_ROUTES,
+  GENERIC_APPS_ROUTE,
+} from './routes'
+import { setChainId } from 'src/logic/config/utils'
+import { setChainIdFromUrl } from 'src/utils/history'
+import { usePageTracking } from 'src/utils/googleTagManager'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
-const Welcome = React.lazy(() => import('./welcome/container'))
-const Open = React.lazy(() => import('./open/container/Open'))
-const Safe = React.lazy(() => import('./safe/container'))
-const Load = React.lazy(() => import('./load/container/Load'))
-
-const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
+const Welcome = React.lazy(() => import('./welcome/Welcome'))
+const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
+const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
+const SafeContainer = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
-  const [isInitialLoad, setInitialLoad] = useState(true)
   const location = useLocation()
-  const matchSafeWithAction = useRouteMatch<{ safeAddress: string; safeAction: string }>({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
-  })
+  const { pathname } = location
+  const lastSafe = useSelector(lastViewedSafe)
+  const { shortName, safeAddress } = useSafeAddress()
 
-  const defaultSafe = useSelector(lastViewedSafe)
-  const { trackPage } = useAnalytics()
-
-  useEffect(() => {
-    if (isInitialLoad && location.pathname !== '/') {
-      setInitialLoad(false)
-    }
-  }, [location.pathname, isInitialLoad])
-
-  useEffect(() => {
-    if (matchSafeWithAction) {
-      // prevent logging safeAddress
-      let safePage = `${SAFELIST_ADDRESS}/SAFE_ADDRESS`
-      if (matchSafeWithAction.params?.safeAction) {
-        safePage += `/${matchSafeWithAction.params?.safeAction}`
-      }
-      trackPage(safePage)
-    } else {
-      const page = `${location.pathname}${location.search}`
-      trackPage(page)
-    }
-  }, [location, matchSafeWithAction, trackPage])
+  // Google Tag Manager page tracking
+  usePageTracking()
 
   return (
     <Switch>
       <Route
-        exact
-        path="/"
-        render={() => {
-          if (!isInitialLoad) {
-            return <Redirect to={WELCOME_ADDRESS} />
-          }
+        // Remove all trailing slashes
+        path="/:url*(/+)"
+        render={() => <Redirect to={location.pathname.replace(/\/+$/, `${location.search}${location.hash}`)} />}
+      />
 
-          if (defaultSafe === null) {
+      <Route
+        // Redirect /xdai root to /gno
+        path="/xdai"
+        exact
+        render={() => <Redirect to="/gno" />}
+      />
+      <Route
+        // Redirect xdai: shortName to gno:
+        path="/xdai\::url*"
+        render={() => <Redirect to={location.pathname.replace(/\/xdai:/, `/gno:`)} />}
+      />
+
+      {
+        // Redirection to open network specific welcome pages
+        getNetworkRootRoutes().map(({ chainId, route, shortName }) => (
+          <Route
+            key={chainId}
+            path={[route, `/${shortName}`]}
+            render={() => {
+              setChainId(chainId)
+              return <Redirect to={ROOT_ROUTE} />
+            }}
+          />
+        ))
+      }
+
+      <Route
+        exact
+        path={ROOT_ROUTE}
+        render={() => {
+          if (lastSafe === null) {
             return (
               <LoadingContainer>
                 <Loader size="md" />
@@ -72,24 +82,52 @@ const Routes = (): React.ReactElement => {
             )
           }
 
-          if (defaultSafe) {
+          if (lastSafe) {
             return (
               <Redirect
-                to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                  safeAddress: defaultSafe,
+                to={generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
+                  shortName,
+                  safeAddress: lastSafe,
                 })}
               />
             )
           }
 
-          return <Redirect to={WELCOME_ADDRESS} />
+          return <Redirect to={WELCOME_ROUTE} />
         }}
       />
-      <Route component={Welcome} exact path={WELCOME_ADDRESS} />
-      <Route component={Open} exact path={OPEN_ADDRESS} />
-      <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
-      <Redirect to="/" />
+
+      {/* Redirect /app/apps?appUrl=https://... to that app within the current Safe */}
+      <Route
+        exact
+        path={GENERIC_APPS_ROUTE}
+        render={() => {
+          if (!lastSafe) {
+            return <Redirect to={WELCOME_ROUTE} />
+          }
+          const redirectPath = generateSafeRoute(SAFE_ROUTES.APPS, {
+            shortName,
+            safeAddress: lastSafe,
+          })
+          return <Redirect to={`${redirectPath}${location.search}`} />
+        }}
+      />
+
+      <Route component={Welcome} exact path={WELCOME_ROUTE} />
+
+      <Route component={CreateSafePage} exact path={OPEN_SAFE_ROUTE} />
+
+      <Route
+        path={ADDRESSED_ROUTE}
+        render={() => {
+          // Routes with a shortName prefix
+          const validShortName = setChainIdFromUrl(pathname)
+          // Safe address is used as a key to re-render the entire SafeContainer
+          return validShortName ? <SafeContainer key={safeAddress} /> : <Redirect to={WELCOME_ROUTE} />
+        }}
+      />
+      <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
+      <Redirect to={ROOT_ROUTE} />
     </Switch>
   )
 }

@@ -1,12 +1,12 @@
 import { AppReduxState } from 'src/store'
-import { CURRENCY_VALUES_KEY, CurrencyValuesState } from 'src/logic/currencyValues/store/reducer/currencyValues'
+import { CURRENCY_REDUCER_ID, CurrencyValuesState } from 'src/logic/currencyValues/store/reducer/currencyValues'
 
-export const currencyValuesSelector = (state: AppReduxState): CurrencyValuesState => state[CURRENCY_VALUES_KEY]
+export const currencyValuesSelector = (state: AppReduxState): CurrencyValuesState => state[CURRENCY_REDUCER_ID]
 
 export const currentCurrencySelector = (state: AppReduxState): string => {
-  return state[CURRENCY_VALUES_KEY].selectedCurrency
+  return state[CURRENCY_REDUCER_ID].selectedCurrency
 }
 
 export const availableCurrenciesSelector = (state: AppReduxState): string[] => {
-  return state[CURRENCY_VALUES_KEY].availableCurrencies
+  return state[CURRENCY_REDUCER_ID].availableCurrencies
 }

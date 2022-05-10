@@ -1,13 +1,7 @@
-import MuiTextField from '@material-ui/core/TextField'
+import MuiTextField, { TextFieldProps } from '@material-ui/core/TextField'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import { lg } from 'src/theme/variables'
-
-// Neded for solving a fix in Windows browsers
-const overflowStyle = {
-  overflow: 'hidden',
-  width: '100%',
-}
 
 const styles = () =>
   createStyles({
@@ -45,6 +39,8 @@ type Props = {
   disabled?: boolean
   rowsMax?: number
   className?: string
+  placeholder?: string
+  InputLabelProps?: TextFieldProps['InputLabelProps']
 }
 
 const TextField = (props: Props): React.ReactElement => {
@@ -56,6 +52,7 @@ const TextField = (props: Props): React.ReactElement => {
     rows,
     testId,
     text,
+    InputLabelProps: _InputLabelProps,
     ...rest
   } = props
   const classes = useStyles()
@@ -80,19 +77,24 @@ const TextField = (props: Props): React.ReactElement => {
     className: `${inputRoot} ${statusClasses}`,
     disableUnderline: disableUnderline,
   }
+  const InputLabelProps = {
+    ..._InputLabelProps,
+    ...(rest?.placeholder && { shrink: true }),
+  }
 
   return (
     <MuiTextField
       error={hasError && showError}
-      helperText={hasError && showError ? errorMessage : helperText || ' '}
+      helperText={hasError && showError ? errorMessage : helperText || ''}
       inputProps={inputProps} // blank in order to force to have helper text
       InputProps={inputRootProps}
+      InputLabelProps={InputLabelProps}
       multiline={multiline}
       name={name}
       onChange={onChange}
       rows={rows}
-      style={overflowStyle}
       value={value}
+      variant="outlined"
       {...rest}
     />
   )

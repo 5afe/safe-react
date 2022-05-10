@@ -20,7 +20,7 @@ export const isValidAddressBookName = (addressBookName: string): boolean => {
   const hasInvalidName = ADDRESS_BOOK_INVALID_NAMES.find((invalidName) =>
     addressBookName?.toUpperCase().includes(invalidName),
   )
-  return !hasInvalidName
+  return !hasInvalidName || addressBookName === ''
 }
 
 /**
@@ -62,5 +62,9 @@ export const getEntryIndex = (
   addressBookEntry: Overwrite<AddressBookEntry, { name?: string }>,
 ): number =>
   state.findIndex(
-    ({ address, chainId }) => chainId === addressBookEntry.chainId && sameAddress(address, addressBookEntry.address),
+    ({ address, chainId }) =>
+      chainId.toString() === addressBookEntry.chainId.toString() && sameAddress(address, addressBookEntry.address),
   )
+
+export const hasSameAddressAndChainId = (arrVal: AddressBookEntry, othVal: AddressBookEntry): boolean =>
+  arrVal.address === othVal.address && arrVal.chainId === othVal.chainId

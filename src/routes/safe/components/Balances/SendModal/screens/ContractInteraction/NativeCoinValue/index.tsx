@@ -14,7 +14,7 @@ import Row from 'src/components/layout/Row'
 import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 
 const useStyles = makeStyles(styles)
 
@@ -22,10 +22,9 @@ interface NativeCoinValueProps {
   onSetMax: (nativeCoinBalance: string) => void
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
+  const nativeCurrency = getNativeCurrency()
   const ethBalance = useSelector(currentSafeEthBalance)
 
   const {
@@ -40,7 +39,7 @@ export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.React
   return disabled ? null : (
     <>
       <Row className={classes.fullWidth} margin="xs">
-        <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+        <Paragraph color="disabled" noMargin size="md">
           Value
         </Paragraph>
         <ButtonLink
@@ -57,12 +56,12 @@ export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.React
             component={TextField}
             disabled={disabled}
             inputAdornment={{
-              endAdornment: <InputAdornment position="end">{nativeCoin.name}</InputAdornment>,
+              endAdornment: <InputAdornment position="end">{nativeCurrency.symbol}</InputAdornment>,
               disabled,
             }}
             name="value"
             placeholder="Value"
-            text="Value"
+            label="Value"
             type="text"
             validate={!disabled && composeValidators(mustBeFloat, maxValue(ethBalance))}
           />

@@ -1,90 +1,70 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
+import styled from 'styled-components'
+import { Text } from '@gnosis.pm/safe-react-components'
+import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
-import { InlineEthHashInfo, TxDetailsContainer } from './styled'
-import { Creation } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TxDetailsContainer } from './styled'
+import { KnownAddressType, useKnownAddress } from './hooks/useKnownAddress'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { TxDataRow } from './TxDataRow'
+import { md } from 'src/theme/variables'
 
-export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
+const StyledTxCreationAddress = styled.div`
+  margin-bottom: ${md};
+
+  &:last-of-type {
+    margin-bottom: 0px;
+  }
+`
+
+export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement => {
   const txInfo = transaction.txInfo as Creation
   const timestamp = transaction.timestamp
 
+  const generateCreatorTxData = (
+    title,
+    creationEntity: Creation['creator' | 'factory' | 'implementation'],
+    address: KnownAddressType,
+  ): ReactElement => (
+    <StyledTxCreationAddress>
+      <Text size="xl" strong>
+        {title}:
+      </Text>
+      {creationEntity ? (
+        <PrefixedEthHashInfo
+          textSize="xl"
+          hash={creationEntity.value}
+          showCopyBtn
+          explorerUrl={getExplorerInfo(creationEntity.value)}
+          name={address?.name || undefined}
+          customAvatar={address?.logoUri || undefined}
+          showAvatar
+        />
+      ) : (
+        <Text size="xl" as="span">
+          {NOT_AVAILABLE}
+        </Text>
+      )}
+    </StyledTxCreationAddress>
+  )
+
   return (
     <TxDetailsContainer>
-      <div className="tx-summary">
-        <div className="tx-hash">
-          <Text size="xl" strong as="span">
-            Transaction hash:{' '}
-          </Text>
-          <InlineEthHashInfo
-            textSize="xl"
-            hash={txInfo.transactionHash}
-            shortenHash={8}
-            showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.transactionHash)}
-          />
+      <div className="tx-creation">
+        <div>
+          {generateCreatorTxData('Creator', txInfo.creator, useKnownAddress(txInfo.creator))}
+          {generateCreatorTxData('Factory', txInfo.factory, useKnownAddress(txInfo.factory))}
+          {generateCreatorTxData('Mastercopy', txInfo.implementation, useKnownAddress(txInfo.implementation))}
         </div>
-        <div className="tx-created">
-          <Text size="xl" strong as="span">
-            Created:{' '}
-          </Text>
-          <Text size="xl" as="span">
-            {formatDateTime(timestamp)}
-          </Text>
-        </div>
-        <div className="tx-creator">
-          <Text size="xl" strong as="span">
-            Creator:{' '}
-          </Text>
-          <InlineEthHashInfo
-            textSize="xl"
-            hash={txInfo.creator.value}
-            shortenHash={4}
-            showCopyBtn
-            explorerUrl={getExplorerInfo(txInfo.creator.value)}
-          />
-        </div>
-        <div className="tx-factory">
-          <Text size="xl" strong as="span">
-            Factory:{' '}
-          </Text>
-          {txInfo.factory ? (
-            <InlineEthHashInfo
-              textSize="xl"
-              hash={txInfo.factory.value}
-              shortenHash={4}
-              showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.factory.value)}
-            />
-          ) : (
-            <Text size="xl" as="span">
-              {NOT_AVAILABLE}
-            </Text>
-          )}
-        </div>
-        <div className="tx-mastercopy">
-          <Text size="xl" strong as="span">
-            Mastercopy:{' '}
-          </Text>
-          {txInfo.implementation ? (
-            <InlineEthHashInfo
-              textSize="xl"
-              hash={txInfo.implementation.value}
-              shortenHash={4}
-              showCopyBtn
-              explorerUrl={getExplorerInfo(txInfo.implementation.value)}
-            />
-          ) : (
-            <Text size="xl" as="span">
-              {NOT_AVAILABLE}
-            </Text>
-          )}
+        <div>
+          <TxDataRow title="Transaction hash:" value={txInfo.transactionHash} inlineType="hash" />
+          <TxDataRow title="Created:" value={formatDateTime(timestamp)} />
         </div>
       </div>
-      <div />
     </TxDetailsContainer>
   )
 }

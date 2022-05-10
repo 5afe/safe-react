@@ -1,8 +1,5 @@
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
 import { useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -10,26 +7,26 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
-import { Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
-import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-
-export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { logError } from 'src/logic/exceptions/CodedException'
+import ErrorCodes from 'src/logic/exceptions/registry'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { Overline } from 'src/components/layout/Typography'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
   onClose: () => void
-  onSubmit: (txParameters: TxParameters) => void
+  onSubmit: (txParameters: TxParameters, delayExecution: boolean) => void
   owner: OwnerData
   threshold?: number
 }
@@ -49,29 +46,8 @@ export const ReviewRemoveOwnerModal = ({
     owners,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
+  const connectedWalletAddress = useSelector(userAccountSelector)
   const numOptions = owners ? owners.length - 1 : 0
-  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
-  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
-  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-
-  const {
-    gasLimit,
-    gasEstimation,
-    gasPriceFormatted,
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isExecution,
-    isCreation,
-    isOffChainSignature,
-  } = useEstimateTransactionGas({
-    txData: data,
-    txRecipient: safeAddress,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-  })
-
-  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     let isCurrent = true
@@ -83,19 +59,18 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
-        // FixMe: if the order returned by the service is the same as in the contracts
-        //  the data lookup can be removed from here
-        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const safeOwners = await gnosisSafe.methods.getOwners().call()
-        const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
-        const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, owner.address, threshold).encodeABI()
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+        const safeTx = await sdk.getRemoveOwnerTx(
+          { ownerAddress: owner.address, threshold: +threshold },
+          { safeTxGas: 0 },
+        )
+        const txData = safeTx.data.data
 
         if (isCurrent) {
           setData(txData)
         }
       } catch (error) {
-        console.error('Error calculating ERC721 transfer data:', error.message)
+        logError(ErrorCodes._812, error.message)
       }
     }
     calculateRemoveOwnerData()
@@ -103,161 +78,87 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, safeVersion, owner.address, threshold])
-
-  const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = gasPriceFormatted
-    const newGasPrice = txParameters.ethGasPrice
-    const oldSafeTxGas = gasEstimation
-    const newSafeTxGas = txParameters.safeTxGas
-
-    if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(txParameters.ethGasPrice)
-    }
-
-    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit)
-    }
-
-    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
-      setManualSafeTxGas(newSafeTxGas)
-    }
-  }
+  }, [safeAddress, safeVersion, connectedWalletAddress, owner.address, threshold])
 
   return (
-    <EditableTxParameters
-      isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation}
-      closeEditModalCallback={closeEditModalCallback}
-    >
-      {(txParameters, toggleEditMode) => (
-        <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.manage} noMargin weight="bolder">
-              Remove owner
-            </Paragraph>
-            <Paragraph className={classes.annotation}>3 of 3</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
-          <Hairline />
-          <Block>
-            <Row className={classes.root}>
-              {/* Details */}
-              <Col layout="column" xs={4}>
-                <Block className={classes.details}>
-                  <Block margin="lg">
-                    <Paragraph color="primary" noMargin size="lg">
-                      Details
-                    </Paragraph>
-                  </Block>
-                  <Block margin="lg">
-                    <Paragraph color="disabled" noMargin size="sm">
-                      Safe name
-                    </Paragraph>
-                    <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {safeName}
-                    </Paragraph>
-                  </Block>
-                  <Block margin="lg">
-                    <Paragraph color="disabled" noMargin size="sm">
-                      Any transaction requires the confirmation of:
-                    </Paragraph>
-                    <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${numOptions} owner(s)`}
-                    </Paragraph>
-                  </Block>
-                </Block>
-              </Col>
-              {/* Owners */}
-              <Col className={classes.owners} layout="column" xs={8}>
-                <Row className={classes.ownersTitle}>
-                  <Paragraph color="primary" noMargin size="lg">
-                    {`${numOptions} Safe owner(s)`}
-                  </Paragraph>
-                </Row>
-                <Hairline />
-                {owners?.map(
-                  (safeOwner) =>
-                    !sameAddress(safeOwner.address, owner.address) && (
-                      <Fragment key={safeOwner.address}>
-                        <Row className={classes.owner}>
-                          <Col align="center" xs={12}>
-                            <EthHashInfo
-                              hash={safeOwner.address}
-                              name={safeOwner.name}
-                              showCopyBtn
-                              showAvatar
-                              explorerUrl={getExplorerInfo(safeOwner.address)}
-                            />
-                          </Col>
-                        </Row>
-                        <Hairline />
-                      </Fragment>
-                    ),
-                )}
-                <Row align="center" className={classes.info}>
-                  <Paragraph color="primary" noMargin size="md" weight="bolder">
-                    REMOVING OWNER &darr;
-                  </Paragraph>
-                </Row>
-                <Hairline />
-                <Row className={classes.selectedOwner} data-testid="remove-owner-review">
-                  <Col align="center" xs={12}>
-                    <EthHashInfo
-                      hash={owner.address}
-                      name={owner.name}
-                      showCopyBtn
-                      showAvatar
-                      explorerUrl={getExplorerInfo(owner.address)}
-                    />
-                  </Col>
-                </Row>
-                <Hairline />
+    <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
+      <ModalHeader onClose={onClose} title="Remove owner" subTitle={getStepTitle(3, 3)} />
+      <Hairline />
+      <Block margin="md">
+        <Row className={classes.root}>
+          {/* Details */}
+          <Col layout="column" xs={4}>
+            <Block className={classes.details}>
+              <Block margin="lg">
+                <Paragraph color="primary" noMargin size="lg">
+                  Details
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph color="disabled" noMargin size="sm">
+                  Safe name
+                </Paragraph>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+                  {safeName}
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph color="disabled" noMargin size="sm">
+                  Any transaction requires the confirmation of:
+                </Paragraph>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+                  {`${threshold} out of ${numOptions} owner(s)`}
+                </Paragraph>
+              </Block>
+            </Block>
+          </Col>
+          {/* Owners */}
+          <Col className={classes.owners} layout="column" xs={8}>
+            <Row className={classes.ownersTitle}>
+              <Paragraph color="primary" noMargin size="lg">
+                {`${numOptions} Safe owner(s)`}
+              </Paragraph>
+            </Row>
+            <Hairline />
+            {owners?.map(
+              (safeOwner) =>
+                !sameAddress(safeOwner.address, owner.address) && (
+                  <Fragment key={safeOwner.address}>
+                    <Row className={classes.owner}>
+                      <Col align="center" xs={12}>
+                        <PrefixedEthHashInfo
+                          hash={safeOwner.address}
+                          name={safeOwner.name}
+                          showCopyBtn
+                          showAvatar
+                          explorerUrl={getExplorerInfo(safeOwner.address)}
+                        />
+                      </Col>
+                    </Row>
+                    <Hairline />
+                  </Fragment>
+                ),
+            )}
+            <Row align="center" className={classes.info}>
+              <Overline noMargin>REMOVING OWNER &darr;</Overline>
+            </Row>
+            <Hairline />
+            <Row className={classes.selectedOwner} data-testid="remove-owner-review">
+              <Col align="center" xs={12}>
+                <PrefixedEthHashInfo
+                  hash={owner.address}
+                  name={owner.name}
+                  showCopyBtn
+                  showAvatar
+                  explorerUrl={getExplorerInfo(owner.address)}
+                />
               </Col>
             </Row>
-          </Block>
-          <Hairline />
-
-          {/* Tx Parameters */}
-          <TxParametersDetail
-            txParameters={txParameters}
-            onEdit={toggleEditMode}
-            compact={false}
-            isTransactionCreation={isCreation}
-            isTransactionExecution={isExecution}
-            isOffChainSignature={isOffChainSignature}
-          />
-
-          {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-            <Block className={classes.gasCostsContainer}>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Block>
-          )}
-          <Modal.Footer withoutBorder>
-            <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
-              confirmButtonProps={{
-                onClick: () => onSubmit(txParameters),
-                status: buttonStatus,
-                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
-                type: 'submit',
-                testId: REMOVE_OWNER_REVIEW_BTN_TEST_ID,
-              }}
-            />
-          </Modal.Footer>
-        </>
-      )}
-    </EditableTxParameters>
+            <Hairline />
+          </Col>
+        </Row>
+        <Hairline />
+      </Block>
+    </TxModalWrapper>
   )
 }

@@ -1,17 +1,12 @@
 import { useState, ReactElement, createContext } from 'react'
 import Drawer from '@material-ui/core/Drawer'
-import { useSelector } from 'react-redux'
 
 import { SafeList } from './SafeList'
-import { sortedSafeListSelector } from './selectors'
 import useSidebarStyles from './style'
-
 import Hairline from 'src/components/layout/Hairline'
-import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
-import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 import AddSafeButton from 'src/components/SafeListSidebar/AddSafeButton'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 export const SafeListSidebarContext = createContext({
   isOpen: false,
@@ -24,17 +19,11 @@ type Props = {
 
 export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
-  const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
-  const ownedSafes = useOwnerSafes()
-  const safeAddress = useSelector(safeAddressFromUrl)
 
   const classes = useSidebarStyles()
-  const { trackEvent } = useAnalytics()
 
   const toggleSidebar = () => {
-    if (!isOpen) {
-      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Safe List Sidebar' })
-    }
+    trackEvent({ ...OVERVIEW_EVENTS.SIDEBAR, label: isOpen ? 'Close' : 'Open' })
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 
@@ -57,7 +46,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
 
         <Hairline />
 
-        <SafeList currentSafeAddress={safeAddress} onSafeClick={toggleSidebar} safes={safes} ownedSafes={ownedSafes} />
+        <SafeList onSafeClick={toggleSidebar} />
       </Drawer>
       {children}
     </SafeListSidebarContext.Provider>

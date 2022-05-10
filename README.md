@@ -10,7 +10,11 @@ The most trusted platform to store digital assets on Ethereum. More info at [gno
 
 For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
 
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.gnosis-safe.io).
+
+## Transactions
+
+Please see the [transaction](docs/transactions.md) notes for more information about transaction details.
 
 ## Related repos
 
@@ -18,22 +22,16 @@ For support requests, please open up a [bug issue](https://github.com/gnosis/saf
 - [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
 - [safe-react-components](https://github.com/gnosis/safe-react-components)
 
-## Production deployments
+## Deployed environments
 
-This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
-
-Besides the Ethereum Mainnet, the following networks are supported:
-
-- [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
-- [xDai](https://xdai.gnosis-safe.io/app/)
-- [Polygon](https://polygon.gnosis-safe.io/app/)
-- [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
-- [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
-- [Volta Testnet](https://volta.gnosis-safe.io/app/)
+- Production: https://gnosis-safe.io/app/
+- Staging: https://safe-team.staging.gnosisdev.com/app/
+- Dev: https://safe-team.dev.gnosisdev.com/app/
+- PRs: `https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/`
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [Deployment](#deployment) for notes on how to deploy the project on a live system.
+These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes. See [Deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -64,17 +62,23 @@ Install dependencies for the project:
 yarn install
 ```
 
-To use the Rinkeby services:
+To launch the dev version of the app locally:
 
 ```
 yarn start
 ```
 
-If you prefer using the Mainnet ones:
+Alternatively, to run the production version of the app:
 
 ```
-yarn start-mainnet
+yarn build
+mv build app
+python -m SimpleHTTPServer 3000
 ```
+
+And open http://localhost:3000/app in the browser.
+
+### Docker
 
 If you prefer to use Docker:
 
@@ -84,16 +88,10 @@ docker-compose build && docker-compose up
 
 ### Building
 
-For Rinkeby:
+To get a complete bundle using the current configuration use:
 
 ```
 yarn build
-```
-
-For Mainnet:
-
-```
-yarn build-mainnet
 ```
 
 ## Running the tests
@@ -119,15 +117,11 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team.staging.gnosisdev.com/).
 
 ### Production
 
 Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
-
-## Configuring the app for running on different networks
-
-[Please check the network configuration documentation](./docs/networks.md)
 
 ## Built With
 

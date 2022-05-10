@@ -1,21 +1,33 @@
 import axios from 'axios'
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
+import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { SafeApp } from './types'
 
+type AppManifestIcon = {
+  src: string
+  sizes: string
+  type?: string
+  purpose?: string
+}
+
 export interface AppManifest {
   name: string
-  iconPath: string
+  iconPath?: string
   description: string
+  icons?: AppManifestIcon[]
   providedBy: string
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
+export const EMPTY_SAFE_APP = 'unknown'
+const MIN_ICON_WIDTH = 128
+const MANIFEST_ERROR_MESSAGE = 'Manifest does not fulfil the required structure.'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
@@ -34,22 +46,27 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
-  appInfo.name !== 'unknown' &&
+  appInfo.name !== EMPTY_SAFE_APP &&
   // `description` exists
   !!appInfo.description
 
-export const getEmptySafeApp = (): SafeApp => {
+export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
     id: Math.random().toString(),
-    url: '',
-    name: 'unknown',
+    url,
+    name: EMPTY_SAFE_APP,
     iconUrl: appsIconSvg,
     description: '',
     fetchStatus: FETCH_STATUS.LOADING,
+    chainIds: [],
+    accessControl: {
+      type: SafeAppAccessPolicyTypes.NoRestrictions,
+    },
+    tags: [],
   }
 }
 
-export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp> => {
+export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest = true): Promise<SafeApp> => {
   let res = {
     ...getEmptySafeApp(),
     error: true,
@@ -73,7 +90,11 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   // verify imported app fulfil safe requirements
   if (!appInfo || !isAppManifestValid(appInfo)) {
-    throw Error('App manifest does not fulfil the required structure.')
+    if (validateManifest) {
+      throw Error(`App ${MANIFEST_ERROR_MESSAGE.toLocaleLowerCase()}`)
+    } else {
+      console.error(`${appInfo.name || 'Safe App'}: ${MANIFEST_ERROR_MESSAGE}`)
+    }
   }
 
   // the DB origin field has a limit of 100 characters
@@ -83,7 +104,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   const appInfoData = {
     name: appInfo.name,
-    iconPath: appInfo.iconPath,
+    iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description,
     providedBy: appInfo.providedBy,
   }
@@ -96,13 +117,31 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     loadingStatus: FETCH_STATUS.SUCCESS,
   }
 
-  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.iconPath}`
+  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfoData.iconPath}`
   if (await canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
 
   return res
 })
+
+export const getAppIcon = (icons: AppManifestIcon[]): string => {
+  const svgIcon = icons.find((icon) => icon?.sizes?.includes('any') || icon?.type === 'image/svg+xml')
+
+  if (svgIcon) {
+    return svgIcon.src
+  }
+
+  for (const icon of icons) {
+    for (const size of icon.sizes.split(' ')) {
+      if (Number(size?.split('x')[0]) >= MIN_ICON_WIDTH) {
+        return icon.src
+      }
+    }
+  }
+
+  return icons[0].src || ''
+}
 
 export const getIpfsLinkFromEns = memoize(async (name: string): Promise<string | undefined> => {
   try {
@@ -146,3 +185,19 @@ const canLoadAppImage = (path: string, timeout = 10000) =>
       resolve(false)
     }
   })
+
+// Some apps still need chain name, as they didn't update to chainId based SDK versions
+// With naming changing in the config service some names aren't the expected ones
+// Ex: Ethereum -> MAINNET, Gnosis Chain -> XDAI
+export const getLegacyChainName = (chainName: string, chainId: string): string => {
+  let network = chainName
+  switch (chainId) {
+    case '1':
+      network = 'MAINNET'
+      break
+    case '100':
+      network = 'XDAI'
+  }
+
+  return network
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { nextTransactions, queuedTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
@@ -15,6 +15,7 @@ export type QueueTransactionsInfo = {
 export const useQueueTransactions = (): QueueTransactionsInfo | undefined => {
   const nextTxs = useSelector(nextTransactions)
   const queuedTxs = useSelector(queuedTransactions)
+  const dispatch = useDispatch()
   const [txsCount, setTxsCount] = useState<{ next: number; queued: number } | undefined>()
 
   useEffect(() => {
@@ -24,8 +25,9 @@ export const useQueueTransactions = (): QueueTransactionsInfo | undefined => {
     const queued = queuedTxs
       ? Object.entries(queuedTxs).reduce((acc, [, transactions]) => (acc += transactions.length), 0)
       : 0
+
     setTxsCount({ next, queued })
-  }, [nextTxs, queuedTxs])
+  }, [dispatch, nextTxs, queuedTxs])
 
   // no data loaded to the store yet
   if ((!nextTxs && !queuedTxs) || typeof txsCount === 'undefined') {

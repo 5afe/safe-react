@@ -1,8 +1,12 @@
-import { Button, Icon, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
+import { Button, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
-import { ReactElement, ReactNode, ReactNodeArray } from 'react'
-import styled from 'styled-components'
+import { ReactElement, ReactNode } from 'react'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getModalEvent } from 'src/utils/events/modals'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { screenSm } from 'src/theme/variables'
 
 type Theme = typeof theme
 
@@ -53,6 +57,10 @@ const ModalStyled = styled(ModalMUI)`
       height: auto;
       max-width: calc(100% - 130px);
     }
+
+    @media (max-width: ${screenSm}px) {
+      width: 100vw;
+    }
   }
 `
 
@@ -86,36 +94,6 @@ export default GnoModal
 /* Generic Modal */
 /*****************/
 
-/*** Header ***/
-const HeaderSection = styled.div`
-  display: flex;
-  padding: 24px 18px 24px 24px;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-
-  h5 {
-    color: ${({ theme }) => theme.colors.text};
-  }
-
-  .close-button {
-    align-self: flex-end;
-    background: none;
-    border: none;
-    padding: 5px;
-    width: 26px;
-    height: 26px;
-
-    span {
-      margin-right: 0;
-    }
-
-    :hover {
-      background: ${({ theme }) => theme.colors.separator};
-      border-radius: 16px;
-      cursor: pointer;
-    }
-  }
-`
-
 const TitleStyled = styled(TitleSRC)`
   display: flex;
   align-items: center;
@@ -148,21 +126,11 @@ const Title = ({ children, ...props }: TitleProps): ReactElement => (
 
 interface HeaderProps {
   children?: ReactNode
-  onClose?: (event: any) => void
+  onClose?: () => unknown
 }
 
-const Header = ({ children, onClose }: HeaderProps): ReactElement => {
-  return (
-    <HeaderSection className="modal-header">
-      {children}
-
-      {onClose && (
-        <button className="close-button" onClick={onClose}>
-          <Icon size="sm" type="cross" />
-        </button>
-      )}
-    </HeaderSection>
-  )
+const Header = ({ children = '', onClose = () => null }: HeaderProps): ReactElement => {
+  return <ModalHeader title={children} onClose={onClose} />
 }
 
 Header.Title = Title
@@ -174,7 +142,7 @@ const BodySection = styled.div<{ withoutPadding: BodyProps['withoutPadding'] }>`
 `
 
 interface BodyProps {
-  children: ReactNode | ReactNodeArray
+  children: ReactNode
   withoutPadding?: boolean
 }
 
@@ -230,6 +198,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
     status: cancelStatus = ButtonStatus.READY,
     text: cancelText = ButtonStatus.LOADING === cancelStatus ? 'Cancelling' : 'Cancel',
     testId: cancelTestId = '',
+    onClick: cancelOnClick,
     ...cancelProps
   } = cancelButtonProps
   const {
@@ -237,6 +206,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
     status: confirmStatus = ButtonStatus.READY,
     text: confirmText = ButtonStatus.LOADING === confirmStatus ? 'Submitting' : 'Submit',
     testId: confirmTestId = '',
+    onClick: confirmOnClick,
     ...confirmProps
   } = confirmButtonProps
 
@@ -246,9 +216,13 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
         size="md"
         color="primary"
         variant="outlined"
-        type={cancelProps?.onClick ? 'button' : 'submit'}
+        type={cancelOnClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
         data-testid={cancelTestId}
+        onClick={(e) => {
+          trackEvent(getModalEvent(cancelText))
+          cancelOnClick?.(e)
+        }}
         {...cancelProps}
       >
         {ButtonStatus.LOADING === cancelStatus ? (
@@ -262,9 +236,13 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
       </Button>
       <Button
         size="md"
-        type={confirmProps?.onClick ? 'button' : 'submit'}
+        type={confirmOnClick ? 'button' : 'submit'}
         disabled={confirmDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(confirmStatus)}
         data-testid={confirmTestId}
+        onClick={(e) => {
+          trackEvent(getModalEvent(confirmText))
+          confirmOnClick?.(e)
+        }}
         {...confirmProps}
       >
         {ButtonStatus.LOADING === confirmStatus ? (
@@ -281,7 +259,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
 }
 
 interface FooterProps {
-  children: ReactNode | ReactNodeArray
+  children: ReactNode
   withoutBorder?: boolean
 }
 

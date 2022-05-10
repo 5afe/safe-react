@@ -1,27 +1,41 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import { useState, ReactElement, useCallback, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { generatePath, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import { Modal } from 'src/components/Modal'
-
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
 import { getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
-import { SAFE_ROUTES } from 'src/routes/routes'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { generateSafeRoute, extractPrefixedSafeAddress, SAFE_ROUTES } from 'src/routes/routes'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 const FORM_ID = 'add-apps-form'
 
 const StyledTextFileAppName = styled(TextField)`
   && {
     width: 385px;
+    .MuiFormLabel-root {
+      &.Mui-disabled {
+        color: rgba(0, 0, 0, 0.54);
+        &.Mui-error {
+          color: ${(props) => props.theme.colors.error};
+        }
+      }
+    }
+    .MuiInputBase-root {
+      .MuiFilledInput-input {
+        color: rgba(0, 0, 0, 0.54);
+      }
+      &:before {
+        border-bottom-style: inset;
+      }
+    }
   }
 `
 
@@ -73,6 +87,8 @@ const INITIAL_VALUES: AddAppFormValues = {
 
 const DEFAULT_APP_INFO = getEmptySafeApp()
 
+const CUSTOM_SAFE_APPS_LINK = 'https://docs.gnosis-safe.io/build/sdks/safe-apps'
+
 interface AddAppProps {
   appList: SafeApp[]
   closeModal: () => void
@@ -80,20 +96,19 @@ interface AddAppProps {
 }
 
 const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement => {
-  const safeAddress = useSelector(safeAddressFromUrl)
-  const appsPath = generatePath(SAFE_ROUTES.APPS, {
-    safeAddress,
-  })
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(async () => {
+    trackEvent(SAFE_APPS_EVENTS.ADD_CUSTOM_APP)
     onAddApp(appInfo)
-    const goToApp = `${appsPath}?appUrl=${encodeURI(appInfo.url)}`
-    history.push(goToApp)
-  }, [history, appsPath, appInfo, onAddApp])
+    history.push({
+      pathname: generateSafeRoute(SAFE_ROUTES.APPS, extractPrefixedSafeAddress()),
+      search: `?appUrl=${encodeURIComponent(appInfo.url)}`,
+    })
+  }, [history, appInfo, onAddApp])
 
   useEffect(() => {
     if (isLoading) {
@@ -120,7 +135,7 @@ const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement =>
                 Safe Apps are third-party extensions.
               </Text>
               <StyledLink
-                href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
+                href={CUSTOM_SAFE_APPS_LINK}
                 target="_blank"
                 rel="noreferrer"
                 title="Learn more about building Safe Apps"
@@ -144,7 +159,7 @@ const AddApp = ({ appList, closeModal, onAddApp }: AddAppProps): ReactElement =>
               )}
               <StyledTextFileAppName
                 label="App name"
-                readOnly
+                disabled
                 meta={{ error: fetchError }}
                 value={isLoading ? 'Loading...' : appInfo.name === DEFAULT_APP_INFO.name ? '' : appInfo.name}
                 onChange={() => {}}

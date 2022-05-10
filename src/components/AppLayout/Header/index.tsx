@@ -1,63 +1,55 @@
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { lazy, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import { UserDetails } from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
+import { currentChainId } from 'src/logic/config/store/selectors'
 import {
   availableSelector,
   loadedSelector,
-  networkSelector,
   providerNameSelector,
   userAccountSelector,
+  userEnsSelector,
 } from 'src/logic/wallets/store/selectors'
-import { removeProvider } from 'src/logic/wallets/store/actions'
-import { canSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
-import { getNetworkId } from 'src/config'
-import { onboard } from 'src/components/ConnectButton'
-import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
+import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
+import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
+import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+
+const HidePairingModule = lazy(
+  () => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule'),
+)
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
+  const chainId = useSelector(currentChainId)
   const userAddress = useSelector(userAccountSelector)
-  const network = useSelector(networkSelector)
+  const ensName = useSelector(userEnsSelector)
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
-  const dispatch = useDispatch()
-  const showSwitchButton = canSwitchNetwork()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
-      const lastUsedProvider = await loadLastUsedProvider()
-      if (lastUsedProvider) {
-        await onboard.walletSelect(lastUsedProvider)
+      const lastUsedProvider = loadLastUsedProvider()
+      const isProviderEnabled = lastUsedProvider && isSupportedWallet(lastUsedProvider)
+      if (isProviderEnabled) {
+        await onboard().walletSelect(lastUsedProvider)
       }
     }
 
     tryToConnectToLastUsedProvider()
-  }, [])
+  }, [chainId])
 
   const openDashboard = () => {
-    const { wallet } = onboard.getState()
+    const { wallet } = onboard().getState()
     return wallet.type === 'sdk' && wallet.dashboard
   }
 
   const onDisconnect = () => {
-    dispatch(removeProvider())
-  }
-
-  const onNetworkChange = async () => {
-    const { wallet } = onboard.getState()
-    const desiredNetwork = getNetworkId()
-    try {
-      await switchNetwork(wallet, desiredNetwork)
-    } catch (e) {
-      e.log()
-      // Fallback to the onboard popup if switching isn't supported
-      await onboard.walletCheck()
-    }
+    onboard().walletReset()
   }
 
   const getProviderInfoBased = () => {
@@ -76,12 +68,11 @@ const HeaderComponent = (): React.ReactElement => {
     return (
       <UserDetails
         connected={available}
-        network={network}
         onDisconnect={onDisconnect}
-        onNetworkChange={showSwitchButton ? onNetworkChange : undefined}
         openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
+        ensName={ensName}
       />
     )
   }
@@ -89,7 +80,12 @@ const HeaderComponent = (): React.ReactElement => {
   const info = getProviderInfoBased()
   const details = getProviderDetailsBased()
 
-  return <Layout providerDetails={details} providerInfo={info} />
+  return (
+    <>
+      {isPairingSupported() && wrapInSuspense(<HidePairingModule />)}
+      <Layout providerDetails={details} providerInfo={info} />
+    </>
+  )
 }
 
 export default HeaderComponent

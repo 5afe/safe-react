@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import Switch from '@material-ui/core/Switch'
 
 import { styles } from './style'
@@ -9,19 +8,20 @@ import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import { EthAddressInput } from './EthAddressInput'
 import FormErrorMessage from './FormErrorMessage'
-import { Header } from './Header'
 import { MethodsDropdown } from './MethodsDropdown'
 import { RenderInputParams } from './RenderInputParams'
 import { RenderOutputParams } from './RenderOutputParams'
 import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
+import { ModalHeader } from '../ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -48,13 +48,13 @@ export interface ContractInteractionProps {
 const ContractInteraction: React.FC<ContractInteractionProps> = ({
   contractAddress,
   initialValues,
+  isABI,
   onClose,
   onNext,
   switchMethod,
-  isABI,
 }) => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const { safeAddress } = useSafeAddress()
   let setCallResults
 
   useMemo(() => {
@@ -94,7 +94,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
   return (
     <>
-      <Header onClose={onClose} subTitle="1 of 2" title="Contract interaction" />
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(1, 2)} title="Contract interaction" />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}
@@ -121,12 +121,12 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
-                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
+                <Paragraph color="disabled" noMargin size="lg">
                   <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
                   Use custom data (hex encoded)
                 </Paragraph>
               </Block>
-              <Buttons onClose={onClose} />
+              <Buttons onClose={onClose} requiresMethod />
             </>
           )
         }}

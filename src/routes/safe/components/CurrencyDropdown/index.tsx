@@ -17,38 +17,55 @@ import { availableCurrenciesSelector, currentCurrencySelector } from 'src/logic/
 import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import Img from 'src/components/layout/Img/index'
-import { getNetworkInfo } from 'src/config'
+import { getNativeCurrency } from 'src/config'
 import { sameString } from 'src/utils/strings'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { currentSafe } from 'src/logic/safe/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { Button } from '@material-ui/core'
+import { ASSETS_EVENTS } from 'src/utils/events/assets'
 
-const { nativeCoin } = getNetworkInfo()
-
-export const CurrencyDropdown = (): React.ReactElement | null => {
+export const CurrencyDropdown = ({ testId }: { testId: string }): React.ReactElement | null => {
   const dispatch = useDispatch()
+  const nativeCurrency = getNativeCurrency()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
   const { address } = useSelector(currentSafe)
   const [searchParams, setSearchParams] = useState('')
   const currenciesList = useSelector(availableCurrenciesSelector)
-  const tokenImage = nativeCoin.logoUri
+  const tokenImage = nativeCurrency.logoUri
   const classes = useDropdownStyles({})
   const currenciesListFiltered = currenciesList.filter((currency) =>
     currency.toLowerCase().includes(searchParams.toLowerCase()),
   )
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    trackEvent({
+      ...ASSETS_EVENTS.CURRENCY_MENU,
+      label: 'Open',
+    })
+
     setAnchorEl(event.currentTarget)
     import('currency-flags/dist/currency-flags.min.css' as string)
   }
 
   const handleClose = () => {
+    trackEvent({
+      ...ASSETS_EVENTS.CURRENCY_MENU,
+      label: 'Close',
+    })
+
     setAnchorEl(null)
   }
 
   const onCurrentCurrencyChangedHandler = async (newCurrencySelectedName: string): Promise<void> => {
+    trackEvent({
+      ...ASSETS_EVENTS.CHANGE_CURRENCY,
+      label: newCurrencySelectedName,
+    })
+
     handleClose()
-    await dispatch(fetchSafeTokens(address, newCurrencySelectedName))
+    dispatch(fetchSafeTokens(address, newCurrencySelectedName))
     dispatch(setSelectedCurrency({ selectedCurrency: newCurrencySelectedName }))
   }
 
@@ -59,11 +76,17 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
   return (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
-        <button className={classes.button} onClick={handleClick} type="button">
+        <Button
+          className={classes.button}
+          onClick={handleClick}
+          type="button"
+          variant="outlined"
+          data-testid={`${testId}-btn`}
+        >
           <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
             {selectedCurrency}
           </span>
-        </button>
+        </Button>
         <Menu
           anchorEl={anchorEl}
           anchorOrigin={{
@@ -108,9 +131,9 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
-                  {sameString(currencyName, nativeCoin.symbol) ? (
+                  {sameString(currencyName, nativeCurrency.symbol) ? (
                     <Img
-                      alt={nativeCoin.symbol.toLocaleLowerCase()}
+                      alt={nativeCurrency.symbol.toLocaleLowerCase()}
                       onError={setImageToPlaceholder}
                       src={tokenImage}
                       className={classNames(classes.etherFlag)}

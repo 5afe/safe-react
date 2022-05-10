@@ -7,17 +7,7 @@ const useLegalConsent = (): { consentReceived: boolean | undefined; onConsentRec
   const [consentReceived, setConsentReceived] = useState<boolean | undefined>()
 
   useEffect(() => {
-    const checkLegalDisclaimer = async () => {
-      const storedConsentReceived = await loadFromStorage(APPS_LEGAL_CONSENT_RECEIVED)
-
-      if (storedConsentReceived) {
-        setConsentReceived(true)
-      } else {
-        setConsentReceived(false)
-      }
-    }
-
-    checkLegalDisclaimer()
+    setConsentReceived(loadFromStorage(APPS_LEGAL_CONSENT_RECEIVED) || false)
   }, [])
 
   const onConsentReceipt = useCallback((): void => {

@@ -3,21 +3,33 @@ import { useSelector } from 'react-redux'
 import { sameString } from 'src/utils/strings'
 import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { AddressEx } from '@gnosis.pm/safe-react-gateway-sdk'
 
-type AddressInfo = { name: string | undefined; image: string | undefined }
+const DEFAULT_PROPS: AddressEx = {
+  value: '',
+  name: null,
+  logoUri: null,
+}
 
-type UseKnownAddressResponse = AddressInfo & { isAddressBook: boolean }
+export type KnownAddressType = AddressEx & { isInAddressBook: boolean }
+export const useKnownAddress = (props: AddressEx | null = DEFAULT_PROPS): KnownAddressType => {
+  const recipientName = useSelector((state) => addressBookEntryName(state, { address: props?.value || '' }))
 
-export const useKnownAddress = (address: string, addressInfo: AddressInfo): UseKnownAddressResponse => {
-  const recipientName = useSelector((state) => addressBookEntryName(state, { address }))
+  // Undefined known address
+  if (!props) {
+    return {
+      ...DEFAULT_PROPS,
+      isInAddressBook: false,
+    }
+  }
+
   // We have to check that the name returned is not UNKNOWN
   const isInAddressBook = !sameString(recipientName, ADDRESS_BOOK_DEFAULT_NAME)
+  const name = isInAddressBook && recipientName ? recipientName : props?.name
 
-  return isInAddressBook
-    ? {
-        name: recipientName,
-        image: undefined,
-        isAddressBook: true,
-      }
-    : { ...addressInfo, isAddressBook: false }
+  return {
+    ...props,
+    name,
+    isInAddressBook,
+  }
 }

@@ -1,4 +1,4 @@
-export const OwnersIcon = () => (
+export const OwnersIcon = (): React.ReactElement => (
   <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <g fill="none" fillRule="evenodd">
       <path d="M0 0h24v24H0z" />

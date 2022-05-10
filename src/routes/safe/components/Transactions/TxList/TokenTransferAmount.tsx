@@ -11,6 +11,10 @@ import { TokenTransferAsset } from './hooks/useAssetInfo'
 const Amount = styled(Text)`
   margin-left: 10px;
   line-height: 16px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const AmountWrapper = styled.div`

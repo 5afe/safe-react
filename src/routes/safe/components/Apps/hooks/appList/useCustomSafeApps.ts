@@ -13,7 +13,7 @@ type ReturnType = {
 
 type CustomSafeApp = StoredSafeApp
 
-/* 
+/*
   This hook is used to manage the list of custom safe apps.
   What it does:
   1. Loads a list of custom safe apps from local storage
@@ -48,9 +48,9 @@ const useCustomSafeApps = (): ReturnType => {
       })
     }
 
-    const loadCustomApps = async () => {
+    const loadCustomApps = () => {
       // recover apps from storage (third-party apps added by the user)
-      const storageAppList = (await loadFromStorage<CustomSafeApp[]>(APPS_STORAGE_KEY)) || []
+      const storageAppList = loadFromStorage<CustomSafeApp[]>(APPS_STORAGE_KEY) || []
       // if the app does not expose supported networks, include them. (backward compatible)
       const serializedApps = storageAppList.map(
         (app): SafeApp => ({

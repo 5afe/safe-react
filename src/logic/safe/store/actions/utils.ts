@@ -1,37 +1,37 @@
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
-import axios from 'axios'
+import { generatePath } from 'react-router-dom'
+import { SafeInfo, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
-import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { ChainId } from 'src/config/chain.d'
 
-export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
-  try {
-    const url = buildTxServiceUrl(safeAddress)
-    const response = await axios.get(url, { params: { limit: 1 } })
+import {
+  Transaction,
+  isMultisigExecutionInfo,
+  LocalTransactionStatus,
+  isMultiSigExecutionDetails,
+} from 'src/logic/safe/store/models/types/gateway.d'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
+import {
+  extractPrefixedSafeAddress,
+  getPrefixedSafeAddressSlug,
+  history,
+  SAFE_ADDRESS_SLUG,
+  SAFE_ROUTES,
+  TRANSACTION_ID_SLUG,
+} from 'src/routes/routes'
 
-    return response.data.results[0] || null
-  } catch (e) {
-    console.error('failed to retrieve last Tx from server', e)
-    return null
-  }
-}
-
-export const getNewTxNonce = async (lastTx: TxServiceModel | null, safeInstance: GnosisSafe): Promise<string> => {
-  // use current's safe nonce as fallback
-  return lastTx ? `${lastTx.nonce + 1}` : (await safeInstance.methods.nonce().call()).toString()
-}
-
-export const shouldExecuteTransaction = async (
+export const canExecuteCreatedTx = async (
   safeInstance: GnosisSafe,
   nonce: string,
-  lastTx: TxServiceModel | null,
+  lastTx: Transaction | null,
 ): Promise<boolean> => {
   const safeNonce = (await safeInstance.methods.nonce().call()).toString()
   const thresholdAsString = await safeInstance.methods.getThreshold().call()
@@ -52,12 +52,12 @@ export const shouldExecuteTransaction = async (
     return true
   }
 
-  // If the previous tx is not executed or the different between lastTx.nonce and nonce is > 1
-  // it's delayed using the approval mechanisms.
+  // If the previous tx is not executed or the difference between lastTx.nonce and nonce is > 1
+  // it's delayed using the approval mechanism.
   // Once the previous tx is executed, the current tx will be available to be executed
   // by the user using the exec button.
-  if (lastTx) {
-    return lastTx.isExecuted && lastTx.nonce + 1 === Number(nonce)
+  if (lastTx && isMultisigExecutionInfo(lastTx.executionInfo)) {
+    return lastTx.txStatus === LocalTransactionStatus.SUCCESS && lastTx.executionInfo.nonce + 1 === Number(nonce)
   }
 
   return false
@@ -78,7 +78,11 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   if (safeInfoModules.length) {
     safeInfo.modules = buildModulesLinkedList(safeInfoModules)
     try {
-      safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+      safeInfo.spendingLimits = await getSpendingLimits(
+        safeInfoModules,
+        remoteSafeInfo.address.value,
+        remoteSafeInfo.chainId,
+      )
     } catch (e) {
       e.log()
       safeInfo.spendingLimits = null
@@ -94,6 +98,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.collectiblesTag = remoteSafeInfo.collectiblesTag
   safeInfo.txQueuedTag = remoteSafeInfo.txQueuedTag
   safeInfo.txHistoryTag = remoteSafeInfo.txHistoryTag
+  safeInfo.chainId = remoteSafeInfo.chainId as ChainId
 
   return safeInfo
 }
@@ -117,4 +122,30 @@ export const buildSafeOwners = (
 
   // nothing to do without remote owners, so we return the stored list
   return localSafeOwners
+}
+
+export const getNonce = async (safeAddress: string, safeVersion: string): Promise<string> => {
+  let nextNonce: string
+  try {
+    nextNonce = (await getRecommendedNonce(safeAddress)).toString()
+  } catch (e) {
+    logError(Errors._616, e.message)
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+    nextNonce = await safeInstance.methods.nonce().call()
+  }
+  return nextNonce
+}
+
+export const navigateToTx = (safeAddress: string, txDetails: TransactionDetails): void => {
+  if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
+    return
+  }
+  const { shortName } = extractPrefixedSafeAddress()
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName, safeAddress })
+  const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
+    [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
+    [TRANSACTION_ID_SLUG]: txDetails.txId,
+  })
+
+  history.push(txRoute)
 }

@@ -5,9 +5,10 @@ import { isReadMethod } from 'src/routes/safe/components/Balances/SendModal/scre
 
 export interface ButtonProps {
   onClose: () => void
+  requiresMethod?: boolean
 }
 
-const Buttons = ({ onClose }: ButtonProps): React.ReactElement => {
+const Buttons = ({ onClose, requiresMethod }: ButtonProps): React.ReactElement => {
   const {
     input: { value: method },
   } = useField('selectedMethod', { subscription: { value: true } })
@@ -26,7 +27,11 @@ const Buttons = ({ onClose }: ButtonProps): React.ReactElement => {
       <Modal.Footer.Buttons
         cancelButtonProps={{ onClick: onClose }}
         confirmButtonProps={{
-          disabled: submitting || validating || ((!valid || !!submitError) && !modifiedSinceLastSubmit) || !method,
+          disabled:
+            submitting ||
+            validating ||
+            ((!valid || !!submitError) && !modifiedSinceLastSubmit) ||
+            (requiresMethod && !method),
           status: submitting || validating ? ButtonStatus.LOADING : ButtonStatus.READY,
           testId: `${isReadMethod(method) ? 'call' : 'review'}-tx-btn`,
           text: isReadMethod(method) ? 'Call' : 'Review',

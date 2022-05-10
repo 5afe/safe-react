@@ -19,13 +19,15 @@ export const cellWidth = (width?: string | number): CellWidth | undefined => {
 }
 
 class GnoTableHead extends React.PureComponent<any> {
-  changeSort = (property, orderAttr) => () => {
-    const { onSort } = this.props
+  changeSort =
+    (property: string, orderAttr: string): (() => void) =>
+    () => {
+      const { onSort } = this.props
 
-    onSort(property, orderAttr)
-  }
+      onSort(property, orderAttr)
+    }
 
-  render() {
+  render(): React.ReactElement {
     const { columns, order, orderBy } = this.props
 
     return (
@@ -35,7 +37,7 @@ class GnoTableHead extends React.PureComponent<any> {
             <TableCell
               align={column.align}
               key={column.id}
-              padding={column.disablePadding ? 'none' : 'default'}
+              padding={column.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === column.id ? order : false}
             >
               {column.static ? (

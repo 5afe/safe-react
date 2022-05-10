@@ -3,46 +3,98 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Link, useHistory } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp'
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown'
 
 import ListMui from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { FixedIcon } from '@gnosis.pm/safe-react-components'
+import { background, secondary, primaryLite, black500, gray500 } from 'src/theme/variables'
 
-const StyledListItem = styled(ListItem)<ListItemProps>`
+const ListItemWrapper = styled.div`
+  padding: 0 12px;
+`
+
+export const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
     margin: 4px 0;
   }
 
+  & .MuiListItemText-root span {
+    line-height: 1;
+  }
+
   &.MuiListItem-button:hover {
+    background-color: ${primaryLite};
     border-radius: 8px;
   }
 
+  &.MuiListItem-gutters {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  &.MuiListItem-root {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
   &.MuiListItem-root.Mui-selected {
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${primaryLite};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
       color: ${({ theme }) => theme.colors.primary};
+
+      & svg {
+        fill: ${({ theme }) => theme.colors.primary};
+      }
     }
     .icon-color {
       fill: ${({ theme }) => theme.colors.primary};
     }
   }
+
+  & .beamer_icon.active {
+    background-color: ${secondary} !important;
+    top: auto;
+    bottom: 10px;
+    left: 22px;
+    width: 6px;
+    height: 6px;
+    border: white solid 1px;
+    text-indent: -9000px;
+  }
 `
 
+const subItemLeftSpace = '10px'
 const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
-    margin: 4px 0;
+    margin: 4px 0 4px ${subItemLeftSpace};
+    width: calc(100% - ${subItemLeftSpace});
+
+    &::before {
+      content: '';
+      width: 6px;
+      height: 1px;
+      background: ${gray500};
+      position: absolute;
+      left: -${subItemLeftSpace};
+    }
+  }
+
+  & .MuiListItemText-root span {
+    line-height: 1;
   }
 
   &.MuiListItem-button:hover {
+    background-color: ${background};
     border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${background};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
     span {
@@ -54,26 +106,24 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 `
 
-const StyledListItemText = styled(ListItemText)`
+export const StyledListItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
-    font-size: 0.76em;
+    font-size: 14px;
     font-weight: 600;
     line-height: 1.5;
-    letter-spacing: 1px;
-    color: ${({ theme }) => theme.colors.placeHolder};
-    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: ${black500} !important;
   }
 `
 
 const StyledListSubItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
-    font-size: 0.85em;
+    font-size: 14px;
     font-weight: 400;
-    letter-spacing: 0px;
-    color: ${({ theme }) => theme.colors.placeHolder};
-    text-transform: none;
+    letter-spacing: 0;
+    color: ${black500} !important;
   }
 `
 
@@ -108,6 +158,20 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: 'darkgrey',
         outline: '1px solid #dadada',
         borderRadius: '20px',
+      },
+    },
+    listMui: {
+      marginLeft: '20px',
+      borderLeft: `1px solid ${gray500}`,
+
+      '&::after': {
+        content: '""',
+        height: '18px',
+        width: '1px',
+        position: 'absolute',
+        bottom: 0,
+        left: '-1px',
+        background: 'white',
       },
     },
     nested: {
@@ -168,7 +232,7 @@ const List = ({ items }: Props): React.ReactElement => {
         onClick={onClick}
         selected={item.selected || isSubItemSelected(item)}
       >
-        {item.icon && item.icon}
+        {item.icon && !isSubItem && item.icon}
 
         <TextAndBadgeWrapper>
           <StyledBadge badgeContent=" " color="error" invisible={!item.badge} variant="dot">
@@ -177,7 +241,11 @@ const List = ({ items }: Props): React.ReactElement => {
         </TextAndBadgeWrapper>
 
         {item.subItems &&
-          (groupCollapseStatus[item.href] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
+          (groupCollapseStatus[item.href] ? (
+            <KeyboardArrowUp fontSize="small" />
+          ) : (
+            <KeyboardArrowDown fontSize="small" />
+          ))}
       </ListItemAux>
     )
   }
@@ -199,16 +267,16 @@ const List = ({ items }: Props): React.ReactElement => {
       {items
         .filter(({ disabled }) => !disabled)
         .map((item) => (
-          <div key={item.label}>
+          <ListItemWrapper key={item.label}>
             {getListItem(item, false)}
             {item.subItems && (
               <Collapse in={groupCollapseStatus[item.href]} timeout="auto" unmountOnExit>
-                <ListMui component="div" disablePadding>
+                <ListMui component="div" disablePadding className={classes.listMui}>
                   {item.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
                 </ListMui>
               </Collapse>
             )}
-          </div>
+          </ListItemWrapper>
         ))}
     </ListMui>
   )

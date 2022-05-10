@@ -1,9 +1,6 @@
-import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import Close from '@material-ui/icons/Close'
 import { ReactElement, useEffect, useState, Fragment } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -11,27 +8,26 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { Modal } from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
 import { styles } from './style'
-import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-
-export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { Overline } from 'src/components/layout/Typography'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 const useStyles = makeStyles(styles)
 
 type ReviewAddOwnerProps = {
   onClickBack: () => void
   onClose: () => void
-  onSubmit: (txParameters: TxParameters) => void
+  onSubmit: (txParameters: TxParameters, delayExecution: boolean) => void
   values: OwnerValues
 }
 
@@ -44,42 +40,25 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     owners,
     currentVersion: safeVersion,
   } = useSelector(currentSafeWithNames)
-  const [manualSafeTxGas, setManualSafeTxGas] = useState('0')
-  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
-  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-
-  const {
-    gasLimit,
-    gasEstimation,
-    gasCostFormatted,
-    gasPriceFormatted,
-    txEstimationExecutionStatus,
-    isExecution,
-    isOffChainSignature,
-    isCreation,
-  } = useEstimateTransactionGas({
-    txData: data,
-    txRecipient: safeAddress,
-    safeTxGas: manualSafeTxGas,
-    manualGasPrice,
-    manualGasLimit,
-  })
-
-  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+  const connectedWalletAddress = useSelector(userAccountSelector)
 
   useEffect(() => {
     let isCurrent = true
 
-    const calculateAddOwnerData = () => {
+    const calculateAddOwnerData = async () => {
       try {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-        const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+        const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+        const safeTx = await sdk.getAddOwnerTx(
+          { ownerAddress: values.ownerAddress, threshold: +values.threshold },
+          { safeTxGas: 0 },
+        )
+        const txData = safeTx.data.data
 
         if (isCurrent) {
           setData(txData)
         }
       } catch (error) {
-        console.error('Error calculating ERC721 transfer data:', error.message)
+        logError(Errors._811, error.message)
       }
     }
     calculateAddOwnerData()
@@ -87,154 +66,82 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, safeVersion, values.ownerAddress, values.threshold])
-
-  const closeEditModalCallback = (txParameters: TxParameters) => {
-    const oldGasPrice = gasPriceFormatted
-    const newGasPrice = txParameters.ethGasPrice
-    const oldSafeTxGas = gasEstimation
-    const newSafeTxGas = txParameters.safeTxGas
-
-    if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(txParameters.ethGasPrice)
-    }
-
-    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
-      setManualGasLimit(txParameters.ethGasLimit)
-    }
-
-    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
-      setManualSafeTxGas(newSafeTxGas)
-    }
-  }
+  }, [connectedWalletAddress, safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   return (
-    <EditableTxParameters
-      isOffChainSignature={isOffChainSignature}
-      isExecution={isExecution}
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation}
-      closeEditModalCallback={closeEditModalCallback}
-    >
-      {(txParameters, toggleEditMode) => (
-        <>
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.manage} noMargin weight="bolder">
-              Add new owner
-            </Paragraph>
-            <Paragraph className={classes.annotation}>3 of 3</Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
-          <Hairline />
-          <Block>
-            <Row className={classes.root}>
-              <Col layout="column" xs={4}>
-                <Block className={classes.details}>
-                  <Block margin="lg">
-                    <Paragraph color="primary" noMargin size="lg">
-                      Details
-                    </Paragraph>
-                  </Block>
-                  <Block margin="lg">
-                    <Paragraph color="disabled" noMargin size="sm">
-                      Safe name
-                    </Paragraph>
-                    <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {safeName}
-                    </Paragraph>
-                  </Block>
-                  <Block margin="lg">
-                    <Paragraph color="disabled" noMargin size="sm">
-                      Any transaction requires the confirmation of:
-                    </Paragraph>
-                    <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${values.threshold} out of ${(owners?.length || 0) + 1} owner(s)`}
-                    </Paragraph>
-                  </Block>
-                </Block>
-              </Col>
-              <Col className={classes.owners} layout="column" xs={8}>
-                <Row className={classes.ownersTitle}>
-                  <Paragraph color="primary" noMargin size="lg">
-                    {`${(owners?.length || 0) + 1} Safe owner(s)`}
-                  </Paragraph>
-                </Row>
-                <Hairline />
-                {owners?.map((owner) => (
-                  <Fragment key={owner.address}>
-                    <Row className={classes.owner}>
-                      <Col align="center" xs={12}>
-                        <EthHashInfo
-                          hash={owner.address}
-                          name={owner.name}
-                          showCopyBtn
-                          showAvatar
-                          explorerUrl={getExplorerInfo(owner.address)}
-                        />
-                      </Col>
-                    </Row>
-                    <Hairline />
-                  </Fragment>
-                ))}
-                <Row align="center" className={classes.info}>
-                  <Paragraph color="primary" noMargin size="md" weight="bolder">
-                    ADDING NEW OWNER &darr;
-                  </Paragraph>
-                </Row>
-                <Hairline />
-                <Row className={classes.selectedOwner} data-testid="add-owner-review">
+    <TxModalWrapper txData={data} onSubmit={onSubmit} onBack={onClickBack}>
+      <ModalHeader onClose={onClose} title="Add new owner" subTitle={getStepTitle(3, 3)} />
+      <Hairline />
+      <Block margin="md">
+        <Row className={classes.root}>
+          <Col layout="column" xs={4}>
+            <Block className={classes.details}>
+              <Block margin="lg">
+                <Paragraph color="primary" noMargin size="lg">
+                  Details
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph color="disabled" noMargin size="sm">
+                  Safe name
+                </Paragraph>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+                  {safeName}
+                </Paragraph>
+              </Block>
+              <Block margin="lg">
+                <Paragraph color="disabled" noMargin size="sm">
+                  Any transaction requires the confirmation of:
+                </Paragraph>
+                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+                  {`${values.threshold} out of ${(owners?.length || 0) + 1} owner(s)`}
+                </Paragraph>
+              </Block>
+            </Block>
+          </Col>
+          <Col className={classes.owners} layout="column" xs={8}>
+            <Row className={classes.ownersTitle}>
+              <Paragraph color="primary" noMargin size="lg">
+                {`${(owners?.length || 0) + 1} Safe owner(s)`}
+              </Paragraph>
+            </Row>
+            <Hairline />
+            {owners?.map((owner) => (
+              <Fragment key={owner.address}>
+                <Row className={classes.owner}>
                   <Col align="center" xs={12}>
-                    <EthHashInfo
-                      hash={values.ownerAddress}
-                      name={values.ownerName}
+                    <PrefixedEthHashInfo
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(values.ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>
                 <Hairline />
+              </Fragment>
+            ))}
+            <Row align="center" className={classes.info}>
+              <Overline noMargin>ADDING NEW OWNER &darr;</Overline>
+            </Row>
+            <Hairline />
+            <Row className={classes.selectedOwner} data-testid="add-owner-review">
+              <Col align="center" xs={12}>
+                <PrefixedEthHashInfo
+                  hash={values.ownerAddress}
+                  name={values.ownerName}
+                  showCopyBtn
+                  showAvatar
+                  explorerUrl={getExplorerInfo(values.ownerAddress)}
+                />
               </Col>
             </Row>
-          </Block>
-          <Hairline />
-
-          {/* Tx Parameters */}
-          <TxParametersDetail
-            txParameters={txParameters}
-            onEdit={toggleEditMode}
-            compact={false}
-            isTransactionCreation={isCreation}
-            isTransactionExecution={isExecution}
-            isOffChainSignature={isOffChainSignature}
-          />
-
-          <Block className={classes.gasCostsContainer}>
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </Block>
-          <Hairline />
-          <Row align="center" className={classes.buttonRow}>
-            <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
-              confirmButtonProps={{
-                onClick: () => onSubmit(txParameters),
-                status: buttonStatus,
-                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
-                testId: ADD_OWNER_SUBMIT_BTN_TEST_ID,
-              }}
-            />
-          </Row>
-        </>
-      )}
-    </EditableTxParameters>
+            <Hairline />
+          </Col>
+        </Row>
+        <Hairline />
+      </Block>
+    </TxModalWrapper>
   )
 }

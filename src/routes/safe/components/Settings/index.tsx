@@ -1,19 +1,21 @@
 import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
-import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
+import { LoadingContainer } from 'src/components/LoaderContainer'
 import { styles } from './style'
-
-import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import Track from 'src/components/Track'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const Advanced = lazy(() => import('./Advanced'))
 const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
@@ -21,6 +23,7 @@ const ManageOwners = lazy(() => import('./ManageOwners'))
 const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
 const SafeDetails = lazy(() => import('./SafeDetails'))
 const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
+const Appearance = lazy(() => import('./Appearance'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -33,40 +36,36 @@ const useStyles = makeStyles(styles)
 const Settings = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
+  const { shortName, safeAddress } = useSafeAddress()
+  const { owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
-  const matchSafeWithAction = useRouteMatch({
-    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
-  }) as {
-    url: string
-    params: Record<string, string>
-  }
+
+  // Question mark makes matching [SAFE_SUBSECTION_SLUG] optional
+  const matchSafeWithSettingSection = useRouteMatch(`${SAFE_SUBSECTION_ROUTE}?`)
+
+  const currentSafeRoutes = generatePrefixedAddressRoutes({
+    shortName,
+    safeAddress,
+  })
 
   let settingsSection
-  switch (matchSafeWithAction.url) {
-    case generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-      safeAddress,
-    }):
+  switch (matchSafeWithSettingSection?.url) {
+    case currentSafeRoutes.SETTINGS_DETAILS:
       settingsSection = 'Safe Details'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
-      safeAddress,
-    }):
+    case currentSafeRoutes.SETTINGS_APPEARANCE:
+      settingsSection = 'Appearance'
+      break
+    case currentSafeRoutes.SETTINGS_OWNERS:
       settingsSection = 'Owners'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
-      safeAddress,
-    }):
+    case currentSafeRoutes.SETTINGS_POLICIES:
       settingsSection = 'Policies'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
-      safeAddress,
-    }):
+    case currentSafeRoutes.SETTINGS_SPENDING_LIMIT:
       settingsSection = 'Spending Limit'
       break
-    case generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
-      safeAddress,
-    }):
+    case currentSafeRoutes.SETTINGS_ADVANCED:
       settingsSection = 'Advanced'
       break
     default:
@@ -98,55 +97,33 @@ const Settings = (): React.ReactElement => {
         </Col>
         {!loadedViaUrl ? (
           <Col end="sm" sm={6} xs={12}>
-            <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
-              <Span className={classes.links}>Remove Safe</Span>
-              <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
-            </ButtonLink>
+            <Track {...SETTINGS_EVENTS.OWNERS.REMOVE_SAFE}>
+              <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
+                <Span className={classes.links}>Remove Safe</Span>
+                <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
+              </ButtonLink>
+            </Track>
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
           </Col>
         ) : (
-          <Col end="sm" sm={6} xs={12}></Col>
+          <Col end="sm" sm={6} xs={12} />
         )}
       </Menu>
       <Block className={classes.root}>
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>
             <Switch>
+              <Route path={SAFE_ROUTES.SETTINGS_DETAILS} exact render={() => <SafeDetails />} />
+              <Route path={SAFE_ROUTES.SETTINGS_APPEARANCE} exact render={() => <Appearance />} />
               <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <SafeDetails />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
-                  safeAddress,
-                })}
+                path={SAFE_ROUTES.SETTINGS_OWNERS}
                 exact
                 render={() => <ManageOwners granted={granted} owners={owners} />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <ThresholdSettings />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <SpendingLimitSettings />}
-              ></Route>
-              <Route
-                path={generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
-                  safeAddress,
-                })}
-                exact
-                render={() => <Advanced />}
-              ></Route>
+              />
+              <Route path={SAFE_ROUTES.SETTINGS_POLICIES} exact render={() => <ThresholdSettings />} />
+              <Route path={SAFE_ROUTES.SETTINGS_SPENDING_LIMIT} exact render={() => <SpendingLimitSettings />} />
+              <Route path={SAFE_ROUTES.SETTINGS_ADVANCED} exact render={() => <Advanced />} />
+              <Redirect to={SAFE_ROUTES.SETTINGS_DETAILS} />
             </Switch>
           </Block>
         </Col>

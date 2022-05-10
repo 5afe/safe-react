@@ -1,5 +1,5 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import { Fragment, ReactElement, useContext } from 'react'
+import { Fragment, ReactElement, useContext, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
@@ -19,6 +19,8 @@ import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
+import { TxActionProvider } from './TxActionProvider'
+import { ActionModal } from './ActionModal'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
@@ -57,24 +59,33 @@ type QueueTransactionProps = {
   transactions: Transaction[]
 }
 
-const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement =>
-  transactions.length > 1 ? (
-    <GroupedTransactionsCard>
+const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
+  const [nrChildrenExpanded, setNrChildrenExpanded] = useState(0)
+
+  const handleChildExpand = (expand: number) => {
+    setNrChildrenExpanded((val) => val + expand)
+  }
+
+  if (transactions.length === 1) {
+    return <TxQueueRow transaction={transactions[0]} />
+  }
+
+  return (
+    <GroupedTransactionsCard expanded={!!nrChildrenExpanded}>
       <TxHoverProvider>
         <Disclaimer nonce={nonce} />
         <GroupedTransactions>
           {transactions.map((transaction, index) => (
             <Fragment key={`${nonce}-${transaction.id}`}>
               <TreeView firstElement={!index} />
-              <TxQueueRow isGrouped transaction={transaction} />
+              <TxQueueRow isGrouped transaction={transaction} onChildExpand={handleChildExpand} />
             </Fragment>
           ))}
         </GroupedTransactions>
       </TxHoverProvider>
     </GroupedTransactionsCard>
-  ) : (
-    <TxQueueRow transaction={transactions[0]} />
   )
+}
 
 type QueueTxListProps = {
   transactions: TransactionDetails['transactions']
@@ -83,10 +94,6 @@ type QueueTxListProps = {
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const nonce = useSelector(currentSafeNonce)
-  const title =
-    txLocation === 'queued.next'
-      ? 'NEXT TRANSACTION'
-      : `QUEUE - Transaction with nonce ${nonce} needs to be executed first`
 
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {
@@ -98,14 +105,22 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
     }
   }
 
+  const title =
+    txLocation === 'queued.next'
+      ? 'NEXT TRANSACTION'
+      : `QUEUE - Transaction with nonce ${nonce} needs to be executed first`
+
   return (
-    <StyledTransactionsGroup>
-      <SubTitle size="lg">{title}</SubTitle>
-      <StyledTransactions>
-        {transactions.map(([nonce, txs]) => (
-          <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
-        ))}
-      </StyledTransactions>
-    </StyledTransactionsGroup>
+    <TxActionProvider>
+      <StyledTransactionsGroup>
+        <SubTitle size="lg">{title}</SubTitle>
+        <StyledTransactions>
+          {transactions.map(([nonce, txs]) => (
+            <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
+          ))}
+        </StyledTransactions>
+      </StyledTransactionsGroup>
+      <ActionModal />
+    </TxActionProvider>
   )
 }

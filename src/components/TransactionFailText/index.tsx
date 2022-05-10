@@ -1,14 +1,23 @@
 import { createStyles, makeStyles } from '@material-ui/core'
 import { sm } from 'src/theme/variables'
-import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
 import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 
 import { useSelector } from 'react-redux'
-import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
+import { grantedSelector, sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
+import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+
+enum ErrorMessage {
+  general = 'This transaction will most likely fail.',
+  creation = 'To save gas costs, avoid creating the transaction.',
+  execution = 'To save gas costs, reject this transaction.',
+  notOwner = `You are currently not an owner of this Safe and won't be able to submit this transaction.`,
+  wrongChain = 'Your wallet is connected to the wrong chain.',
+  sameAddress = `Cannot execute a transaction from the Safe itself, please connect a different account.`,
+}
 
 const styles = createStyles({
   executionWarningRow: {
@@ -23,41 +32,48 @@ const styles = createStyles({
 const useStyles = makeStyles(styles)
 
 type TransactionFailTextProps = {
-  txEstimationExecutionStatus: EstimationStatus
   isExecution: boolean
+  isCreation: boolean
+  estimationStatus: EstimationStatus
 }
 
 export const TransactionFailText = ({
-  txEstimationExecutionStatus,
   isExecution,
+  isCreation,
+  estimationStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
-  const threshold = useSelector(currentSafeThreshold)
+  const isWrongChain = useSelector(shouldSwitchWalletChain)
   const isOwner = useSelector(grantedSelector)
+  const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
 
-  if (txEstimationExecutionStatus !== EstimationStatus.FAILURE && isOwner) {
-    return null
-  }
+  const showError =
+    isWrongChain ||
+    (isExecution && estimationStatus === EstimationStatus.FAILURE) ||
+    (isCreation && !isOwner) ||
+    isSameAddressAsSafe
+  if (!showError) return null
 
-  let errorMessage = 'To save gas costs, avoid creating the transaction.'
-  if (isExecution) {
-    errorMessage =
-      threshold && threshold > 1
-        ? `To save gas costs, reject this transaction`
-        : `To save gas costs, avoid executing the transaction.`
-  }
+  const errorDesc = isCreation ? ErrorMessage.creation : ErrorMessage.execution
+  const defaultMsg = `${ErrorMessage.general} ${errorDesc}`
+
+  const error = isWrongChain
+    ? ErrorMessage.wrongChain
+    : isCreation && !isOwner
+    ? ErrorMessage.notOwner
+    : isSameAddressAsSafe
+    ? ErrorMessage.sameAddress
+    : defaultMsg
 
   return (
     <Row align="center">
       <Paragraph color="error" className={classes.executionWarningRow}>
         <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-
-        {isOwner ? (
-          <>This transaction will most likely fail. {errorMessage}</>
-        ) : (
-          <>You are currently not an owner of this Safe and won&apos;t be able to submit this tx.</>
-        )}
+        {error}
       </Paragraph>
     </Row>
   )
 }
+
+// For tests
+export const _ErrorMessage = ErrorMessage

@@ -1,6 +1,7 @@
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { Record, RecordOf } from 'immutable'
+import { ChainId } from 'src/config/chain.d'
 
-import { FEATURES } from 'src/config/networks/network.d'
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 export type SafeOwner = string
@@ -24,6 +25,7 @@ export type SpendingLimit = {
 
 export type SafeRecordProps = {
   address: string
+  chainId?: ChainId
   threshold: number
   ethBalance: string
   totalFiatBalance: string
@@ -31,11 +33,12 @@ export type SafeRecordProps = {
   modules?: ModulePair[] | null
   spendingLimits?: SpendingLimit[] | null
   balances: BalanceRecord[]
+  loaded: boolean
   nonce: number
   recurringUser?: boolean
   currentVersion: string
   needsUpdate: boolean
-  featuresEnabled: Array<FEATURES>
+  featuresEnabled: FEATURES[]
   loadedViaUrl: boolean
   guard: string
   collectiblesTag: string
@@ -43,8 +46,12 @@ export type SafeRecordProps = {
   txHistoryTag: string
 }
 
+/**
+ * Create a safe record defaulting to these values
+ */
 const makeSafe = Record<SafeRecordProps>({
   address: '',
+  chainId: undefined,
   threshold: 0,
   ethBalance: '0',
   totalFiatBalance: '0',
@@ -52,6 +59,7 @@ const makeSafe = Record<SafeRecordProps>({
   modules: [],
   spendingLimits: [],
   balances: [],
+  loaded: false,
   nonce: 0,
   recurringUser: undefined,
   currentVersion: '',

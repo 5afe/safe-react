@@ -1,6 +1,4 @@
-import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import Close from '@material-ui/icons/Close'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -18,6 +16,8 @@ import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
+import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
@@ -34,7 +34,7 @@ type Props = {
 
 export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
-  const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
+  const { owners, threshold = 1 } = useSelector(currentSafe)
   const ownersCount = owners?.length ?? 0
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -43,15 +43,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Remove owner
-        </Paragraph>
-        <Paragraph className={classes.annotation}>2 of 3</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
+      <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 3)} title="Remove owner" />
       <Hairline />
       <GnoForm
         initialValues={{ threshold: initialValues.threshold || defaultThreshold.toString() }}

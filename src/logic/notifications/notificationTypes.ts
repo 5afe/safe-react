@@ -27,6 +27,7 @@ enum NOTIFICATION_IDS {
   TX_CANCELLATION_EXECUTED_MSG,
   TX_FAILED_MSG,
   TX_PENDING_MSG,
+  TX_PENDING_FAILED_MSG,
   TX_WAITING_MSG,
   TX_CONFIRMATION_EXECUTED_MSG,
   TX_CONFIRMATION_FAILED_MSG,
@@ -39,7 +40,6 @@ enum NOTIFICATION_IDS {
   SETTINGS_CHANGE_EXECUTED_MSG,
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG,
   SETTINGS_CHANGE_FAILED_MSG,
-  TESTNET_VERSION_MSG,
   SIGN_NEW_SPENDING_LIMIT_MSG,
   NEW_SPENDING_LIMIT_REJECTED_MSG,
   NEW_SPENDING_LIMIT_EXECUTED_MSG,
@@ -97,6 +97,10 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
   TX_PENDING_MSG: {
     message: 'Transaction still pending. Consider resubmitting with a higher gas price.',
+    options: { variant: ERROR, persist: true, autoHideDuration: shortDuration },
+  },
+  TX_PENDING_FAILED_MSG: {
+    message: 'Transaction wasn’t mined, please make sure it was properly sent. Be aware that it might still be mined.',
     options: { variant: ERROR, persist: true, autoHideDuration: shortDuration },
   },
   TX_WAITING_MSG: {
@@ -201,12 +205,6 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   REMOVE_SPENDING_LIMIT_FAILED_MSG: {
     message: 'Remove spending limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
-  },
-
-  // Network
-  TESTNET_VERSION_MSG: {
-    message: "Testnet Version: Don't send production assets to this Safe",
-    options: { variant: WARNING, persist: false, preventDuplicate: true, autoHideDuration: longDuration },
   },
 
   // Address book

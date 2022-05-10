@@ -5,7 +5,7 @@ import { adjustV } from './utils'
 
 const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED'
 
-type EthSignerArgs = {
+export type EthSignerArgs = {
   safeTxHash: string
   sender: string
 }

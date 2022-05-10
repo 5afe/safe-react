@@ -1,12 +1,9 @@
+import { SafeAppData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { FETCH_STATUS } from 'src/utils/requests'
 
-export type SafeApp = {
+export type SafeApp = Omit<SafeAppData, 'id'> & {
   id: string
-  url: string
-  name: string
-  iconUrl: string
   disabled?: boolean
-  description: string
   fetchStatus: FETCH_STATUS
   custom?: boolean
 }

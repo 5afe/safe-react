@@ -1,4 +1,3 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -7,7 +6,9 @@ import { sameString } from 'src/utils/strings'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
+import { TransactionData, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { StyledDetailsTitle, StyledTxInfoDetails } from 'src/routes/safe/components/Transactions/TxList/styled'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'
@@ -24,14 +25,22 @@ export const isSpendingLimitMethod = (method?: string): boolean => {
   return isSetAllowance(method) || isDeleteAllowance(method)
 }
 
-const SpendingLimitRow = styled.div`
-  margin-bottom: 16px;
+const StyledInfoBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `
 
-export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
+type SpendingLimitProps = {
+  txData: TransactionData
+  txInfo: TransactionInfo
+}
+
+export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProps): React.ReactElement => {
+  const { dataDecoded } = txData
   const [beneficiary, tokenAddress, amount, resetTimeMin] = useMemo(
-    () => data.parameters?.map(({ value }) => value) ?? [],
-    [data.parameters],
+    () => dataDecoded?.parameters?.map(({ value }) => value) ?? [],
+    [dataDecoded?.parameters],
   )
 
   const resetTimeLabel = useMemo(
@@ -40,44 +49,66 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
   )
 
   const tokenInfo = useTokenInfo(tokenAddress as string)
+  const txTo = getTxTo({ txInfo })
 
   return (
-    <>
-      <SpendingLimitRow>
-        <Text size="xl" strong>
-          Modify spending limit:
-        </Text>
-      </SpendingLimitRow>
-      <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary as string} />
-      </SpendingLimitRow>
-      <SpendingLimitRow>
-        {tokenInfo && (
-          <TokenInfo amount={fromTokenUnit(amount as string, tokenInfo.decimals)} title="Amount" token={tokenInfo} />
-        )}
-      </SpendingLimitRow>
-      <SpendingLimitRow>
-        <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
-      </SpendingLimitRow>
-    </>
+    <StyledTxInfoDetails>
+      <StyledDetailsTitle size="xl" strong>
+        Modify spending limit:
+      </StyledDetailsTitle>
+      <StyledInfoBlock>
+        <AddressInfo
+          title="Beneficiary"
+          address={(beneficiary as string) || txTo?.value || '0x'}
+          name={txTo?.name || undefined}
+          logoUri={txTo?.logoUri || undefined}
+          color="placeHolder"
+        />
+      </StyledInfoBlock>
+      {tokenInfo && (
+        <StyledInfoBlock>
+          <TokenInfo
+            amount={fromTokenUnit(amount as string, tokenInfo.decimals)}
+            title="Amount"
+            token={tokenInfo}
+            color="placeHolder"
+          />
+        </StyledInfoBlock>
+      )}
+      <StyledInfoBlock>
+        <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
+      </StyledInfoBlock>
+    </StyledTxInfoDetails>
   )
 }
 
-export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  const [beneficiary, tokenAddress] = useMemo(() => data.parameters?.map(({ value }) => value) ?? [], [data.parameters])
+export const DeleteSpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProps): React.ReactElement => {
+  const { dataDecoded } = txData
+  const [beneficiary, tokenAddress] = useMemo(
+    () => dataDecoded?.parameters?.map(({ value }) => value) ?? [],
+    [dataDecoded?.parameters],
+  )
   const tokenInfo = useTokenInfo(tokenAddress as string)
+  const txTo = getTxTo({ txInfo })
 
   return (
-    <>
-      <SpendingLimitRow>
-        <Text size="xl" strong>
-          Delete spending limit:
-        </Text>
-      </SpendingLimitRow>
-      <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary as string} />
-      </SpendingLimitRow>
-      <SpendingLimitRow>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</SpendingLimitRow>
-    </>
+    <StyledTxInfoDetails>
+      <StyledDetailsTitle size="xl" strong>
+        Delete spending limit:
+      </StyledDetailsTitle>
+      <StyledInfoBlock>
+        <AddressInfo
+          title="Beneficiary"
+          address={(beneficiary as string) || txTo?.value || '0x'}
+          name={txTo?.name || undefined}
+          logoUri={txTo?.logoUri || undefined}
+        />
+      </StyledInfoBlock>
+      {tokenInfo && (
+        <StyledInfoBlock>
+          <TokenInfo amount="" title="Token" token={tokenInfo} />
+        </StyledInfoBlock>
+      )}
+    </StyledTxInfoDetails>
   )
 }

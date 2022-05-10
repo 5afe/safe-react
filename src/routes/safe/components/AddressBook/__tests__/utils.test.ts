@@ -1,7 +1,6 @@
 import {
   WRONG_FILE_EXTENSION_ERROR,
   FILE_SIZE_TOO_BIG_ERROR,
-  IMPORT_SUPPORTED_FORMATS,
   validateFile,
   validateCsvData,
   CsvDataType,
@@ -9,26 +8,32 @@ import {
 
 describe('Address Book file validations', () => {
   it('Should return wrong file extension error if file type is not allowed', () => {
-    const file = new File([''], 'file.txt', { type: 'text/plain' })
+    const file = new File([''], 'file.txt', { type: 'audio/wav' })
     const result = validateFile(file)
     expect(result).toBe(WRONG_FILE_EXTENSION_ERROR)
   })
 
   it('Should return wrong file extension error if file extension is not valid', () => {
-    const file = new File([''], 'file.txt', { type: IMPORT_SUPPORTED_FORMATS[0] })
+    const file = new File([''], 'file.doc', { type: 'text/csv' })
     const result = validateFile(file)
     expect(result).toBe(WRONG_FILE_EXTENSION_ERROR)
   })
 
   it('Should return file size error if file size is over the allowed', () => {
-    const file = new File([''], 'file.csv', { type: IMPORT_SUPPORTED_FORMATS[0] })
+    const file = new File([''], 'file.csv', { type: 'text/csv' })
     Object.defineProperty(file, 'size', { value: 1024 * 1024 + 1 })
     const result = validateFile(file)
     expect(result).toBe(FILE_SIZE_TOO_BIG_ERROR)
   })
 
   it('Should return undefined if extension and file size are valid', () => {
-    const file = new File([''], 'file.csv', { type: IMPORT_SUPPORTED_FORMATS[0] })
+    const file = new File([''], 'file.csv', { type: 'text/csv' })
+    const result = validateFile(file)
+    expect(result).toBe(undefined)
+  })
+
+  it('Should accept valid file names', () => {
+    const file = new File([''], 'file (1).txt', { type: 'text/plain' })
     const result = validateFile(file)
     expect(result).toBe(undefined)
   })

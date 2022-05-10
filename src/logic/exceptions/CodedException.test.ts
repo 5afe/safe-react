@@ -2,10 +2,25 @@ import { Errors, logError, trackError, CodedException } from './CodedException'
 import * as constants from 'src/utils/constants'
 import * as Sentry from '@sentry/react'
 
-jest.mock('@sentry/react')
-jest.mock('src/utils/constants')
-
 describe('CodedException', () => {
+  beforeAll(() => {
+    jest.mock('@sentry/react')
+    jest.mock('src/utils/constants')
+    ;(constants as any).IS_PRODUCTION = false
+    console.error = jest.fn()
+    // @ts-ignore
+    Sentry.captureException = jest.fn()
+  })
+
+  afterAll(() => {
+    jest.unmock('console')
+    jest.unmock('@sentry/react')
+  })
+
+  afterEach(() => {
+    ;(constants as any).IS_PRODUCTION = false
+  })
+
   it('throws an error if code is not found', () => {
     expect(Errors.___0).toBe('0: No such error code')
 
@@ -56,18 +71,6 @@ describe('CodedException', () => {
   })
 
   describe('Logging', () => {
-    beforeAll(() => {
-      jest.mock('console')
-      console.error = jest.fn()
-    })
-    afterAll(() => {
-      jest.unmock('console')
-    })
-
-    afterEach(() => {
-      ;(constants as any).IS_PRODUCTION = false
-    })
-
     it('logs to the console', () => {
       const err = logError(Errors._100, '123')
       expect(err.message).toBe('Code 100: Invalid input in the address field (123)')
@@ -90,18 +93,6 @@ describe('CodedException', () => {
   })
 
   describe('Tracking', () => {
-    beforeAll(() => {
-      jest.mock('console')
-      console.error = jest.fn()
-    })
-    afterAll(() => {
-      jest.unmock('console')
-    })
-
-    afterEach(() => {
-      ;(constants as any).IS_PRODUCTION = false
-    })
-
     it('tracks using Sentry on production', () => {
       ;(constants as any).IS_PRODUCTION = true
       const err = trackError(Errors._100)

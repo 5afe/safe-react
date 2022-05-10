@@ -7,7 +7,6 @@ env:
   REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
   REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
   REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
-  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
   REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
   REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
 jobs:
@@ -18,7 +17,7 @@ jobs:
       fail-fast: false
       max-parallel: 15
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-18.04]
+        os: [macos-10.15, windows-latest, ubuntu-18.04]
 
     steps:
       - name: Check out Git repository
@@ -48,7 +47,7 @@ jobs:
           # macOS notarization API key
           APPLEID: ${{ secrets.APPLE_ID }}
           APPLEIDPASS: ${{ secrets.APPLE_ID_PASS }}
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: samuelmeuli/action-electron-builder@92327c67bc45ff7c38bf55d8aa8c4d75b7ea38e7
         with:
           #Build scipt
           build_script_name: build-desktop
@@ -71,18 +70,18 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Desktop OSX
-          path: ./dist/Safe[ ]Multisig*.dmg
+          path: ./dist/Safe*.dmg
 
       - name: 'Upload Artifacts Linux'
         if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Linux
-          path: ./dist/Safe[ ]Multisig*.AppImage
+          path: ./dist/Safe*.AppImage
 
       - name: 'Upload Artifacts Windows'
         if: startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Windows
-          path: ./dist/Safe[ ]Multisig*.exe
+          path: ./dist/Safe*.exe

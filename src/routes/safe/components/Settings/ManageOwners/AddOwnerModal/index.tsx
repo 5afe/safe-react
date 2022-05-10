@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { currentSafe } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
@@ -15,6 +14,14 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
+import { getSafeSDK } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { currentSafe, currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import { store } from 'src/store'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type OwnerValues = {
   ownerAddress: string
@@ -28,11 +35,17 @@ export const sendAddOwner = async (
   safeVersion: string,
   txParameters: TxParameters,
   dispatch: Dispatch,
+  connectedWalletAddress: string,
+  delayExecution: boolean,
 ): Promise<void> => {
-  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-  const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+  const sdk = await getSafeSDK(connectedWalletAddress, safeAddress, safeVersion)
+  const safeTx = await sdk.getAddOwnerTx(
+    { ownerAddress: values.ownerAddress, threshold: +values.threshold },
+    { safeTxGas: 0 },
+  )
+  const txData = safeTx.data.data
 
-  const txHash = await dispatch(
+  await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
@@ -42,12 +55,12 @@ export const sendAddOwner = async (
       safeTxGas: txParameters.safeTxGas,
       ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      delayExecution,
     }),
   )
 
-  if (txHash) {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
-  }
+  trackEvent({ ...SETTINGS_EVENTS.THRESHOLD.THRESHOLD, label: values.threshold })
+  trackEvent({ ...SETTINGS_EVENTS.THRESHOLD.OWNERS, label: currentSafe(store.getState()).owners.length })
 }
 
 type Props = {
@@ -59,7 +72,10 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
-  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const { safeAddress } = useSafeAddress()
+  const safeVersion = useSelector(currentSafeCurrentVersion)
+  const connectedWalletAddress = useSelector(userAccountSelector)
+  const chainId = useSelector(currentChainId)
 
   useEffect(
     () => () => {
@@ -94,14 +110,24 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
     setActiveScreen('reviewAddOwner')
   }
 
-  const onAddOwner = async (txParameters: TxParameters) => {
+  const onAddOwner = async (txParameters: TxParameters, delayExecution: boolean) => {
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, safeVersion, txParameters, dispatch)
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
+      await sendAddOwner(
+        values,
+        safeAddress,
+        safeVersion,
+        txParameters,
+        dispatch,
+        connectedWalletAddress,
+        delayExecution,
+      )
+      dispatch(
+        addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress, chainId })),
+      )
     } catch (error) {
-      console.error('Error while removing an owner', error)
+      logError(Errors._808, error.message)
     }
   }
 

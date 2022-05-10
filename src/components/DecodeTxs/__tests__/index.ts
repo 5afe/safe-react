@@ -1,4 +1,4 @@
-import { getByteLength } from '..'
+import { getByteLength } from '../../../utils/getByteLength'
 
 describe('DecodeTxs tests', () => {
   it('should calculate the byte length of a single hex string', () => {

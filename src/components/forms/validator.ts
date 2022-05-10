@@ -1,11 +1,13 @@
-import memoize from 'lodash.memoize'
+import memoize from 'lodash/memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { isFeatureEnabled } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
+import { getShortName } from 'src/config'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { isValidPrefix, parsePrefixedAddress } from 'src/utils/prefixedAddress'
+import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -32,17 +34,6 @@ export const mustBeInteger = (value: string): ValidatorReturnType =>
 export const mustBeFloat = (value: string): ValidatorReturnType =>
   value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined
 
-const regexQuery =
-  /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
-const url = new RegExp(regexQuery)
-export const mustBeUrl = (value: string): ValidatorReturnType => {
-  if (url.test(value)) {
-    return undefined
-  }
-
-  return 'Please, provide a valid url'
-}
-
 export const minValue =
   (min: number | string, inclusive = true) =>
   (value: string): ValidatorReturnType => {
@@ -54,7 +45,7 @@ export const minValue =
       return undefined
     }
 
-    return `Should be greater than ${inclusive ? 'or equal to ' : ''}${min}`
+    return `Must be greater than ${inclusive ? 'or equal to ' : ''}${min}`
   }
 
 export const maxValue =
@@ -82,16 +73,33 @@ export const mustBeAddressHash = memoize((address: string): ValidatorReturnType 
   return isValidAddress(address) ? undefined : errorMessage
 })
 
-export const mustBeEthereumAddress = memoize((address: string): ValidatorReturnType => {
+const mustHaveValidPrefix = (prefix: string): ValidatorReturnType => {
+  if (!isValidPrefix(prefix)) {
+    return 'Wrong chain prefix'
+  }
+
+  if (prefix !== getShortName()) {
+    return 'The chain prefix must match the current network'
+  }
+}
+
+export const mustBeEthereumAddress = (fullAddress: string): ValidatorReturnType => {
   const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
+  const { address, prefix } = parsePrefixedAddress(fullAddress)
+
+  const prefixError = mustHaveValidPrefix(prefix)
+  if (prefixError) return prefixError
+
   const result = mustBeAddressHash(address)
-  if (result !== undefined && isFeatureEnabled(FEATURES.DOMAIN_LOOKUP)) {
+  if (result !== undefined && hasFeature(FEATURES.DOMAIN_LOOKUP)) {
     return errorMessage
   }
   return result
-})
+}
 
-export const mustBeEthereumContractAddress = memoize(async (address: string): Promise<ValidatorReturnType> => {
+export const mustBeEthereumContractAddress = memoize(async (fullAddress: string): Promise<ValidatorReturnType> => {
+  const { address } = parsePrefixedAddress(fullAddress)
+
   const contractCode = await getWeb3().eth.getCode(address)
 
   const errorMessage = `Must resolve to a valid smart contract address.`
@@ -116,8 +124,9 @@ export const minMaxDecimalsLength =
     return minMaxLengthErrMsg ? `Should be ${minLen} to ${maxLen} decimals` : undefined
   }
 
-export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
+export const ADDRESS_REPEATED_ERROR = 'Address already added'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
+export const THRESHOLD_ERROR = 'You cannot set more confirmations than owners'
 
 export const uniqueAddress =
   (addresses: string[] = []) =>

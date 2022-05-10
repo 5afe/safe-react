@@ -1,43 +1,45 @@
-import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
+import { _getChainId } from 'src/config'
+import { ChainId } from 'src/config/chain.d'
+import Storage from './Storage'
 
-import { getNetworkName } from 'src/config'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
-
-// Don't use sessionStorage and cookieStorage
-// https://github.com/gruns/ImmortalDB/issues/22
-// https://github.com/gruns/ImmortalDB/issues/6
-const stores = [IndexedDbStore, LocalStorageStore]
-export const storage = new ImmortalStorage(stores)
-
-const PREFIX = `v2_${getNetworkName()}`
-
-export const loadFromStorage = async <T = unknown>(key: string): Promise<T | undefined> => {
-  try {
-    const stringifiedValue = await storage.get(`${PREFIX}__${key}`)
-    if (stringifiedValue === null || stringifiedValue === undefined) {
-      return undefined
-    }
-
-    return JSON.parse(stringifiedValue)
-  } catch (err) {
-    logError(Errors._700, `key ${key} – ${err.message}`)
-    return undefined
-  }
+// Legacy storage keys. New chains will use the chain id as prefix.
+// @TODO: migrate them to chain ids.
+const STORAGE_KEYS: Record<ChainId, string> = {
+  '1': 'MAINNET',
+  '4': 'RINKEBY',
+  '56': 'BSC',
+  '100': 'XDAI',
+  '137': 'POLYGON',
+  '246': 'ENERGY_WEB_CHAIN',
+  '42161': 'ARBITRUM',
+  '73799': 'VOLTA',
 }
 
-export const saveToStorage = async <T = unknown>(key: string, value: T): Promise<void> => {
-  try {
-    const stringifiedValue = JSON.stringify(value)
-    await storage.set(`${PREFIX}__${key}`, stringifiedValue)
-  } catch (err) {
-    logError(Errors._701, `key ${key} – ${err.message}`)
-  }
+export const storage = new Storage(window.localStorage, '')
+
+export const getStoragePrefix = (id = _getChainId()): string => {
+  const name = STORAGE_KEYS[id] || id
+  // Legacy ImmortalDB prefix
+  // @TODO: migrate it
+  return `_immortal|v2_${name}__`
 }
 
-export const removeFromStorage = async (key: string): Promise<void> => {
-  try {
-    await storage.remove(`${PREFIX}__${key}`)
-  } catch (err) {
-    logError(Errors._702, `key ${key} – ${err.message}`)
-  }
+export const loadFromStorage = <T = unknown>(key: string, prefix = getStoragePrefix()): T | undefined => {
+  return storage.getItem(`${prefix}${key}`)
+}
+
+export const saveToStorage = <T = unknown>(key: string, value: T): void => {
+  storage.setItem<T>(`${getStoragePrefix()}${key}`, value)
+}
+
+export const removeFromStorage = (key: string): void => {
+  storage.removeItem(`${getStoragePrefix()}${key}`)
+}
+
+export const saveToStorageWithExpiry = <T = unknown>(key: string, value: T, expiry: number): void => {
+  storage.setWithExpiry<T>(key, value, expiry)
+}
+
+export const loadFromStorageWithExpiry = <T = unknown>(key: string): T | undefined => {
+  return storage.getWithExpiry<T>(key)
 }

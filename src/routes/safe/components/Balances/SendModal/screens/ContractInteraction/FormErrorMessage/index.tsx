@@ -8,7 +8,7 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 
 const useStyles = makeStyles(styles)
 
-const FormErrorMessage = () => {
+const FormErrorMessage = (): React.ReactElement | null => {
   const classes = useStyles()
   const { modifiedSinceLastSubmit, submitError } = useFormState({
     subscription: { modifiedSinceLastSubmit: true, submitError: true },

@@ -1,23 +1,13 @@
 import { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
-
-import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
+import { Loader } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
-import { getExplorerInfo } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
+import Track from 'src/components/Track'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import Paragraph from 'src/components/layout/Paragraph'
 
-const StyledText = styled(Text)`
-  display: inline-flex;
-  a {
-    margin-left: 4px;
-  }
-  svg {
-    position: relative;
-    top: 4px;
-    left: 4px;
-  }
-`
 const ButtonWithMargin = styled(Button)`
   margin-right: 16px;
 `
@@ -34,32 +24,11 @@ const LoaderText = styled.span`
   margin-left: 10px;
 `
 
-export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
-  const explorerInfo = getExplorerInfo(safeCreationTxHash)
-  const { url, alt } = explorerInfo()
-  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url)
-  const explorerDomain = match !== null ? match[2] : 'Network Explorer'
-
+export const GenericFooter = (): ReactElement => {
   return (
-    <span>
-      <Text size="xl">This process should take a couple of minutes.</Text>
-      <StyledText size="xl">
-        Follow the progress on{' '}
-        <Link
-          href={url}
-          aria-label={alt}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="safe-create-explorer-link"
-          title="More info about this in Etherscan"
-        >
-          <Text size="xl" as="span" color="primary">
-            {explorerDomain}
-          </Text>
-          <Icon size="sm" type="externalLink" color="primary" />
-        </Link>
-      </StyledText>
-    </span>
+    <Paragraph size="lg" color="primary">
+      This process should take a couple of minutes.
+    </Paragraph>
   )
 }
 
@@ -72,21 +41,23 @@ export const ContinueFooter = ({
 }): ReactElement => (
   <FooterContainer>
     <Hairline />
-    <Button
-      color="primary"
-      disabled={continueButtonDisabled}
-      onClick={onContinue}
-      variant="contained"
-      data-testid="continue-btn"
-    >
-      {continueButtonDisabled ? (
-        <>
-          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your safe</LoaderText>
-        </>
-      ) : (
-        <>Get started</>
-      )}
-    </Button>
+    <Track {...CREATE_SAFE_EVENTS.GET_STARTED}>
+      <Button
+        color="primary"
+        disabled={continueButtonDisabled}
+        onClick={onContinue}
+        variant="contained"
+        data-testid="continue-btn"
+      >
+        {continueButtonDisabled ? (
+          <>
+            <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your Safe</LoaderText>
+          </>
+        ) : (
+          <>Get started</>
+        )}
+      </Button>
+    </Track>
   </FooterContainer>
 )
 

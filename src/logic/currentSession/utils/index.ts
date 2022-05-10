@@ -3,13 +3,9 @@ import { CurrentSessionState } from 'src/logic/currentSession/store/reducer/curr
 
 const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION'
 
-export const getCurrentSessionFromStorage = async (): Promise<CurrentSessionState | undefined> =>
+export const getCurrentSessionFromStorage = (): CurrentSessionState | undefined =>
   loadFromStorage(CURRENT_SESSION_STORAGE_KEY)
 
-export const saveCurrentSessionToStorage = async (currentSession) => {
-  try {
-    await saveToStorage(CURRENT_SESSION_STORAGE_KEY, currentSession)
-  } catch (err) {
-    console.error('Error storing currentSession in localStorage', err)
-  }
+export const saveCurrentSessionToStorage = (currentSession: CurrentSessionState): void => {
+  saveToStorage(CURRENT_SESSION_STORAGE_KEY, currentSession)
 }

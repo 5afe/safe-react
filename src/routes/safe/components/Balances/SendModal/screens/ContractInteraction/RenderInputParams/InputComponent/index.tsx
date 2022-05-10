@@ -39,7 +39,7 @@ export const InputComponent = ({ type, keyValue, placeholder }: Props): ReactEle
             name={keyValue}
             placeholder={placeholder}
             testId={keyValue}
-            text={placeholder}
+            label={placeholder}
             type="text"
             validate={composeValidators(required, mustBeAddressHash)}
           />
@@ -57,7 +57,7 @@ export const InputComponent = ({ type, keyValue, placeholder }: Props): ReactEle
               name={keyValue}
               placeholder={placeholder}
               testId={keyValue}
-              text={placeholder}
+              label={placeholder}
               type="text"
               validate={required}
             />

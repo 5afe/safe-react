@@ -1,5 +1,5 @@
-import debounce from 'lodash.debounce'
-import { useCallback, useEffect, useState, useRef } from 'react'
+import debounce from 'lodash/debounce'
+import { useMemo, useEffect, useState, useRef } from 'react'
 
 /*
   This code snippet is copied from https://github.com/gnbaron/use-lodash-debounce
@@ -13,16 +13,13 @@ interface DebounceOptions {
   trailing: boolean
 }
 
-export const useDebouncedCallback = <T extends (...args: unknown[]) => unknown>(
-  callback: T,
-  delay = 0,
-  options?: DebounceOptions,
-): T & { cancel: () => void } => useCallback(debounce(callback, delay, options), [callback, delay, options])
-
 export const useDebounce = <T extends unknown>(value: T, delay = 0, options?: DebounceOptions): T => {
   const previousValue = useRef(value)
   const [current, setCurrent] = useState(value)
-  const debouncedCallback = useDebouncedCallback((value: T) => setCurrent(value), delay, options)
+  const debouncedCallback = useMemo(
+    () => debounce((val: T) => setCurrent(val), delay, options),
+    [setCurrent, delay, options],
+  )
 
   useEffect(() => {
     // does trigger the debounce timer initially
@@ -32,7 +29,7 @@ export const useDebounce = <T extends unknown>(value: T, delay = 0, options?: De
       // cancel the debounced callback on clean up
       return debouncedCallback.cancel
     }
-  }, [debouncedCallback, value])
+  }, [debouncedCallback, value, previousValue])
 
   return current
 }

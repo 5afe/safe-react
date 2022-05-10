@@ -1,6 +1,6 @@
 export const upperFirst = (value: string): string => value.charAt(0).toUpperCase() + value.toLowerCase().slice(1)
 
-export const capitalize = (value: any, prefix?: any) => {
+export const capitalize = (value: string, prefix?: string): undefined | boolean | string | number => {
   if (!value) {
     return undefined
   }
