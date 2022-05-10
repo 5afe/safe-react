@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import { Button, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
@@ -5,7 +6,7 @@ import { ReactElement, ReactNode } from 'react'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getModalEvent } from 'src/utils/events/modals'
 import { trackEvent } from 'src/utils/googleTagManager'
-import styled from 'styled-components'
+import { screenSm } from 'src/theme/variables'
 
 type Theme = typeof theme
 
@@ -55,6 +56,10 @@ const ModalStyled = styled(ModalMUI)`
     &.modal {
       height: auto;
       max-width: calc(100% - 130px);
+    }
+
+    @media (max-width: ${screenSm}px) {
+      width: 100vw;
     }
   }
 `

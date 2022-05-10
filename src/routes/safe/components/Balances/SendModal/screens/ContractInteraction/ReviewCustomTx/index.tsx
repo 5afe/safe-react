@@ -18,10 +18,10 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
-import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type ReviewCustomTxProps = {
   contractAddress: string
@@ -41,7 +41,7 @@ const useStyles = makeStyles(styles)
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
 
   const txRecipient = tx.contractAddress

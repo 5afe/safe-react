@@ -79,19 +79,17 @@ export const KeyRing = ({
   const img = isWarning ? TriangleIcon : KeyIcon
 
   return (
-    <>
-      <Block className={classes.root}>
-        <Block className={classes.key} style={keyStyle}>
-          <Img
-            alt="Status connection"
-            className={isWarning ? classes.warning : undefined}
-            height={keySize}
-            src={img}
-            width={isWarning ? keySize + 2 : keySize}
-          />
-        </Block>
-        {!hideDot && <Dot className={classes.dot} style={dotStyle} />}
+    <Block className={classes.root}>
+      <Block className={classes.key} style={keyStyle}>
+        <Img
+          alt="Status connection"
+          className={isWarning ? classes.warning : undefined}
+          height={keySize}
+          src={img}
+          width={isWarning ? keySize + 2 : keySize}
+        />
       </Block>
-    </>
+      {!hideDot && <Dot className={classes.dot} style={dotStyle} />}
+    </Block>
   )
 }

@@ -166,7 +166,7 @@ const BaseAddressBookInput = ({
       renderInput={(params) => (
         <MuiTextField
           {...params}
-          autoFocus={true}
+          autoFocus
           error={!!validationText}
           fullWidth
           variant="outlined"

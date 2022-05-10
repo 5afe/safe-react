@@ -3,9 +3,24 @@ import { getTransactionDetails, TransactionDetails } from '@gnosis.pm/safe-react
 import { _getChainId } from 'src/config'
 import { GATEWAY_URL } from 'src/utils/constants'
 
+// Cache the request promise to avoid simulateneous requests
+// It's cleared as soon as the promise is resolved
+const cache = {}
+
 /**
- * @param {string} clientGatewayTxId safeTxHash or transaction id from client-gateway
+ * @param {string} txId safeTxHash or transaction id from client-gateway
  */
-export const fetchSafeTransaction = async (clientGatewayTxId: string): Promise<TransactionDetails> => {
-  return getTransactionDetails(GATEWAY_URL, _getChainId(), clientGatewayTxId)
+export const fetchSafeTransaction = async (txId: string): Promise<TransactionDetails> => {
+  const chainId = _getChainId()
+  const cacheKey = `${chainId}_${txId}`
+
+  const promise: Promise<TransactionDetails> = cache[cacheKey] || getTransactionDetails(GATEWAY_URL, chainId, txId)
+
+  // Save the promise into cache
+  cache[cacheKey] = promise
+
+  // Clear cache when promise finishes
+  promise.catch(() => null).then(() => delete cache[cacheKey])
+
+  return promise
 }

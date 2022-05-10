@@ -10,17 +10,17 @@ import {
   LOAD_SPECIFIC_SAFE_ROUTE,
   OPEN_SAFE_ROUTE,
   ADDRESSED_ROUTE,
-  SAFE_ROUTES,
   WELCOME_ROUTE,
   ROOT_ROUTE,
   LOAD_SAFE_ROUTE,
   getNetworkRootRoutes,
-  extractSafeAddress,
+  SAFE_ROUTES,
+  GENERIC_APPS_ROUTE,
 } from './routes'
-import { getShortName } from 'src/config'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
 import { usePageTracking } from 'src/utils/googleTagManager'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
@@ -30,7 +30,8 @@ const SafeContainer = React.lazy(() => import('./safe/container'))
 const Routes = (): React.ReactElement => {
   const location = useLocation()
   const { pathname } = location
-  const defaultSafe = useSelector(lastViewedSafe)
+  const lastSafe = useSelector(lastViewedSafe)
+  const { shortName, safeAddress } = useSafeAddress()
 
   // Google Tag Manager page tracking
   usePageTracking()
@@ -73,7 +74,7 @@ const Routes = (): React.ReactElement => {
         exact
         path={ROOT_ROUTE}
         render={() => {
-          if (defaultSafe === null) {
+          if (lastSafe === null) {
             return (
               <LoadingContainer>
                 <Loader size="md" />
@@ -81,18 +82,34 @@ const Routes = (): React.ReactElement => {
             )
           }
 
-          if (defaultSafe) {
+          if (lastSafe) {
             return (
               <Redirect
-                to={generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
-                  shortName: getShortName(),
-                  safeAddress: defaultSafe,
+                to={generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
+                  shortName,
+                  safeAddress: lastSafe,
                 })}
               />
             )
           }
 
           return <Redirect to={WELCOME_ROUTE} />
+        }}
+      />
+
+      {/* Redirect /app/apps?appUrl=https://... to that app within the current Safe */}
+      <Route
+        exact
+        path={GENERIC_APPS_ROUTE}
+        render={() => {
+          if (!lastSafe) {
+            return <Redirect to={WELCOME_ROUTE} />
+          }
+          const redirectPath = generateSafeRoute(SAFE_ROUTES.APPS, {
+            shortName,
+            safeAddress: lastSafe,
+          })
+          return <Redirect to={`${redirectPath}${location.search}`} />
         }}
       />
 
@@ -106,7 +123,6 @@ const Routes = (): React.ReactElement => {
           // Routes with a shortName prefix
           const validShortName = setChainIdFromUrl(pathname)
           // Safe address is used as a key to re-render the entire SafeContainer
-          const safeAddress = extractSafeAddress()
           return validShortName ? <SafeContainer key={safeAddress} /> : <Redirect to={WELCOME_ROUTE} />
         }}
       />

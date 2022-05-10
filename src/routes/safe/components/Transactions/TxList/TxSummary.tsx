@@ -60,13 +60,12 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      {isMultiSigExecutionDetails(txDetails.detailedExecutionInfo) && (
-        <div className="tx-share">
-          <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
-            <TxShareButton safeTxHash={txDetails.detailedExecutionInfo.safeTxHash} />
-          </Track>
-        </div>
-      )}
+      <div className="tx-share">
+        <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
+          <TxShareButton txId={txDetails.txId} />
+        </Track>
+      </div>
+
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <DelegateCallWarning showWarning={!txData.trustedDelegateCallTarget} />

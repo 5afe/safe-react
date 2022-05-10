@@ -18,6 +18,7 @@ import { getChainInfo, getExplorerInfo } from 'src/config'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = (chainInfo: ChainInfo) =>
   makeStyles(
@@ -82,11 +83,12 @@ type Props = {
 const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement => {
   const chainInfo = getChainInfo()
   const classes = useStyles(chainInfo)
+  const { shortName } = useSafeAddress()
 
   const copyShortName = useSelector(copyShortNameSelector)
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
 
-  const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
+  const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug({ shortName, safeAddress }) : safeAddress
 
   return (
     <>
@@ -117,7 +119,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
           label={
             <>
-              QR code with chain prefix (<b>{chainInfo.shortName}:</b>)
+              QR code with chain prefix (<b>{shortName}:</b>)
             </>
           }
         />

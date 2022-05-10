@@ -26,6 +26,10 @@ const TX_LIST = {
     event: GTM_EVENT.CLICK,
     action: 'Reject transaction',
   },
+  BATCH_EXECUTE: {
+    event: GTM_EVENT.CLICK,
+    action: 'Batch Execute',
+  },
 }
 
 const TX_LIST_CATEGORY = 'tx-list'
