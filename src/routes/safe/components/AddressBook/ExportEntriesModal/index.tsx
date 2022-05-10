@@ -112,7 +112,6 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
                 <Text size="xl" strong as="span">
                   {addressBook.length} address book entries. <br />
                 </Text>
-                .
               </Text>
             ) : (
               <Text size="xl" as="span">
