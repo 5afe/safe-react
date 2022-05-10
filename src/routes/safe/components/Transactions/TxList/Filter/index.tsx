@@ -22,6 +22,7 @@ import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/fi
 import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import useSearchParams from 'src/routes/safe/container/hooks/useSearchParams'
 
 // Types cannot take computed property names
 const TYPE_FIELD_NAME = 'type'
@@ -35,13 +36,13 @@ const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
 const MODULE_FIELD_NAME = 'module'
 const NONCE_FIELD_NAME = 'nonce'
 
-enum FilterType {
+export enum FilterType {
   INCOMING = 'Incoming',
   MULTISIG = 'Outgoing',
   MODULE = 'Module-based',
 }
 
-type FilterForm = {
+export type FilterForm = {
   [TYPE_FIELD_NAME]: FilterType
   [DATE_FROM_FIELD_NAME]: string
   [DATE_TO_FIELD_NAME]: string
@@ -74,32 +75,42 @@ const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
   }
 }
 
-const getTransactionFilter = ({ execution_date__gte, execution_date__lte, to, value }: FilterForm) => {
+const getTransactionFilter = ({
+  execution_date__gte,
+  execution_date__lte,
+  to,
+  value,
+}: FilterForm): Record<string, string> => {
   return {
-    execution_date__gte: execution_date__gte ? new Date(execution_date__gte).toISOString() : undefined,
-    execution_date__lte: execution_date__lte ? new Date(execution_date__lte).toISOString() : undefined,
-    to: to || undefined,
-    value: value ? Number(value) : undefined,
+    ...(execution_date__gte && { execution_date__gte: new Date(execution_date__gte).toISOString() }),
+    ...(execution_date__lte && { execution_date__lte: new Date(execution_date__lte).toISOString() }),
+    ...(to && { to }),
+    ...(value && { value }),
   }
 }
 
-const getIncomingFilter = (filter: FilterForm) => {
+const getIncomingFilter = (filter: FilterForm): Record<string, string> => {
+  const { token_address, type } = filter
   return {
+    type,
     ...getTransactionFilter(filter),
-    token_address: filter.token_address || undefined,
+    ...(token_address && { token_address }),
   }
 }
 
-const getOutgoingFilter = (filter: FilterForm) => {
+const getOutgoingFilter = (filter: FilterForm): Record<string, string> => {
+  const { nonce, type } = filter
   return {
+    type,
     ...getTransactionFilter(filter),
-    nonce: filter.nonce ? Number(filter.nonce) : undefined,
+    ...(nonce && { nonce }),
   }
 }
 
-const getModuleFilter = ({ module }: FilterForm) => {
+const getModuleFilter = ({ module, type }: FilterForm): Record<string, string> => {
   return {
-    module,
+    type,
+    ...(module && { module }),
   }
 }
 
@@ -107,6 +118,7 @@ const Filter = (): ReactElement => {
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
   const toggleFilter = () => setShowFilter((prev) => !prev)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   // We cannot rely on the default values in `useForm` because they are updated on unmount
   // meaning that each `reset` does not retain the 'original' default values
@@ -124,14 +136,14 @@ const Filter = (): ReactElement => {
   })
 
   const methods = useForm<FilterForm>({
-    defaultValues: defaultValues.current,
+    defaultValues: Object.assign(defaultValues.current, searchParams),
   })
-  const { handleSubmit, formState, reset, watch, control } = methods
+  const { handleSubmit, reset, watch, control } = methods
 
   const type = watch(TYPE_FIELD_NAME)
 
-  const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
   const clearParameters = () => {
+    setSearchParams()
     reset({ ...defaultValues.current, type })
   }
 
@@ -143,7 +155,7 @@ const Filter = (): ReactElement => {
         ? getOutgoingFilter(filter)
         : getModuleFilter(filter)
 
-    console.log(params)
+    setSearchParams(params)
 
     trackEvent(TX_LIST_EVENTS.FILTER)
     hideFilter()
@@ -232,10 +244,10 @@ const Filter = (): ReactElement => {
                       )}
                     </ParametersFormWrapper>
                     <ButtonWrapper>
-                      <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
+                      <Button type="submit" variant="contained" color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={clearParameters} disabled={!isClearable} color="default">
+                      <Button variant="contained" onClick={clearParameters} color="default">
                         Clear
                       </Button>
                     </ButtonWrapper>

@@ -1,7 +1,6 @@
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { _getChainId } from 'src/config'
 import { getBalances } from '@gnosis.pm/safe-react-gateway-sdk'
-import { GATEWAY_URL } from 'src/utils/constants'
 
 jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
   getBalances: jest.fn(() => Promise.resolve({ success: true })),
@@ -18,15 +17,9 @@ describe('fetchTokenCurrenciesBalances', () => {
       selectedCurrency: 'USD',
     })
 
-    expect(getBalances).toHaveBeenCalledWith(
-      GATEWAY_URL,
-      _getChainId(),
-      '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf',
-      'USD',
-      {
-        exclude_spam: true,
-        trusted: false,
-      },
-    )
+    expect(getBalances).toHaveBeenCalledWith(_getChainId(), '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf', 'USD', {
+      exclude_spam: true,
+      trusted: false,
+    })
   })
 })

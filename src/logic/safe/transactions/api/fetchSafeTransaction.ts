@@ -1,7 +1,6 @@
 import { getTransactionDetails, TransactionDetails } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId } from 'src/config'
-import { GATEWAY_URL } from 'src/utils/constants'
 
 // Cache the request promise to avoid simulateneous requests
 // It's cleared as soon as the promise is resolved
@@ -14,7 +13,7 @@ export const fetchSafeTransaction = async (txId: string): Promise<TransactionDet
   const chainId = _getChainId()
   const cacheKey = `${chainId}_${txId}`
 
-  const promise: Promise<TransactionDetails> = cache[cacheKey] || getTransactionDetails(GATEWAY_URL, chainId, txId)
+  const promise: Promise<TransactionDetails> = cache[cacheKey] || getTransactionDetails(chainId, txId)
 
   // Save the promise into cache
   cache[cacheKey] = promise

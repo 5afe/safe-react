@@ -1,14 +1,84 @@
-import { getTransactionHistory, getTransactionQueue } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  getTransactionHistory,
+  getTransactionQueue,
+  TransactionListPage,
+  // getIncomingTransfers,
+  // getMultisigTransactions,
+  // getModuleTransactions,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import { _getChainId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { GATEWAY_URL } from 'src/utils/constants'
+import { parseSearch } from 'src/routes/safe/container/hooks/useSearchParams'
+import { history } from 'src/routes/routes'
+import { FilterType } from 'src/routes/safe/components/Transactions/TxList/Filter'
 
 /*************/
 /*  HISTORY  */
 /*************/
-const historyPointers: { [chainId: string]: { [safeAddress: string]: { next?: string; previous?: string } } } = {}
+const historyPointers: {
+  [chainId: string]: { [safeAddress: string]: { next?: string; previous?: string; type?: FilterType } }
+} = {}
+
+export const loadHistory = async (safeAddress: string): Promise<TransactionListPage> => {
+  const chainId = _getChainId()
+  const checksummedAddress = checksumAddress(safeAddress)
+
+  const query = parseSearch(history.location.search)
+  const type = typeof query?.type === 'string' ? (query.type as FilterType) : undefined
+
+  const hasFilter = type && type !== historyPointers?.[chainId]?.[checksummedAddress]?.type
+  if (hasFilter) {
+    console.log('reset history')
+  }
+
+  let txListPage: TransactionListPage & { type?: FilterType } = {
+    results: [],
+    next: '',
+    previous: '',
+    type,
+  }
+
+  try {
+    switch (type) {
+      case FilterType.INCOMING: {
+        // txListPage = await getIncomingTransfers(chainId, checksummedAddress, query)
+        console.log(FilterType.INCOMING, query)
+        break
+      }
+      case FilterType.MULTISIG: {
+        // txListPage = await getMultisigTransactions(chainId, checksummedAddress, query)
+        console.log(FilterType.MULTISIG, query)
+        break
+      }
+      case FilterType.MODULE: {
+        // txListPage = await getModuleTransactions(chainId, checksummedAddress, query)
+        console.log(FilterType.MODULE, query)
+        break
+      }
+      default: {
+        txListPage = await getTransactionHistory(chainId, checksummedAddress)
+      }
+    }
+  } catch (e) {
+    // TODO:
+  }
+
+  if (!historyPointers[chainId]) {
+    historyPointers[chainId] = {}
+  }
+
+  if (!historyPointers[chainId][safeAddress]) {
+    historyPointers[chainId][safeAddress] = {
+      next: txListPage.next,
+      previous: txListPage.previous,
+      type,
+    }
+  }
+
+  return txListPage
+}
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -21,19 +91,12 @@ export const loadPagedHistoryTransactions = async (
   const chainId = _getChainId()
   // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
-  if (!historyPointers[chainId][safeAddress]?.next) {
+  if (historyPointers[chainId]?.[safeAddress]?.type && !historyPointers[chainId]?.[safeAddress]?.next) {
     throw new CodedException(Errors._608)
   }
 
   try {
-    const { results, next, previous } = await getTransactionHistory(
-      GATEWAY_URL,
-      chainId,
-      checksumAddress(safeAddress),
-      historyPointers[chainId][safeAddress].next,
-    )
-
-    historyPointers[chainId][safeAddress] = { next, previous }
+    const { results } = await loadHistory(safeAddress)
 
     return { values: results, next: historyPointers[chainId][safeAddress].next }
   } catch (e) {
@@ -42,17 +105,8 @@ export const loadPagedHistoryTransactions = async (
 }
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
-  const chainId = _getChainId()
   try {
-    const { results, next, previous } = await getTransactionHistory(GATEWAY_URL, chainId, checksumAddress(safeAddress))
-
-    if (!historyPointers[chainId]) {
-      historyPointers[chainId] = {}
-    }
-
-    if (!historyPointers[chainId][safeAddress]) {
-      historyPointers[chainId][safeAddress] = { next, previous }
-    }
+    const { results } = await loadHistory(safeAddress)
 
     return results
   } catch (e) {
@@ -82,7 +136,6 @@ export const loadPagedQueuedTransactions = async (
 
   try {
     const { results, next, previous } = await getTransactionQueue(
-      GATEWAY_URL,
       chainId,
       checksumAddress(safeAddress),
       queuedPointers[chainId][safeAddress].next,
@@ -99,7 +152,7 @@ export const loadPagedQueuedTransactions = async (
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   const chainId = _getChainId()
   try {
-    const { results, next, previous } = await getTransactionQueue(GATEWAY_URL, chainId, checksumAddress(safeAddress))
+    const { results, next, previous } = await getTransactionQueue(chainId, checksumAddress(safeAddress))
 
     if (!queuedPointers[chainId]) {
       queuedPointers[chainId] = {}

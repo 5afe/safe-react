@@ -4,6 +4,11 @@ describe('isValidAddress', () => {
   it('Returns false for an empty string', () => {
     expect(isValidAddress('')).toBeFalsy()
   })
+  it('Returns false for non-string values', () => {
+    ;[123, true, false, null, undefined].forEach((value) => {
+      expect(isValidAddress(value as unknown as string)).toBeFalsy()
+    })
+  })
   it('Returns false when address is `undefined`', () => {
     expect(isValidAddress(undefined)).toBeFalsy()
   })
@@ -21,6 +26,11 @@ describe('isValidAddress', () => {
 describe('isValidPrefixedAddress', () => {
   it('Returns false for an empty string', () => {
     expect(isValidPrefixedAddress('')).toBeFalsy()
+  })
+  it('Returns false for non-string values', () => {
+    ;[123, true, false, null, undefined].forEach((value) => {
+      expect(isValidPrefixedAddress(value as unknown as string)).toBeFalsy()
+    })
   })
   it('Returns false when address is `undefined`', () => {
     expect(isValidPrefixedAddress(undefined)).toBeFalsy()
