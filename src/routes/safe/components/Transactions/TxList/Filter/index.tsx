@@ -31,7 +31,8 @@ import {
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
-import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
+import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 
 const TYPE_FIELD_NAME = 'type'
 const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -123,10 +124,19 @@ const Filter = (): ReactElement => {
 
   const isClearable = !search && !formState.isDirty
 
+  const loadTransactions = async () => {
+    try {
+      const values = await loadHistoryTransactions(safeAddress)
+      dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
+    } catch (e) {
+      e.log()
+    }
+  }
+
   const clearFilter = () => {
     setSearchParams()
 
-    dispatch(fetchTransactions(chainId, safeAddress))
+    loadTransactions()
 
     reset(defaultValues)
     hideFilter()
@@ -144,7 +154,7 @@ const Filter = (): ReactElement => {
 
     setSearchParams(params)
 
-    dispatch(fetchTransactions(chainId, safeAddress))
+    loadTransactions()
 
     trackEvent(TX_LIST_EVENTS.FILTER)
     hideFilter()

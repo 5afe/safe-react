@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/react'
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect, useState } from 'react'
 import { setBaseUrl } from '@gnosis.pm/safe-react-gateway-sdk'
+import { setBaseUrl as setTestBaseUrl } from '@@test/dist'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import App from 'src/components/App'
@@ -35,6 +36,7 @@ const RootConsumer = (): React.ReactElement | null => {
   useEffect(() => {
     // Initialize the SDK
     setBaseUrl(GATEWAY_URL)
+    setTestBaseUrl(GATEWAY_URL)
 
     const initChains = async () => {
       try {
