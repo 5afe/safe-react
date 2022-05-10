@@ -1,10 +1,13 @@
-import { IClientMeta } from '@walletconnect/types'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+import { IClientMeta, IRPCMap } from '@walletconnect/types'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import UAParser from 'ua-parser-js'
 
-import { APP_VERSION, PUBLIC_URL } from 'src/utils/constants'
+import { APP_VERSION, INFURA_TOKEN, PUBLIC_URL, WC_BRIDGE } from 'src/utils/constants'
 import { ChainId } from 'src/config/chain'
-import { getWCWalletInterface, getWalletConnectProvider } from 'src/logic/wallets/walletConnect/utils'
+import { getRpcServiceUrl } from 'src/config'
+import { getChains } from 'src/config/cache/chains'
+import { BLOCK_POLLING_INTERVAL } from '../onboard'
 
 // Modified version of the built in WC module in Onboard v1.35.5
 // https://github.com/blocknative/onboard/blob/release/1.35.5/src/modules/select/wallets/wallet-connect.ts
@@ -33,7 +36,6 @@ const getClientMeta = (): IClientMeta => {
   }
 }
 
-// Note: this shares a lot of similarities with the patchedWalletConnect module
 const getPairingModule = (chainId: ChainId): WalletModule => {
   const STORAGE_ID = 'SAFE__pairingProvider'
   const clientMeta = getClientMeta()
@@ -41,14 +43,27 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
   return {
     name: PAIRING_MODULE_NAME,
     wallet: async ({ resetWalletState }) => {
-      const provider = getWalletConnectProvider(chainId, {
+      const RPC_MAP: IRPCMap = getChains().reduce((map, { chainId, rpcUri }) => {
+        return {
+          ...map,
+          [parseInt(chainId, 10)]: getRpcServiceUrl(rpcUri),
+        }
+      }, {})
+
+      const provider = new WalletConnectProvider({
+        bridge: WC_BRIDGE,
+        pollingInterval: BLOCK_POLLING_INTERVAL,
+        infuraId: INFURA_TOKEN,
+        rpc: RPC_MAP,
+        chainId: parseInt(chainId, 10),
         storageId: STORAGE_ID,
         qrcode: false, // Don't show QR modal
         clientMeta,
       })
 
-      // WalletConnect overrides the clientMeta, so we need to set it back
-      ;(provider.wc as any).clientMeta = clientMeta
+      provider.autoRefreshOnNetworkChange = false
+
+      // WalletConnect overrides the clientMeta, so we need to set it back(provider.wc as any).clientMeta = clientMeta
       ;(provider.wc as any)._clientMeta = clientMeta
 
       const onDisconnect = () => {
@@ -65,7 +80,26 @@ const getPairingModule = (chainId: ChainId): WalletModule => {
       return {
         provider,
         interface: {
-          ...getWCWalletInterface(provider),
+          address: {
+            onChange: (func) => {
+              provider.send('eth_accounts').then((accounts: string[]) => accounts[0] && func(accounts[0]))
+              provider.on('accountsChanged', (accounts: string[]) => func(accounts[0]))
+            },
+          },
+          network: {
+            onChange: (func) => {
+              provider.send('eth_chainId').then(func)
+              provider.on('chainChanged', func)
+            },
+          },
+          // We never request balance from onboard
+          balance: {},
+          disconnect: () => {
+            // Only disconnect if connected
+            if (provider.wc.peerId) {
+              provider.disconnect()
+            }
+          },
           name: PAIRING_MODULE_NAME,
         },
       }

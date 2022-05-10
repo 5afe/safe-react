@@ -1,5 +1,7 @@
-import { formatAmount, formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount, formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 
+// The test environment defaults Intl.NumberFormat to en-US as Node doesn't ship with every locale
+// hence the tests hardcoding en-US formatting but the browser will format correctly
 describe('formatAmount', () => {
   it('Given 0 returns 0', () => {
     // given
@@ -107,14 +109,14 @@ describe('formatAmount', () => {
   })
 })
 
-describe('FormatsAmountsInUsFormat', () => {
+describe('formatCurrency', () => {
   it('Given 0 returns 0.00', () => {
     // given
     const input = 0
-    const expectedResult = '0.00'
+    const expectedResult = '0.00 EUR'
 
     // when
-    const result = formatAmountInUsFormat(input.toString())
+    const result = formatCurrency(input.toString(), 'EUR')
 
     // then
     expect(result).toBe(expectedResult)
@@ -122,10 +124,10 @@ describe('FormatsAmountsInUsFormat', () => {
   it('Given 1 returns 1.00', () => {
     // given
     const input = 1
-    const expectedResult = '1.00'
+    const expectedResult = '1.00 EUR'
 
     // when
-    const result = formatAmountInUsFormat(input.toString())
+    const result = formatCurrency(input.toString(), 'EUR')
 
     // then
     expect(result).toBe(expectedResult)
@@ -133,10 +135,10 @@ describe('FormatsAmountsInUsFormat', () => {
   it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX', () => {
     // given
     const input = 311137.3
-    const expectedResult = '311,137.30'
+    const expectedResult = '311,137.30 EUR'
 
     // when
-    const result = formatAmountInUsFormat(input.toString())
+    const result = formatCurrency(input.toString(), 'EUR')
 
     // then
     expect(result).toBe(expectedResult)
@@ -144,10 +146,10 @@ describe('FormatsAmountsInUsFormat', () => {
   it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX', () => {
     // given
     const input = 19797.899
-    const expectedResult = '19,797.899'
+    const expectedResult = '19,797.899 EUR'
 
     // when
-    const result = formatAmountInUsFormat(input.toString())
+    const result = formatCurrency(input.toString(), 'EUR')
 
     // then
     expect(result).toBe(expectedResult)
@@ -155,10 +157,10 @@ describe('FormatsAmountsInUsFormat', () => {
   it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX', () => {
     // given
     const input = 19797899.479
-    const expectedResult = '19,797,899.479'
+    const expectedResult = '19,797,899.479 EUR'
 
     // when
-    const result = formatAmountInUsFormat(input.toString())
+    const result = formatCurrency(input.toString(), 'EUR')
 
     // then
     expect(result).toBe(expectedResult)
@@ -166,12 +168,21 @@ describe('FormatsAmountsInUsFormat', () => {
   it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX', () => {
     // given
     const input = 19797899479.999
-    const expectedResult = '19,797,899,479.999'
+    const expectedResult = '19,797,899,479.999 EUR'
 
     // when
-    const result = formatAmountInUsFormat(input.toString())
+    const result = formatCurrency(input.toString(), 'EUR')
 
     // then
     expect(result).toBe(expectedResult)
+  })
+  it('Accepts varied currencies', () => {
+    expect(formatCurrency('10', 'USD')).toBe('10.00 USD')
+    expect(formatCurrency('10', 'GBP')).toBe('10.00 GBP')
+  })
+
+  it('Accepts crypto currencies', () => {
+    expect(formatCurrency('10', 'xDai')).toBe('10.00 xDai')
+    expect(formatCurrency('10', 'GNO')).toBe('10.00 GNO')
   })
 })

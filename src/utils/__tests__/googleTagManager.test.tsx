@@ -43,13 +43,13 @@ describe('googleTagManager', () => {
         url: '',
         params: {
           prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
-          safeTxHash: '0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+          txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
         },
       }))
 
       const anonymizedLocation = getAnonymizedLocation({
         pathname:
-          '/rin/0x0000000000000000000000000000000000000000/transactions/0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+          '/rin/0x0000000000000000000000000000000000000000/transactions/multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
         search: '?test=true',
         hash: '#hash',
         state: null,
@@ -117,6 +117,8 @@ describe('googleTagManager', () => {
         auth: 'auth123',
         preview: 'env-3',
         dataLayer: {
+          'gtm.allowlist': ['gaawc', 'gaawe'],
+          'gtm.blocklist': ['j', 'jsm', 'customScripts'],
           event: 'pageview',
           chainId: '4',
           page: '/',

@@ -1,4 +1,3 @@
-import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import { createSelector } from 'reselect'
 
@@ -12,7 +11,10 @@ import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTra
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { createHashBasedSelector } from 'src/logic/safe/store/selectors/utils'
 import { AppReduxState } from 'src/store'
-import { extractSafeAddress } from 'src/routes/routes'
+import { currentSafeNonce } from 'src/logic/safe/store/selectors/index'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
+
+const BATCH_LIMIT = 10
 
 export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewayTransactions'] => {
   return state[GATEWAY_TRANSACTIONS_ID]
@@ -21,8 +23,8 @@ export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewa
 export const historyTransactions = createHashBasedSelector(
   gatewayTransactions,
   currentChainId,
-  (gatewayTransactions, chainId): StoreStructure['history'] | undefined => {
-    const safeAddress = extractSafeAddress()
+  currentSafeAddress,
+  (gatewayTransactions, chainId, safeAddress): StoreStructure['history'] | undefined => {
     return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.history : undefined
   },
 )
@@ -30,8 +32,8 @@ export const historyTransactions = createHashBasedSelector(
 export const pendingTransactions = createSelector(
   gatewayTransactions,
   currentChainId,
-  (gatewayTransactions, chainId): StoreStructure['queued'] | undefined => {
-    const safeAddress = extractSafeAddress()
+  currentSafeAddress,
+  (gatewayTransactions, chainId, safeAddress): StoreStructure['queued'] | undefined => {
     return chainId && safeAddress ? gatewayTransactions[chainId]?.[safeAddress]?.queued : undefined
   },
 )
@@ -47,7 +49,7 @@ export const nextTransaction = createSelector(nextTransactions, (nextTxs) => {
   if (!nextTxs) return
 
   const [txs] = Object.values(nextTxs)
-  return txs?.[0]
+  return txs // If a reject tx exists, this will still return the initial tx
 })
 
 export const queuedTransactions = createSelector(
@@ -62,7 +64,7 @@ const txLocations: TxLocation[] = ['queued.next', 'queued.queued', 'history']
 export const getTransactionWithLocationByAttribute = createSelector(
   gatewayTransactions,
   currentChainId,
-  extractSafeAddress,
+  currentSafeAddress,
   (
     _: AppReduxState,
     attrDetails: { attributeName: keyof Transaction; attributeValue: Transaction[keyof Transaction] },
@@ -94,7 +96,7 @@ export const getTransactionWithLocationByAttribute = createSelector(
 export const getTransactionByAttribute = createSelector(
   gatewayTransactions,
   currentChainId,
-  extractSafeAddress,
+  currentSafeAddress,
   getTransactionWithLocationByAttribute,
   (_gatewayTransactions, _chainId, _safeAddress, txWithLocation) => {
     return txWithLocation?.transaction
@@ -104,7 +106,7 @@ export const getTransactionByAttribute = createSelector(
 export const getTransactionsByNonce = createSelector(
   gatewayTransactions,
   currentChainId,
-  extractSafeAddress,
+  currentSafeAddress,
   (_: AppReduxState, nonce: number) => nonce,
   (gatewayTransactions, chainId, safeAddress, nonce): Transaction[] => {
     let txsByNonce: Transaction[] = []
@@ -144,19 +146,20 @@ export const getLastTransaction = createSelector(
     if (queuedTxs && Object.keys(queuedTxs).length > 0) {
       const queuedNonces = Object.keys(queuedTxs)
       const highestQueuedNonce = Number(queuedNonces.sort()[queuedNonces.length - 1])
-      const lastQueuedTx = Object.values(queuedTxs[highestQueuedNonce])[0]
-      return lastQueuedTx
+      return Object.values(queuedTxs[highestQueuedNonce])[0]
     }
 
     if (nextTxs && Object.keys(nextTxs).length > 0) {
-      const nextTx = Object.values(nextTxs)[0][0]
-      return nextTx
+      return Object.values(nextTxs)[0][0]
     }
 
     if (historyTxs) {
       // History Txs are ordered by timestamp so no need to sort them.
-      const lastHistoryTx = flatten(Object.values(historyTxs)).find((tx) => tx.executionInfo != undefined) || null
-      return lastHistoryTx
+      return (
+        Object.values(historyTxs)
+          .flat()
+          .find((tx) => tx.executionInfo != undefined) || null
+      )
     }
 
     return null
@@ -166,3 +169,37 @@ export const getLastTransaction = createSelector(
 export const getLastTxNonce = createSelector(getLastTransaction, (lastTx) => {
   return isMultisigExecutionInfo(lastTx?.executionInfo) ? lastTx?.executionInfo.nonce : undefined
 })
+
+export const getBatchableTransactions = createSelector(
+  nextTransaction,
+  queuedTransactions,
+  currentSafeNonce,
+  (nextTxs, queuedTxs, safeNonce) => {
+    const batchableTransactions: Transaction[] = []
+    let currentNonce = safeNonce
+
+    if (!nextTxs || !queuedTxs) return batchableTransactions
+
+    // We slice as to not disturb the default order but still start from the most recent tx
+    const sortedNextTxs = nextTxs.slice().sort((a, b) => b.timestamp - a.timestamp)
+    const sortedQueuedTxs = Object.values(queuedTxs).map((tx) => tx.slice().sort((a, b) => b.timestamp - a.timestamp))
+
+    const allTxs = [sortedNextTxs, ...sortedQueuedTxs]
+
+    Object.values(allTxs).forEach((txByNonce) => {
+      txByNonce.forEach((tx) => {
+        if (
+          batchableTransactions.length < BATCH_LIMIT &&
+          isMultisigExecutionInfo(tx.executionInfo) &&
+          tx.executionInfo.nonce === currentNonce &&
+          tx.executionInfo.confirmationsSubmitted >= tx.executionInfo.confirmationsRequired
+        ) {
+          batchableTransactions.push(tx)
+          currentNonce = tx.executionInfo.nonce + 1
+        }
+      })
+    })
+
+    return batchableTransactions
+  },
+)

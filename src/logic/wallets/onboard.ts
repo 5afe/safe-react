@@ -1,4 +1,5 @@
 import Onboard from 'bnc-onboard'
+import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import { API, Initialization } from 'bnc-onboard/dist/src/interfaces'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -17,6 +18,8 @@ import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import HDWalletProvider from '@truffle/hdwallet-provider'
+import { E2E_MNEMONIC, E2E_PROVIDER_URL } from 'src/utils/constants'
 
 const LAST_USED_PROVIDER_KEY = 'SAFE__lastUsedProvider'
 
@@ -26,7 +29,15 @@ export const saveLastUsedProvider = (name: string): void => {
   saveToStorageWithExpiry(LAST_USED_PROVIDER_KEY, name, expiry)
 }
 
+const isCypressAskingForConnectedState = (): boolean => {
+  return window.Cypress && window.cypressConfig?.connected
+}
+
 export const loadLastUsedProvider = (): string | undefined => {
+  if (isCypressAskingForConnectedState()) {
+    return 'e2e-wallet'
+  }
+
   return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
 }
 
@@ -48,10 +59,32 @@ const hasENSSupport = (chainId: ChainId): boolean => {
   return getChains().some((chain) => chain.chainId === chainId && chain.features.includes(FEATURES.DOMAIN_LOOKUP))
 }
 
+export const BLOCK_POLLING_INTERVAL = 1000 * 60 * 60 // 1 hour
+
+const customSDKWallet: WalletModule = {
+  name: 'e2e-wallet',
+  type: 'injected',
+  wallet: async (helpers) => {
+    const { createModernProviderInterface } = helpers
+    const provider = new HDWalletProvider({
+      mnemonic: E2E_MNEMONIC,
+      providerOrUrl: E2E_PROVIDER_URL,
+    })
+
+    return {
+      provider,
+      interface: createModernProviderInterface(provider),
+    }
+  },
+  desktop: true,
+  mobile: true,
+}
+
 const getOnboard = (chainId: ChainId): API => {
   const config: Initialization = {
     networkId: parseInt(chainId, 10),
     networkName: getNetworkName(chainId),
+    blockPollingInterval: BLOCK_POLLING_INTERVAL,
     subscriptions: {
       wallet: async (wallet) => {
         store.dispatch(updateProviderWallet(wallet.name || ''))
@@ -71,7 +104,7 @@ const getOnboard = (chainId: ChainId): API => {
     },
     walletSelect: {
       description: 'Please select a wallet to connect to Gnosis Safe',
-      wallets: getSupportedWallets(chainId),
+      wallets: isCypressAskingForConnectedState() ? [customSDKWallet] : getSupportedWallets(chainId),
     },
     walletCheck: [
       { checkName: 'derivationPath' },

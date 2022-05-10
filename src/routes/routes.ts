@@ -27,7 +27,7 @@ export const SAFE_SECTION_ROUTE = `${ADDRESSED_ROUTE}/:${SAFE_SECTION_SLUG}`
 export const SAFE_SUBSECTION_SLUG = 'safeSubsection'
 export const SAFE_SUBSECTION_ROUTE = `${SAFE_SECTION_ROUTE}/:${SAFE_SUBSECTION_SLUG}`
 
-export const TRANSACTION_ID_SLUG = `safeTxHash`
+export const TRANSACTION_ID_SLUG = 'txId'
 
 // URL: gnosis-safe.io/app/:[SAFE_ADDRESS_SLUG]/:[SAFE_SECTION_SLUG]/:[SAFE_SUBSECTION_SLUG]
 export type SafeRouteSlugs = {
@@ -43,16 +43,19 @@ export const LOAD_SPECIFIC_SAFE_ROUTE = `/load/:${SAFE_ADDRESS_SLUG}?` // ? = op
 export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
 export const OPEN_SAFE_ROUTE = '/open'
+export const GENERIC_APPS_ROUTE = '/apps'
 export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By providing no slug, we get '/load'
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {
+  DASHBOARD: `${ADDRESSED_ROUTE}/home`,
   ASSETS_BALANCES: `${ADDRESSED_ROUTE}/balances`, // [SAFE_SECTION_SLUG] === 'balances'
-  ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`, // [SAFE_SUBSECTION_SLUG] === 'collectibles'
+  ASSETS_BALANCES_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/nfts`, // [SAFE_SUBSECTION_SLUG] === 'nfts'
+  LEGACY_COLLECTIBLES: `${ADDRESSED_ROUTE}/balances/collectibles`,
   TRANSACTIONS: `${ADDRESSED_ROUTE}/transactions`,
   TRANSACTIONS_HISTORY: `${ADDRESSED_ROUTE}/transactions/history`,
   TRANSACTIONS_QUEUE: `${ADDRESSED_ROUTE}/transactions/queue`,
-  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}(${hashRegExp}+)`, // [TRANSACTION_HASH_SLUG] === 'safeTxHash'
+  TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}`,
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
@@ -95,15 +98,13 @@ export const extractPrefixedSafeAddress = (
   }
 }
 
-export const extractShortChainName = (): ShortName => extractPrefixedSafeAddress().shortName
-export const extractSafeAddress = (): string => extractPrefixedSafeAddress().safeAddress
-
-export const getPrefixedSafeAddressSlug = (
-  { safeAddress = extractSafeAddress(), shortName = extractShortChainName() } = {
-    safeAddress: extractSafeAddress(),
-    shortName: extractShortChainName(),
-  },
-): string => `${shortName}:${safeAddress}`
+export const getPrefixedSafeAddressSlug = ({
+  safeAddress,
+  shortName,
+}: {
+  safeAddress: string
+  shortName: string
+}): string => `${shortName}:${safeAddress}`
 
 // Populate `/:[SAFE_ADDRESS_SLUG]` with current 'shortName:safeAddress'
 export const generateSafeRoute = (
@@ -122,4 +123,8 @@ export const generatePrefixedAddressRoutes = (params: SafeRouteParams): typeof S
     (routes, [key, route]) => ({ ...routes, [key]: generateSafeRoute(route, params) }),
     {} as typeof STANDARD_SAFE_ROUTES,
   )
+}
+
+export const getSafeAppUrl = (appUrl: string, routesSlug: SafeRouteParams): string => {
+  return generateSafeRoute(SAFE_ROUTES.APPS, routesSlug) + `?appUrl=${appUrl}`
 }
