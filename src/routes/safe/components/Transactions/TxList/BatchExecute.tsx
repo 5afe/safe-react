@@ -216,8 +216,8 @@ export const BatchExecute = React.memo((): ReactElement => {
             </DecodeTxsWrapper>
           </Row>
           <Paragraph size="md" align="center" color="disabled" noMargin>
-            Be aware that if any of the included transactions reverts, none of them will be executed. This will result
-            in the loss of the allocated transaction fees.
+            Be aware that if any of the included transactions revert, none of them will be executed. This will result in
+            the loss of the allocated transaction fees.
           </Paragraph>
         </ModalContent>
         <Modal.Footer withoutBorder>
