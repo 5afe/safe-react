@@ -15,10 +15,7 @@ function Welcome(): ReactElement {
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to Gnosis Safe.
-        </Title>
-        <Title size="xs">
-          Gnosis Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
+          Welcome to Evmos Safe.
         </Title>
         <CardsContainer>
           <StyledCard>
