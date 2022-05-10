@@ -1,4 +1,4 @@
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Controller, DefaultValues, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -10,30 +10,41 @@ import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
+import { parse, ParsedQuery, stringify } from 'query-string'
+import { useHistory, useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFTextField'
 import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
-
 import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
-import useSearchParams from 'src/routes/safe/container/hooks/useSearchParams'
+import { formateDate } from 'src/utils/date'
+import {
+  getIncomingFilter,
+  getModuleFilter,
+  getOutgoingFilter,
+} from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
+import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 
-// We use 'hidden' fields for the ENS domain/address book name
 const TYPE_FIELD_NAME = 'type'
 const DATE_FROM_FIELD_NAME = 'execution_date__gte'
 const DATE_TO_FIELD_NAME = 'execution_date__lte'
 const RECIPIENT_FIELD_NAME = 'to'
-const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
 const AMOUNT_FIELD_NAME = 'value'
 const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
-const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
 const MODULE_FIELD_NAME = 'module'
-const HIDDEN_MODULE_FIELD_NAME = '__module'
 const NONCE_FIELD_NAME = 'nonce'
+// We use 'hidden' fields for the ENS domain/address book name
+const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
+const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
+const HIDDEN_MODULE_FIELD_NAME = '__module'
 
 export enum FilterType {
   INCOMING = 'Incoming',
@@ -56,114 +67,86 @@ export type FilterForm = {
   [NONCE_FIELD_NAME]: string
 }
 
-const isValidAmount = (value: FilterForm['value']): string | undefined => {
-  if (value && isNaN(Number(value))) {
-    return 'Invalid number'
-  }
+const defaultValues: DefaultValues<FilterForm> = {
+  [TYPE_FIELD_NAME]: FilterType.INCOMING,
+  [DATE_FROM_FIELD_NAME]: '',
+  [DATE_TO_FIELD_NAME]: '',
+  [RECIPIENT_FIELD_NAME]: '',
+  [HIDDEN_RECIPIENT_FIELD_NAME]: '',
+  [AMOUNT_FIELD_NAME]: '',
+  [TOKEN_ADDRESS_FIELD_NAME]: '',
+  [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: '',
+  [MODULE_FIELD_NAME]: '',
+  [NONCE_FIELD_NAME]: '',
 }
 
-const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
-  if (value.length === 0) {
-    return
+const getInitialValues = (search: string) => {
+  const parsedSearch = parse(search)
+
+  const timestampToISO = (value: ParsedQuery[string]): string => {
+    const timestamp = Number(value)
+    return !isNaN(timestamp) ? formateDate(timestamp) : ''
   }
 
-  const number = Number(value)
-  if (isNaN(number)) {
-    return 'Invalid number'
-  }
-  if (number < 0) {
-    return 'Nonce cannot be negative'
-  }
-}
-
-const getTransactionFilter = ({
-  execution_date__gte,
-  execution_date__lte,
-  to,
-  value,
-}: FilterForm): Record<string, string> => {
-  const getTimestampString = (date: string): string => new Date(date).getTime().toString()
   return {
-    ...(execution_date__gte && { execution_date__gte: getTimestampString(execution_date__gte) }),
-    ...(execution_date__lte && { execution_date__lte: getTimestampString(execution_date__lte) }),
-    ...(to && { to }),
-    ...(value && { value }),
-  }
-}
-
-const getIncomingFilter = (filter: FilterForm): Record<string, string> => {
-  const { token_address, type } = filter
-  return {
-    type,
-    ...getTransactionFilter(filter),
-    ...(token_address && { token_address }),
-  }
-}
-
-const getOutgoingFilter = (filter: FilterForm): Record<string, string> => {
-  const { nonce, type } = filter
-  return {
-    type,
-    ...getTransactionFilter(filter),
-    ...(nonce && { nonce }),
-  }
-}
-
-const getModuleFilter = ({ module, type }: FilterForm): Record<string, string> => {
-  return {
-    type,
-    ...(module && { module }),
+    ...defaultValues,
+    ...parsedSearch,
+    ...(parsedSearch[DATE_FROM_FIELD_NAME] && {
+      [DATE_FROM_FIELD_NAME]: timestampToISO(parsedSearch[DATE_FROM_FIELD_NAME]),
+    }),
+    ...(parsedSearch[DATE_TO_FIELD_NAME] && {
+      [DATE_TO_FIELD_NAME]: timestampToISO(parsedSearch[DATE_TO_FIELD_NAME]),
+    }),
   }
 }
 
 const Filter = (): ReactElement => {
+  const dispatch = useDispatch()
+  const chainId = useSelector(currentChainId)
+  const history = useHistory()
+  const { pathname, search } = useLocation()
+  const { safeAddress } = useSafeAddress()
+
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
   const toggleFilter = () => setShowFilter((prev) => !prev)
-  const [searchParams, setSearchParams] = useSearchParams()
 
-  // We cannot rely on the default values in `useForm` because they are updated on unmount
-  // meaning that each `reset` does not retain the 'original' default values
-  const defaultValues = useRef<DefaultValues<FilterForm>>({
-    [TYPE_FIELD_NAME]: FilterType.INCOMING,
-    [DATE_FROM_FIELD_NAME]: '',
-    [DATE_TO_FIELD_NAME]: '',
-    [RECIPIENT_FIELD_NAME]: '',
-    [HIDDEN_RECIPIENT_FIELD_NAME]: '',
-    [AMOUNT_FIELD_NAME]: '',
-    [TOKEN_ADDRESS_FIELD_NAME]: '',
-    [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: '',
-    [MODULE_FIELD_NAME]: undefined,
-    [NONCE_FIELD_NAME]: '',
-  })
+  const setSearchParams = (params?: Record<string, unknown>) => {
+    history.replace(params ? `${pathname}?${stringify(params)}` : pathname)
+  }
 
   const methods = useForm<FilterForm>({
-    defaultValues: Object.assign(defaultValues.current, searchParams),
+    defaultValues: getInitialValues(search),
+    shouldUnregister: true,
   })
-  const { handleSubmit, reset, watch, control } = methods
+  const { handleSubmit, reset, watch, control, formState } = methods
 
-  const type = watch(TYPE_FIELD_NAME)
+  const isClearable = !search && !formState.isDirty
 
-  const clearParameters = () => {
+  const clearFilter = () => {
     setSearchParams()
-    reset({ ...defaultValues.current, type })
+
+    dispatch(fetchTransactions(chainId, safeAddress))
+
+    reset(defaultValues)
+    hideFilter()
   }
+
+  const filterType = watch(TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
     const params =
-      type === FilterType.INCOMING
+      filterType === FilterType.INCOMING
         ? getIncomingFilter(filter)
         : FilterType.MULTISIG
         ? getOutgoingFilter(filter)
         : getModuleFilter(filter)
 
-    // Set more than just the 'type' as we clear the history for filtered results
-    if (Object.keys(params).length > 1) {
-      setSearchParams(params)
+    setSearchParams(params)
 
-      trackEvent(TX_LIST_EVENTS.FILTER)
-    }
+    dispatch(fetchTransactions(chainId, safeAddress))
 
+    trackEvent(TX_LIST_EVENTS.FILTER)
     hideFilter()
   }
 
@@ -172,6 +155,7 @@ const Filter = (): ReactElement => {
       <BackdropLayout isOpen={showFilter} />
       <ClickAwayListener onClickAway={hideFilter}>
         <Wrapper>
+          {search && <button onClick={clearFilter}>Clear filter</button>}
           <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
             <StyledFilterIconImage src={filterIcon} /> Filters{' '}
             {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}
@@ -197,7 +181,7 @@ const Filter = (): ReactElement => {
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
-                      {type !== FilterType.MODULE && (
+                      {filterType !== FilterType.MODULE && (
                         <>
                           <RHFTextField<FilterForm>
                             name={DATE_FROM_FIELD_NAME}
@@ -227,7 +211,7 @@ const Filter = (): ReactElement => {
                           />
                         </>
                       )}
-                      {type === FilterType.INCOMING && (
+                      {filterType === FilterType.INCOMING && (
                         <RHFAddressSearchField<FilterForm>
                           name={TOKEN_ADDRESS_FIELD_NAME}
                           hiddenName={HIDDEN_TOKEN_ADDRESS_FIELD_NAME}
@@ -235,7 +219,7 @@ const Filter = (): ReactElement => {
                           methods={methods}
                         />
                       )}
-                      {type === FilterType.MULTISIG && (
+                      {filterType === FilterType.MULTISIG && (
                         <RHFTextField<FilterForm>
                           name={NONCE_FIELD_NAME}
                           label="Nonce"
@@ -245,7 +229,7 @@ const Filter = (): ReactElement => {
                           }}
                         />
                       )}
-                      {type === FilterType.MODULE && (
+                      {filterType === FilterType.MODULE && (
                         <RHFAddressSearchField<FilterForm>
                           name={MODULE_FIELD_NAME}
                           hiddenName={HIDDEN_MODULE_FIELD_NAME}
@@ -258,7 +242,7 @@ const Filter = (): ReactElement => {
                       <Button type="submit" variant="contained" color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={clearParameters} color="default">
+                      <Button variant="contained" onClick={clearFilter} color="default" disabled={isClearable}>
                         Clear
                       </Button>
                     </ButtonWrapper>

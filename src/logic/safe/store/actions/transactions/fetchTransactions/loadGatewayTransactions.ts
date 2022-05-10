@@ -1,10 +1,10 @@
 import { getTransactionHistory, getTransactionQueue, TransactionListPage } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getIncomingTransfers, getMultisigTransactions, getModuleTransactions } from '@@test/dist'
+import { parse, stringify } from 'query-string'
 import { _getChainId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { parseSearch } from 'src/routes/safe/container/hooks/useSearchParams'
 import { history } from 'src/routes/routes'
 import { FilterType } from 'src/routes/safe/components/Transactions/TxList/Filter'
 import { store } from 'src/store'
@@ -21,57 +21,61 @@ export const loadHistory = async (safeAddress: string): Promise<TransactionListP
   const chainId = _getChainId()
   const checksummedAddress = checksumAddress(safeAddress)
 
-  const { type, ...query } = parseSearch(history.location.search)
+  const { type, ...query } = parse(history.location.search)
   const filterType = typeof type === 'string' ? (type as FilterType) : undefined
 
-  const hasFilter = filterType !== historyPointers?.[chainId]?.[checksummedAddress]?.filterType
-  if (hasFilter) {
+  const newFilter = filterType !== historyPointers?.[chainId]?.[safeAddress]?.filterType
+
+  if (newFilter) {
+    historyPointers[chainId] = {}
     store.dispatch(removeHistoryTransactions({ chainId, safeAddress: checksummedAddress }))
   }
 
-  let txListPage: TransactionListPage & { filterType?: FilterType } = {
-    results: [],
-    next: '',
-    previous: '',
-    filterType,
-  }
+  const historyPointerNext = historyPointers[chainId]?.[safeAddress]?.next
 
-  const next = historyPointers[chainId]?.[safeAddress]?.next
+  let txListPage: TransactionListPage = {
+    next: undefined,
+    previous: undefined,
+    results: [],
+  }
 
   try {
     switch (filterType) {
       case FilterType.INCOMING: {
-        txListPage = await getIncomingTransfers(chainId, checksummedAddress, query, next)
+        txListPage = await getIncomingTransfers(chainId, checksummedAddress, query, historyPointerNext)
         break
       }
       case FilterType.MULTISIG: {
-        txListPage = await getMultisigTransactions(chainId, checksummedAddress, query, next)
+        txListPage = await getMultisigTransactions(chainId, checksummedAddress, query, historyPointerNext)
         break
       }
       case FilterType.MODULE: {
-        txListPage = await getModuleTransactions(chainId, checksummedAddress, query, next)
+        txListPage = await getModuleTransactions(chainId, checksummedAddress, query, historyPointerNext)
         break
       }
       default: {
-        txListPage = await getTransactionHistory(chainId, checksummedAddress, next)
+        txListPage = await getTransactionHistory(chainId, checksummedAddress, historyPointerNext)
       }
     }
   } catch (e) {
     // TODO:
   }
 
-  console.log({ txListPage })
-
   if (!historyPointers[chainId]) {
     historyPointers[chainId] = {}
   }
 
-  if (!historyPointers[chainId][safeAddress]) {
-    historyPointers[chainId][safeAddress] = {
-      next: txListPage.next,
-      previous: txListPage.previous,
-      filterType,
+  const getFilteredPageUrl = (pageUrl?: string) => {
+    if (!pageUrl || !filterType) {
+      return pageUrl
     }
+    return `${pageUrl}&${stringify(query)}`
+  }
+
+  historyPointers[chainId][safeAddress] = {
+    next: getFilteredPageUrl(txListPage?.next),
+    previous: getFilteredPageUrl(txListPage?.previous),
+    filterType,
   }
 
   return txListPage
@@ -86,16 +90,15 @@ export const loadPagedHistoryTransactions = async (
   safeAddress: string,
 ): Promise<{ values: HistoryGatewayResponse['results']; next?: string } | undefined> => {
   const chainId = _getChainId()
-  // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
-  // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
-  if (historyPointers[chainId]?.[safeAddress]?.filterType && !historyPointers[chainId]?.[safeAddress]?.next) {
+
+  if (!historyPointers[chainId]?.[safeAddress]?.next) {
     throw new CodedException(Errors._608)
   }
 
   try {
-    const { results } = await loadHistory(safeAddress)
+    const { results, next } = await loadHistory(safeAddress)
 
-    return { values: results, next: historyPointers[chainId][safeAddress].next }
+    return { values: results, next }
   } catch (e) {
     throw new CodedException(Errors._602, e.message)
   }

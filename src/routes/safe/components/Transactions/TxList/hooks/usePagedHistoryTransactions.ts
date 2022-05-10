@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
@@ -8,7 +8,6 @@ import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
-import { useLocation } from 'react-router-dom'
 
 type PagedTransactions = {
   count: number
@@ -21,7 +20,6 @@ type PagedTransactions = {
 export const usePagedHistoryTransactions = (): PagedTransactions => {
   const { count, transactions } = useHistoryTransactions()
   const chainId = useSelector(currentChainId)
-  const { search } = useLocation()
 
   const dispatch = useDispatch()
   const { safeAddress } = useSafeAddress()
@@ -60,11 +58,6 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
     }
     setIsLoading(false)
   }, [chainId, dispatch, safeAddress])
-
-  // Load filtered transactions
-  useEffect(() => {
-    next()
-  }, [search, next])
 
   return { count, transactions, hasMore, next, isLoading }
 }
