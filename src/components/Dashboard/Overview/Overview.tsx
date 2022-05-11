@@ -1,8 +1,8 @@
 import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Text, Identicon } from '@gnosis.pm/safe-react-components'
-import { useHistory } from 'react-router-dom'
 import { Box, Grid } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 
@@ -11,7 +11,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { Card, DashboardTitle } from 'src/components/Dashboard/styled'
+import { Card, WidgetTitle } from 'src/components/Dashboard/styled'
 import { WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
 import Button from 'src/components/layout/Button'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
@@ -28,6 +28,10 @@ const StyledText = styled(Text)`
   margin-top: 8px;
   font-size: 24px;
   font-weight: bold;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
 `
 
 const NetworkLabelContainer = styled.div`
@@ -85,18 +89,17 @@ const Overview = (): ReactElement => {
   const loaded = useSelector(currentSafeLoaded)
   const nftTokens = useSelector(nftTokensSelector)
   const nftLoaded = useSelector(nftLoadedSelector)
-  const history = useHistory()
 
-  const handleOpenAssets = (): void => {
-    history.push(generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName }))
-  }
+  const assetsLink = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName })
+  const nftsLink = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES, { safeAddress: address, shortName })
 
   // Native token is always returned even when its balance is 0
   const tokenCount = useMemo(() => balances.filter((token) => token.tokenBalance !== '0').length, [balances])
 
   return (
     <WidgetContainer>
-      <DashboardTitle>Dashboard</DashboardTitle>
+      <WidgetTitle>&nbsp;</WidgetTitle>
+
       <WidgetBody>
         {!loaded ? (
           SkeletonOverview
@@ -119,24 +122,33 @@ const Overview = (): ReactElement => {
                 </NetworkLabelContainer>
               </Grid>
             </Grid>
+
             <Grid container>
               <Grid item xs={3}>
-                <Text color="inputDefault" size="lg">
-                  Tokens
-                </Text>
-                <StyledText size="xl">{tokenCount}</StyledText>
+                <StyledLink to={assetsLink}>
+                  <Text color="inputDefault" size="lg">
+                    Tokens
+                  </Text>
+                  <StyledText size="xl">{tokenCount}</StyledText>
+                </StyledLink>
               </Grid>
+
               <Grid item xs={3}>
-                <Text color="inputDefault" size="lg">
-                  NFTs
-                </Text>
-                {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+                <StyledLink to={nftsLink}>
+                  <Text color="inputDefault" size="lg">
+                    NFTs
+                  </Text>
+                  {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+                </StyledLink>
               </Grid>
+
               <Grid item xs={6}>
                 <Box display="flex" height={1} alignItems="flex-end" justifyContent="flex-end">
-                  <Button size="medium" variant="contained" color="primary" onClick={handleOpenAssets}>
-                    View Assets
-                  </Button>
+                  <StyledLink to={assetsLink}>
+                    <Button size="medium" variant="contained" color="primary">
+                      View Assets
+                    </Button>
+                  </StyledLink>
                 </Box>
               </Grid>
             </Grid>

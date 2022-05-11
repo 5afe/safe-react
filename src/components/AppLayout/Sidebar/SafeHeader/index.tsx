@@ -49,7 +49,7 @@ const Container = styled.div`
 
 const IdenticonContainer = styled.div`
   width: 100%;
-  margin: 14px 8px;
+  margin: 14px 8px 9px;
   display: flex;
   justify-content: center;
   align-items: center;
