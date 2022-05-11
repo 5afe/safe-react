@@ -31,8 +31,12 @@ import {
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
-import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import {
+  addHistoryTransactions,
+  removeHistoryTransactions,
+} from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const TYPE_FIELD_NAME = 'type'
 const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -84,7 +88,7 @@ const defaultValues: DefaultValues<FilterForm> = {
 const getInitialValues = (search: string) => {
   const parsedSearch = parse(search)
 
-  const timestampToISO = (value: ParsedQuery[string]): string => {
+  const getDate = (value: ParsedQuery[string]): string => {
     const timestamp = Number(value)
     return !isNaN(timestamp) ? formateDate(timestamp) : ''
   }
@@ -93,10 +97,10 @@ const getInitialValues = (search: string) => {
     ...defaultValues,
     ...parsedSearch,
     ...(parsedSearch[DATE_FROM_FIELD_NAME] && {
-      [DATE_FROM_FIELD_NAME]: timestampToISO(parsedSearch[DATE_FROM_FIELD_NAME]),
+      [DATE_FROM_FIELD_NAME]: getDate(parsedSearch[DATE_FROM_FIELD_NAME]),
     }),
     ...(parsedSearch[DATE_TO_FIELD_NAME] && {
-      [DATE_TO_FIELD_NAME]: timestampToISO(parsedSearch[DATE_TO_FIELD_NAME]),
+      [DATE_TO_FIELD_NAME]: getDate(parsedSearch[DATE_TO_FIELD_NAME]),
     }),
   }
 }
@@ -125,6 +129,7 @@ const Filter = (): ReactElement => {
   const isClearable = !search && !formState.isDirty
 
   const loadTransactions = async () => {
+    dispatch(removeHistoryTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
     try {
       const values = await loadHistoryTransactions(safeAddress)
       dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
@@ -145,7 +150,7 @@ const Filter = (): ReactElement => {
   const filterType = watch(TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
-    const params =
+    const params: Record<string, string> =
       filterType === FilterType.INCOMING
         ? getIncomingFilter(filter)
         : FilterType.MULTISIG

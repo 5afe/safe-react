@@ -7,8 +7,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { history } from 'src/routes/routes'
 import { FilterType } from 'src/routes/safe/components/Transactions/TxList/Filter'
-import { store } from 'src/store'
-import { removeHistoryTransactions } from '../gatewayTransactions'
 
 /*************/
 /*  HISTORY  */
@@ -26,9 +24,8 @@ export const loadHistory = async (safeAddress: string): Promise<TransactionListP
 
   const newFilter = filterType !== historyPointers?.[chainId]?.[safeAddress]?.filterType
 
-  if (newFilter) {
+  if (!historyPointers[chainId] || newFilter) {
     historyPointers[chainId] = {}
-    store.dispatch(removeHistoryTransactions({ chainId, safeAddress: checksummedAddress }))
   }
 
   const historyPointerNext = historyPointers[chainId]?.[safeAddress]?.next
@@ -59,10 +56,6 @@ export const loadHistory = async (safeAddress: string): Promise<TransactionListP
     }
   } catch (e) {
     // TODO:
-  }
-
-  if (!historyPointers[chainId]) {
-    historyPointers[chainId] = {}
   }
 
   const getFilteredPageUrl = (pageUrl?: string) => {
