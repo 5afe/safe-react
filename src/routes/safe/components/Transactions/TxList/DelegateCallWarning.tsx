@@ -1,25 +1,13 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
-import { md } from 'src/theme/variables'
-import styled from 'styled-components'
 
-const StyledText = styled(Text)`
-  margin-bottom: ${md};
-`
+import AlertTooltipWarning from './AlertTooltipWarning'
 
-const DelegateCallWarning = ({ showWarning }: { showWarning: boolean }): ReactElement => {
-  if (showWarning) {
-    return (
-      <StyledText size="xl" strong color="error">
-        ⚠️ Unexpected Delegate Call
-      </StyledText>
-    )
-  }
-  return (
-    <StyledText size="xl" strong>
-      Delegate Call
-    </StyledText>
-  )
-}
+const DelegateCallWarning = ({ showWarning = false }: { showWarning: boolean }): ReactElement => (
+  <AlertTooltipWarning
+    tooltip="This transaction calls a smart contract that will be able to modify your Safe."
+    message={showWarning ? 'Unexpected Delegate Call' : 'Delegate Call'}
+    isWarning={showWarning}
+  />
+)
 
 export default DelegateCallWarning
