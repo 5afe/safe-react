@@ -3,6 +3,12 @@ import { withStyles, Theme, Tooltip, Button } from '@material-ui/core'
 import useCachedState from 'src/utils/storage/useCachedState'
 import styled from 'styled-components'
 
+/**
+ * The OnboardingWidget renders a sticky Tooltip with an arrow pointing towards the wrapped component.
+ * This Tooltip contains a button to hide it. This decision will be stored in the local storage such that the OnboardingWidget will only popup until clicked away once.
+ *
+ * As this renders a MUI Tooltip it comes with the same restrictions (https://v4.mui.com/components/tooltips/).
+ */
 export const OnboardingWidget = ({
   children,
   widgetLocalStorageId,
