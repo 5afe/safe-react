@@ -1,16 +1,16 @@
 import { Button } from '@material-ui/core'
 import local from 'src/utils/storage/local'
 import { render, screen } from 'src/utils/test-utils'
-import { OnboardingWidget } from '.'
+import { OnboardingTooltip } from '.'
 
 describe('<OnboardingWidget>', () => {
   test('renders widget on initial render and hides it after click on button', () => {
     const text = 'New feature available!'
 
     render(
-      <OnboardingWidget text={text} widgetLocalStorageId="someTestId">
+      <OnboardingTooltip text={text} widgetLocalStorageId="someTestId">
         <Button>Testbutton</Button>
-      </OnboardingWidget>,
+      </OnboardingTooltip>,
     )
 
     expect(screen.getByText(new RegExp(text))).toBeInTheDocument()
@@ -27,12 +27,12 @@ describe('<OnboardingWidget>', () => {
 
     render(
       <div>
-        <OnboardingWidget text={text1} widgetLocalStorageId="someTestId1">
+        <OnboardingTooltip text={text1} widgetLocalStorageId="someTestId1">
           <Button>First Button</Button>
-        </OnboardingWidget>
-        <OnboardingWidget text={text2} widgetLocalStorageId="someTestId2">
+        </OnboardingTooltip>
+        <OnboardingTooltip text={text2} widgetLocalStorageId="someTestId2">
           <Button>Second Button</Button>
-        </OnboardingWidget>
+        </OnboardingTooltip>
       </div>,
     )
 
@@ -58,9 +58,9 @@ describe('<OnboardingWidget>', () => {
     const text = 'New feature available!'
 
     render(
-      <OnboardingWidget text={text} widgetLocalStorageId={widgetStorageId}>
+      <OnboardingTooltip text={text} widgetLocalStorageId={widgetStorageId}>
         <Button>Testbutton</Button>
-      </OnboardingWidget>,
+      </OnboardingTooltip>,
     )
     expect(screen.queryByText(new RegExp(text))).not.toBeInTheDocument()
     expect(screen.getByText(/Testbutton/)).toBeInTheDocument()

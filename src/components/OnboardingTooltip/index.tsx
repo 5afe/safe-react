@@ -1,21 +1,23 @@
 import { Icon } from '@gnosis.pm/safe-react-components'
-import { withStyles, Theme, Tooltip, Button } from '@material-ui/core'
+import { Button, withStyles } from '@material-ui/core'
 import useCachedState from 'src/utils/storage/useCachedState'
 import styled from 'styled-components'
+import { Tooltip } from '../layout/Tooltip'
 
 /**
- * The OnboardingWidget renders a sticky Tooltip with an arrow pointing towards the wrapped component.
- * This Tooltip contains a button to hide it. This decision will be stored in the local storage such that the OnboardingWidget will only popup until clicked away once.
+ * The OnboardingTooltip renders a sticky Tooltip with an arrow pointing towards the wrapped component.
+ * This Tooltip contains a button to hide it. This decision will be stored in the local storage such that the OnboardingTooltip will only popup until clicked away once.
  *
  * As this renders a MUI Tooltip it comes with the same restrictions (https://v4.mui.com/components/tooltips/).
  */
-export const OnboardingWidget = ({
+export const OnboardingTooltip = ({
   children,
   widgetLocalStorageId,
   text,
 }: {
   children: React.ReactElement
   widgetLocalStorageId: string
+
   text: string
 }): React.ReactElement => {
   const [widgetHidden, setWidgetHidden] = useCachedState<boolean>(widgetLocalStorageId)
@@ -23,7 +25,7 @@ export const OnboardingWidget = ({
   return widgetHidden ? (
     children
   ) : (
-    <OnboardingTooltip
+    <StyledTooltip
       open
       interactive
       TransitionProps={{
@@ -41,27 +43,13 @@ export const OnboardingWidget = ({
       }
     >
       {children}
-    </OnboardingTooltip>
+    </StyledTooltip>
   )
 }
-const OnboardingTooltip = withStyles(({ palette }: Theme) => ({
-  arrow: {
-    '&::before': {
-      backgroundColor: palette.common.white,
-      bottom: '5px',
-    },
-  },
+
+const StyledTooltip = withStyles(() => ({
   tooltip: {
-    color: palette.common.black,
-    backgroundColor: palette.common.white,
-    borderRadius: '8px',
-    boxShadow: '1px 2px 10px rgba(40, 54, 61, 0.18)',
-    fontSize: '14px',
-    padding: '16px',
     maxWidth: '500px',
-  },
-  popper: {
-    zIndex: 1300,
   },
 }))(Tooltip)
 

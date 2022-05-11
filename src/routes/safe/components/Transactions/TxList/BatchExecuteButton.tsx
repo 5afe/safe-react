@@ -1,14 +1,14 @@
-import { Theme, Tooltip, withStyles } from '@material-ui/core'
 import { ReactElement, useCallback, useContext, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
-import { OnboardingWidget } from 'src/components/OnboardingWidget'
+import { Tooltip } from 'src/components/layout/Tooltip'
+import { OnboardingTooltip } from 'src/components/OnboardingTooltip'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { AppReduxState } from 'src/store'
 import { md, sm } from 'src/theme/variables'
 import styled from 'styled-components'
-import { BatchExecuteHoverContext } from './BatchExecuteHoverProvider'
+import { BatchExecuteHoverContext } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
 
 interface BatchExecuteButtonProps {
   onClick: () => void
@@ -36,22 +36,21 @@ export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactE
   }, [hoverContext])
 
   return (
-    <OnboardingWidget
+    <OnboardingTooltip
       text="Queued transactions can now be executed in batches!"
       widgetLocalStorageId={HELP_STORAGE_KEY}
     >
       <ButtonWrapper>
-        <StyledTooltip
-          interactive
+        <Tooltip
           title={
             isDisabled
-              ? 'Batch execution is only available for transactions that have been fully signed and which are strictly sequential in Safe Nonce.'
+              ? 'Batch execution is only available for transactions that have been fully signed and are strictly sequential in Safe Nonce.'
               : 'All transactions highlighted in light green will be included in the batch execution.'
           }
           arrow
           placement="top-start"
         >
-          <span>
+          <div>
             <Button
               color="primary"
               variant="contained"
@@ -62,10 +61,10 @@ export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactE
             >
               Execute Batch {isBatchable && `(${batchableTransactions.length})`}
             </Button>
-          </span>
-        </StyledTooltip>
+          </div>
+        </Tooltip>
       </ButtonWrapper>
-    </OnboardingWidget>
+    </OnboardingTooltip>
   )
 }
 
@@ -76,20 +75,3 @@ const ButtonWrapper = styled.span`
   margin-bottom: ${md};
   z-index: 0;
 `
-
-const StyledTooltip = withStyles(({ palette }: Theme) => ({
-  arrow: {
-    '&::before': {
-      backgroundColor: palette.common.white,
-      boxShadow: '1px 2px 10px rgba(40, 54, 61, 0.18)',
-    },
-  },
-  tooltip: {
-    color: palette.common.black,
-    backgroundColor: palette.common.white,
-    borderRadius: '8px',
-    boxShadow: '1px 2px 10px rgba(40, 54, 61, 0.18)',
-    fontSize: '14px',
-    padding: '16px',
-  },
-}))(Tooltip)

@@ -1,28 +1,16 @@
 import { ReactElement } from 'react'
-import { Theme, Tooltip, TooltipProps } from '@material-ui/core'
+import { TooltipProps } from '@material-ui/core'
 import Alert, { AlertProps } from '@material-ui/lab/Alert'
 import { withStyles } from '@material-ui/styles'
 import styled from 'styled-components'
 
 import { orange500, black500, orange200, green500, green200 } from 'src/theme/variables'
+import { Tooltip } from 'src/components/layout/Tooltip'
 
-// Tooltip doesn't accept a className, preventing use of `styled-components`
-const StyledTooltip = withStyles(({ palette }: Theme) => ({
+const StyledTooltip = withStyles(() => ({
   arrow: {
-    '&::before': {
-      backgroundColor: palette.common.white,
-      boxShadow: '1px 2px 10px rgba(40, 54, 61, 0.18)',
-    },
     // Align arrow with Alert icon
     left: '10px !important',
-  },
-  tooltip: {
-    color: palette.common.black,
-    backgroundColor: palette.common.white,
-    borderRadius: '8px',
-    boxShadow: '1px 2px 10px rgba(40, 54, 61, 0.18)',
-    fontSize: '14px',
-    padding: '16px',
   },
 }))(Tooltip)
 
