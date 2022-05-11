@@ -42,6 +42,9 @@ import { DecodeTxs } from 'src/components/DecodeTxs'
 import { DecodedDataParameterValue } from '@gnosis.pm/safe-react-gateway-sdk'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { Skeleton } from '@material-ui/lab'
+import { sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
+import { TransactionFailText } from 'src/components/TransactionFailText'
+import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const DecodedTransactions = ({
   transactions,
@@ -125,7 +128,7 @@ async function getBatchExecuteData(
 }
 
 // Memoized as it receives no props
-export const BatchExecute = React.memo((): ReactElement => {
+export const BatchExecute = React.memo((): ReactElement | null => {
   const hoverContext = useContext(BatchExecuteHoverContext)
   const dispatch = useDispatch<Dispatch>()
   const { address: safeAddress, currentVersion } = useSelector(currentSafe)
@@ -138,6 +141,7 @@ export const BatchExecute = React.memo((): ReactElement => {
   const [buttonStatus, setButtonStatus] = useState(ButtonStatus.LOADING)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const store = useSelector((state: AppReduxState) => state)
+  const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
   const hasPendingTx = useMemo(
     () => batchableTransactions.some(({ id }) => isTxPending(store, id)),
     [batchableTransactions, store],
@@ -174,8 +178,7 @@ export const BatchExecute = React.memo((): ReactElement => {
       safeAddress,
       account,
     )
-
-    setButtonStatus(ButtonStatus.READY)
+    setButtonStatus(isSameAddressAsSafe ? ButtonStatus.DISABLED : ButtonStatus.READY)
     setMultiSendCallData(batchExecuteData)
   }
 
@@ -189,6 +192,10 @@ export const BatchExecute = React.memo((): ReactElement => {
     })
 
     toggleModal()
+  }
+
+  if (!account) {
+    return null
   }
 
   return (
@@ -246,6 +253,7 @@ export const BatchExecute = React.memo((): ReactElement => {
             This feature is still in experimental mode. Be aware that if any of the included transactions reverts, none
             of them will be executed. This will result in the loss of the allocated transaction fees.
           </Paragraph>
+          <TransactionFailText estimationStatus={EstimationStatus.SUCCESS} isExecution isCreation={false} />
         </ModalContent>
         <Modal.Footer withoutBorder>
           <Modal.Footer.Buttons
