@@ -38,7 +38,7 @@ import { DecodeTxs } from 'src/components/DecodeTxs'
 import { DecodedDataParameterValue } from '@gnosis.pm/safe-react-gateway-sdk'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { Skeleton } from '@material-ui/lab'
-import { BatchExecuteButton } from './BatchExecuteButton'
+import { BatchExecuteButton } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteButton'
 
 const DecodedTransactions = ({
   transactions,
