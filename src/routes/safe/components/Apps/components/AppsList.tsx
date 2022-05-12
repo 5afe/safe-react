@@ -1,4 +1,13 @@
-import { IconText, Loader, Menu, Text, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import {
+  Button,
+  Card,
+  IconText,
+  Loader,
+  Menu,
+  Text,
+  Breadcrumb,
+  BreadcrumbElement,
+} from '@gnosis.pm/safe-react-components'
 import { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -6,15 +15,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Collapse from 'src/components/Collapse'
 import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
-import { AppCard, AddCustomAppCard } from 'src/routes/safe/components/Apps/components/AppCard'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
+import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { SearchInputCard } from './SearchInputCard'
 import { NoAppsFound } from './NoAppsFound'
 import { SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { useAppList } from '../hooks/appList/useAppList'
 import { useAppsSearch } from '../hooks/useAppsSearch'
-import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
+import SafeAppCard from 'src/routes/safe/components/Apps/components/SafeAppCard/SafeAppCard'
 import { PinnedAppsTutorial } from './PinnedAppsTutorial'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
@@ -65,12 +74,23 @@ const CenterIconText = styled(IconText)`
   margin: 16px 55px 20px 0;
 `
 
+const AddCustomSafeAppCard = styled(Card)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 190px;
+  padding: 0;
+  flex-direction: column;
+  box-shadow: none;
+`
+
+const AddCustomAppLogo = styled.img`
+  height: 90px;
+  margin-bottom: 4px;
+`
+
 const AppsList = (): React.ReactElement => {
-  const { shortName, safeAddress } = useSafeAddress()
-  const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
-    shortName,
-    safeAddress,
-  })
+  const { safeAddress } = useSafeAddress()
   const [appSearch, setAppSearch] = useState('')
   const { allApps, appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
   const apps = useAppsSearch(appList, appSearch)
@@ -79,10 +99,6 @@ const AppsList = (): React.ReactElement => {
   const noAppsFound = apps.length === 0 && appSearch
   const showCustomApps = !!customApps.length && !appSearch
   const showPinnedApps = !appSearch
-
-  const handleAppPin = (app: SafeApp) => {
-    togglePin(app)
-  }
 
   if (isLoading || !safeAddress) {
     return (
@@ -116,13 +132,13 @@ const AppsList = (): React.ReactElement => {
             {pinnedSafeApps.length === 0 && <PinnedAppsTutorial />}
             <AnimatePresence>
               <CardsWrapper data-testid={PINNED_APPS_LIST_TEST_ID}>
-                {pinnedSafeApps.map((a) => (
-                  <AppCard
-                    to={`${appsPath}?appUrl=${encodeURI(a.url)}`}
-                    key={a.id}
-                    app={a}
-                    pinned
-                    onPin={handleAppPin}
+                {pinnedSafeApps.map((pinnedSafeApp) => (
+                  <SafeAppCard
+                    key={pinnedSafeApp.id}
+                    safeApp={pinnedSafeApp}
+                    togglePin={togglePin}
+                    size="md"
+                    isPinned
                   />
                 ))}
               </CardsWrapper>
@@ -141,8 +157,15 @@ const AppsList = (): React.ReactElement => {
           >
             <AnimatePresence>
               <CardsWrapper>
-                {customApps.map((a) => (
-                  <AppCard to={`${appsPath}?appUrl=${encodeURI(a.url)}`} key={a.id} app={a} onRemove={setAppToRemove} />
+                {customApps.map((customSafeApp) => (
+                  <SafeAppCard
+                    key={customSafeApp.id}
+                    safeApp={customSafeApp}
+                    togglePin={togglePin}
+                    onRemove={setAppToRemove}
+                    isCustomSafeApp
+                    size="md"
+                  />
                 ))}
               </CardsWrapper>
             </AnimatePresence>
@@ -155,14 +178,22 @@ const AppsList = (): React.ReactElement => {
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
         <AnimatePresence>
           <CardsWrapper data-testid={ALL_APPS_LIST_TEST_ID}>
-            {!appSearch && <AddCustomAppCard onClick={openAddAppModal} />}
-            {apps.map((a) => (
-              <AppCard
-                to={`${appsPath}?appUrl=${encodeURIComponent(a.url)}`}
-                key={a.id}
-                app={a}
-                onPin={handleAppPin}
-                pinned={pinnedSafeApps.some((pinnedApp) => pinnedApp.id === a.id)}
+            {!appSearch && (
+              <AddCustomSafeAppCard>
+                <AddCustomAppLogo src={AddAppIcon} alt="Add Custom Safe App logo" />
+                <Button size="md" color="primary" variant="contained" onClick={() => openAddAppModal()}>
+                  Add custom app
+                </Button>
+              </AddCustomSafeAppCard>
+            )}
+
+            {apps.map((safeApp) => (
+              <SafeAppCard
+                key={safeApp.id}
+                safeApp={safeApp}
+                togglePin={togglePin}
+                isPinned={pinnedSafeApps.some((pinnedSafeApp) => pinnedSafeApp.id === safeApp.id)}
+                size="md"
               />
             ))}
           </CardsWrapper>

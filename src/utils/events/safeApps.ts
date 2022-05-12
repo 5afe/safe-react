@@ -34,6 +34,22 @@ const SAFE_APPS = {
     event: GTM_EVENT.META,
     action: 'Legacy API call',
   },
+  SHARED_APP_LANDING: {
+    event: GTM_EVENT.META,
+    action: 'Shared App landing page visited',
+  },
+  SHARED_APP_CHAIN_ID: {
+    event: GTM_EVENT.META,
+    action: 'Shared App chainId',
+  },
+  SHARED_APP_OPEN_DEMO: {
+    event: GTM_EVENT.META,
+    action: 'Open demo safe from shared app',
+  },
+  SHARED_APP_OPEN_AFTER_SAFE_CREATION: {
+    event: GTM_EVENT.META,
+    action: 'Open shared app after Safe creation',
+  },
 }
 
 const SAFE_APPS_CATEGORY = 'safe-apps'

@@ -16,6 +16,7 @@ import {
   getNetworkRootRoutes,
   SAFE_ROUTES,
   GENERIC_APPS_ROUTE,
+  SAFE_APP_LANDING_PAGE_ROUTE,
 } from './routes'
 import { setChainId } from 'src/logic/config/utils'
 import { setChainIdFromUrl } from 'src/utils/history'
@@ -25,6 +26,7 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 const Welcome = React.lazy(() => import('./welcome/Welcome'))
 const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
 const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
+const SafeAppLandingPage = React.lazy(() => import('./SafeAppLandingPage/SafeAppLandingPage'))
 const SafeContainer = React.lazy(() => import('./safe/container'))
 
 const Routes = (): React.ReactElement => {
@@ -127,6 +129,7 @@ const Routes = (): React.ReactElement => {
         }}
       />
       <Route component={LoadSafePage} path={[LOAD_SAFE_ROUTE, LOAD_SPECIFIC_SAFE_ROUTE]} />
+      <Route component={SafeAppLandingPage} path={SAFE_APP_LANDING_PAGE_ROUTE} />
       <Redirect to={ROOT_ROUTE} />
     </Switch>
   )
