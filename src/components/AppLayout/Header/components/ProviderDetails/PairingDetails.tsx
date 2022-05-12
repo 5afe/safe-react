@@ -23,10 +23,11 @@ const qrRefresh: CSSProperties = {
 const StyledContainer = styled.div<{
   $vertical: boolean
 }>`
-  max-width: 510px;
+  max-width: 375px;
   display: flex;
   flex-flow: ${(props) => (props.$vertical ? 'column wrap' : 'row nowrap')};
   align-items: center;
+  align-content: center;
   gap: 24px;
 
   div {

@@ -1,6 +1,5 @@
 import { ReactElement, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
@@ -40,30 +39,29 @@ function SelectWalletAndNetworkStep(): ReactElement {
   return (
     <Container data-testid={'select-network-step'}>
       {isWalletConnected ? (
-        <Paragraph color="primary" noMargin size="lg">
-          Select network on which to create your Safe. The app is currently pointing to{' '}
-          <NetworkLabel onClick={openNetworkSelectorPopup} />
-        </Paragraph>
+        <>
+          {!isWrongNetwork && (
+            <Paragraph color="primary" noMargin size="lg">
+              Wallet connected.
+            </Paragraph>
+          )}
+
+          <Paragraph color="primary" size="lg" noMargin={isWrongNetwork}>
+            Creating a Safe on&nbsp;
+            <NetworkLabel onClick={openNetworkSelectorPopup} />
+          </Paragraph>
+        </>
       ) : (
         <Paragraph color="primary" noMargin size="lg">
-          In order to select the network to create your Safe, you need to connect a wallet
+          In order to create your Safe, you need to connect a wallet
         </Paragraph>
       )}
 
-      <SwitchNetworkContainer>
-        {isWalletConnected ? (
-          <ButtonLink
-            type="button"
-            onClick={openNetworkSelectorPopup}
-            color="primary"
-            data-testid={'switch-network-link'}
-          >
-            Switch Network
-          </ButtonLink>
-        ) : (
+      {!isWalletConnected && (
+        <WalletContainer>
           <ConnectDetails />
-        )}
-      </SwitchNetworkContainer>
+        </WalletContainer>
+      )}
 
       {isWalletConnected && isWrongNetwork && (
         <Paragraph color="primary" size="lg">
@@ -101,7 +99,7 @@ const Container = styled(Block)`
   padding: ${lg};
 `
 
-const SwitchNetworkContainer = styled.div`
+const WalletContainer = styled.div`
   padding: 30px 0;
   padding-left: 45px;
 
