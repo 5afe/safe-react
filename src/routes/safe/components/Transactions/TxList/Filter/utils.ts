@@ -13,6 +13,7 @@ import {
   DATE_FROM_FIELD_NAME,
   DATE_TO_FIELD_NAME,
   FilterForm,
+  FilterType,
   FILTER_TYPE_FIELD_NAME,
   MODULE_FIELD_NAME,
   NONCE_FIELD_NAME,
@@ -65,20 +66,21 @@ export const isTxFilter = (object: ParsedUrlQuery): object is Partial<FilterForm
     MODULE_FIELD_NAME,
     NONCE_FIELD_NAME,
   ]
-  return Object.keys(object).some(FILTER_FIELD_NAMES.includes)
+  return Object.keys(object).some((key) => FILTER_FIELD_NAMES.includes(key))
 }
 
 // Filter formatters
 
 type IncomingFilter = operations['incoming_transfers']['parameters']['query']
 type OutgoingFilter = operations['multisig_transactions']['parameters']['query']
+type Filter = (FilterForm | Partial<FilterForm>) & { type?: FilterType }
 
 const getTransactionFilter = ({
   execution_date__gte,
   execution_date__lte,
   to,
   value,
-}: FilterForm | Partial<FilterForm>): Partial<IncomingFilter | OutgoingFilter> => {
+}: Filter): Partial<IncomingFilter | OutgoingFilter> => {
   const getISOString = (date: string): string => new Date(date).toISOString()
   return {
     ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
@@ -88,7 +90,7 @@ const getTransactionFilter = ({
   }
 }
 
-export const getIncomingFilter = (filter: FilterForm | Partial<FilterForm>): IncomingFilter => {
+export const getIncomingFilter = (filter: Filter): IncomingFilter => {
   const { token_address } = filter
   return {
     ...getTransactionFilter(filter),
@@ -96,7 +98,7 @@ export const getIncomingFilter = (filter: FilterForm | Partial<FilterForm>): Inc
   }
 }
 
-export const getMultisigFilter = (filter: FilterForm | Partial<FilterForm>): OutgoingFilter => {
+export const getMultisigFilter = (filter: Filter): OutgoingFilter => {
   const { nonce } = filter
   return {
     ...getTransactionFilter(filter),
@@ -106,7 +108,7 @@ export const getMultisigFilter = (filter: FilterForm | Partial<FilterForm>): Out
 
 type ModuleFilter = operations['module_transactions']['parameters']['query']
 
-export const getModuleFilter = ({ module }: FilterForm | Partial<FilterForm>): ModuleFilter => {
+export const getModuleFilter = ({ module }: Filter): ModuleFilter => {
   return {
     ...(module && { module }),
   }

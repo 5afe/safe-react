@@ -1,4 +1,5 @@
 import * as appearanceSelectors from 'src/logic/appearance/selectors'
+import { FilterType } from '..'
 import * as utils from '../utils'
 
 const VALID_ADDRESS = '0x1234567890123456789012345678901234567890'
@@ -77,6 +78,88 @@ describe('utils', () => {
 
     it('return otherwise return undefined', () => {
       expect(utils.getFilterHelperText('testValue')).toBe(undefined)
+    })
+  })
+  describe('isTxFilter', () => {
+    const filterKeys = [
+      'type',
+      'execution_date__gte',
+      'execution_date__lte',
+      'to',
+      'value',
+      'token_address',
+      'module',
+      'nonce',
+    ]
+    it('should return true if the object has only valid filter keys', () => {
+      filterKeys.forEach((key) => {
+        expect(utils.isTxFilter({ [key]: 'test' })).toBe(true)
+      })
+    })
+
+    it('should return true if the object has a valid filter key', () => {
+      filterKeys.forEach((key, i) => {
+        const str = i.toString()
+        expect(utils.isTxFilter({ str, [key]: 'test' })).toBe(true)
+      })
+    })
+
+    it('should return true if the object has only invalid filter keys', () => {
+      expect(utils.isTxFilter({ test: 'test' })).toBe(false)
+    })
+  })
+
+  describe('getIncomingFilter', () => {
+    it('should extract the incoming filter values from the filter, correctly formatted', () => {
+      const filter = {
+        __to: 'fakeaddress.eth',
+        to: '0x1234567890123456789012345678901234567890',
+        execution_date__gte: '1970-01-01',
+        execution_date__lte: '2000-01-01',
+        type: FilterType.INCOMING,
+        value: '123',
+      }
+
+      expect(utils.getIncomingFilter(filter)).toEqual({
+        to: '0x1234567890123456789012345678901234567890',
+        execution_date__gte: '1970-01-01T00:00:00.000Z',
+        execution_date__lte: '2000-01-01T00:00:00.000Z',
+        value: 123,
+      })
+    })
+  })
+  describe('getMultisigFilter', () => {
+    it('should extract the incoming filter values from the filter, correctly formatted', () => {
+      const filter = {
+        __to: 'fakeaddress.eth',
+        to: '0x1234567890123456789012345678901234567890',
+        execution_date__gte: '1970-01-01',
+        execution_date__lte: '2000-01-01',
+        type: FilterType.MULTISIG,
+        value: '123',
+        nonce: '123',
+      }
+
+      expect(utils.getMultisigFilter(filter)).toEqual({
+        to: '0x1234567890123456789012345678901234567890',
+        execution_date__gte: '1970-01-01T00:00:00.000Z',
+        execution_date__lte: '2000-01-01T00:00:00.000Z',
+        value: 123,
+        nonce: 123,
+      })
+    })
+  })
+  describe('getModuleFilter', () => {
+    it('should extract the incoming filter values from the filter, correctly formatted', () => {
+      const filter = {
+        __module: 'fakeaddress.eth',
+        module: '0x1234567890123456789012345678901234567890',
+        type: FilterType.MODULE,
+      }
+
+      expect(utils.getModuleFilter(filter)).toEqual({
+        module: '0x1234567890123456789012345678901234567890',
+      })
     })
   })
 })
