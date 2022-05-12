@@ -7,9 +7,7 @@ import { Link } from '@gnosis.pm/safe-react-components'
 import QRCode from 'qrcode.react'
 
 import Paragraph from 'src/components/layout/Paragraph'
-import usePairing from 'src/logic/wallets/pairing/hooks/usePairing'
-import { initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
-import { useGetPairingUri } from 'src/logic/wallets/pairing/hooks/useGetPairingUri'
+import { getPairingUri, initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import AppstoreButton from 'src/components/AppstoreButton'
@@ -59,9 +57,8 @@ type PairingDetailsProps = {
 }
 
 const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement => {
-  const uri = useGetPairingUri()
+  const uri = getPairingUri()
   const isPairingLoaded = isPairingModule()
-  usePairing()
 
   const qr = uri ? (
     <QRCode value={uri} size={QR_DIMENSION} />
