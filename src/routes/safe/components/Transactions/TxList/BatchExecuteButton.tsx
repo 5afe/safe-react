@@ -36,10 +36,7 @@ export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactE
   }, [hoverContext])
 
   return (
-    <OnboardingTooltip
-      text="Queued transactions can now be executed in batches!"
-      widgetLocalStorageId={HELP_STORAGE_KEY}
-    >
+    <OnboardingTooltip text="Confirmed transactions can be executed in batches" widgetLocalStorageId={HELP_STORAGE_KEY}>
       <ButtonWrapper>
         <Tooltip
           title={
