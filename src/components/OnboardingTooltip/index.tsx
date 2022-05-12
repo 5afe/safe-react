@@ -36,8 +36,8 @@ export const OnboardingTooltip = ({
         <StyledOnboardingContent>
           <Icon size="md" type="info" color="primary" />
           <span>{text}</span>
-          <Button color="primary" variant="contained" onClick={() => setWidgetHidden(true)}>
-            Got it
+          <Button color="secondary" variant="text" onClick={() => setWidgetHidden(true)}>
+            Got it!
           </Button>
         </StyledOnboardingContent>
       }
