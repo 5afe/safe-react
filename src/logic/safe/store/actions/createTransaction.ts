@@ -169,11 +169,16 @@ export class TxSender {
       return
     }
 
-    const contractErrorMessage = await getContractErrorMessage({
-      safeInstance,
-      from,
-      data: executeData,
-    })
+    let contractErrorMessage
+    try {
+      contractErrorMessage = await getContractErrorMessage({
+        safeInstance,
+        from,
+        data: executeData,
+      })
+    } catch (err) {
+      notifications.showOnError(err, err.message)
+    }
 
     if (contractErrorMessage) {
       logError(Errors._803, contractErrorMessage)
