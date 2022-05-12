@@ -48,7 +48,7 @@ function SelectWalletAndNetworkStep(): ReactElement {
 
           <Paragraph color="primary" size="lg" noMargin={isWrongNetwork}>
             Creating a Safe on&nbsp;
-            <NetworkLabel onClick={openNetworkSelectorPopup} />
+            <NetworkLabel onClick={openNetworkSelectorPopup} data-testid="switch-network-link" />
           </Paragraph>
         </>
       ) : (
