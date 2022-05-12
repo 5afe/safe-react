@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Controller, DefaultValues, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -10,10 +10,9 @@ import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { parse, ParsedQuery, stringify } from 'query-string'
+import { parse, ParsedQuery } from 'query-string'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { operations } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/api'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFTextField'
@@ -24,11 +23,6 @@ import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import { formateDate } from 'src/utils/date'
-import {
-  getIncomingFilter,
-  getModuleFilter,
-  getMultisigFilter,
-} from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
@@ -38,19 +32,21 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { ChainId } from 'src/config/chain'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
-const DATE_FROM_FIELD_NAME = 'execution_date__gte'
-const DATE_TO_FIELD_NAME = 'execution_date__lte'
-const RECIPIENT_FIELD_NAME = 'to'
-const AMOUNT_FIELD_NAME = 'value'
-const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
-const MODULE_FIELD_NAME = 'module'
-const NONCE_FIELD_NAME = 'nonce'
+export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
+export const DATE_TO_FIELD_NAME = 'execution_date__lte'
+export const RECIPIENT_FIELD_NAME = 'to'
+export const AMOUNT_FIELD_NAME = 'value'
+export const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
+export const MODULE_FIELD_NAME = 'module'
+export const NONCE_FIELD_NAME = 'nonce'
 // We use 'hidden' fields for the ENS domain/address book name
-const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
-const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
-const HIDDEN_MODULE_FIELD_NAME = '__module'
+export const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
+export const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
+export const HIDDEN_MODULE_FIELD_NAME = '__module'
 
 export enum FilterType {
   INCOMING = 'Incoming',
@@ -106,67 +102,78 @@ const getInitialValues = (search: string) => {
   }
 }
 
+const loadTransactions = ({
+  chainId,
+  safeAddress,
+  filter,
+}: {
+  chainId: ChainId
+  safeAddress: string
+  filter?: FilterForm
+}) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(removeHistoryTransactions({ chainId, safeAddress }))
+
+    try {
+      const values = await loadHistoryTransactions(safeAddress, filter)
+      dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
+    } catch (e) {
+      e.log()
+    }
+  }
+}
+
 const Filter = (): ReactElement => {
   const dispatch = useDispatch()
   const chainId = useSelector(currentChainId)
-  const history = useHistory()
-  const { pathname, search } = useLocation()
   const { safeAddress } = useSafeAddress()
+  const { pathname, search } = useLocation()
+  const history = useHistory()
 
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
   const toggleFilter = () => setShowFilter((prev) => !prev)
 
-  const setSearchParams = (params?: Record<string, unknown>) => {
-    history.replace(params ? `${pathname}?${stringify(params)}` : pathname)
-  }
-
   const methods = useForm<FilterForm>({
     defaultValues: getInitialValues(search),
     shouldUnregister: true,
   })
-  const { handleSubmit, reset, watch, control, formState } = methods
+  const { handleSubmit, reset, watch, control } = methods
 
-  const isClearable = !search && !formState.isDirty
+  const clearFilter = useCallback(
+    ({ clearSearch = true } = {}) => {
+      if (!search) {
+        return
+      }
 
-  const loadTransactions = async () => {
-    const checksummedAddress = checksumAddress(safeAddress)
+      if (clearSearch) {
+        history.replace(pathname)
+      }
 
-    dispatch(removeHistoryTransactions({ chainId, safeAddress: checksummedAddress }))
+      dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
 
-    try {
-      const values = await loadHistoryTransactions(safeAddress)
-      dispatch(addHistoryTransactions({ chainId, safeAddress: checksummedAddress, values }))
-    } catch (e) {
-      e.log()
+      reset(defaultValues)
+      hideFilter()
+    },
+    [search, history, pathname, chainId, dispatch, reset, safeAddress],
+  )
+
+  useEffect(() => {
+    return () => {
+      // If search is programatically cleared on unmount, the router routes back to here
+      // Search is inherently cleared when unmounting either way
+      clearFilter({ clearSearch: false })
     }
-  }
-
-  const clearFilter = () => {
-    setSearchParams()
-
-    loadTransactions()
-
-    reset(defaultValues)
-    hideFilter()
-  }
+  }, [clearFilter])
 
   const filterType = watch(FILTER_TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
-    const query: operations[
-      | 'incoming_transfers'
-      | 'multisig_transactions'
-      | 'module_transactions']['parameters']['query'] =
-      filterType === FilterType.INCOMING
-        ? getIncomingFilter(filter)
-        : FilterType.MULTISIG
-        ? getMultisigFilter(filter)
-        : getModuleFilter(filter)
+    const query = Object.fromEntries(Object.entries(filter).filter(([, value]) => !!value))
 
-    setSearchParams({ ...query, [FILTER_TYPE_FIELD_NAME]: filterType })
+    history.replace({ pathname, search: `?${new URLSearchParams(query).toString()}` })
 
-    loadTransactions()
+    dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress), filter }))
 
     trackEvent(TX_LIST_EVENTS.FILTER)
     hideFilter()
@@ -177,7 +184,7 @@ const Filter = (): ReactElement => {
       <BackdropLayout isOpen={showFilter} />
       <ClickAwayListener onClickAway={hideFilter}>
         <Wrapper>
-          {search && <button onClick={clearFilter}>Clear filter</button>}
+          {search && <button onClick={() => clearFilter()}>Clear filter</button>}
           <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
             <StyledFilterIconImage src={filterIcon} /> Filters{' '}
             {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}
@@ -264,7 +271,7 @@ const Filter = (): ReactElement => {
                       <Button type="submit" variant="contained" color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={clearFilter} color="default" disabled={isClearable}>
+                      <Button variant="contained" onClick={clearFilter} color="default" disabled={!search}>
                         Clear
                       </Button>
                     </ButtonWrapper>
