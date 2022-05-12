@@ -10,13 +10,10 @@ import {
   isMultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
-import TxShareButton from './TxShareButton'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
 import { sm } from 'src/theme/variables'
-import Track from 'src/components/Track'
-import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 
 const StyledButtonLink = styled(ButtonLink)`
   margin-top: ${sm};
@@ -60,12 +57,6 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
 
   return (
     <>
-      <div className="tx-share">
-        <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
-          <TxShareButton txId={txDetails.txId} />
-        </Track>
-      </div>
-
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <DelegateCallWarning showWarning={!txData.trustedDelegateCallTarget} />
