@@ -82,7 +82,7 @@ const defaultValues: DefaultValues<FilterForm> = {
   [NONCE_FIELD_NAME]: '',
 }
 
-const getInitialValues = (search: string) => {
+const getInitialValues = (search: string): DefaultValues<FilterForm> => {
   const parsedSearch = parse(search)
 
   const getDate = (value: ParsedQuery[string]): string => {
@@ -132,13 +132,26 @@ const Filter = (): ReactElement => {
 
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
-  const toggleFilter = () => setShowFilter((prev) => !prev)
 
   const methods = useForm<FilterForm>({
     defaultValues: getInitialValues(search),
     shouldUnregister: true,
   })
   const { handleSubmit, reset, watch, control } = methods
+
+  const toggleFilter = () => {
+    if (showFilter) {
+      setShowFilter(false)
+      return
+    }
+    setShowFilter(true)
+
+    // We use `shouldUnregister` to avoid saving every value to search
+    // We must therefore reset the form to the values from it
+    Object.entries(getInitialValues(search)).forEach(([key, value]) => {
+      methods.setValue(key as keyof FilterForm, value)
+    })
+  }
 
   const clearFilter = useCallback(
     ({ clearSearch = true } = {}) => {
