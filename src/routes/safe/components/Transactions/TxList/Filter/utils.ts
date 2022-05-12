@@ -1,3 +1,4 @@
+import { operations } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/api'
 import { TextFieldProps } from '@material-ui/core/TextField/TextField'
 import { FieldError } from 'react-hook-form'
 
@@ -42,42 +43,44 @@ export const getFilterHelperText = (value: string, error?: FieldError): TextFiel
 
 // Filter formatters
 
+type IncomingFilter = operations['incoming_transfers']['parameters']['query']
+type OutgoingFilter = operations['multisig_transactions']['parameters']['query']
+
 const getTransactionFilter = ({
   execution_date__gte,
   execution_date__lte,
   to,
   value,
-}: FilterForm): Record<string, string> => {
-  const getTimestampString = (date: string): string => new Date(date).getTime().toString()
+}: FilterForm): Partial<IncomingFilter | OutgoingFilter> => {
+  const getISOString = (date: string): string => new Date(date).toISOString()
   return {
-    ...(execution_date__gte && { execution_date__gte: getTimestampString(execution_date__gte) }),
-    ...(execution_date__lte && { execution_date__lte: getTimestampString(execution_date__lte) }),
+    ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
+    ...(execution_date__lte && { execution_date__lte: getISOString(execution_date__lte) }),
     ...(to && { to }),
-    ...(value && { value }),
+    ...(value && { value: Number(value) }),
   }
 }
 
-export const getIncomingFilter = (filter: FilterForm): Record<string, string> => {
-  const { token_address, type } = filter
+export const getIncomingFilter = (filter: FilterForm): IncomingFilter => {
+  const { token_address } = filter
   return {
-    type,
     ...getTransactionFilter(filter),
     ...(token_address && { token_address }),
   }
 }
 
-export const getOutgoingFilter = (filter: FilterForm): Record<string, string> => {
-  const { nonce, type } = filter
+export const getMultisigFilter = (filter: FilterForm): OutgoingFilter => {
+  const { nonce } = filter
   return {
-    type,
     ...getTransactionFilter(filter),
-    ...(nonce && { nonce }),
+    ...(nonce && { nonce: Number(nonce) }),
   }
 }
 
-export const getModuleFilter = ({ module, type }: FilterForm): Record<string, string> => {
+type ModuleFilter = operations['module_transactions']['parameters']['query']
+
+export const getModuleFilter = ({ module }: FilterForm): ModuleFilter => {
   return {
-    type,
     ...(module && { module }),
   }
 }

@@ -1,12 +1,18 @@
-import { getTransactionHistory, getTransactionQueue, TransactionListPage } from '@gnosis.pm/safe-react-gateway-sdk'
-import { getIncomingTransfers, getMultisigTransactions, getModuleTransactions } from '@@test/dist'
+import {
+  getTransactionHistory,
+  getTransactionQueue,
+  TransactionListPage,
+  getIncomingTransfers,
+  getMultisigTransactions,
+  getModuleTransactions,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import { parse, stringify } from 'query-string'
 import { _getChainId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { history } from 'src/routes/routes'
-import { FilterType } from 'src/routes/safe/components/Transactions/TxList/Filter'
+import { FilterType, FILTER_TYPE_FIELD_NAME } from 'src/routes/safe/components/Transactions/TxList/Filter'
 
 /*************/
 /*  HISTORY  */
@@ -19,7 +25,7 @@ export const loadHistory = async (safeAddress: string): Promise<TransactionListP
   const chainId = _getChainId()
   const checksummedAddress = checksumAddress(safeAddress)
 
-  const { type, ...query } = parse(history.location.search)
+  const { [FILTER_TYPE_FIELD_NAME]: type, ...query } = parse(history.location.search)
   const filterType = typeof type === 'string' ? (type as FilterType) : undefined
 
   const newFilter = filterType !== historyPointers?.[chainId]?.[safeAddress]?.filterType
@@ -36,26 +42,22 @@ export const loadHistory = async (safeAddress: string): Promise<TransactionListP
     results: [],
   }
 
-  try {
-    switch (filterType) {
-      case FilterType.INCOMING: {
-        txListPage = await getIncomingTransfers(chainId, checksummedAddress, query, historyPointerNext)
-        break
-      }
-      case FilterType.MULTISIG: {
-        txListPage = await getMultisigTransactions(chainId, checksummedAddress, query, historyPointerNext)
-        break
-      }
-      case FilterType.MODULE: {
-        txListPage = await getModuleTransactions(chainId, checksummedAddress, query, historyPointerNext)
-        break
-      }
-      default: {
-        txListPage = await getTransactionHistory(chainId, checksummedAddress, historyPointerNext)
-      }
+  switch (filterType) {
+    case FilterType.INCOMING: {
+      txListPage = await getIncomingTransfers(chainId, checksummedAddress, query, historyPointerNext)
+      break
     }
-  } catch (e) {
-    // TODO:
+    case FilterType.MULTISIG: {
+      txListPage = await getMultisigTransactions(chainId, checksummedAddress, query, historyPointerNext)
+      break
+    }
+    case FilterType.MODULE: {
+      txListPage = await getModuleTransactions(chainId, checksummedAddress, query, historyPointerNext)
+      break
+    }
+    default: {
+      txListPage = await getTransactionHistory(chainId, checksummedAddress, historyPointerNext)
+    }
   }
 
   const getFilteredPageUrl = (pageUrl?: string) => {

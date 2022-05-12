@@ -13,6 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabe
 import { parse, ParsedQuery, stringify } from 'query-string'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { operations } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/api'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFTextField'
@@ -26,7 +27,7 @@ import { formateDate } from 'src/utils/date'
 import {
   getIncomingFilter,
   getModuleFilter,
-  getOutgoingFilter,
+  getMultisigFilter,
 } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -38,7 +39,7 @@ import {
 import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
-const TYPE_FIELD_NAME = 'type'
+export const FILTER_TYPE_FIELD_NAME = 'type'
 const DATE_FROM_FIELD_NAME = 'execution_date__gte'
 const DATE_TO_FIELD_NAME = 'execution_date__lte'
 const RECIPIENT_FIELD_NAME = 'to'
@@ -59,7 +60,7 @@ export enum FilterType {
 
 // Types cannot take computed property names
 export type FilterForm = {
-  [TYPE_FIELD_NAME]: FilterType
+  [FILTER_TYPE_FIELD_NAME]: FilterType
   [DATE_FROM_FIELD_NAME]: string
   [DATE_TO_FIELD_NAME]: string
   [RECIPIENT_FIELD_NAME]: string
@@ -73,7 +74,7 @@ export type FilterForm = {
 }
 
 const defaultValues: DefaultValues<FilterForm> = {
-  [TYPE_FIELD_NAME]: FilterType.INCOMING,
+  [FILTER_TYPE_FIELD_NAME]: FilterType.INCOMING,
   [DATE_FROM_FIELD_NAME]: '',
   [DATE_TO_FIELD_NAME]: '',
   [RECIPIENT_FIELD_NAME]: '',
@@ -129,10 +130,13 @@ const Filter = (): ReactElement => {
   const isClearable = !search && !formState.isDirty
 
   const loadTransactions = async () => {
-    dispatch(removeHistoryTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
+    const checksummedAddress = checksumAddress(safeAddress)
+
+    dispatch(removeHistoryTransactions({ chainId, safeAddress: checksummedAddress }))
+
     try {
       const values = await loadHistoryTransactions(safeAddress)
-      dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
+      dispatch(addHistoryTransactions({ chainId, safeAddress: checksummedAddress, values }))
     } catch (e) {
       e.log()
     }
@@ -147,17 +151,20 @@ const Filter = (): ReactElement => {
     hideFilter()
   }
 
-  const filterType = watch(TYPE_FIELD_NAME)
+  const filterType = watch(FILTER_TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
-    const params: Record<string, string> =
+    const query: operations[
+      | 'incoming_transfers'
+      | 'multisig_transactions'
+      | 'module_transactions']['parameters']['query'] =
       filterType === FilterType.INCOMING
         ? getIncomingFilter(filter)
         : FilterType.MULTISIG
-        ? getOutgoingFilter(filter)
+        ? getMultisigFilter(filter)
         : getModuleFilter(filter)
 
-    setSearchParams(params)
+    setSearchParams({ ...query, [FILTER_TYPE_FIELD_NAME]: filterType })
 
     loadTransactions()
 
@@ -182,7 +189,7 @@ const Filter = (): ReactElement => {
                   <TxTypeFormControl>
                     <StyledFormLabel>Transaction type</StyledFormLabel>
                     <Controller<FilterForm>
-                      name={TYPE_FIELD_NAME}
+                      name={FILTER_TYPE_FIELD_NAME}
                       control={control}
                       render={({ field }) => (
                         <RadioGroup {...field}>
