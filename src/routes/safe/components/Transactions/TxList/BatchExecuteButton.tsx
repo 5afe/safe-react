@@ -59,7 +59,7 @@ export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactE
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
             >
-              Execute Batch {isBatchable && `(${batchableTransactions.length})`}
+              Execute Batch{isBatchable && ` (${batchableTransactions.length})`}
             </Button>
           </div>
         </Tooltip>
