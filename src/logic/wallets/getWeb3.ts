@@ -23,6 +23,7 @@ import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
   METAMASK = 'METAMASK',
+  TALLYHO = 'TALLYHO',
   TORUS = 'TORUS',
   PORTIS = 'PORTIS',
   FORTMATIC = 'FORTMATIC',
