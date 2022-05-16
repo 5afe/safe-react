@@ -177,6 +177,7 @@ export class TxSender {
         data: executeData,
       })
     } catch (err) {
+      logError(Errors._817, err.message)
       notifications.showOnError(err, err.message)
     }
 
