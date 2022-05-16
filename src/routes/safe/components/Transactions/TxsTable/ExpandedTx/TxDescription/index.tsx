@@ -44,14 +44,21 @@ export const styles = () => ({
 })
 
 const TransferDescription = ({ amount = '', recipient }) => {
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient.toLowerCase()))
+  const recipientName = useSelector((state) =>
+    getNameFromAddressBook(state, recipient ? recipient.toLowerCase() : recipient),
+  )
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
       {recipientName ? (
-        <OwnerAddressTableCell address={recipient.toLowerCase()} knownAddress showLinks userName={recipientName} />
+        <OwnerAddressTableCell
+          address={recipient ? recipient.toLowerCase() : recipient}
+          knownAddress
+          showLinks
+          userName={recipientName}
+        />
       ) : (
-        <EtherscanLink knownAddress={false} type="address" value={recipient.toLowerCase()} />
+        <EtherscanLink knownAddress={false} type="address" value={recipient ? recipient.toLowerCase() : recipient} />
       )}
     </Block>
   )
