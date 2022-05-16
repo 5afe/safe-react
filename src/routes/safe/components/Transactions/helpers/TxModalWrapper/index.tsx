@@ -1,7 +1,11 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import {
+  calculateTotalGasCost,
+  EstimationStatus,
+  useEstimateTransactionGas,
+} from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
@@ -26,6 +30,10 @@ import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
+import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
+import { checkTransactionExecution, estimateGasForTransactionExecution } from 'src/logic/safe/transactions/gas'
 
 type Props = {
   children: ReactNode
@@ -112,10 +120,52 @@ export const TxModalWrapper = ({
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe)
   const isCreation = isMultisigCreation(confirmationsLen, txType)
   const isSmartContract = useIsSmartContractWallet(userAddress)
-
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
-
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
+
+  const txParameters = useMemo(
+    () => ({
+      safeAddress,
+      safeVersion,
+      txRecipient: txTo || safeAddress,
+      txConfirmations,
+      txAmount: txValue,
+      txData,
+      operation: operation || Operation.CALL,
+      from: userAddress,
+      gasPrice: '0',
+      gasToken: ZERO_ADDRESS,
+      refundReceiver: ZERO_ADDRESS,
+      safeTxGas: safeTxGas || manualSafeTxGas || '0',
+      approvalAndExecution,
+    }),
+    [
+      approvalAndExecution,
+      manualSafeTxGas,
+      operation,
+      safeAddress,
+      safeTxGas,
+      safeVersion,
+      txConfirmations,
+      txData,
+      txTo,
+      txValue,
+      userAddress,
+    ],
+  )
+
+  const gasLimit = useEstimateGasLimit(
+    () => estimateGasForTransactionExecution(txParameters),
+    doExecute,
+    txParameters.txData,
+    manualGasLimit,
+  )
+
+  const checkTxExecution = useCallback((): Promise<boolean> => {
+    return checkTransactionExecution({ ...txParameters, gasLimit })
+  }, [gasLimit, txParameters])
+
+  const txEstimationExecutionStatus = useExecutionStatus(checkTxExecution, doExecute, txParameters.txData, gasLimit)
 
   const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
     isRejectTx,
@@ -126,20 +176,17 @@ export const TxModalWrapper = ({
   })
   if (safeTxGas == null) safeTxGas = safeTxGasEstimation
 
-  const { gasCostFormatted, gasPriceFormatted, gasMaxPrioFeeFormatted, gasLimit, txEstimationExecutionStatus } =
-    useEstimateTransactionGas({
-      txData,
-      txRecipient: txTo || safeAddress,
-      txConfirmations,
-      txAmount: txValue,
-      safeTxGas: safeTxGas || manualSafeTxGas,
-      manualGasPrice,
-      manualMaxPrioFee,
-      manualGasLimit,
-      operation,
-      isExecution: doExecute,
-      approvalAndExecution,
-    })
+  const { gasPriceFormatted, gasPrice, gasMaxPrioFee, gasMaxPrioFeeFormatted } = useEstimateTransactionGas({
+    manualGasPrice,
+    manualMaxPrioFee,
+    isExecution: doExecute,
+    txData,
+  })
+
+  const getGasCostFormatted = useCallback(() => {
+    if (!gasLimit) return '> 0.001'
+    return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
+  }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
@@ -184,7 +231,7 @@ export const TxModalWrapper = ({
 
   const parametersStatus = getParametersStatus(isCreation, doExecute, isRejectTx)
 
-  const gasCost = `${gasCostFormatted} ${nativeCurrency.symbol}`
+  const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
   return (
     <EditableTxParameters
@@ -205,14 +252,12 @@ export const TxModalWrapper = ({
           <Container>
             {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
 
-            {doExecute && (
+            {(doExecute || isSpendingLimitTx) && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
-                gasCost={canTxExecute ? gasCost : ''}
+                gasCost={gasCost}
                 onEdit={toggleEditMode}
-                isTransactionCreation={isCreation}
-                isTransactionExecution={doExecute}
-                isOffChainSignature={isOffChainSignature}
+                parametersStatus={parametersStatus}
               />
             )}
 
