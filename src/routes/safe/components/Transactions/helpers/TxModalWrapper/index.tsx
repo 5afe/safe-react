@@ -16,7 +16,7 @@ import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { lg, md } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { isSpendingLimit, ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useCanTxExecute from 'src/logic/hooks/useCanTxExecute'
 import { useSelector } from 'react-redux'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -65,11 +65,10 @@ export const isApproveAndExecute = (
 ): boolean => {
   if (txConfirmations === threshold) return false
   if (!preApprovingOwner) return false
-  return txConfirmations + 1 === threshold || isSpendingLimit(txType)
+  return txConfirmations + 1 === threshold
 }
 
-export const isMultisigCreation = (txConfirmations: number, txType?: string): boolean =>
-  txConfirmations === 0 && !isSpendingLimit(txType)
+export const isMultisigCreation = (txConfirmations: number): boolean => txConfirmations === 0
 
 /**
  * Determines which fields are displayed in the TxEditableParameters
@@ -110,15 +109,14 @@ export const TxModalWrapper = ({
   const isOwner = useSelector(grantedSelector)
   const userAddress = useSelector(userAccountSelector)
   const { safeAddress } = useSafeAddress()
-  const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
   const confirmationsLen = Array.from(txConfirmations || []).length
   const canTxExecute = useCanTxExecute(preApprovingOwner, confirmationsLen, txThreshold, txNonce)
   const doExecute = executionApproved && canTxExecute
-  const showCheckbox = !isSpendingLimitTx && canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
+  const showCheckbox = canTxExecute && (!txThreshold || txThreshold > confirmationsLen)
   const nativeCurrency = getNativeCurrency()
   const { currentVersion: safeVersion, threshold } = useSelector(currentSafe)
-  const isCreation = isMultisigCreation(confirmationsLen, txType)
+  const isCreation = isMultisigCreation(confirmationsLen)
   const isSmartContract = useIsSmartContractWallet(userAddress)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
@@ -154,12 +152,11 @@ export const TxModalWrapper = ({
     ],
   )
 
-  const gasLimit = useEstimateGasLimit(
-    () => estimateGasForTransactionExecution(txParameters),
-    doExecute,
-    txParameters.txData,
-    manualGasLimit,
-  )
+  const estimateGasLimit = useCallback(() => {
+    return estimateGasForTransactionExecution(txParameters)
+  }, [txParameters])
+
+  const gasLimit = useEstimateGasLimit(estimateGasLimit, doExecute, txParameters.txData, manualGasLimit)
 
   const checkTxExecution = useCallback((): Promise<boolean> => {
     return checkTransactionExecution({ ...txParameters, gasLimit })
@@ -252,7 +249,7 @@ export const TxModalWrapper = ({
           <Container>
             {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
 
-            {(doExecute || isSpendingLimitTx) && (
+            {doExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
                 gasCost={gasCost}
@@ -261,15 +258,13 @@ export const TxModalWrapper = ({
               />
             )}
 
-            {!isSpendingLimitTx && (
-              <TxParametersDetail
-                onEdit={toggleEditMode}
-                txParameters={txParameters}
-                isTransactionCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                parametersStatus={parametersStatus}
-              />
-            )}
+            <TxParametersDetail
+              onEdit={toggleEditMode}
+              txParameters={txParameters}
+              isTransactionCreation={isCreation}
+              isOffChainSignature={isOffChainSignature}
+              parametersStatus={parametersStatus}
+            />
           </Container>
 
           <ReviewInfoText

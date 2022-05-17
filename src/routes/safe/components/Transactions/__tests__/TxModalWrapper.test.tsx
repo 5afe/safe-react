@@ -1,35 +1,23 @@
 import { isApproveAndExecute, isMultisigCreation } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 
 describe('isMultisigCreation', () => {
-  it(`should return true if there are no confirmations for the transaction and the transaction is not spendingLimit`, () => {
+  it(`should return true if there are no confirmations for the transaction`, () => {
     // given
     const transactionConfirmations = 0
-    const transactionType = ''
 
     // when
-    const result = isMultisigCreation(transactionConfirmations, transactionType)
+    const result = isMultisigCreation(transactionConfirmations)
 
     // then
     expect(result).toBe(true)
   })
-  it(`should return false if there are no confirmations for the transaction and the transaction is spendingLimit`, () => {
-    // given
-    const transactionConfirmations = 0
-    const transactionType = 'spendingLimit'
 
-    // when
-    const result = isMultisigCreation(transactionConfirmations, transactionType)
-
-    // then
-    expect(result).toBe(false)
-  })
   it(`should return false if there are confirmations for the transaction`, () => {
     // given
     const transactionConfirmations = 2
-    const transactionType = ''
 
     // when
-    const result = isMultisigCreation(transactionConfirmations, transactionType)
+    const result = isMultisigCreation(transactionConfirmations)
 
     // then
     expect(result).toBe(false)

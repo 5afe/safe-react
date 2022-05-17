@@ -86,19 +86,17 @@ export const SpendingLimitModalWrapper = ({
     }
   }, [isSendingNativeToken, safeAddress, txAmount, txDelegate, txTo, txToken?.address, txToken?.decimals])
 
-  const gasLimit = useEstimateGasLimit(
-    () => estimateGasForAllowanceTransfer(allowanceTransferParams),
-    true,
-    EMPTY_DATA,
-    manualGasLimit,
-  )
+  const estimateGasLimit = useCallback(() => {
+    return estimateGasForAllowanceTransfer(allowanceTransferParams)
+  }, [allowanceTransferParams])
 
-  const txEstimationExecutionStatus = useExecutionStatus(
-    () => checkAllowanceTransferExecution(allowanceTransferParams),
-    true,
-    '',
-    gasLimit,
-  )
+  const gasLimit = useEstimateGasLimit(estimateGasLimit, true, EMPTY_DATA, manualGasLimit)
+
+  const checkAllowanceTransferTx = useCallback(() => {
+    return checkAllowanceTransferExecution(allowanceTransferParams)
+  }, [allowanceTransferParams])
+
+  const txEstimationExecutionStatus = useExecutionStatus(checkAllowanceTransferTx, true, '', gasLimit)
 
   const { gasPriceFormatted, gasPrice, gasMaxPrioFee, gasMaxPrioFeeFormatted } = useEstimateTransactionGas({
     manualGasPrice,

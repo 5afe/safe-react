@@ -38,6 +38,8 @@ import { MODALS_EVENTS } from 'src/utils/events/modals'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { SpendingLimitModalWrapper } from 'src/routes/safe/components/Transactions/helpers/SpendingLimitModalWrapper'
+import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
 const useStyles = makeStyles(styles)
 
@@ -106,8 +108,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
         const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
         const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
+        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.STANDARD_TX)
+
         try {
           trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
+          dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.beforeExecution)))
 
           const allowanceTransferTx = await spendingLimit.methods.executeAllowanceTransfer(
             safeAddress,
@@ -125,12 +130,14 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           await allowanceTransferTx.send(sendParams).on('transactionHash', () => onClose())
         } catch (err) {
           logError(Errors._801, err.message)
+          dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterRejection)))
         }
         onClose()
       }
     },
     [
       chainId,
+      dispatch,
       isSendingNativeToken,
       isSpendingLimitTx,
       onClose,
