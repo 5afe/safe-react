@@ -31,7 +31,7 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
+import { DEFAULT_GAS_LIMIT, useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
 import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
 import { checkTransactionExecution, estimateGasForTransactionExecution } from 'src/logic/safe/transactions/gas'
 
@@ -184,7 +184,7 @@ export const TxModalWrapper = ({
   })
 
   const getGasCostFormatted = useCallback(() => {
-    if (!gasLimit || parseInt(gasLimit) === 0) return '> 0.001'
+    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT) return '> 0.001'
     return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
   }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
 

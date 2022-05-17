@@ -18,7 +18,7 @@ import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getNativeCurrency } from 'src/config'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
+import { DEFAULT_GAS_LIMIT, useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
 import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
 import {
   AllowanceTransferProps,
@@ -108,7 +108,7 @@ export const SpendingLimitModalWrapper = ({
   })
 
   const getGasCostFormatted = useCallback(() => {
-    if (!gasLimit || parseInt(gasLimit) === 0) return '> 0.001'
+    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT) return '> 0.001'
     return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
   }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
 
