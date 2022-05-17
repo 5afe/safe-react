@@ -23,19 +23,15 @@ export const getContractErrorMessage = async ({
 }): Promise<string | undefined> => {
   const web3 = getWeb3()
 
-  try {
-    const returnData = await web3.eth.call({
-      to: safeInstance.options.address,
-      from,
-      value: 0,
-      data,
-    })
+  const returnData = await web3.eth.call({
+    to: safeInstance.options.address,
+    from,
+    value: 0,
+    data,
+  })
 
-    const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
+  const returnBuffer = Buffer.from(returnData.slice(2), 'hex')
 
-    const contractOutput = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
-    return decodeMessage(contractOutput)
-  } catch (err) {
-    throw err
-  }
+  const contractOutput = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
+  return decodeMessage(contractOutput)
 }
