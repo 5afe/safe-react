@@ -29,7 +29,7 @@ export const useEstimateGasLimit = (
     if (error) {
       logError(Errors._612, error.message)
     }
-  }, [data, error, estimationFn, isExecution, manualGasLimit, txData])
+  }, [data, error])
 
   return gasLimit
 }
