@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { waitFor } from 'src/utils/test-utils'
-import { useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
+import { DEFAULT_GAS_LIMIT, useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
 describe('useEstimateGasLimit', () => {
@@ -12,6 +12,19 @@ describe('useEstimateGasLimit', () => {
     await waitFor(() => {
       expect(mockFn).toHaveBeenCalledTimes(1)
       expect(result.current).toBe('21000')
+    })
+  })
+
+  it('returns default estimation if estimate function throws', async () => {
+    const mockFn = jest.fn(() => {
+      throw new Error()
+    })
+
+    const { result } = renderHook(() => useEstimateGasLimit(mockFn, true, EMPTY_DATA, undefined))
+
+    await waitFor(() => {
+      expect(mockFn).toHaveBeenCalledTimes(1)
+      expect(result.current).toBe(DEFAULT_GAS_LIMIT)
     })
   })
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
-const DEFAULT_GAS_LIMIT = '0'
+export const DEFAULT_GAS_LIMIT = '0'
 
 export const useEstimateGasLimit = (
   estimationFn: () => Promise<number>,
@@ -26,8 +27,8 @@ export const useEstimateGasLimit = (
       try {
         const estimation = await estimationFn()
         isCurrent && setGasLimit(estimation.toString())
-      } catch (e) {
-        console.log(e)
+      } catch (err) {
+        logError(Errors._612, err.message)
         setGasLimit(DEFAULT_GAS_LIMIT)
       }
     }

@@ -145,4 +145,11 @@ describe('calculateTotalGasCost', () => {
     expect(gasCost).toBe('0.06719424')
     expect(gasCostFormatted).toBe('0.06719')
   })
+
+  it('returns 0 if gasLimit is 0', () => {
+    const { gasCost, gasCostFormatted } = calculateTotalGasCost('0', '264000000000', '1000000000000', 18)
+
+    expect(gasCost).toBe('0')
+    expect(gasCostFormatted).toBe('0')
+  })
 })
