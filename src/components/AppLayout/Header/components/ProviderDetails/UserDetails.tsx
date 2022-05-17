@@ -1,7 +1,6 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
-import { Identicon, Card } from '@gnosis.pm/safe-react-components'
+import { Identicon } from '@gnosis.pm/safe-react-components'
 import { createStyles } from '@material-ui/core'
 
 import Spacer from 'src/components/Spacer'
@@ -93,9 +92,6 @@ const styles = createStyles({
   },
 })
 
-const StyledCard = styled(Card)`
-  padding: 0px;
-`
 type Props = {
   connected: boolean
   onDisconnect: () => void
@@ -119,7 +115,7 @@ export const UserDetails = ({
   const classes = useStyles()
 
   return (
-    <StyledCard>
+    <div>
       <Block className={classes.container}>
         <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
@@ -190,6 +186,6 @@ export const UserDetails = ({
           </Paragraph>
         </Button>
       </Row>
-    </StyledCard>
+    </div>
   )
 }
