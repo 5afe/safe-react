@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import useAsync from 'src/logic/hooks/useAsync'
 
 export const DEFAULT_GAS_LIMIT = '0'
 
@@ -11,34 +12,24 @@ export const useEstimateGasLimit = (
 ): string | undefined => {
   const [gasLimit, setGasLimit] = useState<string | undefined>(manualGasLimit)
 
-  useEffect(() => {
-    let isCurrent = true
+  const [data, error] = useAsync(async () => {
+    if (!isExecution || !txData) return
+    if (manualGasLimit) return manualGasLimit
 
-    if (manualGasLimit) {
-      setGasLimit(manualGasLimit)
-      return
-    }
-
-    if (!isExecution || !txData) {
-      return
-    }
-
-    const estimateGasLimit = async () => {
-      try {
-        const estimation = await estimationFn()
-        isCurrent && setGasLimit(estimation.toString())
-      } catch (err) {
-        logError(Errors._612, err.message)
-        setGasLimit(DEFAULT_GAS_LIMIT)
-      }
-    }
-
-    estimateGasLimit()
-
-    return () => {
-      isCurrent = false
-    }
+    return await estimationFn()
   }, [estimationFn, isExecution, manualGasLimit, txData])
+
+  useEffect(() => {
+    const newGasLimit = error ? DEFAULT_GAS_LIMIT : data ? data.toString() : undefined
+
+    if (newGasLimit) {
+      setGasLimit(newGasLimit)
+    }
+
+    if (error) {
+      logError(Errors._612, error.message)
+    }
+  }, [data, error, estimationFn, isExecution, manualGasLimit, txData])
 
   return gasLimit
 }

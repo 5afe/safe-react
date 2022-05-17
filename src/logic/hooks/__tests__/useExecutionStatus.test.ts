@@ -37,24 +37,28 @@ describe('useExecutionStatus', () => {
     })
   })
 
-  it('returns SUCCESS if not a tx execution', () => {
+  it('returns SUCCESS if not a tx execution', async () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(true))
 
     const { result } = renderHook(() => useExecutionStatus(mockFn, false, EMPTY_DATA, mockGasLimit))
 
-    expect(mockFn).toHaveBeenCalledTimes(0)
-    expect(result.current).toBe(EstimationStatus.SUCCESS)
+    await waitFor(() => {
+      expect(mockFn).toHaveBeenCalledTimes(0)
+      expect(result.current).toBe(EstimationStatus.SUCCESS)
+    })
   })
 
-  it('returns SUCCESS if txData is empty', () => {
+  it('returns SUCCESS if txData is empty', async () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(true))
 
     const { result } = renderHook(() => useExecutionStatus(mockFn, true, '', mockGasLimit))
 
-    expect(mockFn).toHaveBeenCalledTimes(0)
-    expect(result.current).toBe(EstimationStatus.SUCCESS)
+    await waitFor(() => {
+      expect(mockFn).toHaveBeenCalledTimes(0)
+      expect(result.current).toBe(EstimationStatus.SUCCESS)
+    })
   })
 
   it('returns FAILURE if callback fn returns false', async () => {
