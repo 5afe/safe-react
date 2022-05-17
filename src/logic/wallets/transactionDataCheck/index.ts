@@ -10,7 +10,7 @@ function transactionDataCheck(): any {
     if (wallet && wallet.name.toUpperCase() === WALLET_PROVIDER.LEDGER && !isTransactionDataEnabled) {
       return {
         heading: 'Enable blind signing',
-        description: `<div><p><strong>Important</strong>: In order to sign transactions with your Ledger device, you will have to activate the <a href="https://support.ledger.com/hc/en-us/articles/4405481324433-Enable-blind-signing-in-the-Ethereum-ETH-app?docs=true" style="color: inherit" target="_blank">Bind signing</a> setting in the Ethereum app on your Ledger.</p><a href="https://support.ledger.com/hc/en-us/articles/4405481324433-Enable-blind-signing-in-the-Ethereum-ETH-app?docs=true" target="_blank"><img style="width:100%" src=${ledgerImage} alt="Blind signing"/></a></div>`,
+        description: `<div><p><strong>Important</strong>: In order to sign transactions with your Ledger device, you will have to activate the <a href="https://support.ledger.com/hc/en-us/articles/4405481324433-Enable-blind-signing-in-the-Ethereum-ETH-app?docs=true" style="color: inherit" target="_blank">Blind signing</a> setting in the Ethereum app on your Ledger.</p><a href="https://support.ledger.com/hc/en-us/articles/4405481324433-Enable-blind-signing-in-the-Ethereum-ETH-app?docs=true" target="_blank"><img style="width:100%" src=${ledgerImage} alt="Blind signing"/></a></div>`,
         eventCode: 'allowTransactionData',
         button: {
           text: 'Done',

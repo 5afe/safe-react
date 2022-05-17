@@ -1,39 +1,43 @@
 import styled, { keyframes } from 'styled-components'
 
-const gradientSK = keyframes`
-  0% {
-    background-position: 0% 54%;
-  }
-  50% {
-    background-position: 100% 47%;
-  }
-  100% {
-    background-position: 0% 54%;
-  }
+export const gradientSK = keyframes`
+0% {
+  background-position: 0% 54%;
+}
+50% {
+  background-position: 100% 47%;
+}
+100% {
+  background-position: 0% 54%;
+}
 `
 
-export const AppIconSK = styled.div`
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
-  margin: 0 auto;
+export const SafeAppLogoSK = styled.div`
+  height: ${(props: { size }) => (props.size === 'lg' ? '112px' : '50px')};
+  width: ${(props: { size }) => (props.size === 'lg' ? '112px' : '50px')};
+  border-radius: 50%;
   background-color: lightgrey;
   background: linear-gradient(84deg, lightgrey, transparent);
   background-size: 400% 400%;
   animation: ${gradientSK} 1.5s ease infinite;
 `
-export const TitleSK = styled.div`
-  height: 24px;
+
+export const SafeAppTitleSK = styled.div`
+  height: 18px;
   width: 160px;
-  margin: 24px auto;
+  margin: 8px 0;
+
   background-color: lightgrey;
   background: linear-gradient(84deg, lightgrey, transparent);
   background-size: 400% 400%;
   animation: ${gradientSK} 1.5s ease infinite;
 `
-export const DescriptionSK = styled.div`
-  height: 16px;
-  width: 200px;
+
+export const SafeAppDescriptionSK = styled.div`
+  height: 12px;
+  width: 240px;
+  margin: 2px 0;
+
   background-color: lightgrey;
   background: linear-gradient(84deg, lightgrey, transparent);
   background-size: 400% 400%;
