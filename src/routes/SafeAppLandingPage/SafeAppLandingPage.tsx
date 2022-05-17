@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useMemo } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 import { Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import { Card, Loader } from '@gnosis.pm/safe-react-components'
@@ -36,23 +36,16 @@ const SafeAppLandingPage = (): ReactElement => {
   const safeAppDetailsFromConfigService = appList.find(({ url }) => safeAppUrl === url)
 
   // fetch Safe App details from Manifest.json
-  const fetchManifest = useCallback(async () => {
+  const [safeAppDetailsFromManifest, manifestError, isManifestLoading] = useAsync<SafeApp>(async () => {
     if (safeAppUrl) {
       return getAppInfoFromUrl(safeAppUrl)
     }
-
     throw new Error('No Safe App URL provided.')
   }, [safeAppUrl])
 
-  const {
-    result: safeAppDetailsFromManifest,
-    error: isManifestError,
-    isLoading: isManifestLoading,
-  } = useAsync<SafeApp>(fetchManifest)
-
   const safeAppDetails = safeAppDetailsFromConfigService || safeAppDetailsFromManifest
   const isLoading = isConfigServiceLoading || isManifestLoading
-  const isSafeAppMissing = !isLoading && !safeAppDetails && isManifestError
+  const isSafeAppMissing = !isLoading && !safeAppDetails && manifestError
 
   const availableChains = safeAppDetails?.chainIds || []
 
