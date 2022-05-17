@@ -60,7 +60,6 @@ const Container = styled.div`
 export const isApproveAndExecute = (
   threshold: number,
   txConfirmations: number,
-  txType?: string,
   preApprovingOwner?: string,
 ): boolean => {
   if (txConfirmations === threshold) return false
@@ -119,7 +118,7 @@ export const TxModalWrapper = ({
   const isCreation = isMultisigCreation(confirmationsLen)
   const isSmartContract = useIsSmartContractWallet(userAddress)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
-  const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
+  const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
 
   const txParameters = useMemo(
     () => ({
