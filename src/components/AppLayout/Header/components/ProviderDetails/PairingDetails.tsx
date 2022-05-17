@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement } from 'react'
+import { CSSProperties, ReactElement, useState } from 'react'
 import styled from 'styled-components'
 import Skeleton from '@material-ui/lab/Skeleton'
 import RefreshIcon from '@material-ui/icons/Refresh'
@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { Link } from '@gnosis.pm/safe-react-components'
 import QRCode from 'qrcode.react'
 
+import SafeLogo from 'src/assets/logo.svg'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getPairingUri, initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
@@ -58,15 +59,20 @@ type PairingDetailsProps = {
 }
 
 const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement => {
-  const uri = getPairingUri()
+  const [uri, setUri] = useState<string | undefined>(getPairingUri())
   const isPairingLoaded = isPairingModule()
 
+  const onRefresh = async (): Promise<void> => {
+    await initPairing()
+    setUri(getPairingUri())
+  }
+
   const qr = uri ? (
-    <QRCode value={uri} size={QR_DIMENSION} />
+    <QRCode value={uri} includeMargin imageSettings={{ src: SafeLogo, width: 30, height: 30 }} />
   ) : isPairingLoaded ? (
     <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
   ) : (
-    <IconButton disableRipple style={qrRefresh} onClick={initPairing}>
+    <IconButton disableRipple style={qrRefresh} onClick={onRefresh}>
       <RefreshIcon fontSize="large" />
     </IconButton>
   )
