@@ -3,7 +3,6 @@ import abi from 'ethereumjs-abi'
 import { CONTRACT_ERRORS, CONTRACT_ERROR_CODES } from 'src/logic/contracts/contracts.d'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { Errors, CodedException } from '../exceptions/CodedException'
 
 export const decodeMessage = (message: string): string => {
   const code = CONTRACT_ERROR_CODES.find((code) => {
@@ -37,6 +36,6 @@ export const getContractErrorMessage = async ({
     const contractOutput = abi.rawDecode(['string'], returnBuffer.slice(4))[0]
     return decodeMessage(contractOutput)
   } catch (err) {
-    throw new CodedException(Errors._817, err.message)
+    throw err
   }
 }
