@@ -108,7 +108,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
         const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
         const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.STANDARD_TX)
+        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SPENDING_LIMIT_TX)
 
         try {
           trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
@@ -127,7 +127,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
           const sendParams = createSendParams(tx.tokenSpendingLimit.delegate, txParameters)
 
-          await allowanceTransferTx.send(sendParams).on('transactionHash', () => onClose())
+          await allowanceTransferTx.send(sendParams).on('transactionHash', () => {
+            onClose()
+            dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+          })
         } catch (err) {
           logError(Errors._801, err.message)
           dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterRejection)))
@@ -174,6 +177,14 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send funds" />
 
       <Hairline />
+
+      {isSpendingLimitTx ? (
+        <Block className={classes.container}>
+          Spending limit transactions only appear in the interface once they are successfully mined and indexed. Pending
+          transactions can only be viewed in your signer wallet application or under your owner wallet address through a
+          Blockchain Explorer.
+        </Block>
+      ) : null}
 
       <Block className={classes.container}>
         {/* Amount */}
