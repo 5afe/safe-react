@@ -31,7 +31,7 @@ import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-import { decodeMessage, getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
 import { isWalletRejection } from 'src/logic/wallets/errors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
@@ -169,17 +169,11 @@ export class TxSender {
       return
     }
 
-    let contractErrorMessage
-    try {
-      contractErrorMessage = await getContractErrorMessage({
-        safeInstance,
-        from,
-        data: executeData,
-      })
-    } catch (err) {
-      logError(Errors._817, err.message)
-      notifications.showOnError(err, decodeMessage(err.message))
-    }
+    const contractErrorMessage = await getContractErrorMessage({
+      safeInstance,
+      from,
+      data: executeData,
+    })
 
     if (contractErrorMessage) {
       logError(Errors._803, contractErrorMessage)
