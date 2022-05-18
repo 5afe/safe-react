@@ -18,15 +18,9 @@ describe('fetchTokenCurrenciesBalances', () => {
       selectedCurrency: 'USD',
     })
 
-    expect(getBalances).toHaveBeenCalledWith(
-      GATEWAY_URL,
-      _getChainId(),
-      '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf',
-      'USD',
-      {
-        exclude_spam: true,
-        trusted: false,
-      },
-    )
+    expect(getBalances).toHaveBeenCalledWith(_getChainId(), '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf', 'USD', {
+      exclude_spam: true,
+      trusted: false,
+    })
   })
 })
