@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { sanitizeUrl } from 'src/utils/sanitizeUrl'
 
 type AppUrlReturnType = {
-  getAppUrl: () => string | null
+  getAppUrl: () => string
 }
 
 export const useSafeAppUrl = (): AppUrlReturnType => {

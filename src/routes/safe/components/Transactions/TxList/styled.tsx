@@ -396,6 +396,8 @@ export const TxDetailsContainer = styled.div`
   }
 
   .tx-details {
+    position: relative;
+
     &.not-executed {
       grid-row-end: span 2;
     }

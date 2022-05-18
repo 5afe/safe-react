@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/react'
 import { theme as styledTheme, Loader } from '@gnosis.pm/safe-react-components'
 import { useEffect, useState } from 'react'
+import { setBaseUrl } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import App from 'src/components/App'
@@ -19,6 +20,7 @@ import { logError, Errors, CodedException } from 'src/logic/exceptions/CodedExce
 import { loadChains } from 'src/config/cache/chains'
 import { setChainId } from 'src/logic/config/utils'
 import { _getChainId } from 'src/config'
+import { GATEWAY_URL } from 'src/utils/constants'
 
 // Preloader is rendered outside of '#root' and acts as a loading spinner
 // for the app and then chains loading
@@ -31,6 +33,9 @@ const RootConsumer = (): React.ReactElement | null => {
   const [isError, setIsError] = useState<boolean>(false)
 
   useEffect(() => {
+    // Initialize the SDK
+    setBaseUrl(GATEWAY_URL)
+
     const initChains = async () => {
       try {
         await loadChains()

@@ -52,7 +52,8 @@
         }
       ],
       "disabledWallets": [
-        "lattice"
+        "lattice",
+        "safeMobile"
       ],
       "features": [
         "CONTRACT_INTERACTION",
@@ -117,7 +118,8 @@
         "portis",
         "torus",
         "trust",
-        "walletLink"
+        "walletLink",
+        "safeMobile"
       ],
       "features": [
         "CONTRACT_INTERACTION",
@@ -172,7 +174,8 @@
       ],
       "disabledWallets": [
         "fortmatic",
-        "lattice"
+        "lattice",
+        "safeMobile"
       ],
       "features": [
         "CONTRACT_INTERACTION",

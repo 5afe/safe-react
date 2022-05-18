@@ -113,6 +113,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
         </div>
       )}
 
+      <Divider />
       <Provider
         info={providerInfo}
         open={open}
@@ -129,6 +130,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
           )
         }
       />
+      <Divider />
 
       <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />
     </Row>
