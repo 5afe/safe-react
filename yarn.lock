@@ -1892,13 +1892,6 @@
   dependencies:
     cross-fetch "^3.1.5"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.10.3":
-  version "2.10.3"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.10.3.tgz#4537442a78eb0508c483aabcac19296335a77ac3"
-  integrity sha512-ukaLACozdJQb2YGSAZgBUkF4CT9iKVjpnKFCKUnGGghXqp+Yyn9jpdcfFK0VYQJ6ZSwAm40tHtQaN3K9817Bcg==
-  dependencies:
-    cross-fetch "^3.1.5"
-
 "@gnosis.pm/safe-react-gateway-sdk@^2.5.6":
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.7.4.tgz#3a1d96e30d10e4859579b558586fd25cd4ae3480"
@@ -1912,6 +1905,13 @@
   integrity sha512-lrZ3gXzbNzIjIzYDs21d7I3fwwHi01YFnD+2+5Kuy0+fJAiONYXih2Z9Q4h3RS/AgzTHfL+G7WB6XB0V8GMVCQ==
   dependencies:
     isomorphic-unfetch "^3.1.0"
+
+"@gnosis.pm/safe-react-gateway-sdk@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-3.0.1.tgz#0588072cf8aa4d83d46d12ff8d94e2ea7d29ad38"
+  integrity sha512-k4SgNW2VmODHFfd+sRd5Zuh3KVvSyD/EGqms87PnaW5bkerfl49stsW2F1hnO6hMaJDEKcgpzds7UjDHLLZ6OQ==
+  dependencies:
+    cross-fetch "^3.1.5"
 
 "@gnosis.pm/safe-web3-lib@^1.0.0":
   version "1.0.0"

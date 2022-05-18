@@ -1,7 +1,6 @@
 import { MasterCopyReponse, getMasterCopies } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId } from 'src/config'
-import { GATEWAY_URL } from 'src/utils/constants'
 
 export enum MasterCopyDeployer {
   GNOSIS = 'Gnosis',
@@ -30,7 +29,7 @@ const extractMasterCopyInfo = (mc: MasterCopyReponse[number]): MasterCopy => {
 
 export const fetchMasterCopies = async (): Promise<MasterCopy[] | undefined> => {
   try {
-    const res = await getMasterCopies(GATEWAY_URL, _getChainId())
+    const res = await getMasterCopies(_getChainId())
     return res.map(extractMasterCopyInfo)
   } catch (error) {
     console.error('Fetching data from master-copies errored', error)

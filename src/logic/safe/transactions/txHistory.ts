@@ -4,7 +4,6 @@ import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { _getChainId } from 'src/config'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { GATEWAY_URL } from 'src/utils/constants'
 import { TxArgs } from '../store/models/types/transaction'
 
 type ProposeTxBody = Omit<MultisigTransactionRequest, 'safeTxHash'> & {
@@ -85,6 +84,6 @@ export const saveTxToHistory = async ({
     origin: origin ? origin : null,
     signature,
   })
-  const txDetails = await proposeTransaction(GATEWAY_URL, _getChainId(), address, body)
+  const txDetails = await proposeTransaction(_getChainId(), address, body)
   return txDetails
 }
