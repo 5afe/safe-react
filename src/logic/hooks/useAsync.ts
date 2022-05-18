@@ -1,34 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-type AsyncResult<T> = {
-  error: Error | undefined
-  result: T | undefined
-}
+type AsyncResult<T> = [result: T | undefined, error: Error | undefined, loading: boolean]
 
-const useAsync = <T>(asyncCall: () => Promise<T>): AsyncResult<T> => {
-  const [asyncVal, setAsyncVal] = useState<T>()
-  const [err, setErr] = useState<Error>()
+const useAsync = <T>(asyncCall: () => Promise<T>, dependencies: unknown[]): AsyncResult<T> => {
+  const [result, setResult] = useState<T>()
+  const [error, setError] = useState<Error>()
+  const [loading, setLoading] = useState<boolean>(true)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const callback = useCallback(asyncCall, dependencies)
 
   useEffect(() => {
     let isCurrent = true
 
-    setAsyncVal(undefined)
-    setErr(undefined)
+    setResult(undefined)
+    setError(undefined)
+    setLoading(true)
 
-    asyncCall()
+    callback()
       .then((val: T) => {
-        if (isCurrent) setAsyncVal(val)
+        isCurrent && setResult(val)
       })
-      .catch((error) => {
-        if (isCurrent) setErr(error)
+      .catch((err) => {
+        isCurrent && setError(err)
+      })
+      .finally(() => {
+        isCurrent && setLoading(false)
       })
 
     return () => {
       isCurrent = false
     }
-  }, [asyncCall])
+  }, [callback])
 
-  return { error: err, result: asyncVal }
+  return [result, error, loading]
 }
 
 export default useAsync
