@@ -31,7 +31,7 @@ import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getLastTransaction } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-import { getContractErrorMessage } from 'src/logic/contracts/safeContractErrors'
+import { parseContractError } from 'src/logic/contracts/safeContractErrors'
 import { isWalletRejection } from 'src/logic/wallets/errors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
@@ -169,11 +169,19 @@ export class TxSender {
       return
     }
 
-    const contractErrorMessage = await getContractErrorMessage({
-      safeInstance,
-      from,
-      data: executeData,
-    })
+    let contractErrorMessage = ''
+    try {
+      const returnData = await getWeb3().eth.call({
+        to: safeInstance.options.address,
+        from,
+        value: 0,
+        data: executeData,
+      })
+
+      contractErrorMessage = parseContractError(returnData)
+    } catch (err) {
+      contractErrorMessage = parseContractError(err)
+    }
 
     if (contractErrorMessage) {
       logError(Errors._803, contractErrorMessage)
