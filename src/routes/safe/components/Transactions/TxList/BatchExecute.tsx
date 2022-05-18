@@ -18,7 +18,6 @@ import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import Row from 'src/components/layout/Row'
 import Paragraph from 'src/components/layout/Paragraph'
-import { GnosisSafe } from 'src/types/contracts/gnosis_safe'
 import Hairline from 'src/components/layout/Hairline'
 import { getInteractionTitle } from 'src/routes/safe/components/Transactions/helpers/utils'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -42,6 +41,7 @@ import { sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
 import { TransactionFailText } from 'src/components/TransactionFailText'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { BatchExecuteButton } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteButton'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const DecodedTransactions = ({
   transactions,
@@ -102,10 +102,12 @@ async function getTxDetails(transactions: Transaction[], dispatch: Dispatch) {
 async function getBatchExecuteData(
   dispatch: Dispatch,
   transactions: Transaction[],
-  safeInstance: GnosisSafe,
   safeAddress: string,
+  safeVersion: string,
   account: string,
 ) {
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
+
   const txs: MultiSendTx[] = transactions.map((transaction) => {
     const txInfo = getTxInfo(transaction, safeAddress)
     const confirmations = getTxConfirmations(transaction)
@@ -129,11 +131,11 @@ export const BatchExecute = React.memo((): ReactElement | null => {
   const dispatch = useDispatch<Dispatch>()
   const { address: safeAddress, currentVersion } = useSelector(currentSafe)
   const account = useSelector(userAccountSelector)
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress, currentVersion)
   const multiSendContractAddress = getMultisendContractAddress()
   const batchableTransactions = useSelector(getBatchableTransactions)
   const [txsWithDetails, setTxsWithDetails] = useState<Transaction[]>([])
   const [isModalOpen, setModalOpen] = useState(false)
+  const [error, setError] = useState<Error>()
   const [buttonStatus, setButtonStatus] = useState(ButtonStatus.LOADING)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
@@ -153,15 +155,21 @@ export const BatchExecute = React.memo((): ReactElement | null => {
     const transactionsWithDetails = await getTxDetails(batchableTransactions, dispatch)
     setTxsWithDetails(transactionsWithDetails)
 
-    const batchExecuteData = await getBatchExecuteData(
-      dispatch,
-      transactionsWithDetails,
-      safeInstance,
-      safeAddress,
-      account,
-    )
-    setButtonStatus(isSameAddressAsSafe ? ButtonStatus.DISABLED : ButtonStatus.READY)
-    setMultiSendCallData(batchExecuteData)
+    try {
+      const batchExecuteData = await getBatchExecuteData(
+        dispatch,
+        transactionsWithDetails,
+        safeAddress,
+        currentVersion,
+        account,
+      )
+      setButtonStatus(isSameAddressAsSafe ? ButtonStatus.DISABLED : ButtonStatus.READY)
+      setMultiSendCallData(batchExecuteData)
+    } catch (err) {
+      logError(Errors._619, err.message)
+      setError(err)
+      setButtonStatus(ButtonStatus.DISABLED)
+    }
   }
 
   const handleBatchExecute = async () => {
@@ -226,7 +234,11 @@ export const BatchExecute = React.memo((): ReactElement | null => {
             Be aware that if any of the included transactions revert, none of them will be executed. This will result in
             the loss of the allocated transaction fees.
           </Paragraph>
-          <TransactionFailText estimationStatus={EstimationStatus.SUCCESS} isExecution isCreation={false} />
+          <TransactionFailText
+            estimationStatus={error ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS}
+            isExecution
+            isCreation={false}
+          />
         </ModalContent>
         <Modal.Footer withoutBorder>
           <Modal.Footer.Buttons

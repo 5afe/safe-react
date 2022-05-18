@@ -30,6 +30,7 @@ enum ErrorCodes {
   _616 = '616: Failed to retrieve recommended nonce',
   _617 = '617: Error fetching safeTxGas',
   _618 = '618: Error fetching fee history',
+  _619 = '619: Failed to prepare a multisend tx',
   _700 = '700: Failed to read from local/session storage',
   _701 = '701: Failed to write to local/session storage',
   _702 = '702: Failed to remove from local/session storage',
