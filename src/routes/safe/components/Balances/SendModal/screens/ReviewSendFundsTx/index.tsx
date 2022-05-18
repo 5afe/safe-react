@@ -102,6 +102,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
+      if (!spendingLimitModuleAddress) return
+
       const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
       try {
         trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
