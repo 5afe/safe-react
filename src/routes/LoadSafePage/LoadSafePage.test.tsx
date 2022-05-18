@@ -6,7 +6,6 @@ import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-ut
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
-import { GATEWAY_URL } from 'src/utils/constants'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 jest.spyOn(getWeb3ReadOnly().eth.ens, 'getResolver')
