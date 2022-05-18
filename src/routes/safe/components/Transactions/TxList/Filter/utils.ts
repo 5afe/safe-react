@@ -98,11 +98,12 @@ export const getIncomingFilter = (filter: Filter): IncomingFilter => {
   }
 }
 
-export const getMultisigFilter = (filter: Filter): OutgoingFilter => {
+export const getMultisigFilter = (filter: Filter, executed: boolean): OutgoingFilter => {
   const { nonce } = filter
   return {
     ...getTransactionFilter(filter),
     ...(nonce && { nonce }),
+    ...(executed && { executed: `${executed}` }),
   }
 }
 

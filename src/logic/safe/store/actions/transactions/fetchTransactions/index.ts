@@ -1,6 +1,5 @@
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import { parse } from 'querystring'
 
 import {
   addHistoryTransactions,
@@ -15,7 +14,7 @@ export default (chainId: string, safeAddress: string) =>
   async (dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>): Promise<void> => {
     const loadHistory = async () => {
       try {
-        const query = parse(history.location.search.slice(1))
+        const query = Object.fromEntries(new URLSearchParams(history.location.search))
         const filter = isTxFilter(query) ? query : undefined
         const values = await loadHistoryTransactions(safeAddress, filter)
         dispatch(addHistoryTransactions({ chainId, safeAddress, values }))

@@ -56,7 +56,7 @@ const getHistoryTxListPage = async (
       break
     }
     case FilterType.MULTISIG: {
-      query = filter ? getMultisigFilter(filter) : undefined
+      query = filter ? getMultisigFilter(filter, true) : undefined
       txListPage = await getMultisigTransactions(chainId, safeAddress, query, next)
       break
     }
@@ -70,12 +70,14 @@ const getHistoryTxListPage = async (
     }
   }
 
-  const getPageUrl = (pageUrl?: string) => {
-    if (!pageUrl || !filterType || Object.keys(query || {}).length === 0) {
+  const getPageUrl = (pageUrl?: string): string | undefined => {
+    if (!pageUrl || !filterType || !query) {
       return pageUrl
     }
 
-    return `${pageUrl}&${new URLSearchParams(query).toString()}`
+    const searchParams = new URLSearchParams(query).toString()
+
+    return searchParams ? `${pageUrl}&${searchParams}` : pageUrl
   }
 
   historyPointers[chainId][safeAddress].next = getPageUrl(txListPage?.next)
