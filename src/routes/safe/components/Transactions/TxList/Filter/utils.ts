@@ -86,7 +86,7 @@ const getTransactionFilter = ({
     ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
     ...(execution_date__lte && { execution_date__lte: getISOString(execution_date__lte) }),
     ...(to && { to }),
-    ...(value && { value: Number(value) }),
+    ...(value && { value }),
   }
 }
 
@@ -102,14 +102,15 @@ export const getMultisigFilter = (filter: Filter): OutgoingFilter => {
   const { nonce } = filter
   return {
     ...getTransactionFilter(filter),
-    ...(nonce && { nonce: Number(nonce) }),
+    ...(nonce && { nonce }),
   }
 }
 
 type ModuleFilter = operations['module_transactions']['parameters']['query']
 
-export const getModuleFilter = ({ module }: Filter): ModuleFilter => {
+export const getModuleFilter = ({ to, module }: Filter): ModuleFilter => {
   return {
+    ...(to && { to }),
     ...(module && { module }),
   }
 }

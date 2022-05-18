@@ -15,7 +15,7 @@ export default (chainId: string, safeAddress: string) =>
   async (dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>): Promise<void> => {
     const loadHistory = async () => {
       try {
-        const query = parse(history.location.search)
+        const query = parse(history.location.search.slice(1))
         const filter = isTxFilter(query) ? query : undefined
         const values = await loadHistoryTransactions(safeAddress, filter)
         dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
@@ -33,5 +33,5 @@ export default (chainId: string, safeAddress: string) =>
       }
     }
 
-    await Promise.all([loadHistory, loadQueue])
+    await Promise.all([loadHistory(), loadQueue()])
   }

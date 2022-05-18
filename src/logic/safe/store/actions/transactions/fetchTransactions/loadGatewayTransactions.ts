@@ -17,6 +17,7 @@ import {
   getModuleFilter,
 } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
 import { ChainId } from 'src/config/chain.d'
+import { operations } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/api'
 
 /*************/
 /*  HISTORY  */
@@ -44,35 +45,37 @@ const getHistoryTxListPage = async (
 
   const { next, filterType } = historyPointers[chainId]?.[safeAddress] || {}
 
+  let query:
+    | operations['incoming_transfers' | 'incoming_transfers' | 'module_transactions']['parameters']['query']
+    | undefined
+
   switch (filterType) {
     case FilterType.INCOMING: {
-      const query = filter ? getIncomingFilter(filter) : undefined
+      query = filter ? getIncomingFilter(filter) : undefined
       txListPage = await getIncomingTransfers(chainId, safeAddress, query, next)
       break
     }
     case FilterType.MULTISIG: {
-      const query = filter ? getMultisigFilter(filter) : undefined
+      query = filter ? getMultisigFilter(filter) : undefined
       txListPage = await getMultisigTransactions(chainId, safeAddress, query, next)
       break
     }
     case FilterType.MODULE: {
-      const query = filter ? getModuleFilter(filter) : undefined
+      query = filter ? getModuleFilter(filter) : undefined
       txListPage = await getModuleTransactions(chainId, safeAddress, query, next)
       break
     }
     default: {
       txListPage = await getTransactionHistory(chainId, safeAddress, next)
-
-      delete historyPointers[chainId][safeAddress].filterType
     }
   }
 
   const getPageUrl = (pageUrl?: string) => {
-    if (!pageUrl || !filterType) {
+    if (!pageUrl || !filterType || Object.keys(query || {}).length === 0) {
       return pageUrl
     }
 
-    return `${pageUrl}&${new URLSearchParams(filter).toString()}`
+    return `${pageUrl}&${new URLSearchParams(query).toString()}`
   }
 
   historyPointers[chainId][safeAddress].next = getPageUrl(txListPage?.next)
@@ -117,12 +120,14 @@ export const loadHistoryTransactions = async (
   const isNewFilter = filter?.type !== historyPointers?.[chainId]?.[safeAddress]?.filterType
   if (!historyPointers[chainId][safeAddress] || isNewFilter) {
     historyPointers[chainId][safeAddress] = {
+      next: undefined,
+      previous: undefined,
       filterType: filter?.[FILTER_TYPE_FIELD_NAME],
     }
   }
 
   try {
-    const { results } = await getHistoryTxListPage(safeAddress, safeAddress, filter)
+    const { results } = await getHistoryTxListPage(chainId, safeAddress, filter)
 
     return results
   } catch (e) {

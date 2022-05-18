@@ -155,17 +155,12 @@ const Filter = (): ReactElement => {
 
   const clearFilter = useCallback(
     ({ clearSearch = true } = {}) => {
-      if (!search) {
-        return
-      }
-
-      if (clearSearch) {
+      if (search && clearSearch) {
         history.replace(pathname)
+        dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
+        reset(defaultValues)
       }
 
-      dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
-
-      reset(defaultValues)
       hideFilter()
     },
     [search, history, pathname, chainId, dispatch, reset, safeAddress],
@@ -223,8 +218,22 @@ const Filter = (): ReactElement => {
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
+                      <RHFAddressSearchField<FilterForm>
+                        name={RECIPIENT_FIELD_NAME}
+                        hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
+                        label="Recipient"
+                        methods={methods}
+                      />
                       {filterType !== FilterType.MODULE && (
                         <>
+                          <RHFTextField<FilterForm>
+                            name={AMOUNT_FIELD_NAME}
+                            label="Amount"
+                            control={control}
+                            rules={{
+                              validate: isValidAmount,
+                            }}
+                          />
                           <RHFTextField<FilterForm>
                             name={DATE_FROM_FIELD_NAME}
                             label="From"
@@ -236,20 +245,6 @@ const Filter = (): ReactElement => {
                             label="To"
                             type="date"
                             control={control}
-                          />
-                          <RHFAddressSearchField<FilterForm>
-                            name={RECIPIENT_FIELD_NAME}
-                            hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
-                            label="Recipient"
-                            methods={methods}
-                          />
-                          <RHFTextField<FilterForm>
-                            name={AMOUNT_FIELD_NAME}
-                            label="Amount"
-                            control={control}
-                            rules={{
-                              validate: isValidAmount,
-                            }}
                           />
                         </>
                       )}

@@ -153,11 +153,13 @@ describe('utils', () => {
     it('should extract the incoming filter values from the filter, correctly formatted', () => {
       const filter = {
         __module: 'fakeaddress.eth',
+        to: '0x1234567890123456789012345678901234567890',
         module: '0x1234567890123456789012345678901234567890',
         type: FilterType.MODULE,
       }
 
       expect(utils.getModuleFilter(filter)).toEqual({
+        to: '0x1234567890123456789012345678901234567890',
         module: '0x1234567890123456789012345678901234567890',
       })
     })
