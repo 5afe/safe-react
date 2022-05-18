@@ -55,7 +55,6 @@ const updateSafeProps = (prevSafe, safe) => {
       } else {
         // Temp fix
         if (key === 'currentVersion' && safe[key].endsWith('+L2')) {
-          console.log(key, safe[key])
           record.set(key, safe[key].replace('+L2', ''))
         } else {
           // By default we overwrite the value. This is for strings, numbers and unset values
