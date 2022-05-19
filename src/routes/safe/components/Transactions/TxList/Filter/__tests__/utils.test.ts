@@ -124,7 +124,7 @@ describe('utils', () => {
         to: '0x1234567890123456789012345678901234567890',
         execution_date__gte: '1970-01-01T00:00:00.000Z',
         execution_date__lte: '2000-01-01T00:00:00.000Z',
-        value: 123,
+        value: '123',
       })
     })
   })
@@ -144,8 +144,28 @@ describe('utils', () => {
         to: '0x1234567890123456789012345678901234567890',
         execution_date__gte: '1970-01-01T00:00:00.000Z',
         execution_date__lte: '2000-01-01T00:00:00.000Z',
-        value: 123,
-        nonce: 123,
+        value: '123',
+        nonce: '123',
+      })
+    })
+    it('should add the executed param if defined', () => {
+      const filter = {
+        __to: 'fakeaddress.eth',
+        to: '0x1234567890123456789012345678901234567890',
+        execution_date__gte: '1970-01-01',
+        execution_date__lte: '2000-01-01',
+        type: FilterType.MULTISIG,
+        value: '123',
+        nonce: '123',
+      }
+
+      expect(utils.getMultisigFilter(filter, true)).toEqual({
+        to: '0x1234567890123456789012345678901234567890',
+        execution_date__gte: '1970-01-01T00:00:00.000Z',
+        execution_date__lte: '2000-01-01T00:00:00.000Z',
+        value: '123',
+        nonce: '123',
+        executed: 'true',
       })
     })
   })

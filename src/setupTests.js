@@ -55,6 +55,9 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
     getTransactionQueue: jest.fn(),
     postTransaction: jest.fn(),
     getChainsConfig: jest.fn(),
+    getIncomingTransfers: jest.fn(),
+    getMultisigTransactions: jest.fn(),
+    getModuleTransactions: jest.fn(),
   }
 })
 

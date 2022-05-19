@@ -192,7 +192,6 @@ const Filter = (): ReactElement => {
       <BackdropLayout isOpen={showFilter} />
       <ClickAwayListener onClickAway={hideFilter}>
         <Wrapper>
-          {search && <button onClick={() => clearFilter()}>Clear filter</button>}
           <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
             <StyledFilterIconImage src={filterIcon} /> Filters{' '}
             {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}

@@ -1906,10 +1906,10 @@
   dependencies:
     isomorphic-unfetch "^3.1.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-3.0.1.tgz#0588072cf8aa4d83d46d12ff8d94e2ea7d29ad38"
-  integrity sha512-k4SgNW2VmODHFfd+sRd5Zuh3KVvSyD/EGqms87PnaW5bkerfl49stsW2F1hnO6hMaJDEKcgpzds7UjDHLLZ6OQ==
+"@gnosis.pm/safe-react-gateway-sdk@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-3.1.1.tgz#e8968317d4684c4c796691b642212155a3858be8"
+  integrity sha512-Vw8efr9tgSsAYEAV5nMy+LRwP5CqdRMysyYEGcRlvzeKChggC0L0O6b8ucjhu8QhjpVLCNaaavLxZLUAr4tlhg==
   dependencies:
     cross-fetch "^3.1.5"
 
