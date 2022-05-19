@@ -76,14 +76,20 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
+  const page_path = getAnonymizedPathname()
+
+  const config = {
+    // debug_mode: true,
+    page_title: document.title,
+    page_location: `${location.origin}${page_path}`, //${search}${hash}`,
+    page_path,
+  }
+
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
     ...GTM_ENVIRONMENT,
     dataLayer: {
-      config: {
-        // Disable standard page_view event
-        send_page_view: false,
-      },
+      config,
       // Allow only GA4 configuration and GA4 custom event tags
       // @see https://developers.google.com/tag-platform/tag-manager/web/restrict
       'gtm.allowlist': ['gaawc', 'gaawe'],
@@ -115,7 +121,8 @@ const getPageViewEvent = (
   const page_path = getAnonymizedPathname(pathname)
 
   return {
-    event: GA_EVENT.PAGE_VIEW,
+    // event: GA_EVENT.PAGE_VIEW,
+    // debug_mode: true,
     page_title: document.title,
     page_location: `${location.origin}${page_path}${search}${hash}`,
     page_path,
@@ -129,7 +136,7 @@ export const usePageTracking = (): void => {
 
   useEffect(() => {
     TagManager.dataLayer({
-      dataLayer: { ...getPageViewEvent(location), chainId },
+      dataLayer: { config: getPageViewEvent(location), chainId },
     })
   }, [location, chainId])
 }
