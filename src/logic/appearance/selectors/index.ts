@@ -14,8 +14,3 @@ export const showShortNameSelector = createSelector(
   appearanceStateSelector,
   ({ showShortName }: AppearanceState): boolean => showShortName,
 )
-
-export const batchExecuteSelector = createSelector(
-  appearanceStateSelector,
-  ({ batchExecute }: AppearanceState): boolean => batchExecute,
-)
