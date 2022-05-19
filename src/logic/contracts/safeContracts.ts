@@ -1,4 +1,5 @@
 import semverSatisfies from 'semver/functions/satisfies'
+import semverClean from 'semver/functions/clean'
 import {
   getSafeSingletonDeployment,
   getSafeL2SingletonDeployment,
@@ -268,7 +269,7 @@ export const estimateGasForDeployingSafe = async (
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string, safeVersion: string): GnosisSafe => {
-  const safeSingletonDeployment = getSafeContractDeployment({ safeVersion })
+  const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: semverClean(safeVersion) })
 
   const web3 = getWeb3()
   return new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[], safeAddress) as unknown as GnosisSafe
