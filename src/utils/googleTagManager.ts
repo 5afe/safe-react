@@ -69,7 +69,7 @@ export enum GTM_EVENT {
 }
 
 export const loadGoogleTagManager = (): void => {
-  const GTM_ENVIRONMENT = true ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
+  const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
   if (!GOOGLE_TAG_MANAGER_ID || !GTM_ENVIRONMENT.auth) {
     console.warn('[GTM] - Unable to initialize Google Tag Manager. `id` or `gtm_auth` missing.')
