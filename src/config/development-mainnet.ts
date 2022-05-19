@@ -4,7 +4,7 @@ import { TX_SERVICE_HOST, RELAY_API_URL } from 'src/config/names'
 
 const devMainnetConfig = {
   ...devConfig,
-  [TX_SERVICE_HOST]: 'http://localhost:8000/api/v1/',
+  [TX_SERVICE_HOST]: 'https://api.rsk-safe.com/api/v1/',
   [RELAY_API_URL]: 'https://safe-relay.mainnet.staging.gnosisdev.com/api/v1/',
 }
 
