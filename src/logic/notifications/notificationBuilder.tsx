@@ -102,6 +102,15 @@ const newSpendingLimitTxNotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.NEW_SPENDING_LIMIT_FAILED_MSG,
 }
 
+const spendingLimitTxNotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
+  afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.SPENDING_LIMIT_EXECUTED_MSG,
+  },
+  afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
+}
+
 const removeSpendingLimitTxNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_REMOVE_SPENDING_LIMIT_MSG,
   afterRejection: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_REJECTED_MSG,
@@ -198,6 +207,10 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
     }
     case TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX: {
       notificationsQueue = newSpendingLimitTxNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.SPENDING_LIMIT_TX: {
+      notificationsQueue = spendingLimitTxNotificationsQueue
       break
     }
     case TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX: {
