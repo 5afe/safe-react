@@ -1,4 +1,4 @@
-import { request } from 'graphql-request'
+import axios from 'axios'
 import { GatewayDefinitions, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getNetworkExplorerInfo } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -37,17 +37,15 @@ export const fetchTokenCurrenciesBalances = async ({
   }
 }
 const WEI_PER = 1_000_000_000_000_000_000
-const exchangeRate = 1
 
 async function getTokenBalances(address: string, selectedCurrency: string, excludeSpamTokens: boolean) {
-  const [tokens, prices] = await Promise.all([fetchTokens(address), fetchPrices()])
+  const tokens = await fetchTokens(address)
 
   const filteredTokens = excludeSpamTokens ? tokens.filter((token) => !/doge/i.test(token.name)) : tokens
+  const tokenPrices = await fetchPrices(filteredTokens, selectedCurrency)
 
   return filteredTokens.map((token) => {
-    const usdConversion = token.symbol === 'cUSD' ? 1 : prices[token.symbol.toUpperCase()] || 0
-    // TODO when we bring back multi fiat support change exchangeRate to the actual rate
-    const fiatConversion = selectedCurrency === 'USD' ? usdConversion : usdConversion * exchangeRate
+    const price = tokenPrices[token.contractAddress]?.[selectedCurrency.toLowerCase()] || 0
     return {
       tokenInfo: {
         type: TokenType.ERC20,
@@ -58,8 +56,8 @@ async function getTokenBalances(address: string, selectedCurrency: string, exclu
         logoUri: `https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_${token.symbol}.png`,
       },
       balance: token.balance,
-      fiatBalance: new BigNumber(token.balance).dividedBy(WEI_PER).multipliedBy(fiatConversion).toString(),
-      fiatConversion: fiatConversion.toString(),
+      fiatBalance: new BigNumber(token.balance).dividedBy(WEI_PER).multipliedBy(price).toString(),
+      fiatConversion: '1',
     }
   })
 }
@@ -109,28 +107,22 @@ async function fetchTokensWithRetriesAndAlternate(address: string) {
   return []
 }
 
-interface PriceInfo {
-  symbol: string
-  derivedCUSD: number
+type TokenPrices = {
+  [key: string]: {
+    [currency: string]: number
+  }
 }
 
-const tokensQuery = `query { tokens(number_gte: 11749000) {
-  derivedCUSD
-  symbol
-}}`
-
-async function fetchPrices(): Promise<Record<string, number>> {
+async function fetchPrices(tokens: BlockScoutTokenBalance[], selectedCurrency: string): Promise<TokenPrices> {
+  const addressesString = tokens.reduce((addresses, token) => {
+    return `${addresses},${token.contractAddress}`
+  }, '')
+  const priceUrl = `https://api.coingecko.com/api/v3/simple/token_price/celo?vs_currencies=${selectedCurrency}&contract_addresses=${addressesString}`
   try {
-    const { tokens } = await request<{ tokens: PriceInfo[] }>(
-      'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap',
-      tokensQuery,
-    )
-    return tokens.reduce((collection, entry) => {
-      collection[entry.symbol.toUpperCase()] = entry.derivedCUSD
-      return collection
-    }, {})
+    const tokenPrices = await axios.get<TokenPrices>(priceUrl)
+    return tokenPrices.data
   } catch (e) {
-    console.error('Could not fetch prices from ubeswap subgraph', e)
+    console.error('Could not fetch token prices', e)
     return {}
   }
 }
