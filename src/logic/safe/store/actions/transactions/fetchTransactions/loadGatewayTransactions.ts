@@ -75,9 +75,12 @@ const getHistoryTxListPage = async (
       return pageUrl
     }
 
-    const searchParams = new URLSearchParams(query).toString()
+    const url = new URL(pageUrl)
+    const entries = Object.entries(query)
 
-    return searchParams ? `${pageUrl}&${searchParams}` : pageUrl
+    entries.forEach(([key, value]) => url.searchParams.set(key, value))
+
+    return url.toString()
   }
 
   historyPointers[chainId][safeAddress].next = getPageUrl(txListPage?.next)
