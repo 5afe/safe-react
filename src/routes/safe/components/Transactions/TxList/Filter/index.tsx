@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { parse, ParsedQuery } from 'query-string'
+import { parse } from 'query-string'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -22,7 +22,6 @@ import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/fi
 import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
-import { formateDate } from 'src/utils/date'
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
@@ -83,22 +82,9 @@ const defaultValues: DefaultValues<FilterForm> = {
 }
 
 const getInitialValues = (search: string): DefaultValues<FilterForm> => {
-  const parsedSearch = parse(search)
-
-  const getDate = (value: ParsedQuery[string]): string => {
-    const timestamp = Number(value)
-    return !isNaN(timestamp) ? formateDate(timestamp) : ''
-  }
-
   return {
     ...defaultValues,
-    ...parsedSearch,
-    ...(parsedSearch[DATE_FROM_FIELD_NAME] && {
-      [DATE_FROM_FIELD_NAME]: getDate(parsedSearch[DATE_FROM_FIELD_NAME]),
-    }),
-    ...(parsedSearch[DATE_TO_FIELD_NAME] && {
-      [DATE_TO_FIELD_NAME]: getDate(parsedSearch[DATE_TO_FIELD_NAME]),
-    }),
+    ...parse(search),
   }
 }
 
