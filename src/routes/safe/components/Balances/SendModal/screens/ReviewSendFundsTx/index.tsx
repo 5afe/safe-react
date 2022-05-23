@@ -107,6 +107,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
       if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
         const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
         const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
+        if (!spendingLimitModuleAddress) return
         const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SPENDING_LIMIT_TX)
 

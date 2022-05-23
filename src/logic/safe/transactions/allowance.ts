@@ -24,6 +24,8 @@ export const estimateGasForAllowanceTransfer = async ({
   signature,
 }: AllowanceTransferProps): Promise<number> => {
   const spendingLimitModuleAddress = getSpendingLimitModuleAddress(_getChainId())
+  if (!spendingLimitModuleAddress) return 0
+
   const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
 
   return spendingLimit.methods
@@ -42,6 +44,8 @@ export const checkAllowanceTransferExecution = async ({
   signature,
 }: AllowanceTransferProps): Promise<boolean> => {
   const spendingLimitModuleAddress = getSpendingLimitModuleAddress(_getChainId())
+  if (!spendingLimitModuleAddress) return false
+
   const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
 
   return spendingLimit.methods
