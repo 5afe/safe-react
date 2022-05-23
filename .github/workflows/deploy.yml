@@ -167,4 +167,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          browser: chrome
+          headless: true
           config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
