@@ -1,5 +1,4 @@
 import 'cypress-file-upload'
-import { deleteDownloadsFolder } from '../utils/deleteDownloadsFolder'
 const path = require('path')
 
 const NAME = 'Owner1'
@@ -18,8 +17,6 @@ const GNO_CSV_ENTRY = {
 }
 
 describe('Address book', () => {
-  beforeEach(deleteDownloadsFolder)
-
   it('should add and remove Address Book entries', () => {
     cy.visit(`/${RINKEBY_TEST_SAFE}/address-book`)
 
@@ -43,7 +40,7 @@ describe('Address book', () => {
 
     cy.wait(4000) // Waiting for notifications to dissapear before clicking "Import"
     cy.get('[data-track="address-book: Import"]').click()
-    cy.get('[type="file"]').attachFile('../utils/files/address_book_test.csv')
+    cy.get('[type="file"]').attachFile('../fixtures/address_book_test.csv')
     cy.get('.modal-footer').findByText('Import').click()
     cy.findByText(RINKEBY_CSV_ENTRY.name).should('exist')
     cy.findByText(RINKEBY_CSV_ENTRY.address).should('exist')
@@ -54,10 +51,12 @@ describe('Address book', () => {
     cy.findByText(GNO_CSV_ENTRY.address).should('exist')
 
     const date = new Date()
-    const day = date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCMonth()
-    const month = date.getUTCMonth() + 1 < 10 ? `0${date.getUTCMonth() + 1}` : date.getUTCMonth() + 1
+    const day = `00${date.getUTCDate()}`.slice(-2)
+    const month = `00${date.getUTCMonth() + 1}`.slice(-2)
     const year = date.getUTCFullYear()
     const fileName = `gnosis-safe-address-book-${year}-${month}-${day}.csv`
+
+    console.log(fileName)
 
     cy.get('[data-track="address-book: Export"]').click()
     cy.findByText('Download').click()

@@ -43,7 +43,7 @@ describe('Load Safe', () => {
       .should('have.value', SAFE_ENS_NAME_TRANSLATED)
     cy.findByTestId('qr-icon').click()
     cy.get('[class="paper"]').find('button').contains('Upload an image').click()
-    cy.get('[type="file"]').attachFile('../utils/files/rinkeby_safe_QR.png')
+    cy.get('[type="file"]').attachFile('../fixtures/rinkeby_safe_QR.png')
     cy.findByTestId('load-safe-address-field').should('have.value', SAFE_QR_CODE_ADDRESS)
     cy.findByTestId('safeAddress-valid-address-adornment').should('exist')
     cy.wait(3000) //have to wait or after clicking next what loads is the owners of the previous valids safe, not the one from the QR code
