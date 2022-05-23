@@ -163,17 +163,3 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-
-  # Cypress E2E tests
-  cypress-run:
-    if: success() && github.event.number
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          headless: true
-          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
