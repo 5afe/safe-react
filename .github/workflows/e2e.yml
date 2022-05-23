@@ -28,7 +28,6 @@ jobs:
           yarn cache clean
 
       - name: Run the app locally
-        run: yarn start
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
+        run: |
+          yarn start &
+          yarn cypress:run

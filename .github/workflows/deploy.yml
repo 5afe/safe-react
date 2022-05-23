@@ -117,7 +117,7 @@ jobs:
         with:
           message: |
             ## Deployment links
-            :orange_circle: [Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rin) | :white_circle: [Mainnet](${{ env.REVIEW_FEATURE_URL }}/eth) | :purple_circle: [Polygon](${{ env.REVIEW_FEATURE_URL }}/matic) | :yellow_circle: [BSC](${{ env.REVIEW_FEATURE_URL }}/bnb) | :black_circle: [Arbitrum](${{ env.REVIEW_FEATURE_URL }}/arb1) | :green_circle: [Gnosis Chain](${{ env.REVIEW_FEATURE_URL }}/gno)
+            :white_circle: [Mainnet](${{ env.REVIEW_FEATURE_URL }}/eth) | :purple_circle: [Polygon](${{ env.REVIEW_FEATURE_URL }}/matic) | :orange_circle: [Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rin)
             -|-|-|-|-|-
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
