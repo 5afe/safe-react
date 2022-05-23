@@ -163,27 +163,17 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-  e2e:
-    name: Trigger e2e tests
-    if: success() && github.ref == 'refs/heads/dev'
-    runs-on: ubuntu-latest
+
+  # Cypress E2E tests
+  cypress-run:
+    if: success() && github.event.number
+    runs-on: ubuntu-20.04
     steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
         with:
-          token: ${{ secrets.E2E_RUN_HOOK_ACCESS_TOKEN }}
-          repository: gnosis/safe-react-e2e-tests
-          event-type: run-e2e-from-safe-react
-  e2ePR:
-    name: Trigger e2e tests on pr
-    if: github.event.number
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.E2E_RUN_HOOK_ACCESS_TOKEN }}
-          repository: gnosis/safe-react-e2e-tests
-          event-type: run-e2e-tests-from-safe-react-on-pr
-          client-payload: '{"pr_number": "${{ github.event.number }}"}'
+          headless: true
+          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
