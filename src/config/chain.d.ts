@@ -13,6 +13,8 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   ETHEREUM: '1',
   RINKEBY: '4',
   VOLTA: '73799',
+  CLOUDWALK_MAINNET: '2009',
+  CLOUDWALK_TESTNET: '2008',
 }
 
 // Values match that required of onboard and returned by CGW

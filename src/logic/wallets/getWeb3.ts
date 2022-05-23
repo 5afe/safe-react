@@ -52,9 +52,10 @@ const web3ReadOnly: Web3[] = []
 export const getWeb3ReadOnly = (chainId = _getChainId()): Web3 => {
   if (!web3ReadOnly[chainId]) {
     web3ReadOnly[chainId] = new Web3(
-      process.env.NODE_ENV !== 'test'
-        ? new Web3.providers.HttpProvider(getRpcServiceUrl(), web3HttpProviderOptions)
-        : 'ws://localhost:8545',
+      // process.env.NODE_ENV !== 'test'
+      // ?
+      new Web3.providers.HttpProvider(getRpcServiceUrl(), web3HttpProviderOptions),
+      // : 'ws://localhost:8545',
     )
   }
 

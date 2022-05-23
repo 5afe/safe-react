@@ -1,0 +1,148 @@
+import {
+  GAS_PRICE_TYPE,
+  RPC_AUTHENTICATION,
+  FEATURES,
+  RpcUri,
+  BlockExplorerUriTemplate,
+  NativeCurrency,
+  Theme,
+} from '@gnosis.pm/safe-react-gateway-sdk'
+
+export const chainsCW = {
+  next: null,
+  previous: null,
+  results: [
+    {
+      transactionService: 'https://explorer.mainnet.cloudwalk.io/api-docs',
+      chainId: '2009',
+      chainName: 'Mainnet',
+      shortName: 'brlc',
+      l2: false,
+      description: '',
+      rpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rpc.mainnet.cloudwalk.io',
+      } as RpcUri,
+      safeAppsRpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rpc.mainnet.cloudwalk.io',
+      } as RpcUri,
+      publicRpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rpc.mainnet.cloudwalk.io',
+      } as RpcUri,
+      blockExplorerUriTemplate: {
+        address: 'https://explorer.mainnet.cloudwalk.io/address/{{address}}/transactions',
+        txHash: 'https://explorer.mainnet.cloudwalk.io/tx/{{txHash}}/internal-transactions',
+        api: 'https://explorer.mainnet.cloudwalk.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}',
+      } as BlockExplorerUriTemplate,
+      nativeCurrency: {
+        name: 'Reais',
+        symbol: 'BRLC',
+        decimals: 18,
+        logoUri: 'https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png',
+      } as NativeCurrency,
+      theme: {
+        textColor: '#001428',
+        backgroundColor: '#DDDDDD',
+      } as Theme,
+      ensRegistryAddress: '',
+      gasPrice: [
+        {
+          type: GAS_PRICE_TYPE.FIXED,
+          weiValue: '24000000000',
+        },
+      ] as any,
+      disabledWallets: [
+        'authereum',
+        'coinbase',
+        'fortmatic',
+        'frame',
+        'keystone',
+        'lattice',
+        'opera',
+        'operaTouch',
+        'portis',
+        'tally',
+        'torus',
+        'trezor',
+        'trust',
+        'walletLink',
+      ],
+      features: [
+        FEATURES.CONTRACT_INTERACTION,
+        FEATURES.DOMAIN_LOOKUP,
+        // FEATURES.EIP1559,
+        FEATURES.ERC721,
+        FEATURES.SAFE_APPS,
+        FEATURES.SAFE_TX_GAS_OPTIONAL,
+        FEATURES.SPENDING_LIMIT,
+      ] as FEATURES[],
+    },
+    {
+      transactionService: 'https://explorer.testnet.cloudwalk.io/api-docs',
+      chainId: '2008',
+      chainName: 'Testnet',
+      shortName: 'brlc',
+      l2: true,
+      description: '',
+      rpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rpc.testnet.cloudwalk.io',
+      } as RpcUri,
+      safeAppsRpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rpc.testnet.cloudwalk.io',
+      } as RpcUri,
+      publicRpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rpc.testnet.cloudwalk.io',
+      } as RpcUri,
+      blockExplorerUriTemplate: {
+        address: 'https://explorer.testnet.cloudwalk.io/address/{{address}}/transactions',
+        txHash: 'https://explorer.testnet.cloudwalk.io/tx/{{txHash}}/internal-transactions',
+        api: 'https://explorer.testnet.cloudwalk.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}',
+      } as BlockExplorerUriTemplate,
+      nativeCurrency: {
+        name: 'Reais',
+        symbol: 'BRLC',
+        decimals: 18,
+        logoUri: 'https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png',
+      } as NativeCurrency,
+      theme: {
+        textColor: '#ffffff',
+        backgroundColor: '#48A9A6',
+      } as Theme,
+      gasPrice: [
+        {
+          type: GAS_PRICE_TYPE.FIXED,
+          weiValue: '24000000000',
+        },
+      ] as any,
+      disabledWallets: [
+        'authereum',
+        'coinbase',
+        'fortmatic',
+        'frame',
+        'keystone',
+        'lattice',
+        'opera',
+        'operaTouch',
+        'portis',
+        'tally',
+        'torus',
+        'trezor',
+        'trust',
+        'walletLink',
+      ],
+      features: [
+        FEATURES.CONTRACT_INTERACTION,
+        // FEATURES.EIP1559,
+        FEATURES.ERC721,
+        FEATURES.SAFE_APPS,
+        FEATURES.SAFE_TX_GAS_OPTIONAL,
+        FEATURES.SPENDING_LIMIT,
+      ] as FEATURES[],
+    },
+  ],
+}

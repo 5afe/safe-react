@@ -15694,6 +15694,11 @@ safe-buffer@5.2.1, safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, 
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
+safe-deployments-fork@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/safe-deployments-fork/-/safe-deployments-fork-1.0.0.tgz#f6aad66800d177fe37fafeca2dcb8b84e212c23c"
+  integrity sha512-8cODOhLkuNJPdVm5ZyTChlRbMlTZWovZ5EDf6tblkYn+hNcKa6SOSAxPu39tQqUoKcaLUNkkGyNtYiACzPiqNA==
+
 safe-event-emitter@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/safe-event-emitter/-/safe-event-emitter-1.0.1.tgz#5b692ef22329ed8f69fdce607e50ca734f6f20af"

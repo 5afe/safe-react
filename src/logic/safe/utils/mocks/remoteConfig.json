@@ -186,6 +186,136 @@
         "SAFE_TX_GAS_OPTIONAL",
         "SPENDING_LIMIT"
       ]
+    },
+    {
+      "transactionService": "https://explorer.mainnet.cloudwalk.io/api-docs",
+      "chainId": "2009",
+      "chainName": "Mainnet",
+      "shortName": "brlc",
+      "l2": false,
+      "description": "",
+      "rpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.mainnet.cloudwalk.io"
+      },
+      "safeAppsRpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.mainnet.cloudwalk.io"
+      },
+      "publicRpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.mainnet.cloudwalk.io"
+      },
+      "blockExplorerUriTemplate": {
+        "address": "https://explorer.mainnet.cloudwalk.io/address/{{address}}/transactions",
+        "txHash": "https://explorer.mainnet.cloudwalk.io/tx/{{txHash}}/internal-transactions",
+        "api": "https://explorer.mainnet.cloudwalk.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+      },
+      "nativeCurrency": {
+        "name": "Reais",
+        "symbol": "BRLC",
+        "decimals": 18,
+        "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png"
+      },
+      "theme": {
+        "textColor": "#001428",
+        "backgroundColor": "#DDDDDD"
+      },
+      "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+      "gasPrice": [
+        {
+          "type": "FIXED",
+          "weiValue": "0000000000"
+        }
+      ],
+      "disabledWallets": [
+        "authereum",
+        "coinbase",
+        "fortmatic",
+        "frame",
+        "keystone",
+        "lattice",
+        "opera",
+        "operaTouch",
+        "portis",
+        "tally",
+        "torus",
+        "trezor",
+        "trust",
+        "walletLink"
+      ],
+      "features": [
+        "CONTRACT_INTERACTION",
+        "DOMAIN_LOOKUP",
+        "ERC721",
+        "SAFE_APPS",
+        "SAFE_TX_GAS_OPTIONAL",
+        "SPENDING_LIMIT"
+      ]
+    },
+    {
+      "transactionService": "https://explorer.testnet.cloudwalk.io/api-docs",
+      "chainId": "2008",
+      "chainName": "Testnet",
+      "shortName": "brlc",
+      "l2": true,
+      "description": "",
+      "rpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.testnet.cloudwalk.io"
+      },
+      "safeAppsRpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.testnet.cloudwalk.io"
+      },
+      "publicRpcUri": {
+        "authentication": "NO_AUTHENTICATION",
+        "value": "https://rpc.testnet.cloudwalk.io"
+      },
+      "blockExplorerUriTemplate": {
+        "address": "https://explorer.testnet.cloudwalk.io/address/{{address}}/transactions",
+        "txHash": "https://explorer.testnet.cloudwalk.io/tx/{{txHash}}/internal-transactions",
+        "api": "https://explorer.testnet.cloudwalk.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+      },
+      "nativeCurrency": {
+        "name": "Reais",
+        "symbol": "BRLC",
+        "decimals": 18,
+        "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png"
+      },
+      "theme": {
+        "textColor": "#ffffff",
+        "backgroundColor": "#48A9A6"
+      },
+      "gasPrice": [
+        {
+          "type": "FIXED",
+          "weiValue": "0000000000"
+        }
+      ],
+      "disabledWallets": [
+        "authereum",
+        "coinbase",
+        "fortmatic",
+        "frame",
+        "keystone",
+        "lattice",
+        "opera",
+        "operaTouch",
+        "portis",
+        "tally",
+        "torus",
+        "trezor",
+        "trust",
+        "walletLink"
+      ],
+      "features": [
+        "CONTRACT_INTERACTION",
+        "ERC721",
+        "SAFE_APPS",
+        "SAFE_TX_GAS_OPTIONAL",
+        "SPENDING_LIMIT"
+      ]
     }
   ]
 }

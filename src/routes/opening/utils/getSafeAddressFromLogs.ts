@@ -1,5 +1,5 @@
 import abiDecoder from 'abi-decoder'
-import { getProxyFactoryDeployment } from '@gnosis.pm/safe-deployments'
+import { getProxyFactoryDeployment } from 'safe-deployments-fork'
 import { Log } from 'web3-core'
 import { checksumAddress } from 'src/utils/checksumAddress'
 

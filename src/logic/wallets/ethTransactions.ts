@@ -5,14 +5,17 @@ import { BigNumber } from 'bignumber.js'
 import { FeeHistoryResult } from 'web3-eth'
 import { hexToNumber } from 'web3-utils'
 
-import { getSDKWeb3ReadOnly, getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import {
+  // getSDKWeb3ReadOnly,
+  getWeb3ReadOnly,
+} from 'src/logic/wallets/getWeb3'
 import { getFixedGasPrice, getGasPriceOracles } from 'src/config'
 import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const EMPTY_DATA = '0x'
 
-export const DEFAULT_MAX_GAS_FEE = 3.5e9 // 3.5 GWEI
-export const DEFAULT_MAX_PRIO_FEE = 2.5e9 // 2.5 GWEI
+export const DEFAULT_MAX_GAS_FEE = 0.0e9 // 3.5 GWEI
+export const DEFAULT_MAX_PRIO_FEE = 0.0e9 // 2.5 GWEI
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { uri, gasParameter, gweiFactor } = gasPriceOracle
@@ -89,9 +92,10 @@ export const calculateGasPrice = async (): Promise<string> => {
 
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
-    const ethAdapter = getSDKWeb3ReadOnly()
-
-    return await ethAdapter.estimateGas(txConfig)
+    console.log(txConfig)
+    return parseInt('21000')
+    // const ethAdapter = getSDKWeb3ReadOnly()
+    // return await ethAdapter.estimateGas(txConfig)
   } catch (err) {
     throw new CodedException(Errors._612, err.message)
   }
