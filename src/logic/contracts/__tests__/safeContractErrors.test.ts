@@ -14,6 +14,6 @@ describe('decodeMessage', () => {
   })
 
   it('returns provided errors if not safe errors', () => {
-    expect(decodeMessage('Not a Safe error')).toBe('Not a Safe error')
+    expect(decodeMessage('Not a Safe error')).toBe(null)
   })
 })

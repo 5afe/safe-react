@@ -13,6 +13,7 @@ type Props = {
   safeNonce?: TxParameters['safeNonce']
   safeTxGas?: TxParameters['safeTxGas']
   closeEditModalCallback?: (txParameters: TxParameters) => void
+  txType?: string
 }
 
 export const EditableTxParameters = ({
@@ -25,6 +26,7 @@ export const EditableTxParameters = ({
   safeNonce,
   safeTxGas,
   closeEditModalCallback,
+  txType,
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
   const [useManualValues, setUseManualValues] = useState(false)
@@ -83,6 +85,7 @@ export const EditableTxParameters = ({
       txParameters={txParameters}
       onClose={closeEditFormHandler}
       parametersStatus={parametersStatus ?? defaultParameterStatus}
+      txType={txType}
     />
   ) : (
     children(txParameters, toggleStatus)
