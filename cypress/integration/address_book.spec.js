@@ -56,8 +56,6 @@ describe('Address book', () => {
     const year = date.getUTCFullYear()
     const fileName = `gnosis-safe-address-book-${year}-${month}-${day}.csv`
 
-    console.log(fileName)
-
     cy.get('[data-track="address-book: Export"]').click()
     cy.findByText('Download').click()
     const downloadsFolder = Cypress.config('downloadsFolder')
