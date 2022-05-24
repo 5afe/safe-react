@@ -32,6 +32,18 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
+  e2e:
+    runs-on: ubuntu-20.04
+    # let's make sure our tests pass on Chrome browser
+    name: E2E on Chrome
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cypress-io/github-action@v2
+        with:
+          spec: cypress/integration/smoke/*.spec.js
+          browser: chrome
+          record: false
+          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
   deploy:
     name: Deployment
     runs-on: ubuntu-latest
@@ -163,11 +175,3 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-
-      # Cypress E2E tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          spec: cypress/integration/smoke/*.spec.js
-          record: false
-          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
