@@ -167,4 +167,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          config: video=false,spec=cypress/integration/smoke/*.spec.js,baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
+          spec: cypress/integration/smoke/*.spec.js
+          video: false
+          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
