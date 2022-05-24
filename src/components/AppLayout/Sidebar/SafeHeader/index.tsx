@@ -228,7 +228,8 @@ const SafeHeader = ({
 
   const [masterCopyError] = useAsync(async () => {
     if (address && currentVersion) {
-      ;(await isValidMasterCopy(chainInfo, address, currentVersion))
+      const isValid = await isValidMasterCopy(chainInfo, address, currentVersion)
+      return isValid
         ? null
         : 'Invalid master copy address in proxy contract. This safe was not created through the web interface and there may be issues interacting with it.'
     }
