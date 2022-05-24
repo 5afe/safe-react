@@ -36,11 +36,8 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { Box } from '@material-ui/core'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useAsync from 'src/logic/hooks/useAsync'
-import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
-import semverSatisfies from 'semver/functions/satisfies'
-import { getSafeL2SingletonDeployment, getSafeSingletonDeployment } from '@gnosis.pm/safe-deployments'
 import { Tooltip } from 'src/components/layout/Tooltip'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { isValidMasterCopy } from 'src/logic/safe/utils/safeVersion'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -231,16 +228,9 @@ const SafeHeader = ({
 
   const [masterCopyError] = useAsync(async () => {
     if (address && currentVersion) {
-      debugger
-      const masterCopyAddressFromProxy = await getMasterCopyAddressFromProxyAddress(address)
-      const { l2, chainId } = chainInfo
-      const useL2ContractVersion = l2 && semverSatisfies(currentVersion, '>=1.3.0')
-      const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
-      const expectedMasterCopyAddress = getDeployment()?.networkAddresses[chainId]
-
-      return sameAddress(masterCopyAddressFromProxy, expectedMasterCopyAddress)
+      ;(await isValidMasterCopy(chainInfo, address, currentVersion))
         ? null
-        : 'Invalid master copy address in proxy contract. This safe was not created through the web interface. There may be issues interacting with it.'
+        : 'Invalid master copy address in proxy contract. This safe was not created through the web interface and there may be issues interacting with it.'
     }
   }, [address, chainInfo, currentVersion])
 
