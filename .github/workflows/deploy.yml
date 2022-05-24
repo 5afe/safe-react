@@ -53,7 +53,9 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: |
+            '**/node_modules'              
+            '**/.cache/Cypress'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - run: |
