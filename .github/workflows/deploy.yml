@@ -163,11 +163,3 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-
-      # Cypress E2E tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          spec: cypress/integration/smoke/*.spec.js
-          record: false
-          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
