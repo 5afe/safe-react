@@ -1,4 +1,5 @@
 import { REMOVE_GUARD_BTN_TEST_ID } from 'src/routes/safe/components/Settings/Advanced/TransactionGuard'
+import * as safeContracts from 'src/logic/contracts/safeContracts'
 import { render, screen, getByText, fireEvent } from 'src/utils/test-utils'
 import { history } from 'src/routes/routes'
 import Advanced from '.'
@@ -31,6 +32,9 @@ jest.mock('src/logic/hooks/useEstimateTransactionGas', () => {
 })
 
 describe('Advanced Settings Component', () => {
+  beforeEach(() => {
+    jest.spyOn(safeContracts, 'getMultisendContractAddress').mockReturnValue('mockAddress')
+  })
   it('Renders Advanced Settings Component', () => {
     const customState = {
       providers: {
@@ -79,6 +83,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -134,6 +141,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -162,6 +172,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -195,6 +208,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -260,6 +276,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -291,6 +310,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -299,6 +321,21 @@ describe('Advanced Settings Component', () => {
       expect(nonceLabel).toBeInTheDocument()
 
       expect(getByText(nonceLabel, currentNonce)).toBeInTheDocument()
+    })
+  })
+  describe('BatchExecute Setting', () => {
+    it('displays if MultiSend contract exists', () => {
+      jest.spyOn(safeContracts, 'getMultisendContractAddress').mockReturnValue('mockAddress')
+
+      const { getByText } = render(<Advanced />)
+      expect(getByText('Transactions (experimental)')).toBeInTheDocument()
+    })
+
+    it('doesnt display if the MultiSend contract doesnt exist', () => {
+      jest.spyOn(safeContracts, 'getMultisendContractAddress').mockReturnValue('')
+
+      const { queryByText } = render(<Advanced />)
+      expect(queryByText('Transactions (experimental)')).not.toBeInTheDocument()
     })
   })
 })

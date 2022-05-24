@@ -1,8 +1,7 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-import { Virtuoso } from 'react-virtuoso'
 
 import Item from './components/Item'
 
@@ -14,8 +13,10 @@ import {
 } from 'src/logic/collectibles/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { ASSETS_EVENTS } from 'src/utils/events/assets'
+import VirtualizedList from 'src/components/VirtualizedList'
 
 const useStyles = makeStyles(
   createStyles({
@@ -83,7 +84,6 @@ const useStyles = makeStyles(
 )
 
 const Collectibles = (): React.ReactElement => {
-  const { trackEvent } = useAnalytics()
   const classes = useStyles()
   const [selectedToken, setSelectedToken] = useState<NFTToken | undefined>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = useState(false)
@@ -92,9 +92,10 @@ const Collectibles = (): React.ReactElement => {
   const nftTokens = useSelector(orderedNFTAssets)
   const nftAssetsFromNftTokens = useSelector(nftAssetsFromNftTokensSelector)
 
+  const nftAmount = useMemo(() => nftTokens.length, [nftTokens])
   useEffect(() => {
-    trackEvent(SAFE_EVENTS.COLLECTIBLES)
-  }, [trackEvent])
+    trackEvent({ ...ASSETS_EVENTS.NFT_AMOUNT, label: nftAmount })
+  }, [nftAmount])
 
   const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)
@@ -105,9 +106,7 @@ const Collectibles = (): React.ReactElement => {
     return (
       <Card className={classes.cardOuter}>
         <div className={classes.cardInner}>
-          <Paragraph className={classes.noData}>
-            {nftLoaded ? 'No collectibles available' : 'Loading collectibles...'}
-          </Paragraph>
+          <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
         </div>
       </Card>
     )
@@ -115,10 +114,7 @@ const Collectibles = (): React.ReactElement => {
 
   return (
     <>
-      <Virtuoso
-        style={{
-          height: 'calc(100% - 54px)', // Remove breadcrumb height
-        }}
+      <VirtualizedList
         data={nftAssetsFromNftTokens}
         itemContent={(_, nftAsset) => {
           // Larger collectible lists can cause this to be initially undefined

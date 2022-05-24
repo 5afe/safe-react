@@ -89,7 +89,7 @@ type TxDetailsProps = {
 
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const { data, loading } = useTransactionDetails(transaction.id)
+  const { data, loading } = useTransactionDetails(transaction.id, transaction.txDetails)
   const txStatus = useTxStatus(transaction)
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
@@ -99,18 +99,18 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
-    if (!transaction.txDetails || !isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)) {
+    if (!data || !isModuleExecutionInfo(data.detailedExecutionInfo)) {
       return null
     }
 
     return (
       <div className="tx-module">
-        <TxModuleInfo detailedExecutionInfo={transaction.txDetails?.detailedExecutionInfo} />
+        <TxModuleInfo detailedExecutionInfo={data?.detailedExecutionInfo} />
       </div>
     )
   }
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <Centered padding={10}>
         <Loader size="sm" />

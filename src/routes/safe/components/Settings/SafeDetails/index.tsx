@@ -32,11 +32,12 @@ import {
   latestMasterContractVersion as latestMasterContractVersionSelector,
   safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
-import { useAnalytics, SETTINGS_EVENTS } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
 import ChainIndicator from 'src/components/ChainIndicator'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -71,7 +72,6 @@ const SafeDetails = (): ReactElement => {
   const safeName = safeNamesMap[safeAddress]?.name
 
   const dispatch = useDispatch()
-  const { trackEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = useState(false)
   const [safeInfo, setSafeInfo] = useState<MasterCopy | undefined>()
@@ -81,6 +81,8 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
+    trackEvent(SETTINGS_EVENTS.DETAILS.SAFE_NAME)
+
     dispatch(
       addressBookAddOrUpdate(
         makeAddressBookEntry({ address: safeAddress, name: values.safeName, chainId: curChainId }),
@@ -114,10 +116,6 @@ const SafeDetails = (): ReactElement => {
       ? ` (there's a newer version: ${latestMasterContractVersion})`
       : ''
   }
-
-  useEffect(() => {
-    trackEvent(SETTINGS_EVENTS.DETAILS)
-  }, [trackEvent])
 
   useEffect(() => {
     const getMasterCopyInfo = async () => {

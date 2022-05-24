@@ -2,6 +2,7 @@ import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
 import { ChainId } from 'src/config/chain.d'
 import { switchNetwork, shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
+import { WALLET_PROVIDER } from '../getWeb3'
 
 class CodedError extends Error {
   public code: number
@@ -77,16 +78,6 @@ describe('src/logic/wallets/utils/network', () => {
     })
   })
   describe('shouldSwitchNetwork', () => {
-    it('should return true when networks mismatch', () => {
-      const wallet = {
-        provider: {
-          networkVersion: '4',
-        },
-      }
-
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
-    })
-
     it('should return false when wallet is not connected', () => {
       const wallet = {
         provider: undefined,
@@ -94,15 +85,82 @@ describe('src/logic/wallets/utils/network', () => {
 
       expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
     })
+    it('should return false when it is a hardware wallet', () => {
+      expect(
+        shouldSwitchNetwork({
+          name: WALLET_PROVIDER.LEDGER,
+        } as Wallet),
+      ).toBe(false)
 
-    it('should return false when networks are the same', () => {
-      const wallet = {
-        provider: {
-          networkVersion: '1',
-        },
-      }
+      expect(
+        shouldSwitchNetwork({
+          name: WALLET_PROVIDER.TREZOR,
+        } as Wallet),
+      ).toBe(false)
 
-      expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      expect(
+        shouldSwitchNetwork({
+          type: 'hardware',
+        } as Wallet),
+      ).toBe(false)
+    })
+    describe('should return true when networks mismatch', () => {
+      it('for numeric `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: 4,
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      })
+      it('for strict hex `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '0x2',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      })
+      it('for string `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '4',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(true)
+      })
+    })
+    describe('should return false when networks are the same', () => {
+      it('for numeric `chainIds`', () => {
+        const wallet = {
+          provider: {
+            networkVersion: 1,
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      })
+      it('for strict hex `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '0x1',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      })
+      it('for string `chainId`s', () => {
+        const wallet = {
+          provider: {
+            networkVersion: '1',
+          },
+        }
+
+        expect(shouldSwitchNetwork(wallet as Wallet)).toBe(false)
+      })
     })
   })
 })

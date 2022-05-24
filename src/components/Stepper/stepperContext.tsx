@@ -1,7 +1,7 @@
 import { useContext, ReactElement, useState, Children, createContext } from 'react'
 import { history } from 'src/routes/routes'
 
-const StepperContext = createContext({})
+const StepperContext = createContext<StepperProviderTypes>({} as StepperProviderTypes)
 
 function useStepper(): any {
   const context = useContext(StepperContext)
@@ -22,6 +22,7 @@ type StepperProviderTypes = {
   stepsComponents: ReactElement[]
   children: ReactElement
   testId?: string
+  trackingCategory?: string
 }
 
 function StepperProvider({
@@ -31,6 +32,7 @@ function StepperProvider({
   stepsComponents,
   children,
   testId,
+  trackingCategory,
 }: StepperProviderTypes): ReactElement {
   const [currentStep, setCurrentStep] = useState(0)
 
@@ -66,7 +68,7 @@ function StepperProvider({
     setCurrentStep((step) => step + 1)
   }
 
-  const state = {
+  const state: StepperProviderTypes = {
     currentStep,
     setCurrentStep,
     steps,
@@ -84,6 +86,7 @@ function StepperProvider({
     customNextButtonLabel,
 
     testId,
+    trackingCategory,
 
     ...store,
   }

@@ -26,10 +26,12 @@ import {
   BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
-import { useAnalytics, SAFE_EVENTS } from 'src/utils/googleAnalytics'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { ASSETS_EVENTS } from 'src/utils/events/assets'
+import Track from 'src/components/Track'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -79,11 +81,14 @@ const Coins = (props: Props): React.ReactElement => {
   const selectedCurrency = useSelector(currentCurrencySelector)
   const safeTokens = useSelector(extendedSafeTokensSelector)
   const granted = useSelector(grantedSelector)
-  const { trackEvent } = useAnalytics()
 
+  const differingTokens = useMemo(() => safeTokens.size, [safeTokens])
   useEffect(() => {
-    trackEvent(SAFE_EVENTS.COINS)
-  }, [trackEvent])
+    // Safe does not have any tokens until fetching is complete
+    if (differingTokens > 0) {
+      trackEvent({ ...ASSETS_EVENTS.DIFFERING_TOKENS, label: differingTokens })
+    }
+  }, [differingTokens])
 
   const filteredData: List<BalanceData> = useMemo(
     () => getBalanceData(safeTokens, selectedCurrency),
@@ -141,25 +146,29 @@ const Coins = (props: Props): React.ReactElement => {
               <TableCell component="td">
                 <Row align="end" className={classes.actions}>
                   {granted && (
-                    <StyledButton
-                      color="primary"
-                      onClick={() => showSendFunds(row.asset.address)}
-                      size="md"
-                      variant="contained"
-                      data-testid="balance-send-btn"
-                    >
-                      <FixedIcon type="arrowSentWhite" />
+                    <Track {...ASSETS_EVENTS.SEND}>
+                      <StyledButton
+                        color="primary"
+                        onClick={() => showSendFunds(row.asset.address)}
+                        size="md"
+                        variant="contained"
+                        data-testid="balance-send-btn"
+                      >
+                        <FixedIcon type="arrowSentWhite" />
+                        <Text size="xl" color="white">
+                          Send
+                        </Text>
+                      </StyledButton>
+                    </Track>
+                  )}
+                  <Track {...ASSETS_EVENTS.RECEIVE}>
+                    <StyledButton color="primary" onClick={showReceiveFunds} size="md" variant="contained">
+                      <FixedIcon type="arrowReceivedWhite" />
                       <Text size="xl" color="white">
-                        Send
+                        Receive
                       </Text>
                     </StyledButton>
-                  )}
-                  <StyledButton color="primary" onClick={showReceiveFunds} size="md" variant="contained">
-                    <FixedIcon type="arrowReceivedWhite" />
-                    <Text size="xl" color="white">
-                      Receive
-                    </Text>
-                  </StyledButton>
+                  </Track>
                 </Row>
               </TableCell>
             </TableRow>

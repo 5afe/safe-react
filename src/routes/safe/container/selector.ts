@@ -16,8 +16,14 @@ export const grantedSelector = createSelector(
   currentSafe,
   shouldSwitchWalletChain,
   (userAccount: string, safe: SafeRecord, isWrongChain: boolean): boolean => {
-    return isUserAnOwner(safe, userAccount) && !isWrongChain
+    return isUserAnOwner(safe, userAccount) && !isWrongChain && !sameAddress(userAccount, safe.address)
   },
+)
+
+export const sameAddressAsSafeSelector = createSelector(
+  userAccountSelector,
+  currentSafe,
+  (userAccount: string, safe: SafeRecord): boolean => sameAddress(userAccount, safe.address),
 )
 
 const safeEthAsTokenSelector = createSelector(currentSafe, (safe?: SafeRecord): Token | undefined => {

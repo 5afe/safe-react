@@ -18,6 +18,7 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
 
   return {
     ...storedSafe,
+    loaded: false,
     owners,
     modules: null,
   }
@@ -52,8 +53,13 @@ const updateSafeProps = (prevSafe, safe) => {
             : record.update(key, (current) => current.merge(safe[key]))
         }
       } else {
-        // By default we overwrite the value. This is for strings, numbers and unset values
-        record.set(key, safe[key])
+        // Temp fix
+        if (key === 'currentVersion' && safe[key].endsWith('+L2')) {
+          record.set(key, safe[key].replace('+L2', ''))
+        } else {
+          // By default we overwrite the value. This is for strings, numbers and unset values
+          record.set(key, safe[key])
+        }
       }
     })
   })

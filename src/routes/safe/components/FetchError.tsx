@@ -8,6 +8,7 @@ interface FetchErrorProps {
   text: string
   buttonText: string
   redirectRoute: string
+  onClick?: () => void
 }
 
 const StyledLink = styled(Link)`
@@ -25,14 +26,14 @@ const ErrorContainer = styled.div`
   margin-top: -30px;
 `
 
-const FetchError = ({ text, buttonText, redirectRoute }: FetchErrorProps): ReactElement => {
+const FetchError = ({ text, buttonText, redirectRoute, onClick }: FetchErrorProps): ReactElement => {
   return (
     <ErrorContainer>
       <img src="./resources/error.png" alt="Error" />
 
       <Title size="xs">{text}</Title>
 
-      <StyledLink to={redirectRoute}>
+      <StyledLink to={redirectRoute} onClick={onClick}>
         <Button color="primary" size="medium" variant="contained">
           {buttonText}
         </Button>

@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect'
-import { NFTAsset, NFTAssets, NFTToken, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
+import { NFTAsset, NFTAssets, NFTTokens, NFTTokensStore } from 'src/logic/collectibles/sources/collectibles.d'
 
 import { AppReduxState } from 'src/store'
 import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles'
 export const nftAssets = (state: AppReduxState): NFTAssets => state[NFT_ASSETS_REDUCER_ID]
-export const nftTokens = (state: AppReduxState): NFTTokens => state[NFT_TOKENS_REDUCER_ID]
+export const nftTokens = (state: AppReduxState): NFTTokensStore => state[NFT_TOKENS_REDUCER_ID]
 
 export const nftAssetsSelector = createSelector(nftAssets, (assets) => assets)
 
@@ -22,8 +22,9 @@ const nftAssetsAddressFromNftTokensSelector = createSelector(nftTokensSelector, 
   return Array.from(uniqueAddresses)
 })
 
-export const orderedNFTAssets = createSelector(nftTokensSelector, (userNftTokens): NFTToken[] =>
-  userNftTokens.sort((a, b) => a.name.localeCompare(b.name)),
+export const orderedNFTAssets = createSelector(
+  nftTokensSelector,
+  (userNftTokens): NFTTokens => userNftTokens.sort((a, b) => a.name.localeCompare(b.name)),
 )
 
 export const nftAssetsFromNftTokensSelector = createSelector(

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
+import { _getChainId } from 'src/config'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -28,12 +29,14 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import Hairline from 'src/components/layout/Hairline'
 import { isModuleEnabled } from 'src/logic/safe/utils/modules'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -65,6 +68,10 @@ const useExistentSpendingLimit = ({
   }, [spendingLimits, txToken.decimals, values.beneficiary, values.token])
 }
 
+const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
+  getResetTimeOptions().find(({ value }) => value === existentSpendingLimit.resetTimeMin)?.label ??
+  'One-time spending limit'
+
 type SpendingLimitsTxData = {
   spendingLimitTxData: CreateTransactionArgs
   transactions: MultiSendTx[]
@@ -87,7 +94,9 @@ const calculateSpendingLimitsTxData = async (
   modules: string[],
   txParameters?: TxParameters,
 ): Promise<SpendingLimitsTxData> => {
-  const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
+  const chainId = _getChainId()
+  const moduleAddress = getSpendingLimitModuleAddress(chainId)
+  const isSpendingLimitEnabled = isModuleEnabled(modules, moduleAddress)
   const transactions: MultiSendTx[] = []
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
@@ -96,6 +105,7 @@ const calculateSpendingLimitsTxData = async (
       safeAddress,
       safeVersion,
       connectedWalletAddress,
+      moduleAddress,
     )
     transactions.push(enableSpendingLimitTx)
   }
@@ -107,11 +117,11 @@ const calculateSpendingLimitsTxData = async (
 
   // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
   if (!isDelegateAlreadyAdded && values?.beneficiary) {
-    transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
+    transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary, moduleAddress))
   }
 
   if (existentSpendingLimit && existentSpendingLimit.spent !== '0') {
-    transactions.push(getResetSpendingLimitTx(existentSpendingLimit.delegate, txToken.address))
+    transactions.push(getResetSpendingLimitTx(existentSpendingLimit.delegate, txToken.address, moduleAddress))
   }
 
   // prepare the setAllowance tx
@@ -128,9 +138,9 @@ const calculateSpendingLimitsTxData = async (
   if (safeAddress) {
     // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
     if (transactions.length === 0) {
-      spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress })
+      spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress, moduleAddress })
     } else {
-      const encodedTxForMultisend = setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress })
+      const encodedTxForMultisend = setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress, moduleAddress })
       transactions.push(encodedTxForMultisend)
       spendingLimitTxData = spendingLimitMultiSendTx({ transactions, safeAddress })
     }
@@ -164,7 +174,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     spendingLimits,
     currentVersion: safeVersion = '',
     modules,
-  } = useSelector(currentSafe) ?? {}
+  } = useSelector(currentSafe)
   const connectedWalletAddress = useSelector(userAccountSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
@@ -223,6 +233,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       )
 
       dispatch(createTransaction({ ...spendingLimitTxData, delayExecution }))
+
+      trackEvent({
+        ...SETTINGS_EVENTS.SPENDING_LIMIT.RESET_PERIOD,
+        label: values.withResetTime ? `${values.resetTime} minutes` : 'never',
+      })
     }
   }
 
@@ -230,10 +245,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     () => (values.withResetTime ? getResetTimeOptions().find(({ value }) => value === values.resetTime)?.label : ''),
     [values.resetTime, values.withResetTime],
   )
-
-  const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
-    getResetTimeOptions().find(({ value }) => value === (+existentSpendingLimit.resetTimeMin).toString())?.label ??
-    'One-time spending limit'
 
   return (
     <TxModalWrapper
