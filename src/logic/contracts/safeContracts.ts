@@ -22,6 +22,7 @@ import { CompatibilityFallbackHandler } from 'src/types/contracts/compatibility_
 import { SignMessageLib } from 'src/types/contracts/sign_message_lib.d'
 import { MultiSend } from 'src/types/contracts/multi_send.d'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { NonPayableTransactionObject } from 'src/types/contracts/types'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
@@ -204,7 +205,7 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
   return masterCopyAddress
 }
 
-export const instantiateSafeContracts = () => {
+export const instantiateSafeContracts = (): void => {
   const web3 = getWeb3()
   const chainId = _getChainId()
 
@@ -221,24 +222,24 @@ export const instantiateSafeContracts = () => {
   multiSend = getMultiSendContractInstance(web3, chainId)
 }
 
-export const getSafeMasterContract = () => {
+export const getSafeMasterContract = (): GnosisSafe => {
   instantiateSafeContracts()
   return safeMaster
 }
 
-export const getSafeMasterContractAddress = () => {
+export const getSafeMasterContractAddress = (): string => {
   return safeMaster.options.address
 }
 
-export const getFallbackHandlerContractAddress = () => {
+export const getFallbackHandlerContractAddress = (): string => {
   return fallbackHandler.options.address
 }
 
-export const getMultisendContract = () => {
+export const getMultisendContract = (): MultiSend => {
   return multiSend
 }
 
-export const getMultisendContractAddress = () => {
+export const getMultisendContractAddress = (): string => {
   return multiSend.options.address
 }
 
@@ -246,7 +247,7 @@ export const getSafeDeploymentTransaction = (
   safeAccounts: string[],
   numConfirmations: number,
   safeCreationSalt: number,
-) => {
+): NonPayableTransactionObject<string> => {
   const gnosisSafeData = safeMaster.methods
     .setup(
       safeAccounts,
@@ -267,7 +268,7 @@ export const estimateGasForDeployingSafe = async (
   numConfirmations: number,
   userAccount: string,
   safeCreationSalt: number,
-) => {
+): Promise<number> => {
   const proxyFactoryData = getSafeDeploymentTransaction(safeAccounts, numConfirmations, safeCreationSalt).encodeABI()
 
   return calculateGasOf({
