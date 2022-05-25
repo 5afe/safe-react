@@ -25,7 +25,7 @@ const styles = () => ({
   root: {
     backgroundColor: 'white',
     borderRadius: sm,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+    boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
     marginTop: '11px',
     minWidth: '280px',
     padding: 0,
@@ -57,8 +57,6 @@ const styles = () => ({
   },
   popper: {
     zIndex: 1301,
-    borderRadius: '8px',
-    boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
   },
   network: {
     backgroundColor: 'white',
