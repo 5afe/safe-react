@@ -14,8 +14,8 @@ import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedExce
 
 export const EMPTY_DATA = '0x'
 
-export const DEFAULT_MAX_GAS_FEE = 0.0e9 // 3.5 GWEI
-export const DEFAULT_MAX_PRIO_FEE = 0.0e9 // 2.5 GWEI
+export const DEFAULT_MAX_GAS_FEE = 0.0e9 // 0.0 GWEI
+export const DEFAULT_MAX_PRIO_FEE = 0.0e9 // 0.0 GWEI
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
   const { uri, gasParameter, gweiFactor } = gasPriceOracle
@@ -53,14 +53,12 @@ export const getFeesPerGas = async (): Promise<{
   } catch (err) {
     logError(Errors._618, err.message)
   }
-
   if (!blocks || !maxPriorityFeePerGas || isNaN(maxPriorityFeePerGas) || !baseFeePerGas || isNaN(baseFeePerGas)) {
     return {
       maxFeePerGas: DEFAULT_MAX_GAS_FEE,
       maxPriorityFeePerGas: DEFAULT_MAX_PRIO_FEE,
     }
   }
-
   return {
     maxFeePerGas: baseFeePerGas + maxPriorityFeePerGas,
     maxPriorityFeePerGas,
@@ -69,7 +67,6 @@ export const getFeesPerGas = async (): Promise<{
 
 export const calculateGasPrice = async (): Promise<string> => {
   const gasPriceOracles = getGasPriceOracles()
-
   for (const gasPriceOracle of gasPriceOracles) {
     try {
       const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
@@ -93,7 +90,7 @@ export const calculateGasPrice = async (): Promise<string> => {
 export const calculateGasOf = async (txConfig: EthAdapterTransaction): Promise<number> => {
   try {
     console.log(txConfig)
-    return parseInt('21000')
+    return 21000
     // const ethAdapter = getSDKWeb3ReadOnly()
     // return await ethAdapter.estimateGas(txConfig)
   } catch (err) {

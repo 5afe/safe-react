@@ -50,7 +50,7 @@ export const chainsCW = {
       gasPrice: [
         {
           type: GAS_PRICE_TYPE.FIXED,
-          weiValue: '24000000000',
+          weiValue: '00000000000',
         },
       ] as any,
       disabledWallets: [
@@ -116,7 +116,7 @@ export const chainsCW = {
       gasPrice: [
         {
           type: GAS_PRICE_TYPE.FIXED,
-          weiValue: '24000000000',
+          weiValue: '00000000000',
         },
       ] as any,
       disabledWallets: [
@@ -138,6 +138,58 @@ export const chainsCW = {
       features: [
         FEATURES.CONTRACT_INTERACTION,
         // FEATURES.EIP1559,
+        FEATURES.ERC721,
+        FEATURES.SAFE_APPS,
+        FEATURES.SAFE_TX_GAS_OPTIONAL,
+        FEATURES.SPENDING_LIMIT,
+      ] as FEATURES[],
+    },
+    {
+      transactionService: 'https://safe-transaction.rinkeby.staging.gnosisdev.com',
+      chainId: '4',
+      chainName: 'Rinkeby',
+      shortName: 'rin',
+      l2: false,
+      description: '',
+      rpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rinkeby.infura.io/v3/',
+      } as RpcUri,
+      safeAppsRpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rinkeby.infura.io/v3/',
+      } as RpcUri,
+      publicRpcUri: {
+        authentication: RPC_AUTHENTICATION.NO_AUTHENTICATION,
+        value: 'https://rinkeby.infura.io/v3/',
+      } as RpcUri,
+      blockExplorerUriTemplate: {
+        address: 'https://rinkeby.etherscan.io/address/{{address}}',
+        txHash: 'https://rinkeby.etherscan.io/tx/{{txHash}}',
+        api: 'https://api-rinkeby.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}',
+      } as BlockExplorerUriTemplate,
+      nativeCurrency: {
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18,
+        logoUri: 'https://safe-transaction-assets.staging.gnosisdev.com/chains/4/currency_logo.png',
+      } as NativeCurrency,
+      theme: {
+        textColor: '#ffffff',
+        backgroundColor: '#E8673C',
+      } as Theme,
+      // ensRegistryAddress: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+      gasPrice: [
+        {
+          type: GAS_PRICE_TYPE.FIXED,
+          weiValue: '24000000000',
+        },
+      ] as any,
+      disabledWallets: ['fortmatic', 'lattice', 'tally'],
+      features: [
+        FEATURES.CONTRACT_INTERACTION,
+        FEATURES.DOMAIN_LOOKUP,
+        FEATURES.EIP1559,
         FEATURES.ERC721,
         FEATURES.SAFE_APPS,
         FEATURES.SAFE_TX_GAS_OPTIONAL,

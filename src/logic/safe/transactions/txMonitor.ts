@@ -1,9 +1,11 @@
 import { Transaction, TransactionReceipt } from 'web3-core'
 
-import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3ReadOnly, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
+import { AbstractProvider } from 'web3-core/types'
+import { hexToNumber } from 'web3-utils'
 
 type TxMonitorProps = {
   sender: string
@@ -13,12 +15,48 @@ type TxMonitorProps = {
   gasPrice?: string
 }
 
+type TxHash = {
+  blockHash: string
+  blockNumber: string
+  chainId: string
+  creates: null
+  from: string
+  gas: string
+  gasPrice: string
+  hash: string
+  input: string
+  nonce: string
+  publicKey: string
+  r: string
+  raw: string
+  s: string
+  standardV: string
+  to: string
+  transactionIndex: string
+  v: string
+  value: string
+}
+// type TxReceipt = {
+//   blockHash: string | null,
+//   blockNumber: string | null,
+//   contractAddress: null,
+//   cumulativeGasUsed: string | null,
+//   from: string | null,
+//   gasUsed: string | null,
+//   logs: Array<any>,
+//   logsBloom: string | null,
+//   status: string | null,
+//   to: string | null,
+//   transactionHash: string | null,
+//   transactionIndex: string | null
+// }
+
 type TxMonitorOptions = {
   delay?: number
   maxRetries?: number
 }
 
-const MAX_RETRIES = 720
+const MAX_RETRIES = 5
 const DEFAULT_DELAY = 5000
 
 async function findSpeedupTx({ sender, hash, nonce, data }: TxMonitorProps): Promise<Transaction | undefined> {
@@ -52,12 +90,32 @@ async function findSpeedupTx({ sender, hash, nonce, data }: TxMonitorProps): Pro
  * @param {number} options.delay
  * @returns {Promise<TransactionReceipt>}
  */
+
+const providerAsync = async ({ provider, hash, tries, method }): Promise<TxHash> => {
+  return new Promise(async (resolve, reject) => {
+    provider.sendAsync(
+      {
+        jsonrpc: '2.0',
+        method,
+        params: [hash],
+        id: String(tries),
+      },
+      (err, res: any) => {
+        if (err || res?.error) reject(null)
+        else resolve(res.result)
+      },
+    )
+  })
+}
+
 export const txMonitor = (
   { sender, hash, data, nonce, gasPrice }: TxMonitorProps,
   options?: TxMonitorOptions,
   tries = 0,
 ): Promise<TransactionReceipt> => {
   const web3 = getWeb3ReadOnly()
+  const web3Test = getWeb3()
+  const provider = web3Test.currentProvider as AbstractProvider
   return new Promise<TransactionReceipt>((resolve, reject) => {
     const { maxRetries = MAX_RETRIES } = options || {}
     if (tries > maxRetries) {
@@ -71,9 +129,20 @@ export const txMonitor = (
         let params: TxMonitorProps = { sender, hash, data }
         try {
           // Find the nonce for the current tx
-          const transaction = await web3.eth.getTransaction(hash)
+          // const transaction = await web3.eth.getTransaction(hash)
+          const transaction = await providerAsync({
+            provider,
+            hash,
+            tries,
+            method: 'eth_getTransactionByHash',
+          }).then((res) => res)
+
           if (transaction) {
-            params = { ...params, nonce: transaction.nonce, gasPrice: transaction.gasPrice }
+            params = {
+              ...params,
+              nonce: hexToNumber(transaction.nonce),
+              gasPrice: `${hexToNumber(transaction.gasPrice)}`,
+            }
           }
         } catch (e) {
           // ignore error
@@ -87,6 +156,10 @@ export const txMonitor = (
       // Case 2: the nonce exists, try to get the receipt for the original tx
       try {
         const firstTxReceipt = await web3.eth.getTransactionReceipt(hash)
+        // const firstTxReceipt = await providerAsync({
+        //   provider, hash, tries, method: 'eth_getTransactionReceipt'
+        // }).then(res => res)
+
         if (firstTxReceipt) {
           return resolve(firstTxReceipt)
         }
