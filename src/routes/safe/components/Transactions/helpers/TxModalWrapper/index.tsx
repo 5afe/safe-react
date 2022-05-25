@@ -1,5 +1,7 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { Button, Text, Link } from '@gnosis.pm/safe-react-components'
+import { Grid } from '@material-ui/core'
 
 import {
   calculateTotalGasCost,
@@ -26,7 +28,11 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getNativeCurrency } from 'src/config'
 import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
-import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
+import {
+  checkIfOffChainSignatureIsPossible,
+  generateSignaturesFromTxConfirmations,
+  getPreValidatedSignatures,
+} from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
@@ -34,6 +40,10 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { DEFAULT_GAS_LIMIT, useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
 import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
 import { checkTransactionExecution, estimateGasForTransactionExecution } from 'src/logic/safe/transactions/gas'
+import { useSimulation } from 'src/routes/safe/components/Transactions/helpers/Simulation/useSimulation'
+import { getExecutionTransaction } from 'src/logic/safe/transactions'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { FETCH_STATUS } from 'src/utils/requests'
 
 type Props = {
   children: ReactNode
@@ -119,22 +129,25 @@ export const TxModalWrapper = ({
   const isSmartContract = useIsSmartContractWallet(userAddress)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
+  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink } = useSimulation()
+  console.log(simulation)
 
   const txParameters = useMemo(
     () => ({
-      safeAddress,
-      safeVersion,
-      txRecipient: txTo || safeAddress,
-      txConfirmations,
-      txAmount: txValue,
-      txData,
-      operation: operation || Operation.CALL,
-      from: userAddress,
+      baseGas: '0',
+      data: txData,
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
+      nonce: txNonce ? parseInt(txNonce) : 0,
+      operation: operation || Operation.CALL,
       refundReceiver: ZERO_ADDRESS,
+      safeInstance: getGnosisSafeInstanceAt(safeAddress, safeVersion),
       safeTxGas: safeTxGas || manualSafeTxGas || '0',
-      approvalAndExecution,
+      sender: userAddress,
+      sigs: generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? userAddress : undefined),
+      to: txTo || safeAddress,
+      valueInWei: txValue,
+      safeAddress,
     }),
     [
       approvalAndExecution,
@@ -145,6 +158,7 @@ export const TxModalWrapper = ({
       safeVersion,
       txConfirmations,
       txData,
+      txNonce,
       txTo,
       txValue,
       userAddress,
@@ -155,13 +169,13 @@ export const TxModalWrapper = ({
     return estimateGasForTransactionExecution(txParameters)
   }, [txParameters])
 
-  const gasLimit = useEstimateGasLimit(estimateGasLimit, doExecute, txParameters.txData, manualGasLimit)
+  const gasLimit = useEstimateGasLimit(estimateGasLimit, doExecute, txParameters.data, manualGasLimit)
 
   const checkTxExecution = useCallback((): Promise<boolean> => {
     return checkTransactionExecution({ ...txParameters, gasLimit })
   }, [gasLimit, txParameters])
 
-  const txEstimationExecutionStatus = useExecutionStatus(checkTxExecution, doExecute, txParameters.txData, gasLimit)
+  const txEstimationExecutionStatus = useExecutionStatus(checkTxExecution, doExecute, txParameters.data, gasLimit)
 
   const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
     isRejectTx,
@@ -229,6 +243,12 @@ export const TxModalWrapper = ({
 
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
+  const simulateTx = () => {
+    const sigs = getPreValidatedSignatures(userAddress)
+    const data = getExecutionTransaction({ ...txParameters, sigs }).encodeABI()
+    simulateTransaction(data)
+  }
+
   return (
     <EditableTxParameters
       isExecution={doExecute}
@@ -246,8 +266,36 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
+            <Grid container alignItems="center" justifyContent="space-between" style={{ marginBottom: '16px' }}>
+              {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
 
+              <Button size="md" onClick={simulateTx} variant="contained" style={{ marginLeft: 'auto' }}>
+                Simulate
+              </Button>
+            </Grid>
+            {simulationRequestStatus === FETCH_STATUS.SUCCESS && (
+              <>
+                {!simulation?.simulation.status ? (
+                  <Text color="inputFilled" size="lg">
+                    The batch failed during the simulation throwing error <b>{simulation?.transaction.error_message}</b>{' '}
+                    in the contract at <b>{simulation?.transaction.error_info?.address}</b>. Full simulation report is
+                    available{' '}
+                    <Link href={simulationLink} target="_blank" rel="noreferrer" size="lg">
+                      <b>on Tenderly</b>
+                    </Link>
+                    .
+                  </Text>
+                ) : (
+                  <Text color="inputFilled" size="lg">
+                    The batch was successfully simulated. Full simulation report is available{' '}
+                    <Link href={simulationLink} target="_blank" rel="noreferrer" size="lg">
+                      <b>on Tenderly</b>
+                    </Link>
+                    .
+                  </Text>
+                )}
+              </>
+            )}
             {doExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
