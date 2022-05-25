@@ -33,8 +33,8 @@ export const InvalidMasterCopyError = ({ onClose }: { onClose: () => void }): Re
   return (
     <StyledAlert severity="error" onClose={onClose}>
       <MuiAlertTitle>
-        This safe is using an invalid master copy contract. The web interface might not work correctly. It&apos;s
-        recommended to use the{' '}
+        This safe is using an invalid master copy contract. The web interface might not work correctly. We recommend
+        using the{' '}
         <Link href={CLI_LINK} size="xl" target="_blank">
           command line interface
         </Link>{' '}
