@@ -166,6 +166,7 @@ jobs:
   e2e:
     runs-on: ubuntu-20.04
     name: E2E on Chrome
+    if: github.event.number
     needs: deploy
     steps:
       - uses: actions/checkout@v2
