@@ -11,7 +11,7 @@ const StyledContainer = styled.div<{
   flex-wrap: wrap;
   box-sizing: border-box;
   justify-content: space-between;
-  gap: ${(props) => (props.$vertical ? '24px' : '60px')};
+  gap: ${(props) => (props.$vertical ? '20px' : '60px')};
   max-width: ${(props) => (props.$vertical ? '280px' : 'auto')};
   padding: ${(props) => (props.$vertical ? '20px' : '0')};
 `

@@ -26,7 +26,7 @@ const StyledContainer = styled.div<{
 }>`
   max-width: 375px;
   display: flex;
-  gap: 24px;
+  gap: ${(props) => (props.$vertical ? '12px' : '24px')};
   flex-flow: ${(props) => (props.$vertical ? 'column wrap' : 'row nowrap')};
   align-items: ${(props) => (props.$vertical ? 'center' : '')};
 
@@ -55,6 +55,11 @@ const StyledContent = styled.div`
 
 const StyledQr = styled.div`
   align-self: center;
+
+  img,
+  canvas {
+    display: block;
+  }
 `
 
 type PairingDetailsProps = {
