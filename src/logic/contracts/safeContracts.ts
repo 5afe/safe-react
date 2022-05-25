@@ -6,6 +6,7 @@ import {
   getFallbackHandlerDeployment,
   getMultiSendCallOnlyDeployment,
   getSignMessageLibDeployment,
+  SingletonDeployment,
 } from '@gnosis.pm/safe-deployments'
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
@@ -30,12 +31,17 @@ let safeMaster: GnosisSafe
 let fallbackHandler: CompatibilityFallbackHandler
 let multiSend: MultiSend
 
-const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => {
+export const getSafeContractDeployment = ({
+  safeVersion,
+}: {
+  safeVersion: string
+}): SingletonDeployment | undefined => {
   // We check if version is prior to v1.0.0 as they are not supported but still we want to keep a minimum compatibility
   const useOldestContractVersion = semverSatisfies(safeVersion, '<1.0.0')
   // We have to check if network is L2
   const networkId = _getChainId()
   const chainConfig = getChainById(networkId)
+
   // We had L1 contracts in three L2 networks, xDai, EWC and Volta so even if network is L2 we have to check that safe version is after v1.3.0
   const useL2ContractVersion = chainConfig.l2 && semverSatisfies(safeVersion, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment

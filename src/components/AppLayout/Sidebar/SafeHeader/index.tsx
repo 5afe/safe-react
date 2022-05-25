@@ -35,9 +35,6 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { Box } from '@material-ui/core'
 import { currentSafe } from 'src/logic/safe/store/selectors'
-import useAsync from 'src/logic/hooks/useAsync'
-import { Tooltip } from 'src/components/layout/Tooltip'
-import { isValidMasterCopy } from 'src/logic/safe/utils/safeVersion'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -213,7 +210,7 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
-  const { owners, threshold, currentVersion } = useSelector(currentSafe)
+  const { owners, threshold } = useSelector(currentSafe)
   const copyChainPrefix = useSelector(copyShortNameSelector)
   const { shortName } = useSafeAddress()
 
@@ -225,15 +222,6 @@ const SafeHeader = ({
   }
 
   const chainInfo = getChainInfo()
-
-  const [masterCopyError] = useAsync(async () => {
-    if (address && currentVersion) {
-      const isValid = await isValidMasterCopy(chainInfo, address, currentVersion)
-      return isValid
-        ? null
-        : 'Invalid master copy address in proxy contract. This safe was not created through the web interface and there may be issues interacting with it.'
-    }
-  }, [address, chainInfo, currentVersion])
 
   if (!address || !hasSafeOpen) {
     return (
@@ -285,13 +273,6 @@ const SafeHeader = ({
           <Track {...OVERVIEW_EVENTS.OPEN_EXPLORER}>
             <StyledExplorerButton explorerUrl={getExplorerInfo(address)} />
           </Track>
-          {masterCopyError && (
-            <Tooltip title={masterCopyError}>
-              <span>
-                <Icon color="error" size="md" type="error" />
-              </span>
-            </Tooltip>
-          )}
         </IconContainer>
 
         <Paragraph color="black400" noMargin size="md">
