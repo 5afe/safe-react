@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, ReactNode, useEffect, useMemo, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
@@ -86,7 +86,7 @@ const useStyles = makeStyles(
   }),
 )
 
-const Collectibles = (): React.ReactElement => {
+const Collectibles = ({ children }: { children: ReactNode }): React.ReactElement => {
   const classes = useStyles()
   const [selectedToken, setSelectedToken] = useState<NFTToken | undefined>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = useState(false)
@@ -105,13 +105,18 @@ const Collectibles = (): React.ReactElement => {
     setSendNFTsModalOpen(true)
   }
 
+  const intro = <Fragment key="intro">{children}</Fragment>
+
   if (nftAssetsFromNftTokens.length === 0) {
     return (
-      <Card className={classes.cardOuter}>
-        <div className={classes.cardInner}>
-          <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
-        </div>
-      </Card>
+      <Fragment>
+        {intro}
+        <Card className={classes.cardOuter}>
+          <div className={classes.cardInner}>
+            <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
+          </div>
+        </Card>
+      </Fragment>
     )
   }
 
@@ -119,7 +124,7 @@ const Collectibles = (): React.ReactElement => {
     <>
       <VirtualizedList
         data={nftAssetsFromNftTokens}
-        itemContent={(_, nftAsset) => {
+        itemContent={(index, nftAsset) => {
           // Larger collectible lists can cause this to be initially undefined
           if (!nftAsset) {
             return null
@@ -127,6 +132,8 @@ const Collectibles = (): React.ReactElement => {
 
           return (
             <Fragment key={nftAsset.slug}>
+              {index === 0 && intro}
+
               <div className={classes.title}>
                 <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
                 <h2 className={classes.titleText}>{nftAsset.name}</h2>
@@ -171,7 +178,7 @@ const CollectiblesPage = (): React.ReactElement => {
   )
 
   return (
-    <div>
+    <Collectibles>
       {infoBar}
 
       <h3>NFT apps</h3>
@@ -185,9 +192,7 @@ const CollectiblesPage = (): React.ReactElement => {
       </Grid>
 
       <h3>NFTs</h3>
-
-      <Collectibles />
-    </div>
+    </Collectibles>
   )
 }
 

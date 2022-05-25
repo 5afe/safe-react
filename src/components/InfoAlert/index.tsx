@@ -13,7 +13,7 @@ const InfoAlert = (props: InfoAlertProps): ReactElement | null => {
   const [isClosed, setClosed] = useCachedState<boolean>(`${props.id}Closed`)
 
   return isClosed ? null : (
-    <MuiAlert severity="info" onClose={() => setClosed(true)} style={{ marginBottom: '26px' }}>
+    <MuiAlert severity="info" onClose={() => setClosed(true)} style={{ margin: '0 20px 26px 0' }}>
       <Paragraph style={{ fontWeight: 'bold', margin: '0 0 0.5em' }}>{props.title}</Paragraph>
 
       <Paragraph noMargin>{props.text}</Paragraph>
