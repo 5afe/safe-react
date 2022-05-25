@@ -105,12 +105,10 @@ const Collectibles = ({ children }: { children: ReactNode }): React.ReactElement
     setSendNFTsModalOpen(true)
   }
 
-  const intro = <Fragment key="intro">{children}</Fragment>
-
   if (nftAssetsFromNftTokens.length === 0) {
     return (
       <Fragment>
-        {intro}
+        {children}
         <Card className={classes.cardOuter}>
           <div className={classes.cardInner}>
             <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
@@ -132,7 +130,7 @@ const Collectibles = ({ children }: { children: ReactNode }): React.ReactElement
 
           return (
             <Fragment key={nftAsset.slug}>
-              {index === 0 && intro}
+              {index === 0 && children}
 
               <div className={classes.title}>
                 <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
