@@ -1,25 +1,21 @@
 import { ReactElement, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph/index'
-import styled from 'styled-components'
 import { lg } from 'src/theme/variables'
-import { useSelector } from 'react-redux'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { getChainInfo } from 'src/config'
 
 const StyledBlock = styled(Block)`
   minheight: 420px;
+  padding: ${lg};
 `
 
 const StyledHeading = styled(Heading)`
-  padding: ${lg};
   padding-bottom: 0;
-`
-
-const StyledParagraph = styled(Paragraph)`
-  padding-left: ${lg};
 `
 
 const Delegates = (): ReactElement => {
@@ -41,7 +37,7 @@ const Delegates = (): ReactElement => {
   return (
     <StyledBlock>
       <StyledHeading tag="h2">Manage Safe Delegates</StyledHeading>
-      <StyledParagraph>Get, add and delete delegates.</StyledParagraph>
+      <Paragraph>Get, add and delete delegates.</Paragraph>
       <pre>{JSON.stringify(delegatesList, undefined, 2)}</pre>
     </StyledBlock>
   )

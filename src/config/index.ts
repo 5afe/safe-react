@@ -40,8 +40,7 @@ export const _getChainId = (): ChainId => {
   return _chainId
 }
 
-export const isValidChainId = (chainId: unknown): chainId is ChainId =>
-  getChains().some((chain) => chain.chainId === chainId)
+export const isValidChainId = (chainId: unknown): boolean => getChains().some((chain) => chain.chainId === chainId)
 
 export const getChainById = (chainId: ChainId): ChainInfo => {
   return getChains().find((chain) => chain.chainId === chainId) || emptyChainInfo
