@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
-import { Location } from 'history'
 import { useSelector } from 'react-redux'
 
 import { ADDRESSED_ROUTE, history, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
@@ -18,7 +17,7 @@ import { Cookie, removeCookies } from 'src/logic/cookies/utils'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { EMPTY_SAFE_APP } from 'src/routes/safe/components/Apps/utils'
 
-export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
+export const getAnonymizedPathname = (pathname: string = history.location.pathname): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
   const ANON_TX_ID = 'TRANSACTION_ID'
 
@@ -36,7 +35,7 @@ export const getAnonymizedLocation = ({ pathname, search, hash }: Location = his
     anonPathname = anonPathname.replace(txIdMatch.params[TRANSACTION_ID_SLUG], ANON_TX_ID)
   }
 
-  return anonPathname + search + hash
+  return anonPathname
 }
 
 type GTMEnvironment = 'LIVE' | 'LATEST' | 'DEVELOPMENT'
@@ -76,8 +75,7 @@ export const loadGoogleTagManager = (): void => {
   // Cache name to prevent tracking of same page
   currentPathname = history.location.pathname
 
-  const page = getAnonymizedLocation()
-
+  const page_path = getAnonymizedPathname()
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
     ...GTM_ENVIRONMENT,
@@ -85,12 +83,8 @@ export const loadGoogleTagManager = (): void => {
       // Must emit (custom) event in order to trigger page tracking
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
-      page,
-      // Allow only GA4 configuration and GA4 custom event tags
-      // @see https://developers.google.com/tag-platform/tag-manager/web/restrict
-      'gtm.allowlist': ['gaawc', 'gaawe'],
-      // Block JS variables and custom scripts
-      'gtm.blocklist': ['j', 'jsm', 'customScripts'],
+      pageLocation: `${location.origin}${page_path}`,
+      pagePath: page_path,
     },
   })
 }
@@ -111,6 +105,7 @@ export const unloadGoogleTagManager = (): void => {
 
 export const usePageTracking = (): void => {
   const chainId = useSelector(currentChainId)
+  const origin = location.origin
 
   useEffect(() => {
     const unsubscribe = history.listen((location) => {
@@ -119,13 +114,15 @@ export const usePageTracking = (): void => {
       }
 
       currentPathname = location.pathname
+      const page_path = getAnonymizedPathname()
 
       TagManager.dataLayer({
         dataLayer: {
           // Must emit (custom) event in order to trigger page tracking
           event: GTM_EVENT.PAGEVIEW,
           chainId,
-          page: getAnonymizedLocation(location),
+          pageLocation: `${origin}${page_path}`,
+          pagePath: page_path,
           // Clear dataLayer
           eventCategory: undefined,
           eventAction: undefined,
@@ -137,7 +134,7 @@ export const usePageTracking = (): void => {
     return () => {
       unsubscribe()
     }
-  }, [chainId])
+  }, [chainId, origin])
 }
 
 export type EventLabel = string | number | boolean | null
