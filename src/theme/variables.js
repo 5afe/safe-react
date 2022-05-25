@@ -17,6 +17,7 @@ const secondaryBackground = '#f0efee'
 const sm = '8px'
 const warningColor = '#ffc05f'
 const alertWarningColor = '#FBE5C5'
+const infoColor = '#ECF5F4'
 const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
@@ -63,6 +64,7 @@ module.exports = {
   primary200: primaryLite,
   primary300: '#92C9BE',
   primary400: primaryActive,
+  infoColor,
   regularFont: 400,
   red400: '#C31717',
   screenLg: 1200,
