@@ -57,6 +57,8 @@ const styles = () => ({
   },
   popper: {
     zIndex: 1301,
+    borderRadius: '8px',
+    boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
   },
   network: {
     backgroundColor: 'white',

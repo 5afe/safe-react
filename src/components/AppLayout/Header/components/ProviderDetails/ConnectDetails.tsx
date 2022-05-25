@@ -9,9 +9,11 @@ const StyledContainer = styled.div<{
 }>`
   display: flex;
   flex-wrap: wrap;
-  gap: ${(props) => (props.$vertical ? '24px' : '60px')};
   box-sizing: border-box;
   justify-content: space-between;
+  gap: ${(props) => (props.$vertical ? '24px' : '60px')};
+  max-width: ${(props) => (props.$vertical ? '280px' : 'auto')};
+  padding: ${(props) => (props.$vertical ? '20px' : '0')};
 `
 
 const ConnectDetails = ({ vertical = false }: { vertical?: boolean }): ReactElement => (
