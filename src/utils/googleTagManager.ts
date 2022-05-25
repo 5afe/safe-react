@@ -90,6 +90,7 @@ export const loadGoogleTagManager = (): void => {
       chainId: _getChainId(),
       pageLocation: `${location.origin}${page_path}`,
       pagePath: page_path,
+      'gtm.allowlist': ['gaawc', 'gaawe', 'e'],
     },
   })
 }
