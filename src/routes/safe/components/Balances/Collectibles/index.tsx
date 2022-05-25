@@ -177,10 +177,10 @@ const CollectiblesPage = (): React.ReactElement => {
 
   return (
     <Collectibles>
-      {infoBar}
-
       {nftApps.length > 0 && (
         <>
+          {infoBar}
+
           <h3>NFT apps</h3>
 
           <Grid style={{ marginBottom: '30px' }}>
