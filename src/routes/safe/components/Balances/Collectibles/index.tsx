@@ -164,7 +164,7 @@ const CollectiblesPage = (): React.ReactElement => {
 
   const infoBar = (
     <InfoAlert
-      key="collectiblesInfoClosed"
+      id="collectiblesInfo"
       title="Use Safe Apps to view your NFT portfolio"
       text="Get the most optimal experience with Safe Apps. View your collections, buy or sell NFTs, and more."
     />

@@ -6,11 +6,11 @@ import { ReactElement } from 'react'
 type InfoAlertProps = {
   title: string
   text: string
-  key: string
+  id: string
 }
 
 const InfoAlert = (props: InfoAlertProps): ReactElement | null => {
-  const [isClosed, setClosed] = useCachedState<boolean>(props.key)
+  const [isClosed, setClosed] = useCachedState<boolean>(`${props.id}Closed`)
 
   return isClosed ? null : (
     <MuiAlert severity="info" onClose={() => setClosed(true)} style={{ marginBottom: '26px' }}>
