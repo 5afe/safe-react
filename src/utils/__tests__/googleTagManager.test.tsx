@@ -31,6 +31,38 @@ describe('googleTagManager', () => {
 
       expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS')
     })
+    it('anonymizes history route', () => {
+      ;(matchPath as jest.Mock).mockImplementation(() => ({
+        isExact: false,
+        path: '',
+        url: '',
+        params: {
+          prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+        },
+      }))
+
+      const anonymizedPathname = getAnonymizedPathname(
+        '/rin/0x0000000000000000000000000000000000000000/transactions/history',
+      )
+
+      expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS/transactions/history')
+    })
+    it('anonymizes queue route', () => {
+      ;(matchPath as jest.Mock).mockImplementation(() => ({
+        isExact: false,
+        path: '',
+        url: '',
+        params: {
+          prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+        },
+      }))
+
+      const anonymizedPathname = getAnonymizedPathname(
+        '/rin/0x0000000000000000000000000000000000000000/transactions/queue',
+      )
+
+      expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS/transactions/queue')
+    })
     it('anonymizes transaction ids', () => {
       ;(matchPath as jest.Mock).mockImplementation(() => ({
         isExact: false,
