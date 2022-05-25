@@ -147,6 +147,8 @@ describe('googleTagManager', () => {
           chainId: '4',
           pageLocation: 'http://localhost/',
           pagePath: '/',
+          'gtm.allowlist': ['gaawc', 'gaawe', 'e'],
+          'gtm.blocklist': ['j', 'jsm', 'customScripts'],
         },
       })
     })

@@ -91,6 +91,7 @@ export const loadGoogleTagManager = (): void => {
       pageLocation: `${location.origin}${page_path}`,
       pagePath: page_path,
       'gtm.allowlist': ['gaawc', 'gaawe', 'e'],
+      'gtm.blocklist': ['j', 'jsm', 'customScripts'],
     },
   })
 }
