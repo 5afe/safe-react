@@ -165,7 +165,6 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
   e2e:
     runs-on: ubuntu-20.04
-    # let's make sure our tests pass on Chrome browser
     name: E2E on Chrome
     needs: deploy
     steps:
