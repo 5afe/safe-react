@@ -181,15 +181,19 @@ const CollectiblesPage = (): React.ReactElement => {
     <Collectibles>
       {infoBar}
 
-      <h3>NFT apps</h3>
+      {nftApps.length > 0 && (
+        <>
+          <h3>NFT apps</h3>
 
-      <Grid style={{ marginBottom: '30px' }}>
-        {nftApps.map((app) => (
-          <Grid item key={app.id} xs={4}>
-            <SafeAppCard safeApp={app} size="md" togglePin={togglePin} />
+          <Grid style={{ marginBottom: '30px' }}>
+            {nftApps.map((app) => (
+              <Grid item key={app.id} xs={4}>
+                <SafeAppCard safeApp={app} size="md" togglePin={togglePin} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </>
+      )}
 
       <h3>NFTs</h3>
     </Collectibles>
