@@ -22,6 +22,7 @@ export const generateColumns = (): Array<DelegatesTableColumn> => {
     width: 170,
     custom: false,
     align: 'left',
+    static: true,
   }
 
   const delegatorColumn = {
@@ -30,18 +31,21 @@ export const generateColumns = (): Array<DelegatesTableColumn> => {
     width: 170,
     custom: false,
     align: 'left',
+    static: true,
   }
 
   const labelColumn = {
     id: DELEGATE_LABEL_ID,
     label: 'Label',
     custom: false,
+    static: true,
   }
 
   const actionsColumn = {
     id: ACTIONS_ID,
     label: '',
     custom: true,
+    static: true,
   }
 
   return [delegateColumn, delegatorColumn, labelColumn, actionsColumn]

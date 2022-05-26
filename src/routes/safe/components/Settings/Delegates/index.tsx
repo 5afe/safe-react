@@ -184,7 +184,14 @@ const Delegates = (): ReactElement => {
       </ButtonLink>
       <pre>{JSON.stringify(delegatesList, undefined, 2)}</pre>
       <TableContainer>
-        <Table columns={columns} data={delegatesList} defaultFixed disableLoadingOnEmptyTable disablePagination>
+        <Table
+          columns={columns}
+          data={delegatesList}
+          noBorder
+          defaultFixed
+          disableLoadingOnEmptyTable
+          disablePagination
+        >
           {(data) =>
             data.map((row, index) => {
               const hideBorderBottom = index >= 3 && index === data.size - 1 && classes.noBorderBottom
