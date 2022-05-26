@@ -19,7 +19,7 @@ export const generateColumns = (): Array<DelegatesTableColumn> => {
   const delegateColumn = {
     id: DELEGATE_ADDRESS_ID,
     label: 'Delegate',
-    width: 150,
+    width: 170,
     custom: false,
     align: 'left',
   }
@@ -27,7 +27,7 @@ export const generateColumns = (): Array<DelegatesTableColumn> => {
   const delegatorColumn = {
     id: DELEGATOR_ADDRESS_ID,
     label: 'Delegator',
-    width: 150,
+    width: 170,
     custom: false,
     align: 'left',
   }

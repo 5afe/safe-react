@@ -24,6 +24,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import Row from 'src/components/layout/Row'
 import ButtonHelper from 'src/components/ButtonHelper'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { RemoveDelegateModal } from 'src/routes/safe/components/Settings/Delegates/RemoveDelegateModal'
 
 // TODO: these types will come from the Client GW SDK once #72 is merged
 type Page<T> = {
@@ -59,6 +60,8 @@ const Delegates = (): ReactElement => {
   const { transactionService } = getChainInfo()
   const [delegatesList, setDelegatesList] = useState<DelegateResponse['results']>([])
   const [addDelegateModalOpen, setAddDelegateModalOpen] = useState<boolean>(false)
+  const [removeDelegateModalOpen, setRemoveDelegateModalOpen] = useState<boolean>(false)
+  const [addressToRemove, setAddressToRemove] = useState<string>('')
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
@@ -75,10 +78,10 @@ const Delegates = (): ReactElement => {
 
   const getSignature = async (delegate) => {
     const totp = Math.floor(Date.now() / 1000 / 3600)
-    const web3 = getWeb3()
     const msg = checksumAddress(delegate) + totp
-
     const hashMessage = keccak256(fromAscii(msg))
+
+    const web3 = getWeb3()
     const signature = await web3.eth.sign(hashMessage, userAccount)
 
     return signature
@@ -113,6 +116,28 @@ const Delegates = (): ReactElement => {
       .then(() => {
         fetchDelegates()
       })
+  }
+
+  const handleRemoveDelegate = async (address: string) => {
+    // close Remove delegate modal
+    setRemoveDelegateModalOpen(false)
+
+    const delegate = checksumAddress(address)
+    const signature = await getSignature(delegate)
+
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({
+        signature: signature,
+      }),
+    }
+
+    const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/${delegate}/`
+    fetch(url, requestOptions).then(() => {
+      setAddressToRemove('')
+      fetchDelegates()
+    })
   }
 
   return (
@@ -178,8 +203,8 @@ const Delegates = (): ReactElement => {
                       </ButtonHelper>
                       <ButtonHelper
                         onClick={() => {
-                          // setSelectedEntry({ entry: row })
-                          // setDeleteEntryModalOpen(true)
+                          setRemoveDelegateModalOpen(true)
+                          setAddressToRemove(row[DELEGATE_ADDRESS_ID])
                         }}
                       >
                         <Icon
@@ -202,6 +227,15 @@ const Delegates = (): ReactElement => {
         isOpen={addDelegateModalOpen}
         onClose={() => setAddDelegateModalOpen(false)}
         onSubmit={handleAddDelegate}
+      />
+      <RemoveDelegateModal
+        delegateToDelete={addressToRemove}
+        isOpen={removeDelegateModalOpen}
+        onClose={() => {
+          setRemoveDelegateModalOpen(false)
+          setAddressToRemove('')
+        }}
+        onSubmit={handleRemoveDelegate}
       />
     </StyledBlock>
   )
