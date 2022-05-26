@@ -14,7 +14,6 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { getChainInfo, getExplorerInfo } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { AddDelegateModal } from 'src/routes/safe/components/Settings/Delegates/AddDelegateModal'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -23,8 +22,9 @@ import { styles } from './style'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import Row from 'src/components/layout/Row'
 import ButtonHelper from 'src/components/ButtonHelper'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import { AddDelegateModal } from 'src/routes/safe/components/Settings/Delegates/AddDelegateModal'
 import { RemoveDelegateModal } from 'src/routes/safe/components/Settings/Delegates/RemoveDelegateModal'
+import { EditDelegateModal } from 'src/routes/safe/components/Settings/Delegates/EditDelegateModal'
 
 // TODO: these types will come from the Client GW SDK once #72 is merged
 type Page<T> = {
@@ -56,10 +56,11 @@ const useStyles = makeStyles(styles)
 const Delegates = (): ReactElement => {
   const { address: safeAddress } = useSelector(currentSafeWithNames)
   const userAccount = useSelector(userAccountSelector)
-  const granted = useSelector(grantedSelector)
   const { transactionService } = getChainInfo()
   const [delegatesList, setDelegatesList] = useState<DelegateResponse['results']>([])
   const [addDelegateModalOpen, setAddDelegateModalOpen] = useState<boolean>(false)
+  const [editDelegateModalOpen, setEditDelegateModalOpen] = useState<boolean>(false)
+  const [delegateToEdit, setDelegateToEdit] = useState<string>('')
   const [removeDelegateModalOpen, setRemoveDelegateModalOpen] = useState<boolean>(false)
   const [addressToRemove, setAddressToRemove] = useState<string>('')
   const columns = generateColumns()
@@ -99,6 +100,32 @@ const Delegates = (): ReactElement => {
     const delegate = checksumAddress(address)
 
     const signature = await getSignature(delegate)
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({
+        safe: safeAddress,
+        delegate: delegate,
+        signature: signature,
+        label: label,
+      }),
+    }
+
+    const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/`
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then(() => {
+        fetchDelegates()
+      })
+  }
+
+  const handleEditDelegateLabel = async (label) => {
+    // close Edit delegate modal
+    setEditDelegateModalOpen(false)
+
+    const delegate = checksumAddress(delegateToEdit)
+    const signature = await getSignature(delegate)
+
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
@@ -187,24 +214,16 @@ const Delegates = (): ReactElement => {
                     <Row align="end" className={classes.actions}>
                       <ButtonHelper
                         onClick={() => {
-                          //   setSelectedEntry({
-                          //     entry: row,
-                          //     isOwnerAddress: userOwner,
-                          //   })
-                          //   setEditCreateEntryModalOpen(true)
+                          setDelegateToEdit(row[DELEGATE_ADDRESS_ID])
+                          setEditDelegateModalOpen(true)
                         }}
                       >
-                        <Icon
-                          size="sm"
-                          type="edit"
-                          tooltip="Edit delegate"
-                          className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
-                        />
+                        <Icon size="sm" type="edit" tooltip="Edit delegate" className={classes.editEntryButton} />
                       </ButtonHelper>
                       <ButtonHelper
                         onClick={() => {
-                          setRemoveDelegateModalOpen(true)
                           setAddressToRemove(row[DELEGATE_ADDRESS_ID])
+                          setRemoveDelegateModalOpen(true)
                         }}
                       >
                         <Icon
@@ -212,7 +231,7 @@ const Delegates = (): ReactElement => {
                           type="delete"
                           color="error"
                           tooltip="Remove delegate"
-                          className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
+                          className={classes.removeEntryButton}
                         />
                       </ButtonHelper>
                     </Row>
@@ -228,13 +247,16 @@ const Delegates = (): ReactElement => {
         onClose={() => setAddDelegateModalOpen(false)}
         onSubmit={handleAddDelegate}
       />
+      <EditDelegateModal
+        delegate={delegateToEdit}
+        isOpen={editDelegateModalOpen}
+        onClose={() => setEditDelegateModalOpen(false)}
+        onSubmit={handleEditDelegateLabel}
+      />
       <RemoveDelegateModal
         delegateToDelete={addressToRemove}
         isOpen={removeDelegateModalOpen}
-        onClose={() => {
-          setRemoveDelegateModalOpen(false)
-          setAddressToRemove('')
-        }}
+        onClose={() => setRemoveDelegateModalOpen(false)}
         onSubmit={handleRemoveDelegate}
       />
     </StyledBlock>

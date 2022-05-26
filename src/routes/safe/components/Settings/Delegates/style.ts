@@ -40,17 +40,11 @@ export const styles = createStyles({
   editEntryButton: {
     cursor: 'pointer',
   },
-  editEntryButtonNonOwner: {
-    cursor: 'pointer',
-  },
   removeEntryButton: {
     cursor: 'pointer',
   },
   removeEntryButtonDisabled: {
     cursor: 'default',
-  },
-  removeEntryButtonNonOwner: {
-    cursor: 'pointer',
   },
   leftIcon: {
     marginRight: sm,
