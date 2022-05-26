@@ -1,4 +1,4 @@
-import { ReactElement, useCallback } from 'react'
+import { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { shallowEqual, useSelector } from 'react-redux'
@@ -38,11 +38,8 @@ const TxSingularDetails = (): ReactElement => {
   const { [TRANSACTION_ID_SLUG]: txId = '' } = useParams<SafeRouteSlugs>()
   const storedTx = useStoredTx(txId)
 
-  // When this callback changes, we refetch the tx details
-  const fetchTxDetails = useCallback(() => fetchSafeTransaction(txId), [txId])
-
   // Fetch tx details
-  const { result: fetchedTx, error } = useAsync<TransactionDetails>(fetchTxDetails)
+  const [fetchedTx, error] = useAsync<TransactionDetails>(() => fetchSafeTransaction(txId), [txId])
 
   if (error) {
     const safeParams = extractPrefixedSafeAddress()

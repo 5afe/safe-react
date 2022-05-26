@@ -11,7 +11,6 @@ jobs:
     steps:
       - name: 'CLA Assistant'
         if: github.base_ref != 'main' && ((github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target')
-        # Alpha Release
         uses: gnosis/github-action@master
         # GitHub token, automatically provided to the action
         # (No need to define this secret in the repo settings)
@@ -21,6 +20,6 @@ jobs:
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-cla-document: 'https://github.com/gnosis/safe-react/blob/main/GNOSISCLA.md'
           branch: 'cla-signatures'
-          allowlist: lukasschor,mikheevm,rmeissner,germartinez,davidalbela,Uxio0,dasanra,francovenica,tschubotz,luarx,giacomolicari,gnosis-info,bot*,katspaugh,DaniSomoza,iamacook,yagopv,usame-algan,schmanu
+          allowlist: lukasschor,mikhailxyz,rmeissner,germartinez,davidalbela,Uxio0,dasanra,francovenica,tschubotz,luarx,giacomolicari,gnosis-info,bot*,katspaugh,DaniSomoza,iamacook,yagopv,usame-algan,schmanu
           empty-commit-flag: false
           blockchain-storage-flag: false

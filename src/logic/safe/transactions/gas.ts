@@ -43,7 +43,7 @@ export const estimateSafeTxGas = async (
   }
 }
 
-type TransactionExecutionEstimationProps = {
+export type TransactionExecutionEstimationProps = {
   txData: string
   safeAddress: string
   safeVersion: string

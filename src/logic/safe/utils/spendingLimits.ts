@@ -133,8 +133,9 @@ export const getSpendingLimits = async (
   chainId: ChainId,
 ): Promise<SpendingLimit[] | null> => {
   const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
-  const isSpendingLimitEnabled = isModuleEnabled(modules, spendingLimitModuleAddress)
+  if (!spendingLimitModuleAddress) return null
 
+  const isSpendingLimitEnabled = isModuleEnabled(modules, spendingLimitModuleAddress)
   if (!isSpendingLimitEnabled) return null
 
   try {

@@ -1,9 +1,7 @@
 import { ReactElement, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
-import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible } from '../utils'
 import Bold from 'src/components/layout/Bold'
@@ -42,10 +40,7 @@ type Props = {
   gasCost: string
   onEdit: () => void
   compact?: boolean
-  parametersStatus?: ParametersStatus
-  isTransactionCreation: boolean
-  isTransactionExecution: boolean
-  isOffChainSignature: boolean
+  parametersStatus: ParametersStatus
 }
 
 export const TxEstimatedFeesDetail = ({
@@ -54,17 +49,8 @@ export const TxEstimatedFeesDetail = ({
   gasCost,
   compact = true,
   parametersStatus,
-  isTransactionCreation,
-  isTransactionExecution,
-  isOffChainSignature,
 }: Props): ReactElement | null => {
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
-  const threshold = useSelector(currentSafeThreshold) || 1
-  const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
-
-  if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
-    return null
-  }
 
   const onChangeExpand = () => {
     setIsAccordionExpanded(!isAccordionExpanded)
@@ -82,7 +68,7 @@ export const TxEstimatedFeesDetail = ({
       </Track>
       <AccordionDetails>
         <AccordionDetailsWrapper>
-          {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
+          {areEthereumParamsVisible(parametersStatus) && (
             <>
               <TxParameterWrapper>
                 <Text size="lg">Nonce</Text>

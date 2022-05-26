@@ -24,7 +24,12 @@ export const isPairingModule = (name: Wallet['name'] = onboard().getState().wall
 }
 
 export const getPairingUri = (): string | undefined => {
-  const wcUri = onboard().getState().wallet.provider?.wc?.uri
   const PAIRING_MODULE_URI_PREFIX = 'safe-'
-  return wcUri ? `${PAIRING_MODULE_URI_PREFIX}${wcUri}` : undefined
+  const wcUri = onboard().getState().wallet.provider?.wc?.uri
+
+  if (!wcUri || !/key=.+/.test(wcUri)) {
+    return
+  }
+
+  return `${PAIRING_MODULE_URI_PREFIX}${wcUri}`
 }

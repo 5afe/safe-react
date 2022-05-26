@@ -1,5 +1,4 @@
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
-import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
@@ -24,7 +23,7 @@ export const useEstimateSafeTxGas = ({
   const defaultEstimation = '0'
   const { address: safeAddress, currentVersion: safeVersion } = useSelector(currentSafe)
 
-  const requestSafeTxGas = useCallback((): Promise<string> => {
+  const [result, error] = useAsync<string>(() => {
     if (isRejectTx || !txData) return Promise.resolve(defaultEstimation)
 
     return estimateSafeTxGas(
@@ -38,8 +37,6 @@ export const useEstimateSafeTxGas = ({
       safeVersion,
     )
   }, [isRejectTx, operation, safeAddress, safeVersion, txAmount, txData, txRecipient])
-
-  const { result, error } = useAsync<string>(requestSafeTxGas)
 
   return { result: result || defaultEstimation, error }
 }

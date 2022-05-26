@@ -4,9 +4,9 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
-import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
+import { getSupportedWallets, isCypressAskingForConnectedState } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
-import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
+import { loadFromStorageWithExpiry, removeFromStorageWithExpiry, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
 import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
@@ -27,11 +27,15 @@ export const saveLastUsedProvider = (name: string): void => {
 }
 
 export const loadLastUsedProvider = (): string | undefined => {
+  if (isCypressAskingForConnectedState()) {
+    return 'e2e-wallet'
+  }
+
   return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
 }
 
 export const removeLastUsedProvider = (): void => {
-  removeFromStorage(LAST_USED_PROVIDER_KEY)
+  removeFromStorageWithExpiry(LAST_USED_PROVIDER_KEY)
 }
 
 const getNetworkName = (chainId: ChainId) => {

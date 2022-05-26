@@ -19,6 +19,7 @@ import {
   areSafeParamsEnabled,
   areEthereumParamsVisible,
   ethereumTxParametersTitle,
+  isSpendingLimit,
 } from 'src/routes/safe/components/Transactions/helpers/utils'
 import useSafeTxGas from 'src/routes/safe/components/Transactions/helpers/useSafeTxGas'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
@@ -68,6 +69,7 @@ interface Props {
   onClose: (txParameters?: TxParameters) => void
   parametersStatus: ParametersStatus
   isExecution: boolean
+  txType?: string
 }
 
 const formValidation = (values: Record<keyof TxParameters, string>): Record<string, number | string | undefined> => {
@@ -100,11 +102,13 @@ export const EditTxParametersForm = ({
   txParameters,
   parametersStatus = 'ENABLED',
   isExecution,
+  txType,
 }: Props): ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice, ethMaxPrioFee } = txParameters
   const showSafeTxGas = useSafeTxGas()
   const [manualSafeNonce, setManualSafeNonce] = useState<string>()
+  const isSpendingLimitTx = isSpendingLimit(txType)
 
   const onSubmit = (values: TxParameters) => {
     onClose(values)
@@ -160,36 +164,40 @@ export const EditTxParametersForm = ({
         >
           {() => (
             <>
-              <StyledText size="xl" strong>
-                Safe transaction
-              </StyledText>
+              {!isSpendingLimitTx && (
+                <>
+                  <StyledText size="xl" strong>
+                    Safe transaction
+                  </StyledText>
 
-              <SafeOptions>
-                <Field
-                  name="safeNonce"
-                  defaultValue={safeNonce}
-                  placeholder="Safe nonce"
-                  label="Safe nonce"
-                  type="number"
-                  min="0"
-                  component={TextField}
-                  disabled={!areSafeParamsEnabled(parametersStatus)}
-                  onChange={handleSafeNonceChange}
-                  inputAdornment={loadingAdornment}
-                />
-                {showSafeTxGas && (
-                  <Field
-                    name="safeTxGas"
-                    defaultValue={safeTxGas}
-                    placeholder="SafeTxGas"
-                    label="SafeTxGas"
-                    type="number"
-                    min="0"
-                    component={TextField}
-                    disabled={!areSafeParamsEnabled(parametersStatus)}
-                  />
-                )}
-              </SafeOptions>
+                  <SafeOptions>
+                    <Field
+                      name="safeNonce"
+                      defaultValue={safeNonce}
+                      placeholder="Safe nonce"
+                      label="Safe nonce"
+                      type="number"
+                      min="0"
+                      component={TextField}
+                      disabled={!areSafeParamsEnabled(parametersStatus)}
+                      onChange={handleSafeNonceChange}
+                      inputAdornment={loadingAdornment}
+                    />
+                    {showSafeTxGas && (
+                      <Field
+                        name="safeTxGas"
+                        defaultValue={safeTxGas}
+                        placeholder="SafeTxGas"
+                        label="SafeTxGas"
+                        type="number"
+                        min="0"
+                        component={TextField}
+                        disabled={!areSafeParamsEnabled(parametersStatus)}
+                      />
+                    )}
+                  </SafeOptions>
+                </>
+              )}
 
               {areEthereumParamsVisible(parametersStatus) && (
                 <>
