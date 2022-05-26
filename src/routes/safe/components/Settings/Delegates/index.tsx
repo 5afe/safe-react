@@ -1,19 +1,29 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { ButtonLink, Table, TableHeader, TableRow, Text } from '@gnosis.pm/safe-react-components'
+import { makeStyles, TableCell, TableContainer, TableRow } from '@material-ui/core'
+import { ButtonLink, Icon } from '@gnosis.pm/safe-react-components'
+import { keccak256, fromAscii } from 'web3-utils'
+import cn from 'classnames'
 
 import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import { lg } from 'src/theme/variables'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import { getChainInfo } from 'src/config'
+import { getChainInfo, getExplorerInfo } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { AddDelegateModal } from 'src/routes/safe/components/Settings/Delegates/AddDelegateModal'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { keccak256, fromAscii } from 'web3-utils'
+import Table from 'src/components/Table'
+import { cellWidth } from 'src/components/Table/TableHead'
+import { DELEGATE_ADDRESS_ID, DELEGATOR_ADDRESS_ID, generateColumns } from './columns'
+import { styles } from './style'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import Row from 'src/components/layout/Row'
+import ButtonHelper from 'src/components/ButtonHelper'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 // TODO: these types will come from the Client GW SDK once #72 is merged
 type Page<T> = {
@@ -40,22 +50,19 @@ const StyledHeading = styled(Heading)`
   padding-bottom: 0;
 `
 
+const useStyles = makeStyles(styles)
+
 const Delegates = (): ReactElement => {
   const { address: safeAddress } = useSelector(currentSafeWithNames)
   const userAccount = useSelector(userAccountSelector)
+  const granted = useSelector(grantedSelector)
   const { transactionService } = getChainInfo()
   const [delegatesList, setDelegatesList] = useState<DelegateResponse['results']>([])
   const [addDelegateModalOpen, setAddDelegateModalOpen] = useState<boolean>(false)
+  const columns = generateColumns()
+  const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const headerCells: TableHeader[] = useMemo(
-    () => [
-      { id: 'delegate', label: 'Delegate' },
-      { id: 'delegator', label: 'Delegator' },
-      { id: 'label', label: 'Label' },
-    ],
-    [],
-  )
-  const rows: TableRow[] = useMemo(() => [], [])
+  const classes = useStyles(styles)
 
   const fetchDelegates = useCallback(() => {
     const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/`
@@ -81,22 +88,6 @@ const Delegates = (): ReactElement => {
     if (!safeAddress || !transactionService) return
     fetchDelegates()
   }, [fetchDelegates, safeAddress, transactionService])
-
-  useEffect(() => {
-    if (delegatesList.length) {
-      let index = 0
-      for (const obj of delegatesList) {
-        rows.push({
-          id: `${index++}`,
-          cells: [
-            { id: 'delegate', content: <Text size="xl">{checksumAddress(obj.delegate)}</Text> },
-            { id: 'delegator', content: <Text size="xl">{checksumAddress(obj.delegator)}</Text> },
-            { id: 'label', content: <Text size="xl">{obj.label}</Text> },
-          ],
-        })
-      }
-    }
-  }, [delegatesList, rows])
 
   const handleAddDelegate = async ({ address, label }) => {
     // close Add delegate modal
@@ -140,7 +131,73 @@ const Delegates = (): ReactElement => {
         Add delegate
       </ButtonLink>
       <pre>{JSON.stringify(delegatesList, undefined, 2)}</pre>
-      <Table headers={headerCells} rows={rows} />
+      <TableContainer>
+        <Table columns={columns} data={delegatesList} defaultFixed disableLoadingOnEmptyTable disablePagination>
+          {(data) =>
+            data.map((row, index) => {
+              const hideBorderBottom = index >= 3 && index === data.size - 1 && classes.noBorderBottom
+              return (
+                <TableRow className={cn(classes.hide, hideBorderBottom)} key={index}>
+                  {autoColumns.map((column) => {
+                    const displayEthHash = [DELEGATE_ADDRESS_ID, DELEGATOR_ADDRESS_ID].includes(column.id)
+                    return (
+                      <TableCell component="td" key={column.id} style={cellWidth(column.width)}>
+                        {displayEthHash ? (
+                          <Block justify="left">
+                            <PrefixedEthHashInfo
+                              hash={row[column.id]}
+                              shortenHash={4}
+                              showCopyBtn
+                              showAvatar
+                              explorerUrl={getExplorerInfo(row[column.id])}
+                            />
+                          </Block>
+                        ) : (
+                          row[column.id]
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                  <TableCell component="td">
+                    <Row align="end" className={classes.actions}>
+                      <ButtonHelper
+                        onClick={() => {
+                          //   setSelectedEntry({
+                          //     entry: row,
+                          //     isOwnerAddress: userOwner,
+                          //   })
+                          //   setEditCreateEntryModalOpen(true)
+                        }}
+                      >
+                        <Icon
+                          size="sm"
+                          type="edit"
+                          tooltip="Edit delegate"
+                          className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
+                        />
+                      </ButtonHelper>
+                      <ButtonHelper
+                        onClick={() => {
+                          // setSelectedEntry({ entry: row })
+                          // setDeleteEntryModalOpen(true)
+                        }}
+                      >
+                        <Icon
+                          size="sm"
+                          type="delete"
+                          color="error"
+                          tooltip="Remove delegate"
+                          className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
+                        />
+                      </ButtonHelper>
+                    </Row>
+                  </TableCell>
+                </TableRow>
+              )
+            })
+          }
+        </Table>
+      </TableContainer>
       <AddDelegateModal
         isOpen={addDelegateModalOpen}
         onClose={() => setAddDelegateModalOpen(false)}
