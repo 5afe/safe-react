@@ -98,7 +98,7 @@ export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions
     })
     .map(({ desktop: _, ...rest }) => rest)
 
-  if (chainId === CHAIN_ID.RINKEBY && window.Cypress) {
+  if (chainId === CHAIN_ID.RINKEBY && window.Cypress && window.Cypress.env('CYPRESS_MNEMONIC')) {
     supportedWallets.push(getE2EWalletModule())
   }
 
