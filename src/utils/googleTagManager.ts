@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
-import { matchPath } from 'react-router-dom'
+import { matchPath, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { ADDRESSED_ROUTE, history, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
@@ -68,7 +68,6 @@ export enum GTM_EVENT {
   SAFE_APP = 'safeApp',
 }
 
-let currentPathname = history.location.pathname
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
@@ -77,10 +76,8 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
-  // Cache name to prevent tracking of same page
-  currentPathname = history.location.pathname
-
   const page_path = getAnonymizedPathname()
+
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
     ...GTM_ENVIRONMENT,
@@ -90,7 +87,6 @@ export const loadGoogleTagManager = (): void => {
       chainId: _getChainId(),
       pageLocation: `${location.origin}${page_path}`,
       pagePath: page_path,
-      'gtm.allowlist': ['gaawc', 'gaawe', 'e'],
       'gtm.blocklist': ['j', 'jsm', 'customScripts'],
     },
   })
@@ -111,37 +107,32 @@ export const unloadGoogleTagManager = (): void => {
 }
 
 export const usePageTracking = (): void => {
+  const didMount = useRef(false)
+  const { pathname } = useLocation()
   const chainId = useSelector(currentChainId)
-  const origin = location.origin
 
   useEffect(() => {
-    const unsubscribe = history.listen((location) => {
-      if (location.pathname === currentPathname) {
-        return
-      }
-
-      currentPathname = location.pathname
-      const page_path = getAnonymizedPathname()
-
-      TagManager.dataLayer({
-        dataLayer: {
-          // Must emit (custom) event in order to trigger page tracking
-          event: GTM_EVENT.PAGEVIEW,
-          chainId,
-          pageLocation: `${origin}${page_path}`,
-          pagePath: page_path,
-          // Clear dataLayer
-          eventCategory: undefined,
-          eventAction: undefined,
-          eventLabel: undefined,
-        },
-      })
-    })
-
-    return () => {
-      unsubscribe()
+    if (!didMount.current) {
+      didMount.current = true
+      return
     }
-  }, [chainId, origin])
+
+    const page_path = getAnonymizedPathname()
+
+    TagManager.dataLayer({
+      dataLayer: {
+        // Must emit (custom) event in order to trigger page tracking
+        event: GTM_EVENT.PAGEVIEW,
+        chainId,
+        pageLocation: `${location.origin}${page_path}`,
+        pagePath: page_path,
+        // Clear dataLayer
+        eventCategory: undefined,
+        eventAction: undefined,
+        eventLabel: undefined,
+      },
+    })
+  }, [chainId, pathname])
 }
 
 export type EventLabel = string | number | boolean | null
