@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Button, Text, Link } from '@gnosis.pm/safe-react-components'
-import { Grid } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 
 import {
   calculateTotalGasCost,
@@ -130,7 +130,6 @@ export const TxModalWrapper = ({
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
   const { simulateTransaction, simulation, simulationRequestStatus, simulationLink } = useSimulation()
-  console.log(simulation)
 
   const txParameters = useMemo(
     () => ({
@@ -243,11 +242,11 @@ export const TxModalWrapper = ({
 
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
-  const simulateTx = () => {
+  const simulateTx = useCallback(() => {
     const sigs = getPreValidatedSignatures(userAddress)
     const data = getExecutionTransaction({ ...txParameters, sigs }).encodeABI()
     simulateTransaction(data)
-  }
+  }, [simulateTransaction, txParameters, userAddress])
 
   return (
     <EditableTxParameters
@@ -274,7 +273,7 @@ export const TxModalWrapper = ({
               </Button>
             </Grid>
             {simulationRequestStatus === FETCH_STATUS.SUCCESS && (
-              <>
+              <Box mb={2}>
                 {!simulation?.simulation.status ? (
                   <Text color="inputFilled" size="lg">
                     The batch failed during the simulation throwing error <b>{simulation?.transaction.error_message}</b>{' '}
@@ -294,7 +293,7 @@ export const TxModalWrapper = ({
                     .
                   </Text>
                 )}
-              </>
+              </Box>
             )}
             {doExecute && (
               <TxEstimatedFeesDetail
