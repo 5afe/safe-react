@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { Title } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
+import uniq from 'lodash/uniq'
 
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import ConnectButton from 'src/components/ConnectButton'
@@ -19,40 +20,26 @@ type UserSafeProps = {
   safeAppChainId: string
 }
 
-const getCompatibleSafesFromLocalStorage = (
-  safesFromService: Record<string, string[]>,
+const getCompatibleSafes = (
   safesFromLocalStorage: LocalSafes,
-  compatibleChains: string[],
-  addressBook: AddressBookEntry[],
-): AddressBookEntry[] => {
-  return compatibleChains.reduce((compatibleSafes, chainId) => {
-    const safesFromLocalstorage =
-      safesFromLocalStorage[chainId]
-        ?.filter(({ address }) => !safesFromService[chainId]?.includes(address)) // we filter Safes already included
-        ?.map(({ address }) => ({
-          address,
-          chainId,
-          name: getNameFromAddressBook(addressBook, address, chainId),
-        })) || []
-
-    return [...compatibleSafes, ...safesFromLocalstorage]
-  }, [])
-}
-
-const getCompatibleSafesFromService = (
   safesFromService: Record<string, string[]>,
   compatibleChains: string[],
   addressBook: AddressBookEntry[],
 ): AddressBookEntry[] => {
-  return compatibleChains.reduce((compatibleSafes, chainId) => {
-    const safesFromConfigService =
-      safesFromService[chainId]?.map((address) => ({
-        address,
-        chainId,
-        name: getNameFromAddressBook(addressBook, address, chainId),
-      })) || []
+  return compatibleChains.reduce((result, chainId) => {
+    const flatSafesFromLocalStorage = safesFromLocalStorage[chainId].map(({ address }) => address) || []
+    const flatSafesFromService = safesFromService[chainId] || []
 
-    return [...compatibleSafes, ...safesFromConfigService]
+    // we remove duplicated safes
+    const allSafes = uniq([...flatSafesFromService, ...flatSafesFromLocalStorage])
+
+    const compatibleSafes = allSafes.map((address) => ({
+      address,
+      chainId,
+      name: getNameFromAddressBook(addressBook, address, chainId),
+    }))
+
+    return [...result, ...compatibleSafes]
   }, [])
 }
 
@@ -68,25 +55,15 @@ const UserSafeSection = ({ safeAppUrl, availableChains, safeAppChainId }: UserSa
     ? [...availableChains, safeAppChainId]
     : availableChains
 
-  // we collect all compatible safes from backend
-  const compatibleUserSafesFromService = getCompatibleSafesFromService(safesFromService, compatibleChains, addressBook)
+  // we collect all compatible safes from backend and localstorage
+  const compatibleSafes = getCompatibleSafes(safesFromLocalStorage, safesFromService, compatibleChains, addressBook)
 
-  // we collect all compatible safes from the localstorage
-  const compatibleUserSafesFromLocalStorage = getCompatibleSafesFromLocalStorage(
-    safesFromService,
-    safesFromLocalStorage,
-    compatibleChains,
-    addressBook,
-  )
-
-  const compatibleUserSafes = [...compatibleUserSafesFromLocalStorage, ...compatibleUserSafesFromService]
-
-  const selectedUserSafe = getDefaultSafe(compatibleUserSafes, lastViewedSafeAddress, safeAppChainId)
+  const selectedUserSafe = getDefaultSafe(compatibleSafes, lastViewedSafeAddress, safeAppChainId)
 
   const isWalletConnected = !!userAddress
-  const hasComplatibleSafesInLocalStotorage = compatibleUserSafesFromLocalStorage.length > 0
+  const hasComplatibleSafes = compatibleSafes.length > 0
 
-  const showConnectWalletSection = !isWalletConnected && !hasComplatibleSafesInLocalStotorage
+  const showConnectWalletSection = !isWalletConnected && !hasComplatibleSafes
 
   return (
     <UserSafeContainer>
@@ -96,7 +73,7 @@ const UserSafeSection = ({ safeAppUrl, availableChains, safeAppChainId }: UserSa
           <ConnectWalletButton data-testid="connect-wallet-btn" />
         </ConnectWalletContainer>
       ) : selectedUserSafe ? (
-        <UseYourSafe safeAppUrl={safeAppUrl} defaultSafe={selectedUserSafe} safes={compatibleUserSafes} />
+        <UseYourSafe safeAppUrl={safeAppUrl} defaultSafe={selectedUserSafe} safes={compatibleSafes} />
       ) : (
         <CreateNewSafe safeAppUrl={safeAppUrl} />
       )}
