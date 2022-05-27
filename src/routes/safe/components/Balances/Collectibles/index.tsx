@@ -164,7 +164,7 @@ const Collectibles = ({ children }: { children: ReactNode }): React.ReactElement
 
 const CollectiblesPage = (): React.ReactElement => {
   const NFT_APPS_TAG = 'nft'
-  const { allApps, togglePin } = useAppList()
+  const { allApps, pinnedSafeApps, togglePin } = useAppList()
   const nftApps = useMemo(() => allApps.filter((app) => app.tags?.includes(NFT_APPS_TAG)), [allApps])
 
   const infoBar = (
@@ -186,7 +186,12 @@ const CollectiblesPage = (): React.ReactElement => {
           <Grid style={{ marginBottom: '30px' }}>
             {nftApps.map((app) => (
               <Grid item key={app.id} xs={4}>
-                <SafeAppCard safeApp={app} size="md" togglePin={togglePin} />
+                <SafeAppCard
+                  safeApp={app}
+                  size="md"
+                  togglePin={togglePin}
+                  isPinned={pinnedSafeApps.some(({ id }) => id === app.id)}
+                />
               </Grid>
             ))}
           </Grid>
