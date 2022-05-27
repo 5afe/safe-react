@@ -1,15 +1,15 @@
 import HDWalletProvider from '@truffle/hdwallet-provider'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
 import { getPublicRpcUrl } from 'src/config'
+import CypressLogo from 'src/assets/icons/cypress_logo.svg'
 
 const WALLET_NAME = 'E2E Wallet'
-const CYPRESS_LOGO = 'https://iconape.com/wp-content/files/gj/370774/svg/370774.svg'
 
 const getE2EWalletModule = (): WalletModule => {
   return {
     name: WALLET_NAME,
     type: 'injected',
-    iconSrc: CYPRESS_LOGO,
+    iconSrc: CypressLogo,
     wallet: async (helpers) => {
       const { createModernProviderInterface } = helpers
       const provider = new HDWalletProvider({
