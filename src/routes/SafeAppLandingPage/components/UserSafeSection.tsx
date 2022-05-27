@@ -19,6 +19,43 @@ type UserSafeProps = {
   safeAppChainId: string
 }
 
+const getCompatibleSafesFromLocalStorage = (
+  safesFromService: Record<string, string[]>,
+  safesFromLocalStorage: LocalSafes,
+  compatibleChains: string[],
+  addressBook: AddressBookEntry[],
+): AddressBookEntry[] => {
+  return compatibleChains.reduce((compatibleSafes, chainId) => {
+    const safesFromLocalstorage =
+      safesFromLocalStorage[chainId]
+        ?.filter(({ address }) => !safesFromService[chainId]?.includes(address)) // we filter Safes already included
+        ?.map(({ address }) => ({
+          address,
+          chainId,
+          name: getNameFromAddressBook(addressBook, address, chainId),
+        })) || []
+
+    return [...compatibleSafes, ...safesFromLocalstorage]
+  }, [])
+}
+
+const getCompatibleSafesFromService = (
+  safesFromService: Record<string, string[]>,
+  compatibleChains: string[],
+  addressBook: AddressBookEntry[],
+): AddressBookEntry[] => {
+  return compatibleChains.reduce((compatibleSafes, chainId) => {
+    const safesFromConfigService =
+      safesFromService[chainId]?.map((address) => ({
+        address,
+        chainId,
+        name: getNameFromAddressBook(addressBook, address, chainId),
+      })) || []
+
+    return [...compatibleSafes, ...safesFromConfigService]
+  }, [])
+}
+
 const UserSafeSection = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps): ReactElement => {
   const userAddress = useSelector(userAccountSelector)
   const lastViewedSafeAddress = useSelector(lastViewedSafe)
@@ -86,43 +123,6 @@ const ConnectWalletContainer = styled.div`
 const ConnectWalletButton = styled(ConnectButton)`
   height: 52px;
 `
-
-const getCompatibleSafesFromLocalStorage = (
-  safesFromService: Record<string, string[]>,
-  safesFromLocalStorage: LocalSafes,
-  compatibleChains: string[],
-  addressBook: AddressBookEntry[],
-): AddressBookEntry[] => {
-  return compatibleChains.reduce((compatibleSafes, chainId) => {
-    const safesFromLocalstorage =
-      safesFromLocalStorage[chainId]
-        ?.filter(({ address }) => !safesFromService[chainId]?.includes(address)) // we filter Safes already included
-        ?.map(({ address }) => ({
-          address,
-          chainId,
-          name: getNameFromAddressBook(addressBook, address, chainId),
-        })) || []
-
-    return [...compatibleSafes, ...safesFromLocalstorage]
-  }, [])
-}
-
-const getCompatibleSafesFromService = (
-  safesFromService: Record<string, string[]>,
-  compatibleChains: string[],
-  addressBook: AddressBookEntry[],
-): AddressBookEntry[] => {
-  return compatibleChains.reduce((compatibleSafes, chainId) => {
-    const safesFromConfigService =
-      safesFromService[chainId]?.map((address) => ({
-        address,
-        chainId,
-        name: getNameFromAddressBook(addressBook, address, chainId),
-      })) || []
-
-    return [...compatibleSafes, ...safesFromConfigService]
-  }, [])
-}
 
 const getNameFromAddressBook = (addressBook: AddressBookEntry[], address: string, chainId: string) => {
   const addressBookEntry = addressBook.find(
