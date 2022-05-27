@@ -27,7 +27,7 @@ const getCompatibleSafes = (
   addressBook: AddressBookEntry[],
 ): AddressBookEntry[] => {
   return compatibleChains.reduce((result, chainId) => {
-    const flatSafesFromLocalStorage = safesFromLocalStorage[chainId].map(({ address }) => address) || []
+    const flatSafesFromLocalStorage = safesFromLocalStorage[chainId]?.map(({ address }) => address) || []
     const flatSafesFromService = safesFromService[chainId] || []
 
     // we remove duplicated safes
