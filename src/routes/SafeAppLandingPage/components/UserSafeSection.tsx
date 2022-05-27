@@ -16,35 +16,52 @@ import UseYourSafe from './UseYourSafe'
 type UserSafeProps = {
   safeAppUrl: string
   availableChains: string[]
-  safeAppChainId: string | null
+  safeAppChainId: string
 }
 
 const UserSafeSection = ({ safeAppUrl, availableChains, safeAppChainId }: UserSafeProps): ReactElement => {
   const userAddress = useSelector(userAccountSelector)
   const lastViewedSafeAddress = useSelector(lastViewedSafe)
-  const ownedSafes = useOwnerSafes()
-  const localSafes = useLocalSafes()
+  const safesFromService = useOwnerSafes()
+  const safesFromLocalStorage = useLocalSafes()
   const addressBook = useSelector(addressBookState)
 
-  const compatibleUserSafes = getCompatibleSafes(ownedSafes, localSafes, availableChains, safeAppChainId, addressBook)
+  // we include the chainId provided in the query params in the available chains list
+  const compatibleChains = !availableChains.includes(safeAppChainId)
+    ? [...availableChains, safeAppChainId]
+    : availableChains
+
+  // we collect all compatible safes from backend
+  const compatibleUserSafesFromService = getCompatibleSafesFromService(safesFromService, compatibleChains, addressBook)
+
+  // we collect all compatible safes from the localstorage
+  const compatibleUserSafesFromLocalStorage = getCompatibleSafesFromLocalStorage(
+    safesFromService,
+    safesFromLocalStorage,
+    compatibleChains,
+    addressBook,
+  )
+
+  const compatibleUserSafes = [...compatibleUserSafesFromLocalStorage, ...compatibleUserSafesFromService]
 
   const selectedUserSafe = getDefaultSafe(compatibleUserSafes, lastViewedSafeAddress, safeAppChainId)
 
   const isWalletConnected = !!userAddress
+  const hasComplatibleSafesInLocalStotorage = compatibleUserSafesFromLocalStorage.length > 0
+
+  const showConnectWalletSection = !isWalletConnected && !hasComplatibleSafesInLocalStotorage
 
   return (
     <UserSafeContainer>
       <Title size="xs">Use the dApp with your Safe!</Title>
-      {isWalletConnected ? (
-        selectedUserSafe ? (
-          <UseYourSafe safeAppUrl={safeAppUrl} defaultSafe={selectedUserSafe} safes={compatibleUserSafes} />
-        ) : (
-          <CreateNewSafe safeAppUrl={safeAppUrl} />
-        )
-      ) : (
+      {showConnectWalletSection ? (
         <ConnectWalletContainer>
           <ConnectWalletButton data-testid="connect-wallet-btn" />
         </ConnectWalletContainer>
+      ) : selectedUserSafe ? (
+        <UseYourSafe safeAppUrl={safeAppUrl} defaultSafe={selectedUserSafe} safes={compatibleUserSafes} />
+      ) : (
+        <CreateNewSafe safeAppUrl={safeAppUrl} />
       )}
     </UserSafeContainer>
   )
@@ -70,41 +87,41 @@ const ConnectWalletButton = styled(ConnectButton)`
   height: 52px;
 `
 
-const getCompatibleSafes = (
-  ownedSafes: Record<string, string[]>,
-  localSafes: LocalSafes,
-  availableChains: string[],
-  safeAppChainId: string | null,
+const getCompatibleSafesFromLocalStorage = (
+  safesFromService: Record<string, string[]>,
+  safesFromLocalStorage: LocalSafes,
+  compatibleChains: string[],
   addressBook: AddressBookEntry[],
 ): AddressBookEntry[] => {
-  // we include the chainId provided in the query params in the available chains list
-  const compatibleChains =
-    safeAppChainId && !availableChains.includes(safeAppChainId) ? [...availableChains, safeAppChainId] : availableChains
-
-  // we collect all compatible safes from the Config Service & Local Storage
-  const compatibleSafes = compatibleChains.reduce((compatibleSafes, chainId) => {
-    // Safes from Config Service
-    const safesFromConfigService =
-      ownedSafes[chainId]?.map((address) => ({
-        address,
-        chainId,
-        name: getNameFromAddressBook(addressBook, address, chainId),
-      })) || []
-
-    // Safes from Local Storage
+  return compatibleChains.reduce((compatibleSafes, chainId) => {
     const safesFromLocalstorage =
-      localSafes[chainId]
-        ?.filter(({ address }) => !ownedSafes[chainId]?.includes(address)) // we filter Safes already included
+      safesFromLocalStorage[chainId]
+        ?.filter(({ address }) => !safesFromService[chainId]?.includes(address)) // we filter Safes already included
         ?.map(({ address }) => ({
           address,
           chainId,
           name: getNameFromAddressBook(addressBook, address, chainId),
         })) || []
 
-    return [...compatibleSafes, ...safesFromConfigService, ...safesFromLocalstorage]
+    return [...compatibleSafes, ...safesFromLocalstorage]
   }, [])
+}
 
-  return compatibleSafes
+const getCompatibleSafesFromService = (
+  safesFromService: Record<string, string[]>,
+  compatibleChains: string[],
+  addressBook: AddressBookEntry[],
+): AddressBookEntry[] => {
+  return compatibleChains.reduce((compatibleSafes, chainId) => {
+    const safesFromConfigService =
+      safesFromService[chainId]?.map((address) => ({
+        address,
+        chainId,
+        name: getNameFromAddressBook(addressBook, address, chainId),
+      })) || []
+
+    return [...compatibleSafes, ...safesFromConfigService]
+  }, [])
 }
 
 const getNameFromAddressBook = (addressBook: AddressBookEntry[], address: string, chainId: string) => {
