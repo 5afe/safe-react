@@ -1,4 +1,4 @@
-const SAFE = 'rin:0xFfDC1BcdeC18b1196e7FA04246295DE3A17972Ac'
+const SAFE = 'rin:0xB5ef359e8eBDAd1cd7695FFEF3f6F6D7d5e79B08'
 
 describe('Dashboard', () => {
   before(() => {
@@ -13,7 +13,7 @@ describe('Dashboard', () => {
 
   it('should display the overview widget', () => {
     cy.contains('main p', SAFE).should('exist')
-    cy.contains('main', '1/9')
+    cy.contains('main', '1/1')
     cy.get(`main a[href="/app/${SAFE}/balances"] button`).contains('View Assets')
     cy.get(`main a[href="/app/${SAFE}/balances"]`).contains('Tokens3')
     cy.contains(`main a[href="/app/${SAFE}/balances/nfts"]`, 'NFTs0')
@@ -31,14 +31,35 @@ describe('Dashboard', () => {
   })
 
   it('should display the tx queue widget', () => {
-    cy.contains('main', 'This Safe has no queued transactions')
+    cy.contains('main', 'This Safe has no queued transactions').should('not.exist')
+
+    // Queued txns
+    cy.contains(
+      `main a[href="/app/${SAFE}/transactions/queue"]`,
+      '0' + 'addOwnerWithThreshold' + '1/1'
+    ).should('exist')
+
+    cy.contains(
+      `main a[href="/app/${SAFE}/transactions/queue"]`,
+      '2' + 'Send' + '-0.001 USDC' + '1/1'
+    ).should('exist')
+  
     cy.contains(`a[href="/app/${SAFE}/transactions/queue"]`, 'View All')
   })
 
   it('should display the featured Safe Apps', () => {
     cy.contains('main h2', 'Connect & Transact')
+
+    // Tx Builder app
     cy.contains('main p', 'Use Transaction Builder')
+    cy.get(`a[href="/app/${SAFE}/apps?appUrl=https://safe-apps.dev.gnosisdev.com/tx-builder"]`)
+      .should('exist')
+
+    // WalletConnect app
     cy.contains('main p', 'Use WalletConnect')
+    cy.get(`a[href="/app/${SAFE}/apps?appUrl=https://safe-apps.dev.gnosisdev.com/wallet-connect"]`)
+      .should('exist')
+
   })
 
   it('should show the Safe Apps widget', () => {
