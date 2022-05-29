@@ -76,13 +76,33 @@ describe('Check safe version', () => {
       expect(isValid).toBe(false)
     })
 
-    it('returns true for L1 mastercopy in L2 chain and version <1.3.0', async () => {
+    it('returns true for L1 mastercopy in L2 chain and version 1.1.1', async () => {
       jest.spyOn(config, '_getChainId').mockImplementation(() => '100')
       jest.spyOn(config, 'getChainById').mockImplementation(() => ({ ...emptyChainInfo, chainId: '100', l2: true }))
       jest
         .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
         .mockImplementation(() => getSafeSingletonDeployment({ version: '1.1.1' })?.networkAddresses['100'])
       const isValid = await isValidMasterCopy('100', '0x0000000000000000000000000000000000000001', '1.1.1')
+      expect(isValid).toBe(true)
+    })
+
+    it('returns true for L1 mastercopy in L2 chain and version 1.2.0', async () => {
+      jest.spyOn(config, '_getChainId').mockImplementation(() => '100')
+      jest.spyOn(config, 'getChainById').mockImplementation(() => ({ ...emptyChainInfo, chainId: '100', l2: true }))
+      jest
+        .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
+        .mockImplementation(() => getSafeSingletonDeployment({ version: '1.2.0' })?.networkAddresses['100'])
+      const isValid = await isValidMasterCopy('100', '0x0000000000000000000000000000000000000001', '1.2.0')
+      expect(isValid).toBe(true)
+    })
+
+    it('returns true for L1 mastercopy in L2 chain and version 1.0.0', async () => {
+      jest.spyOn(config, '_getChainId').mockImplementation(() => '100')
+      jest.spyOn(config, 'getChainById').mockImplementation(() => ({ ...emptyChainInfo, chainId: '100', l2: true }))
+      jest
+        .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
+        .mockImplementation(() => getSafeSingletonDeployment({ version: '1.0.0' })?.networkAddresses['100'])
+      const isValid = await isValidMasterCopy('100', '0x0000000000000000000000000000000000000001', '1.0.0')
       expect(isValid).toBe(true)
     })
   })

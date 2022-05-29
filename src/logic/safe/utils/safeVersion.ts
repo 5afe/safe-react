@@ -102,5 +102,8 @@ export const isValidMasterCopy = async (
   const expectedDeployment = getSafeContractDeployment({ safeVersion: semverClean(safeVersion) })
   const expectedMasterCopyAddress = expectedDeployment?.networkAddresses[chainId]
 
-  return sameAddress(masterCopyAddressFromProxy, expectedMasterCopyAddress)
+  return (
+    typeof masterCopyAddressFromProxy !== 'undefined' &&
+    sameAddress(masterCopyAddressFromProxy, expectedMasterCopyAddress)
+  )
 }
