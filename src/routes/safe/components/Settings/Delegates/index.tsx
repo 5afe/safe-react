@@ -25,6 +25,7 @@ import ButtonHelper from 'src/components/ButtonHelper'
 import { AddDelegateModal } from 'src/routes/safe/components/Settings/Delegates/AddDelegateModal'
 import { RemoveDelegateModal } from 'src/routes/safe/components/Settings/Delegates/RemoveDelegateModal'
 import { EditDelegateModal } from 'src/routes/safe/components/Settings/Delegates/EditDelegateModal'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 // TODO: these types will come from the Client GW SDK once #72 is merged
 type Page<T> = {
@@ -51,6 +52,10 @@ const StyledHeading = styled(Heading)`
   padding-bottom: 0;
 `
 
+const StyledButtonLink = styled(ButtonLink)<{ isDisabled: boolean }>`
+  display: ${({ isDisabled }) => (isDisabled ? 'none' : 'flex')};
+`
+
 const useStyles = makeStyles(styles)
 
 const Delegates = (): ReactElement => {
@@ -65,6 +70,7 @@ const Delegates = (): ReactElement => {
   const [addressToRemove, setAddressToRemove] = useState<string>('')
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
+  const granted = useSelector(grantedSelector)
 
   const classes = useStyles(styles)
 
@@ -171,7 +177,7 @@ const Delegates = (): ReactElement => {
     <StyledBlock>
       <StyledHeading tag="h2">Manage Safe Delegates</StyledHeading>
       <Paragraph>Get, add and delete delegates.</Paragraph>
-      <ButtonLink
+      <StyledButtonLink
         onClick={() => {
           setAddDelegateModalOpen(true)
         }}
@@ -179,9 +185,10 @@ const Delegates = (): ReactElement => {
         iconType="add"
         iconSize="sm"
         textSize="xl"
+        isDisabled={!granted}
       >
         Add delegate
-      </ButtonLink>
+      </StyledButtonLink>
       <pre>{JSON.stringify(delegatesList, undefined, 2)}</pre>
       <TableContainer>
         <Table
@@ -219,28 +226,32 @@ const Delegates = (): ReactElement => {
                   })}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <ButtonHelper
-                        onClick={() => {
-                          setDelegateToEdit(row[DELEGATE_ADDRESS_ID])
-                          setEditDelegateModalOpen(true)
-                        }}
-                      >
-                        <Icon size="sm" type="edit" tooltip="Edit delegate" className={classes.editEntryButton} />
-                      </ButtonHelper>
-                      <ButtonHelper
-                        onClick={() => {
-                          setAddressToRemove(row[DELEGATE_ADDRESS_ID])
-                          setRemoveDelegateModalOpen(true)
-                        }}
-                      >
-                        <Icon
-                          size="sm"
-                          type="delete"
-                          color="error"
-                          tooltip="Remove delegate"
-                          className={classes.removeEntryButton}
-                        />
-                      </ButtonHelper>
+                      {granted && (
+                        <>
+                          <ButtonHelper
+                            onClick={() => {
+                              setDelegateToEdit(row[DELEGATE_ADDRESS_ID])
+                              setEditDelegateModalOpen(true)
+                            }}
+                          >
+                            <Icon size="sm" type="edit" tooltip="Edit delegate" className={classes.editEntryButton} />
+                          </ButtonHelper>
+                          <ButtonHelper
+                            onClick={() => {
+                              setAddressToRemove(row[DELEGATE_ADDRESS_ID])
+                              setRemoveDelegateModalOpen(true)
+                            }}
+                          >
+                            <Icon
+                              size="sm"
+                              type="delete"
+                              color="error"
+                              tooltip="Remove delegate"
+                              className={classes.removeEntryButton}
+                            />
+                          </ButtonHelper>
+                        </>
+                      )}
                     </Row>
                   </TableCell>
                 </TableRow>
