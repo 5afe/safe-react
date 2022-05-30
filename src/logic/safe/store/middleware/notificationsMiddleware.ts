@@ -2,9 +2,8 @@ import { Action } from 'redux-actions'
 import { AnyAction } from 'redux'
 import { TransactionListItem, Transaction, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
-import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import { closeNotification, showNotification } from 'src/logic/notifications/store/notifications'
 import { getAwaitingGatewayTransactions } from 'src/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
@@ -56,7 +55,14 @@ const sendAwaitingTransactionNotification = (
   }
 
   dispatch(
-    enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, notificationClickedCb)),
+    showNotification({
+      ...NOTIFICATIONS.TX_WAITING_MSG,
+      options: {
+        ...NOTIFICATIONS.TX_WAITING_MSG.options,
+        onClick: notificationClickedCb,
+        key: notificationKey,
+      },
+    }),
   )
 
   lastTimeUserLoggedInForSafes = {
@@ -90,7 +96,7 @@ const notificationsMiddleware =
             safesMap,
           )
           // if we have a notification, dispatch it depending on transaction's status
-          executedTxNotification && dispatch(enqueueSnackbar(executedTxNotification))
+          executedTxNotification && dispatch(showNotification(executedTxNotification))
 
           break
         }
@@ -120,8 +126,8 @@ const notificationsMiddleware =
 
           const notificationKey = `${safeAddress}-awaiting`
 
-          const onNotificationClicked = (dispatch, notificationKey) => () => {
-            dispatch(closeSnackbarAction({ key: notificationKey }))
+          const onNotificationClicked = () => {
+            dispatch(closeNotification({ key: notificationKey }))
             history.push(
               generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_HISTORY, {
                 shortName: currentShortName,
@@ -135,7 +141,7 @@ const notificationsMiddleware =
             safeAddress,
             awaitingTxsSubmissionDateList,
             notificationKey,
-            onNotificationClicked(dispatch, notificationKey),
+            onNotificationClicked,
           )
 
           break
@@ -151,7 +157,7 @@ const notificationsMiddleware =
 
           const notificationKey = `${curSafeAddress}-update`
           const onNotificationClicked = () => {
-            dispatch(closeSnackbarAction({ key: notificationKey }))
+            dispatch(closeNotification({ key: notificationKey }))
             history.push(
               generateSafeRoute(ADDRESSED_ROUTE, {
                 shortName: currentShortName,
@@ -162,13 +168,14 @@ const notificationsMiddleware =
 
           if (version?.needUpdate && isUserOwner) {
             dispatch(
-              enqueueSnackbar(
-                enhanceSnackbarForAction(
-                  NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
-                  notificationKey,
-                  onNotificationClicked,
-                ),
-              ),
+              showNotification({
+                ...NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
+                options: {
+                  ...NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE.options,
+                  key: notificationKey,
+                  onClick: onNotificationClicked,
+                },
+              }),
             )
           }
           break

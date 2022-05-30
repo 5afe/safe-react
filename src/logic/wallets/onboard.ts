@@ -12,7 +12,7 @@ import updateProviderWallet from 'src/logic/wallets/store/actions/updateProvider
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
-import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
+import { closeAllNotifications } from '../notifications/store/notifications'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
@@ -68,7 +68,7 @@ const getOnboard = (chainId: ChainId): API => {
       },
       network: (networkId) => {
         store.dispatch(updateProviderNetwork(networkId?.toString() || ''))
-        store.dispatch(closeSnackbar({ dismissAll: true }))
+        store.dispatch(closeAllNotifications())
       },
       ens: hasENSSupport(chainId)
         ? (ens) => {

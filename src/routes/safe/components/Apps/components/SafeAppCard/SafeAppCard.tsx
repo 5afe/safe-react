@@ -10,8 +10,8 @@ import { generateSafeRoute, getShareSafeAppUrl, SAFE_ROUTES } from 'src/routes/r
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import fallbackSafeAppLogoSvg from 'src/assets/icons/apps.svg'
 import { currentChainId } from 'src/logic/config/store/selectors'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { enhanceSnackbarForAction, NOTIFICATIONS } from 'src/logic/notifications'
+import { showNotification } from 'src/logic/notifications/store/notifications'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { copyToClipboard } from 'src/utils/clipboard'
 import { getShortName } from 'src/config'
@@ -51,7 +51,7 @@ const SafeAppCard = ({
   const shareSafeApp = () => {
     const shareSafeAppUrl = getShareSafeAppUrl(safeApp.url, chainId)
     copyToClipboard(shareSafeAppUrl)
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.SHARE_SAFE_APP_URL_COPIED)))
+    dispatch(showNotification(NOTIFICATIONS.SHARE_SAFE_APP_URL_COPIED))
   }
 
   const isSafeAppLoading = safeApp.fetchStatus === FETCH_STATUS.LOADING
