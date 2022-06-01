@@ -1,5 +1,4 @@
 import UnstoppableResolution from '@unstoppabledomains/resolution'
-import { getRpcServiceUrl } from 'src/config'
 
 let UDResolution: UnstoppableResolution
 
@@ -9,10 +8,10 @@ export const getAddressFromUnstoppableDomain = (name: string): Promise<string> =
       sourceConfig: {
         uns: {
           api: true,
-          url: getRpcServiceUrl(),
         },
       },
     })
   }
-  return UDResolution.addr(name, 'ETH')
+  const resolved = UDResolution.addr(name, 'ETH')
+  return resolved
 }
