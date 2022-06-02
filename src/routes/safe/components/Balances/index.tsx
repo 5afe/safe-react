@@ -10,6 +10,7 @@ import ReceiveModal from 'src/components/App/ReceiveModal'
 import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { FEATURES } from 'src/config/networks/network.d'
@@ -126,7 +127,7 @@ const Balances = (): ReactElement => {
               )
             }}
           />
-          {/* <Route
+          <Route
             path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
               safeAddress,
             })}
@@ -136,7 +137,7 @@ const Balances = (): ReactElement => {
                 <CurrencyDropdown />
               </Col>
             )}
-          /> */}
+          />
         </Switch>
       </Menu>
       <Switch>

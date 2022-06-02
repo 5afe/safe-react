@@ -61,7 +61,10 @@ const CurrencyTooltip = (props: CurrencyTooltipProps): React.ReactElement | null
   const value = valueWithCurrency.replace(/[^\d.-]/g, '')
   if (!Number(value) && Number(balance)) {
     return (
-      <Tooltip placement="top" title="Value may be zero due to missing token price information">
+      <Tooltip
+        placement="top"
+        title="Value may be zero due to missing token price information or the value being too small"
+      >
         <span>
           <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
         </span>

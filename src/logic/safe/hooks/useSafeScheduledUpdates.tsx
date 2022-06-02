@@ -7,7 +7,7 @@ import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
-export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string): void => {
+export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string, currentCurrency?: string): void => {
   const dispatch = useDispatch()
   const timer = useRef<number>()
 
@@ -18,7 +18,7 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
     const fetchSafeData = async (address: string): Promise<void> => {
       batch(async () => {
         await Promise.all([
-          dispatch(fetchSafeTokens(address)),
+          dispatch(fetchSafeTokens(address, currentCurrency)),
           dispatch(fetchTransactions(address)),
           dispatch(fetchCollectibles(address)),
           dispatch(fetchSafe(address)),
@@ -38,5 +38,5 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       mounted = false
       clearTimeout(timer.current)
     }
-  }, [dispatch, safeAddress, safeLoaded])
+  }, [dispatch, safeAddress, safeLoaded, currentCurrency])
 }

@@ -80,7 +80,7 @@ const App: React.FC = ({ children }) => {
   // if safe is loaded via URL, `safeAddress` won't be available until store is populated with temp information
   // Temp information will be built from `addressFromUrl`
   const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
-  useSafeScheduledUpdates(safeLoaded, safeAddress)
+  useSafeScheduledUpdates(safeLoaded, safeAddress, currentCurrency)
   useAddressBookSync()
 
   const sendFunds = safeActionsState.sendFunds
