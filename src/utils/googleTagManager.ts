@@ -30,14 +30,18 @@ export const getAnonymizedPathname = (pathname: string = history.location.pathna
   }
 
   // Anonymise transaction id
-  const txIdMatch = matchPath<{ [TRANSACTION_ID_SLUG]: string }>(pathname, { path: SAFE_ROUTES.TRANSACTIONS_SINGULAR })
+  const txIdMatch = matchPath<{ [TRANSACTION_ID_SLUG]: string }>(pathname, {
+    path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
+  })
 
-  if (txIdMatch) {
-    const terms = new RegExp(/queue|history/)
-    const replacement = !terms.test(txIdMatch.params[TRANSACTION_ID_SLUG])
-      ? ANON_TX_ID
-      : txIdMatch.params[TRANSACTION_ID_SLUG]
-    anonPathname = anonPathname.replace(txIdMatch.params[TRANSACTION_ID_SLUG], replacement)
+  const queueHistoryMatch = matchPath(pathname, {
+    path: [SAFE_ROUTES.TRANSACTIONS_HISTORY, SAFE_ROUTES.TRANSACTIONS_QUEUE],
+  })
+
+  const isSingularTxView = txIdMatch && !queueHistoryMatch
+
+  if (isSingularTxView) {
+    anonPathname = anonPathname.replace(txIdMatch.params[TRANSACTION_ID_SLUG], ANON_TX_ID)
   }
 
   return anonPathname
