@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import { Control, FieldValues, Path, useController, UseControllerProps } from 'react-hook-form'
 import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete'
 import TextField from '@material-ui/core/TextField/TextField'
-import { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { SettingsInfo, SettingsInfoType } from '@gnosis.pm/safe-react-gateway-sdk'
 
 type Props<T> = {
   name: Path<T>
@@ -14,43 +14,43 @@ type Props<T> = {
 // TODO: Create enum in the types for these types
 const MODULES: { label: string; type: SettingsInfo['type'] }[] = [
   {
-    type: 'SET_FALLBACK_HANDLER',
+    type: SettingsInfoType.SET_FALLBACK_HANDLER,
     label: 'Set fallback handler',
   },
   {
-    type: 'ADD_OWNER',
+    type: SettingsInfoType.ADD_OWNER,
     label: 'Add owner',
   },
   {
-    type: 'REMOVE_OWNER',
+    type: SettingsInfoType.REMOVE_OWNER,
     label: 'Remove owner',
   },
   {
-    type: 'SWAP_OWNER',
+    type: SettingsInfoType.SWAP_OWNER,
     label: 'Swap owner',
   },
   {
-    type: 'CHANGE_THRESHOLD',
+    type: SettingsInfoType.CHANGE_THRESHOLD,
     label: 'Change required confirmations',
   },
   {
-    type: 'CHANGE_IMPLEMENTATION',
+    type: SettingsInfoType.CHANGE_IMPLEMENTATION,
     label: 'Change implementation',
   },
   {
-    type: 'ENABLE_MODULE',
+    type: SettingsInfoType.ENABLE_MODULE,
     label: 'Enable module',
   },
   {
-    type: 'DISABLE_MODULE',
+    type: SettingsInfoType.DISABLE_MODULE,
     label: 'Disable module',
   },
   {
-    type: 'SET_GUARD',
+    type: SettingsInfoType.SET_GUARD,
     label: 'Set guard',
   },
   {
-    type: 'DELETE_GUARD',
+    type: SettingsInfoType.DELETE_GUARD,
     label: 'Delete guard',
   },
 ]
