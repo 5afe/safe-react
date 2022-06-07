@@ -19,7 +19,7 @@ import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/
 import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
-import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
+import { lg, md, primary300, grey400, largeFontSize, primary200, sm, black300 } from 'src/theme/variables'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
@@ -33,6 +33,9 @@ import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactio
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
+import ScheduleIcon from '@material-ui/icons/Schedule'
+import { IconButton, InputAdornment } from '@material-ui/core'
+import { Tooltip } from 'src/components/layout/Tooltip'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
 export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -108,6 +111,14 @@ const loadTransactions = ({
     }
   }
 }
+
+const StyledRHFTextField = styled(RHFTextField)`
+  &:hover {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: ${black300};
+    }
+  }
+`
 
 const Filter = (): ReactElement => {
   const dispatch = useDispatch()
@@ -189,6 +200,16 @@ const Filter = (): ReactElement => {
     hideFilter()
   }
 
+  const comingSoonAdornment = (
+    <InputAdornment position="end">
+      <Tooltip title="Coming soon" arrow>
+        <IconButton>
+          <ScheduleIcon />
+        </IconButton>
+      </Tooltip>
+    </InputAdornment>
+  )
+
   return (
     <>
       <BackdropLayout isOpen={showFilter} />
@@ -235,18 +256,24 @@ const Filter = (): ReactElement => {
                               validate: isValidAmount,
                             }}
                           />
-                          {/* <RHFTextField<FilterForm>
+                          {/* @ts-expect-error - styled-components don't have strict types */}
+                          <StyledRHFTextField<FilterForm>
                             name={DATE_FROM_FIELD_NAME}
                             label="From"
-                            type="date"
+                            // type="date"
                             control={control}
+                            disabled
+                            endAdornment={comingSoonAdornment}
                           />
-                          <RHFTextField<FilterForm>
+                          {/* @ts-expect-error - styled-components don't have strict types */}
+                          <StyledRHFTextField<FilterForm>
                             name={DATE_TO_FIELD_NAME}
                             label="To"
-                            type="date"
+                            // type="date"
                             control={control}
-                          /> */}
+                            disabled
+                            endAdornment={comingSoonAdornment}
+                          />
                         </>
                       )}
                       {filterType === FilterType.INCOMING && (
