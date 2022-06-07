@@ -75,13 +75,17 @@ const getHistoryTxListPage = async (
       return pageUrl
     }
 
-    const url = new URL(pageUrl)
+    let url: URL
+
+    try {
+      url = new URL(pageUrl)
+    } catch {
+      return pageUrl
+    }
 
     Object.entries(query).forEach(([key, value]) => {
       url.searchParams.set(key, value)
     })
-
-    console.log(url.toString())
 
     return url.toString()
   }

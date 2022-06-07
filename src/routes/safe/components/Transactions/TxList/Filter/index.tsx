@@ -46,10 +46,6 @@ export const AMOUNT_FIELD_NAME = 'value'
 export const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
 export const MODULE_FIELD_NAME = 'module'
 export const NONCE_FIELD_NAME = 'nonce'
-// We use 'hidden' fields for the ENS domain/address book name
-export const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
-export const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
-export const HIDDEN_MODULE_FIELD_NAME = '__module'
 
 export enum FilterType {
   INCOMING = 'Incoming',
@@ -63,12 +59,9 @@ export type FilterForm = {
   [DATE_FROM_FIELD_NAME]: string
   [DATE_TO_FIELD_NAME]: string
   [RECIPIENT_FIELD_NAME]: string
-  [HIDDEN_RECIPIENT_FIELD_NAME]: string
   [AMOUNT_FIELD_NAME]: string
   [TOKEN_ADDRESS_FIELD_NAME]: string
-  [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: string
   [MODULE_FIELD_NAME]: string
-  [HIDDEN_MODULE_FIELD_NAME]: string
   [NONCE_FIELD_NAME]: string
 }
 
@@ -77,10 +70,8 @@ const defaultValues: DefaultValues<FilterForm> = {
   [DATE_FROM_FIELD_NAME]: '',
   [DATE_TO_FIELD_NAME]: '',
   [RECIPIENT_FIELD_NAME]: '',
-  [HIDDEN_RECIPIENT_FIELD_NAME]: '',
   [AMOUNT_FIELD_NAME]: '',
   [TOKEN_ADDRESS_FIELD_NAME]: '',
-  [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: '',
   [MODULE_FIELD_NAME]: '',
   [NONCE_FIELD_NAME]: '',
 }
@@ -248,7 +239,6 @@ const Filter = (): ReactElement => {
                     <ParametersFormWrapper>
                       <RHFAddressSearchField<FilterForm>
                         name={RECIPIENT_FIELD_NAME}
-                        hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
                         label="Recipient"
                         methods={methods}
                       />
@@ -285,7 +275,6 @@ const Filter = (): ReactElement => {
                       {filterType === FilterType.INCOMING && (
                         <RHFAddressSearchField<FilterForm>
                           name={TOKEN_ADDRESS_FIELD_NAME}
-                          hiddenName={HIDDEN_TOKEN_ADDRESS_FIELD_NAME}
                           label="Token address"
                           methods={methods}
                         />
@@ -301,12 +290,7 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {filterType === FilterType.MODULE && (
-                        <RHFAddressSearchField<FilterForm>
-                          name={MODULE_FIELD_NAME}
-                          hiddenName={HIDDEN_MODULE_FIELD_NAME}
-                          label="Module"
-                          methods={methods}
-                        />
+                        <RHFAddressSearchField<FilterForm> name={MODULE_FIELD_NAME} label="Module" methods={methods} />
                       )}
                     </ParametersFormWrapper>
                     <ButtonWrapper>
