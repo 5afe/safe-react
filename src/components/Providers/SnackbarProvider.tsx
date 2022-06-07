@@ -11,7 +11,7 @@ import useNotifier from 'src/logic/hooks/useNotifier'
 import { fontColor, secondaryText, sm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
-  contianerRoot: {
+  containerRoot: {
     top: '50px',
   },
   root: {
@@ -34,19 +34,18 @@ const useStyles = makeStyles({
     boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
     flexWrap: 'nowrap',
     padding: '20px',
-    '& *[class^="SnackbarItem-message-"]': {
+    alignItems: 'space-between',
+    '& div:first-child': {
       color: fontColor,
       padding: '0 10px 0 0',
       alignItems: 'stretch',
-      overflowX: 'hidden',
       overflowY: 'auto',
       maxHeight: '160px',
-      wordBreak: 'break-word',
       '& > img': {
         marginRight: '13px',
       },
     },
-    '& *[class^="SnackbarItem-action-"]': {
+    '& div:last-child': {
       paddingLeft: '0',
       '& > button': {
         color: secondaryText,
@@ -69,7 +68,7 @@ const CustomSnackBarProvider = ({ children }: { children: ReactNode }): React.Re
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       className={classes.snackbar}
       classes={{
-        containerRoot: classes.contianerRoot,
+        containerRoot: classes.containerRoot,
         root: classes.root,
         variantSuccess: classes.success,
         variantError: classes.error,
