@@ -36,6 +36,7 @@ import { Dispatch } from 'src/logic/safe/store/actions/types'
 import ScheduleIcon from '@material-ui/icons/Schedule'
 import { IconButton, InputAdornment } from '@material-ui/core'
 import { Tooltip } from 'src/components/layout/Tooltip'
+import { isEqual } from 'lodash'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
 export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -174,6 +175,11 @@ const Filter = (): ReactElement => {
   const filterType = watch(FILTER_TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
+    // Don't apply the same filter twice
+    if (isEqual(filter, getInitialValues(search))) {
+      hideFilter()
+    }
+
     const query = Object.fromEntries(Object.entries(filter).filter(([, value]) => !!value))
 
     history.replace({ pathname, search: `?${new URLSearchParams(query).toString()}` })
@@ -181,19 +187,19 @@ const Filter = (): ReactElement => {
     dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress), filter }))
 
     const trackedFields = [
-      query[FILTER_TYPE_FIELD_NAME],
-      // query[DATE_FROM_FIELD_NAME],
-      // query[DATE_TO_FIELD_NAME],
-      query[RECIPIENT_FIELD_NAME],
-      query[AMOUNT_FIELD_NAME],
-      query[TOKEN_ADDRESS_FIELD_NAME],
-      query[MODULE_FIELD_NAME],
-      query[NONCE_FIELD_NAME],
+      FILTER_TYPE_FIELD_NAME,
+      // DATE_FROM_FIELD_NAME,
+      // DATE_TO_FIELD_NAME,
+      RECIPIENT_FIELD_NAME,
+      AMOUNT_FIELD_NAME,
+      TOKEN_ADDRESS_FIELD_NAME,
+      MODULE_FIELD_NAME,
+      NONCE_FIELD_NAME,
     ]
 
-    trackedFields.forEach((label) => {
-      if (label) {
-        trackEvent({ ...TX_LIST_EVENTS.FILTER, label })
+    trackedFields.forEach((field) => {
+      if (query[field]) {
+        trackEvent({ ...TX_LIST_EVENTS.FILTER, label: query[field] })
       }
     })
 
