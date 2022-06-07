@@ -45,6 +45,7 @@ enum NOTIFICATION_IDS {
   NEW_SPENDING_LIMIT_EXECUTED_MSG,
   NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
   NEW_SPENDING_LIMIT_FAILED_MSG,
+  SPENDING_LIMIT_EXECUTED_MSG,
   SIGN_REMOVE_SPENDING_LIMIT_MSG,
   REMOVE_SPENDING_LIMIT_REJECTED_MSG,
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
@@ -177,6 +178,11 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
   NEW_SPENDING_LIMIT_EXECUTED_MSG: {
     message: 'New spending limit successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  SPENDING_LIMIT_EXECUTED_MSG: {
+    message:
+      'Your transaction has been submitted and will appear in the interface only after it has been successfully mined and indexed.',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {

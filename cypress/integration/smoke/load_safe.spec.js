@@ -17,9 +17,9 @@ describe('Load Safe', () => {
 
     cy.get('[data-track="load-safe: Open stepper"]').click()
     cy.findByText('Add existing Safe').should('exist')
-    cy.wait(1000) //Have to wait because clicking the switch network fails sometimes if not
+    cy.wait(1000) // Have to wait because clicking the switch network fails sometimes if not
 
-    //Step 1
+    // Network selection
     cy.findByTestId('select-network-step').find('button').click()
     cy.get('[aria-labelledby="select-network"]').should('exist')
     cy.findByText('Ethereum').click()
@@ -29,7 +29,7 @@ describe('Load Safe', () => {
     cy.findByText('Rinkeby').click()
     cy.get('[data-track="load-safe: Continue"]').click()
 
-    //Step2
+    // Name
     cy.findByTestId('load-safe-name-field').should('have.attr', 'placeholder').should('contain', 'rinkeby-safe')
     cy.findByTestId('load-safe-name-field').type('Test safe name').should('have.value', 'Test safe name')
 
@@ -43,23 +43,23 @@ describe('Load Safe', () => {
       .should('have.value', SAFE_ENS_NAME_TRANSLATED)
     cy.findByTestId('qr-icon').click()
     cy.get('[class="paper"]').find('button').contains('Upload an image').click()
-    cy.get('[type="file"]').attachFile('../utils/files/rinkeby_safe_QR.png')
+    cy.get('[type="file"]').attachFile('../fixtures/rinkeby_safe_QR.png')
     cy.findByTestId('load-safe-address-field').should('have.value', SAFE_QR_CODE_ADDRESS)
     cy.findByTestId('safeAddress-valid-address-adornment').should('exist')
     cy.wait(3000) //have to wait or after clicking next what loads is the owners of the previous valids safe, not the one from the QR code
     cy.get('[type="submit"]').click()
 
-    //Step3
+    // Owners
     cy.findByPlaceholderText(OWNER_ENS_DEFAULT_NAME).parents('div[data-testid="owner-row"]').findByText(OWNER_ADDRESS)
     cy.findByPlaceholderText(OWNER_ENS_DEFAULT_NAME).type('Test Owner Name').should('have.value', 'Test Owner Name')
     cy.get('[data-track="load-safe: Continue"]').click()
 
-    //Review Step
+    // Review Step
     cy.findByText('Test safe name').should('exist')
     cy.findByText('Test Owner Name').should('exist')
     cy.get('[data-track="load-safe: Add"]').click()
 
-    //Safe Loaded
+    // Safe loaded
     cy.findByTestId('sidebar').findByText('Test safe name')
     cy.findByTestId('sidebar').find('nav').findByText('Settings').click()
     cy.findByTestId('sidebar').find('nav').findByText('Owners').click()
