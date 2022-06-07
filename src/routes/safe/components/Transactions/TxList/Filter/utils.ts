@@ -66,7 +66,7 @@ export const isTxFilter = (object: ParsedUrlQuery): object is Partial<FilterForm
     MODULE_FIELD_NAME,
     NONCE_FIELD_NAME,
   ]
-  return Object.keys(object).every((key) => FILTER_FIELD_NAMES.includes(key))
+  return Object.keys(object).some((key) => FILTER_FIELD_NAMES.includes(key))
 }
 
 // Filter formatters
