@@ -25,7 +25,7 @@ const ModalStyled = styled(ModalMUI)`
   .paper {
     position: relative;
     top: 68px;
-    width: 500px;
+    width: 525px;
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
@@ -60,6 +60,7 @@ const ModalStyled = styled(ModalMUI)`
 
     @media (max-width: ${screenSm}px) {
       width: 100vw;
+      max-width: 100vw !important;
     }
   }
 `

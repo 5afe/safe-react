@@ -25,10 +25,7 @@ describe('Intercom and cookie prefs', () => {
     cy.get('#intercom-container').should('exist')
 
     // Intercom should be disabled on a Safe App page
-    cy.visit(`/${RINKEBY_TEST_SAFE}/apps`)
-
-    // Click on first app link
-    cy.get('[data-testid="safe_apps__all-apps-container"] a').first().click()
+    cy.visit(`/${RINKEBY_TEST_SAFE}/apps?appUrl=https://safe-apps.dev.gnosisdev.com/drain-safe`)
     cy.get(intercomButton).should('not.exist')
 
     // Go to Settings and change the cookie settings

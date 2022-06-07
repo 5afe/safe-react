@@ -1,11 +1,13 @@
 import { WalletInitOptions, WalletModule, WalletSelectModuleOptions } from 'bnc-onboard/dist/src/interfaces'
 
-import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
+import { getRpcServiceUrl, getDisabledWallets, getChainById, getPublicRpcUrl } from 'src/config'
 import { ChainId, WALLETS } from 'src/config/chain.d'
 import { FORTMATIC_KEY, PORTIS_ID, WC_BRIDGE } from 'src/utils/constants'
 import getPairingModule from 'src/logic/wallets/pairing/module'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
 import { getChains } from 'src/config/cache/chains'
+import HDWalletProvider from '@truffle/hdwallet-provider'
+import { E2E_MNEMONIC } from 'src/utils/constants'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean // Whether wallet supports desktop app
@@ -78,6 +80,27 @@ const wallets = (chainId: ChainId): Wallet[] => {
     { walletName: WALLETS.OPERA_TOUCH, desktop: false },
   ]
 }
+const getTestWallet = (): WalletModule => ({
+  name: 'e2e-wallet',
+  type: 'injected',
+  wallet: async (helpers) => {
+    const { createModernProviderInterface } = helpers
+    const provider = new HDWalletProvider({
+      mnemonic: E2E_MNEMONIC,
+      providerOrUrl: getPublicRpcUrl(),
+    })
+    return {
+      provider,
+      interface: createModernProviderInterface(provider),
+    }
+  },
+  desktop: true,
+  mobile: true,
+})
+
+export const isCypressAskingForConnectedState = (): boolean => {
+  return typeof window !== 'undefined' && window.Cypress && window.cypressConfig?.connected
+}
 
 export const isSupportedWallet = (name: WALLETS | string): boolean => {
   return !getDisabledWallets().some((walletName) => {
@@ -87,6 +110,11 @@ export const isSupportedWallet = (name: WALLETS | string): boolean => {
 }
 
 export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions['wallets'] => {
+  // E2E test wallet
+  if (isCypressAskingForConnectedState()) {
+    return [getTestWallet()]
+  }
+
   const supportedWallets: WalletSelectModuleOptions['wallets'] = wallets(chainId)
     .filter(({ walletName, desktop }) => {
       if (!isSupportedWallet(walletName)) {

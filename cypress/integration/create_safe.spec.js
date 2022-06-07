@@ -14,7 +14,6 @@ describe('Create Safe', () => {
     cy.contains('button', 'Continue').click({ force: true })
 
     cy.wait(500) // Not sure why without this ends with "Transaction underpriced"
-
     cy.contains('button', 'Create').click()
     cy.contains('Your Safe was created successfully', { timeout: 60000 })
   })

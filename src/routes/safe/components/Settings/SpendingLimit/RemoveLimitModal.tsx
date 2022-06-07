@@ -47,6 +47,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   }, [spendingLimit])
 
   const removeSelectedSpendingLimit = (txParameters: TxParameters, delayExecution: boolean) => {
+    if (!spendingLimitAddress) return
     try {
       dispatch(
         createTransaction({

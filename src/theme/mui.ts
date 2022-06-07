@@ -28,6 +28,7 @@ import {
   xs,
   black300,
   black400,
+  infoColor,
 } from './variables'
 
 const palette = {
@@ -502,11 +503,17 @@ const theme = createTheme({
     MuiAlert: {
       root: {
         color: fontColor,
-        height: '48px',
         alignItems: 'center',
       },
       standardWarning: {
         backgroundColor: alertWarning,
+      },
+      standardInfo: {
+        backgroundColor: infoColor,
+        borderRadius: '8px',
+        '& svg': {
+          color: secondary,
+        },
       },
       icon: {
         '& > svg': {

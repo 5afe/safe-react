@@ -4,21 +4,31 @@ import { getWeb3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SignMessageModal } from './'
 import { getEmptySafeApp } from '../../utils'
 
-jest.mock('src/logic/hooks/useEstimateTransactionGas', () => ({
-  useEstimateTransactionGas: () => ({
-    txEstimationExecutionStatus: 'SUCCESS',
-    gasEstimation: 0,
-    gasCost: '0',
-    gasCostFormatted: '0',
-    gasPrice: '0',
-    gasPriceFormatted: '0',
-    gasLimit: '0',
-    isExecution: true,
-    isCreation: false,
-    isOffChainSignature: false,
-  }),
-  EstimationStatus: { LOADING: 'LOADING' },
-}))
+const safeAddress = '0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb'
+
+const customState = {
+  providers: {
+    name: 'MetaMask',
+    loaded: true,
+    available: true,
+    account: '0x680cde08860141F9D223cE4E620B10Cd6741037E',
+    network: '4',
+  },
+  currentSession: {
+    currentSafeAddress: safeAddress,
+  },
+  safes: {
+    safes: {
+      [safeAddress]: {
+        address: safeAddress,
+        nonce: 0,
+        modules: null,
+        guard: '',
+        currentVersion: '1.3.0',
+      },
+    },
+  },
+}
 
 describe('SignMessageModal Component', () => {
   const web3ReadOnly = getWeb3ReadOnly()
@@ -39,6 +49,7 @@ describe('SignMessageModal Component', () => {
         requestId="1"
         app={getEmptySafeApp()}
       />,
+      customState,
     )
 
     expect(screen.getByText(utf8Message)).toBeVisible()
