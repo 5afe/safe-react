@@ -46,6 +46,7 @@ export const formatAmount = (number: string): string => {
 
 // Note: we can't use Intl.NumberFormat's 'currency' style as it doesn't support all fiats
 const currencyFormatter = new Intl.NumberFormat(LOCALE, {
+  minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
 
