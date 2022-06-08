@@ -32,11 +32,7 @@ let safeMaster: GnosisSafe
 let fallbackHandler: CompatibilityFallbackHandler
 let multiSend: MultiSend
 
-export const getSafeContractDeployment = ({
-  safeVersion,
-}: {
-  safeVersion: string
-}): SingletonDeployment | undefined => {
+const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }): SingletonDeployment | undefined => {
   // We check if version is prior to v1.0.0 as they are not supported but still we want to keep a minimum compatibility
   const useOldestContractVersion = semverSatisfies(safeVersion, '<1.0.0')
   // We have to check if network is L2

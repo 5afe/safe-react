@@ -1,15 +1,10 @@
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
-import semverClean from 'semver/functions/clean'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { FEATURES, getMasterCopies } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import {
-  getMasterCopyAddressFromProxyAddress,
-  getSafeContractDeployment,
-  getSafeMasterContract,
-} from 'src/logic/contracts/safeContracts'
+import { getMasterCopyAddressFromProxyAddress, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getChainInfo } from 'src/config'
@@ -93,17 +88,13 @@ export const getSafeVersionInfo = async (safeVersion: string): Promise<SafeVersi
   }
 }
 
-export const isValidMasterCopy = async (
-  chainId: string,
-  safeAddress: string,
-  safeVersion: string,
-): Promise<boolean> => {
+export const isValidMasterCopy = async (chainId: string, safeAddress: string): Promise<boolean> => {
+  const supportedMasterCopies = await getMasterCopies(chainId)
   const masterCopyAddressFromProxy = await getMasterCopyAddressFromProxyAddress(safeAddress)
-  const expectedDeployment = getSafeContractDeployment({ safeVersion: semverClean(safeVersion) })
-  const expectedMasterCopyAddress = expectedDeployment?.networkAddresses[chainId]
-
-  return (
-    typeof masterCopyAddressFromProxy !== 'undefined' &&
-    sameAddress(masterCopyAddressFromProxy, expectedMasterCopyAddress)
+  if (!masterCopyAddressFromProxy) {
+    return false
+  }
+  return supportedMasterCopies.some((supportedMasterCopy) =>
+    sameAddress(supportedMasterCopy.address, masterCopyAddressFromProxy),
   )
 }
