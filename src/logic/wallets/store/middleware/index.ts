@@ -12,7 +12,7 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
-import onboard, { removeLastUsedProvider, saveLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { saveLastUsedProvider } from 'src/logic/wallets/onboard'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
@@ -41,7 +41,6 @@ const providerMiddleware =
     // No wallet is connected via onboard, reset provider
     if (!name && !account && !network) {
       resetWeb3()
-      removeLastUsedProvider()
     }
 
     // Wallet 'partially' connected: only a subset of onboard subscription(s) have fired
