@@ -12,11 +12,13 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
-import onboard, { saveLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { removeLastUsedProvider, saveLastUsedProvider } from 'src/logic/wallets/onboard'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 const UNKNOWN_PEER = 'Unknown'
+
+let prevAccount = ''
 
 const providerMiddleware =
   (store: ReturnType<typeof reduxStore>) =>
@@ -37,6 +39,18 @@ const providerMiddleware =
 
     const state = store.getState()
     const { name, account, network, loaded, available } = providerSelector(state)
+
+    // Onboard provides no disconnection event, so we must manually handle
+    // removing the last used provider when the wallet disconnects itself
+    const didConnect = !prevAccount && account
+    if (didConnect) {
+      prevAccount = account
+    }
+    const didDisconnect = prevAccount && !account
+    if (didDisconnect) {
+      prevAccount = ''
+      removeLastUsedProvider()
+    }
 
     // No wallet is connected via onboard, reset provider
     if (!name && !account && !network) {
