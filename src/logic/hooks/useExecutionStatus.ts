@@ -3,14 +3,23 @@ import { useEffect, useState } from 'react'
 import useAsync from 'src/logic/hooks/useAsync'
 import { DEFAULT_GAS_LIMIT } from 'src/logic/hooks/useEstimateGasLimit'
 
-export const useExecutionStatus = (
-  checkTxExecution: () => Promise<boolean>,
-  isExecution: boolean,
-  txData: string,
-  gasLimit: string | undefined,
-  gasPrice: string,
-  gasMaxPrioFee: string,
-): EstimationStatus => {
+type Props = {
+  checkTxExecution: () => Promise<boolean>
+  isExecution: boolean
+  txData: string
+  gasLimit: string | undefined
+  gasPrice: string
+  gasMaxPrioFee: string
+}
+
+export const useExecutionStatus = ({
+  checkTxExecution,
+  isExecution,
+  txData,
+  gasLimit,
+  gasPrice,
+  gasMaxPrioFee,
+}: Props): EstimationStatus => {
   const [executionStatus, setExecutionState] = useState<EstimationStatus>(EstimationStatus.LOADING)
 
   const [status, error, loading] = useAsync(async () => {

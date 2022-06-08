@@ -182,14 +182,14 @@ export const TxModalWrapper = ({
     return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
   }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
 
-  const txEstimationExecutionStatus = useExecutionStatus(
+  const txEstimationExecutionStatus = useExecutionStatus({
     checkTxExecution,
-    doExecute,
-    txParameters.txData,
+    isExecution: doExecute,
+    txData: txParameters.txData,
     gasLimit,
     gasPrice,
     gasMaxPrioFee,
-  )
+  })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
