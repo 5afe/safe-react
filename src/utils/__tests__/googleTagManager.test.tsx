@@ -1,5 +1,6 @@
 import * as TagManager from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
+import * as reactRouterDom from 'react-router-dom'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { history } from 'src/routes/routes'
@@ -64,15 +65,26 @@ describe('googleTagManager', () => {
       expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS/transactions/queue')
     })
     it('anonymizes transaction ids', () => {
-      ;(matchPath as jest.Mock).mockImplementation(() => ({
-        isExact: false,
-        path: '',
-        url: '',
-        params: {
-          prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
-          txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
-        },
-      }))
+      ;(matchPath as jest.Mock)
+        .mockImplementationOnce(() => ({
+          isExact: false,
+          path: '',
+          url: '',
+          params: {
+            prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+            txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+          },
+        }))
+        .mockImplementationOnce(() => ({
+          isExact: false,
+          path: '',
+          url: '',
+          params: {
+            prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+            txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+          },
+        }))
+        .mockImplementationOnce(() => null)
 
       const anonymizedPathname = getAnonymizedPathname(
         '/rin/0x0000000000000000000000000000000000000000/transactions/multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
