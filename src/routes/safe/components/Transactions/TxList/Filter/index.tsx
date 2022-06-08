@@ -122,8 +122,10 @@ const Filter = (): ReactElement => {
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
 
+  const initialValues = getInitialValues(search)
+
   const methods = useForm<FilterForm>({
-    defaultValues: getInitialValues(search),
+    defaultValues: initialValues,
     shouldUnregister: true,
   })
   const { handleSubmit, reset, watch, control } = methods
@@ -137,7 +139,7 @@ const Filter = (): ReactElement => {
 
     // We use `shouldUnregister` to avoid saving every value to search
     // We must therefore reset the form to the values from it
-    Object.entries(getInitialValues(search)).forEach(([key, value]) => {
+    Object.entries(initialValues).forEach(([key, value]) => {
       methods.setValue(key as keyof FilterForm, value)
     })
   }
@@ -167,7 +169,7 @@ const Filter = (): ReactElement => {
 
   const onSubmit = (filter: FilterForm) => {
     // Don't apply the same filter twice
-    if (isEqual(filter, getInitialValues(search))) {
+    if (isEqual(filter, initialValues)) {
       hideFilter()
     }
 
@@ -212,8 +214,8 @@ const Filter = (): ReactElement => {
       <BackdropLayout isOpen={showFilter} />
       <ClickAwayListener onClickAway={hideFilter}>
         <Wrapper>
-          <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
-            <StyledFilterIconImage src={filterIcon} /> Filters{' '}
+          <StyledFilterButton onClick={toggleFilter} variant="contained" disableElevation $isFiltered={!!search}>
+            <StyledFilterIconImage src={filterIcon} /> {search ? initialValues[FILTER_TYPE_FIELD_NAME] : 'Filter'}
             {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}
           </StyledFilterButton>
           {showFilter && (
@@ -314,19 +316,16 @@ const Filter = (): ReactElement => {
 
 export default Filter
 
-const StyledFilterButton = styled(Button)`
+const StyledFilterButton = styled(Button)<{ $isFiltered: boolean }>`
   &.MuiButton-root {
     align-items: center;
-    background-color: ${primary200};
-    border: 2px solid ${primary300};
+    background-color: ${({ $isFiltered }) => $isFiltered && primary200};
+    border: ${({ $isFiltered }) => `2px solid ${$isFiltered ? primary300 : 'transparent'}`};
     color: #162d45;
     align-self: flex-end;
     margin-right: ${md};
     margin-top: -51px;
     margin-bottom: ${md};
-    &:hover {
-      background-color: ${primary200};
-    }
   }
 `
 
@@ -350,6 +349,7 @@ const StyledPaper = styled(Paper)`
   margin-left: 10px;
   top: 0;
   left: 0;
+  box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
 `
 
 const FilterWrapper = styled.div`
