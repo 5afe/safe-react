@@ -33,7 +33,7 @@ import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactio
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import ScheduleIcon from '@material-ui/icons/Schedule'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import { IconButton, InputAdornment } from '@material-ui/core'
 import { Tooltip } from 'src/components/layout/Tooltip'
 import { isEqual } from 'lodash'
@@ -201,7 +201,7 @@ const Filter = (): ReactElement => {
     <InputAdornment position="end">
       <Tooltip title="Coming soon" arrow>
         <IconButton>
-          <ScheduleIcon />
+          <HourglassEmptyIcon />
         </IconButton>
       </Tooltip>
     </InputAdornment>
