@@ -24,8 +24,9 @@ export const useExecutionStatus = ({
 
   const [status, error, loading] = useAsync(async () => {
     if (!isExecution || !txData) return EstimationStatus.SUCCESS
-    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT || gasPrice === DEFAULT_GAS || gasMaxPrioFee === DEFAULT_GAS)
-      return EstimationStatus.LOADING
+    const isEstimationPending =
+      !gasLimit || gasLimit === DEFAULT_GAS_LIMIT || gasPrice === DEFAULT_GAS || gasMaxPrioFee === DEFAULT_GAS
+    if (isEstimationPending) return EstimationStatus.LOADING
 
     const success = await checkTxExecution()
     return success ? EstimationStatus.SUCCESS : EstimationStatus.FAILURE
