@@ -12,6 +12,8 @@ import {
   DEFAULT_MAX_PRIO_FEE,
 } from 'src/logic/wallets/ethTransactions'
 
+export const DEFAULT_GAS = '0'
+
 export enum EstimationStatus {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
@@ -55,10 +57,10 @@ export const useEstimateTransactionGas = ({
   txData,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
-    gasPrice: '0',
-    gasPriceFormatted: '0',
-    gasMaxPrioFee: '0',
-    gasMaxPrioFeeFormatted: '0',
+    gasPrice: DEFAULT_GAS,
+    gasPriceFormatted: DEFAULT_GAS,
+    gasMaxPrioFee: DEFAULT_GAS,
+    gasMaxPrioFeeFormatted: DEFAULT_GAS,
   })
 
   useEffect(() => {
