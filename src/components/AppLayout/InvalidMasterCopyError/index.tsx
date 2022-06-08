@@ -6,8 +6,6 @@ import useAsync from 'src/logic/hooks/useAsync'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { isValidMasterCopy } from 'src/logic/safe/utils/safeVersion'
 import MuiAlert from '@material-ui/lab/Alert'
-import MuiAlertTitle from '@material-ui/lab/AlertTitle'
-import { withStyles } from '@material-ui/core'
 
 const CLI_LINK = 'https://github.com/5afe/safe-cli'
 
@@ -31,25 +29,13 @@ export const InvalidMasterCopyError = ({ onClose }: { onClose: () => void }): Re
   }
 
   return (
-    <StyledAlert severity="error" onClose={onClose}>
-      <MuiAlertTitle>
-        This Safe was created with an unsupported base contract. The web interface might not work correctly. We
-        recommend using the{' '}
-        <Link href={CLI_LINK} size="xl" target="_blank">
-          command line interface
-        </Link>{' '}
-        instead.
-      </MuiAlertTitle>
-    </StyledAlert>
+    <MuiAlert severity="error" onClose={onClose}>
+      This Safe was created with an unsupported base contract. The web interface might not work correctly. We recommend
+      using the{' '}
+      <Link href={CLI_LINK} size="xl" target="_blank">
+        command line interface
+      </Link>{' '}
+      instead.
+    </MuiAlert>
   )
 }
-
-const StyledAlert = withStyles({
-  icon: {
-    marginLeft: 'auto',
-  },
-  action: {
-    marginLeft: '0px',
-    marginRight: 'auto',
-  },
-})(MuiAlert)

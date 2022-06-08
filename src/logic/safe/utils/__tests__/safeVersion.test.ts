@@ -55,13 +55,23 @@ describe('Check safe version', () => {
       expect(isValid).toBe(true)
     })
 
-    it('returns false for L1 mastercopy in L2 chain and version >=1.3.0', async () => {
+    it('returns false for L1 mastercopy in L2 chain and version 1.3.0', async () => {
       jest.spyOn(config, '_getChainId').mockImplementation(() => '100')
       jest.spyOn(config, 'getChainById').mockImplementation(() => ({ ...emptyChainInfo, chainId: '100', l2: true }))
       jest
         .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
         .mockImplementation(() => getSafeSingletonDeployment()?.networkAddresses['100'])
       const isValid = await isValidMasterCopy('100', '0x0000000000000000000000000000000000000001', '1.3.0')
+      expect(isValid).toBe(false)
+    })
+
+    it('returns false for L2 mastercopy in L1 chain and version 1.3.0', async () => {
+      jest.spyOn(config, '_getChainId').mockImplementation(() => '1')
+      jest.spyOn(config, 'getChainById').mockImplementation(() => ({ ...emptyChainInfo, chainId: '1', l2: false }))
+      jest
+        .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
+        .mockImplementation(() => getSafeL2SingletonDeployment({ version: '1.3.0' })?.networkAddresses['1'])
+      const isValid = await isValidMasterCopy('1', '0x0000000000000000000000000000000000000001', '1.3.0')
       expect(isValid).toBe(false)
     })
 
