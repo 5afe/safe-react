@@ -19,7 +19,7 @@ import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { history, generateSafeRoute, ADDRESSED_ROUTE, SAFE_ROUTES } from 'src/routes/routes'
+import { history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ADD_CURRENT_SAFE_ADDRESS } from 'src/logic/currentSession/store/actions/addCurrentSafeAddress'
@@ -160,7 +160,7 @@ const notificationsMiddleware =
         const onNotificationClicked = () => {
           dispatch(closeNotification({ key: notificationKey }))
           history.push(
-            generateSafeRoute(ADDRESSED_ROUTE, {
+            generateSafeRoute(SAFE_ROUTES.SETTINGS_DETAILS, {
               shortName: currentShortName,
               safeAddress: curSafeAddress,
             }),
