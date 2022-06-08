@@ -96,13 +96,20 @@ export const SpendingLimitModalWrapper = ({
     return checkAllowanceTransferExecution(allowanceTransferParams)
   }, [allowanceTransferParams])
 
-  const txEstimationExecutionStatus = useExecutionStatus(checkAllowanceTransferTx, true, '', gasLimit)
-
   const { gasPriceFormatted, gasPrice, gasMaxPrioFee, gasMaxPrioFeeFormatted } = useEstimateTransactionGas({
     manualGasPrice,
     manualMaxPrioFee,
     isExecution: true,
     txData: EMPTY_DATA,
+  })
+
+  const txEstimationExecutionStatus = useExecutionStatus({
+    checkTxExecution: checkAllowanceTransferTx,
+    isExecution: true,
+    txData: '',
+    gasLimit,
+    gasPrice,
+    gasMaxPrioFee,
   })
 
   const getGasCostFormatted = useCallback(() => {

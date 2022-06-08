@@ -1,4 +1,3 @@
-import { useSnackbar } from 'notistack'
 import {
   InterfaceMessageIds,
   InterfaceMessageToPayload,
@@ -37,7 +36,6 @@ const useIframeMessageHandler = (
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
   const { chainId, chainName } = getChainInfo()
@@ -136,9 +134,7 @@ const useIframeMessageHandler = (
     chainName,
     chainId,
     closeModal,
-    closeSnackbar,
     dispatch,
-    enqueueSnackbar,
     ethBalance,
     openConfirmationModal,
     safeAddress,

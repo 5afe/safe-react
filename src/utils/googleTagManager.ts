@@ -91,6 +91,8 @@ export const loadGoogleTagManager = (): void => {
       chainId: _getChainId(),
       pageLocation: `${location.origin}${page_path}`,
       pagePath: page_path,
+      // Block JS variables and custom scripts
+      // @see https://developers.google.com/tag-platform/tag-manager/web/restrict
       'gtm.blocklist': ['j', 'jsm', 'customScripts'],
     },
   })

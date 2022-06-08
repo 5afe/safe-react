@@ -3,8 +3,8 @@ import { Action } from 'redux-actions'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
 import { store as reduxStore } from 'src/store'
-import { enhanceSnackbarForAction, NOTIFICATIONS } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ProviderPayloads } from 'src/logic/wallets/store/reducer'
 import { providerSelector } from '../selectors'
@@ -52,12 +52,12 @@ const providerMiddleware =
     // @TODO: `loaded` flag that is/was always set to true - should be moved to wallet connection catch
     // Wallet, account and network did not successfully load
     if (!loaded) {
-      store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
+      store.dispatch(showNotification(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG))
       return handledAction
     }
 
     if (!available) {
-      store.dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
+      store.dispatch(showNotification(NOTIFICATIONS.UNLOCK_WALLET_MSG))
       return handledAction
     }
 

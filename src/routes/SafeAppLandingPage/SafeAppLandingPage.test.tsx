@@ -104,7 +104,12 @@ describe('<SafeAppLandingPage>', () => {
     expect(screen.queryByText('Available networks')).not.toBeInTheDocument()
   })
 
-  it('Renders connect wallet button if user wallet is not connected', async () => {
+  it('Renders connect wallet button if user wallet is not connected and no compatible safe is present in the localstorage', async () => {
+    // no compatible safes defined in the local storage
+    storage.setItem('_immortal|v2_RINKEBY__SAFES', {})
+    storage.setItem('_immortal|v2_MAINNET__SAFES', {})
+    storage.setItem('_immortal|v2_POLYGON__SAFES', {})
+
     const SHARE_SAFE_APP_LINK = `share/safe-app?appUrl=${SAFE_APP_URL_FROM_MANIFEST}&chainId=${SAFE_APP_CHAIN_ID}`
 
     history.push(SHARE_SAFE_APP_LINK)
@@ -395,6 +400,53 @@ describe('<SafeAppLandingPage>', () => {
       expect(queryByText(selectorModal, getAddressLabel(incompatibleSafe))).not.toBeInTheDocument()
 
       // redirect button
+      const openSafeAppLinkNode = screen.getByText('Connect Safe').closest('a')
+
+      expect(openSafeAppLinkNode).toHaveAttribute(
+        'href',
+        `/rin:${ownedSafe1}/apps?appUrl=${SAFE_APP_URL_FROM_CONFIG_SERVICE}`,
+      )
+    })
+
+    it('Select a compatible Safe from local storage if no wallet is connected', async () => {
+      // safes defined in the localstorage
+      storage.setItem('_immortal|v2_RINKEBY__SAFES', {
+        [ownedSafe1]: { address: ownedSafe1, chainId: CHAIN_ID.RINKEBY, owners: [ownerAccount] },
+      })
+
+      storage.setItem('_immortal|v2_MAINNET__SAFES', {
+        [storedSafe]: { address: storedSafe, chainId: CHAIN_ID.ETHEREUM, owners: [ownerAccount] },
+      })
+
+      storage.setItem('_immortal|v2_POLYGON__SAFES', {
+        [incompatibleSafe]: { address: incompatibleSafe, chainId: CHAIN_ID.POLYGON, owners: [incompatibleSafe] },
+      })
+
+      const customState = {
+        // no wallet is connected
+        providers: {},
+        addressBook: [
+          {
+            address: ownedSafe1,
+            name: 'First test Safe',
+            chainId: CHAIN_ID.RINKEBY,
+          },
+        ],
+      }
+
+      render(<SafeAppLandingPage />, customState)
+
+      // shows a Loader
+      const loaderNode = screen.getByRole('progressbar')
+      expect(loaderNode).toBeInTheDocument()
+
+      // when the Loader is removed check the default safe
+      await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
+
+      // safe in the same provided chain as default safe
+      expect(screen.getByRole('textbox', { hidden: true })).toHaveValue(ownedSafe1)
+
+      // redirect to open the safe app with the compatible Safe is present
       const openSafeAppLinkNode = screen.getByText('Connect Safe').closest('a')
 
       expect(openSafeAppLinkNode).toHaveAttribute(

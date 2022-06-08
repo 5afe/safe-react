@@ -1,2 +1,2 @@
 export * from './notificationTypes'
-export * from './notificationBuilder'
+export * from './txNotificationBuilder'

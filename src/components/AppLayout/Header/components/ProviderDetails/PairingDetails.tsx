@@ -26,10 +26,9 @@ const StyledContainer = styled.div<{
 }>`
   max-width: 375px;
   display: flex;
+  gap: ${(props) => (props.$vertical ? '12px' : '24px')};
   flex-flow: ${(props) => (props.$vertical ? 'column wrap' : 'row nowrap')};
-  align-items: center;
-  align-content: center;
-  gap: 24px;
+  align-items: ${(props) => (props.$vertical ? 'center' : '')};
 
   div {
     align-items: ${(props) => (props.$vertical ? 'center' : '')};
@@ -54,6 +53,15 @@ const StyledContent = styled.div`
   flex-flow: column wrap;
 `
 
+const StyledQr = styled.div`
+  align-self: center;
+
+  img,
+  canvas {
+    display: block;
+  }
+`
+
 type PairingDetailsProps = {
   vertical?: boolean
 }
@@ -67,14 +75,18 @@ const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement
     setUri(getPairingUri())
   }
 
-  const qr = uri ? (
-    <QRCode value={uri} includeMargin imageSettings={{ src: SafeLogo, width: 30, height: 30 }} />
-  ) : isPairingLoaded ? (
-    <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
-  ) : (
-    <IconButton disableRipple style={qrRefresh} onClick={onRefresh}>
-      <RefreshIcon fontSize="large" />
-    </IconButton>
+  const qr = (
+    <StyledQr>
+      {uri ? (
+        <QRCode value={uri} includeMargin imageSettings={{ src: SafeLogo, width: 30, height: 30 }} />
+      ) : isPairingLoaded ? (
+        <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
+      ) : (
+        <IconButton disableRipple style={qrRefresh} onClick={onRefresh}>
+          <RefreshIcon fontSize="large" />
+        </IconButton>
+      )}
+    </StyledQr>
   )
 
   const title = <StyledTitle>Connect to Mobile</StyledTitle>
