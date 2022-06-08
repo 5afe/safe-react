@@ -19,10 +19,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
+import { showNotification } from 'src/logic/notifications/store/notifications'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
@@ -91,8 +90,7 @@ const SafeDetails = (): ReactElement => {
     // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
     dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+    dispatch(showNotification(NOTIFICATIONS.SAFE_NAME_CHANGED_MSG))
   }
 
   const handleUpdateSafe = () => {

@@ -324,50 +324,6 @@ const theme = createTheme({
         color: secondaryText,
       },
     },
-    MuiSnackbar: {
-      root: {
-        maxWidth: '100%',
-        width: '340px',
-      },
-    },
-    MuiSnackbarContent: {
-      root: {
-        borderRadius: `${sm} !important`,
-        boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        padding: '20px',
-        width: '100%',
-      },
-      message: {
-        color: fontColor,
-        flexGrow: '1',
-        fontFamily: 'Averta',
-        fontSize: '14px',
-        lineHeight: '1.43',
-        padding: '0 10px 0 0',
-        '& > span': {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'stretch',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          maxHeight: '160px',
-          wordBreak: 'break-word',
-          '& > img': {
-            display: 'block',
-            marginRight: '13px',
-          },
-        },
-      },
-      action: {
-        paddingLeft: '0',
-        '& > button': {
-          color: secondaryText,
-        },
-      },
-    },
     MuiTab: {
       root: {
         fontFamily: secondaryFontFamily,
