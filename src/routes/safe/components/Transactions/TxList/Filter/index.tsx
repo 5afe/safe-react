@@ -19,7 +19,7 @@ import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/
 import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
-import { lg, md, primary300, grey400, largeFontSize, primary200, sm, black300 } from 'src/theme/variables'
+import { lg, md, primary300, grey400, largeFontSize, primary200, sm, black300, fontColor } from 'src/theme/variables'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
@@ -319,8 +319,8 @@ export default Filter
 const StyledFilterButton = styled(Button)<{ $isFiltered: boolean }>`
   &.MuiButton-root {
     align-items: center;
-    background-color: ${({ $isFiltered }) => $isFiltered && primary200};
-    border: ${({ $isFiltered }) => `2px solid ${$isFiltered ? primary300 : 'transparent'}`};
+    background-color: ${({ $isFiltered }) => ($isFiltered ? primary200 : 'transparent')};
+    border: ${({ $isFiltered }) => `2px solid ${$isFiltered ? primary300 : fontColor}`};
     color: #162d45;
     align-self: flex-end;
     margin-right: ${md};
