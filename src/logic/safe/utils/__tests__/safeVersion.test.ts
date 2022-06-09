@@ -1,4 +1,4 @@
-import { getSafeL2SingletonDeployment, getSafeSingletonDeployment } from '@gnosis.pm/safe-deployments'
+import { getSafeL2SingletonDeployment } from '@gnosis.pm/safe-deployments'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import * as GatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
 import { checkIfSafeNeedsUpdate, hasFeature, isValidMasterCopy } from 'src/logic/safe/utils/safeVersion'
