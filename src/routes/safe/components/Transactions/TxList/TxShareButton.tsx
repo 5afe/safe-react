@@ -6,16 +6,21 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 import { PUBLIC_URL } from 'src/utils/constants'
 import styled from 'styled-components'
+import { primaryLite, background } from 'src/theme/variables'
 
 type Props = {
   txId: string
 }
 
 const StyledCopyToClipboardBtn = styled(CopyToClipboardBtn)`
-  background: #f6f7f8;
+  background: ${background};
   border-radius: 4px;
   height: 32px;
   width: 32px;
+
+  &:hover {
+    background: ${primaryLite};
+  }
 
   & span {
     width: 32px;
