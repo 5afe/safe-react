@@ -143,10 +143,10 @@ describe('formatCurrency', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XX', () => {
+  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX', () => {
     // given
     const input = 19797.899
-    const expectedResult = '19,797.90 EUR'
+    const expectedResult = '19,797.899 EUR'
 
     // when
     const result = formatCurrency(input.toString(), 'EUR')
@@ -154,10 +154,10 @@ describe('formatCurrency', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XX', () => {
+  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX', () => {
     // given
     const input = 19797899.479
-    const expectedResult = '19,797,899.48 EUR'
+    const expectedResult = '19,797,899.479 EUR'
 
     // when
     const result = formatCurrency(input.toString(), 'EUR')
@@ -165,10 +165,10 @@ describe('formatCurrency', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XX', () => {
+  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX', () => {
     // given
     const input = 19797899479.999
-    const expectedResult = '19,797,899,480.00 EUR'
+    const expectedResult = '19,797,899,479.999 EUR'
 
     // when
     const result = formatCurrency(input.toString(), 'EUR')
