@@ -26,22 +26,9 @@ import { AddDelegateModal } from 'src/routes/safe/components/Settings/Delegates/
 import { RemoveDelegateModal } from 'src/routes/safe/components/Settings/Delegates/RemoveDelegateModal'
 import { EditDelegateModal } from 'src/routes/safe/components/Settings/Delegates/EditDelegateModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-
-// TODO: these types will come from the Client GW SDK once #72 is merged
-type Page<T> = {
-  next?: string
-  previous?: string
-  results: Array<T>
-}
-
-type Delegate = {
-  safe?: string
-  delegate: string
-  delegator: string
-  label: string
-}
-
-type DelegateResponse = Page<Delegate>
+import { DelegateResponse } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/delegates'
+import { getDelegates } from '@gnosis.pm/safe-react-gateway-sdk'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const StyledBlock = styled(Block)`
   minheight: 420px;
@@ -71,17 +58,14 @@ const Delegates = (): ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
   const granted = useSelector(grantedSelector)
+  const chainId = useSelector(currentChainId)
 
   const classes = useStyles(styles)
 
-  const fetchDelegates = useCallback(() => {
-    const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/`
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        setDelegatesList(data.results)
-      })
-  }, [safeAddress, transactionService])
+  const fetchDelegates = useCallback(async () => {
+    const { results } = await getDelegates(chainId, { safe: safeAddress })
+    setDelegatesList(results)
+  }, [chainId, safeAddress])
 
   const getSignature = async (delegate) => {
     const totp = Math.floor(Date.now() / 1000 / 3600)
