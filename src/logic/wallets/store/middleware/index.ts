@@ -41,7 +41,6 @@ const providerMiddleware =
     // No wallet is connected via onboard, reset provider
     if (!name && !account && !network) {
       resetWeb3()
-      removeLastUsedProvider()
     }
 
     // Wallet 'partially' connected: only a subset of onboard subscription(s) have fired
