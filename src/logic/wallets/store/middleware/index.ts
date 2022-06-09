@@ -11,7 +11,7 @@ import { providerSelector } from '../selectors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
-import { resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
+import { isHardwareWallet, resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import onboard, { saveLastUsedProvider } from 'src/logic/wallets/onboard'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
@@ -72,8 +72,12 @@ const providerMiddleware =
       instantiateSafeContracts()
     }
 
-    // Only track when store/UI is in sync with onboard
-    if (account === checksumAddress(address) && !shouldSwitchNetwork(wallet)) {
+    // Store and onboard are in sync
+    const isStoreInSync = account === checksumAddress(address)
+    // onboard().getState().address is out of sync for hardware wallets
+    const shouldTrack = (isStoreInSync || isHardwareWallet(wallet)) && !shouldSwitchNetwork(wallet)
+
+    if (shouldTrack) {
       trackEvent({ ...WALLET_EVENTS.CONNECT, label: name })
       // Track WalletConnect peer wallet
       if (name.toUpperCase() === 'WALLETCONNECT') {

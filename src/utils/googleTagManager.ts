@@ -1,7 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import TagManager, { TagManagerArgs } from 'react-gtm-module'
-import { matchPath } from 'react-router-dom'
-import { Location } from 'history'
+import { matchPath, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { ADDRESSED_ROUTE, history, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
@@ -18,7 +17,7 @@ import { Cookie, removeCookies } from 'src/logic/cookies/utils'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { EMPTY_SAFE_APP } from 'src/routes/safe/components/Apps/utils'
 
-export const getAnonymizedLocation = ({ pathname, search, hash }: Location = history.location): string => {
+export const getAnonymizedPathname = (pathname: string = history.location.pathname): string => {
   const ANON_SAFE_ADDRESS = 'SAFE_ADDRESS'
   const ANON_TX_ID = 'TRANSACTION_ID'
 
@@ -31,12 +30,21 @@ export const getAnonymizedLocation = ({ pathname, search, hash }: Location = his
   }
 
   // Anonymise transaction id
-  const txIdMatch = matchPath(pathname, { path: SAFE_ROUTES.TRANSACTIONS_SINGULAR })
-  if (txIdMatch) {
+  const txIdMatch = matchPath<{ [TRANSACTION_ID_SLUG]: string }>(pathname, {
+    path: SAFE_ROUTES.TRANSACTIONS_SINGULAR,
+  })
+
+  const queueHistoryMatch = matchPath(pathname, {
+    path: [SAFE_ROUTES.TRANSACTIONS_HISTORY, SAFE_ROUTES.TRANSACTIONS_QUEUE],
+  })
+
+  const isSingularTxView = txIdMatch && !queueHistoryMatch
+
+  if (isSingularTxView) {
     anonPathname = anonPathname.replace(txIdMatch.params[TRANSACTION_ID_SLUG], ANON_TX_ID)
   }
 
-  return anonPathname + search + hash
+  return anonPathname
 }
 
 type GTMEnvironment = 'LIVE' | 'LATEST' | 'DEVELOPMENT'
@@ -64,7 +72,6 @@ export enum GTM_EVENT {
   SAFE_APP = 'safeApp',
 }
 
-let currentPathname = history.location.pathname
 export const loadGoogleTagManager = (): void => {
   const GTM_ENVIRONMENT = IS_PRODUCTION ? GTM_ENV_AUTH.LIVE : GTM_ENV_AUTH.DEVELOPMENT
 
@@ -73,10 +80,7 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
-  // Cache name to prevent tracking of same page
-  currentPathname = history.location.pathname
-
-  const page = getAnonymizedLocation()
+  const page_path = getAnonymizedPathname()
 
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
@@ -85,7 +89,8 @@ export const loadGoogleTagManager = (): void => {
       // Must emit (custom) event in order to trigger page tracking
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
-      page,
+      pageLocation: `${location.origin}${page_path}`,
+      pagePath: page_path,
       // Block JS variables and custom scripts
       // @see https://developers.google.com/tag-platform/tag-manager/web/restrict
       'gtm.blocklist': ['j', 'jsm', 'customScripts'],
@@ -108,34 +113,32 @@ export const unloadGoogleTagManager = (): void => {
 }
 
 export const usePageTracking = (): void => {
+  const didMount = useRef(false)
+  const { pathname } = useLocation()
   const chainId = useSelector(currentChainId)
 
   useEffect(() => {
-    const unsubscribe = history.listen((location) => {
-      if (location.pathname === currentPathname) {
-        return
-      }
-
-      currentPathname = location.pathname
-
-      TagManager.dataLayer({
-        dataLayer: {
-          // Must emit (custom) event in order to trigger page tracking
-          event: GTM_EVENT.PAGEVIEW,
-          chainId,
-          page: getAnonymizedLocation(location),
-          // Clear dataLayer
-          eventCategory: undefined,
-          eventAction: undefined,
-          eventLabel: undefined,
-        },
-      })
-    })
-
-    return () => {
-      unsubscribe()
+    if (!didMount.current) {
+      didMount.current = true
+      return
     }
-  }, [chainId])
+
+    const page_path = getAnonymizedPathname()
+
+    TagManager.dataLayer({
+      dataLayer: {
+        // Must emit (custom) event in order to trigger page tracking
+        event: GTM_EVENT.PAGEVIEW,
+        chainId,
+        pageLocation: `${location.origin}${page_path}`,
+        pagePath: page_path,
+        // Clear dataLayer
+        eventCategory: undefined,
+        eventAction: undefined,
+        eventLabel: undefined,
+      },
+    })
+  }, [chainId, pathname])
 }
 
 export type EventLabel = string | number | boolean | null
