@@ -13,11 +13,14 @@
 // the project's config changing)
 
 import { rmdir } from 'fs'
+import { config } from 'dotenv'
+
+config()
 
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (on) => {
+module.exports = (on, config) => {
   on('task', {
     deleteFolder(folderName) {
       console.log('deleting folder %s', folderName)
@@ -33,4 +36,8 @@ module.exports = (on) => {
       })
     },
   })
+
+  config.env.CYPRESS_MNEMONIC = process.env.CYPRESS_MNEMONIC
+
+  return config
 }
