@@ -1,5 +1,15 @@
 const SAFE = 'rin:0x87a57cBf742CC1Fc702D0E9BF595b1E056693e2f'
 
+// Logo pathnames
+const CONTRACT_INTERACTION = '/app/static/media/custom.6f7b401c.svg'
+const WRAPPED_ETH = '/tokens/logos/0xc778417E063141139Fce010982780140Aa0cD5Ab.png'
+const MULTI_SEND_CONTRACT = '/contracts/logos/0x40A2aCCbd92BCA938b02010E17A5b8929b49130D.png'
+const OUTGOING = '/app/static/media/outgoing.d744cc02.svg'
+const ETH = '/chains/4/currency_logo.png'
+const INCOMING = '/app/static/media/incoming.1bf5be26.svg'
+const NFT = '/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png'
+const USDC = '/app/static/media/incoming.1bf5be26.svg'
+
 describe('Dashboard', () => {
   before(() => {
     // Go to the test Safe transaction history
@@ -25,7 +35,7 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '6').should('exist')
 
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/custom.6f7b401c.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', CONTRACT_INTERACTION)
         cy.wrap($tx).contains('p', 'Contract interaction').should('exist')
 
         // Info
@@ -56,7 +66,7 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '5').should('exist')
 
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/custom.6f7b401c.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', CONTRACT_INTERACTION)
         cy.wrap($tx).contains('p', 'Contract interaction').should('exist')
 
         // Info
@@ -87,10 +97,7 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '4').should('exist')
 
         // Type
-        cy.wrap($tx)
-          .find('img')
-          .should('have.attr', 'src')
-          .should('include', '/tokens/logos/0xc778417E063141139Fce010982780140Aa0cD5Ab.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', WRAPPED_ETH)
         cy.wrap($tx).contains('p', 'Wrapped Ether').should('exist')
 
         // Info
@@ -108,10 +115,7 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '3').should('exist')
 
         // Type
-        cy.wrap($tx)
-          .find('img')
-          .should('have.attr', 'src')
-          .should('include', '/tokens/logos/0xc778417E063141139Fce010982780140Aa0cD5Ab.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', WRAPPED_ETH)
         cy.wrap($tx).contains('p', 'Wrapped Ether').should('exist')
 
         // Info
@@ -129,10 +133,7 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '2').should('exist')
 
         // Type
-        cy.wrap($tx)
-          .find('img')
-          .should('have.attr', 'src')
-          .should('include', '/contracts/logos/0x40A2aCCbd92BCA938b02010E17A5b8929b49130D.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', MULTI_SEND_CONTRACT)
         cy.wrap($tx).contains('p', 'Gnosis Safe: MultiSendCallOnly').should('exist')
 
         // Info
@@ -150,7 +151,7 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '1').should('exist')
 
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/custom.6f7b401c.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', CONTRACT_INTERACTION)
         cy.wrap($tx).contains('p', 'Contract interaction').should('exist')
 
         // Info
@@ -168,11 +169,11 @@ describe('Dashboard', () => {
         cy.wrap($tx).contains('p', '0').should('exist')
 
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/outgoing.d744cc02.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', OUTGOING)
         cy.wrap($tx).contains('p', 'Sent').should('exist')
 
         // Info
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/chains/4/currency_logo.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', ETH)
         cy.wrap($tx).contains('span', '-0.1 ETH').should('exist')
 
         // Time
@@ -200,14 +201,11 @@ describe('Dashboard', () => {
       // Receive 0.3 USDC
       .next(($tx) => {
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/incoming.1bf5be26.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', INCOMING)
         cy.wrap($tx).contains('p', 'Received').should('exist')
 
         // Info
-        cy.wrap($tx)
-          .find('img')
-          .should('have.attr', 'src')
-          .should('include', '/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', NFT)
         cy.wrap($tx).contains('span', '+0.3 USDC').should('exist')
 
         // Time
@@ -219,11 +217,11 @@ describe('Dashboard', () => {
       // Receive 0.1 ETH
       .next(($tx) => {
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/incoming.1bf5be26.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', USDC)
         cy.wrap($tx).contains('p', 'Received').should('exist')
 
         // Info
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/chains/4/currency_logo.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', ETH)
         cy.wrap($tx).contains('span', '+0.1 ETH').should('exist')
 
         // Time
