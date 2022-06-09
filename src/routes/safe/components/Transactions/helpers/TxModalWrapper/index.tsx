@@ -161,8 +161,6 @@ export const TxModalWrapper = ({
     return checkTransactionExecution({ ...txParameters, gasLimit })
   }, [gasLimit, txParameters])
 
-  const txEstimationExecutionStatus = useExecutionStatus(checkTxExecution, doExecute, txParameters.txData, gasLimit)
-
   const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
     isRejectTx,
     txData,
@@ -183,6 +181,15 @@ export const TxModalWrapper = ({
     if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT) return '> 0.001'
     return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
   }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
+
+  const txEstimationExecutionStatus = useExecutionStatus({
+    checkTxExecution,
+    isExecution: doExecute,
+    txData: txParameters.txData,
+    gasLimit,
+    gasPrice,
+    gasMaxPrioFee,
+  })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 

@@ -34,7 +34,7 @@ export class TxMultiSender {
     this.multiSendContract = getMultisendContract()
     this.dispatch = dispatch
     this.account = account
-    this.notifications = createTxNotifications(TX_NOTIFICATION_TYPES.STANDARD_TX, null, dispatch)
+    this.notifications = createTxNotifications(dispatch, TX_NOTIFICATION_TYPES.STANDARD_TX)
     this.safeAddress = safeAddress
   }
 

@@ -9,7 +9,16 @@ describe('useExecutionStatus', () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(true))
 
-    const { result } = renderHook(() => useExecutionStatus(mockFn, true, EMPTY_DATA, mockGasLimit))
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: mockGasLimit,
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
 
     expect(result.current).toBe(EstimationStatus.LOADING)
   })
@@ -17,7 +26,78 @@ describe('useExecutionStatus', () => {
   it('returns LOADING if no gasLimit exists', async () => {
     const mockFn = jest.fn(() => Promise.resolve(true))
 
-    const { result } = renderHook(() => useExecutionStatus(mockFn, true, EMPTY_DATA, undefined))
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: undefined,
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBe(EstimationStatus.LOADING)
+      expect(mockFn).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  it('returns LOADING if gasLimit is 0', async () => {
+    const mockFn = jest.fn(() => Promise.resolve(true))
+
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: '0',
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBe(EstimationStatus.LOADING)
+      expect(mockFn).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  it('returns LOADING if gasPrice is 0', async () => {
+    const mockGasLimit = '21000'
+    const mockFn = jest.fn(() => Promise.resolve(true))
+
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: mockGasLimit,
+        gasPrice: '0',
+        gasMaxPrioFee: '2',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(result.current).toBe(EstimationStatus.LOADING)
+      expect(mockFn).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  it('returns LOADING if gasMaxPrioFee is 0', async () => {
+    const mockGasLimit = '21000'
+    const mockFn = jest.fn(() => Promise.resolve(true))
+
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: mockGasLimit,
+        gasPrice: '10',
+        gasMaxPrioFee: '0',
+      }),
+    )
 
     await waitFor(() => {
       expect(result.current).toBe(EstimationStatus.LOADING)
@@ -29,7 +109,16 @@ describe('useExecutionStatus', () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(true))
 
-    const { result } = renderHook(() => useExecutionStatus(mockFn, true, EMPTY_DATA, mockGasLimit))
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: mockGasLimit,
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
 
     await waitFor(() => {
       expect(mockFn).toHaveBeenCalledTimes(1)
@@ -41,7 +130,16 @@ describe('useExecutionStatus', () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(true))
 
-    const { result } = renderHook(() => useExecutionStatus(mockFn, false, EMPTY_DATA, mockGasLimit))
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: false,
+        txData: EMPTY_DATA,
+        gasLimit: mockGasLimit,
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
 
     await waitFor(() => {
       expect(mockFn).toHaveBeenCalledTimes(0)
@@ -53,7 +151,16 @@ describe('useExecutionStatus', () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(true))
 
-    const { result } = renderHook(() => useExecutionStatus(mockFn, true, '', mockGasLimit))
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: '',
+        gasLimit: mockGasLimit,
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
 
     await waitFor(() => {
       expect(mockFn).toHaveBeenCalledTimes(0)
@@ -65,7 +172,16 @@ describe('useExecutionStatus', () => {
     const mockGasLimit = '21000'
     const mockFn = jest.fn(() => Promise.resolve(false))
 
-    const { result } = renderHook(() => useExecutionStatus(mockFn, true, EMPTY_DATA, mockGasLimit))
+    const { result } = renderHook(() =>
+      useExecutionStatus({
+        checkTxExecution: mockFn,
+        isExecution: true,
+        txData: EMPTY_DATA,
+        gasLimit: mockGasLimit,
+        gasPrice: '10',
+        gasMaxPrioFee: '2',
+      }),
+    )
 
     await waitFor(() => {
       expect(mockFn).toHaveBeenCalledTimes(1)

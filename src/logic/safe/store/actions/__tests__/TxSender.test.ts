@@ -6,7 +6,7 @@ import * as utils from 'src/logic/safe/store/actions/utils'
 import * as walletSelectors from 'src/logic/wallets/store/selectors'
 import * as safeSelectors from 'src/logic/safe/store/selectors'
 import * as safeContracts from 'src/logic/contracts/safeContracts'
-import * as notificationBuilder from 'src/logic/notifications/notificationBuilder'
+import * as notificationBuilder from 'src/logic/notifications/txNotificationBuilder'
 import * as safeTxSigner from 'src/logic/safe/safeTxSigner'
 import * as offChainSigner from 'src/logic/safe/transactions/offchainSigner'
 import * as txHistory from 'src/logic/safe/transactions/txHistory'
@@ -17,6 +17,7 @@ import * as send from 'src/logic/safe/transactions/send'
 import * as getWeb3 from 'src/logic/wallets/getWeb3'
 import { waitFor } from '@testing-library/react'
 import { LocalTransactionStatus } from 'src/logic/safe/store/models/types/gateway.d'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 jest.mock('bnc-onboard', () => () => ({
   config: jest.fn(),
@@ -92,12 +93,11 @@ const mockTxProps = {
   from: '',
   to: '',
   valueInWei: '',
-  notifiedTransaction: '',
+  notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
   safeAddress: '',
   txData: EMPTY_DATA,
   operation: 0,
   navigateToTransactionsTab: false,
-  origin: null,
   safeTxGas: '',
   txNonce: '0',
 }

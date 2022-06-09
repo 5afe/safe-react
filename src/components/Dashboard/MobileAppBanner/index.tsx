@@ -153,9 +153,9 @@ const MobileAppBanner = (): ReactElement | null => {
           <>
             <StyledBanner $count={count} onClick={onClick} />
 
-            <StyledCloseButton onClick={onClose} />
+            <StyledCloseButton onClick={onClose} aria-label="Close mobile banner" />
 
-            <StyledBackButton onClick={onBack} />
+            <StyledBackButton onClick={onBack} aria-label="Previous mobile banner slide" />
 
             {count === 1 && (
               <StyledAppstoreButton>
