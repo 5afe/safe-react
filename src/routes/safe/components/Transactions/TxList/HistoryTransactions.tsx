@@ -11,7 +11,7 @@ import Filter, { FILTER_TYPE_FIELD_NAME } from './Filter'
 import { useLocation } from 'react-router-dom'
 
 export const HistoryTransactions = (): ReactElement => {
-  const { count, hasMore, next, transactions, isLoading } = usePagedHistoryTransactions()
+  const { count, next, transactions, isLoading } = usePagedHistoryTransactions()
   const { search } = useLocation()
   const isFiltered = search.includes(`${FILTER_TYPE_FIELD_NAME}=`)
 
@@ -32,7 +32,7 @@ export const HistoryTransactions = (): ReactElement => {
           <Title size="xs">{isFiltered ? 'No results found' : 'History transactions will appear here'} </Title>
         </NoTransactions>
       ) : (
-        <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+        <TxsInfiniteScroll next={next} isLoading={isLoading}>
           <HistoryTxList transactions={transactions} />
         </TxsInfiniteScroll>
       )}
