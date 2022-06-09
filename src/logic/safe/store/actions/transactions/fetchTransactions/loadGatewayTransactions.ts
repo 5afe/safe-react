@@ -27,7 +27,6 @@ const historyPointers: {
     [safeAddress: string]: {
       next?: string
       previous?: string
-      filterType?: FilterType
     }
   }
 } = {}
@@ -43,13 +42,13 @@ const getHistoryTxListPage = async (
     results: [],
   }
 
-  const { next, filterType } = historyPointers[chainId]?.[safeAddress] || {}
+  const { next } = historyPointers[chainId]?.[safeAddress] || {}
 
   let query:
     | operations['incoming_transfers' | 'incoming_transfers' | 'module_transactions']['parameters']['query']
     | undefined
 
-  switch (filterType) {
+  switch (filter?.[FILTER_TYPE_FIELD_NAME]) {
     case FilterType.INCOMING: {
       query = filter ? getIncomingFilter(filter) : undefined
       txListPage = await getIncomingTransfers(chainId, safeAddress, query, next)
@@ -71,7 +70,7 @@ const getHistoryTxListPage = async (
   }
 
   const getPageUrl = (pageUrl?: string): string | undefined => {
-    if (!pageUrl || !filterType || !query) {
+    if (!pageUrl || !query) {
       return pageUrl
     }
 
@@ -129,12 +128,10 @@ export const loadHistoryTransactions = async (
     historyPointers[chainId] = {}
   }
 
-  const isNewFilter = filter?.type !== historyPointers?.[chainId]?.[safeAddress]?.filterType
-  if (!historyPointers[chainId][safeAddress] || isNewFilter) {
+  if (!historyPointers[chainId][safeAddress] || filter) {
     historyPointers[chainId][safeAddress] = {
       next: undefined,
       previous: undefined,
-      filterType: filter?.[FILTER_TYPE_FIELD_NAME],
     }
   }
 
