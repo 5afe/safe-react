@@ -12,7 +12,7 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { WALLET_EVENTS } from 'src/utils/events/wallet'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { isHardwareWallet, resetWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
-import onboard, { removeLastUsedProvider, saveLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { saveLastUsedProvider } from 'src/logic/wallets/onboard'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
