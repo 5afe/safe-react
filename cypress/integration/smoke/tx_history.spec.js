@@ -1,14 +1,14 @@
 const SAFE = 'rin:0x87a57cBf742CC1Fc702D0E9BF595b1E056693e2f'
 
 // Logo pathnames
-const CONTRACT_INTERACTION = '/app/static/media/custom.6f7b401c.svg'
+const CONTRACT_INTERACTION = '/app/static/media/custom' // partial filename as build compiles to 'custom.123XYZ.svg'
 const WRAPPED_ETH = '/tokens/logos/0xc778417E063141139Fce010982780140Aa0cD5Ab.png'
 const MULTI_SEND_CONTRACT = '/contracts/logos/0x40A2aCCbd92BCA938b02010E17A5b8929b49130D.png'
-const OUTGOING = '/app/static/media/outgoing.d744cc02.svg'
+const OUTGOING = '/app/static/media/outgoing' // partial filename as build compiles to 'outgoing.123XYZ.svg'
 const ETH = '/chains/4/currency_logo.png'
-const INCOMING = '/app/static/media/incoming.1bf5be26.svg'
+const INCOMING = '/app/static/media/incoming' // partial filename as build compiles to 'incoming.123XYZ.svg'
 const NFT = '/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png'
-const USDC = '/app/static/media/incoming.1bf5be26.svg'
+const USDC = '/app/static/media/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png'
 
 describe('Dashboard', () => {
   before(() => {
@@ -24,11 +24,11 @@ describe('Dashboard', () => {
     cy.contains('p', DATE).should('exist')
 
     // Transaction summaries
-    const accordions = cy.contains('p', DATE).next().children()
+    const rows = cy.contains('p', DATE).next().children()
 
-    accordions.should('have.length', 1)
+    rows.should('have.length', 1)
 
-    accordions
+    rows
       // testBool contract interaction w/ rin:0x49d4450977E2c95362C13D3a31a09311E0Ea26A6
       .first(($tx) => {
         // Nonce
@@ -55,11 +55,11 @@ describe('Dashboard', () => {
     cy.contains('p', DATE).should('exist')
 
     // Transaction summaries
-    const accordions = cy.contains('p', DATE).next().children()
+    const rows = cy.contains('p', DATE).next().children()
 
-    accordions.should('have.length', 1)
+    rows.should('have.length', 1)
 
-    accordions
+    rows
       // testBool contract interaction
       .first(($tx) => {
         // Nonce
@@ -86,11 +86,11 @@ describe('Dashboard', () => {
     cy.contains('p', DATE).should('exist')
 
     // Transaction summaries
-    const accordions = cy.contains('p', DATE).next().children()
+    const rows = cy.contains('p', DATE).next().children()
 
-    accordions.should('have.length', 9)
+    rows.should('have.length', 9)
 
-    accordions
+    rows
       // CowSwap approval of Wrapped Ether
       .first(($tx) => {
         // Nonce
