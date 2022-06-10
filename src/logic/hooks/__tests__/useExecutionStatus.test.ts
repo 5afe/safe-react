@@ -43,7 +43,7 @@ describe('useExecutionStatus', () => {
     })
   })
 
-  it('returns LOADING if gasLimit is 0', async () => {
+  it('returns SUCCESS if gasLimit is 0', async () => {
     const mockFn = jest.fn(() => Promise.resolve(true))
 
     const { result } = renderHook(() =>
@@ -58,8 +58,8 @@ describe('useExecutionStatus', () => {
     )
 
     await waitFor(() => {
-      expect(result.current).toBe(EstimationStatus.LOADING)
-      expect(mockFn).toHaveBeenCalledTimes(0)
+      expect(result.current).toBe(EstimationStatus.SUCCESS)
+      expect(mockFn).toHaveBeenCalledTimes(1)
     })
   })
 
