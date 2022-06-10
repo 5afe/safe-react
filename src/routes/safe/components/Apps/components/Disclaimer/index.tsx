@@ -1,37 +1,65 @@
-import { Icon, FixedDialog } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
+import { Icon } from '@gnosis.pm/safe-react-components'
 import Grid from '@material-ui/core/Grid'
 import Slider, { SliderItem } from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
+import { alpha } from '@material-ui/core/styles'
+import SecuritySteps from './SecuritySteps'
+import WarningDefaultList from './WarningDefaultList'
 
 interface OwnProps {
   onCancel: () => void
   onConfirm: () => void
 }
 
+//eslint-disable-next-line
 const SafeAppsDisclaimer = ({ onCancel, onConfirm }: OwnProps): JSX.Element => {
   return (
-    <FixedDialog
-      body={
+    <Container>
+      <Wrapper>
         <Grid container justifyContent="center" alignItems="center" direction="column">
-          <Icon type="apps" size="md" color="primary" />
+          <StyledIcon type="apps" size="md" color="primary" />
           <Slider>
             <SliderItem>
               <LegalDisclaimer />
             </SliderItem>
             <SliderItem>
-              <p>One</p>
+              <SecuritySteps />
             </SliderItem>
             <SliderItem>
-              <p>two</p>
+              <WarningDefaultList />
             </SliderItem>
           </Slider>
         </Grid>
-      }
-      onCancel={onCancel}
-      onConfirm={onConfirm}
-      title="Disclaimer"
-    />
+      </Wrapper>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const Wrapper = styled.div`
+  width: 450px;
+  padding: 50px 24px 24px 24px;
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 8px;
+  box-shadow: 1px 2px 10px 0 ${({ theme }) => alpha(theme.colors.shadow.color, 0.18)};
+
+  '&:focus': {
+    outline: 'none';
+  }
+`
+
+const StyledIcon = styled(Icon)`
+  svg {
+    width: 46px;
+    height: 46px;
+  }
+`
 
 export default SafeAppsDisclaimer

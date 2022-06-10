@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@gnosis.pm/safe-react-components'
-import { Grid } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 
 type SliderState = {
@@ -112,19 +112,31 @@ const Slider: React.FC = ({ children }) => {
           {stateRef.current._slides.map((slide) => slide)}
         </StyledInner>
       </StyledContainer>
-      <Grid container justifyContent="center">
+      <Box display="flex" justifyContent="center" m={5}>
         {stateRef.current._slides.map((slide, index) => (
           <StyledDot key={index} color={index === stateRef.current.activeSlide ? 'primary' : 'secondaryLight'} />
         ))}
-      </Grid>
-      {stateRef.current.activeSlide !== 0 && (
-        <Button color="primary" size="md" variant="bordered" onClick={prevSlide}>
-          Back
+      </Box>
+      <Box display="flex" justifyContent="center" width="100%">
+        {stateRef.current.activeSlide !== 0 && (
+          <Button color="primary" size="md" variant="bordered" fullWidth onClick={prevSlide}>
+            Back
+          </Button>
+        )}
+
+        <Button
+          color="primary"
+          size="md"
+          fullWidth
+          onClick={nextSlide}
+          style={{
+            width: stateRef.current.activeSlide !== 0 ? '100%' : '50%',
+            marginLeft: stateRef.current.activeSlide !== 0 ? 10 : 0,
+          }}
+        >
+          Continue
         </Button>
-      )}
-      <Button color="primary" size="md" onClick={nextSlide}>
-        Continue
-      </Button>
+      </Box>
     </>
   )
 }
