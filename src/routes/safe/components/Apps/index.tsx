@@ -2,8 +2,8 @@ import { useHistory } from 'react-router-dom'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
 import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
-import LegalDisclaimer from 'src/routes/safe/components/Apps/components/LegalDisclaimer'
 import { useLegalConsent } from 'src/routes/safe/components/Apps/hooks/useLegalConsent'
+import SafeAppsDisclaimer from './components/Disclaimer'
 import SafeAppsErrorBoundary from './components/SafeAppsErrorBoundary'
 import SafeAppsLoadError from './components/SafeAppsLoadError'
 
@@ -17,7 +17,7 @@ const Apps = (): React.ReactElement => {
 
   if (url) {
     if (!consentReceived) {
-      return <LegalDisclaimer onCancel={goBack} onConfirm={onConsentReceipt} />
+      return <SafeAppsDisclaimer onCancel={goBack} onConfirm={onConsentReceipt} />
     }
 
     return (
