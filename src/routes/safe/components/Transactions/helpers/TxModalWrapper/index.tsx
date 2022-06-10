@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { extractSafeAddress } from 'src/routes/routes'
 import { ReviewInfoText } from 'src/components/ReviewInfoText'
 import { TxEstimatedFeesDetail } from 'src/routes/safe/components/Transactions/helpers/TxEstimatedFeesDetail'
 import ExecuteCheckbox from 'src/components/ExecuteCheckbox'
@@ -26,6 +25,7 @@ import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type Props = {
   children: ReactNode
@@ -101,7 +101,7 @@ export const TxModalWrapper = ({
   const [executionApproved, setExecutionApproved] = useState<boolean>(true)
   const isOwner = useSelector(grantedSelector)
   const userAddress = useSelector(userAccountSelector)
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const isSpendingLimitTx = isSpendingLimit(txType)
   const preApprovingOwner = isOwner ? userAddress : undefined
   const confirmationsLen = Array.from(txConfirmations || []).length
@@ -117,8 +117,7 @@ export const TxModalWrapper = ({
 
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, txType, preApprovingOwner)
 
-  const safeTxGasEstimation = useEstimateSafeTxGas({
-    isCreation,
+  const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
     isRejectTx,
     txData,
     txRecipient: txTo || safeAddress,
@@ -235,7 +234,7 @@ export const TxModalWrapper = ({
               isExecution={doExecute}
               isRejection={isRejectTx}
               safeNonce={txParameters.safeNonce}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
+              txEstimationExecutionStatus={safeTxGasError ? EstimationStatus.FAILURE : txEstimationExecutionStatus}
             />
           )}
 

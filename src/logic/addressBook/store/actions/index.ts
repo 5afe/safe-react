@@ -10,6 +10,7 @@ export enum ADDRESS_BOOK_ACTIONS {
   IMPORT = 'addressBook/import',
   SAFE_LOAD = 'addressBook/safeLoad',
   SYNC = 'addressBook/sync',
+  FIX_EMPTY_NAMES = 'addressBook/fixEmptyNames',
 }
 
 export const addressBookAddOrUpdate = createAction<AddressBookEntry>(ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE)
@@ -17,3 +18,4 @@ export const addressBookRemove = createAction<AddressBookEntry>(ADDRESS_BOOK_ACT
 export const addressBookSafeLoad = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.SAFE_LOAD)
 export const addressBookImport = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.IMPORT)
 export const addressBookSync = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.SYNC)
+export const addressBookFixEmptyNames = createAction(ADDRESS_BOOK_ACTIONS.FIX_EMPTY_NAMES)

@@ -1678,6 +1678,11 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-modules-deployments/-/safe-modules-deployments-1.0.0.tgz#b4cfcf7782c3fa1491b84405ac06cfa4f7eff365"
   integrity sha512-mZkGtfGmEym7l5w2K6d/mIaS8sDmy50uGWAfTj5Q/+Y1cU9fHYU6hzhb0QaeyNM7F7HM3jg5ZTJjartZJUqu3w==
 
+"@gnosis.pm/safe-modules-deployments@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-modules-deployments/-/safe-modules-deployments-1.0.0.tgz#b4cfcf7782c3fa1491b84405ac06cfa4f7eff365"
+  integrity sha512-mZkGtfGmEym7l5w2K6d/mIaS8sDmy50uGWAfTj5Q/+Y1cU9fHYU6hzhb0QaeyNM7F7HM3jg5ZTJjartZJUqu3w==
+
 "@gnosis.pm/safe-react-components@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-1.1.2.tgz#26daeae23f5cd0811d79bfb3497d046b85441aa9"
@@ -1691,9 +1696,10 @@
   dependencies:
     cross-fetch "^3.1.5"
 
-"@gnosis.pm/safe-react-gateway-sdk@^2.10.2":
-  version "2.10.2"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.10.2.tgz#25d01ea5c947bc2701535c6cdf059b380276e0f5"
+"@gnosis.pm/safe-react-gateway-sdk@^2.10.3":
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-2.10.3.tgz#4537442a78eb0508c483aabcac19296335a77ac3"
+  integrity sha512-ukaLACozdJQb2YGSAZgBUkF4CT9iKVjpnKFCKUnGGghXqp+Yyn9jpdcfFK0VYQJ6ZSwAm40tHtQaN3K9817Bcg==
   dependencies:
     cross-fetch "^3.1.5"
 
@@ -4378,9 +4384,10 @@ bnb-javascript-sdk-nobroadcast@^2.16.14:
     uuid "^3.3.2"
     websocket-stream "^5.5.0"
 
-bnc-onboard@^1.37.3:
-  version "1.37.3"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.37.3.tgz#e4c3ae94ab44b3053a6dea07057447feb9b9da14"
+bnc-onboard@^1.38.2:
+  version "1.38.2"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.38.2.tgz#23aa7f10546e15d595b4420e5959732c9a485c71"
+  integrity sha512-ObRQaHV1HXXOVuUJMHVYhmsz8T804hl+cl47t12ZRVG3HtF8Pf/22jGjrG2mWkgdx4h3RVLvxOqW5V1nwHTdaw==
   dependencies:
     "@cvbb/eth-keyring" "^1.1.0"
     "@ensdomains/ensjs" "^2.0.1"
@@ -4400,7 +4407,7 @@ bnc-onboard@^1.37.3:
     "@walletconnect/web3-provider" "^1.7.1"
     authereum "^0.1.12"
     bignumber.js "^9.0.0"
-    bnc-sdk "^3.4.1"
+    bnc-sdk "^4.1.0"
     bowser "^2.10.0"
     eth-lattice-keyring "^0.2.7"
     eth-provider "^0.6.1"
@@ -4411,14 +4418,16 @@ bnc-onboard@^1.37.3:
     hdkey "^2.0.1"
     regenerator-runtime "^0.13.7"
     trezor-connect "^8.1.9"
-    walletlink "^2.4.6"
+    walletlink "^2.5.0"
     web3-provider-engine "^15.0.4"
 
-bnc-sdk@^3.4.1:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-3.7.0.tgz#b6472067baad41e102c4fe748ba3cc32793fca9e"
+bnc-sdk@^4.1.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-4.2.0.tgz#cabc70eaf4a49dd2f695c6fcee50c833aa2af6b2"
+  integrity sha512-uoe40jLL+eYxeCAOqLgWLOowU9kyUuXyLURVgSSfIBjUNuszlz+I2wZYtvdWF+YkYphSr7L3E6WFtmwFrne+Pw==
   dependencies:
     crypto-es "^1.2.2"
+    nanoid "^3.3.1"
     rxjs "^6.6.3"
     sturdy-websocket "^0.1.12"
 
@@ -5480,11 +5489,12 @@ cross-env@^7.0.3:
     cross-spawn "^7.0.1"
 
 cross-fetch@^2.1.0:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.2.5.tgz#afaf5729f3b6c78d89c9296115c9f142541a5705"
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.2.6.tgz#2ef0bb39a24ac034787965c457368a28730e220a"
+  integrity sha512-9JZz+vXCmfKUZ68zAptS7k4Nu8e2qcibe7WVZYps7sAgk5R8GYTc+T1WR0v1rlP9HxgARmOX1UTIJZFytajpNA==
   dependencies:
-    node-fetch "2.6.1"
-    whatwg-fetch "2.0.4"
+    node-fetch "^2.6.7"
+    whatwg-fetch "^2.0.4"
 
 cross-fetch@^3.1.5:
   version "3.1.5"
@@ -5809,6 +5819,11 @@ currently-unhandled@^0.4.1:
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
+
+cypress-file-upload@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-5.0.8.tgz#d8824cbeaab798e44be8009769f9a6c9daa1b4a1"
+  integrity sha512-+8VzNabRk3zG6x8f8BWArF/xA/W0VK4IZNx3MV0jFWrJS/qKn8eHfa5nU73P9fOQAgwHFJx7zjg4lwOnljMO8g==
 
 cypress@^9.5.1:
   version "9.5.3"
@@ -10894,6 +10909,11 @@ nanoid@^3.1.30:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
 
+nanoid@^3.3.1:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.3.tgz#fd8e8b7aa761fe807dba2d1b98fb7241bb724a25"
+  integrity sha512-p1sjXuopFs0xg+fPASzQ28agW1oHD7xDsd9Xkf3T15H3c/cifrFHVwrh74PdoklAPi+i7MdRsE47vm2r6JoB+w==
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -10956,19 +10976,9 @@ node-addon-api@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.2.tgz#432cfa82962ce494b132e9d72a15b29f71ff5d32"
 
-node-fetch@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-
-node-fetch@2.6.7:
+node-fetch@2.6.7, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
-  dependencies:
-    whatwg-url "^5.0.0"
-
-node-fetch@^2.6.0, node-fetch@^2.6.1:
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.5.tgz#42735537d7f080a7e5f78b6c549b7146be1742fd"
   dependencies:
     whatwg-url "^5.0.0"
 
@@ -15477,9 +15487,10 @@ walker@^1.0.7, walker@~1.0.5:
   dependencies:
     makeerror "1.0.12"
 
-walletlink@^2.4.6:
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/walletlink/-/walletlink-2.4.7.tgz#3dd034f7cd6e9d9f4cc1d677bb951869dc743e20"
+walletlink@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/walletlink/-/walletlink-2.5.0.tgz#b8db10f4d9f124084feb16d1e2b2d08ba8c20d21"
+  integrity sha512-PBJmK5tZmonwKPABBI2/optaZ11O4kKmkmnU5eLKhk4XRlal5qJ1igZ4U5j3w6w8wxxdhCWpLMHzGWt3n/p7mw==
   dependencies:
     "@metamask/safe-event-emitter" "2.0.0"
     bind-decorator "^1.0.11"
@@ -16122,7 +16133,7 @@ whatwg-encoding@^1.0.5:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@2.0.4:
+whatwg-fetch@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
 

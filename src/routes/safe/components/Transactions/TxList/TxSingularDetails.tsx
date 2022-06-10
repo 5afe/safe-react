@@ -23,20 +23,20 @@ import FetchError from '../../FetchError'
 import useAsync from 'src/logic/hooks/useAsync'
 import { getTransactionWithLocationByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
-const useStoredTx = (txId?: string): { txLocation: TxLocation; transaction?: Transaction } => {
+const useStoredTx = (txId?: string): { txLocation: TxLocation; transaction?: Transaction } | null => {
   return (
     useSelector(
       (state: AppReduxState) =>
         txId ? getTransactionWithLocationByAttribute(state, { attributeName: 'id', attributeValue: txId }) : undefined,
       shallowEqual,
-    ) || { txLocation: 'history' }
+    ) || null
   )
 }
 
 const TxSingularDetails = (): ReactElement => {
   // Get a safeTxHash from the URL
   const { [TRANSACTION_ID_SLUG]: txId = '' } = useParams<SafeRouteSlugs>()
-  const { transaction, txLocation } = useStoredTx(txId)
+  const storedTx = useStoredTx(txId)
 
   // When this callback changes, we refetch the tx details
   const fetchTxDetails = useCallback(() => fetchSafeTransaction(txId), [txId])
@@ -55,7 +55,7 @@ const TxSingularDetails = (): ReactElement => {
     )
   }
 
-  const detailedTx = transaction || (fetchedTx ? makeTxFromDetails(fetchedTx) : null)
+  const detailedTx = storedTx?.transaction || (fetchedTx ? makeTxFromDetails(fetchedTx) : null)
 
   if (!detailedTx) {
     return (
@@ -67,9 +67,10 @@ const TxSingularDetails = (): ReactElement => {
 
   const isQueue = isTxQueued(detailedTx.txStatus)
   const TxList = isQueue ? QueueTxList : HistoryTxList
+  const fallbackLocation: TxLocation = isQueue ? 'queued.queued' : 'history'
 
   return (
-    <TxLocationContext.Provider value={{ txLocation }}>
+    <TxLocationContext.Provider value={{ txLocation: storedTx?.txLocation || fallbackLocation }}>
       <TxList transactions={[[detailedTx.timestamp.toString(), [detailedTx]]]} />
     </TxLocationContext.Provider>
   )

@@ -45,10 +45,8 @@ export interface NFTToken {
   tokenId: number | string
 }
 
-export type NFTTokens = {
-  loaded: boolean
-  items: Array<NFTToken>
-}
+export type NFTTokens = Array<NFTToken>
+export type NFTTokensStore = { items: NFTTokens; loaded: boolean }
 
 export interface Collectibles {
   nftAssets: NFTAssets

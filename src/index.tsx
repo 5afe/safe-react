@@ -15,8 +15,17 @@ Sentry.init({
   release: `safe-react@${process.env.REACT_APP_APP_VERSION}`,
   integrations: [new Integrations.BrowserTracing()],
   sampleRate: 0.1,
-  // ignore MetaMask errors we don't control
-  ignoreErrors: ['Internal JSON-RPC error', 'JsonRpcEngine', 'Non-Error promise rejection captured with keys: code'],
+  ignoreErrors: [
+    // MetaMask errors we don't control
+    'Internal JSON-RPC error',
+    'JsonRpcEngine',
+    'Non-Error promise rejection captured with keys: code',
+    // Duplicate of Errors._800 emitted by promiEvent
+    'Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!',
+    // Insignificant ResizeObserver errors
+    'ResizeObserver loop completed with undelivered notifications.',
+    'ResizeObserver loop limit exceeded',
+  ],
 })
 
 const root = document.getElementById('root')

@@ -173,7 +173,7 @@ const CookiesBanner = isDesktop
       const [localAnalytics, setLocalAnalytics] = useState(false)
 
       const { cookieBannerOpen } = useSelector(cookieBannerState)
-      // const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
+      //const isSafeAppView = !!useSafeAppUrl().getAppUrl()
 
       const openBanner = useCallback(
         (key?: COOKIE_IDS): void => {

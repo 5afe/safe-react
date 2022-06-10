@@ -7,7 +7,7 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
-import { extractSafeAddress } from 'src/routes/routes'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 export type TxTypeProps = {
   icon?: string
@@ -17,7 +17,7 @@ export type TxTypeProps = {
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const toAddress = getTxTo(tx)
   const knownAddressBookAddress = useKnownAddress(toAddress)
 

@@ -6,9 +6,9 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
-import { extractSafeAddress } from 'src/routes/routes'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
+import { currentSafeAddress } from 'src/logic/currentSession/store/selectors'
 
 const safesState = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -20,12 +20,9 @@ export const latestMasterContractVersion = createSelector(safesState, (safeState
   safeState.get('latestMasterContractVersion'),
 )
 
-export const currentSafe = createSelector(
-  [safesAsMap, () => extractSafeAddress()],
-  (safes: SafesMap, address: string) => {
-    return safes.get(address, baseSafe(address)) ?? {}
-  },
-)
+export const currentSafe = createSelector([safesAsMap, currentSafeAddress], (safes: SafesMap, address: string) => {
+  return safes.get(address, baseSafe(address)) ?? {}
+})
 
 const baseSafe = (address = '') => makeSafe({ address })
 
@@ -37,6 +34,8 @@ export const safeFieldSelector =
 export const currentSafeEthBalance = createSelector(currentSafe, safeFieldSelector('ethBalance'))
 
 export const currentSafeBalances = createSelector(currentSafe, safeFieldSelector('balances'))
+
+export const currentSafeLoaded = createSelector(currentSafe, safeFieldSelector('loaded'))
 
 export const currentSafeNeedsUpdate = createSelector(currentSafe, safeFieldSelector('needsUpdate'))
 

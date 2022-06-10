@@ -117,6 +117,7 @@ describe('googleTagManager', () => {
         auth: 'auth123',
         preview: 'env-3',
         dataLayer: {
+          'gtm.blocklist': ['j', 'jsm', 'customScripts'],
           event: 'pageview',
           chainId: '4',
           page: '/',

@@ -7,7 +7,7 @@ import InfoIcon from 'src/assets/icons/info_red.svg'
 
 import { useSelector } from 'react-redux'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import { grantedSelector, sameAddressAsSafeSelector } from 'src/routes/safe/container/selector'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 
 enum ErrorMessage {
@@ -16,6 +16,7 @@ enum ErrorMessage {
   execution = 'To save gas costs, reject this transaction.',
   notOwner = `You are currently not an owner of this Safe and won't be able to submit this transaction.`,
   wrongChain = 'Your wallet is connected to the wrong chain.',
+  sameAddress = `Cannot execute a transaction from the Safe itself, please connect a different account.`,
 }
 
 const styles = createStyles({
@@ -44,15 +45,25 @@ export const TransactionFailText = ({
   const classes = useStyles()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const isOwner = useSelector(grantedSelector)
+  const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
 
   const showError =
-    isWrongChain || (isExecution && estimationStatus === EstimationStatus.FAILURE) || (isCreation && !isOwner)
+    isWrongChain ||
+    (isExecution && estimationStatus === EstimationStatus.FAILURE) ||
+    (isCreation && !isOwner) ||
+    isSameAddressAsSafe
   if (!showError) return null
 
   const errorDesc = isCreation ? ErrorMessage.creation : ErrorMessage.execution
   const defaultMsg = `${ErrorMessage.general} ${errorDesc}`
 
-  const error = isWrongChain ? ErrorMessage.wrongChain : isCreation && !isOwner ? ErrorMessage.notOwner : defaultMsg
+  const error = isWrongChain
+    ? ErrorMessage.wrongChain
+    : isCreation && !isOwner
+    ? ErrorMessage.notOwner
+    : isSameAddressAsSafe
+    ? ErrorMessage.sameAddress
+    : defaultMsg
 
   return (
     <Row align="center">

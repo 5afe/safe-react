@@ -21,10 +21,10 @@ import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 import { styles } from './style'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { extractSafeAddress } from 'src/routes/routes'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = makeStyles(styles)
 
@@ -46,7 +46,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const nftTokens = useSelector(nftTokensSelector)
 
   const txToken = nftTokens.find(
