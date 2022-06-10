@@ -25,7 +25,6 @@ export const EditDelegateModal = ({ isOpen, onClose, delegate, onSubmit }: EditD
   const classes = useStyles()
 
   const handleSubmit = ({ label }: { label: string }): void => {
-    console.log('submit label', label)
     onSubmit(label)
     onClose()
   }

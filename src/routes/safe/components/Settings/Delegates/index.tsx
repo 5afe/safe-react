@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { makeStyles, TableCell, TableContainer, TableRow } from '@material-ui/core'
@@ -27,8 +27,9 @@ import { RemoveDelegateModal } from 'src/routes/safe/components/Settings/Delegat
 import { EditDelegateModal } from 'src/routes/safe/components/Settings/Delegates/EditDelegateModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { DelegateResponse } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/delegates'
-import { getDelegates } from '@gnosis.pm/safe-react-gateway-sdk'
+import { addDelegate, deleteSafeDelegate } from '@gnosis.pm/safe-react-gateway-sdk'
 import { currentChainId } from 'src/logic/config/store/selectors'
+import { fetchDelegates } from 'src/logic/delegates/api/delegates'
 
 const StyledBlock = styled(Block)`
   minheight: 420px;
@@ -62,11 +63,6 @@ const Delegates = (): ReactElement => {
 
   const classes = useStyles(styles)
 
-  const fetchDelegates = useCallback(async () => {
-    const { results } = await getDelegates(chainId, { safe: safeAddress })
-    setDelegatesList(results)
-  }, [chainId, safeAddress])
-
   const getSignature = async (delegate) => {
     const totp = Math.floor(Date.now() / 1000 / 3600)
     const msg = checksumAddress(delegate) + totp
@@ -80,33 +76,33 @@ const Delegates = (): ReactElement => {
 
   useEffect(() => {
     if (!safeAddress || !transactionService) return
-    fetchDelegates()
-  }, [fetchDelegates, safeAddress, transactionService])
+    fetchDelegates(chainId, { safe: safeAddress }).then((delegates) => {
+      setDelegatesList(delegates.results)
+    })
+  }, [chainId, safeAddress, transactionService])
 
   const handleAddDelegate = async ({ address, label }) => {
     // close Add delegate modal
     setAddDelegateModalOpen(false)
 
     const delegate = checksumAddress(address)
-
     const signature = await getSignature(delegate)
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
+
+    try {
+      await addDelegate(chainId, {
         safe: safeAddress,
-        delegate: delegate,
-        signature: signature,
-        label: label,
-      }),
+        delegate,
+        delegator: userAccount,
+        signature,
+        label,
+      })
+    } catch (e) {
+      console.error(e)
     }
 
-    const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/`
-    fetch(url, requestOptions)
-      .then((response) => response.json())
-      .then(() => {
-        fetchDelegates()
-      })
+    fetchDelegates(chainId, { safe: safeAddress }).then(({ results }) => {
+      setDelegatesList(results)
+    })
   }
 
   const handleEditDelegateLabel = async (label) => {
@@ -116,23 +112,21 @@ const Delegates = (): ReactElement => {
     const delegate = checksumAddress(delegateToEdit)
     const signature = await getSignature(delegate)
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
+    try {
+      await addDelegate(chainId, {
         safe: safeAddress,
-        delegate: delegate,
-        signature: signature,
-        label: label,
-      }),
+        delegate,
+        delegator: userAccount,
+        signature,
+        label,
+      })
+    } catch (e) {
+      console.error(e)
     }
 
-    const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/`
-    fetch(url, requestOptions)
-      .then((response) => response.json())
-      .then(() => {
-        fetchDelegates()
-      })
+    fetchDelegates(chainId, { safe: safeAddress }).then(({ results }) => {
+      setDelegatesList(results)
+    })
   }
 
   const handleRemoveDelegate = async (address: string) => {
@@ -142,18 +136,20 @@ const Delegates = (): ReactElement => {
     const delegate = checksumAddress(address)
     const signature = await getSignature(delegate)
 
-    const requestOptions = {
-      method: 'DELETE',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
-        signature: signature,
-      }),
+    try {
+      await deleteSafeDelegate(chainId, safeAddress, delegate, {
+        safe: safeAddress,
+        delegate,
+        // delegator: userAccount,
+        signature,
+      })
+    } catch (e) {
+      console.error(e)
     }
 
-    const url = `${transactionService}/api/v1/safes/${safeAddress}/delegates/${delegate}/`
-    fetch(url, requestOptions).then(() => {
-      setAddressToRemove('')
-      fetchDelegates()
+    setAddressToRemove('')
+    fetchDelegates(chainId, { safe: safeAddress }).then(({ results }) => {
+      setDelegatesList(results)
     })
   }
 
