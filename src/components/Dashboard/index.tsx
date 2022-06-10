@@ -13,14 +13,13 @@ const Dashboard = (): ReactElement => {
     <Grid container spacing={3}>
       <DashboardTitle>Dashboard</DashboardTitle>
 
-      <Grid item xs={12} md={12} lg={6}>
+      <Grid item xs={12} md={12} lg={12}>
         <Overview />
       </Grid>
 
-      <Grid item xs={12} md={6} />
       {/* <MobileAppBanner /> */}
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={12}>
         <PendingTxsList size={4} />
       </Grid>
 
