@@ -171,6 +171,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: cypress-io/github-action@v2
         with:
+          env:
+            CYPRESS_ENV: ${{ env.REACT_APP_ENV}}
           spec: cypress/integration/smoke/*.spec.js
           browser: chrome
           record: false
