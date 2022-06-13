@@ -12,8 +12,6 @@ type SliderState = {
 }
 
 const Slider: React.FC = ({ children }) => {
-  console.clear()
-
   const stateRef = useRef<SliderState>({
     translate: 1,
     activeSlide: 0,

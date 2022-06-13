@@ -6,6 +6,9 @@ import LegalDisclaimer from './LegalDisclaimer'
 import { alpha } from '@material-ui/core/styles'
 import SecuritySteps from './SecuritySteps'
 import WarningDefaultList from './WarningDefaultList'
+import { useAppList } from '../../hooks/appList/useAppList'
+import { useLegalConsent } from '../../hooks/useLegalConsent'
+import { useEffect } from 'react'
 
 interface OwnProps {
   onCancel: () => void
@@ -14,6 +17,14 @@ interface OwnProps {
 
 //eslint-disable-next-line
 const SafeAppsDisclaimer = ({ onCancel, onConfirm }: OwnProps): JSX.Element => {
+  const { appList } = useAppList()
+  const { consentReceived, onConsentReceipt } = useLegalConsent()
+
+  useEffect(() => {
+    console.log(appList, consentReceived, onConsentReceipt)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appList])
+
   return (
     <Container>
       <Wrapper>
