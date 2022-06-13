@@ -6,9 +6,9 @@ type Props = {
   checkTxExecution: () => Promise<boolean>
   isExecution: boolean
   txData: string
-  gasLimit: string | undefined
-  gasPrice: string | undefined
-  gasMaxPrioFee: string | undefined
+  gasLimit?: string
+  gasPrice?: string
+  gasMaxPrioFee?: string
 }
 
 export const useExecutionStatus = ({
