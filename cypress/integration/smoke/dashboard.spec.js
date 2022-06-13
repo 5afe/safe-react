@@ -1,9 +1,6 @@
 const SAFE = 'rin:0xB5ef359e8eBDAd1cd7695FFEF3f6F6D7d5e79B08'
 
 describe('Dashboard', () => {
-  const safeAppsUrl =
-    Cypress.env('CYPRESS_ENV') === 'prod' ? 'https://apps.gnosis-safe.io' : 'https://safe-apps.dev.gnosisdev.com'
-
   before(() => {
     // Go to the test Safe home page
     cy.visit(`/${SAFE}/home`)
@@ -50,11 +47,11 @@ describe('Dashboard', () => {
 
     // Tx Builder app
     cy.contains('main p', 'Use Transaction Builder')
-    cy.get(`a[href="/app/${SAFE}/apps?appUrl=${safeAppsUrl}/tx-builder"]`).should('exist')
+    cy.get(`a[href*='/tx-builder']`).should('exist')
 
     // WalletConnect app
     cy.contains('main p', 'Use WalletConnect')
-    cy.get(`a[href="/app/${SAFE}/apps?appUrl=${safeAppsUrl}/wallet-connect"]`).should('exist')
+    cy.get(`a[href*='/wallet-connect']`).should('exist')
 
     // Featured apps have a Safe-specific link
     cy.get(`main a[href^="/app/${SAFE}/apps?appUrl=http"]`).should('have.length', 2)
