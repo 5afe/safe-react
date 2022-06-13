@@ -25,6 +25,8 @@ import { showNotification } from 'src/logic/notifications/store/notifications'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -119,6 +121,7 @@ export const SafeDeployment = ({
         setStepIndex(1)
         setIntervalStarted(true)
       } catch (err) {
+        trackEvent(CREATE_SAFE_EVENTS.REJECT_CREATE_SAFE)
         onError(err)
       }
     }
