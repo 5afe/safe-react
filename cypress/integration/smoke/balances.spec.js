@@ -3,7 +3,7 @@ const balanceRowTestId = '[data-testid=balance-row]'
 const receiveModalClass = '.receive-modal'
 
 const TEST_SAFE = '/rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
-const ASSETS_LENGTH = 4
+const ASSETS_LENGTH = 7
 
 describe('Assets > Coins', () => {
   const TOKEN_AMOUNT_COLUMN = 1
@@ -39,6 +39,7 @@ describe('Assets > Coins', () => {
       // Balance should end with DAI
       cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('DAI')
     })
+
     it('should have Wrapped Ether', () => {
       const WETH_ROW_NUMBER = 1
 
@@ -55,7 +56,7 @@ describe('Assets > Coins', () => {
     })
 
     it('should have USD Coin', () => {
-      const USD_ROW_NUMBER = 2
+      const USD_ROW_NUMBER = 3
 
       cy.get(balanceRowTestId).contains('USD Coin')
 
@@ -83,6 +84,7 @@ describe('Assets > Coins', () => {
           expect(text).to.match(tokenRegex)
         })
     })
+
     it('should have Fiat balance formated as per fiatRegex', () => {
       // Balance should comply with the fiatRegex
       cy.get(assetsTableContainer)
@@ -119,6 +121,41 @@ describe('Assets > Coins', () => {
     })
   })
 
+  describe('pagination should work', () => {
+    it('should have pagination toolbar', () => {
+      cy.get('.MuiTablePagination-toolbar').contains('Rows per page:')
+    })
+
+    it('should should allow 5 rows per page and navigate to next and previous page', () => {
+      // Click on the pagination select dropdown
+      cy.get('.MuiTablePagination-toolbar').contains('100').click()
+
+      // Select 5 rows per page
+      cy.get('ul[role=listbox] li[role="option"]').contains('5').click()
+
+      // Should display 1-5 of 7
+      cy.get('.MuiTablePagination-caption').contains('1-5 of 7')
+
+      // Click on the next page button
+      cy.get('button[aria-label="Next Page"]').click()
+
+      // Should display 6-7 of 7
+      cy.get('.MuiTablePagination-caption').contains('6-7 of 7')
+
+      // Table should have 2 rows
+      cy.get(balanceRowTestId).should('have.length', 2)
+
+      // Click on the previous page button
+      cy.get('button[aria-label="Previous Page"]').click()
+
+      // Should display 1-5 of 7
+      cy.get('.MuiTablePagination-caption').contains('1-5 of 7')
+
+      // Table should have 5 rows
+      cy.get(balanceRowTestId).should('have.length', 5)
+    })
+  })
+
   describe('should open assets modals', () => {
     it('should open the Receive assets modal', () => {
       // Assets table container should exist
@@ -127,7 +164,7 @@ describe('Assets > Coins', () => {
       // Balance row should exist
       cy.get(balanceRowTestId).first().should('exist')
 
-      // First balance row shows Ether
+      // First balance row shows Dai
       cy.get(balanceRowTestId).first().contains('Dai')
 
       // Receive text should not exist yet
