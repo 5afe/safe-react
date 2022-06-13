@@ -3,12 +3,17 @@ import styled from 'styled-components'
 import { Text, Dot } from '@gnosis.pm/safe-react-components'
 import { StyledTitle } from './styles'
 
-const SECURITY_STEPS = ['Security Step 1', 'Security Step 2', 'Security Step 3', 'Security Step 4']
+const SECURITY_STEPS = [
+  'Always use applications shared through trusted links and sources',
+  'Check the application URL before using it (appUrl parameter in the browser bar)',
+  'Review transaction information in the Safe popup when interacting with the Safe Apps and creating transactions',
+  'Review your transaction queue and transaction information when having more than one owner configured',
+]
 
 const SecuritySteps = (): React.ReactElement => {
   return (
     <>
-      <StyledTitle size="sm">Security Steps</StyledTitle>
+      <StyledTitle size="sm">Best security practices when interacting with Safe Apps</StyledTitle>
       {SECURITY_STEPS.map((step, index) => (
         <Box key={index} display="flex" marginBottom={2} alignItems="flex-start">
           <StyledDot color="primary">

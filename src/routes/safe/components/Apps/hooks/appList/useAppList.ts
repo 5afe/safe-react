@@ -17,6 +17,7 @@ type UseAppListReturnType = {
   removeApp: (appId: string) => void
   addCustomApp: (app: SafeApp) => void
   isLoading: boolean
+  getSafeApp: (url: string) => SafeApp | undefined
 }
 
 const useAppList = (): UseAppListReturnType => {
@@ -83,6 +84,22 @@ const useAppList = (): UseAppListReturnType => {
     [updatePinnedSafeApps, pinnedSafeAppIds],
   )
 
+  const getSafeApp = useCallback(
+    (url: string): SafeApp | undefined => {
+      const urlInstance = new URL(url)
+      const safeAppUrl = `${urlInstance.hostname}/${urlInstance.pathname}`
+
+      return appList.find((app: SafeApp) => {
+        const appUrlInstance = new URL(app?.url)
+
+        if (`${appUrlInstance?.hostname}/${appUrlInstance?.pathname}` === safeAppUrl) {
+          return app
+        }
+      })
+    },
+    [appList],
+  )
+
   return {
     allApps,
     appList,
@@ -92,6 +109,7 @@ const useAppList = (): UseAppListReturnType => {
     togglePin,
     addCustomApp,
     isLoading: remoteIsLoading,
+    getSafeApp,
   }
 }
 

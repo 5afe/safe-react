@@ -3,8 +3,14 @@ import { StyledTitle } from './styles'
 
 const WarningDefaultList = (): JSX.Element => (
   <>
-    <StyledTitle size="sm">⚠️ Warning</StyledTitle>
-    <Text size="lg">The application you are about to access is not in our default list</Text>
+    <StyledTitle size="sm">Warning</StyledTitle>
+    <Text size="xl" color="error">
+      The application you are trying to use is not in our default list
+    </Text>
+    <br />
+    <Text size="lg">
+      The <b>default list</b> are applications reviewed and verified for us
+    </Text>
   </>
 )
 

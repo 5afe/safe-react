@@ -7,54 +7,75 @@ import { alpha } from '@material-ui/core/styles'
 import SecuritySteps from './SecuritySteps'
 import WarningDefaultList from './WarningDefaultList'
 import { useAppList } from '../../hooks/appList/useAppList'
-import { useLegalConsent } from '../../hooks/useLegalConsent'
 import { useEffect } from 'react'
 
 interface OwnProps {
   onCancel: () => void
   onConfirm: () => void
+  appUrl: string
+  isConsentAccepted?: boolean
+  isSafeAppInDefaultList: boolean
+  isFirstTimeAccessingApp: boolean
 }
 
 //eslint-disable-next-line
-const SafeAppsDisclaimer = ({ onCancel, onConfirm }: OwnProps): JSX.Element => {
+const SafeAppsDisclaimer = ({
+  onCancel,
+  onConfirm,
+  appUrl,
+  isConsentAccepted,
+  isSafeAppInDefaultList,
+  isFirstTimeAccessingApp,
+}: OwnProps): JSX.Element => {
   const { appList } = useAppList()
-  const { consentReceived, onConsentReceipt } = useLegalConsent()
+
+  const handleComplete = () => {
+    onConfirm()
+  }
 
   useEffect(() => {
-    console.log(appList, consentReceived, onConsentReceipt)
+    console.log(appList, isConsentAccepted, appUrl)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appList])
 
   return (
-    <Container>
-      <Wrapper>
+    <StyledContainer>
+      <StyledWrapper>
         <Grid container justifyContent="center" alignItems="center" direction="column">
           <StyledIcon type="apps" size="md" color="primary" />
-          <Slider>
-            <SliderItem>
-              <LegalDisclaimer />
-            </SliderItem>
-            <SliderItem>
-              <SecuritySteps />
-            </SliderItem>
-            <SliderItem>
-              <WarningDefaultList />
-            </SliderItem>
+          <Slider onCancel={onCancel} onComplete={handleComplete}>
+            {isConsentAccepted && (
+              <SliderItem>
+                <LegalDisclaimer />
+              </SliderItem>
+            )}
+
+            {isFirstTimeAccessingApp && (
+              <SliderItem>
+                <SecuritySteps />
+              </SliderItem>
+            )}
+
+            {!isSafeAppInDefaultList && (
+              <SliderItem>
+                <WarningDefaultList />
+              </SliderItem>
+            )}
           </Slider>
         </Grid>
-      </Wrapper>
-    </Container>
+      </StyledWrapper>
+    </StyledContainer>
   )
 }
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 `
 
-const Wrapper = styled.div`
+const StyledWrapper = styled.div`
   width: 450px;
   padding: 50px 24px 24px 24px;
   background-color: ${({ theme }) => theme.colors.white};

@@ -3,6 +3,12 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from '@gnosis.pm/safe-react-components'
 import { Box } from '@material-ui/core'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
+import { NotVoid } from 'lodash'
+
+type SliderProps = {
+  onCancel: () => NotVoid
+  onComplete: () => void
+}
 
 type SliderState = {
   translate: number
@@ -11,7 +17,7 @@ type SliderState = {
   _slides: React.ReactElement[]
 }
 
-const Slider: React.FC = ({ children }) => {
+const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   const stateRef = useRef<SliderState>({
     translate: 1,
     activeSlide: 0,
@@ -79,7 +85,7 @@ const Slider: React.FC = ({ children }) => {
   }
   const nextSlide = () => {
     if (stateRef.current.activeSlide === slides.length - 1) {
-      // TODO: End process
+      onComplete()
       return
     }
 
@@ -116,11 +122,15 @@ const Slider: React.FC = ({ children }) => {
         ))}
       </Box>
       <Box display="flex" justifyContent="center" width="100%">
-        {stateRef.current.activeSlide !== 0 && (
-          <Button color="primary" size="md" variant="bordered" fullWidth onClick={prevSlide}>
-            Back
-          </Button>
-        )}
+        <Button
+          color="primary"
+          size="md"
+          variant="bordered"
+          fullWidth
+          onClick={stateRef.current.activeSlide === 0 ? onCancel : prevSlide}
+        >
+          {stateRef.current.activeSlide === 0 ? 'Cancel' : 'Back'}
+        </Button>
 
         <Button
           color="primary"
@@ -128,8 +138,7 @@ const Slider: React.FC = ({ children }) => {
           fullWidth
           onClick={nextSlide}
           style={{
-            width: stateRef.current.activeSlide !== 0 ? '100%' : '50%',
-            marginLeft: stateRef.current.activeSlide !== 0 ? 10 : 0,
+            marginLeft: 10,
           }}
         >
           Continue
