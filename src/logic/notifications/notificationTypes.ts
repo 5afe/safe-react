@@ -13,7 +13,7 @@ const longDuration = 10000
 export type Notification = {
   message: SnackbarMessage
   options?: OptionsObject
-  dismissed?: boolean
+  action?: unknown // Will specify the type when actions are added
 }
 
 enum NOTIFICATION_IDS {
