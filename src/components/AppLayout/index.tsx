@@ -8,7 +8,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { ARRAY_OF_SAFE_ROUTES, SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { ADDRESSED_ROUTE, SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
 import QueueBar from '../QueueBar/QueueBar'
@@ -145,11 +145,8 @@ const Layout: React.FC<Props> = ({
   const { transactions } = usePagedQueuedTransactions()
 
   const hasPendingTransactions = transactions?.next.count !== 0
-  const isSafeRoute = !!matchPath(pathname, {
-    path: ARRAY_OF_SAFE_ROUTES,
-  })
-
-  const showQueueBar = isSafeRoute && hasPendingTransactions
+  const hasSafeOpen = !!useRouteMatch(ADDRESSED_ROUTE)
+  const showQueueBar = hasSafeOpen && hasPendingTransactions
 
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(
