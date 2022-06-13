@@ -28,16 +28,16 @@ type UseEstimateTransactionGasProps = {
 }
 
 type TransactionGasEstimationResult = {
-  gasPrice: string
-  gasPriceFormatted: string
-  gasMaxPrioFee: string
-  gasMaxPrioFeeFormatted: string
+  gasPrice?: string
+  gasPriceFormatted?: string
+  gasMaxPrioFee?: string
+  gasMaxPrioFeeFormatted?: string
 }
 
 export const calculateTotalGasCost = (
   gasLimit: string,
   gasPrice: string,
-  gasMaxPrioFee: string,
+  gasMaxPrioFee: string | undefined,
   decimals: number,
 ): { gasCost: string; gasCostFormatted: string } => {
   const totalPricePerGas = parseInt(gasPrice, 10) + parseInt(gasMaxPrioFee || '0', 10)
@@ -57,10 +57,10 @@ export const useEstimateTransactionGas = ({
   txData,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
-    gasPrice: DEFAULT_GAS,
-    gasPriceFormatted: DEFAULT_GAS,
-    gasMaxPrioFee: DEFAULT_GAS,
-    gasMaxPrioFeeFormatted: DEFAULT_GAS,
+    gasPrice: undefined,
+    gasPriceFormatted: undefined,
+    gasMaxPrioFee: undefined,
+    gasMaxPrioFeeFormatted: undefined,
   })
 
   useEffect(() => {

@@ -25,10 +25,10 @@ describe('useEstimateTransactionGas', () => {
       isExecution: true,
     }
     initialState = {
-      gasPrice: '0',
-      gasPriceFormatted: '0',
-      gasMaxPrioFee: '0',
-      gasMaxPrioFeeFormatted: '0',
+      gasPrice: undefined,
+      gasPriceFormatted: undefined,
+      gasMaxPrioFee: undefined,
+      gasMaxPrioFeeFormatted: undefined,
     }
     failureState = {
       gasPrice: DEFAULT_MAX_GAS_FEE.toString(),
