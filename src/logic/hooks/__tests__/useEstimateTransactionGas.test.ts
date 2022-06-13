@@ -110,6 +110,21 @@ describe('useEstimateTransactionGas', () => {
     })
   })
 
+  it('returns 0 for maxPrioFee pre EIP-1559 if calculateGasPrice throws', async () => {
+    jest.spyOn(gas, 'isMaxFeeParam').mockImplementation(() => false)
+    jest.spyOn(ethTransactions, 'calculateGasPrice').mockImplementation(() => {
+      throw new Error()
+    })
+
+    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
+
+    await waitFor(() => {
+      expect(result.current.gasMaxPrioFee).toBe('0')
+      expect(result.current.gasMaxPrioFeeFormatted).toBe('0')
+      expect(prioFeeEstimationSpy).toHaveBeenCalledTimes(0)
+    })
+  })
+
   it('returns failure state if getFeesPerGas throws', async () => {
     jest.spyOn(gas, 'isMaxFeeParam').mockImplementation(() => true)
     jest.spyOn(ethTransactions, 'getFeesPerGas').mockImplementation(() => {
