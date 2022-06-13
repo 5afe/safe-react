@@ -97,6 +97,28 @@ describe('Assets > Coins', () => {
     })
   })
 
+  describe('fiat currency can be changed', () => {
+    it('should have USD Coin as default currency', () => {
+      // First row Fiat balance should not contain EUR
+      cy.get(balanceRowTestId).first().find('td').eq(FIAT_AMOUNT_COLUMN).should('not.contain', 'EUR')
+      // First row Fiat balance should contain USD
+      cy.get(balanceRowTestId).first().find('td').eq(FIAT_AMOUNT_COLUMN).contains('USD')
+    })
+
+    it('should allow changing the currency to EUR', () => {
+      // Click on balances currency dropdown
+      cy.get('[data-testid=balances-currency-dropdown-btn]').click()
+
+      // Select EUR
+      cy.get('ul[role=menu]').findByText('EUR').click()
+
+      // First row Fiat balance should not contain USD
+      cy.get(balanceRowTestId).first().find('td').eq(FIAT_AMOUNT_COLUMN).should('not.contain', 'USD')
+      // First row Fiat balance should contain EUR
+      cy.get(balanceRowTestId).first().find('td').eq(FIAT_AMOUNT_COLUMN).contains('EUR')
+    })
+  })
+
   describe('should open assets modals', () => {
     it('should open the Receive assets modal', () => {
       // Assets table container should exist
