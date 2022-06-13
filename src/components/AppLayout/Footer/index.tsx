@@ -7,7 +7,7 @@ import AppstoreButton from 'src/components/AppstoreButton'
 import GnoButtonLink from 'src/components/layout/ButtonLink'
 import Link from 'src/components/layout/Link'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
-import { screenSm, secondary, sm } from 'src/theme/variables'
+import { secondary, sm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
   footer: {
@@ -21,7 +21,8 @@ const useStyles = makeStyles({
     margin: '0 auto',
     maxWidth: '100%',
     padding: `20px ${sm} 20px`,
-    width: `${screenSm}px`,
+    width: '100%',
+    height: '59px',
   },
   item: {
     color: 'rgba(0, 0, 0, 0.54)',

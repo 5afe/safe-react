@@ -68,6 +68,8 @@ export const SAFE_ROUTES = {
   SETTINGS_ADVANCED: `${ADDRESSED_ROUTE}/settings/advanced`,
 }
 
+export const ARRAY_OF_SAFE_ROUTES = Object.entries(SAFE_ROUTES).map(([, safeRoute]) => safeRoute)
+
 export const getNetworkRootRoutes = (): Array<{ chainId: ChainId; route: string; shortName: string }> =>
   getChains().map(({ chainId, chainName, shortName }) => ({
     chainId,

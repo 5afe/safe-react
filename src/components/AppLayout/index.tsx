@@ -8,9 +8,11 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { ARRAY_OF_SAFE_ROUTES, SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
+import QueueBar from '../QueueBar/QueueBar'
+import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
 
 const Container = styled.div`
   height: 100vh;
@@ -35,6 +37,7 @@ const BodyWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
+  position: relative;
 `
 
 const slideIn = keyframes`
@@ -89,24 +92,20 @@ const SidebarWrapper = styled.aside`
   }
 `
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{ showQueueBar: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
 
   padding: 8px 24px;
+  margin-bottom: ${({ showQueueBar }) => (showQueueBar ? '70px' : '0')};
 
   > :nth-child(1) {
     flex-grow: 1;
     width: 100%;
     align-items: center;
     justify-content: center;
-  }
-
-  > :nth-child(2) {
-    width: 100%;
-    height: 59px;
   }
 `
 
@@ -143,6 +142,15 @@ const Layout: React.FC<Props> = ({
     path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
+  const { transactions } = usePagedQueuedTransactions()
+
+  const hasPendingTransactions = transactions?.next.count !== 0
+  const isSafeRoute = !!matchPath(pathname, {
+    path: ARRAY_OF_SAFE_ROUTES,
+  })
+
+  const showQueueBar = isSafeRoute && hasPendingTransactions
+
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(
     (e: React.MouseEvent): void => {
@@ -172,10 +180,11 @@ const Layout: React.FC<Props> = ({
             />
           </SidebarWrapper>
         )}
-        <ContentWrapper>
+        <ContentWrapper showQueueBar={showQueueBar}>
           <div>{children}</div>
           {hasFooter && <Footer />}
         </ContentWrapper>
+        {showQueueBar && <QueueBar />}
       </BodyWrapper>
 
       {!mobileNotSupportedClosed && <MobileNotSupported onClose={closeMobileNotSupported} />}
