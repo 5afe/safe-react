@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
@@ -14,11 +14,13 @@ const Apps = (): React.ReactElement => {
   const history = useHistory()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
-  const { appList, getSafeApp } = useAppList()
+  const { isLoading, appList, getSafeApp } = useAppList()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
   const { appsReviewed, onReviewApp } = useSecuritySteps()
 
   const isSafeAppInDefaultList = useMemo(() => {
+    if (!url) return false
+
     const urlInstance = new URL(url)
     const safeAppUrl = `${urlInstance.hostname}/${urlInstance.pathname}`
 
@@ -29,12 +31,14 @@ const Apps = (): React.ReactElement => {
   }, [appList, url])
 
   const isFirstTimeAccessingApp = useMemo(() => {
+    if (!url) return true
+
     const safeAppId = getSafeApp(url)?.id
 
     return safeAppId ? appsReviewed.includes(safeAppId) : false
   }, [appsReviewed, getSafeApp, url])
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     onConsentReceipt()
 
     const safeAppId = getSafeApp(url)?.id
@@ -42,11 +46,15 @@ const Apps = (): React.ReactElement => {
     if (safeAppId) {
       onReviewApp(safeAppId)
     }
-  }
+  }, [getSafeApp, onConsentReceipt, onReviewApp, url])
 
-  const goBack = () => history.goBack()
+  const goBack = useCallback(() => history.goBack(), [history])
 
   if (url) {
+    if (isLoading) {
+      return <p>Loading...</p>
+    }
+
     if (!consentReceived || !isSafeAppInDefaultList || isFirstTimeAccessingApp) {
       return (
         <SafeAppsDisclaimer

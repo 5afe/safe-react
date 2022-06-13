@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@gnosis.pm/safe-react-components'
@@ -18,14 +19,13 @@ type SliderState = {
 }
 
 const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
+  const slides = React.Children.toArray(children).filter(Boolean) as React.ReactElement[]
   const stateRef = useRef<SliderState>({
     translate: 1,
     activeSlide: 0,
     transition: 0.45,
     _slides: [],
   })
-  const slides = children as React.ReactElement[]
-
   const firstSlide = slides?.[0]
   const secondSlide = slides?.[1]
   const lastSlide = slides?.[slides?.length - 1]
@@ -103,6 +103,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
       activeSlide: stateRef.current.activeSlide === 0 ? slides.length - 1 : stateRef.current.activeSlide - 1,
     })
   }
+
   return (
     <>
       <StyledContainer className="container">
@@ -117,7 +118,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
         </StyledInner>
       </StyledContainer>
       <Box display="flex" justifyContent="center" m={5}>
-        {stateRef.current._slides.map((slide, index) => (
+        {slides.map((_, index) => (
           <StyledDot key={index} color={index === stateRef.current.activeSlide ? 'primary' : 'secondaryLight'} />
         ))}
       </Box>

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import styled from 'styled-components'
 import { Icon } from '@gnosis.pm/safe-react-components'
 import Grid from '@material-ui/core/Grid'
@@ -44,7 +45,7 @@ const SafeAppsDisclaimer = ({
         <Grid container justifyContent="center" alignItems="center" direction="column">
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
-            {isConsentAccepted && (
+            {!isConsentAccepted && (
               <SliderItem>
                 <LegalDisclaimer />
               </SliderItem>
@@ -94,4 +95,4 @@ const StyledIcon = styled(Icon)`
   }
 `
 
-export default SafeAppsDisclaimer
+export default memo(SafeAppsDisclaimer)
