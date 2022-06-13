@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import { formatAmount, formatCurrency } from 'src/logic/tokens/utils/formatAmount'
+import { formatCurrency } from 'src/logic/tokens/utils/formatAmount'
 import { TableColumn } from 'src/components/Table/types.d'
 import { Token } from 'src/logic/tokens/store/model/token'
 export const BALANCE_TABLE_ASSET_ID = 'asset'
@@ -26,7 +26,7 @@ export const getBalanceData = (safeTokens: List<Token>, currencySelected: string
         symbol: token.symbol,
       },
       assetOrder: token.name,
-      [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(tokenBalance?.toString() || '0')} ${token.symbol}`,
+      [BALANCE_TABLE_BALANCE_ID]: formatCurrency(tokenBalance?.toString() || '0', token.symbol),
       balanceOrder: Number(tokenBalance),
       [BALANCE_TABLE_VALUE_ID]: formatCurrency(fiatBalance?.toString() || '0', currencySelected),
       valueOrder: Number(tokenBalance),
