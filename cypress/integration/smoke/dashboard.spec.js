@@ -54,14 +54,14 @@ describe('Dashboard', () => {
     cy.get(`a[href*='/wallet-connect']`).should('exist')
 
     // Featured apps have a Safe-specific link
-    cy.get(`main a[href^="/app/${SAFE}/apps?appUrl=http"]`).should('have.length', 2)
+    cy.get(`main section#featured-safe-apps a[href^="/app/${SAFE}/apps?appUrl=http"]`).should('have.length', 2)
   })
 
   it('should show the Safe Apps widget', () => {
-    cy.contains('main h2', 'Safe Apps')
-    cy.contains('main a[href="/app/apps"] button', 'Explore Safe Apps')
+    cy.contains('main section#safe-apps h2', 'Safe Apps')
+    cy.contains('main section#safe-apps a[href="/app/apps"] button', 'Explore Safe Apps')
 
-    // Regular apps have a non-Safe-specific link
-    cy.get('main a[href^="/app/apps?appUrl=http"]').should('have.length', 5)
+    // Regular safe apps
+    cy.get(`main section#safe-apps a[href^="/app/${SAFE}/apps?appUrl=http"]`).should('have.length', 5)
   })
 })
