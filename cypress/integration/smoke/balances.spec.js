@@ -2,14 +2,17 @@ const assetsTableContainer = '.MuiTableContainer-root'
 const balanceRowTestId = '[data-testid=balance-row]'
 const receiveModalClass = '.receive-modal'
 
-const TEST_SAFE = '/eth:0x8675B754342754A30A2AeF474D114d8460bca19b'
-const ASSETS_LENGTH = 26
+const TEST_SAFE = '/rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
+const ASSETS_LENGTH = 4
 
 describe('Assets > Coins', () => {
+  const TOKEN_AMOUNT_COLUMN = 1
+  const FIAT_AMOUNT_COLUMN = 2
+
   // Fiat balance regex
   const fiatRegex = new RegExp(`([0-9]{1,3},)*[0-9]{1,3}.[0-9]{2}`)
   // Token balance regex
-  const tokenRegex = new RegExp(`([0-9]{1,3},)*[0-9]{1,3}.[0-9]{5}`)
+  const tokenRegex = new RegExp(`([0-9]{1,3},)*[0-9]{1,3}.[0-9]{2,5}`)
 
   before(() => {
     // Open the Safe used for testing
@@ -18,26 +21,56 @@ describe('Assets > Coins', () => {
   })
 
   describe('should have different tokens', () => {
-    it('should have 26 entries in the table', () => {
+    it(`should have ${ASSETS_LENGTH} entries in the table`, () => {
       cy.get(balanceRowTestId).should('have.length', ASSETS_LENGTH)
     })
 
-    it('should have Wrapped Ether', () => {
-      cy.get(balanceRowTestId).contains('Wrapped Ether')
+    it('should have Dai', () => {
+      const DAI_ROW_NUMBER = 0
+      // First row should be Dai
+      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).contains('Dai')
+
+      // First row should have a image with alt text "Dai"
+      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).get('img[alt="Dai"]').should('exist')
+
+      // Link to show details
+      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).get('a[aria-label="Show details on Etherscan"]').should('exist')
+
+      // Balance should end with DAI
+      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('DAI')
     })
-    it('should have Dai Stablecoin', () => {
-      cy.get(balanceRowTestId).contains('Dai Stablecoin')
+    it('should have Wrapped Ether', () => {
+      const WETH_ROW_NUMBER = 1
+
+      cy.get(balanceRowTestId).contains('Wrapped Ether')
+
+      // First row should have a image with alt text "Wrapped Eth"
+      cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).get('img[alt="Wrapped Ether"]').should('exist')
+
+      // Link to show details
+      cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).get('a[aria-label="Show details on Etherscan"]').should('exist')
+
+      // Balance should end with WETH
+      cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('WETH')
     })
 
-    it('should have MakerDAO', () => {
-      cy.get(balanceRowTestId).contains('MakerDAO')
+    it('should have USD Coin', () => {
+      const USD_ROW_NUMBER = 2
+
+      cy.get(balanceRowTestId).contains('USD Coin')
+
+      // First row should have a image with alt text "USD Coin"
+      cy.get(balanceRowTestId).eq(USD_ROW_NUMBER).get('img[alt="USD Coin"]').should('exist')
+
+      // Link to show details
+      cy.get(balanceRowTestId).eq(USD_ROW_NUMBER).get('a[aria-label="Show details on Etherscan"]').should('exist')
+
+      // Balance should end with USDC
+      cy.get(balanceRowTestId).eq(USD_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('USDC')
     })
   })
 
   describe('values should be formatted as per locale', () => {
-    const TOKEN_AMOUNT_COLUMN = 1
-    const FIAT_AMOUNT_COLUMN = 2
-
     it('should have Token balance formated as per tokenRegex', () => {
       // Balance should comply with the tokenRegex
       cy.get(assetsTableContainer)
@@ -73,7 +106,7 @@ describe('Assets > Coins', () => {
       cy.get(balanceRowTestId).first().should('exist')
 
       // First balance row shows Ether
-      cy.get(balanceRowTestId).first().contains('Ether')
+      cy.get(balanceRowTestId).first().contains('Dai')
 
       // Receive text should not exist yet
       cy.get(balanceRowTestId).first().findByText('Receive').should('not.be.visible')
@@ -91,7 +124,8 @@ describe('Assets > Coins', () => {
       cy.get(receiveModalClass).findByText('Receive assets').should('exist')
 
       // The Receive screen should have the correct address
-      cy.get(receiveModalClass).findByText('0x8675B754342754A30A2AeF474D114d8460bca19b').should('exist')
+      const [, safeAddress] = TEST_SAFE.split(':')
+      cy.get(receiveModalClass).findByText(safeAddress).should('exist')
 
       // Click in the Done button
       cy.get(receiveModalClass).findByText('Done').click({ force: true })
