@@ -22,19 +22,19 @@ const CREATE_SAFE = {
   },
   SUBMIT_CREATE_SAFE: {
     event: GTM_EVENT.META,
-    action: 'Submit Create Safe',
+    action: 'Submit Safe creation',
   },
   REJECT_CREATE_SAFE: {
     event: GTM_EVENT.META,
-    action: 'Reject Create Safe',
+    action: 'Reject Safe creation',
   },
   RETRY_CREATE_SAFE: {
     event: GTM_EVENT.META,
-    action: 'Retry Create Safe',
+    action: 'Retry Safe creation',
   },
   CANCEL_CREATE_SAFE: {
     event: GTM_EVENT.META,
-    action: 'Cancel Create Safe',
+    action: 'Cancel Safe creation',
   },
   CREATED_SAFE: {
     event: GTM_EVENT.META,
