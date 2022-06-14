@@ -17,7 +17,7 @@ const Apps = (): React.ReactElement => {
   const [isDisclaimerReadingCompleted, setIsDisclaimerReadingCompleted] = useState(false)
   const { isLoading, appList, getSafeApp } = useAppList()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
-  const { appsReviewed, onReviewApp } = useSecuritySteps()
+  const { appsReviewed, onReviewApp, extendedListReviewed, onReviewExtendedList } = useSecuritySteps()
 
   useEffect(() => {
     if (!url) {
@@ -54,8 +54,12 @@ const Apps = (): React.ReactElement => {
       onReviewApp(safeAppId)
     }
 
+    if (!extendedListReviewed) {
+      onReviewExtendedList()
+    }
+
     setIsDisclaimerReadingCompleted(true)
-  }, [getSafeApp, onConsentReceipt, onReviewApp, url])
+  }, [extendedListReviewed, getSafeApp, onConsentReceipt, onReviewApp, onReviewExtendedList, url])
 
   const goBack = useCallback(() => history.goBack(), [history])
 
@@ -74,6 +78,7 @@ const Apps = (): React.ReactElement => {
           isConsentAccepted={consentReceived}
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}
+          isExtendedListReviewed={extendedListReviewed}
         />
       )
     }

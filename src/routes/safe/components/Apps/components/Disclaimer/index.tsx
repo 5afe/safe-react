@@ -16,6 +16,7 @@ interface OwnProps {
   isConsentAccepted?: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
+  isExtendedListReviewed: boolean
 }
 
 const SafeAppsDisclaimer = ({
@@ -24,6 +25,7 @@ const SafeAppsDisclaimer = ({
   isConsentAccepted,
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
+  isExtendedListReviewed,
 }: OwnProps): JSX.Element => {
   const handleComplete = () => {
     onConfirm()
@@ -36,12 +38,12 @@ const SafeAppsDisclaimer = ({
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
-            {isFirstTimeAccessingApp && <SecurityStepList />}
-
-            {SECURITY_STEPS.map((step, index) => (
-              <SecurityStepContent key={index} title={step.title} image={step.image} />
-            ))}
-
+            {isFirstTimeAccessingApp && isExtendedListReviewed && <SecurityStepList />}
+            {isFirstTimeAccessingApp &&
+              !isExtendedListReviewed &&
+              SECURITY_STEPS.map((step, index) => (
+                <SecurityStepContent key={index} title={step.title} image={step.image} />
+              ))}
             {!isSafeAppInDefaultList && <WarningDefaultList />}
           </Slider>
         </Grid>
