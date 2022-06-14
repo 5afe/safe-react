@@ -58,6 +58,10 @@ const StyledGrid = styled.div`
   }
 `
 
+const StyledAppCard = styled(Card)`
+  padding: ${SAFE_APP_CARD_PADDING}px;
+`
+
 const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: number): SafeApp[] => {
   return useMemo(() => {
     if (!allApps.length) return []
@@ -124,13 +128,13 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
           ))}
 
           <StyledLink to={allAppsUrl}>
-            <Card>
+            <StyledAppCard>
               <StyledExploreBlock>
                 <Button size="md" color="primary" variant="contained">
                   Explore Safe Apps
                 </Button>
               </StyledExploreBlock>
-            </Card>
+            </StyledAppCard>
           </StyledLink>
         </StyledGrid>
       </WidgetBody>
