@@ -8,6 +8,7 @@ import { store } from 'src/store'
 import { isValidAddress, isValidPrefixedAddress } from 'src/utils/isValidAddress'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 import { textShortener } from 'src/utils/strings'
+import { toWei } from 'web3-utils'
 import {
   AMOUNT_FIELD_NAME,
   DATE_FROM_FIELD_NAME,
@@ -86,7 +87,7 @@ const getTransactionFilter = ({
     ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
     ...(execution_date__lte && { execution_date__lte: getISOString(execution_date__lte) }),
     ...(to && { to }),
-    ...(value && { value }),
+    ...(value && { value: toWei(value) }),
   }
 }
 

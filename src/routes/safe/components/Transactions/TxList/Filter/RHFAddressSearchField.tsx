@@ -5,6 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete'
 import TextField from '@material-ui/core/TextField/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress'
+import styled from 'styled-components'
 
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
@@ -19,6 +20,18 @@ type Props<T> = {
   methods: UseFormReturn<T>
   label: string
 }
+
+const StyledAutocomplete = styled(Autocomplete)`
+  .MuiAutocomplete-input:not([value='']) {
+    text-overflow: ellipsis;
+    overflow: hidden !important;
+    padding-right: 34px !important;
+
+    + .MuiAutocomplete-clearIndicator {
+      visibility: visible;
+    }
+  }
+`
 
 const RHFAddressSearchField = <T extends FieldValues>({
   name,
@@ -80,7 +93,7 @@ const RHFAddressSearchField = <T extends FieldValues>({
   }
 
   return (
-    <Autocomplete
+    <StyledAutocomplete
       freeSolo
       options={addressBookOnChain}
       getOptionLabel={({ name }) => name}
