@@ -74,6 +74,8 @@ const useStyles = (chainInfo: ChainInfo) =>
     }),
   )()
 
+export const RECEIVE_ASSETS_MODAL_TEST_ID = 'receive-assets-modal'
+
 type Props = {
   onClose: () => void
   safeAddress: string
@@ -91,7 +93,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
   const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug({ shortName, safeAddress }) : safeAddress
 
   return (
-    <>
+    <div data-testid={RECEIVE_ASSETS_MODAL_TEST_ID}>
       <Row align="center" className={classes.heading} grow>
         <Paragraph noMargin size="xl" weight="bolder">
           Receive assets
@@ -133,7 +135,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           Done
         </Button>
       </Row>
-    </>
+    </div>
   )
 }
 
