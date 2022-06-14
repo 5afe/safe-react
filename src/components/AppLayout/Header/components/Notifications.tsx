@@ -88,6 +88,8 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
     if (open) {
       notificationsToShow.forEach(({ read, options }) => {
         if (read) return
+        // Unspecified keys are automatically generated in `showNotification` thunk
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         dispatch(readNotification({ key: options!.key! }))
       })
       setShowAll(false)
@@ -299,6 +301,7 @@ const ExpandIconButton = styled(IconButton)`
   height: 20px;
   margin-left: 10px;
   margin-right: 18px;
+  padding: 0;
   > * {
     color: ${black300};
   }
