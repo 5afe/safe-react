@@ -28,6 +28,14 @@ describe('getSortedNotifications', () => {
     expect(getSortedNotifications(notifications)).toEqual(notifications)
   })
 
+  it('should sort the notifications chronologically', () => {
+    const notifications = [{ timestamp: 1 }, { timestamp: 2 }, { timestamp: 3 }, { timestamp: 4 }] as NotificationsState
+
+    const sortedNotifications = [{ timestamp: 4 }, { timestamp: 3 }, { timestamp: 2 }, { timestamp: 1 }]
+
+    expect(getSortedNotifications(notifications)).toEqual(sortedNotifications)
+  })
+
   it('should sort unread actionable notifications to the top', () => {
     const notifications = [READ_ACTION_NOTIFICATION, READ_NOTIFICATION, UNREAD_ACTION_NOTIFICATION]
 

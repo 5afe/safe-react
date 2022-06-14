@@ -29,7 +29,9 @@ export const getSortedNotifications = (notifications: NotificationsState): Notif
   const unreadNotifications: NotificationsState = []
   const readNotifications: NotificationsState = []
 
-  for (const notification of notifications) {
+  const chronologicalNotifications = notifications.sort((a, b) => b.timestamp - a.timestamp)
+
+  for (const notification of chronologicalNotifications) {
     if (notification.read) {
       readNotifications.push(notification)
       continue
@@ -101,7 +103,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   return (
     <>
       <Wrapper ref={notificationsRef}>
-        <BellIconButton onClick={handleClickBell}>
+        <BellIconButton onClick={handleClickBell} disableRipple>
           <UnreadBadge
             variant="dot"
             invisible={!hasUnread}
@@ -136,7 +138,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
                 <NotificationList notifications={notificationsToShow} />
                 {canExpand && (
                   <div>
-                    <ExpandIconButton onClick={() => setShowAll((prev) => !prev)}>
+                    <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
                       {showAll ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </ExpandIconButton>
                     <Subtitle>
@@ -193,6 +195,8 @@ const Wrapper = styled.div`
 `
 
 const BellIconButton = styled(IconButton)`
+  width: 100%;
+  height: 100%;
   &:hover {
     background: none;
   }
@@ -214,7 +218,7 @@ const NotificationsPopper = styled(Paper)`
 `
 
 const NotificationsHeader = styled.div`
-  height: 41px;
+  height: 30px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
