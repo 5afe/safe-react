@@ -20,6 +20,7 @@ import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
+import Notifications from 'src/components/AppLayout/Header/components/Notifications'
 
 const styles = () => ({
   root: {
@@ -90,7 +91,8 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
 }
 
 const Layout = ({ classes, providerDetails, providerInfo }) => {
-  const { clickAway, open, toggle } = useStateHandler()
+  const { clickAway: clickAwayNotifications, open: openNotifications, toggle: toggleNotifications } = useStateHandler()
+  const { clickAway: clickAwayWallet, open: openWallet, toggle: toggleWallet } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
 
@@ -114,24 +116,27 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       )}
 
       <Divider />
+      <Notifications open={openNotifications} toggle={toggleNotifications} clickAway={clickAwayNotifications} />
+
+      <Divider />
       <Provider
         info={providerInfo}
-        open={open}
-        toggle={toggle}
+        open={openWallet}
+        toggle={toggleWallet}
         render={(providerRef) =>
           providerRef.current && (
             <WalletPopup
               anchorEl={providerRef.current}
               providerDetails={providerDetails}
-              open={open}
+              open={openWallet}
               classes={classes}
-              onClose={clickAway}
+              onClose={clickAwayWallet}
             />
           )
         }
       />
-      <Divider />
 
+      <Divider />
       <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />
     </Row>
   )
