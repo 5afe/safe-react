@@ -9,6 +9,7 @@ import { ReturnValue as Props } from 'src/logic/hooks/useStateHandler'
 import {
   deleteAllNotifications,
   NotificationsState,
+  readNotification,
   selectNotifications,
 } from 'src/logic/notifications/store/notifications'
 import { black300, black500, border, primary200, primary400, sm } from 'src/theme/variables'
@@ -82,10 +83,20 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const unreadCount = useMemo(() => notifications.reduce((acc, { read }) => acc + Number(!read), 0), [notifications])
   const hasUnread = unreadCount > 0
 
+  const handleClick = () => {
+    if (open) {
+      notificationsToShow.forEach(({ read, options }) => {
+        if (read) return
+        dispatch(readNotification({ key: options!.key! }))
+      })
+    }
+    toggle()
+  }
+
   return (
     <>
       <Wrapper ref={notificationsRef}>
-        <BellIconButton onClick={() => toggle()}>
+        <BellIconButton onClick={handleClick}>
           <UnreadBadge
             variant="dot"
             invisible={!hasUnread}
@@ -123,7 +134,9 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
                     <ExpandIconButton onClick={() => setShowAll((prev) => !prev)}>
                       {showAll ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </ExpandIconButton>
-                    <Subtitle>{notifications.length - NOTIFICATION_LIMIT} other notifications</Subtitle>
+                    <Subtitle>
+                      {showAll ? 'Hide' : `${notifications.length - NOTIFICATION_LIMIT} other notifications`}
+                    </Subtitle>
                   </div>
                 )}
               </NotificationsPopper>
