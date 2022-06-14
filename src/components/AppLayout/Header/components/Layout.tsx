@@ -27,7 +27,6 @@ const styles = () => ({
     backgroundColor: 'white',
     borderRadius: sm,
     boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
-    marginTop: '11px',
     minWidth: '280px',
     padding: 0,
   },
@@ -63,7 +62,6 @@ const styles = () => ({
     backgroundColor: 'white',
     borderRadius: sm,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-    marginTop: '11px',
     minWidth: '180px',
     padding: '0',
   },
@@ -80,8 +78,14 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
       open
       placement="bottom"
       popperOptions={{ positionFixed: true }}
+      modifiers={{
+        offset: {
+          enabled: true,
+          offset: '0, 11px',
+        },
+      }}
     >
-      <ClickAwayListener onClickAway={onClose} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
+      <ClickAwayListener onClickAway={onClose} mouseEvent="onMouseUp">
         <List className={classes.root} component="div">
           {providerDetails}
         </List>

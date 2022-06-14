@@ -55,7 +55,6 @@ const styles = {
     backgroundColor: 'white',
     borderRadius: sm,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
-    marginTop: '11px',
     minWidth: '180px',
     padding: '0',
   },
@@ -118,8 +117,14 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
         open={open}
         placement="bottom"
         popperOptions={{ positionFixed: true }}
+        modifiers={{
+          offset: {
+            enabled: true,
+            offset: '0, 11px',
+          },
+        }}
       >
-        <ClickAwayListener onClickAway={clickAway} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
+        <ClickAwayListener onClickAway={clickAway}>
           <List className={classes.network} component="div">
             {getNetworkRootRoutes().map((network) => (
               <Fragment key={network.chainId}>

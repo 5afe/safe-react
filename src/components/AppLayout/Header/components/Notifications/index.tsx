@@ -21,7 +21,7 @@ export const NOTIFICATION_LIMIT = 4
 // Props will be used in popper
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const dispatch = useDispatch()
-  const notificationsRef = useRef<HTMLDivElement>(null)
+  const notificationsRef = useRef<HTMLButtonElement>(null)
   const [showAll, setShowAll] = useState<boolean>(false)
 
   const notifications = useSelector(selectNotifications)
@@ -53,8 +53,8 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
 
   return (
     <>
-      <Wrapper ref={notificationsRef}>
-        <BellIconButton onClick={handleClickBell} disableRipple>
+      <Wrapper>
+        <BellIconButton onClick={handleClickBell} disableRipple ref={notificationsRef}>
           <UnreadNotificationBadge
             variant="dot"
             invisible={!hasUnread}
@@ -74,8 +74,15 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
         style={{
           zIndex: 1302,
         }}
+        popperOptions={{ positionFixed: true }}
+        modifiers={{
+          offset: {
+            enabled: true,
+            offset: '0, 11px',
+          },
+        }}
       >
-        <ClickAwayListener onClickAway={handleClickAway} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
+        <ClickAwayListener onClickAway={handleClickAway}>
           <NotificationsPopper component="div">
             <NotificationsHeader>
               <div>
@@ -127,7 +134,6 @@ const NotificationsPopper = styled(Paper)`
   box-sizing: border-box;
   border-radius: ${sm};
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
-  margin-top: 11px;
   width: 438px;
   padding: 30px 23px;
 `
