@@ -16,25 +16,34 @@ enum NOTIFICATION_ACTIONS {
   DELETE_ALL = 'notifications/deleteAll',
 }
 
-export type NotificationsState = Notification[]
+export type NotificationsState = (Notification & {
+  timestamp: number
+  dismissed: boolean
+  read: boolean
+})[]
 
-type KeyPayload = { key: SnackbarKey }
+type ShowPayload = Notification
+type ClosePayload = { key: SnackbarKey; read?: boolean }
+type DeletePayload = { key: SnackbarKey }
 
-const notificationsReducer = handleActions<NotificationsState, Notification | KeyPayload>(
+type Payloads = ShowPayload | ClosePayload | DeletePayload
+
+const notificationsReducer = handleActions<NotificationsState, Payloads>(
   {
-    [NOTIFICATION_ACTIONS.SHOW]: (state, { payload }: Action<Notification>) => {
-      // getNotificationsFromTxType can return `null` notifications
-      return payload ? [...state, payload] : state
+    [NOTIFICATION_ACTIONS.SHOW]: (state, { payload }: Action<ShowPayload>) => {
+      return [...state, { ...payload, read: false, dismissed: false, timestamp: new Date().getTime() }]
     },
-    [NOTIFICATION_ACTIONS.CLOSE]: (state, { payload }: Action<KeyPayload>) => {
+    [NOTIFICATION_ACTIONS.CLOSE]: (state, action: Action<ClosePayload>) => {
+      const { key, read = true } = action.payload
+
       return state.map((notification) => {
-        return notification.options?.key === payload.key ? { ...notification, dismissed: true } : notification
+        return notification.options?.key === key ? { ...notification, read, dismissed: true } : notification
       })
     },
     [NOTIFICATION_ACTIONS.CLOSE_ALL]: (state) => {
       return state.map((notification) => ({ ...notification, dismissed: true }))
     },
-    [NOTIFICATION_ACTIONS.DELETE]: (state, { payload }: Action<KeyPayload>) => {
+    [NOTIFICATION_ACTIONS.DELETE]: (state, { payload }: Action<DeletePayload>) => {
       return state.filter((notification) => notification.options?.key !== payload.key)
     },
     [NOTIFICATION_ACTIONS.DELETE_ALL]: () => {
@@ -45,26 +54,21 @@ const notificationsReducer = handleActions<NotificationsState, Notification | Ke
 )
 
 export const showNotification = (
-  payload: Pick<Notification, 'message' | 'options'>,
+  payload: ShowPayload,
 ): ThunkAction<SnackbarKey, AppReduxState, undefined, AnyAction> => {
   return (dispatch): SnackbarKey => {
-    const action = createAction<Notification>(NOTIFICATION_ACTIONS.SHOW)
+    const action = createAction<ShowPayload>(NOTIFICATION_ACTIONS.SHOW)
 
     const key = payload.options?.key || Math.random().toString(32).slice(2)
 
-    dispatch(
-      action({
-        ...payload,
-        options: { ...payload.options, key },
-      }),
-    )
+    dispatch(action({ ...payload, options: { ...payload.options, key } }))
 
     return key
   }
 }
-export const closeNotification = createAction<KeyPayload>(NOTIFICATION_ACTIONS.CLOSE)
+export const closeNotification = createAction<ClosePayload>(NOTIFICATION_ACTIONS.CLOSE)
 export const closeAllNotifications = createAction(NOTIFICATION_ACTIONS.CLOSE_ALL)
-export const deleteNotification = createAction<KeyPayload>(NOTIFICATION_ACTIONS.DELETE)
+export const deleteNotification = createAction<DeletePayload>(NOTIFICATION_ACTIONS.DELETE)
 export const deleteAllNotifications = createAction(NOTIFICATION_ACTIONS.DELETE_ALL)
 
 export const selectNotifications = (state: AppReduxState): NotificationsState => {
