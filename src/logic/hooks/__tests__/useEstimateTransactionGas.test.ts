@@ -25,10 +25,10 @@ describe('useEstimateTransactionGas', () => {
       isExecution: true,
     }
     initialState = {
-      gasPrice: '0',
-      gasPriceFormatted: '0',
-      gasMaxPrioFee: '0',
-      gasMaxPrioFeeFormatted: '0',
+      gasPrice: undefined,
+      gasPriceFormatted: undefined,
+      gasMaxPrioFee: undefined,
+      gasMaxPrioFeeFormatted: undefined,
     }
     failureState = {
       gasPrice: DEFAULT_MAX_GAS_FEE.toString(),
@@ -106,6 +106,21 @@ describe('useEstimateTransactionGas', () => {
 
     await waitFor(() => {
       expect(result.current.gasMaxPrioFee).toBe('0')
+      expect(prioFeeEstimationSpy).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  it('returns 0 for maxPrioFee pre EIP-1559 if calculateGasPrice throws', async () => {
+    jest.spyOn(gas, 'isMaxFeeParam').mockImplementation(() => false)
+    jest.spyOn(ethTransactions, 'calculateGasPrice').mockImplementation(() => {
+      throw new Error()
+    })
+
+    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
+
+    await waitFor(() => {
+      expect(result.current.gasMaxPrioFee).toBe('0')
+      expect(result.current.gasMaxPrioFeeFormatted).toBe('0')
       expect(prioFeeEstimationSpy).toHaveBeenCalledTimes(0)
     })
   })

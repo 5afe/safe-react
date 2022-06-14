@@ -175,3 +175,5 @@ jobs:
           browser: chrome
           record: false
           config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
+        env:
+          CYPRESS_ENV: ${{ env.REACT_APP_ENV}}
