@@ -104,7 +104,6 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     })
   }
 
-  console.log(stateRef.current._slides)
   return (
     <>
       <StyledContainer className="container">
