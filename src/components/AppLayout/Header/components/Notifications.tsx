@@ -20,6 +20,7 @@ import AlertIcon from 'src/assets/icons/alert.svg'
 import CheckIcon from 'src/assets/icons/check.svg'
 import ErrorIcon from 'src/assets/icons/error.svg'
 import InfoIcon from 'src/assets/icons/info.svg'
+import { StyledScrollableBar } from 'src/routes/safe/components/Transactions/TxList/styled'
 
 const NOTIFICATION_LIMIT = 4
 
@@ -71,9 +72,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const [showAll, setShowAll] = useState<boolean>(false)
 
   const notifications = useSelector(selectNotifications)
-  const sortedNotifications = useMemo(() => {
-    return getSortedNotifications(notifications)
-  }, [notifications])
+  const sortedNotifications = useMemo(() => getSortedNotifications(notifications), [notifications])
 
   const canExpand = notifications.length > NOTIFICATION_LIMIT
 
@@ -83,20 +82,26 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const unreadCount = useMemo(() => notifications.reduce((acc, { read }) => acc + Number(!read), 0), [notifications])
   const hasUnread = unreadCount > 0
 
-  const handleClick = () => {
+  const handleClickBell = () => {
     if (open) {
       notificationsToShow.forEach(({ read, options }) => {
         if (read) return
         dispatch(readNotification({ key: options!.key! }))
       })
+      setShowAll(false)
     }
     toggle()
+  }
+
+  const handleClickAway = () => {
+    clickAway()
+    setShowAll(false)
   }
 
   return (
     <>
       <Wrapper ref={notificationsRef}>
-        <BellIconButton onClick={handleClick}>
+        <BellIconButton onClick={handleClickBell}>
           <UnreadBadge
             variant="dot"
             invisible={!hasUnread}
@@ -119,7 +124,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
-            <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
+            <ClickAwayListener mouseEvent="onClick" onClickAway={handleClickAway} touchEvent={false}>
               <NotificationsPopper>
                 <NotificationsHeader>
                   <div>
@@ -154,31 +159,29 @@ const NotificationList = ({ notifications }: { notifications: NotificationsState
   }
 
   return (
-    <>
+    <ScrollContainer $showScrollbar={notifications.length > NOTIFICATION_LIMIT}>
       <NotificationType>System updates</NotificationType>
-      {notifications.map(({ options, message, timestamp, read }) => {
-        return (
-          <Notification key={timestamp}>
-            <UnreadBadge
-              variant="dot"
-              overlap="circle"
-              invisible={read}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-            >
-              <img src={getNotificationIcon(options?.variant)} />
-            </UnreadBadge>
-            <div>
-              <NotificationMessage>{message}</NotificationMessage>
-              <br />
-              <Subtitle>{formatTime(timestamp)}</Subtitle>
-            </div>
-          </Notification>
-        )
-      })}
-    </>
+      {notifications.map(({ options, message, timestamp, read }) => (
+        <Notification key={timestamp}>
+          <UnreadBadge
+            variant="dot"
+            overlap="circle"
+            invisible={read}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          >
+            <img src={getNotificationIcon(options?.variant)} />
+          </UnreadBadge>
+          <div>
+            <NotificationMessage>{message}</NotificationMessage>
+            <br />
+            <Subtitle>{formatTime(timestamp)}</Subtitle>
+          </div>
+        </Notification>
+      ))}
+    </ScrollContainer>
   )
 }
 
@@ -216,6 +219,13 @@ const NotificationsHeader = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 16px;
+`
+
+const ScrollContainer = styled(StyledScrollableBar)<{ $showScrollbar: boolean }>`
+  height: ${({ $showScrollbar: $scroll }) => ($scroll ? '500px' : 'auto')};
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
 `
 
 const NotificationsTitle = styled.h4`
