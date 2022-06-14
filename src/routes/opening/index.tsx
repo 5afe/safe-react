@@ -27,6 +27,7 @@ import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -121,7 +122,9 @@ export const SafeDeployment = ({
         setStepIndex(1)
         setIntervalStarted(true)
       } catch (err) {
-        trackEvent(CREATE_SAFE_EVENTS.REJECT_CREATE_SAFE)
+        if (isWalletRejection(err)) {
+          trackEvent(CREATE_SAFE_EVENTS.REJECT_CREATE_SAFE)
+        }
         onError(err)
       }
     }
