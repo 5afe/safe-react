@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
@@ -14,6 +14,7 @@ const Apps = (): React.ReactElement => {
   const history = useHistory()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
+  const [completed, setCompleted] = useState(false)
   const { isLoading, appList, getSafeApp } = useAppList()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
   const { appsReviewed, onReviewApp } = useSecuritySteps()
@@ -35,7 +36,7 @@ const Apps = (): React.ReactElement => {
 
     const safeAppId = getSafeApp(url)?.id
 
-    return safeAppId ? appsReviewed.includes(safeAppId) : false
+    return safeAppId ? !appsReviewed?.includes(safeAppId) : true
   }, [appsReviewed, getSafeApp, url])
 
   const handleConfirm = useCallback(() => {
@@ -46,16 +47,14 @@ const Apps = (): React.ReactElement => {
     if (safeAppId) {
       onReviewApp(safeAppId)
     }
+
+    setCompleted(true)
   }, [getSafeApp, onConsentReceipt, onReviewApp, url])
 
   const goBack = useCallback(() => history.goBack(), [history])
 
   if (url) {
-    if (isLoading) {
-      return <p>Loading...</p>
-    }
-
-    if (!consentReceived || !isSafeAppInDefaultList || isFirstTimeAccessingApp) {
+    if (!isLoading && !completed && (!consentReceived || !isSafeAppInDefaultList || isFirstTimeAccessingApp)) {
       return (
         <SafeAppsDisclaimer
           onCancel={goBack}

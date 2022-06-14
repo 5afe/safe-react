@@ -2,7 +2,7 @@ import { memo } from 'react'
 import styled from 'styled-components'
 import { Icon } from '@gnosis.pm/safe-react-components'
 import Grid from '@material-ui/core/Grid'
-import Slider, { SliderItem } from './Slider'
+import Slider from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
 import { alpha } from '@material-ui/core/styles'
 import SecuritySteps from './SecuritySteps'
@@ -45,23 +45,9 @@ const SafeAppsDisclaimer = ({
         <Grid container justifyContent="center" alignItems="center" direction="column">
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
-            {!isConsentAccepted && (
-              <SliderItem>
-                <LegalDisclaimer />
-              </SliderItem>
-            )}
-
-            {isFirstTimeAccessingApp && (
-              <SliderItem>
-                <SecuritySteps />
-              </SliderItem>
-            )}
-
-            {!isSafeAppInDefaultList && (
-              <SliderItem>
-                <WarningDefaultList />
-              </SliderItem>
-            )}
+            {!isConsentAccepted && <LegalDisclaimer />}
+            {isFirstTimeAccessingApp && <SecuritySteps />}
+            {!isSafeAppInDefaultList && <WarningDefaultList />}
           </Slider>
         </Grid>
       </StyledWrapper>

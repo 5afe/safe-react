@@ -12,8 +12,12 @@ const useSecuritySteps = (): { appsReviewed: string[]; onReviewApp: (appId: stri
 
   const onReviewApp = useCallback(
     (appId: string): void => {
-      setAppsReviewed([...appsReviewed, appId])
-      saveToStorage(APPS_SECURITY_STEPS_REVIEWED, true)
+      if (!appsReviewed.includes(appId)) {
+        const reviewedApps = [...appsReviewed, appId]
+
+        setAppsReviewed(reviewedApps)
+        saveToStorage(APPS_SECURITY_STEPS_REVIEWED, reviewedApps)
+      }
     },
     [appsReviewed],
   )

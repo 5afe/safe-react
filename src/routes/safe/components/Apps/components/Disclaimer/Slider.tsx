@@ -104,6 +104,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     })
   }
 
+  console.log(stateRef.current._slides)
   return (
     <>
       <StyledContainer className="container">
@@ -114,7 +115,9 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
             transform: `translateX(-${stateRef.current.translate * 100}%)`,
           }}
         >
-          {stateRef.current._slides.map((slide) => slide)}
+          {stateRef.current._slides.map((slide, index) => (
+            <SliderItem key={index}>{slide}</SliderItem>
+          ))}
         </StyledInner>
       </StyledContainer>
       <Box display="flex" justifyContent="center" m={5}>
@@ -173,7 +176,7 @@ const StyledDot = styled.div<{ color: ThemeColors }>`
   margin: 0 8px;
 `
 
-export const SliderItem = styled.div`
+const SliderItem = styled.div`
   min-width: 100%;
   min-height: 100%;
 
