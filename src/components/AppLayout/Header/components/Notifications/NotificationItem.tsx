@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { OptionsObject } from 'notistack'
 
@@ -19,7 +20,7 @@ const notificationIcon = {
 
 const getNotificationIcon = (variant: OptionsObject['variant'] = 'info'): string => notificationIcon[variant]
 
-const NoficationItem = ({ read, options, message, timestamp }: NotificationsState[number]) => (
+const NoficationItem = ({ read, options, message, timestamp }: NotificationsState[number]): ReactElement => (
   <Notification>
     <UnreadNotificationBadge
       variant="dot"
