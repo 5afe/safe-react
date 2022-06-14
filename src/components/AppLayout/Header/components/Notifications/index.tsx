@@ -3,69 +3,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, Badge, ClickAwayListener, Grow, Paper, Popper } from '@material-ui/core'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import styled from 'styled-components'
-import { OptionsObject } from 'notistack'
+import { orderBy } from 'lodash'
 
 import { ReturnValue as Props } from 'src/logic/hooks/useStateHandler'
 import {
   deleteAllNotifications,
-  NotificationsState,
   readNotification,
   selectNotifications,
 } from 'src/logic/notifications/store/notifications'
-import { black300, black500, border, primary200, primary400, sm } from 'src/theme/variables'
+import { black300, border, primary200, primary400, sm } from 'src/theme/variables'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
-import { formatTime } from 'src/utils/date'
-import AlertIcon from 'src/assets/icons/alert.svg'
-import CheckIcon from 'src/assets/icons/check.svg'
-import ErrorIcon from 'src/assets/icons/error.svg'
-import InfoIcon from 'src/assets/icons/info.svg'
-import { StyledScrollableBar } from 'src/routes/safe/components/Transactions/TxList/styled'
+import NotificationList from 'src/components/AppLayout/Header/components/Notifications/NotificationList'
 
-const NOTIFICATION_LIMIT = 4
-
-export const getSortedNotifications = (notifications: NotificationsState): NotificationsState => {
-  const unreadActionNotifications: NotificationsState = []
-  const unreadNotifications: NotificationsState = []
-  const readNotifications: NotificationsState = []
-
-  const chronologicalNotifications = notifications.sort((a, b) => b.timestamp - a.timestamp)
-
-  for (const notification of chronologicalNotifications) {
-    if (notification.read) {
-      readNotifications.push(notification)
-      continue
-    }
-
-    if (notification.action) {
-      unreadActionNotifications.push(notification)
-    } else {
-      unreadNotifications.push(notification)
-    }
-  }
-
-  return unreadActionNotifications.concat(unreadNotifications, readNotifications)
-}
-
-export const getNotificationIcon = (variant: OptionsObject['variant']): string => {
-  switch (variant) {
-    case 'error': {
-      return ErrorIcon
-    }
-    case 'info': {
-      return InfoIcon
-    }
-    case 'success': {
-      return CheckIcon
-    }
-    case 'warning': {
-      return AlertIcon
-    }
-    default: {
-      return InfoIcon
-    }
-  }
-}
+export const NOTIFICATION_LIMIT = 4
 
 // Props will be used in popper
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
@@ -74,7 +25,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const [showAll, setShowAll] = useState<boolean>(false)
 
   const notifications = useSelector(selectNotifications)
-  const sortedNotifications = useMemo(() => getSortedNotifications(notifications), [notifications])
+  const sortedNotifications = useMemo(() => orderBy(notifications, ['timestamp', 'read', 'action']), [notifications])
 
   const canExpand = notifications.length > NOTIFICATION_LIMIT
 
@@ -88,9 +39,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
     if (open) {
       notificationsToShow.forEach(({ read, options }) => {
         if (read) return
-        // Unspecified keys are automatically generated in `showNotification` thunk
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        dispatch(readNotification({ key: options!.key! }))
+        dispatch(readNotification({ key: options.key }))
       })
       setShowAll(false)
     }
@@ -106,7 +55,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
     <>
       <Wrapper ref={notificationsRef}>
         <BellIconButton onClick={handleClickBell} disableRipple>
-          <UnreadBadge
+          <UnreadNotificationBadge
             variant="dot"
             invisible={!hasUnread}
             anchorOrigin={{
@@ -115,7 +64,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
             }}
           >
             <NotificationsNoneIcon fontSize="small" />
-          </UnreadBadge>
+          </UnreadNotificationBadge>
         </BellIconButton>
       </Wrapper>
       <Popper
@@ -143,9 +92,9 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
                     <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
                       {showAll ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </ExpandIconButton>
-                    <Subtitle>
+                    <NotificationSubtitle>
                       {showAll ? 'Hide' : `${notifications.length - NOTIFICATION_LIMIT} other notifications`}
-                    </Subtitle>
+                    </NotificationSubtitle>
                   </div>
                 )}
               </NotificationsPopper>
@@ -154,38 +103,6 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
         )}
       </Popper>
     </>
-  )
-}
-
-const NotificationList = ({ notifications }: { notifications: NotificationsState }): ReactElement => {
-  if (!notifications.length) {
-    return <NotificationMessage>No notifications</NotificationMessage>
-  }
-
-  return (
-    <ScrollContainer $showScrollbar={notifications.length > NOTIFICATION_LIMIT}>
-      <NotificationType>System updates</NotificationType>
-      {notifications.map(({ options, message, timestamp, read }) => (
-        <Notification key={timestamp}>
-          <UnreadBadge
-            variant="dot"
-            overlap="circle"
-            invisible={read}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-          >
-            <img src={getNotificationIcon(options?.variant)} />
-          </UnreadBadge>
-          <div>
-            <NotificationMessage>{message}</NotificationMessage>
-            <br />
-            <Subtitle>{formatTime(timestamp)}</Subtitle>
-          </div>
-        </Notification>
-      ))}
-    </ScrollContainer>
   )
 }
 
@@ -204,7 +121,7 @@ const BellIconButton = styled(IconButton)`
   }
 `
 
-const UnreadBadge = styled(Badge)`
+export const UnreadNotificationBadge = styled(Badge)`
   .MuiBadge-badge {
     background-color: ${primary400};
   }
@@ -225,13 +142,6 @@ const NotificationsHeader = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 16px;
-`
-
-const ScrollContainer = styled(StyledScrollableBar)<{ $showScrollbar: boolean }>`
-  height: ${({ $showScrollbar: $scroll }) => ($scroll ? '500px' : 'auto')};
-  overflow-x: hidden;
-  overflow-y: auto;
-  width: 100%;
 `
 
 const NotificationsTitle = styled.h4`
@@ -261,33 +171,7 @@ const ClearAllButton = styled.button`
   color: ${primary400};
 `
 
-const NotificationType = styled.h4`
-  all: unset;
-  display: block;
-  font-weight: 400;
-  font-size: 14px;
-  color: ${black300};
-  margin-bottom: 12px;
-`
-
-const Notification = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  > * {
-    padding: 8px;
-  }
-`
-
-const NotificationMessage = styled.p`
-  all: unset;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: ${black500};
-`
-
-const Subtitle = styled.span`
+export const NotificationSubtitle = styled.span`
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;

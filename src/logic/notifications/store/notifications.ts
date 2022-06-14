@@ -1,4 +1,4 @@
-import { SnackbarKey } from 'notistack'
+import { OptionsObject, SnackbarKey } from 'notistack'
 import { AnyAction } from 'redux'
 import { Action, createAction, handleActions } from 'redux-actions'
 import { ThunkAction } from 'redux-thunk'
@@ -17,13 +17,20 @@ enum NOTIFICATION_ACTIONS {
   DELETE_ALL = 'notifications/deleteAll',
 }
 
-export type NotificationsState = (Notification & {
+type WithRequiredProperty<Type, Key extends keyof Type> = Type & {
+  [Property in Key]-?: Type[Property]
+}
+
+// `showNotification` generates `options.key` if none is provided
+type KeyedNotification = Notification & { options: WithRequiredProperty<OptionsObject, 'key'> }
+
+export type NotificationsState = (KeyedNotification & {
   timestamp: number
   dismissed: boolean
   read: boolean
 })[]
 
-type ShowPayload = Notification
+type ShowPayload = KeyedNotification
 type KeyPayload = { key: SnackbarKey }
 type ClosePayload = KeyPayload & { read?: boolean }
 
@@ -59,10 +66,10 @@ const notificationsReducer = handleActions<NotificationsState, Payloads>(
 )
 
 export const showNotification = (
-  payload: ShowPayload,
+  payload: Notification,
 ): ThunkAction<SnackbarKey, AppReduxState, undefined, AnyAction> => {
   return (dispatch): SnackbarKey => {
-    const action = createAction<ShowPayload>(NOTIFICATION_ACTIONS.SHOW)
+    const action = createAction<KeyedNotification>(NOTIFICATION_ACTIONS.SHOW)
 
     const key = payload.options?.key || Math.random().toString(32).slice(2)
 

@@ -15,9 +15,7 @@ const useNotifier = (): void => {
 
   useEffect(() => {
     for (const notification of notifications) {
-      // Unspecified keys are automatically generated in `showNotification` thunk
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const key = notification.options!.key!
+      const { key } = notification.options
 
       // Dismiss notification via Notistack
       if (notification.dismissed) {
