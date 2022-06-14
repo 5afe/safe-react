@@ -52,37 +52,37 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   }
 
   return (
-    <>
-      <Wrapper>
-        <BellIconButton onClick={handleClickBell} disableRipple ref={notificationsRef}>
-          <UnreadNotificationBadge
-            variant="dot"
-            invisible={!hasUnread}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-          >
-            <NotificationsNoneIcon fontSize="small" />
-          </UnreadNotificationBadge>
-        </BellIconButton>
-      </Wrapper>
-      <Popper
-        anchorEl={notificationsRef.current}
-        open={open}
-        placement="bottom-start"
-        style={{
-          zIndex: 1302,
-        }}
-        popperOptions={{ positionFixed: true }}
-        modifiers={{
-          offset: {
-            enabled: true,
-            offset: '0, 11px',
-          },
-        }}
-      >
-        <ClickAwayListener onClickAway={handleClickAway}>
+    <ClickAwayListener onClickAway={handleClickAway} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
+      <div>
+        <Wrapper>
+          <BellIconButton onClick={handleClickBell} disableRipple ref={notificationsRef}>
+            <UnreadNotificationBadge
+              variant="dot"
+              invisible={!hasUnread}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+            >
+              <NotificationsNoneIcon fontSize="small" />
+            </UnreadNotificationBadge>
+          </BellIconButton>
+        </Wrapper>
+        <Popper
+          anchorEl={notificationsRef.current}
+          open={open}
+          placement="bottom-start"
+          style={{
+            zIndex: 1302,
+          }}
+          popperOptions={{ positionFixed: true }}
+          modifiers={{
+            offset: {
+              enabled: true,
+              offset: '0, 27px',
+            },
+          }}
+        >
           <NotificationsPopper component="div">
             <NotificationsHeader>
               <div>
@@ -103,9 +103,9 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
               </div>
             )}
           </NotificationsPopper>
-        </ClickAwayListener>
-      </Popper>
-    </>
+        </Popper>
+      </div>
+    </ClickAwayListener>
   )
 }
 
