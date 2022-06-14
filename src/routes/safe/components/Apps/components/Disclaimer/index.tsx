@@ -5,39 +5,29 @@ import Grid from '@material-ui/core/Grid'
 import Slider from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
 import { alpha } from '@material-ui/core/styles'
-import SecuritySteps from './SecuritySteps'
+import SecurityStepList from './SecurityStepList'
 import WarningDefaultList from './WarningDefaultList'
-import { useAppList } from '../../hooks/appList/useAppList'
-import { useEffect } from 'react'
+import { SECURITY_STEPS } from './utils'
+import SecurityStepContent from './SecurityStepContent'
 
 interface OwnProps {
   onCancel: () => void
   onConfirm: () => void
-  appUrl: string
   isConsentAccepted?: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
 }
 
-//eslint-disable-next-line
 const SafeAppsDisclaimer = ({
   onCancel,
   onConfirm,
-  appUrl,
   isConsentAccepted,
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
 }: OwnProps): JSX.Element => {
-  const { appList } = useAppList()
-
   const handleComplete = () => {
     onConfirm()
   }
-
-  useEffect(() => {
-    console.log(appList, isConsentAccepted, appUrl)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appList])
 
   return (
     <StyledContainer>
@@ -46,7 +36,12 @@ const SafeAppsDisclaimer = ({
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
-            {isFirstTimeAccessingApp && <SecuritySteps />}
+            {isFirstTimeAccessingApp && <SecurityStepList />}
+
+            {SECURITY_STEPS.map((step, index) => (
+              <SecurityStepContent key={index} title={step.title} image={step.image} />
+            ))}
+
             {!isSafeAppInDefaultList && <WarningDefaultList />}
           </Slider>
         </Grid>
@@ -68,10 +63,6 @@ const StyledWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
   box-shadow: 1px 2px 10px 0 ${({ theme }) => alpha(theme.colors.shadow.color, 0.18)};
-
-  '&:focus': {
-    outline: 'none';
-  }
 `
 
 const StyledIcon = styled(Icon)`

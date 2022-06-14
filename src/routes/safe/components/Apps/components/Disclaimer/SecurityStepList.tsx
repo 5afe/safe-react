@@ -2,15 +2,9 @@ import { Box } from '@material-ui/core'
 import styled from 'styled-components'
 import { Text, Dot } from '@gnosis.pm/safe-react-components'
 import { StyledTitle } from './styles'
+import { SECURITY_STEPS } from './utils'
 
-const SECURITY_STEPS = [
-  'Always use applications shared through trusted links and sources',
-  'Check the application URL before using it (appUrl parameter in the browser bar)',
-  'Review transaction information in the Safe popup when interacting with the Safe Apps and creating transactions',
-  'Review your transaction queue and transaction information when having more than one owner configured',
-]
-
-const SecuritySteps = (): React.ReactElement => {
+const SecurityStepList = (): React.ReactElement => {
   return (
     <>
       <StyledTitle size="sm">Best security practices when interacting with Safe Apps</StyledTitle>
@@ -19,7 +13,7 @@ const SecuritySteps = (): React.ReactElement => {
           <StyledDot color="primary">
             <StyledDotText size="sm">{index + 1}</StyledDotText>
           </StyledDot>
-          <Text size="lg">{step}</Text>
+          <Text size="lg">{step.title}</Text>
         </Box>
       ))}
     </>
@@ -40,4 +34,4 @@ const StyledDotText = styled(Text)`
   font-size: 10px;
 `
 
-export default SecuritySteps
+export default SecurityStepList

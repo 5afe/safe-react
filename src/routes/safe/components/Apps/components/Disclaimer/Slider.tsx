@@ -166,6 +166,7 @@ const StyledInner = styled.div`
   min-width: 100%;
   min-height: 100%;
   transform: translateX(0);
+  height: 400px;
 `
 
 const StyledDot = styled.div<{ color: ThemeColors }>`
