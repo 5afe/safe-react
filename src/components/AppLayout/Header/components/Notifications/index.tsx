@@ -1,6 +1,6 @@
 import { ReactElement, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { IconButton, Badge, ClickAwayListener, Grow, Paper, Popper } from '@material-ui/core'
+import { IconButton, Badge, ClickAwayListener, Paper, Popper } from '@material-ui/core'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import styled from 'styled-components'
 import { orderBy } from 'lodash'
@@ -75,32 +75,28 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
           zIndex: 1302,
         }}
       >
-        {({ TransitionProps }) => (
-          <Grow {...TransitionProps}>
-            <ClickAwayListener mouseEvent="onClick" onClickAway={handleClickAway} touchEvent={false}>
-              <NotificationsPopper>
-                <NotificationsHeader>
-                  <div>
-                    <NotificationsTitle>Notifications</NotificationsTitle>
-                    {hasUnread && <UnreadCount>{unreadCount}</UnreadCount>}
-                  </div>
-                  <ClearAllButton onClick={() => dispatch(deleteAllNotifications())}>Clear All</ClearAllButton>
-                </NotificationsHeader>
-                <NotificationList notifications={notificationsToShow} />
-                {canExpand && (
-                  <div>
-                    <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
-                      {showAll ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </ExpandIconButton>
-                    <NotificationSubtitle>
-                      {showAll ? 'Hide' : `${notifications.length - NOTIFICATION_LIMIT} other notifications`}
-                    </NotificationSubtitle>
-                  </div>
-                )}
-              </NotificationsPopper>
-            </ClickAwayListener>
-          </Grow>
-        )}
+        <ClickAwayListener onClickAway={handleClickAway} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
+          <NotificationsPopper component="div">
+            <NotificationsHeader>
+              <div>
+                <NotificationsTitle>Notifications</NotificationsTitle>
+                {hasUnread && <UnreadCount>{unreadCount}</UnreadCount>}
+              </div>
+              <ClearAllButton onClick={() => dispatch(deleteAllNotifications())}>Clear All</ClearAllButton>
+            </NotificationsHeader>
+            <NotificationList notifications={notificationsToShow} />
+            {canExpand && (
+              <div>
+                <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
+                  {showAll ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ExpandIconButton>
+                <NotificationSubtitle>
+                  {showAll ? 'Hide' : `${notifications.length - NOTIFICATION_LIMIT} other notifications`}
+                </NotificationSubtitle>
+              </div>
+            )}
+          </NotificationsPopper>
+        </ClickAwayListener>
       </Popper>
     </>
   )

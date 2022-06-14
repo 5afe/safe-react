@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import IconButton from '@material-ui/core/IconButton'
@@ -120,24 +119,20 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
         placement="bottom"
         popperOptions={{ positionFixed: true }}
       >
-        {({ TransitionProps }) => (
-          <Grow {...TransitionProps}>
-            <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-              <List className={classes.network} component="div">
-                {getNetworkRootRoutes().map((network) => (
-                  <Fragment key={network.chainId}>
-                    <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
-                      <NetworkLabel networkInfo={getChainById(network.chainId)} />
+        <ClickAwayListener onClickAway={clickAway} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
+          <List className={classes.network} component="div">
+            {getNetworkRootRoutes().map((network) => (
+              <Fragment key={network.chainId}>
+                <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
+                  <NetworkLabel networkInfo={getChainById(network.chainId)} />
 
-                      {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
-                    </StyledLink>
-                    <StyledDivider />
-                  </Fragment>
-                ))}
-              </List>
-            </ClickAwayListener>
-          </Grow>
-        )}
+                  {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
+                </StyledLink>
+                <StyledDivider />
+              </Fragment>
+            ))}
+          </List>
+        </ClickAwayListener>
       </Popper>
     </>
   )

@@ -81,7 +81,7 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
       placement="bottom"
       popperOptions={{ positionFixed: true }}
     >
-      <ClickAwayListener mouseEvent="onClick" onClickAway={onClose} touchEvent={false}>
+      <ClickAwayListener onClickAway={onClose} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
         <List className={classes.root} component="div">
           {providerDetails}
         </List>
