@@ -31,7 +31,6 @@ const Notifications = ({}: Props): ReactElement => {
       <IconButton>
         <StyledBadge
           variant="dot"
-          color="primary"
           invisible={!hasUnread}
           anchorOrigin={{
             vertical: 'bottom',
