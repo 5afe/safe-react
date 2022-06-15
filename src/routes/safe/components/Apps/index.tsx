@@ -75,6 +75,7 @@ const Apps = (): React.ReactElement => {
         <SafeAppsDisclaimer
           onCancel={goBack}
           onConfirm={handleConfirm}
+          appUrl={url}
           isConsentAccepted={consentReceived}
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}

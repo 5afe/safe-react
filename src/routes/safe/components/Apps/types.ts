@@ -11,3 +11,8 @@ export type SafeApp = Omit<SafeAppData, 'id'> & {
 export type StoredSafeApp = {
   url: string
 }
+
+export type SecurityStep = {
+  title: string
+  imageSrc?: string
+}

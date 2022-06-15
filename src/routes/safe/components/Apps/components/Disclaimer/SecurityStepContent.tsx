@@ -1,19 +1,17 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
 import styled from 'styled-components'
-
 import { StyledTitle } from './styles'
+import { SecurityStep } from '../../types'
 
-type SecurityStepContentProps = {
-  title: string
-  image: string
-}
+type SecurityStepContentProps = SecurityStep
 
-const SecurityStepContent = ({ title, image }: SecurityStepContentProps): React.ReactElement => {
+const SecurityStepContent: React.FC<SecurityStepContentProps> = ({ title, imageSrc, children }): React.ReactElement => {
   return (
     <Grid container direction="column" alignItems="center" justifyContent="center">
       <StyledTitle size="xs">{title}</StyledTitle>
-      <StyledImage src={image} />
+      {children}
+      {imageSrc && <StyledImage src={imageSrc} alt={title} />}
     </Grid>
   )
 }
@@ -23,4 +21,4 @@ const StyledImage = styled.img`
   width: 90%;
 `
 
-export default React.memo(SecurityStepContent)
+export default SecurityStepContent

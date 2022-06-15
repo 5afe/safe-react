@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import styled from 'styled-components'
-import { Icon } from '@gnosis.pm/safe-react-components'
 import Grid from '@material-ui/core/Grid'
+import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import Slider from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
 import { alpha } from '@material-ui/core/styles'
@@ -9,10 +9,12 @@ import SecurityStepList from './SecurityStepList'
 import WarningDefaultList from './WarningDefaultList'
 import { SECURITY_STEPS } from './utils'
 import SecurityStepContent from './SecurityStepContent'
+import { SecurityStep } from '../../types'
 
-interface OwnProps {
+interface SafeAppsDisclaimerProps {
   onCancel: () => void
   onConfirm: () => void
+  appUrl: string
   isConsentAccepted?: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
@@ -22,11 +24,12 @@ interface OwnProps {
 const SafeAppsDisclaimer = ({
   onCancel,
   onConfirm,
+  appUrl,
   isConsentAccepted,
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
   isExtendedListReviewed,
-}: OwnProps): JSX.Element => {
+}: SafeAppsDisclaimerProps): JSX.Element => {
   const handleComplete = () => {
     onConfirm()
   }
@@ -38,12 +41,20 @@ const SafeAppsDisclaimer = ({
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
-            {isFirstTimeAccessingApp && isExtendedListReviewed && <SecurityStepList />}
+            {isFirstTimeAccessingApp && isExtendedListReviewed && (
+              <SecurityStepList steps={SECURITY_STEPS} appUrl={appUrl} />
+            )}
             {isFirstTimeAccessingApp &&
               !isExtendedListReviewed &&
-              SECURITY_STEPS.map((step, index) => (
-                <SecurityStepContent key={index} title={step.title} image={step.image} />
-              ))}
+              SECURITY_STEPS.map((step: SecurityStep, index: number) => {
+                return step.imageSrc ? (
+                  <SecurityStepContent key={index} {...step} />
+                ) : (
+                  <SecurityStepContent title={step.title}>
+                    <StyledStepContentText size="xl">{appUrl}</StyledStepContentText>
+                  </SecurityStepContent>
+                )
+              })}
             {!isSafeAppInDefaultList && <WarningDefaultList />}
           </Slider>
         </Grid>
@@ -72,6 +83,11 @@ const StyledIcon = styled(Icon)`
     width: 46px;
     height: 46px;
   }
+`
+
+const StyledStepContentText = styled(Text)`
+  font-weight: bold;
+  overflow-wrap: anywhere;
 `
 
 export default memo(SafeAppsDisclaimer)

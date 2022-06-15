@@ -6,6 +6,7 @@ describe('<SafeAppsDisclaimer />', () => {
   const baseProps = {
     onConfirm: jest.fn(),
     onCancel: jest.fn(),
+    appUrl: 'https://safe-app.test.eth',
     isExtendedListReviewed: false,
     isFirstTimeAccessingApp: false,
     isSafeAppInDefaultList: true,
