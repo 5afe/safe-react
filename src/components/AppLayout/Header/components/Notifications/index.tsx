@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, Badge, ClickAwayListener, Paper, Popper } from '@material-ui/core'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import styled from 'styled-components'
-import { orderBy } from 'lodash'
 
 import { ReturnValue as Props } from 'src/logic/hooks/useStateHandler'
 import {
   deleteAllNotifications,
+  NotificationsState,
   readNotification,
   selectNotifications,
 } from 'src/logic/notifications/store/notifications'
@@ -18,6 +18,16 @@ import NotificationList from 'src/components/AppLayout/Header/components/Notific
 
 export const NOTIFICATION_LIMIT = 4
 
+export const getSortedNotifications = (notifications: NotificationsState): NotificationsState => {
+  const chronologicalNotifications = notifications.sort((a, b) => b.timestamp - a.timestamp)
+
+  const unreadActionNotifications = chronologicalNotifications.filter(({ read, action }) => !read && action)
+  const unreadNotifications = chronologicalNotifications.filter(({ read, action }) => !read && !action)
+  const readNotifications = chronologicalNotifications.filter(({ read }) => read)
+
+  return [...unreadActionNotifications, ...unreadNotifications, ...readNotifications]
+}
+
 // Props will be used in popper
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const dispatch = useDispatch()
@@ -25,7 +35,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const [showAll, setShowAll] = useState<boolean>(false)
 
   const notifications = useSelector(selectNotifications)
-  const sortedNotifications = useMemo(() => orderBy(notifications, ['timestamp', 'read', 'action']), [notifications])
+  const sortedNotifications = useMemo(() => getSortedNotifications(notifications), [notifications])
 
   const canExpand = notifications.length > NOTIFICATION_LIMIT
 
