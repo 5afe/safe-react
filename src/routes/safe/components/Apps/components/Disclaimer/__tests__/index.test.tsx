@@ -11,6 +11,7 @@ describe('<SafeAppsDisclaimer />', () => {
     isFirstTimeAccessingApp: false,
     isSafeAppInDefaultList: true,
     isConsentAccepted: true,
+    isWarningHidden: false,
   }
 
   it('should show the Legal Disclaimer if not previously accepted', () => {
@@ -44,7 +45,7 @@ describe('<SafeAppsDisclaimer />', () => {
   it('should show a warning when the application is not in the default list', () => {
     render(<SafeAppsDisclaimer {...baseProps} isSafeAppInDefaultList={false} />)
 
-    expect(screen.queryAllByText(/warning/i).length).toEqual(2)
+    expect(screen.queryAllByText(/warning/i).length).toEqual(4)
   })
 
   it('should call onConfirm() after the slides are reviewed', () => {
