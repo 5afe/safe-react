@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
-import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -315,12 +314,6 @@ export const SafeDeployment = ({
           ) : null}
         </BodyFooter>
       </Body>
-
-      {stepIndex !== 0 && (
-        <BackButton color="primary" minWidth={140} onClick={onCancel} data-testid="safe-creation-back-btn">
-          Back
-        </BackButton>
-      )}
     </Wrapper>
   )
 }
@@ -423,9 +416,4 @@ const BodyFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-`
-
-const BackButton = styled(Button)`
-  grid-column: 2;
-  margin: 20px auto 0;
 `
