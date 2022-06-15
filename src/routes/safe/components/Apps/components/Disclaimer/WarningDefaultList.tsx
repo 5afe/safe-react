@@ -8,9 +8,7 @@ const WarningDefaultList = (): JSX.Element => (
       The application you are trying to use is not in our default list
     </Text>
     <br />
-    <Text size="lg">
-      The <b>default list</b> are applications reviewed and verified for us
-    </Text>
+    <Text size="lg">Check the link you are using and ensure it comes from a trusted source</Text>
   </>
 )
 
