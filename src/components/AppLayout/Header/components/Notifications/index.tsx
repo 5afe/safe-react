@@ -28,7 +28,6 @@ export const getSortedNotifications = (notifications: NotificationsState): Notif
   return [...unreadActionNotifications, ...unreadNotifications, ...readNotifications]
 }
 
-// Props will be used in popper
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const dispatch = useDispatch()
   const notificationsRef = useRef<HTMLButtonElement>(null)
