@@ -4,6 +4,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 const APPS_SECURITY_STEPS_REVIEWED = 'APPS_SECURITY_STEPS_REVIEWED'
 const APPS_SECURITY_STEPS_EXTENDED_LIST_REVIEWED = 'APPS_SECURITY_STEPS_EXTENDED_LIST_REVIEWED'
 const APPS_SECURITY_STEPS_CUSTOM_WARNING = 'APPS_SECURITY_STEPS_CUSTOM_WARNING'
+const APPS_SECURITY_STEPS_LEGAL_CONSENT_RECEIVED = 'APPS_SECURITY_STEPS_LEGAL_CONSENT_RECEIVED'
 
 const useSecuritySteps = (): {
   appsReviewed: string[]
@@ -12,15 +13,19 @@ const useSecuritySteps = (): {
   onReviewExtendedList: () => void
   hideCustomAppsWarning: boolean
   onHideCustomAppsWarning: () => void
+  consentReceived: boolean
+  onConsentReceipt: () => void
 } => {
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
   const [hideCustomAppsWarning, setHideCustomAppsWarning] = useState(false)
+  const [consentReceived, setConsentReceived] = useState<boolean>(false)
 
   useEffect(() => {
     setAppsReviewed(loadFromStorage(APPS_SECURITY_STEPS_REVIEWED) || [])
     setExtendedListReviewed(loadFromStorage(APPS_SECURITY_STEPS_EXTENDED_LIST_REVIEWED) || false)
     setHideCustomAppsWarning(loadFromStorage(APPS_SECURITY_STEPS_CUSTOM_WARNING) || false)
+    setConsentReceived(loadFromStorage(APPS_SECURITY_STEPS_LEGAL_CONSENT_RECEIVED) || false)
   }, [])
 
   const onReviewApp = useCallback(
@@ -45,6 +50,11 @@ const useSecuritySteps = (): {
     saveToStorage(APPS_SECURITY_STEPS_CUSTOM_WARNING, true)
   }, [])
 
+  const onConsentReceipt = useCallback((): void => {
+    setConsentReceived(true)
+    saveToStorage(APPS_SECURITY_STEPS_LEGAL_CONSENT_RECEIVED, true)
+  }, [])
+
   return {
     appsReviewed,
     onReviewApp,
@@ -52,6 +62,8 @@ const useSecuritySteps = (): {
     extendedListReviewed,
     onReviewExtendedList,
     onHideCustomAppsWarning,
+    consentReceived,
+    onConsentReceipt,
   }
 }
 

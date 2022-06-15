@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
 import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
-import { useLegalConsent } from 'src/routes/safe/components/Apps/hooks/useLegalConsent'
 import SafeAppsDisclaimer from './components/Disclaimer'
 import SafeAppsErrorBoundary from './components/SafeAppsErrorBoundary'
 import SafeAppsLoadError from './components/SafeAppsLoadError'
@@ -16,7 +15,7 @@ const Apps = (): React.ReactElement => {
   const url = getAppUrl()
   const [isDisclaimerReadingCompleted, setIsDisclaimerReadingCompleted] = useState(false)
   const { isLoading, appList, getSafeApp } = useAppList()
-  const { consentReceived, onConsentReceipt } = useLegalConsent()
+
   const {
     appsReviewed,
     onReviewApp,
@@ -24,6 +23,8 @@ const Apps = (): React.ReactElement => {
     onReviewExtendedList,
     hideCustomAppsWarning,
     onHideCustomAppsWarning,
+    consentReceived,
+    onConsentReceipt,
   } = useSecuritySteps()
 
   useEffect(() => {
