@@ -10,9 +10,19 @@ type Props<T> = {
   rules?: UseControllerProps<T>['rules']
   label: string
   type?: HTMLInputTypeAttribute
+  // To disable date fields
+  disabled?: boolean
+  endAdornment?: ReactElement
 }
 
-const RHFTextField = <T extends FieldValues>({ name, rules, control, type, ...props }: Props<T>): ReactElement => {
+const RHFTextField = <T extends FieldValues>({
+  name,
+  rules,
+  control,
+  type,
+  endAdornment = undefined,
+  ...props
+}: Props<T>): ReactElement => {
   const {
     field: { ref, value, ...field },
     fieldState: { error },
@@ -33,6 +43,7 @@ const RHFTextField = <T extends FieldValues>({ name, rules, control, type, ...pr
       error={!!error}
       helperText={getFilterHelperText(value, error)}
       InputLabelProps={{ shrink: type === 'date' || !!value }}
+      InputProps={{ endAdornment }}
     />
   )
 }

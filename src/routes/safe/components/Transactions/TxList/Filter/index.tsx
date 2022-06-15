@@ -1,4 +1,4 @@
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Controller, DefaultValues, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -10,152 +10,212 @@ import Paper from '@material-ui/core/Paper/Paper'
 import FormControl from '@material-ui/core/FormControl/FormControl'
 import FormLabel from '@material-ui/core/FormLabel/FormLabel'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import type { SettingsInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { parse } from 'query-string'
+import { useHistory, useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Button from 'src/components/layout/Button'
 import RHFTextField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFTextField'
 import RHFAddressSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFAddressSearchField'
-import RHFModuleSearchField from 'src/routes/safe/components/Transactions/TxList/Filter/RHFModuleSearchField'
 import BackdropLayout from 'src/components/layout/Backdrop'
 import filterIcon from 'src/routes/safe/components/Transactions/TxList/assets/filter-icon.svg'
-
-import { lg, md, primary300, grey400, largeFontSize, primary200, sm } from 'src/theme/variables'
+import { lg, md, primary300, grey400, largeFontSize, primary200, sm, black300, fontColor } from 'src/theme/variables'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import { isValidAmount, isValidNonce } from 'src/routes/safe/components/Transactions/TxList/Filter/validation'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import {
+  addHistoryTransactions,
+  removeHistoryTransactions,
+} from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { ChainId } from 'src/config/chain'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
+import { IconButton, InputAdornment } from '@material-ui/core'
+import { Tooltip } from 'src/components/layout/Tooltip'
+import { isEqual } from 'lodash'
 
-// Types cannot take computed property names
-const TYPE_FIELD_NAME = 'type'
-const DATE_FROM_FIELD_NAME = 'execution_date__gte'
-const DATE_TO_FIELD_NAME = 'execution_date__lte'
-const RECIPIENT_FIELD_NAME = 'to'
-const HIDDEN_RECIPIENT_FIELD_NAME = '__to'
-const AMOUNT_FIELD_NAME = 'value'
-const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
-const HIDDEN_TOKEN_ADDRESS_FIELD_NAME = '__token_address'
-const MODULE_FIELD_NAME = 'module'
-const NONCE_FIELD_NAME = 'nonce'
+export const FILTER_TYPE_FIELD_NAME = 'type'
+export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
+export const DATE_TO_FIELD_NAME = 'execution_date__lte'
+export const RECIPIENT_FIELD_NAME = 'to'
+export const AMOUNT_FIELD_NAME = 'value'
+export const TOKEN_ADDRESS_FIELD_NAME = 'token_address'
+export const MODULE_FIELD_NAME = 'module'
+export const NONCE_FIELD_NAME = 'nonce'
 
-enum FilterType {
+export enum FilterType {
   INCOMING = 'Incoming',
   MULTISIG = 'Outgoing',
   MODULE = 'Module-based',
 }
 
-type FilterForm = {
-  [TYPE_FIELD_NAME]: FilterType
+// Types cannot take computed property names
+export type FilterForm = {
+  [FILTER_TYPE_FIELD_NAME]: FilterType
   [DATE_FROM_FIELD_NAME]: string
   [DATE_TO_FIELD_NAME]: string
   [RECIPIENT_FIELD_NAME]: string
-  [HIDDEN_RECIPIENT_FIELD_NAME]: string
   [AMOUNT_FIELD_NAME]: string
   [TOKEN_ADDRESS_FIELD_NAME]: string
-  [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: string
-  [MODULE_FIELD_NAME]: SettingsInfo['type']
+  [MODULE_FIELD_NAME]: string
   [NONCE_FIELD_NAME]: string
 }
 
-const isValidAmount = (value: FilterForm['value']): string | undefined => {
-  if (value && isNaN(Number(value))) {
-    return 'Invalid number'
-  }
+const defaultValues: DefaultValues<FilterForm> = {
+  [FILTER_TYPE_FIELD_NAME]: FilterType.INCOMING,
+  [DATE_FROM_FIELD_NAME]: '',
+  [DATE_TO_FIELD_NAME]: '',
+  [RECIPIENT_FIELD_NAME]: '',
+  [AMOUNT_FIELD_NAME]: '',
+  [TOKEN_ADDRESS_FIELD_NAME]: '',
+  [MODULE_FIELD_NAME]: '',
+  [NONCE_FIELD_NAME]: '',
 }
 
-const isValidNonce = (value: FilterForm['nonce']): string | undefined => {
-  if (value.length === 0) {
-    return
-  }
-
-  const number = Number(value)
-  if (isNaN(number)) {
-    return 'Invalid number'
-  }
-  if (number < 0) {
-    return 'Nonce cannot be negative'
-  }
-}
-
-const getTransactionFilter = ({ execution_date__gte, execution_date__lte, to, value }: FilterForm) => {
+const getInitialValues = (search: string): DefaultValues<FilterForm> => {
   return {
-    execution_date__gte: execution_date__gte ? new Date(execution_date__gte).toISOString() : undefined,
-    execution_date__lte: execution_date__lte ? new Date(execution_date__lte).toISOString() : undefined,
-    to: to || undefined,
-    value: value ? Number(value) : undefined,
+    ...defaultValues,
+    ...parse(search),
   }
 }
 
-const getIncomingFilter = (filter: FilterForm) => {
-  return {
-    ...getTransactionFilter(filter),
-    token_address: filter.token_address || undefined,
+const loadTransactions = ({
+  chainId,
+  safeAddress,
+  filter,
+}: {
+  chainId: ChainId
+  safeAddress: string
+  filter?: FilterForm
+}) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(removeHistoryTransactions({ chainId, safeAddress }))
+
+    try {
+      const values = await loadHistoryTransactions(safeAddress, filter)
+      dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
+    } catch (e) {
+      e.log()
+    }
   }
 }
 
-const getOutgoingFilter = (filter: FilterForm) => {
-  return {
-    ...getTransactionFilter(filter),
-    nonce: filter.nonce ? Number(filter.nonce) : undefined,
+const StyledRHFTextField = styled(RHFTextField)`
+  &:hover {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: ${black300};
+    }
   }
-}
-
-const getModuleFilter = ({ module }: FilterForm) => {
-  return {
-    module,
-  }
-}
+`
 
 const Filter = (): ReactElement => {
+  const dispatch = useDispatch()
+  const chainId = useSelector(currentChainId)
+  const { safeAddress } = useSafeAddress()
+  const { pathname, search } = useLocation()
+  const history = useHistory()
+
   const [showFilter, setShowFilter] = useState<boolean>(false)
   const hideFilter = () => setShowFilter(false)
-  const toggleFilter = () => setShowFilter((prev) => !prev)
 
-  // We cannot rely on the default values in `useForm` because they are updated on unmount
-  // meaning that each `reset` does not retain the 'original' default values
-  const defaultValues = useRef<DefaultValues<FilterForm>>({
-    [TYPE_FIELD_NAME]: FilterType.INCOMING,
-    [DATE_FROM_FIELD_NAME]: '',
-    [DATE_TO_FIELD_NAME]: '',
-    [RECIPIENT_FIELD_NAME]: '',
-    [HIDDEN_RECIPIENT_FIELD_NAME]: '',
-    [AMOUNT_FIELD_NAME]: '',
-    [TOKEN_ADDRESS_FIELD_NAME]: '',
-    [HIDDEN_TOKEN_ADDRESS_FIELD_NAME]: '',
-    [MODULE_FIELD_NAME]: undefined,
-    [NONCE_FIELD_NAME]: '',
-  })
+  const initialValues = getInitialValues(search)
 
   const methods = useForm<FilterForm>({
-    defaultValues: defaultValues.current,
+    defaultValues: initialValues,
+    shouldUnregister: true,
   })
-  const { handleSubmit, formState, reset, watch, control } = methods
+  const { handleSubmit, reset, watch, control } = methods
 
-  const type = watch(TYPE_FIELD_NAME)
+  const toggleFilter = () => {
+    if (showFilter) {
+      setShowFilter(false)
+      return
+    }
+    setShowFilter(true)
 
-  const isClearable = Object.entries(formState.dirtyFields).some(([name, value]) => value && name !== TYPE_FIELD_NAME)
-  const clearParameters = () => {
-    reset({ ...defaultValues.current, type })
+    // We use `shouldUnregister` to avoid saving every value to search
+    // We must therefore reset the form to the values from it
+    Object.entries(initialValues).forEach(([key, value]) => {
+      methods.setValue(key as keyof FilterForm, value)
+    })
   }
+
+  const clearFilter = useCallback(
+    ({ clearSearch = true } = {}) => {
+      if (search && clearSearch) {
+        history.replace(pathname)
+        dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
+        reset(defaultValues)
+      }
+
+      hideFilter()
+    },
+    [search, history, pathname, chainId, dispatch, reset, safeAddress],
+  )
+
+  useEffect(() => {
+    return () => {
+      // If search is programatically cleared on unmount, the router routes back to here
+      // Search is inherently cleared when unmounting either way
+      clearFilter({ clearSearch: false })
+    }
+  }, [clearFilter])
+
+  const filterType = watch(FILTER_TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
-    const params =
-      type === FilterType.INCOMING
-        ? getIncomingFilter(filter)
-        : FilterType.MULTISIG
-        ? getOutgoingFilter(filter)
-        : getModuleFilter(filter)
+    // Don't apply the same filter twice
+    if (isEqual(filter, initialValues)) {
+      hideFilter()
+    }
 
-    console.log(params)
+    const query = Object.fromEntries(Object.entries(filter).filter(([, value]) => !!value))
 
-    trackEvent(TX_LIST_EVENTS.FILTER)
+    history.replace({ pathname, search: `?${new URLSearchParams(query).toString()}` })
+
+    dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress), filter }))
+
+    const trackedFields = [
+      FILTER_TYPE_FIELD_NAME,
+      // DATE_FROM_FIELD_NAME,
+      // DATE_TO_FIELD_NAME,
+      RECIPIENT_FIELD_NAME,
+      AMOUNT_FIELD_NAME,
+      TOKEN_ADDRESS_FIELD_NAME,
+      MODULE_FIELD_NAME,
+      NONCE_FIELD_NAME,
+    ]
+
+    trackedFields.forEach((field) => {
+      if (query[field]) {
+        trackEvent({ ...TX_LIST_EVENTS.FILTER, label: query[field] })
+      }
+    })
+
     hideFilter()
   }
+
+  const comingSoonAdornment = (
+    <InputAdornment position="end">
+      <Tooltip title="Coming soon" arrow>
+        <IconButton>
+          <HourglassEmptyIcon />
+        </IconButton>
+      </Tooltip>
+    </InputAdornment>
+  )
 
   return (
     <>
       <BackdropLayout isOpen={showFilter} />
       <ClickAwayListener onClickAway={hideFilter}>
         <Wrapper>
-          <StyledFilterButton onClick={toggleFilter} variant="contained" color="primary" disableElevation>
-            <StyledFilterIconImage src={filterIcon} /> Filters{' '}
+          <StyledFilterButton onClick={toggleFilter} variant="contained" disableElevation $isFiltered={!!search}>
+            <StyledFilterIconImage src={filterIcon} /> {search ? initialValues[FILTER_TYPE_FIELD_NAME] : 'Filter'}
             {showFilter ? <ExpandLessIcon color="secondary" /> : <ExpandMoreIcon color="secondary" />}
           </StyledFilterButton>
           {showFilter && (
@@ -165,7 +225,7 @@ const Filter = (): ReactElement => {
                   <TxTypeFormControl>
                     <StyledFormLabel>Transaction type</StyledFormLabel>
                     <Controller<FilterForm>
-                      name={TYPE_FIELD_NAME}
+                      name={FILTER_TYPE_FIELD_NAME}
                       control={control}
                       render={({ field }) => (
                         <RadioGroup {...field}>
@@ -179,25 +239,25 @@ const Filter = (): ReactElement => {
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
-                      {type !== FilterType.MODULE && (
+                      {filterType !== FilterType.MODULE && (
                         <>
-                          <RHFTextField<FilterForm>
+                          {/* @ts-expect-error - styled-components don't have strict types */}
+                          <StyledRHFTextField<FilterForm>
                             name={DATE_FROM_FIELD_NAME}
                             label="From"
-                            type="date"
+                            // type="date"
                             control={control}
+                            disabled
+                            endAdornment={comingSoonAdornment}
                           />
-                          <RHFTextField<FilterForm>
+                          {/* @ts-expect-error - styled-components don't have strict types */}
+                          <StyledRHFTextField<FilterForm>
                             name={DATE_TO_FIELD_NAME}
                             label="To"
-                            type="date"
+                            // type="date"
                             control={control}
-                          />
-                          <RHFAddressSearchField<FilterForm>
-                            name={RECIPIENT_FIELD_NAME}
-                            hiddenName={HIDDEN_RECIPIENT_FIELD_NAME}
-                            label="Recipient"
-                            methods={methods}
+                            disabled
+                            endAdornment={comingSoonAdornment}
                           />
                           <RHFTextField<FilterForm>
                             name={AMOUNT_FIELD_NAME}
@@ -209,33 +269,39 @@ const Filter = (): ReactElement => {
                           />
                         </>
                       )}
-                      {type === FilterType.INCOMING && (
+                      {filterType === FilterType.INCOMING && (
                         <RHFAddressSearchField<FilterForm>
                           name={TOKEN_ADDRESS_FIELD_NAME}
-                          hiddenName={HIDDEN_TOKEN_ADDRESS_FIELD_NAME}
                           label="Token address"
                           methods={methods}
                         />
                       )}
-                      {type === FilterType.MULTISIG && (
-                        <RHFTextField<FilterForm>
-                          name={NONCE_FIELD_NAME}
-                          label="Nonce"
-                          control={control}
-                          rules={{
-                            validate: isValidNonce,
-                          }}
-                        />
+                      {filterType === FilterType.MULTISIG && (
+                        <>
+                          <RHFAddressSearchField<FilterForm>
+                            name={RECIPIENT_FIELD_NAME}
+                            label="Recipient"
+                            methods={methods}
+                          />
+                          <RHFTextField<FilterForm>
+                            name={NONCE_FIELD_NAME}
+                            label="Nonce"
+                            control={control}
+                            rules={{
+                              validate: isValidNonce,
+                            }}
+                          />
+                        </>
                       )}
-                      {type === FilterType.MODULE && (
-                        <RHFModuleSearchField<FilterForm> name={MODULE_FIELD_NAME} label="Module" control={control} />
+                      {filterType === FilterType.MODULE && (
+                        <RHFAddressSearchField<FilterForm> name={MODULE_FIELD_NAME} label="Module" methods={methods} />
                       )}
                     </ParametersFormWrapper>
                     <ButtonWrapper>
-                      <Button type="submit" variant="contained" disabled={!isClearable} color="primary">
+                      <Button type="submit" variant="contained" color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={clearParameters} disabled={!isClearable} color="default">
+                      <Button variant="contained" onClick={clearFilter} color="default" disabled={!search}>
                         Clear
                       </Button>
                     </ButtonWrapper>
@@ -252,19 +318,16 @@ const Filter = (): ReactElement => {
 
 export default Filter
 
-const StyledFilterButton = styled(Button)`
+const StyledFilterButton = styled(Button)<{ $isFiltered: boolean }>`
   &.MuiButton-root {
     align-items: center;
-    background-color: ${primary200};
-    border: 2px solid ${primary300};
+    background-color: ${({ $isFiltered }) => ($isFiltered ? primary200 : 'transparent')};
+    border: ${({ $isFiltered }) => `2px solid ${$isFiltered ? primary300 : fontColor}`};
     color: #162d45;
     align-self: flex-end;
     margin-right: ${md};
     margin-top: -51px;
     margin-bottom: ${md};
-    &:hover {
-      background-color: ${primary200};
-    }
   }
 `
 
@@ -288,6 +351,7 @@ const StyledPaper = styled(Paper)`
   margin-left: 10px;
   top: 0;
   left: 0;
+  box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
 `
 
 const FilterWrapper = styled.div`

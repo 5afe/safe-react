@@ -14,7 +14,7 @@ import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import { BatchExecuteHoverProvider } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
 
 export const QueueTransactions = (): ReactElement => {
-  const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const { count, isLoading, next, transactions } = usePagedQueuedTransactions()
 
   const queuedTxCount = useMemo(
     () => (transactions ? transactions.next.count + transactions.queue.count : 0),
@@ -51,7 +51,7 @@ export const QueueTransactions = (): ReactElement => {
   return (
     <BatchExecuteHoverProvider>
       <BatchExecute />
-      <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+      <TxsInfiniteScroll next={next} isLoading={isLoading}>
         {/* Next list */}
         <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
           {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}

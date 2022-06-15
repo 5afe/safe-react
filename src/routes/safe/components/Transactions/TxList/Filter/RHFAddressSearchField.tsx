@@ -5,6 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete/Autocomplete'
 import TextField from '@material-ui/core/TextField/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment/InputAdornment'
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress'
+import styled from 'styled-components'
 
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
@@ -16,21 +17,32 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 
 type Props<T> = {
   name: Path<T>
-  hiddenName: Path<T>
   methods: UseFormReturn<T>
   label: string
 }
 
+const StyledAutocomplete = styled(Autocomplete)`
+  .MuiAutocomplete-input:not([value='']) {
+    text-overflow: ellipsis;
+    overflow: hidden !important;
+    padding-right: 34px !important;
+
+    + .MuiAutocomplete-clearIndicator {
+      visibility: visible;
+    }
+  }
+`
+
 const RHFAddressSearchField = <T extends FieldValues>({
   name,
-  hiddenName,
-  methods: { control, register },
+  methods: { control },
   label,
   ...props
 }: Props<T>): ReactElement => {
   const addressBookOnChain = useSelector(currentNetworkAddressBook)
 
   const [isResolving, setIsResolving] = useState<boolean>(false)
+  const [inputValue, setInputValue] = useState<string>('')
 
   // Field that holds the address value
   const { field, fieldState } = useController<T>({
@@ -45,15 +57,9 @@ const RHFAddressSearchField = <T extends FieldValues>({
     },
   })
 
-  // Field that holds the input value
-  const { field: hiddenField } = useController({
-    name: hiddenName,
-    control,
-  })
-
   // On autocomplete selection/text input find address from address book/resolve ENS domain
   const onInputChange = async (newValue: string) => {
-    hiddenField.onChange(newValue)
+    setInputValue(newValue)
 
     const addressBookEntry = addressBookOnChain.find(({ name }) => name === newValue)
     if (addressBookEntry) {
@@ -87,42 +93,39 @@ const RHFAddressSearchField = <T extends FieldValues>({
   }
 
   return (
-    <>
-      <input type="hidden" {...register(hiddenName)} />
-      <Autocomplete
-        freeSolo
-        options={addressBookOnChain}
-        getOptionLabel={({ name }) => name}
-        onInputChange={(_, value) => onInputChange(value)}
-        renderInput={({ inputProps, InputProps, ...params }) => (
-          <TextField
-            innerRef={field.ref}
-            {...params}
-            {...props}
-            label={label}
-            name={name}
-            variant="outlined"
-            error={!!fieldState.error}
-            helperText={getFilterHelperText(field.value, fieldState.error)}
-            inputProps={{
-              ...inputProps,
-              value: formatInputValue(hiddenField.value),
-              readOnly: isResolving,
-            }}
-            InputProps={{
-              ...InputProps,
-              endAdornment: isResolving ? (
-                <InputAdornment position="start">
-                  <CircularProgress size="16px" />
-                </InputAdornment>
-              ) : (
-                InputProps.endAdornment
-              ),
-            }}
-          />
-        )}
-      />
-    </>
+    <StyledAutocomplete
+      freeSolo
+      options={addressBookOnChain}
+      getOptionLabel={({ name }) => name}
+      onInputChange={(_, value) => onInputChange(value)}
+      renderInput={({ inputProps, InputProps, ...params }) => (
+        <TextField
+          innerRef={field.ref}
+          {...params}
+          {...props}
+          label={label}
+          name={name}
+          variant="outlined"
+          error={!!fieldState.error}
+          helperText={getFilterHelperText(field.value, fieldState.error)}
+          inputProps={{
+            ...inputProps,
+            value: formatInputValue(inputValue || field.value),
+            readOnly: isResolving,
+          }}
+          InputProps={{
+            ...InputProps,
+            endAdornment: isResolving ? (
+              <InputAdornment position="start">
+                <CircularProgress size="16px" />
+              </InputAdornment>
+            ) : (
+              InputProps.endAdornment
+            ),
+          }}
+        />
+      )}
+    />
   )
 }
 
