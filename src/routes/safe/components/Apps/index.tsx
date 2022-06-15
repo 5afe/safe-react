@@ -17,7 +17,14 @@ const Apps = (): React.ReactElement => {
   const [isDisclaimerReadingCompleted, setIsDisclaimerReadingCompleted] = useState(false)
   const { isLoading, appList, getSafeApp } = useAppList()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
-  const { appsReviewed, onReviewApp, extendedListReviewed, onReviewExtendedList } = useSecuritySteps()
+  const {
+    appsReviewed,
+    onReviewApp,
+    extendedListReviewed,
+    onReviewExtendedList,
+    hideCustomAppsWarning,
+    onHideCustomAppsWarning,
+  } = useSecuritySteps()
 
   useEffect(() => {
     if (!url) {
@@ -45,21 +52,37 @@ const Apps = (): React.ReactElement => {
     return safeAppId ? !appsReviewed?.includes(safeAppId) : true
   }, [appsReviewed, getSafeApp, url])
 
-  const handleConfirm = useCallback(() => {
-    onConsentReceipt()
+  const handleConfirm = useCallback(
+    (shouldHide: boolean) => {
+      onConsentReceipt()
 
-    const safeAppId = getSafeApp(url)?.id
+      const safeAppId = getSafeApp(url)?.id
 
-    if (safeAppId) {
-      onReviewApp(safeAppId)
-    }
+      if (safeAppId) {
+        onReviewApp(safeAppId)
+      }
 
-    if (!extendedListReviewed) {
-      onReviewExtendedList()
-    }
+      if (!extendedListReviewed) {
+        onReviewExtendedList()
+      }
 
-    setIsDisclaimerReadingCompleted(true)
-  }, [extendedListReviewed, getSafeApp, onConsentReceipt, onReviewApp, onReviewExtendedList, url])
+      if (!hideCustomAppsWarning && shouldHide) {
+        onHideCustomAppsWarning()
+      }
+
+      setIsDisclaimerReadingCompleted(true)
+    },
+    [
+      extendedListReviewed,
+      getSafeApp,
+      hideCustomAppsWarning,
+      onConsentReceipt,
+      onHideCustomAppsWarning,
+      onReviewApp,
+      onReviewExtendedList,
+      url,
+    ],
+  )
 
   const goBack = useCallback(() => history.goBack(), [history])
 
@@ -67,7 +90,7 @@ const Apps = (): React.ReactElement => {
     !isLoading &&
     (!consentReceived ||
       (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
-      (!isSafeAppInDefaultList && !isDisclaimerReadingCompleted))
+      (!isSafeAppInDefaultList && !isDisclaimerReadingCompleted && !hideCustomAppsWarning))
 
   if (url) {
     if (showDisclaimer) {
@@ -80,6 +103,7 @@ const Apps = (): React.ReactElement => {
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}
           isExtendedListReviewed={extendedListReviewed}
+          isWarningHidden={hideCustomAppsWarning}
         />
       )
     }

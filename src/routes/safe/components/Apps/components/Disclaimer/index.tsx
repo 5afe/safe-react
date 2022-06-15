@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import styled from 'styled-components'
 import Grid from '@material-ui/core/Grid'
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
@@ -13,12 +13,13 @@ import { SecurityStep } from '../../types'
 
 interface SafeAppsDisclaimerProps {
   onCancel: () => void
-  onConfirm: () => void
+  onConfirm: (hideWarning: boolean) => void
   appUrl: string
   isConsentAccepted?: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
   isExtendedListReviewed: boolean
+  isWarningHidden: boolean
 }
 
 const SafeAppsDisclaimer = ({
@@ -29,9 +30,12 @@ const SafeAppsDisclaimer = ({
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
   isExtendedListReviewed,
+  isWarningHidden,
 }: SafeAppsDisclaimerProps): JSX.Element => {
+  const [hideWarning, setHideWarning] = useState(false)
+
   const handleComplete = () => {
-    onConfirm()
+    onConfirm(hideWarning)
   }
 
   return (
@@ -41,7 +45,7 @@ const SafeAppsDisclaimer = ({
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
-            {isFirstTimeAccessingApp && isExtendedListReviewed && (
+            {isFirstTimeAccessingApp && isSafeAppInDefaultList && isExtendedListReviewed && (
               <SecurityStepList steps={SECURITY_STEPS} appUrl={appUrl} />
             )}
             {isFirstTimeAccessingApp &&
@@ -55,7 +59,7 @@ const SafeAppsDisclaimer = ({
                   </SecurityStepContent>
                 )
               })}
-            {!isSafeAppInDefaultList && <WarningDefaultList />}
+            {!isSafeAppInDefaultList && !isWarningHidden && <WarningDefaultList onHideWarning={setHideWarning} />}
           </Slider>
         </Grid>
       </StyledWrapper>
