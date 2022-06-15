@@ -30,7 +30,7 @@ export const getSortedNotifications = (notifications: NotificationsState): Notif
 
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const dispatch = useDispatch()
-  const notificationsRef = useRef<HTMLButtonElement>(null)
+  const notificationsRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState<boolean>(false)
 
   const notifications = useSelector(selectNotifications)
@@ -62,21 +62,19 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
 
   return (
     <ClickAwayListener onClickAway={handleClickAway} mouseEvent="onMouseUp" touchEvent="onTouchEnd">
-      <div>
-        <Wrapper>
-          <BellIconButton onClick={handleClickBell} disableRipple ref={notificationsRef}>
-            <UnreadNotificationBadge
-              variant="dot"
-              invisible={!hasUnread}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-            >
-              <NotificationsNoneIcon fontSize="small" />
-            </UnreadNotificationBadge>
-          </BellIconButton>
-        </Wrapper>
+      <Wrapper ref={notificationsRef}>
+        <BellIconButton onClick={handleClickBell} disableRipple>
+          <UnreadNotificationBadge
+            variant="dot"
+            invisible={!hasUnread}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+          >
+            <NotificationsNoneIcon fontSize="small" />
+          </UnreadNotificationBadge>
+        </BellIconButton>
         <Popper
           anchorEl={notificationsRef.current}
           open={open}
@@ -88,7 +86,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
           modifiers={{
             offset: {
               enabled: true,
-              offset: '0, 27px',
+              offset: '0, 11px',
             },
           }}
         >
@@ -113,21 +111,19 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
             )}
           </NotificationsPopper>
         </Popper>
-      </div>
+      </Wrapper>
     </ClickAwayListener>
   )
 }
 
 const Wrapper = styled.div`
-  width: 44px;
   height: 100%;
-  display: flex;
-  justify-content: center;
 `
 
 const BellIconButton = styled(IconButton)`
-  width: 100%;
+  width: 44px;
   height: 100%;
+  border-radius: 0;
   &:hover {
     background: none;
   }
