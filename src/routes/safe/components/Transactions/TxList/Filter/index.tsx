@@ -239,21 +239,8 @@ const Filter = (): ReactElement => {
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
-                      <RHFAddressSearchField<FilterForm>
-                        name={RECIPIENT_FIELD_NAME}
-                        label="Recipient"
-                        methods={methods}
-                      />
                       {filterType !== FilterType.MODULE && (
                         <>
-                          <RHFTextField<FilterForm>
-                            name={AMOUNT_FIELD_NAME}
-                            label="Amount"
-                            control={control}
-                            rules={{
-                              validate: isValidAmount,
-                            }}
-                          />
                           {/* @ts-expect-error - styled-components don't have strict types */}
                           <StyledRHFTextField<FilterForm>
                             name={DATE_FROM_FIELD_NAME}
@@ -272,6 +259,14 @@ const Filter = (): ReactElement => {
                             disabled
                             endAdornment={comingSoonAdornment}
                           />
+                          <RHFTextField<FilterForm>
+                            name={AMOUNT_FIELD_NAME}
+                            label="Amount"
+                            control={control}
+                            rules={{
+                              validate: isValidAmount,
+                            }}
+                          />
                         </>
                       )}
                       {filterType === FilterType.INCOMING && (
@@ -282,14 +277,21 @@ const Filter = (): ReactElement => {
                         />
                       )}
                       {filterType === FilterType.MULTISIG && (
-                        <RHFTextField<FilterForm>
-                          name={NONCE_FIELD_NAME}
-                          label="Nonce"
-                          control={control}
-                          rules={{
-                            validate: isValidNonce,
-                          }}
-                        />
+                        <>
+                          <RHFAddressSearchField<FilterForm>
+                            name={RECIPIENT_FIELD_NAME}
+                            label="Recipient"
+                            methods={methods}
+                          />
+                          <RHFTextField<FilterForm>
+                            name={NONCE_FIELD_NAME}
+                            label="Nonce"
+                            control={control}
+                            rules={{
+                              validate: isValidNonce,
+                            }}
+                          />
+                        </>
                       )}
                       {filterType === FilterType.MODULE && (
                         <RHFAddressSearchField<FilterForm> name={MODULE_FIELD_NAME} label="Module" methods={methods} />

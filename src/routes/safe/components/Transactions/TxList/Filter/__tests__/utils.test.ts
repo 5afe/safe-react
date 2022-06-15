@@ -112,8 +112,6 @@ describe('utils', () => {
   describe('getIncomingFilter', () => {
     it('should extract the incoming filter values from the filter, correctly formatted', () => {
       const filter = {
-        __to: 'fakeaddress.eth',
-        to: '0x1234567890123456789012345678901234567890',
         execution_date__gte: '1970-01-01',
         execution_date__lte: '2000-01-01',
         type: FilterType.INCOMING,
@@ -121,7 +119,6 @@ describe('utils', () => {
       }
 
       expect(utils.getIncomingFilter(filter)).toEqual({
-        to: '0x1234567890123456789012345678901234567890',
         execution_date__gte: '1970-01-01T00:00:00.000Z',
         execution_date__lte: '2000-01-01T00:00:00.000Z',
         value: '123000000000000000000',

@@ -79,14 +79,12 @@ type Filter = (FilterForm | Partial<FilterForm>) & { type?: FilterType }
 const getTransactionFilter = ({
   execution_date__gte,
   execution_date__lte,
-  to,
   value,
 }: Filter): Partial<IncomingFilter | OutgoingFilter> => {
   const getISOString = (date: string): string => new Date(date).toISOString()
   return {
     ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
     ...(execution_date__lte && { execution_date__lte: getISOString(execution_date__lte) }),
-    ...(to && { to }),
     ...(value && { value: toWei(value) }),
   }
 }
@@ -100,9 +98,10 @@ export const getIncomingFilter = (filter: Filter): IncomingFilter => {
 }
 
 export const getMultisigFilter = (filter: Filter, executed = false): OutgoingFilter => {
-  const { nonce } = filter
+  const { to, nonce } = filter
   return {
     ...getTransactionFilter(filter),
+    ...(to && { to }),
     ...(nonce && { nonce }),
     ...(executed && { executed: `${executed}` }),
   }
