@@ -136,9 +136,10 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
         </StyledInner>
       </StyledContainer>
       <Box display="flex" justifyContent="center" m={5}>
-        {slides.map((_, index) => (
-          <StyledDot key={index} color={index === stateRef.current.activeSlide ? 'primary' : 'secondaryLight'} />
-        ))}
+        {slides.length > 1 &&
+          slides.map((_, index) => (
+            <StyledDot key={index} color={index === stateRef.current.activeSlide ? 'primary' : 'secondaryLight'} />
+          ))}
       </Box>
       <Box display="flex" justifyContent="center" width="100%">
         <Button
