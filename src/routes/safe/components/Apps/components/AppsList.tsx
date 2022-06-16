@@ -242,7 +242,12 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
                 color: 'error',
                 onClick: () => {
                   removeApp(appToRemove.id)
-                  onRemoveApp(JSON.parse(appToRemove.id).url)
+
+                  const url = JSON.parse(appToRemove.id)?.url
+                  if (url) {
+                    onRemoveApp(url)
+                  }
+
                   setAppToRemove(null)
                 },
                 text: 'Remove',
