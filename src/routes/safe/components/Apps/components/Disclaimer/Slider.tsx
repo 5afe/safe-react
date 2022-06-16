@@ -29,7 +29,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   const firstSlide = slides?.[0]
   const secondSlide = slides?.[1]
   const lastSlide = slides?.[slides?.length - 1]
-
+  const [disabledBtn, setDisabledBtn] = useState(false)
   const [state, setState] = useState<SliderState>({
     translate: 1,
     activeSlide: 0,
@@ -53,6 +53,14 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (disabledBtn) {
+      setTimeout(() => {
+        setDisabledBtn(false)
+      }, 450)
+    }
+  }, [disabledBtn])
 
   useEffect(() => {
     if (stateRef.current.transition === 0) {
@@ -84,10 +92,14 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     })
   }
   const nextSlide = () => {
+    if (disabledBtn) return
+
     if (stateRef.current.activeSlide === slides.length - 1) {
       onComplete()
       return
     }
+
+    setDisabledBtn(true)
 
     setState({
       ...stateRef.current,
@@ -97,6 +109,10 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   }
 
   const prevSlide = () => {
+    if (disabledBtn) return
+
+    setDisabledBtn(true)
+
     setState({
       ...stateRef.current,
       translate: 0,

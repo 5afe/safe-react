@@ -1,6 +1,7 @@
-import React from 'react'
-import { render, fireEvent, screen } from 'src/utils/test-utils'
+import { render, fireEvent, screen, act } from 'src/utils/test-utils'
 import SafeAppsDisclaimer from '../index'
+
+const pauseForSeconds = async (ms: number) => await new Promise((_) => setTimeout(_, ms))
 
 describe('<SafeAppsDisclaimer />', () => {
   const baseProps = {
@@ -48,29 +49,41 @@ describe('<SafeAppsDisclaimer />', () => {
     expect(screen.queryAllByText(/warning/i).length).toEqual(4)
   })
 
-  it('should call onConfirm() after the slides are reviewed', () => {
+  it('should call onConfirm() after the slides are reviewed', async () => {
     render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
     const continueBtn = screen.getByText(/continue/i)
 
-    for (let i = 0; i < 4; i++) {
-      fireEvent.click(continueBtn)
-    }
+    await act(async () => {
+      for (let i = 0; i < 4; i++) {
+        fireEvent.click(continueBtn)
+        await pauseForSeconds(500)
+      }
+    })
 
     expect(baseProps.onConfirm).toHaveBeenCalledTimes(1)
   })
 
-  it('should iterate back and forward over the slides', () => {
+  it('should iterate back and forward over the slides', async () => {
     render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
     const continueBtn = screen.getByText(/continue/i)
 
-    fireEvent.click(continueBtn)
-    fireEvent.click(continueBtn)
-    fireEvent.click(continueBtn)
-    fireEvent.click(screen.getByText(/back/i))
-    fireEvent.click(continueBtn)
-    fireEvent.click(screen.getByText(/back/i))
-    fireEvent.click(continueBtn)
-    fireEvent.click(continueBtn)
+    await act(async () => {
+      fireEvent.click(continueBtn)
+      await pauseForSeconds(500)
+      fireEvent.click(continueBtn)
+      await pauseForSeconds(500)
+      fireEvent.click(continueBtn)
+      await pauseForSeconds(500)
+      fireEvent.click(screen.getByText(/back/i))
+      await pauseForSeconds(500)
+      fireEvent.click(continueBtn)
+      await pauseForSeconds(500)
+      fireEvent.click(screen.getByText(/back/i))
+      await pauseForSeconds(500)
+      fireEvent.click(continueBtn)
+      await pauseForSeconds(500)
+      fireEvent.click(continueBtn)
+    })
 
     expect(baseProps.onConfirm).toHaveBeenCalledTimes(1)
   })
