@@ -75,13 +75,9 @@ const safeReducer = handleActions<SafeReducerMap, Payloads>(
       const safe = action.payload
       const safeAddress = safe.address
 
-      console.log(safe)
-
       mergeNewTagsInSafe(state, safe, safeAddress)
 
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]) as SafeRecordProps)
-
-      console.log(shouldUpdate)
 
       return shouldUpdate
         ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress }), (prevSafe) =>
