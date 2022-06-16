@@ -18,17 +18,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Use Node 16
+    - name: Use Node 10
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '10'
 
     - name: Install dependencies
-      run: yarn
+      run: |
+        sudo apt install libusb-1.0-0-dev libudev-dev
+        yarn
 
     - name: Build site
       run: |
-        yarn build
+        yarn build-mainnet
         
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -39,7 +41,7 @@ jobs:
 
     - name: Deploy site to S3
       run: |
-        aws s3 sync --delete --only-show-errors dist/ ${{ secrets.S3_BUCKET }}
+        aws s3 sync --delete --only-show-errors build/ ${{ secrets.S3_BUCKET }}
 
     - name: Invalidate CloudFront cache
       run: |
