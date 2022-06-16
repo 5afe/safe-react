@@ -89,7 +89,11 @@ const AddCustomAppLogo = styled.img`
   margin-bottom: 4px;
 `
 
-const AppsList = (): React.ReactElement => {
+type AppListProps = {
+  onRemoveApp: (appUrl: string) => void
+}
+
+const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
   const { safeAddress } = useSafeAddress()
   const [appSearch, setAppSearch] = useState('')
   const { allApps, appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
@@ -238,6 +242,7 @@ const AppsList = (): React.ReactElement => {
                 color: 'error',
                 onClick: () => {
                   removeApp(appToRemove.id)
+                  onRemoveApp(JSON.parse(appToRemove.id).url)
                   setAppToRemove(null)
                 },
                 text: 'Remove',

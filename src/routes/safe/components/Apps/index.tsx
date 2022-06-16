@@ -21,8 +21,9 @@ const Apps = (): React.ReactElement => {
     onReviewApp,
     extendedListReviewed,
     onReviewExtendedList,
-    hideCustomAppsWarning,
-    onHideCustomAppsWarning,
+    customAppsReviewed,
+    onReviewCustomApp,
+    onRemoveCustomApp,
     consentReceived,
     onConsentReceipt,
   } = useSecuritySteps()
@@ -50,8 +51,8 @@ const Apps = (): React.ReactElement => {
 
     const safeAppId = getSafeApp(url)?.id
 
-    return safeAppId ? !appsReviewed?.includes(safeAppId) : true
-  }, [appsReviewed, getSafeApp, url])
+    return safeAppId ? !appsReviewed?.includes(safeAppId) : !customAppsReviewed?.includes(url)
+  }, [appsReviewed, customAppsReviewed, getSafeApp, url])
 
   const handleConfirm = useCallback(
     (shouldHide: boolean) => {
@@ -61,28 +62,19 @@ const Apps = (): React.ReactElement => {
 
       if (safeAppId) {
         onReviewApp(safeAppId)
+      } else {
+        if (shouldHide) {
+          onReviewCustomApp(url)
+        }
       }
 
       if (!extendedListReviewed) {
         onReviewExtendedList()
       }
 
-      if (!hideCustomAppsWarning && shouldHide) {
-        onHideCustomAppsWarning()
-      }
-
       setIsDisclaimerReadingCompleted(true)
     },
-    [
-      extendedListReviewed,
-      getSafeApp,
-      hideCustomAppsWarning,
-      onConsentReceipt,
-      onHideCustomAppsWarning,
-      onReviewApp,
-      onReviewExtendedList,
-      url,
-    ],
+    [extendedListReviewed, getSafeApp, onConsentReceipt, onReviewApp, onReviewCustomApp, onReviewExtendedList, url],
   )
 
   const goBack = useCallback(() => history.goBack(), [history])
@@ -91,7 +83,7 @@ const Apps = (): React.ReactElement => {
     !isLoading &&
     (!consentReceived ||
       (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
-      (!isSafeAppInDefaultList && !isDisclaimerReadingCompleted && !hideCustomAppsWarning))
+      (!isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted))
 
   if (url) {
     if (showDisclaimer) {
@@ -104,7 +96,6 @@ const Apps = (): React.ReactElement => {
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}
           isExtendedListReviewed={extendedListReviewed}
-          isWarningHidden={hideCustomAppsWarning}
         />
       )
     }
@@ -115,7 +106,7 @@ const Apps = (): React.ReactElement => {
       </SafeAppsErrorBoundary>
     )
   } else {
-    return <AppsList />
+    return <AppsList onRemoveApp={onRemoveCustomApp} />
   }
 }
 

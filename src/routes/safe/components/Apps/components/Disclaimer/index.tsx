@@ -19,7 +19,6 @@ interface SafeAppsDisclaimerProps {
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
   isExtendedListReviewed: boolean
-  isWarningHidden: boolean
 }
 
 const SafeAppsDisclaimer = ({
@@ -30,7 +29,6 @@ const SafeAppsDisclaimer = ({
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
   isExtendedListReviewed,
-  isWarningHidden,
 }: SafeAppsDisclaimerProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
 
@@ -45,7 +43,7 @@ const SafeAppsDisclaimer = ({
           <StyledIcon type="apps" size="md" color="primary" />
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
-            {isFirstTimeAccessingApp && isSafeAppInDefaultList && isExtendedListReviewed && (
+            {isFirstTimeAccessingApp && isExtendedListReviewed && (
               <SecurityStepList steps={SECURITY_STEPS} appUrl={appUrl} />
             )}
             {isFirstTimeAccessingApp &&
@@ -59,7 +57,9 @@ const SafeAppsDisclaimer = ({
                   </SecurityStepContent>
                 )
               })}
-            {!isSafeAppInDefaultList && !isWarningHidden && <WarningDefaultList onHideWarning={setHideWarning} />}
+            {!isSafeAppInDefaultList && isFirstTimeAccessingApp && (
+              <WarningDefaultList onHideWarning={setHideWarning} />
+            )}
           </Slider>
         </Grid>
       </StyledWrapper>
