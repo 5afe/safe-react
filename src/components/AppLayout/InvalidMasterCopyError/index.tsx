@@ -32,7 +32,7 @@ export const InvalidMasterCopyError = ({ onClose }: { onClose: () => void }): Re
     <MuiAlert severity="error" onClose={onClose}>
       This Safe was created with an unsupported base contract. The web interface might not work correctly. We recommend
       using the{' '}
-      <Link href={CLI_LINK} size="xl" target="_blank">
+      <Link href={CLI_LINK} size="xl" target="_blank" rel="noopener noreferrer">
         command line interface
       </Link>{' '}
       instead.
