@@ -1,4 +1,3 @@
-import { getSafeL2SingletonDeployment } from '@gnosis.pm/safe-deployments'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import * as GatewaySDK from '@gnosis.pm/safe-react-gateway-sdk'
 import { checkIfSafeNeedsUpdate, hasFeature, isValidMasterCopy } from 'src/logic/safe/utils/safeVersion'
@@ -40,8 +39,6 @@ describe('Check safe version', () => {
   })
 
   describe('isValidMasterCopy', () => {
-    const safeContracts = require('src/logic/contracts/safeContracts')
-
     it('returns false if address is not contained in result', async () => {
       jest.spyOn(GatewaySDK, 'getMasterCopies').mockImplementation(() =>
         Promise.resolve([
@@ -56,11 +53,7 @@ describe('Check safe version', () => {
         ]),
       )
 
-      jest
-        .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
-        .mockImplementation(() => '0x0000000000000000000000000000000000000005')
-
-      const isValid = await isValidMasterCopy('1', '0x0000000000000000000000000000000000000001')
+      const isValid = await isValidMasterCopy('1', '0x0000000000000000000000000000000000000005')
       expect(isValid).toBe(false)
     })
 
@@ -86,11 +79,7 @@ describe('Check safe version', () => {
         ]),
       )
 
-      jest
-        .spyOn(safeContracts, 'getMasterCopyAddressFromProxyAddress')
-        .mockImplementation(() => getSafeL2SingletonDeployment()?.networkAddresses['1'])
-
-      const isValid = await isValidMasterCopy('1', '0x0000000000000000000000000000000000000001')
+      const isValid = await isValidMasterCopy('1', '0x3E5c63644E683549055b9Be8653de26E0B4CD36E')
       expect(isValid).toBe(true)
     })
   })
