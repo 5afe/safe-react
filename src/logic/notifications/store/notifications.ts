@@ -71,7 +71,8 @@ export const showNotification = (
   return (dispatch): SnackbarKey => {
     const action = createAction<KeyedNotification>(NOTIFICATION_ACTIONS.SHOW)
 
-    const key = payload.options?.key || Math.random().toString(32).slice(2)
+    // Generate/append random key in case key was dispatched before and is `read`
+    const key = `${payload.options?.key || ''}${Math.random().toString(32).slice(2)}`
 
     dispatch(action({ ...payload, options: { ...payload.options, key } }))
 
