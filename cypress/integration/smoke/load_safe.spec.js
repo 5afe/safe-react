@@ -22,7 +22,7 @@ describe('Load Safe', () => {
     // Network selection
     cy.findByTestId('select-network-step').find('button').click()
     cy.get('[aria-labelledby="select-network"]').should('exist')
-    cy.findByText('Ethereum').click()
+    cy.get('[aria-labelledby="select-network"]').findByText('Ethereum').click()
     cy.get('nav').findByText('Ethereum').should('exist')
     cy.findByTestId('select-network-step').findByText('Ethereum').should('exist')
     cy.findByTestId('select-network-step').find('button').click()

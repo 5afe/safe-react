@@ -1,12 +1,12 @@
 describe('Create Safe', () => {
   it('should create a new safe', () => {
-    cy.configWindow({ connected: true })
+    cy.connectE2EWallet()
 
     cy.visit('/')
 
     cy.contains('a', 'Accept all').click()
     cy.get('p').contains('Rinkeby').click()
-    cy.get('[data-testid=connected-wallet]').should('contain', 'e2e-wallet')
+    cy.get('[data-testid=connected-wallet]').should('contain', 'E2E Wallet')
     cy.contains('Create new Safe').click()
     cy.contains('Continue').click()
     cy.get('[data-testid=create-safe-name-field]').type('Test Safe')

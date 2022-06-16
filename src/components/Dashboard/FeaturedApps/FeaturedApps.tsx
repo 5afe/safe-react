@@ -43,7 +43,7 @@ export const FeaturedApps = (): ReactElement | null => {
 
   return (
     <Grid item xs={12} md>
-      <WidgetContainer>
+      <WidgetContainer id="featured-safe-apps">
         <WidgetTitle>Connect & Transact</WidgetTitle>
         <WidgetBody>
           <StyledGrid container>

@@ -8,6 +8,7 @@ import { secondary } from 'src/theme/variables'
 import DemoSvg from 'src/assets/icons/demo.svg'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
+import Spacer from 'src/components/Spacer'
 
 const TryDemoSafe = ({ safeAppUrl }: { safeAppUrl: string | null }): ReactElement => {
   const history = useHistory()
@@ -23,6 +24,8 @@ const TryDemoSafe = ({ safeAppUrl }: { safeAppUrl: string | null }): ReactElemen
   return (
     <SafeDemoContainer>
       <Title size="xs">Want to try the app before using it?</Title>
+
+      <Spacer />
 
       <img alt="Demo" height={92} src={DemoSvg} />
 

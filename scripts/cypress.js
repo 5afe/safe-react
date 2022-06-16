@@ -8,6 +8,7 @@ const DEPLOYMENTS = {
 }
 
 const command = `cypress ${process.argv[2]}`
-const env = process.argv?.[3]
+// To accept 'prod' or 'production' as an argument
+let env = process.argv?.[3] === 'production' ? 'prod' : process.argv?.[3]
 
-exec(env ? `${command} --config baseUrl=${DEPLOYMENTS[env]}` : command)
+exec(env ? `${command} --config baseUrl=${DEPLOYMENTS[env]} --env CYPRESS_ENV=${env}` : command)

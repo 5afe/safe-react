@@ -1,7 +1,7 @@
 import { backOff, IBackOffOptions } from 'exponential-backoff'
 
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
@@ -52,7 +52,7 @@ const monitorTx = async (
     .catch(() => {
       // Unsuccessfully mined (threw in last backOff attempt)
       store.dispatch(removePendingTransaction({ id: txId }))
-      store.dispatch(enqueueSnackbar(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
+      store.dispatch(showNotification(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
     })
 }
 

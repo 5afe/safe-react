@@ -13,7 +13,7 @@ import { useTransactionActions } from './useTransactionActions'
 import { TransactionActionStateContext } from 'src/routes/safe/components/Transactions/TxList/TxActionProvider'
 import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/TxHoverProvider'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { trackEvent } from 'src/utils/googleTagManager'
@@ -48,7 +48,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
           (canExecute && details.confirmationsRequired > details.confirmations.length) ||
           (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)
         ) {
-          dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
+          dispatch(showNotification(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
           return
         }
       }
