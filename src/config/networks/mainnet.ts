@@ -1,4 +1,4 @@
-import EtherLogo from 'src/config/assets/token_eth.svg'
+import CeloLogo from 'src/config/assets/token_CELO.svg'
 import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
@@ -44,11 +44,11 @@ const mainnet: NetworkConfig = {
     isTestNet: false,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
-      address: '0x0000000000000000000000000000000000000000',
+      address: '0x471EcE3750Da237f93B8E339c536989b8978a438',
       name: 'Celo',
       symbol: 'CELO',
       decimals: 18,
-      logoUri: EtherLogo,
+      logoUri: CeloLogo,
     },
   },
 }

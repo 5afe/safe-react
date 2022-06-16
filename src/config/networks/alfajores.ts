@@ -1,4 +1,4 @@
-import EtherLogo from 'src/config/assets/token_eth.svg'
+import CeloLogo from 'src/config/assets/token_CELO.svg'
 import {
   EnvironmentSettings,
   ETHEREUM_LAYER,
@@ -50,11 +50,11 @@ const alfajores: NetworkConfig = {
     isTestNet: true,
     ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
-      address: '0x0000000000000000000000000000000000000000',
+      address: '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
       name: 'Celo (Alfajores)',
       symbol: 'CELO',
       decimals: 18,
-      logoUri: EtherLogo,
+      logoUri: CeloLogo,
     },
   },
   disabledWallets: [WALLETS.FORTMATIC],
