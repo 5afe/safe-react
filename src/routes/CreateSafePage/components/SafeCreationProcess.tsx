@@ -131,6 +131,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
     deploymentTx
       .send(sendParams)
       .once('transactionHash', (txHash) => {
+        trackEvent(CREATE_SAFE_EVENTS.SUBMIT_CREATE_SAFE)
         onHash(txHash)
 
         saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
@@ -255,6 +256,7 @@ function SafeCreationProcess(): ReactElement {
   }
 
   const onRetry = (): void => {
+    trackEvent(CREATE_SAFE_EVENTS.RETRY_CREATE_SAFE)
     const safeCreationFormValues = loadSavedDataOrLeave()
 
     if (!safeCreationFormValues) {
@@ -272,6 +274,7 @@ function SafeCreationProcess(): ReactElement {
   }
 
   const onCancel = () => {
+    trackEvent(CREATE_SAFE_EVENTS.CANCEL_CREATE_SAFE)
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     goToWelcomePage()
   }

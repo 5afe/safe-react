@@ -1,7 +1,5 @@
 import { lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
-import { Card } from '@gnosis.pm/safe-react-components'
 
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
@@ -16,7 +14,7 @@ import {
   userAccountSelector,
   userEnsSelector,
 } from 'src/logic/wallets/store/selectors'
-import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { loadLastUsedProvider, removeLastUsedProvider } from 'src/logic/wallets/onboard'
 import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
 import { initPairing, isPairingSupported } from 'src/logic/wallets/pairing/utils'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
@@ -24,11 +22,6 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 const HidePairingModule = lazy(
   () => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule'),
 )
-
-const StyledCard = styled(Card)`
-  padding: 20px;
-  max-width: 240px;
-`
 
 const HeaderComponent = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
@@ -59,6 +52,7 @@ const HeaderComponent = (): React.ReactElement => {
 
   const onDisconnect = () => {
     onboard().walletReset()
+    removeLastUsedProvider()
   }
 
   const getProviderInfoBased = () => {
@@ -87,7 +81,7 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const info = getProviderInfoBased()
-  const details = <StyledCard>{getProviderDetailsBased()}</StyledCard>
+  const details = getProviderDetailsBased()
 
   return (
     <>

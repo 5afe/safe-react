@@ -1,10 +1,10 @@
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, ReactNode, useEffect, useMemo, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
+import { Grid } from '@material-ui/core'
 
 import Item from './components/Item'
-
 import Paragraph from 'src/components/layout/Paragraph'
 import {
   nftAssetsFromNftTokensSelector,
@@ -17,6 +17,9 @@ import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { ASSETS_EVENTS } from 'src/utils/events/assets'
 import VirtualizedList from 'src/components/VirtualizedList'
+import InfoAlert from 'src/components/InfoAlert'
+import SafeAppCard from '../../Apps/components/SafeAppCard/SafeAppCard'
+import { useAppList } from '../../Apps/hooks/appList/useAppList'
 
 const useStyles = makeStyles(
   createStyles({
@@ -83,7 +86,7 @@ const useStyles = makeStyles(
   }),
 )
 
-const Collectibles = (): React.ReactElement => {
+const Collectibles = ({ children }: { children: ReactNode }): React.ReactElement => {
   const classes = useStyles()
   const [selectedToken, setSelectedToken] = useState<NFTToken | undefined>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = useState(false)
@@ -104,11 +107,14 @@ const Collectibles = (): React.ReactElement => {
 
   if (nftAssetsFromNftTokens.length === 0) {
     return (
-      <Card className={classes.cardOuter}>
-        <div className={classes.cardInner}>
-          <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
-        </div>
-      </Card>
+      <Fragment>
+        {children}
+        <Card className={classes.cardOuter}>
+          <div className={classes.cardInner}>
+            <Paragraph className={classes.noData}>{nftLoaded ? 'No NFTs available' : 'Loading NFTs...'}</Paragraph>
+          </div>
+        </Card>
+      </Fragment>
     )
   }
 
@@ -116,7 +122,7 @@ const Collectibles = (): React.ReactElement => {
     <>
       <VirtualizedList
         data={nftAssetsFromNftTokens}
-        itemContent={(_, nftAsset) => {
+        itemContent={(index, nftAsset) => {
           // Larger collectible lists can cause this to be initially undefined
           if (!nftAsset) {
             return null
@@ -124,6 +130,8 @@ const Collectibles = (): React.ReactElement => {
 
           return (
             <Fragment key={nftAsset.slug}>
+              {index === 0 && children}
+
               <div className={classes.title}>
                 <div className={classes.titleImg} style={{ backgroundImage: `url(${nftAsset.image || ''})` }} />
                 <h2 className={classes.titleText}>{nftAsset.name}</h2>
@@ -154,4 +162,45 @@ const Collectibles = (): React.ReactElement => {
   )
 }
 
-export default Collectibles
+const CollectiblesPage = (): React.ReactElement => {
+  const NFT_APPS_TAG = 'nft'
+  const { allApps, pinnedSafeApps, togglePin } = useAppList()
+  const nftApps = useMemo(() => allApps.filter((app) => app.tags?.includes(NFT_APPS_TAG)), [allApps])
+
+  const infoBar = (
+    <InfoAlert
+      id="collectiblesInfo"
+      title="Use Safe Apps to view your NFT portfolio"
+      text="Get the most optimal experience with Safe Apps. View your collections, buy or sell NFTs, and more."
+    />
+  )
+
+  return (
+    <Collectibles>
+      {nftApps.length > 0 && (
+        <>
+          {infoBar}
+
+          <h3>NFT apps</h3>
+
+          <Grid style={{ marginBottom: '30px' }}>
+            {nftApps.map((app) => (
+              <Grid item key={app.id} xs={4}>
+                <SafeAppCard
+                  safeApp={app}
+                  size="md"
+                  togglePin={togglePin}
+                  isPinned={pinnedSafeApps.some(({ id }) => id === app.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
+
+      <h3>NFTs</h3>
+    </Collectibles>
+  )
+}
+
+export default CollectiblesPage

@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.25.3",
+  "version": "3.26.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -79,7 +79,7 @@
     "@gnosis.pm/safe-apps-sdk": "7.3.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
-    "@gnosis.pm/safe-deployments": "^1.8.0",
+    "@gnosis.pm/safe-deployments": "^1.15.0",
     "@gnosis.pm/safe-modules-deployments": "^1.0.0",
     "@gnosis.pm/safe-react-components": "^1.1.2",
     "@gnosis.pm/safe-react-gateway-sdk": "^3.0.1",
@@ -90,7 +90,8 @@
     "@openzeppelin/contracts": "4.4.2",
     "@sentry/react": "^6.10.0",
     "@sentry/tracing": "^6.10.0",
-    "@unstoppabledomains/resolution": "^1.17.0",
+    "@truffle/hdwallet-provider": "^2.0.8",
+    "@unstoppabledomains/resolution": "^7.1.4",
     "abi-decoder": "^2.4.0",
     "axios": "0.21.4",
     "bignumber.js": "9.0.1",
@@ -110,7 +111,7 @@
     "immutable": "4.0.0-rc.12",
     "js-cookie": "^3.0.0",
     "lodash": "^4.17.21",
-    "notistack": "https://github.com/gnosis/notistack.git#v0.9.5",
+    "notistack": "1.0.10",
     "object-hash": "^2.1.1",
     "qrcode.react": "1.0.1",
     "query-string": "7.0.1",
@@ -138,8 +139,7 @@
     "web3": "1.7.0",
     "web3-core": "^1.7.0",
     "web3-eth-contract": "^1.7.0",
-    "web3-utils": "^1.7.0",
-    "@truffle/hdwallet-provider": "^2.0.8"
+    "web3-utils": "^1.7.0"
   },
   "devDependencies": {
     "@gnosis.pm/safe-core-sdk-types": "1.0.0",

@@ -19,7 +19,6 @@ env:
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_ETHERSCAN_API_KEY: ${{ secrets.REACT_APP_ETHERSCAN_API_KEY }}
   REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY }}
-  REACT_APP_E2E_MNEMONIC: ${{ secrets.REACT_APP_E2E_MNEMONIC }}
 
 jobs:
   debug:
@@ -163,11 +162,18 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-
-      # Cypress E2E tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
+  e2e:
+    runs-on: ubuntu-20.04
+    name: E2E on Chrome
+    if: github.event.number
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cypress-io/github-action@v2
         with:
           spec: cypress/integration/smoke/*.spec.js
+          browser: chrome
           record: false
           config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
+        env:
+          CYPRESS_ENV: ${{ env.REACT_APP_ENV}}

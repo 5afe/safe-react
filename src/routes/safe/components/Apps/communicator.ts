@@ -43,8 +43,7 @@ class AppCommunicator {
       return true
     }
 
-    // @ts-expect-error .parent doesn't exist on some possible types
-    const sentFromIframe = msg.source.parent === window.parent
+    const sentFromIframe = this.iframeRef.current?.contentWindow === msg.source
     const knownMethod = Object.values(Methods).includes(msg.data.method)
 
     return sentFromIframe && knownMethod

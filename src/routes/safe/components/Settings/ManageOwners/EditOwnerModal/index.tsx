@@ -13,7 +13,7 @@ import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
@@ -38,7 +38,7 @@ export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.Reac
     // Update the value only if the ownerName really changed
     if (ownerName !== owner.name) {
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: owner.address, name: ownerName, chainId })))
-      dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
+      dispatch(showNotification(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
     }
     onClose()
   }
