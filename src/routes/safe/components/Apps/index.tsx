@@ -14,28 +14,28 @@ const Apps = (): React.ReactElement => {
   const url = getAppUrl()
 
   const {
-    handleConfirm,
-    showDisclaimer,
-    consentReceived,
+    isModalVisible,
     isSafeAppInDefaultList,
     isFirstTimeAccessingApp,
-    extendedListReviewed,
+    isConsentAccepted,
+    isExtendedListReviewed,
+    onComplete,
     onRemoveCustomApp,
   } = useSecurityFeedbackModal()
 
   const goBack = useCallback(() => history.goBack(), [history])
 
   if (url) {
-    if (showDisclaimer) {
+    if (isModalVisible) {
       return (
         <SafeAppsDisclaimer
           onCancel={goBack}
-          onConfirm={handleConfirm}
+          onConfirm={onComplete}
           appUrl={url}
-          isConsentAccepted={consentReceived}
+          isConsentAccepted={isConsentAccepted}
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}
-          isExtendedListReviewed={extendedListReviewed}
+          isExtendedListReviewed={isExtendedListReviewed}
         />
       )
     }

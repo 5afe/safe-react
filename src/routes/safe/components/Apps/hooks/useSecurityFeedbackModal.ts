@@ -9,16 +9,16 @@ type SecurityFeedbackModalStorage = {
   appsReviewed: string[]
   extendedListReviewed: boolean
   customAppsReviewed: string[]
-  consentReceived: boolean
+  consentAccepted: boolean
 }
 
 const useSecurityFeedbackModal = (): {
-  handleConfirm: (shouldHide: boolean) => void
-  showDisclaimer: boolean
-  consentReceived: boolean
+  isModalVisible: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
-  extendedListReviewed: boolean
+  isConsentAccepted: boolean
+  isExtendedListReviewed: boolean
+  onComplete: (shouldHide: boolean) => void
   onRemoveCustomApp: (appUrl: string) => void
 } => {
   const didMount = useRef(false)
@@ -30,7 +30,7 @@ const useSecurityFeedbackModal = (): {
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
   const [customAppsReviewed, setCustomAppsReviewed] = useState<string[]>([])
-  const [consentReceived, setConsentReceived] = useState<boolean>(false)
+  const [consentAccepted, setConsentAccepted] = useState<boolean>(false)
   const [isDisclaimerReadingCompleted, setIsDisclaimerReadingCompleted] = useState(false)
 
   useEffect(() => {
@@ -38,14 +38,14 @@ const useSecurityFeedbackModal = (): {
       appsReviewed: [],
       extendedListReviewed: false,
       customAppsReviewed: [],
-      consentReceived: false,
+      consentAccepted: false,
     }
 
     if (securityStepsStatus) {
       setAppsReviewed(securityStepsStatus.appsReviewed)
       setExtendedListReviewed(securityStepsStatus.extendedListReviewed)
       setCustomAppsReviewed(securityStepsStatus.customAppsReviewed)
-      setConsentReceived(securityStepsStatus.consentReceived)
+      setConsentAccepted(securityStepsStatus.consentAccepted)
     }
   }, [])
 
@@ -65,17 +65,9 @@ const useSecurityFeedbackModal = (): {
       appsReviewed,
       extendedListReviewed,
       customAppsReviewed,
-      consentReceived,
+      consentAccepted,
     })
-  }, [appsReviewed, consentReceived, customAppsReviewed, extendedListReviewed])
-
-  const onRemoveCustomApp = useCallback(
-    (appUrl: string): void => {
-      const reviewedApps = customAppsReviewed.filter((url) => url !== appUrl)
-      setCustomAppsReviewed(reviewedApps)
-    },
-    [customAppsReviewed],
-  )
+  }, [appsReviewed, consentAccepted, customAppsReviewed, extendedListReviewed])
 
   const isSafeAppInDefaultList = useMemo(() => {
     if (!url) return false
@@ -97,9 +89,19 @@ const useSecurityFeedbackModal = (): {
     return safeAppId ? !appsReviewed?.includes(safeAppId) : !customAppsReviewed?.includes(url)
   }, [appsReviewed, customAppsReviewed, getSafeApp, url])
 
-  const handleConfirm = useCallback(
+  const isModalVisible = useMemo(
+    () =>
+      !isLoading &&
+      didMount.current &&
+      (!consentAccepted ||
+        (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
+        (!isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted)),
+    [consentAccepted, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList],
+  )
+
+  const onComplete = useCallback(
     (shouldHide: boolean) => {
-      setConsentReceived(true)
+      setConsentAccepted(true)
 
       const safeAppId = getSafeApp(url)?.id
 
@@ -124,23 +126,21 @@ const useSecurityFeedbackModal = (): {
     [appsReviewed, customAppsReviewed, extendedListReviewed, getSafeApp, url],
   )
 
-  const showDisclaimer = useMemo(
-    () =>
-      !isLoading &&
-      didMount.current &&
-      (!consentReceived ||
-        (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
-        (!isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted)),
-    [consentReceived, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList],
+  const onRemoveCustomApp = useCallback(
+    (appUrl: string): void => {
+      const reviewedApps = customAppsReviewed.filter((url) => url !== appUrl)
+      setCustomAppsReviewed(reviewedApps)
+    },
+    [customAppsReviewed],
   )
 
   return {
-    handleConfirm,
-    showDisclaimer,
-    consentReceived,
+    isModalVisible,
     isSafeAppInDefaultList,
     isFirstTimeAccessingApp,
-    extendedListReviewed,
+    isConsentAccepted: consentAccepted,
+    isExtendedListReviewed: extendedListReviewed,
+    onComplete,
     onRemoveCustomApp,
   }
 }
