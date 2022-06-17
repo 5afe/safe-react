@@ -2,11 +2,14 @@ const balanceRowTestId = '[data-testid=balance-row]'
 
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
 const ASSETS_LENGTH = 7
+const DAI_ROW_NUMBER = 0
+const TOKEN_AMOUNT_COLUMN = 1
+const FIAT_AMOUNT_COLUMN = 2
+const WETH_ROW_NUMBER = 1
+const USDC_ROW_NUMBER = 3
+
 
 describe('Assets > Coins', () => {
-  const TOKEN_AMOUNT_COLUMN = 1
-  const FIAT_AMOUNT_COLUMN = 2
-
   // Fiat balance regex
   const fiatRegex = new RegExp(`([0-9]{1,3},)*[0-9]{1,3}.[0-9]{2}`)
   // Token balance regex
@@ -24,8 +27,6 @@ describe('Assets > Coins', () => {
     })
 
     it('should have Dai', () => {
-      const DAI_ROW_NUMBER = 0
-
       // First row should be Dai
       cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).contains('Dai')
 
@@ -40,8 +41,6 @@ describe('Assets > Coins', () => {
     })
 
     it('should have Wrapped Ether', () => {
-      const WETH_ROW_NUMBER = 1
-
       // Second row should be Wrapped Ether
       cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).contains('Wrapped Ether')
 
@@ -59,8 +58,6 @@ describe('Assets > Coins', () => {
     })
 
     it('should have USD Coin', () => {
-      const USDC_ROW_NUMBER = 2
-
       // Third row should be USD Coin
       cy.get(balanceRowTestId).eq(USDC_ROW_NUMBER).contains('USD Coin')
 
