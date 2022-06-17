@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { StyledTitle } from './styles'
 import { SecurityStep } from '../../types'
 
-type SecurityStepContentProps = SecurityStep
+type SecurityStepContentProps = Omit<SecurityStep, 'id'>
 
 const SecurityStepContent: React.FC<SecurityStepContentProps> = ({ title, imageSrc, children }): React.ReactElement => {
   return (

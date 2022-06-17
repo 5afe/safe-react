@@ -55,10 +55,16 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   }, [])
 
   useEffect(() => {
+    let id: ReturnType<typeof setTimeout>
+
     if (disabledBtn) {
-      setTimeout(() => {
+      id = setTimeout(() => {
         setDisabledBtn(false)
-      }, 450)
+      }, 550)
+    }
+
+    return () => {
+      if (id) clearTimeout(id)
     }
   }, [disabledBtn])
 

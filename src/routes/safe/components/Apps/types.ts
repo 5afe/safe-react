@@ -13,6 +13,7 @@ export type StoredSafeApp = {
 }
 
 export type SecurityStep = {
+  id: string
   title: string
   imageSrc?: string
 }

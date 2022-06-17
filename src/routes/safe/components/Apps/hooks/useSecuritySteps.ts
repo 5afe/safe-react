@@ -125,11 +125,14 @@ const useSecuritySteps = (): {
     [extendedListReviewed, getSafeApp, onConsentReceipt, onReviewApp, onReviewCustomApp, onReviewExtendedList, url],
   )
 
-  const showDisclaimer =
-    !isLoading &&
-    (!consentReceived ||
-      (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
-      (!isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted))
+  const showDisclaimer = useMemo(
+    () =>
+      !isLoading &&
+      (!consentReceived ||
+        (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
+        (!isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted)),
+    [consentReceived, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList],
+  )
 
   return {
     handleConfirm,

@@ -48,11 +48,11 @@ const SafeAppsDisclaimer = ({
             )}
             {isFirstTimeAccessingApp &&
               !isExtendedListReviewed &&
-              SECURITY_STEPS.map((step: SecurityStep, index: number) => {
+              SECURITY_STEPS.map((step: SecurityStep) => {
                 return step.imageSrc ? (
-                  <SecurityStepContent key={index} {...step} />
+                  <SecurityStepContent key={step.id} {...step} />
                 ) : (
-                  <SecurityStepContent title={step.title}>
+                  <SecurityStepContent key={step.id} title={step.title}>
                     <StyledStepContentText size="xl">{appUrl}</StyledStepContentText>
                   </SecurityStepContent>
                 )
