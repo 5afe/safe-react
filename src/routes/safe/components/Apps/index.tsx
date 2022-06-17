@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
 import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
-import SafeAppsDisclaimer from './components/SecurityFeedbackModal'
+import SecurityFeedbackModal from './components/SecurityFeedbackModal'
 import SafeAppsErrorBoundary from './components/SafeAppsErrorBoundary'
 import SafeAppsLoadError from './components/SafeAppsLoadError'
 import { useSecurityFeedbackModal } from './hooks/useSecurityFeedbackModal'
@@ -28,7 +28,7 @@ const Apps = (): React.ReactElement => {
   if (url) {
     if (isModalVisible) {
       return (
-        <SafeAppsDisclaimer
+        <SecurityFeedbackModal
           onCancel={goBack}
           onConfirm={onComplete}
           appUrl={url}

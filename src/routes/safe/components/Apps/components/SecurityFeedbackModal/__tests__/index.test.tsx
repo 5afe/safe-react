@@ -1,9 +1,9 @@
 import { render, fireEvent, screen, act } from 'src/utils/test-utils'
-import SafeAppsDisclaimer from '../index'
+import SecurityFeedbackModal from '../index'
 
 const pauseForSeconds = async (ms: number) => await new Promise((_) => setTimeout(_, ms))
 
-describe('<SafeAppsDisclaimer />', () => {
+describe('<SecurityFeedbackModal />', () => {
   const baseProps = {
     onConfirm: jest.fn(),
     onCancel: jest.fn(),
@@ -15,7 +15,7 @@ describe('<SafeAppsDisclaimer />', () => {
   }
 
   it('should show the Legal Disclaimer if not previously accepted', () => {
-    render(<SafeAppsDisclaimer {...baseProps} isConsentAccepted={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isConsentAccepted={false} />)
 
     expect(
       screen.getAllByRole('heading', {
@@ -25,31 +25,31 @@ describe('<SafeAppsDisclaimer />', () => {
   })
 
   it('should not show the Legal Disclaimer if it was previously accepted', () => {
-    render(<SafeAppsDisclaimer {...baseProps} isConsentAccepted={true} />)
+    render(<SecurityFeedbackModal {...baseProps} isConsentAccepted={true} />)
 
     expect(screen.queryByText(/disclaimer/i)).not.toBeInTheDocument()
   })
 
   it('should show the Extended List when not reviewed', () => {
-    render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
 
     expect(screen.queryByText('1')).not.toBeInTheDocument()
   })
 
   it('should avoid to show the Extended List when already reviewed', () => {
-    render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={true} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={true} />)
 
     expect(screen.queryAllByText('1').length).toEqual(2)
   })
 
   it('should show a warning when the application is not in the default list', () => {
-    render(<SafeAppsDisclaimer {...baseProps} isSafeAppInDefaultList={false} isFirstTimeAccessingApp={true} />)
+    render(<SecurityFeedbackModal {...baseProps} isSafeAppInDefaultList={false} isFirstTimeAccessingApp={true} />)
 
     expect(screen.queryAllByText(/warning/i).length).toEqual(2)
   })
 
   it('should call onConfirm() after the slides are reviewed', async () => {
-    render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
     const continueBtn = screen.getByText(/continue/i)
 
     await act(async () => {
@@ -63,7 +63,7 @@ describe('<SafeAppsDisclaimer />', () => {
   })
 
   it('should iterate back and forward over the slides', async () => {
-    render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
     const continueBtn = screen.getByText(/continue/i)
 
     await act(async () => {
@@ -88,7 +88,7 @@ describe('<SafeAppsDisclaimer />', () => {
   })
 
   it('should call onCancel() when clicking the Cancel button', () => {
-    render(<SafeAppsDisclaimer {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
 
     fireEvent.click(screen.getByText(/cancel/i))
 

@@ -7,7 +7,7 @@ import LegalDisclaimer from './LegalDisclaimer'
 import { alpha } from '@material-ui/core/styles'
 import SecurityStepList from './SecurityStepList'
 import WarningDefaultList from './WarningDefaultList'
-import { SECURITY_STEPS } from './utils'
+import { SECURITY_STEPS } from './constants'
 import SecurityStepContent from './SecurityStepContent'
 import { SecurityStep } from '../../types'
 
@@ -21,7 +21,7 @@ interface SafeAppsDisclaimerProps {
   isExtendedListReviewed: boolean
 }
 
-const SafeAppsDisclaimer = ({
+const SecurityFeedbackModal = ({
   onCancel,
   onConfirm,
   appUrl,
@@ -94,4 +94,4 @@ const StyledStepContentText = styled(Text)`
   overflow-wrap: anywhere;
 `
 
-export default memo(SafeAppsDisclaimer)
+export default memo(SecurityFeedbackModal)
