@@ -4,10 +4,9 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from '@gnosis.pm/safe-react-components'
 import { Box } from '@material-ui/core'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-import { NotVoid } from 'lodash'
 
 type SliderProps = {
-  onCancel: () => NotVoid
+  onCancel: () => void
   onComplete: () => void
 }
 
@@ -15,26 +14,26 @@ type SliderState = {
   translate: number
   activeSlide: number
   transition: number
-  _slides: React.ReactElement[]
+  renderedSlides: React.ReactElement[]
 }
 
 const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
-  const slides = React.Children.toArray(children).filter(Boolean) as React.ReactElement[]
+  const allSlides = React.Children.toArray(children).filter(Boolean) as React.ReactElement[]
   const stateRef = useRef<SliderState>({
     translate: 1,
     activeSlide: 0,
     transition: 0.45,
-    _slides: [],
+    renderedSlides: [],
   })
-  const firstSlide = slides?.[0]
-  const secondSlide = slides?.[1]
-  const lastSlide = slides?.[slides?.length - 1]
+  const firstSlide = allSlides?.[0]
+  const secondSlide = allSlides?.[1]
+  const lastSlide = allSlides?.[allSlides?.length - 1]
   const [disabledBtn, setDisabledBtn] = useState(false)
   const [state, setState] = useState<SliderState>({
     translate: 1,
     activeSlide: 0,
     transition: 0.45,
-    _slides: [lastSlide, firstSlide, secondSlide],
+    renderedSlides: [lastSlide, firstSlide, secondSlide],
   })
 
   stateRef.current = state
@@ -75,24 +74,24 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   }, [state.transition])
 
   const smoothTransition = () => {
-    let _slides: React.ReactElement[] = []
+    let slides: React.ReactElement[] = []
 
     // We're at the last slide.
-    if (stateRef.current.activeSlide === slides.length - 1) {
-      _slides = [slides[slides.length - 2], lastSlide, firstSlide]
+    if (stateRef.current.activeSlide === allSlides.length - 1) {
+      slides = [allSlides[allSlides.length - 2], lastSlide, firstSlide]
     }
     // We're back at the first slide. Just reset to how it was on initial render
     else if (stateRef.current.activeSlide === 0) {
-      _slides = [lastSlide, firstSlide, secondSlide]
+      slides = [lastSlide, firstSlide, secondSlide]
     }
     // Create an array of the previous last slide, and the next two slides that follow it.
     else {
-      _slides = slides.slice(stateRef.current.activeSlide - 1, stateRef.current.activeSlide + 2)
+      slides = allSlides.slice(stateRef.current.activeSlide - 1, stateRef.current.activeSlide + 2)
     }
 
     setState({
       ...stateRef.current,
-      _slides,
+      renderedSlides: slides,
       translate: 1,
       transition: 0,
     })
@@ -100,7 +99,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   const nextSlide = () => {
     if (disabledBtn) return
 
-    if (stateRef.current.activeSlide === slides.length - 1) {
+    if (stateRef.current.activeSlide === allSlides.length - 1) {
       onComplete()
       return
     }
@@ -110,7 +109,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     setState({
       ...stateRef.current,
       translate: 2,
-      activeSlide: stateRef.current.activeSlide === slides.length - 1 ? 0 : stateRef.current.activeSlide + 1,
+      activeSlide: stateRef.current.activeSlide === allSlides.length - 1 ? 0 : stateRef.current.activeSlide + 1,
     })
   }
 
@@ -122,7 +121,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     setState({
       ...stateRef.current,
       translate: 0,
-      activeSlide: stateRef.current.activeSlide === 0 ? slides.length - 1 : stateRef.current.activeSlide - 1,
+      activeSlide: stateRef.current.activeSlide === 0 ? allSlides.length - 1 : stateRef.current.activeSlide - 1,
     })
   }
 
@@ -136,14 +135,14 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
             transform: `translateX(-${stateRef.current.translate * 100}%)`,
           }}
         >
-          {stateRef.current._slides.map((slide, index) => (
+          {stateRef.current.renderedSlides.map((slide, index) => (
             <SliderItem key={index}>{slide}</SliderItem>
           ))}
         </StyledInner>
       </StyledContainer>
       <Box display="flex" justifyContent="center" m={5}>
-        {slides.length > 1 &&
-          slides.map((_, index) => (
+        {allSlides.length > 1 &&
+          allSlides.map((_, index) => (
             <StyledDot key={index} color={index === stateRef.current.activeSlide ? 'primary' : 'secondaryLight'} />
           ))}
       </Box>
