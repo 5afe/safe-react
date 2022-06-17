@@ -24,6 +24,7 @@ const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
 const SafeDetails = lazy(() => import('./SafeDetails'))
 const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
 const Appearance = lazy(() => import('./Appearance'))
+const Delegates = lazy(() => import('./Delegates'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -123,6 +124,7 @@ const Settings = (): React.ReactElement => {
               <Route path={SAFE_ROUTES.SETTINGS_POLICIES} exact render={() => <ThresholdSettings />} />
               <Route path={SAFE_ROUTES.SETTINGS_SPENDING_LIMIT} exact render={() => <SpendingLimitSettings />} />
               <Route path={SAFE_ROUTES.SETTINGS_ADVANCED} exact render={() => <Advanced />} />
+              <Route path={SAFE_ROUTES.SETTINGS_DELEGATES} exact render={() => <Delegates />} />
               <Redirect to={SAFE_ROUTES.SETTINGS_DETAILS} />
             </Switch>
           </Block>

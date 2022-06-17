@@ -106,6 +106,11 @@ const useSidebarItems = (): ListItemType[] => {
         iconType: 'settingsTool',
         href: currentSafeRoutes.SETTINGS_ADVANCED,
       }),
+      makeEntryItem({
+        label: 'Delegates',
+        iconType: 'settingsTool',
+        href: currentSafeRoutes.SETTINGS_DELEGATES,
+      }),
     ].filter(Boolean)
 
     return [
