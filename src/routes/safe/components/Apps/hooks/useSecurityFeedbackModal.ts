@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { useAppList } from './appList/useAppList'
+import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 
-const APPS_SECURITY_STEPS = 'APPS_SECURITY_STEPS'
+const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
 
-type SecurityStepsStorage = {
+type SecurityFeedbackModalStorage = {
   appsReviewed: string[]
   extendedListReviewed: boolean
   customAppsReviewed: string[]
   consentReceived: boolean
 }
 
-const useSecuritySteps = (): {
+const useSecurityFeedbackModal = (): {
   handleConfirm: (shouldHide: boolean) => void
   showDisclaimer: boolean
   consentReceived: boolean
@@ -21,18 +21,20 @@ const useSecuritySteps = (): {
   extendedListReviewed: boolean
   onRemoveCustomApp: (appUrl: string) => void
 } => {
+  const didMount = useRef(false)
+
+  const { isLoading, appList, getSafeApp } = useAppList()
+  const { getAppUrl } = useSafeAppUrl()
+  const url = getAppUrl()
+
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
   const [customAppsReviewed, setCustomAppsReviewed] = useState<string[]>([])
   const [consentReceived, setConsentReceived] = useState<boolean>(false)
   const [isDisclaimerReadingCompleted, setIsDisclaimerReadingCompleted] = useState(false)
-  const didMount = useRef(false)
-  const { isLoading, appList, getSafeApp } = useAppList()
-  const { getAppUrl } = useSafeAppUrl()
-  const url = getAppUrl()
 
   useEffect(() => {
-    const securityStepsStatus: SecurityStepsStorage = loadFromStorage(APPS_SECURITY_STEPS) || {
+    const securityStepsStatus: SecurityFeedbackModalStorage = loadFromStorage(APPS_SECURITY_FEEDBACK_MODAL) || {
       appsReviewed: [],
       extendedListReviewed: false,
       customAppsReviewed: [],
@@ -59,38 +61,13 @@ const useSecuritySteps = (): {
       return
     }
 
-    saveToStorage(APPS_SECURITY_STEPS, { appsReviewed, extendedListReviewed, customAppsReviewed, consentReceived })
+    saveToStorage(APPS_SECURITY_FEEDBACK_MODAL, {
+      appsReviewed,
+      extendedListReviewed,
+      customAppsReviewed,
+      consentReceived,
+    })
   }, [appsReviewed, consentReceived, customAppsReviewed, extendedListReviewed])
-
-  const onReviewApp = useCallback(
-    (appId: string): void => {
-      if (!appsReviewed.includes(appId)) {
-        const reviewedApps = [...appsReviewed, appId]
-
-        setAppsReviewed(reviewedApps)
-      }
-    },
-    [appsReviewed],
-  )
-
-  const onReviewExtendedList = useCallback((): void => {
-    setExtendedListReviewed(true)
-  }, [])
-
-  const onReviewCustomApp = useCallback(
-    (appUrl: string): void => {
-      if (!customAppsReviewed.includes(appUrl)) {
-        const reviewedApps = [...customAppsReviewed, appUrl]
-
-        setCustomAppsReviewed(reviewedApps)
-      }
-    },
-    [customAppsReviewed],
-  )
-
-  const onConsentReceipt = useCallback((): void => {
-    setConsentReceived(true)
-  }, [])
 
   const onRemoveCustomApp = useCallback(
     (appUrl: string): void => {
@@ -122,25 +99,29 @@ const useSecuritySteps = (): {
 
   const handleConfirm = useCallback(
     (shouldHide: boolean) => {
-      onConsentReceipt()
+      setConsentReceived(true)
 
       const safeAppId = getSafeApp(url)?.id
 
-      if (safeAppId) {
-        onReviewApp(safeAppId)
+      if (safeAppId && !appsReviewed.includes(safeAppId)) {
+        const reviewedApps = [...appsReviewed, safeAppId]
+
+        setAppsReviewed(reviewedApps)
       } else {
-        if (shouldHide) {
-          onReviewCustomApp(url)
+        if (shouldHide && !customAppsReviewed.includes(url)) {
+          const reviewedApps = [...customAppsReviewed, url]
+
+          setCustomAppsReviewed(reviewedApps)
         }
       }
 
       if (!extendedListReviewed) {
-        onReviewExtendedList()
+        setExtendedListReviewed(true)
       }
 
       setIsDisclaimerReadingCompleted(true)
     },
-    [extendedListReviewed, getSafeApp, onConsentReceipt, onReviewApp, onReviewCustomApp, onReviewExtendedList, url],
+    [appsReviewed, customAppsReviewed, extendedListReviewed, getSafeApp, url],
   )
 
   const showDisclaimer = useMemo(
@@ -164,4 +145,4 @@ const useSecuritySteps = (): {
   }
 }
 
-export { useSecuritySteps }
+export { useSecurityFeedbackModal }

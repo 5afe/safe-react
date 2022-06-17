@@ -6,7 +6,7 @@ import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
 import SafeAppsDisclaimer from './components/Disclaimer'
 import SafeAppsErrorBoundary from './components/SafeAppsErrorBoundary'
 import SafeAppsLoadError from './components/SafeAppsLoadError'
-import { useSecuritySteps } from './hooks/useSecuritySteps'
+import { useSecurityFeedbackModal } from './hooks/useSecurityFeedbackModal'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()
@@ -21,7 +21,7 @@ const Apps = (): React.ReactElement => {
     isFirstTimeAccessingApp,
     extendedListReviewed,
     onRemoveCustomApp,
-  } = useSecuritySteps()
+  } = useSecurityFeedbackModal()
 
   const goBack = useCallback(() => history.goBack(), [history])
 
