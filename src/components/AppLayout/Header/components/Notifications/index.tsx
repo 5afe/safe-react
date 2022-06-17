@@ -41,7 +41,10 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const notificationsToShow =
     canExpand && showAll ? sortedNotifications : sortedNotifications.slice(0, NOTIFICATION_LIMIT)
 
-  const unreadCount = useMemo(() => notifications.filter(({ read }) => !read).length, [notifications])
+  const unreadCount = useMemo(
+    () => notifications.filter(({ read, dismissed }) => !read && dismissed).length,
+    [notifications],
+  )
   const hasUnread = unreadCount > 0
 
   const handleClickBell = () => {
