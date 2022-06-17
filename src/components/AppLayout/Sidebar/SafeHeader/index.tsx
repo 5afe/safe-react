@@ -221,8 +221,6 @@ const SafeHeader = ({
     onNewTransactionClick()
   }
 
-  const chainInfo = getChainInfo()
-
   if (!address || !hasSafeOpen) {
     return (
       <Container>
@@ -236,6 +234,7 @@ const SafeHeader = ({
       </Container>
     )
   }
+  const chainInfo = getChainInfo()
 
   return (
     <>

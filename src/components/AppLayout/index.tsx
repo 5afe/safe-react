@@ -136,7 +136,6 @@ const Layout: React.FC<Props> = ({
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
   const [expanded, setExpanded] = useState(false)
-  const [showMasterCopyError, setShowMasterCopyError] = useState(true)
   const { pathname } = useLocation()
   useDarkMode()
 
@@ -160,7 +159,7 @@ const Layout: React.FC<Props> = ({
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
-      {showMasterCopyError && <InvalidMasterCopyError onClose={() => setShowMasterCopyError(false)} />}
+      <InvalidMasterCopyError />
 
       <BodyWrapper>
         {showSideBar && (

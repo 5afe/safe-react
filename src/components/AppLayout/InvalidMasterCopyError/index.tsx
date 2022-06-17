@@ -6,18 +6,24 @@ import useAsync from 'src/logic/hooks/useAsync'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { isValidMasterCopy } from 'src/logic/safe/utils/safeVersion'
 import MuiAlert from '@material-ui/lab/Alert'
+import { useState } from 'react'
 
 const CLI_LINK = 'https://github.com/5afe/safe-cli'
 
-export const InvalidMasterCopyError = ({ onClose }: { onClose: () => void }): React.ReactElement | null => {
+export const InvalidMasterCopyError = (): React.ReactElement | null => {
   const chainInfo = getChainInfo()
   const { implementation } = useSelector(currentSafe)
+  const [showMasterCopyError, setShowMasterCopyError] = useState(true)
 
   const [validMasterCopy, error] = useAsync(async () => {
     if (implementation.value) {
       return await isValidMasterCopy(chainInfo.chainId, implementation.value)
     }
   }, [chainInfo.chainId, implementation.value])
+
+  if (!showMasterCopyError) {
+    return null
+  }
 
   if (error) {
     logError(Errors._620, error.message)
@@ -29,7 +35,7 @@ export const InvalidMasterCopyError = ({ onClose }: { onClose: () => void }): Re
   }
 
   return (
-    <MuiAlert severity="error" onClose={onClose}>
+    <MuiAlert severity="error" onClose={() => setShowMasterCopyError(false)}>
       This Safe was created with an unsupported base contract. The web interface might not work correctly. We recommend
       using the{' '}
       <Link href={CLI_LINK} size="xl" target="_blank" rel="noopener noreferrer">

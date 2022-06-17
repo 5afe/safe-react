@@ -52,6 +52,7 @@ const updateSafeProps = (prevSafe, safe) => {
             ? record.set(key, safe[key])
             : record.update(key, (current) => current.merge(safe[key]))
         } else {
+          // TODO: temporary fix if type is AddressEx because it's neither a Map, nor has a size property
           record.set(key, safe[key])
         }
       } else {
