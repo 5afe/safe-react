@@ -80,7 +80,7 @@ export const loadGoogleTagManager = (): void => {
     return
   }
 
-  const page_path = getAnonymizedPathname()
+  const pagePath = getAnonymizedPathname()
 
   TagManager.initialize({
     gtmId: GOOGLE_TAG_MANAGER_ID,
@@ -89,8 +89,8 @@ export const loadGoogleTagManager = (): void => {
       // Must emit (custom) event in order to trigger page tracking
       event: GTM_EVENT.PAGEVIEW,
       chainId: _getChainId(),
-      pageLocation: `${location.origin}${page_path}`,
-      pagePath: page_path,
+      pageLocation: `${location.origin}${pagePath}`,
+      pagePath,
       // Block JS variables and custom scripts
       // @see https://developers.google.com/tag-platform/tag-manager/web/restrict
       'gtm.blocklist': ['j', 'jsm', 'customScripts'],
@@ -112,6 +112,16 @@ export const unloadGoogleTagManager = (): void => {
   removeCookies(GOOGLE_ANALYTICS_COOKIE_LIST)
 }
 
+type PageViewDataLayer = {
+  event: GTM_EVENT
+  chainId: string
+  pageLocation: string
+  pagePath: string
+  eventCategory: undefined
+  eventAction: undefined
+  eventLabel: undefined
+}
+
 export const usePageTracking = (): void => {
   const didMount = useRef(false)
   const { pathname } = useLocation()
@@ -123,21 +133,20 @@ export const usePageTracking = (): void => {
       return
     }
 
-    const page_path = getAnonymizedPathname()
+    const pagePath = getAnonymizedPathname()
 
-    TagManager.dataLayer({
-      dataLayer: {
-        // Must emit (custom) event in order to trigger page tracking
-        event: GTM_EVENT.PAGEVIEW,
-        chainId,
-        pageLocation: `${location.origin}${page_path}`,
-        pagePath: page_path,
-        // Clear dataLayer
-        eventCategory: undefined,
-        eventAction: undefined,
-        eventLabel: undefined,
-      },
-    })
+    const event: PageViewDataLayer = {
+      // Must emit (custom) event in order to trigger page tracking
+      event: GTM_EVENT.PAGEVIEW,
+      chainId,
+      pageLocation: `${location.origin}${pagePath}`,
+      pagePath,
+      // Clear dataLayer
+      eventCategory: undefined,
+      eventAction: undefined,
+      eventLabel: undefined,
+    }
+    track(event)
   }, [chainId, pathname])
 }
 
@@ -226,7 +235,7 @@ export const trackSafeAppMessage = ({
   track(dataLayer)
 }
 
-function track(dataLayer: EventDataLayer | SafeAppEventDataLayer) {
+function track(dataLayer: EventDataLayer | SafeAppEventDataLayer | PageViewDataLayer) {
   if (!IS_PRODUCTION) {
     console.info('[GTM]', dataLayer)
   }
