@@ -3,7 +3,9 @@ import { StyledTitle } from './styles'
 
 const LegalDisclaimer = (): JSX.Element => (
   <>
-    <StyledTitle size="sm">Disclaimer</StyledTitle>
+    <StyledTitle size="sm" centered>
+      Disclaimer
+    </StyledTitle>
     <Text size="lg">
       You are now accessing third-party apps, which we do not own, control, maintain or audit. We are not liable for any
       loss you may suffer in connection with interacting with the apps, which is at your own risk. You must read our

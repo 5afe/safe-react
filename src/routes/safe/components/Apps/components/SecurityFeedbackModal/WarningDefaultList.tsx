@@ -1,41 +1,46 @@
 import { useState } from 'react'
-import styled from 'styled-components'
+import Box from '@material-ui/core/Box'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { StyledTitle } from './styles'
 
 type WarningDefaultListProps = {
-  onHideWarning: (hideWarning: boolean) => void
+  onHideWarning?: (hideWarning: boolean) => void
 }
 
 const WarningDefaultList = ({ onHideWarning }: WarningDefaultListProps): React.ReactElement => {
   const [toggleHideWarning, setToggleHideWarning] = useState(false)
 
   const handleToggleWarningPreference = (): void => {
-    onHideWarning(!toggleHideWarning)
+    onHideWarning?.(!toggleHideWarning)
     setToggleHideWarning(!toggleHideWarning)
   }
 
   return (
-    <>
-      <StyledTitle size="sm">Warning</StyledTitle>
+    <Box flexDirection="column">
+      <StyledTitle size="sm" color="error" bold centered={!!onHideWarning}>
+        ⚠️Warning!
+      </StyledTitle>
       <Text size="xl" color="error">
-        The application you are trying to use is not in our default list
+        <b>The application you are trying to use is not in our default list</b>
       </Text>
       <br />
       <Text size="lg">Check the link you are using and ensure it comes from a trusted source</Text>
-      <StyledFormControlLabel
-        control={
-          <Checkbox
-            checked={toggleHideWarning}
-            onChange={handleToggleWarningPreference}
-            name="Warning message preference"
-          />
-        }
-        label="Do not show this warning again"
-      />
-    </>
+      {onHideWarning && (
+        <StyledFormControlLabel
+          control={
+            <Checkbox
+              checked={toggleHideWarning}
+              onChange={handleToggleWarningPreference}
+              name="Warning message preference"
+            />
+          }
+          label="Do not show this warning again"
+        />
+      )}
+    </Box>
   )
 }
 

@@ -12,7 +12,9 @@ type SecurityStepListProps = {
 const SecurityStepList = ({ steps, appUrl }: SecurityStepListProps): React.ReactElement => {
   return (
     <>
-      <StyledTitle size="sm">Best security practices when interacting with Safe Apps</StyledTitle>
+      <StyledTitle size="sm" centered>
+        Best security practices when interacting with Safe Apps
+      </StyledTitle>
       {steps.map((step, index) => (
         <Box key={index} display="flex" marginBottom={2} alignItems="flex-start">
           <StyledDot color="primary">

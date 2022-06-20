@@ -9,7 +9,9 @@ type SecurityStepContentProps = Omit<SecurityStep, 'id'>
 const SecurityStepContent: React.FC<SecurityStepContentProps> = ({ title, imageSrc, children }): React.ReactElement => {
   return (
     <Grid container direction="column" alignItems="center" justifyContent="center">
-      <StyledTitle size="xs">{title}</StyledTitle>
+      <StyledTitle size="xs" centered>
+        {title}
+      </StyledTitle>
       {children}
       {imageSrc && <StyledImage src={imageSrc} alt={title} />}
     </Grid>
