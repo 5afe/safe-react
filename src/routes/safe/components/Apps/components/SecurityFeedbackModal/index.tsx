@@ -7,7 +7,7 @@ import LegalDisclaimer from './LegalDisclaimer'
 import { alpha } from '@material-ui/core/styles'
 import SecurityStepList from './SecurityStepList'
 import WarningDefaultList from './WarningDefaultList'
-import { SECURITY_STEPS } from './constants'
+import { SECURITY_PRACTICES } from './constants'
 import SecurityStepContent from './SecurityStepContent'
 import { SecurityStep } from '../../types'
 
@@ -44,11 +44,11 @@ const SecurityFeedbackModal = ({
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
             {isFirstTimeAccessingApp && isExtendedListReviewed && (
-              <SecurityStepList steps={SECURITY_STEPS} appUrl={appUrl} />
+              <SecurityStepList steps={SECURITY_PRACTICES} appUrl={appUrl} />
             )}
             {isFirstTimeAccessingApp &&
               !isExtendedListReviewed &&
-              SECURITY_STEPS.map((step: SecurityStep) => {
+              SECURITY_PRACTICES.map((step: SecurityStep) => {
                 return step.imageSrc ? (
                   <SecurityStepContent key={step.id} {...step} />
                 ) : (

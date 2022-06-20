@@ -1,4 +1,4 @@
-export const SECURITY_STEPS = [
+export const SECURITY_PRACTICES = [
   {
     id: '1',
     title: 'Always use applications shared through trusted sources',
