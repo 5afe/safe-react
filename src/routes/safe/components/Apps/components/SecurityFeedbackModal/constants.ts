@@ -1,7 +1,7 @@
 export const SECURITY_STEPS = [
   {
     id: '1',
-    title: 'Always use applications shared through trusted links and sources',
+    title: 'Always use applications shared through trusted sources',
     imageSrc: './safe-apps-security-practices/1.png',
   },
   {
@@ -10,8 +10,7 @@ export const SECURITY_STEPS = [
   },
   {
     id: '3',
-    title:
-      'Review transaction information in the Safe popup when interacting with the Safe Apps and creating transactions',
+    title: 'Review transaction information before sending it when interacting with Safe Apps and creating transactions',
     imageSrc: './safe-apps-security-practices/2.png',
   },
   {
