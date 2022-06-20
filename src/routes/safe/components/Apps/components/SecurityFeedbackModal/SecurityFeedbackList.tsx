@@ -16,14 +16,14 @@ const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps):
         Best security practices when interacting with Safe Apps
       </StyledTitle>
 
-      {practices.map((step, index) => (
+      {practices.map((practice, index) => (
         <Box key={index} display="flex" marginBottom={2} alignItems="flex-start">
           <StyledDot color="primary">
             <StyledDotText size="sm">{index + 1}</StyledDotText>
           </StyledDot>
           <Box flexDirection="column">
-            <Text size="lg">{step.title}</Text>
-            {!step.imageSrc && (
+            <Text size="lg">{practice.title}</Text>
+            {!practice.imageSrc && (
               <StyledText size="lg">
                 <b>{appUrl}</b>
               </StyledText>

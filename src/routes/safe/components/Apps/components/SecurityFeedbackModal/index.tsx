@@ -5,7 +5,7 @@ import { alpha } from '@material-ui/core/styles'
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import Slider from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
-import SecurityStepList from './SecurityFeedbackList'
+import SecurityFeedbackList from './SecurityFeedbackList'
 import UnknownAppWarning from './UnknownAppWarning'
 import { SECURITY_PRACTICES } from './constants'
 import SecurityFeedbackContent from './SecurityFeedbackContent'
@@ -44,7 +44,7 @@ const SecurityFeedbackModal = ({
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
             {isFirstTimeAccessingApp && isExtendedListReviewed && (
-              <SecurityStepList practices={SECURITY_PRACTICES} appUrl={appUrl} />
+              <SecurityFeedbackList practices={SECURITY_PRACTICES} appUrl={appUrl} />
             )}
             {isFirstTimeAccessingApp &&
               !isExtendedListReviewed &&
@@ -53,7 +53,7 @@ const SecurityFeedbackModal = ({
                   <SecurityFeedbackContent key={practice.id} {...practice} />
                 ) : (
                   <SecurityFeedbackContent key={practice.id} title={practice.title}>
-                    <StyledStepContentText size="xl">{appUrl}</StyledStepContentText>
+                    <StyledSecurityFeedbackContentText size="xl">{appUrl}</StyledSecurityFeedbackContentText>
                   </SecurityFeedbackContent>
                 )
               })}
@@ -87,7 +87,7 @@ const StyledIcon = styled(Icon)`
   }
 `
 
-const StyledStepContentText = styled(Text)`
+const StyledSecurityFeedbackContentText = styled(Text)`
   font-weight: bold;
   overflow-wrap: anywhere;
 `
