@@ -2,20 +2,21 @@ import { Box } from '@material-ui/core'
 import styled from 'styled-components'
 import { Text, Dot } from '@gnosis.pm/safe-react-components'
 import { StyledTitle } from './styles'
-import { SecurityStep } from '../../types'
+import { SecurityFeedbackPractice } from '../../types'
 
-type SecurityStepListProps = {
-  steps: SecurityStep[]
+type SecurityFeedbackListProps = {
+  practices: SecurityFeedbackPractice[]
   appUrl: string
 }
 
-const SecurityStepList = ({ steps, appUrl }: SecurityStepListProps): React.ReactElement => {
+const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps): React.ReactElement => {
   return (
     <>
       <StyledTitle size="sm" centered>
         Best security practices when interacting with Safe Apps
       </StyledTitle>
-      {steps.map((step, index) => (
+
+      {practices.map((step, index) => (
         <Box key={index} display="flex" marginBottom={2} alignItems="flex-start">
           <StyledDot color="primary">
             <StyledDotText size="sm">{index + 1}</StyledDotText>
@@ -39,8 +40,8 @@ const StyledDot = styled(Dot)`
   width: 20px;
   height: 20px;
   margin-right: 20px;
-  background: #f0efee;
-  color: #566976;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.secondaryHover};
 `
 
 const StyledDotText = styled(Text)`
@@ -53,4 +54,4 @@ const StyledText = styled(Text)`
   margin: 10px 0;
 `
 
-export default SecurityStepList
+export default SecurityFeedbackList

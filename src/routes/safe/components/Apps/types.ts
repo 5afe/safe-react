@@ -12,7 +12,7 @@ export type StoredSafeApp = {
   url: string
 }
 
-export type SecurityStep = {
+export type SecurityFeedbackPractice = {
   id: string
   title: string
   imageSrc?: string

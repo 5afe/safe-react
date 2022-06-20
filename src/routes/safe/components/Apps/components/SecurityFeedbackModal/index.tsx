@@ -1,17 +1,17 @@
 import { memo, useState } from 'react'
 import styled from 'styled-components'
 import Grid from '@material-ui/core/Grid'
+import { alpha } from '@material-ui/core/styles'
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import Slider from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
-import { alpha } from '@material-ui/core/styles'
-import SecurityStepList from './SecurityStepList'
-import WarningDefaultList from './WarningDefaultList'
+import SecurityStepList from './SecurityFeedbackList'
+import UnknownAppWarning from './UnknownAppWarning'
 import { SECURITY_PRACTICES } from './constants'
-import SecurityStepContent from './SecurityStepContent'
-import { SecurityStep } from '../../types'
+import SecurityFeedbackContent from './SecurityFeedbackContent'
+import { SecurityFeedbackPractice } from '../../types'
 
-interface SafeAppsDisclaimerProps {
+interface SecurityFeedbackModalProps {
   onCancel: () => void
   onConfirm: (hideWarning: boolean) => void
   appUrl: string
@@ -29,7 +29,7 @@ const SecurityFeedbackModal = ({
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
   isExtendedListReviewed,
-}: SafeAppsDisclaimerProps): JSX.Element => {
+}: SecurityFeedbackModalProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
 
   const handleComplete = () => {
@@ -44,22 +44,20 @@ const SecurityFeedbackModal = ({
           <Slider onCancel={onCancel} onComplete={handleComplete}>
             {!isConsentAccepted && <LegalDisclaimer />}
             {isFirstTimeAccessingApp && isExtendedListReviewed && (
-              <SecurityStepList steps={SECURITY_PRACTICES} appUrl={appUrl} />
+              <SecurityStepList practices={SECURITY_PRACTICES} appUrl={appUrl} />
             )}
             {isFirstTimeAccessingApp &&
               !isExtendedListReviewed &&
-              SECURITY_PRACTICES.map((step: SecurityStep) => {
-                return step.imageSrc ? (
-                  <SecurityStepContent key={step.id} {...step} />
+              SECURITY_PRACTICES.map((practice: SecurityFeedbackPractice) => {
+                return practice.imageSrc ? (
+                  <SecurityFeedbackContent key={practice.id} {...practice} />
                 ) : (
-                  <SecurityStepContent key={step.id} title={step.title}>
+                  <SecurityFeedbackContent key={practice.id} title={practice.title}>
                     <StyledStepContentText size="xl">{appUrl}</StyledStepContentText>
-                  </SecurityStepContent>
+                  </SecurityFeedbackContent>
                 )
               })}
-            {!isSafeAppInDefaultList && isFirstTimeAccessingApp && (
-              <WarningDefaultList onHideWarning={setHideWarning} />
-            )}
+            {!isSafeAppInDefaultList && isFirstTimeAccessingApp && <UnknownAppWarning onHideWarning={setHideWarning} />}
           </Slider>
         </Grid>
       </StyledWrapper>

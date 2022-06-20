@@ -8,7 +8,7 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { black300 } from 'src/theme/variables'
 import fallbackSafeAppLogoSvg from 'src/assets/icons/apps.svg'
 import { useSecurityFeedbackModal } from 'src/routes/safe/components/Apps/hooks/useSecurityFeedbackModal'
-import WarningDefaultList from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/WarningDefaultList'
+import UnknownAppWarning from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/UnknownAppWarning'
 
 type SafeAppDetailsTypes = {
   iconUrl: string
@@ -53,7 +53,7 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeApp
       )}
       {isLoaded && !isSafeAppInDefaultList && (
         <>
-          <WarningDefaultList />
+          <UnknownAppWarning />
           <Separator />
         </>
       )}

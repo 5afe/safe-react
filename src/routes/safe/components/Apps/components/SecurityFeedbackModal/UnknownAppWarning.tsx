@@ -6,11 +6,11 @@ import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { StyledTitle } from './styles'
 
-type WarningDefaultListProps = {
+type UnknownAppWarningProps = {
   onHideWarning?: (hideWarning: boolean) => void
 }
 
-const WarningDefaultList = ({ onHideWarning }: WarningDefaultListProps): React.ReactElement => {
+const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.ReactElement => {
   const [toggleHideWarning, setToggleHideWarning] = useState(false)
 
   const handleToggleWarningPreference = (): void => {
@@ -53,4 +53,4 @@ const StyledFormControlLabel = styled(FormControlLabel)`
   }
 `
 
-export default WarningDefaultList
+export default UnknownAppWarning
