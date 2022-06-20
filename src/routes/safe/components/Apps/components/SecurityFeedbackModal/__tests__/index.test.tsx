@@ -55,7 +55,7 @@ describe('<SecurityFeedbackModal />', () => {
     await act(async () => {
       for (let i = 0; i < 4; i++) {
         fireEvent.click(continueBtn)
-        await pauseForSeconds(500)
+        await pauseForSeconds(550)
       }
     })
 
@@ -68,19 +68,19 @@ describe('<SecurityFeedbackModal />', () => {
 
     await act(async () => {
       fireEvent.click(continueBtn)
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(continueBtn)
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(continueBtn)
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(screen.getByText(/back/i))
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(continueBtn)
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(screen.getByText(/back/i))
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(continueBtn)
-      await pauseForSeconds(500)
+      await pauseForSeconds(550)
       fireEvent.click(continueBtn)
     })
 

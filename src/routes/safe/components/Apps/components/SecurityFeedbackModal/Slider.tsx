@@ -17,6 +17,8 @@ type SliderState = {
   renderedSlides: React.ReactElement[]
 }
 
+const SLIDER_TIMEOUT = 500
+
 const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   const allSlides = React.Children.toArray(children).filter(Boolean) as React.ReactElement[]
   const stateRef = useRef<SliderState>({
@@ -59,7 +61,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
     if (disabledBtn) {
       id = setTimeout(() => {
         setDisabledBtn(false)
-      }, 550)
+      }, SLIDER_TIMEOUT)
     }
 
     return () => {
