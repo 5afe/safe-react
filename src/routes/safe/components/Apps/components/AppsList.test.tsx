@@ -303,7 +303,7 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
     })
   })
 
-  it.only('Copies the Safe app URL to the clipboard and shows a snackbar', async () => {
+  it('Copies the Safe app URL to the clipboard and shows a snackbar', async () => {
     const copyToClipboardSpy = jest.spyOn(clipboard, 'copyToClipboard')
 
     copyToClipboardSpy.mockImplementation(() => jest.fn())

@@ -163,7 +163,7 @@ export const createTxNotifications = (
   const beforeExecutionKey = dispatch(showNotification(txNotifications.beforeExecution))
 
   return {
-    closePending: () => dispatch(closeNotification({ key: beforeExecutionKey })),
+    closePending: () => dispatch(closeNotification({ key: beforeExecutionKey, read: false })),
     showOnRejection: () => dispatch(showNotification(txNotifications.afterRejection)),
     showOnError: (err: Error & { code: number }, customErrorMessage?: string) => {
       const msg = isTxPendingError(err)

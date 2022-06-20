@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
-import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -25,6 +24,9 @@ import { showNotification } from 'src/logic/notifications/store/notifications'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -119,6 +121,9 @@ export const SafeDeployment = ({
         setStepIndex(1)
         setIntervalStarted(true)
       } catch (err) {
+        if (isWalletRejection(err)) {
+          trackEvent(CREATE_SAFE_EVENTS.REJECT_CREATE_SAFE)
+        }
         onError(err)
       }
     }
@@ -309,12 +314,6 @@ export const SafeDeployment = ({
           ) : null}
         </BodyFooter>
       </Body>
-
-      {stepIndex !== 0 && (
-        <BackButton color="primary" minWidth={140} onClick={onCancel} data-testid="safe-creation-back-btn">
-          Back
-        </BackButton>
-      )}
     </Wrapper>
   )
 }
@@ -417,9 +416,4 @@ const BodyFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-`
-
-const BackButton = styled(Button)`
-  grid-column: 2;
-  margin: 20px auto 0;
 `

@@ -9,12 +9,17 @@ import { sampleSize, uniqBy } from 'lodash'
 import { screenSm, screenMd } from 'src/theme/variables'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { GENERIC_APPS_ROUTE } from 'src/routes/routes'
-import DashboardAppCard, { CARD_HEIGHT, CARD_PADDING } from 'src/components/Dashboard/SafeApps/DashboardAppCard'
+import SafeAppCard, {
+  SAFE_APP_CARD_HEIGHT,
+  SAFE_APP_CARD_PADDING,
+} from 'src/routes/safe/components/Apps/components/SafeAppCard/SafeAppCard'
 import ExploreIcon from 'src/assets/icons/explore.svg'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppsUsageData, rankSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import { FEATURED_APPS_TAG } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
 import { WidgetTitle, WidgetBody, WidgetContainer, Card } from 'src/components/Dashboard/styled'
+
+export const CARD_PADDING = 24
 
 const SkeletonWrapper = styled.div`
   border-radius: 8px;
@@ -53,6 +58,10 @@ const StyledGrid = styled.div`
   }
 `
 
+const StyledAppCard = styled(Card)`
+  padding: ${SAFE_APP_CARD_PADDING}px;
+`
+
 const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: number): SafeApp[] => {
   return useMemo(() => {
     if (!allApps.length) return []
@@ -87,11 +96,11 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
 
   const LoadingState = useMemo(
     () => (
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         {Array.from(Array(size).keys()).map((key) => (
           <Grid item xs={12} md={4} key={key}>
             <SkeletonWrapper>
-              <Skeleton variant="rect" height={CARD_HEIGHT + 2 * CARD_PADDING} />
+              <Skeleton variant="rect" height={SAFE_APP_CARD_HEIGHT + 2 * SAFE_APP_CARD_PADDING} />
             </SkeletonWrapper>
           </Grid>
         ))}
@@ -103,31 +112,29 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
   if (isLoading) return LoadingState
 
   return (
-    <WidgetContainer>
+    <WidgetContainer id="safe-apps">
       <WidgetTitle>Safe Apps</WidgetTitle>
 
       <WidgetBody>
         <StyledGrid>
           {displayedApps.map((safeApp) => (
-            <DashboardAppCard
+            <SafeAppCard
               key={safeApp.id}
-              name={safeApp.name}
-              description={safeApp.description}
-              logoUri={safeApp.iconUrl}
-              appUri={safeApp.url}
-              isPinned={pinnedSafeApps.some((app) => app.id === safeApp.id)}
-              onPin={() => togglePin(safeApp)}
+              safeApp={safeApp}
+              togglePin={togglePin}
+              size="md"
+              isPinned={pinnedSafeApps.some((pinnedSafeApp) => pinnedSafeApp.id === safeApp.id)}
             />
           ))}
 
           <StyledLink to={allAppsUrl}>
-            <Card>
+            <StyledAppCard>
               <StyledExploreBlock>
                 <Button size="md" color="primary" variant="contained">
                   Explore Safe Apps
                 </Button>
               </StyledExploreBlock>
-            </Card>
+            </StyledAppCard>
           </StyledLink>
         </StyledGrid>
       </WidgetBody>
