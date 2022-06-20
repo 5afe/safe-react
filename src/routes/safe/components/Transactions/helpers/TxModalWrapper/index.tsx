@@ -44,6 +44,7 @@ import { useSimulation } from 'src/routes/safe/components/Transactions/helpers/S
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { FETCH_STATUS } from 'src/utils/requests'
+import { isSimulationAvailable } from '../Simulation/simulation'
 
 type Props = {
   children: ReactNode
@@ -129,7 +130,7 @@ export const TxModalWrapper = ({
   const isSmartContract = useIsSmartContractWallet(userAddress)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
-  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink } = useSimulation()
+  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError } = useSimulation()
 
   const txParameters = useMemo(
     () => ({
@@ -245,8 +246,8 @@ export const TxModalWrapper = ({
   const simulateTx = useCallback(() => {
     const sigs = getPreValidatedSignatures(userAddress)
     const data = getExecutionTransaction({ ...txParameters, sigs }).encodeABI()
-    simulateTransaction(data)
-  }, [simulateTransaction, txParameters, userAddress])
+    simulateTransaction(data, gasLimit)
+  }, [simulateTransaction, txParameters, userAddress, gasLimit])
 
   return (
     <EditableTxParameters
@@ -268,9 +269,11 @@ export const TxModalWrapper = ({
             <Grid container alignItems="center" justifyContent="space-between" style={{ marginBottom: '16px' }}>
               {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
 
-              <Button size="md" onClick={simulateTx} variant="contained" style={{ marginLeft: 'auto' }}>
-                Simulate
-              </Button>
+              {isSimulationAvailable() && (
+                <Button size="md" onClick={simulateTx} variant="contained" style={{ marginLeft: 'auto' }}>
+                  Simulate
+                </Button>
+              )}
             </Grid>
             {simulationRequestStatus === FETCH_STATUS.SUCCESS && (
               <Box mb={2}>
@@ -293,6 +296,13 @@ export const TxModalWrapper = ({
                     .
                   </Text>
                 )}
+              </Box>
+            )}
+            {simulationRequestStatus === FETCH_STATUS.ERROR && Boolean(simulationError) && (
+              <Box mb={2}>
+                <Text color="error" size="lg">
+                  An unexpected error occured during simulation: <b>{simulationError}</b>
+                </Text>
               </Box>
             )}
             {doExecute && (

@@ -16,14 +16,16 @@ type UseSimulationReturn =
   | {
       simulationRequestStatus: FETCH_STATUS.NOT_ASKED | FETCH_STATUS.ERROR | FETCH_STATUS.LOADING
       simulation: undefined
-      simulateTransaction: (data: string) => void
+      simulateTransaction: (data: string, gasLimit?: string) => void
       simulationLink: string
+      simulationError?: string
     }
   | {
       simulationRequestStatus: FETCH_STATUS.SUCCESS
       simulation: TenderlySimulation
-      simulateTransaction: (data: string) => void
+      simulateTransaction: (data: string, gasLimit?: string) => void
       simulationLink: string
+      simulationError?: string
     }
 
 export const useSimulation = (): UseSimulationReturn => {
@@ -32,24 +34,27 @@ export const useSimulation = (): UseSimulationReturn => {
   const userAddress = useSelector(userAccountSelector)
   const [simulation, setSimulation] = useState<TenderlySimulation | undefined>()
   const [simulationRequestStatus, setSimulationRequestStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
+  const [simulationError, setSimulationError] = useState<string | undefined>(undefined)
 
   const simulationLink = useMemo(() => getSimulationLink(simulation?.simulation.id || ''), [simulation])
 
   const simulateTransaction = useCallback(
-    async (data: string) => {
+    async (data: string, gasLimit?: string) => {
       if (!web3 || !chainId) return
 
       setSimulationRequestStatus(FETCH_STATUS.LOADING)
       try {
-        const latestBlock = await web3.eth.getBlock('latest')
-        const blockGasLimit = latestBlock.gasLimit.toString()
+        const getBlockGasLimit = async () => {
+          const latestBlock = await web3.eth.getBlock('latest')
+          return parseInt(latestBlock.gasLimit.toString())
+        }
 
         const simulationPayload: TenderlySimulatePayload = {
           network_id: chainId || '4',
           from: userAddress,
           to: address,
           input: data,
-          gas: parseInt(blockGasLimit),
+          gas: Number(gasLimit) ?? (await getBlockGasLimit()),
           gas_price: '0',
           state_objects: {
             [address]: {
@@ -67,9 +72,11 @@ export const useSimulation = (): UseSimulationReturn => {
         const simulationResponse = await axios.post(TENDERLY_SIMULATE_ENDPOINT_URL, simulationPayload)
         setSimulation(simulationResponse.data)
         setSimulationRequestStatus(FETCH_STATUS.SUCCESS)
+        setSimulationError(undefined)
       } catch (error) {
         console.error(error)
         setSimulationRequestStatus(FETCH_STATUS.ERROR)
+        setSimulationError(error.message)
       }
     },
     [address, chainId, userAddress, web3],
@@ -80,5 +87,6 @@ export const useSimulation = (): UseSimulationReturn => {
     simulationRequestStatus,
     simulation,
     simulationLink,
+    simulationError,
   } as UseSimulationReturn
 }
