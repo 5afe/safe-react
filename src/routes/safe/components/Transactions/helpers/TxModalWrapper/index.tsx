@@ -100,7 +100,7 @@ export const TxModalWrapper = ({
   isSubmitDisabled,
   isRejectTx = false,
 }: Props): React.ReactElement => {
-  const [manualSafeTxGas, setManualSafeTxGas] = useState<string>('')
+  const [manualSafeTxGas, setManualSafeTxGas] = useState<string>()
   const [manualGasPrice, setManualGasPrice] = useState<string>()
   const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string>()
   const [manualGasLimit, setManualGasLimit] = useState<string>()
