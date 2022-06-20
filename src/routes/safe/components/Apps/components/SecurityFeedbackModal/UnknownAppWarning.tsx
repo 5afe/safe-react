@@ -47,6 +47,7 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
 const StyledFormControlLabel = styled(FormControlLabel)`
   && {
     margin-top: 15px;
+    margin-right: 0;
     flex-direction: row-reverse;
     justify-self: flex-end;
     display: flex;
