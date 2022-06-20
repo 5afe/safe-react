@@ -78,16 +78,11 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
   const smoothTransition = () => {
     let slides: React.ReactElement[] = []
 
-    // We're at the last slide.
     if (stateRef.current.activeSlide === allSlides.length - 1) {
       slides = [allSlides[allSlides.length - 2], lastSlide, firstSlide]
-    }
-    // We're back at the first slide. Just reset to how it was on initial render
-    else if (stateRef.current.activeSlide === 0) {
+    } else if (stateRef.current.activeSlide === 0) {
       slides = [lastSlide, firstSlide, secondSlide]
-    }
-    // Create an array of the previous last slide, and the next two slides that follow it.
-    else {
+    } else {
       slides = allSlides.slice(stateRef.current.activeSlide - 1, stateRef.current.activeSlide + 2)
     }
 

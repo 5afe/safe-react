@@ -244,6 +244,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
                   removeApp(appToRemove.id)
 
                   const url = JSON.parse(appToRemove.id)?.url
+
                   if (url) {
                     onRemoveApp(url)
                   }
