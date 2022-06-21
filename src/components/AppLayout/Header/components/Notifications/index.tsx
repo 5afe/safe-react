@@ -1,6 +1,6 @@
 import { ReactElement, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { IconButton, Badge, ClickAwayListener, Paper, Popper, Divider } from '@material-ui/core'
+import { IconButton, Badge, ClickAwayListener, Paper, Popper } from '@material-ui/core'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import styled from 'styled-components'
 
@@ -49,18 +49,23 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   )
   const hasUnread = unreadCount > 0
 
+  const handleRead = () => {
+    notificationsToShow.forEach(({ read, options }) => {
+      if (read) return
+      dispatch(readNotification({ key: options.key }))
+    })
+  }
+
   const handleClickBell = () => {
     if (open) {
-      notificationsToShow.forEach(({ read, options }) => {
-        if (read) return
-        dispatch(readNotification({ key: options.key }))
-      })
+      handleRead()
       setShowAll(false)
     }
     toggle()
   }
 
   const handleClickAway = () => {
+    handleRead()
     clickAway()
     setShowAll(false)
   }
@@ -109,7 +114,6 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
               </div>
               {hasNotifications && <ClearAllButton onClick={handleClear}>Clear All</ClearAllButton>}
             </NotificationsHeader>
-            <StyledDivider />
             <NotificationList notifications={notificationsToShow} />
             {canExpand && (
               <NotificationsFooter>
@@ -152,21 +156,14 @@ const NotificationsPopper = styled(Paper)`
   border-radius: ${sm};
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
   width: 438px;
-  padding: 24px 23px;
 `
 
 const NotificationsHeader = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 16px;
-`
-
-const StyledDivider = styled(Divider)`
-  width: 438px;
-  height: 2px;
-  background-color: ${background};
-  margin: 16px -23px;
+  padding: 24px 24px;
+  border-bottom: 2px solid ${background};
 `
 
 const NotificationsTitle = styled.h4`
@@ -201,7 +198,7 @@ const ClearAllButton = styled.button`
 `
 
 const NotificationsFooter = styled.div`
-  margin-top: 8px;
+  padding: 24px 32px 16px;
 `
 
 export const NotificationSubtitle = styled.span`

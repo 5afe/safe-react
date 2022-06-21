@@ -36,6 +36,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 16px;
+  padding-bottom: 16px;
 `
 
 const Description = styled(Typography)`
@@ -47,6 +49,7 @@ const ScrollContainer = styled(StyledScrollableBar)<{ $showScrollbar: boolean }>
   height: ${({ $showScrollbar: $scroll }) => ($scroll ? '500px' : 'auto')};
   overflow-x: hidden;
   overflow-y: auto;
+  padding: 16px 24px;
 `
 
 const NotificationType = styled.h4`
