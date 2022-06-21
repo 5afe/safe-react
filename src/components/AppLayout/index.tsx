@@ -13,6 +13,7 @@ import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
 import QueueBar from '../QueueBar/QueueBar'
 import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 
 const Container = styled.div`
   height: 100vh;
@@ -142,13 +143,14 @@ const Layout: React.FC<Props> = ({
     path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
-  const { transactions } = usePagedQueuedTransactions()
-
   const [closedQueueBar, setClosedQueueBar] = useState(false)
-  const hasTransactions = !!transactions
+
+  const { transactions } = usePagedQueuedTransactions()
   const hasPendingTransactions = transactions?.next.count !== 0
-  const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS)
-  const showQueueBar = isSafeAppRoute && hasTransactions && hasPendingTransactions && !closedQueueBar
+
+  const isSafeAppView = !!useSafeAppUrl().getAppUrl()
+  const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS) && isSafeAppView
+  const showQueueBar = isSafeAppRoute && hasPendingTransactions && !closedQueueBar && !!transactions
 
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(
