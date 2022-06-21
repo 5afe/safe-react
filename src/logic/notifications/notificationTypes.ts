@@ -50,11 +50,6 @@ enum NOTIFICATION_IDS {
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
   REMOVE_SPENDING_LIMIT_FAILED_MSG,
-  ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
-  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS,
-  ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS,
-  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS,
-  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS,
   ADDRESS_BOOK_EXPORT_ENTRIES_ERROR,
   SAFE_NEW_VERSION_AVAILABLE,
   SHARE_SAFE_APP_URL_COPIED,
@@ -208,26 +203,6 @@ export const NOTIFICATIONS: Record<keyof typeof NOTIFICATION_IDS, Notification> 
   },
 
   // Address book
-  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: {
-    message: 'Entry created successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: {
-    message: 'Entry saved successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS: {
-    message: 'Entries imported successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
-    message: 'Entry deleted successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS: {
-    message: 'Address book exported',
-    options: { variant: VARIANT.SUCCESS },
-  },
   ADDRESS_BOOK_EXPORT_ENTRIES_ERROR: {
     message: 'An error occurred while generating the address book CSV.',
     options: { variant: VARIANT.ERROR },

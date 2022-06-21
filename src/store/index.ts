@@ -2,7 +2,6 @@ import { applyMiddleware, CombinedState, combineReducers, compose, createStore, 
 import { save, load, LoadOptions, RLSOptions } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
-import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
 import addressBookReducer, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
@@ -76,7 +75,6 @@ const enhancer = composeEnhancers(
     notificationsMiddleware,
     safeStorageMiddleware,
     providerMiddleware,
-    addressBookMiddleware,
     configMiddleware,
     gatewayTransactionsMiddleware,
     pendingTransactionsMiddleware,
