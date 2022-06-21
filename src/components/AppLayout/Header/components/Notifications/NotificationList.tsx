@@ -47,7 +47,6 @@ const ScrollContainer = styled(StyledScrollableBar)<{ $showScrollbar: boolean }>
   height: ${({ $showScrollbar: $scroll }) => ($scroll ? '500px' : 'auto')};
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 0 24px;
 `
 
 const NotificationType = styled.h4`
