@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { xs, lg, black500, extraLargeFontSize, largeFontSize } from 'src/theme/variables'
 
-export const WidgetContainer = styled.div`
+export const WidgetContainer = styled.section`
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -1,37 +1,31 @@
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
-import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { showNotification } from 'src/logic/notifications/store/notifications'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import { AppReduxState } from 'src/store'
+import { ThunkMiddleware } from 'redux-thunk'
 
-const watchedActions = Object.values(ADDRESS_BOOK_ACTIONS)
+export const addressBookMiddleware: ThunkMiddleware<AppReduxState> =
+  ({ dispatch }) =>
+  (next) =>
+  (action) => {
+    const handledAction = next(action)
 
-export const addressBookMiddleware = (store) => (next) => async (action) => {
-  const handledAction = next(action)
-  if (watchedActions.includes(action.type)) {
-    const { dispatch } = store
     switch (action.type) {
       case ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE: {
-        const { shouldAvoidUpdatesNotifications } = action.payload
-        if (!shouldAvoidUpdatesNotifications) {
-          const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_NEW_ENTRY)
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
-        }
+        dispatch(showNotification(NOTIFICATIONS.ADDRESS_BOOK_NEW_ENTRY_SUCCESS))
         break
       }
       case ADDRESS_BOOK_ACTIONS.REMOVE: {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_DELETE_ENTRY)
-        dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+        dispatch(showNotification(NOTIFICATIONS.ADDRESS_BOOK_DELETE_ENTRY_SUCCESS))
         break
       }
       case ADDRESS_BOOK_ACTIONS.IMPORT: {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_IMPORT_ENTRIES)
-        dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+        dispatch(showNotification(NOTIFICATIONS.ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS))
         break
       }
       default:
         break
     }
-  }
 
-  return handledAction
-}
+    return handledAction
+  }

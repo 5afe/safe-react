@@ -14,7 +14,7 @@ import {
   userAccountSelector,
   userEnsSelector,
 } from 'src/logic/wallets/store/selectors'
-import onboard, { loadLastUsedProvider } from 'src/logic/wallets/onboard'
+import onboard, { loadLastUsedProvider, removeLastUsedProvider } from 'src/logic/wallets/onboard'
 import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
 import { initPairing, isPairingSupported } from 'src/logic/wallets/pairing/utils'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
@@ -52,6 +52,7 @@ const HeaderComponent = (): React.ReactElement => {
 
   const onDisconnect = () => {
     onboard().walletReset()
+    removeLastUsedProvider()
   }
 
   const getProviderInfoBased = () => {

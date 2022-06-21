@@ -1,18 +1,17 @@
 import UnstoppableResolution from '@unstoppabledomains/resolution'
-import { getRpcServiceUrl } from 'src/config'
 
-let unstoppableResolver: UnstoppableResolution
+let UDResolution: UnstoppableResolution
 
 export const getAddressFromUnstoppableDomain = (name: string): Promise<string> => {
-  if (!unstoppableResolver) {
-    unstoppableResolver = new UnstoppableResolution({
-      blockchain: {
-        cns: {
-          url: getRpcServiceUrl(),
+  if (!UDResolution) {
+    UDResolution = new UnstoppableResolution({
+      sourceConfig: {
+        uns: {
+          api: true,
         },
       },
     })
   }
-
-  return unstoppableResolver.addr(name, 'ETH')
+  const resolved = UDResolution.addr(name, 'ETH')
+  return resolved
 }

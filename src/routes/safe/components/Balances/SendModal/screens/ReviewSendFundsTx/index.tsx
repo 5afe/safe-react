@@ -38,8 +38,8 @@ import { MODALS_EVENTS } from 'src/utils/events/modals'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { SpendingLimitModalWrapper } from 'src/routes/safe/components/Transactions/helpers/SpendingLimitModalWrapper'
-import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { closeNotification, showNotification } from 'src/logic/notifications/store/notifications'
 
 const useStyles = makeStyles(styles)
 
@@ -111,9 +111,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SPENDING_LIMIT_TX)
 
+        trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
+
+        let beforeExecutionKey = ''
         try {
-          trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.beforeExecution)))
+          beforeExecutionKey = dispatch(showNotification(notification.beforeExecution)) as unknown as string
 
           const allowanceTransferTx = await spendingLimit.methods.executeAllowanceTransfer(
             safeAddress,
@@ -126,15 +128,18 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             EMPTY_DATA,
           )
 
+          dispatch(closeNotification({ key: beforeExecutionKey, read: false }))
+
           const sendParams = createSendParams(tx.tokenSpendingLimit.delegate, txParameters)
 
           await allowanceTransferTx.send(sendParams).on('transactionHash', () => {
             onClose()
-            dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+            dispatch(showNotification(notification.afterExecution.noMoreConfirmationsNeeded))
           })
         } catch (err) {
           logError(Errors._801, err.message)
-          dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterRejection)))
+          dispatch(closeNotification({ key: beforeExecutionKey, read: false }))
+          dispatch(showNotification(notification.afterRejection))
         }
         onClose()
       }

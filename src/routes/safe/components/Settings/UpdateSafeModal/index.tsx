@@ -14,6 +14,7 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
 
@@ -44,7 +45,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         txNonce: txParameters.safeNonce,
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
-        notifiedTransaction: 'STANDARD_TX',
+        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         operation: Operation.DELEGATE,
         delayExecution,
       }),

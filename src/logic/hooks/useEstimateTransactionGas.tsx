@@ -12,6 +12,8 @@ import {
   DEFAULT_MAX_PRIO_FEE,
 } from 'src/logic/wallets/ethTransactions'
 
+export const DEFAULT_GAS = '0'
+
 export enum EstimationStatus {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
@@ -26,10 +28,10 @@ type UseEstimateTransactionGasProps = {
 }
 
 type TransactionGasEstimationResult = {
-  gasPrice: string
-  gasPriceFormatted: string
-  gasMaxPrioFee: string
-  gasMaxPrioFeeFormatted: string
+  gasPrice?: string
+  gasPriceFormatted?: string
+  gasMaxPrioFee?: string
+  gasMaxPrioFeeFormatted?: string
 }
 
 export const calculateTotalGasCost = (
@@ -38,7 +40,7 @@ export const calculateTotalGasCost = (
   gasMaxPrioFee: string,
   decimals: number,
 ): { gasCost: string; gasCostFormatted: string } => {
-  const totalPricePerGas = parseInt(gasPrice, 10) + parseInt(gasMaxPrioFee || '0', 10)
+  const totalPricePerGas = parseInt(gasPrice, 10) + parseInt(gasMaxPrioFee, 10)
   const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas
   const gasCost = fromTokenUnit(estimatedGasCosts, decimals)
   const gasCostFormatted = formatAmount(gasCost)
@@ -55,10 +57,10 @@ export const useEstimateTransactionGas = ({
   txData,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
-    gasPrice: '0',
-    gasPriceFormatted: '0',
-    gasMaxPrioFee: '0',
-    gasMaxPrioFeeFormatted: '0',
+    gasPrice: undefined,
+    gasPriceFormatted: undefined,
+    gasMaxPrioFee: undefined,
+    gasMaxPrioFeeFormatted: undefined,
   })
 
   useEffect(() => {
@@ -86,8 +88,8 @@ export const useEstimateTransactionGas = ({
         setGasEstimation({
           gasPrice: DEFAULT_MAX_GAS_FEE.toString(),
           gasPriceFormatted: fromWei(DEFAULT_MAX_GAS_FEE.toString(), 'gwei'),
-          gasMaxPrioFee: DEFAULT_MAX_PRIO_FEE.toString(),
-          gasMaxPrioFeeFormatted: fromWei(DEFAULT_MAX_PRIO_FEE.toString(), 'gwei'),
+          gasMaxPrioFee: isMaxFeeParam() ? DEFAULT_MAX_PRIO_FEE.toString() : '0',
+          gasMaxPrioFeeFormatted: isMaxFeeParam() ? fromWei(DEFAULT_MAX_PRIO_FEE.toString(), 'gwei') : '0',
         })
       }
     }

@@ -310,14 +310,14 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
 
     render(<AppsList />, mockStore)
 
+    // snackbar is not present
+    expect(screen.queryByText('Safe App URL copied to clipboard!')).not.toBeInTheDocument()
+
     await waitFor(() => {
       const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
       const compoundAppShareBtn = within(allAppsContainer).getByLabelText(
         'copy Compound Safe App share link to clipboard',
       )
-
-      // snackbar is not present
-      expect(screen.queryByText('Safe App URL copied to clipboard!')).not.toBeInTheDocument()
 
       // we click on the Share Safe App Button
       fireEvent.click(compoundAppShareBtn)
