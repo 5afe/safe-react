@@ -43,7 +43,7 @@ const NoficationItem = ({ read, options, message, timestamp }: NotificationsStat
 )
 
 const NotificationListItem = styled(ListItem)`
-  &:not(:last-child) {
+  .MuiListItem-root &:not(:last-child) {
     border-bottom: 2px solid ${background};
   }
   .MuiListItemText-secondary {
