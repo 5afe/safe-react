@@ -109,7 +109,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
               </div>
               {hasNotifications && <ClearAllButton onClick={handleClear}>Clear All</ClearAllButton>}
             </NotificationsHeader>
-            <StyledDivier />
+            <StyledDivider />
             <NotificationList notifications={notificationsToShow} />
             {canExpand && (
               <NotificationsFooter>
@@ -162,7 +162,7 @@ const NotificationsHeader = styled.div`
   margin-bottom: 16px;
 `
 
-const StyledDivier = styled(Divider)`
+const StyledDivider = styled(Divider)`
   width: 438px;
   height: 2px;
   background-color: ${background};
