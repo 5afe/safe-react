@@ -16,14 +16,14 @@ type UseSimulationReturn =
   | {
       simulationRequestStatus: FETCH_STATUS.NOT_ASKED | FETCH_STATUS.ERROR | FETCH_STATUS.LOADING
       simulation: undefined
-      simulateTransaction: (data: string, gasLimit?: string) => void
+      simulateTransaction: (data: string, canExecuteTx: boolean, gasLimit?: string) => void
       simulationLink: string
       simulationError?: string
     }
   | {
       simulationRequestStatus: FETCH_STATUS.SUCCESS
       simulation: TenderlySimulation
-      simulateTransaction: (data: string, gasLimit?: string) => void
+      simulateTransaction: (data: string, canExecuteTx: boolean, gasLimit?: string) => void
       simulationLink: string
       simulationError?: string
     }
@@ -39,7 +39,7 @@ export const useSimulation = (): UseSimulationReturn => {
   const simulationLink = useMemo(() => getSimulationLink(simulation?.simulation.id || ''), [simulation])
 
   const simulateTransaction = useCallback(
-    async (data: string, gasLimit?: string) => {
+    async (data: string, canExecuteTx: boolean, gasLimit?: string) => {
       if (!web3 || !chainId) return
 
       setSimulationRequestStatus(FETCH_STATUS.LOADING)
@@ -60,9 +60,11 @@ export const useSimulation = (): UseSimulationReturn => {
             [address]: {
               balance: undefined,
               code: undefined,
-              storage: {
-                [`0x${'4'.padStart(64, '0')}`]: `0x${'1'.padStart(64, '0')}`,
-              },
+              storage: canExecuteTx
+                ? undefined
+                : {
+                    [`0x${'4'.padStart(64, '0')}`]: `0x${'1'.padStart(64, '0')}`,
+                  },
             },
           },
           save: true,

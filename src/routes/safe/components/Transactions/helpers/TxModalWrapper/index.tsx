@@ -244,10 +244,14 @@ export const TxModalWrapper = ({
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
   const simulateTx = useCallback(() => {
-    const sigs = getPreValidatedSignatures(userAddress)
-    const data = getExecutionTransaction({ ...txParameters, sigs }).encodeABI()
-    simulateTransaction(data, gasLimit)
-  }, [simulateTransaction, txParameters, userAddress, gasLimit])
+    // If a transaction is executable we simulate with the proposed / selected gasLimit and the actual signatures
+    // Otherwise we overwrite the threshold to 1 on tenderly and create a signature
+    const data = getExecutionTransaction({
+      ...txParameters,
+      sigs: canTxExecute ? txParameters.sigs : getPreValidatedSignatures(userAddress),
+    }).encodeABI()
+    simulateTransaction(data, canTxExecute, gasLimit)
+  }, [txParameters, canTxExecute, userAddress, simulateTransaction, gasLimit])
 
   return (
     <EditableTxParameters
