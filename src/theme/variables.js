@@ -17,6 +17,7 @@ const secondaryBackground = '#f0efee'
 const sm = '8px'
 const warningColor = '#ffc05f'
 const alertWarningColor = '#FBE5C5'
+const infoColor = '#ECF5F4'
 const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
@@ -45,6 +46,8 @@ module.exports = {
   fontSizeHeadingXs: 13,
   grey400: '#EEEFF0',
   gray500: '#E2E3E3',
+  green200: '#EFFAF1',
+  green500: '#008C30',
   headerHeight,
   largeFontSize: '16px',
   lg,
@@ -54,12 +57,14 @@ module.exports = {
   md,
   mediumFontSize: '14px',
   orange500: '#e8663d',
+  orange200: '#FFF4E3',
   primary,
   primaryLite,
   primaryActive,
   primary200: primaryLite,
   primary300: '#92C9BE',
   primary400: primaryActive,
+  infoColor,
   regularFont: 400,
   red400: '#C31717',
   screenLg: 1200,

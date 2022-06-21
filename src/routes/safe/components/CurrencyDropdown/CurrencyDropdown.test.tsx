@@ -2,7 +2,7 @@ import { fireEvent, render, screen, getByText, waitFor, queryByText } from 'src/
 import { CurrencyDropdown } from '.'
 import { history, ROOT_ROUTE } from 'src/routes/routes'
 import { mockedEndpoints } from 'src/setupTests'
-import { GATEWAY_URL } from 'src/utils/constants'
+import {} from 'src/utils/constants'
 
 const mockedAvailableCurrencies = ['USD', 'EUR', 'AED', 'AFN', 'ALL', 'ARS']
 const rinkebyNetworkId = '4'
@@ -87,7 +87,7 @@ describe('<CurrencyDropdown>', () => {
 
     // getBalances endpoint has been called
     expect(mockedEndpoints.getBalances).toBeCalledTimes(1)
-    expect(mockedEndpoints.getBalances).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, safeAddress, selectedCurrency, {
+    expect(mockedEndpoints.getBalances).toBeCalledWith(rinkebyNetworkId, safeAddress, selectedCurrency, {
       exclude_spam: true,
       trusted: false,
     })

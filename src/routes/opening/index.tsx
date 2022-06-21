@@ -15,13 +15,13 @@ import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
-import SuccessSvg from './assets/safe-created.svg'
+import SuccessSvg from 'src/assets/icons/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultLoading from './assets/creation-process.gif'
 import { TransactionReceipt } from 'web3-core'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -55,10 +55,10 @@ export const SafeDeployment = ({
   const showSnackbarError = useCallback(
     (err: Error) => {
       if (isTxPendingError(err)) {
-        dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
+        dispatch(showNotification(NOTIFICATIONS.TX_PENDING_MSG))
       } else {
         dispatch(
-          enqueueSnackbar({
+          showNotification({
             ...NOTIFICATIONS.CREATE_SAFE_FAILED_MSG,
             message: `${NOTIFICATIONS.CREATE_SAFE_FAILED_MSG.message} – ${err.message}`,
           }),

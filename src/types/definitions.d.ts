@@ -16,6 +16,7 @@ declare global {
     beamer_config?: BeamerConfig
     Beamer?: BeamerMethods
     dataLayer?: DataLayerArgs['dataLayer']
+    Cypress?
   }
 }
 declare module '@openzeppelin/contracts/build/contracts/ERC721'

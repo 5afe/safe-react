@@ -39,7 +39,6 @@ describe('fetchSafe', () => {
   // Test args
   const testAddress = '0xAdCa2CCcF35CbB27fD757f1c0329DF767f8E38F0'
   const chainId = '4'
-  const cgwUrl = 'https://safe-client.staging.gnosisdev.com'
 
   afterEach(() => {
     setChainId(chainId)
@@ -50,7 +49,7 @@ describe('fetchSafe', () => {
     await (action as MockedAction)(() => null)
 
     await waitFor(() => {
-      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(chainId, testAddress)
       expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
       expect(fetchCollectibles).toHaveBeenCalledWith(testAddress)
       expect(fetchTransactions).toHaveBeenCalledWith(chainId, testAddress)
@@ -63,7 +62,7 @@ describe('fetchSafe', () => {
     await (action as MockedAction)(() => null)
 
     await waitFor(() => {
-      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(chainId, testAddress)
       expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
       expect(fetchCollectibles).toHaveBeenCalledWith(testAddress)
       expect(fetchTransactions).toHaveBeenCalledWith(chainId, testAddress)
@@ -80,7 +79,7 @@ describe('fetchSafe', () => {
     await (action as MockedAction)(() => null)
 
     await waitFor(() => {
-      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, initialChainId, testAddress)
+      expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(initialChainId, testAddress)
       expect(fetchSafeTokens).not.toHaveBeenCalled()
       expect(fetchCollectibles).not.toHaveBeenCalled()
       expect(fetchTransactions).not.toHaveBeenCalled()
@@ -103,7 +102,7 @@ describe('fetchSafe', () => {
       await (action as MockedAction)(() => null)
 
       await waitFor(() => {
-        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(chainId, testAddress)
         expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
         expect(fetchCollectibles).not.toHaveBeenCalled()
         expect(fetchTransactions).toHaveBeenCalled()
@@ -122,7 +121,7 @@ describe('fetchSafe', () => {
       await (action as MockedAction)(() => null)
 
       await waitFor(() => {
-        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(chainId, testAddress)
         expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
         expect(fetchCollectibles).toHaveBeenCalled()
         expect(fetchTransactions).toHaveBeenCalled()
@@ -141,7 +140,7 @@ describe('fetchSafe', () => {
       await (action as MockedAction)(() => null)
 
       await waitFor(() => {
-        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(cgwUrl, chainId, testAddress)
+        expect(GatewaySDK.getSafeInfo).toHaveBeenCalledWith(chainId, testAddress)
         expect(fetchSafeTokens).toHaveBeenCalledWith(testAddress)
         expect(fetchCollectibles).toHaveBeenCalled()
         expect(fetchTransactions).not.toHaveBeenCalled()

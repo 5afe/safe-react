@@ -5,9 +5,8 @@ import { CSVDownloader, jsonToCSV } from 'react-papaparse'
 import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
-import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { showNotification } from 'src/logic/notifications/store/notifications'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 
 import { addressBookState } from 'src/logic/addressBook/store/selectors'
 
@@ -63,11 +62,10 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
     setLoading(true)
     setTimeout(() => {
       if (!loading) {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_EXPORT_ENTRIES)
         const action = error
-          ? notification.afterExecution.afterExecutionError
-          : notification.afterExecution.noMoreConfirmationsNeeded
-        dispatch(enqueueSnackbar(enhanceSnackbarForAction(action)))
+          ? NOTIFICATIONS.ADDRESS_BOOK_EXPORT_ENTRIES_ERROR
+          : NOTIFICATIONS.ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS
+        dispatch(showNotification(action))
       }
       onClose()
     }, 600)

@@ -6,13 +6,13 @@ import { _getChainId, getChainName } from 'src/config'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
-import { loadFromStorageWithExpiry, removeFromStorage, saveToStorageWithExpiry } from 'src/utils/storage'
+import { loadFromStorageWithExpiry, removeFromStorageWithExpiry, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
 import updateProviderWallet from 'src/logic/wallets/store/actions/updateProviderWallet'
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
-import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
+import { closeAllNotifications } from '../notifications/store/notifications'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
@@ -31,7 +31,7 @@ export const loadLastUsedProvider = (): string | undefined => {
 }
 
 export const removeLastUsedProvider = (): void => {
-  removeFromStorage(LAST_USED_PROVIDER_KEY)
+  removeFromStorageWithExpiry(LAST_USED_PROVIDER_KEY)
 }
 
 const getNetworkName = (chainId: ChainId) => {
@@ -64,7 +64,7 @@ const getOnboard = (chainId: ChainId): API => {
       },
       network: (networkId) => {
         store.dispatch(updateProviderNetwork(networkId?.toString() || ''))
-        store.dispatch(closeSnackbar({ dismissAll: true }))
+        store.dispatch(closeAllNotifications())
       },
       ens: hasENSSupport(chainId)
         ? (ens) => {

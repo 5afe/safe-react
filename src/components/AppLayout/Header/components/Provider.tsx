@@ -5,7 +5,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
 import { screenSm, sm } from 'src/theme/variables'
 
 const styles = () => ({
@@ -15,7 +14,7 @@ const styles = () => ({
     height: '100%',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      flexBasis: '284px',
+      flexBasis: '280px',
     },
   },
   provider: {
@@ -50,14 +49,12 @@ class Provider extends React.Component<any> {
     return (
       <>
         <div className={classes.root} ref={this.myRef}>
-          <Divider />
           <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
             {info}
             <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </Col>
-          <Divider />
         </div>
         {render(this.myRef)}
       </>

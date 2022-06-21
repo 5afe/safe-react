@@ -138,17 +138,17 @@ describe('<CreateSafePage>', () => {
 
       // from Rinkeby to Mainnet
       expect(screen.getByText('Rinkeby')).toBeInTheDocument()
-      fireEvent.click(screen.getByText('Switch Network'))
+      fireEvent.click(screen.getByTestId('switch-network-link'))
       fireEvent.click(screen.getByText('Ethereum'))
       await waitFor(() => expect(screen.getByText('Ethereum')).toBeInTheDocument())
 
       // from Mainnet to Polygon
-      fireEvent.click(screen.getByText('Switch Network'))
+      fireEvent.click(screen.getByTestId('switch-network-link'))
       fireEvent.click(screen.getByText('Polygon'))
       await waitFor(() => expect(screen.getByText('Polygon')).toBeInTheDocument())
 
       // from Polygon to Rinkeby
-      fireEvent.click(screen.getByText('Switch Network'))
+      fireEvent.click(screen.getByTestId('switch-network-link'))
       fireEvent.click(screen.getByText('Rinkeby'))
       await waitFor(() => expect(screen.getByText('Rinkeby')).toBeInTheDocument())
     })
@@ -168,7 +168,7 @@ describe('<CreateSafePage>', () => {
 
       await waitFor(() => expect(screen.getByTestId('switch-network-link')).toBeInTheDocument())
 
-      fireEvent.click(screen.getByText('Switch Network'))
+      fireEvent.click(screen.getByTestId('switch-network-link'))
 
       // closes popup
       fireEvent.click(screen.getByLabelText('close'))

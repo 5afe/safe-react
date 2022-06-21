@@ -6,18 +6,14 @@ import { AllowanceModule } from 'src/types/contracts/allowance-module.d'
 import { ChainId } from 'src/config/chain.d'
 
 /**
- * Returns an address of the deployed AllowanceModule contract. Throws if not found.
+ * Returns an address of the deployed AllowanceModule contract. Returns undefined if no address found.
  * @param {ChainId} chainId - The chainId of the network
  * @returns {string|undefined}
  */
-const getSpendingLimitModuleAddress = (chainId: ChainId): string => {
+const getSpendingLimitModuleAddress = (chainId: ChainId): string | undefined => {
   const deployment = getAllowanceModuleDeployment({ network: chainId })
 
-  if (!deployment) {
-    throw new Error(`Could not find AllowanceModule deployment for chainId: ${chainId}`)
-  }
-
-  return deployment.networkAddresses[chainId]
+  return deployment?.networkAddresses[chainId]
 }
 
 /**

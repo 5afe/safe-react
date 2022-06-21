@@ -92,10 +92,9 @@ const calculateSpendingLimitsTxData = async (
   txToken: Token,
   values: Record<string, string>,
   modules: string[],
+  moduleAddress: string,
   txParameters?: TxParameters,
 ): Promise<SpendingLimitsTxData> => {
-  const chainId = _getChainId()
-  const moduleAddress = getSpendingLimitModuleAddress(chainId)
   const isSpendingLimitEnabled = isModuleEnabled(modules, moduleAddress)
   const transactions: MultiSendTx[] = []
 
@@ -186,6 +185,9 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   useEffect(() => {
     const calculateSpendingLimit = async () => {
+      const moduleAddress = getSpendingLimitModuleAddress(_getChainId())
+      if (!moduleAddress) return
+
       const { spendingLimitTxData } = await calculateSpendingLimitsTxData(
         safeAddress,
         safeVersion,
@@ -195,6 +197,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         txToken,
         values,
         safeModules,
+        moduleAddress,
       )
       setEstimateGasArgs(spendingLimitTxData)
     }
@@ -211,6 +214,9 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   ])
 
   const handleSubmit = async (txParameters: TxParameters, delayExecution: boolean): Promise<void> => {
+    const moduleAddress = getSpendingLimitModuleAddress(_getChainId())
+    if (!moduleAddress) return
+
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
     const advancedOptionsTxParameters = {
       ...txParameters,
@@ -229,6 +235,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         txToken,
         values,
         safeModules,
+        moduleAddress,
         advancedOptionsTxParameters,
       )
 
@@ -271,7 +278,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             </Text>
           )}
         </Col>
-        <Col margin="md">
+        <Col margin="md" style={{ wordBreak: 'break-all' }}>
           <AddressInfo address={values.beneficiary} title="Beneficiary" color="placeHolder" />
         </Col>
         <Col margin="md">

@@ -21,6 +21,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
 export enum WALLETS {
   SAFE_MOBILE = 'safeMobile',
   METAMASK = 'metamask',
+  TALLYHO = 'tally',
   WALLET_CONNECT = 'walletConnect',
   TREZOR = 'trezor',
   LEDGER = 'ledger',

@@ -1,9 +1,4 @@
-import {
-  calculateTotalGasCost,
-  EstimationStatus,
-  getDefaultGasEstimation,
-  useEstimateTransactionGas,
-} from 'src/logic/hooks/useEstimateTransactionGas'
+import { calculateTotalGasCost, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { renderHook } from '@testing-library/react-hooks'
 import { DEFAULT_MAX_GAS_FEE, DEFAULT_MAX_PRIO_FEE } from 'src/logic/wallets/ethTransactions'
 import { fromWei, toWei } from 'web3-utils'
@@ -27,30 +22,23 @@ describe('useEstimateTransactionGas', () => {
   beforeAll(() => {
     mockParams = {
       txData: 'mocktxdata',
-      txRecipient: '',
-      txAmount: '',
-      safeTxGas: '',
-      operation: 1,
       isExecution: true,
-      approvalAndExecution: false,
     }
-    initialState = getDefaultGasEstimation({
-      txEstimationExecutionStatus: EstimationStatus.LOADING,
-      gasPrice: '0',
-      gasPriceFormatted: '0',
-      gasMaxPrioFee: '0',
-      gasMaxPrioFeeFormatted: '0',
-    })
-    failureState = getDefaultGasEstimation({
-      txEstimationExecutionStatus: EstimationStatus.FAILURE,
+    initialState = {
+      gasPrice: undefined,
+      gasPriceFormatted: undefined,
+      gasMaxPrioFee: undefined,
+      gasMaxPrioFeeFormatted: undefined,
+    }
+    failureState = {
       gasPrice: DEFAULT_MAX_GAS_FEE.toString(),
       gasPriceFormatted: fromWei(DEFAULT_MAX_GAS_FEE.toString(), 'gwei'),
       gasMaxPrioFee: DEFAULT_MAX_PRIO_FEE.toString(),
       gasMaxPrioFeeFormatted: fromWei(DEFAULT_MAX_PRIO_FEE.toString(), 'gwei'),
-    })
+    }
   })
 
-  let gasPriceEstimationSpy, prioFeeEstimationSpy, gasLimitEstimationSpy
+  let gasPriceEstimationSpy, prioFeeEstimationSpy
   beforeEach(() => {
     gasPriceEstimationSpy = jest.spyOn(ethTransactions, 'calculateGasPrice').mockImplementation(() => {
       return Promise.resolve('0')
@@ -61,35 +49,24 @@ describe('useEstimateTransactionGas', () => {
         maxFeePerGas: 0,
       })
     })
-    gasLimitEstimationSpy = jest.spyOn(gas, 'estimateGasForTransactionExecution').mockImplementation(() => {
-      return Promise.resolve(0)
-    })
-    jest.spyOn(gas, 'checkTransactionExecution').mockImplementation(jest.fn())
   })
 
   afterEach(() => {
     jest.restoreAllMocks()
   })
 
-  it('returns initial estimation and successful loading state if tx is not execution', () => {
+  it('returns initial estimation if tx is not execution', () => {
     const { result } = renderHook(() => useEstimateTransactionGas({ ...mockParams, isExecution: false }))
 
-    expect(result.current).toStrictEqual({ ...initialState, txEstimationExecutionStatus: EstimationStatus.SUCCESS })
+    expect(result.current).toStrictEqual(initialState)
   })
 
-  it('returns initial estimation and successful loading state if there is no txData', () => {
-    const { result } = renderHook(() => useEstimateTransactionGas({ ...mockParams, txData: '' }))
-
-    expect(result.current).toStrictEqual({ ...initialState, txEstimationExecutionStatus: EstimationStatus.SUCCESS })
-  })
-
-  it('estimates gas price, max priority fee and gas limit', async () => {
+  it('estimates gas price and max priority fee', async () => {
     renderHook(() => useEstimateTransactionGas(mockParams))
 
     await waitFor(() => {
       expect(gasPriceEstimationSpy).toHaveBeenCalledTimes(1)
       expect(prioFeeEstimationSpy).toHaveBeenCalledTimes(1)
-      expect(gasLimitEstimationSpy).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -104,19 +81,6 @@ describe('useEstimateTransactionGas', () => {
     await waitFor(() => {
       expect(result.current.gasPrice).toBe(mockGasPrice)
       expect(gasPriceEstimationSpy).toHaveBeenCalledTimes(0)
-    })
-  })
-
-  it('returns manualGasLimit if it exists instead of estimation', async () => {
-    const mockManualGasLimit = '30000'
-
-    const { result } = renderHook(() =>
-      useEstimateTransactionGas({ ...mockParams, manualGasLimit: mockManualGasLimit }),
-    )
-
-    await waitFor(() => {
-      expect(result.current.gasLimit).toBe(mockManualGasLimit)
-      expect(gasLimitEstimationSpy).toHaveBeenCalledTimes(0)
     })
   })
 
@@ -146,69 +110,24 @@ describe('useEstimateTransactionGas', () => {
     })
   })
 
-  it('returns a failure state if checkTransactionExecution is false', async () => {
-    jest.spyOn(gas, 'checkTransactionExecution').mockImplementation(() => {
-      return Promise.resolve(false)
+  it('returns 0 for maxPrioFee pre EIP-1559 if calculateGasPrice throws', async () => {
+    jest.spyOn(gas, 'isMaxFeeParam').mockImplementation(() => false)
+    jest.spyOn(ethTransactions, 'calculateGasPrice').mockImplementation(() => {
+      throw new Error()
     })
 
     const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
 
     await waitFor(() => {
-      expect(result.current.txEstimationExecutionStatus).toBe(EstimationStatus.FAILURE)
-    })
-  })
-
-  it('returns a success state if checkTransactionExecution is true', async () => {
-    jest.spyOn(gas, 'checkTransactionExecution').mockImplementation(() => {
-      return Promise.resolve(true)
-    })
-
-    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
-
-    await waitFor(() => {
-      expect(result.current.txEstimationExecutionStatus).toBe(EstimationStatus.SUCCESS)
+      expect(result.current.gasMaxPrioFee).toBe('0')
+      expect(result.current.gasMaxPrioFeeFormatted).toBe('0')
+      expect(prioFeeEstimationSpy).toHaveBeenCalledTimes(0)
     })
   })
 
   it('returns failure state if getFeesPerGas throws', async () => {
     jest.spyOn(gas, 'isMaxFeeParam').mockImplementation(() => true)
     jest.spyOn(ethTransactions, 'getFeesPerGas').mockImplementation(() => {
-      throw new Error()
-    })
-
-    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
-
-    await waitFor(() => {
-      expect(result.current).toStrictEqual(failureState)
-    })
-  })
-
-  it('returns failure state if estimateGasForTransactionExecution throws', async () => {
-    jest.spyOn(gas, 'estimateGasForTransactionExecution').mockImplementation(() => {
-      throw new Error()
-    })
-
-    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
-
-    await waitFor(() => {
-      expect(result.current).toStrictEqual(failureState)
-    })
-  })
-
-  it('returns failure state if estimateGasForTransactionExecution throws', async () => {
-    jest.spyOn(gas, 'checkTransactionExecution').mockImplementation(() => {
-      throw new Error()
-    })
-
-    const { result } = renderHook(() => useEstimateTransactionGas(mockParams))
-
-    await waitFor(() => {
-      expect(result.current).toStrictEqual(failureState)
-    })
-  })
-
-  it('returns failure state if estimateGasForTransactionExecution throws', async () => {
-    jest.spyOn(ethTransactions, 'calculateGasPrice').mockImplementation(() => {
       throw new Error()
     })
 
@@ -240,5 +159,12 @@ describe('calculateTotalGasCost', () => {
 
     expect(gasCost).toBe('0.06719424')
     expect(gasCostFormatted).toBe('0.06719')
+  })
+
+  it('returns 0 if gasLimit is 0', () => {
+    const { gasCost, gasCostFormatted } = calculateTotalGasCost('0', '264000000000', '1000000000000', 18)
+
+    expect(gasCost).toBe('0')
+    expect(gasCostFormatted).toBe('0')
   })
 })

@@ -14,6 +14,8 @@ import { mustBeEthereumAddress } from 'src/components/forms/validator'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;
+  max-width: 100%;
+  word-break: break-all;
 `
 
 const BeneficiaryScan = styled.div`

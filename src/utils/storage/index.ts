@@ -45,3 +45,7 @@ export const saveToStorageWithExpiry = <T = unknown>(key: string, value: T, expi
 export const loadFromStorageWithExpiry = <T = unknown>(key: string): T | undefined => {
   return storage.getWithExpiry<T>(key)
 }
+
+export const removeFromStorageWithExpiry = (key: string): void => {
+  return storage.removeItem(key)
+}

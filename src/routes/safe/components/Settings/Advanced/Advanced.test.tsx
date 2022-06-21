@@ -323,19 +323,4 @@ describe('Advanced Settings Component', () => {
       expect(getByText(nonceLabel, currentNonce)).toBeInTheDocument()
     })
   })
-  describe('BatchExecute Setting', () => {
-    it('displays if MultiSend contract exists', () => {
-      jest.spyOn(safeContracts, 'getMultisendContractAddress').mockReturnValue('mockAddress')
-
-      const { getByText } = render(<Advanced />)
-      expect(getByText('Transactions (experimental)')).toBeInTheDocument()
-    })
-
-    it('doesnt display if the MultiSend contract doesnt exist', () => {
-      jest.spyOn(safeContracts, 'getMultisendContractAddress').mockReturnValue('')
-
-      const { queryByText } = render(<Advanced />)
-      expect(queryByText('Transactions (experimental)')).not.toBeInTheDocument()
-    })
-  })
 })

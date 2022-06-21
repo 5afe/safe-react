@@ -5,6 +5,9 @@ import { render, screen, fireEvent, within, act, waitFor } from 'src/utils/test-
 import * as appUtils from 'src/routes/safe/components/Apps/utils'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import * as clipboard from 'src/utils/clipboard'
+import { getShareSafeAppUrl } from 'src/routes/routes'
+import { CHAIN_ID } from 'src/config/chain.d'
 import { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 
 const mockStore = {
@@ -238,17 +241,21 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     })
 
     const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
-    const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound')
+    const compoundAppPinBtn = within(allAppsContainer).getByLabelText('Pin Compound Safe App')
     act(() => {
       fireEvent.click(compoundAppPinBtn)
     })
 
     await waitFor(() => {
       expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByText('Compound')).toBeInTheDocument()
-      expect(within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')).toBeInTheDocument()
+      expect(
+        within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound Safe App'),
+      ).toBeInTheDocument()
     })
 
-    const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText('Unpin Compound')
+    const compoundAppUnpinBtn = within(screen.getByTestId(PINNED_APPS_LIST_TEST_ID)).getByLabelText(
+      'Unpin Compound Safe App',
+    )
     act(() => {
       fireEvent.click(compoundAppUnpinBtn)
     })
@@ -279,5 +286,50 @@ describe('Safe Apps -> AppsList -> Pinning apps', () => {
     expect(updatedPinnedAppsInLocalStorage).toContain('14')
     expect(updatedPinnedAppsInLocalStorage).toContain('24')
     expect(updatedPinnedAppsInLocalStorage).not.toContain('228')
+  })
+})
+
+describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
+  it('Shows Share Safe app button in the Safe App Card', async () => {
+    render(<AppsList />, mockStore)
+
+    await waitFor(() => {
+      const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
+      const compoundAppShareBtn = within(allAppsContainer).getByLabelText(
+        'copy Compound Safe App share link to clipboard',
+      )
+
+      expect(compoundAppShareBtn).toBeInTheDocument()
+    })
+  })
+
+  it.only('Copies the Safe app URL to the clipboard and shows a snackbar', async () => {
+    const copyToClipboardSpy = jest.spyOn(clipboard, 'copyToClipboard')
+
+    copyToClipboardSpy.mockImplementation(() => jest.fn())
+
+    render(<AppsList />, mockStore)
+
+    // snackbar is not present
+    expect(screen.queryByText('Safe App URL copied to clipboard!')).not.toBeInTheDocument()
+
+    await waitFor(() => {
+      const allAppsContainer = screen.getByTestId(ALL_APPS_LIST_TEST_ID)
+      const compoundAppShareBtn = within(allAppsContainer).getByLabelText(
+        'copy Compound Safe App share link to clipboard',
+      )
+
+      // we click on the Share Safe App Button
+      fireEvent.click(compoundAppShareBtn)
+
+      const compoundUrl = 'https://cloudflare-ipfs.com/ipfs/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k'
+      const shareSafeAppUrl = getShareSafeAppUrl(compoundUrl, CHAIN_ID.RINKEBY)
+
+      // share Safe app url is copied in the clipboard
+      expect(copyToClipboardSpy).toHaveBeenCalledWith(shareSafeAppUrl)
+
+      // we show a snackbar
+      expect(screen.getByText('Safe App URL copied to clipboard!')).toBeInTheDocument()
+    })
   })
 })
