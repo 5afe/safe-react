@@ -1,13 +1,14 @@
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
-import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
+import { FEATURES, getMasterCopies } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getChainInfo } from 'src/config'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const FEATURES_BY_VERSION: Record<string, string> = {
   [FEATURES.SAFE_TX_GAS_OPTIONAL]: '>=1.3.0',
@@ -85,4 +86,12 @@ export const getSafeVersionInfo = async (safeVersion: string): Promise<SafeVersi
   } catch (err) {
     logError(Errors._606, err.message)
   }
+}
+
+export const isValidMasterCopy = async (chainId: string, masterCopyAddress: string): Promise<boolean> => {
+  const supportedMasterCopies = await getMasterCopies(chainId)
+
+  return supportedMasterCopies.some((supportedMasterCopy) =>
+    sameAddress(supportedMasterCopy.address, masterCopyAddress),
+  )
 }

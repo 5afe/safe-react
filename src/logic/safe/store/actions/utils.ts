@@ -99,6 +99,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.txQueuedTag = remoteSafeInfo.txQueuedTag
   safeInfo.txHistoryTag = remoteSafeInfo.txHistoryTag
   safeInfo.chainId = remoteSafeInfo.chainId as ChainId
+  safeInfo.implementation = remoteSafeInfo.implementation
 
   return safeInfo
 }

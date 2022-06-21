@@ -35,6 +35,11 @@ const getMockedOldSafe = ({
       { tokenAddress: mockedActiveTokenAddress1, tokenBalance: '100' },
       { tokenAddress: mockedActiveTokenAddress2, tokenBalance: '10' },
     ],
+    implementation: {
+      value: '',
+      name: null,
+      logoUri: null,
+    },
     loaded: true,
     nonce: nonce || 2,
     recurringUser: recurringUser || false,
