@@ -89,15 +89,15 @@ const useSecurityFeedbackModal = (): {
     return safeAppId ? !appsReviewed?.includes(safeAppId) : !customAppsReviewed?.includes(url)
   }, [appsReviewed, customAppsReviewed, getSafeApp, url])
 
-  const isModalVisible = useMemo(
-    () =>
-      !isLoading &&
-      didMount.current &&
-      (!consentAccepted ||
-        (isSafeAppInDefaultList && isFirstTimeAccessingApp) ||
-        (!isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted)),
-    [consentAccepted, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList],
-  )
+  const isModalVisible = useMemo(() => {
+    const isComponentReady = !isLoading && didMount.current
+    const shouldShowLegalDisclaimer = !consentAccepted
+    const shouldShowSecurityPractices = isSafeAppInDefaultList && isFirstTimeAccessingApp
+    const shouldShowUnknownAppWarning =
+      !isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted
+
+    return isComponentReady && (shouldShowLegalDisclaimer || shouldShowSecurityPractices || shouldShowUnknownAppWarning)
+  }, [consentAccepted, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList])
 
   const onComplete = useCallback(
     (shouldHide: boolean) => {
