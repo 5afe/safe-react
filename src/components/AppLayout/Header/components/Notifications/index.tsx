@@ -166,7 +166,6 @@ const StyledDivier = styled(Divider)`
   width: 438px;
   height: 2px;
   background-color: ${background};
-  width: 406px;
   margin: 16px -23px;
 `
 

@@ -6,7 +6,7 @@ import { NOTIFICATION_LIMIT } from 'src/components/AppLayout/Header/components/N
 import { StyledScrollableBar } from 'src/routes/safe/components/Transactions/TxList/styled'
 import { background, black300, gray500 } from 'src/theme/variables'
 import NotificationItem from 'src/components/AppLayout/Header/components/Notifications/NotificationItem'
-import { Divider, Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 
 import Bell from './assets/bell.svg'
 
@@ -23,11 +23,8 @@ const NotificationList = ({ notifications }: { notifications: NotificationsState
   return (
     <ScrollContainer $showScrollbar={notifications.length > NOTIFICATION_LIMIT}>
       <NotificationType>System updates</NotificationType>
-      {notifications.map((notification, i) => (
-        <>
-          <NotificationItem key={notification.timestamp} {...notification} />
-          {i !== notifications.length - 1 && <StyledDivier />}
-        </>
+      {notifications.map((notification) => (
+        <NotificationItem key={notification.timestamp} {...notification} />
       ))}
     </ScrollContainer>
   )
@@ -49,6 +46,9 @@ const ScrollContainer = styled(StyledScrollableBar)<{ $showScrollbar: boolean }>
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
+  & > div:not(:last-child) {
+    border-bottom: 2px solid ${background};
+  }
 `
 
 const NotificationType = styled.h4`
@@ -58,13 +58,6 @@ const NotificationType = styled.h4`
   font-size: 14px;
   color: ${black300};
   margin-bottom: 12px;
-`
-
-const StyledDivier = styled(Divider)`
-  height: 2px;
-  background-color: ${background};
-  width: 406px;
-  margin: 8px -6px;
 `
 
 export default NotificationList
