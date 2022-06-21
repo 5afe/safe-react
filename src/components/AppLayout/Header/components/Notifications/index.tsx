@@ -50,24 +50,24 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const hasUnread = unreadCount > 0
 
   const handleRead = () => {
+    if (!open) {
+      return
+    }
     notificationsToShow.forEach(({ read, options }) => {
       if (read) return
       dispatch(readNotification({ key: options.key }))
     })
+    setShowAll(false)
   }
 
   const handleClickBell = () => {
-    if (open) {
-      handleRead()
-      setShowAll(false)
-    }
+    handleRead()
     toggle()
   }
 
   const handleClickAway = () => {
     handleRead()
     clickAway()
-    setShowAll(false)
   }
 
   const handleClear = () => {
