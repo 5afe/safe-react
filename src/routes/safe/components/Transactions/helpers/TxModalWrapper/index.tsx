@@ -178,7 +178,7 @@ export const TxModalWrapper = ({
   })
 
   const getGasCostFormatted = useCallback(() => {
-    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT) return '> 0.001'
+    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT || !gasPrice || !gasMaxPrioFee) return '> 0.001'
     return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
   }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
 

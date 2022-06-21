@@ -14,6 +14,7 @@ import { screenSm } from 'src/theme/variables'
 import QueueBar from '../QueueBar/QueueBar'
 import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { InvalidMasterCopyError } from 'src/components/AppLayout/InvalidMasterCopyError'
 
 const Container = styled.div`
   height: 100vh;
@@ -26,6 +27,7 @@ const Container = styled.div`
 
 const HeaderWrapper = styled.nav`
   height: 52px;
+  min-height: 52px;
   width: 100%;
   z-index: 1299;
 
@@ -166,6 +168,8 @@ const Layout: React.FC<Props> = ({
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
+      <InvalidMasterCopyError />
+
       <BodyWrapper>
         {showSideBar && (
           <SidebarWrapper data-testid="sidebar" $expanded={expanded} onClick={onSidebarClick}>

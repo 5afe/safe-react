@@ -1,15 +1,14 @@
-import { DEFAULT_GAS, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEffect, useState } from 'react'
 import useAsync from 'src/logic/hooks/useAsync'
-import { DEFAULT_GAS_LIMIT } from 'src/logic/hooks/useEstimateGasLimit'
 
 type Props = {
   checkTxExecution: () => Promise<boolean>
   isExecution: boolean
   txData: string
-  gasLimit: string | undefined
-  gasPrice: string
-  gasMaxPrioFee: string
+  gasLimit?: string
+  gasPrice?: string
+  gasMaxPrioFee?: string
 }
 
 export const useExecutionStatus = ({
@@ -24,8 +23,7 @@ export const useExecutionStatus = ({
 
   const [status, error, loading] = useAsync(async () => {
     if (!isExecution || !txData) return EstimationStatus.SUCCESS
-    const isEstimationPending =
-      !gasLimit || gasLimit === DEFAULT_GAS_LIMIT || gasPrice === DEFAULT_GAS || gasMaxPrioFee === DEFAULT_GAS
+    const isEstimationPending = !gasLimit || !gasPrice || !gasMaxPrioFee
     if (isEstimationPending) return EstimationStatus.LOADING
 
     const success = await checkTxExecution()

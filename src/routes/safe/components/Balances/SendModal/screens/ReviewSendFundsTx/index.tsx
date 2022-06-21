@@ -39,7 +39,7 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { SpendingLimitModalWrapper } from 'src/routes/safe/components/Transactions/helpers/SpendingLimitModalWrapper'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
-import { showNotification } from 'src/logic/notifications/store/notifications'
+import { closeNotification, showNotification } from 'src/logic/notifications/store/notifications'
 
 const useStyles = makeStyles(styles)
 
@@ -111,9 +111,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SPENDING_LIMIT_TX)
 
+        trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
+
+        let beforeExecutionKey = ''
         try {
-          trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
-          dispatch(showNotification(notification.beforeExecution))
+          beforeExecutionKey = dispatch(showNotification(notification.beforeExecution)) as unknown as string
 
           const allowanceTransferTx = await spendingLimit.methods.executeAllowanceTransfer(
             safeAddress,
@@ -126,6 +128,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             EMPTY_DATA,
           )
 
+          dispatch(closeNotification({ key: beforeExecutionKey, read: false }))
+
           const sendParams = createSendParams(tx.tokenSpendingLimit.delegate, txParameters)
 
           await allowanceTransferTx.send(sendParams).on('transactionHash', () => {
@@ -134,6 +138,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           })
         } catch (err) {
           logError(Errors._801, err.message)
+          dispatch(closeNotification({ key: beforeExecutionKey, read: false }))
           dispatch(showNotification(notification.afterRejection))
         }
         onClose()

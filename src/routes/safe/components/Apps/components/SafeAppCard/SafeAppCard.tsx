@@ -136,7 +136,8 @@ const setSafeAppLogoFallback = (error: SyntheticEvent<HTMLImageElement, Event>):
   error.currentTarget.src = fallbackSafeAppLogoSvg
 }
 
-const SAFE_APP_CARD_HEIGHT = 190
+export const SAFE_APP_CARD_HEIGHT = 190
+export const SAFE_APP_CARD_PADDING = 16
 
 const SafeAppContainer = styled(motion.div).attrs({
   layout: true,
@@ -160,7 +161,7 @@ const StyledLink = styled(Link)`
 
 const StyledAppCard = styled(Card)`
   flex: 1 1 100%;
-  padding: 16px;
+  padding: ${SAFE_APP_CARD_PADDING}px;
   display: flex;
   flex-direction: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? 'row' : 'column')};
   box-shadow: none;
