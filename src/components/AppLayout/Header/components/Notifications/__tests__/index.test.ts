@@ -3,22 +3,20 @@ import { getSortedNotifications } from '../'
 
 const UNREAD_ACTION_NOTIFICATION = {
   read: false,
-  action: true,
+  link: {},
 } as NotificationsState[number]
 
 const UNREAD_NOTIFICATION = {
   read: false,
-  action: false,
 } as NotificationsState[number]
 
 const READ_ACTION_NOTIFICATION = {
   read: true,
-  action: true,
+  link: {},
 } as NotificationsState[number]
 
 const READ_NOTIFICATION = {
   read: true,
-  action: false,
 } as NotificationsState[number]
 
 describe('Notifications', () => {
