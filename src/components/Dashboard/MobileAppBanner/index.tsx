@@ -136,6 +136,7 @@ const MobileAppBanner = (): ReactElement | null => {
 
   const onClose = useCallback(() => {
     setClosing(true)
+    trackEvent(MOBILE_APP_EVENTS.dashboardBannerClose)
   }, [])
 
   const onDone = useCallback(() => {
