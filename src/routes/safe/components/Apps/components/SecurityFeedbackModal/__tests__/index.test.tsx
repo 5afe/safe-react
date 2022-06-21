@@ -25,31 +25,31 @@ describe('<SecurityFeedbackModal />', () => {
   })
 
   it('should not show the Legal Disclaimer if it was previously accepted', () => {
-    render(<SecurityFeedbackModal {...baseProps} isConsentAccepted={true} />)
+    render(<SecurityFeedbackModal {...baseProps} isConsentAccepted />)
 
     expect(screen.queryByText(/disclaimer/i)).not.toBeInTheDocument()
   })
 
   it('should show the Extended List when not reviewed', () => {
-    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed={false} />)
 
     expect(screen.queryByText('1')).not.toBeInTheDocument()
   })
 
   it('should avoid to show the Extended List when already reviewed', () => {
-    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={true} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed />)
 
     expect(screen.queryAllByText('1').length).toEqual(2)
   })
 
   it('should show a warning when the application is not in the default list', () => {
-    render(<SecurityFeedbackModal {...baseProps} isSafeAppInDefaultList={false} isFirstTimeAccessingApp={true} />)
+    render(<SecurityFeedbackModal {...baseProps} isSafeAppInDefaultList={false} isFirstTimeAccessingApp />)
 
     expect(screen.queryAllByText(/warning/i).length).toEqual(2)
   })
 
   it('should call onConfirm() after the slides are reviewed', async () => {
-    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed={false} />)
     const continueBtn = screen.getByText(/continue/i)
 
     await act(async () => {
@@ -63,7 +63,7 @@ describe('<SecurityFeedbackModal />', () => {
   })
 
   it('should iterate back and forward over the slides', async () => {
-    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed={false} />)
     const continueBtn = screen.getByText(/continue/i)
 
     await act(async () => {
@@ -88,7 +88,7 @@ describe('<SecurityFeedbackModal />', () => {
   })
 
   it('should call onCancel() when clicking the Cancel button', () => {
-    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp={true} isExtendedListReviewed={false} />)
+    render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed={false} />)
 
     fireEvent.click(screen.getByText(/cancel/i))
 

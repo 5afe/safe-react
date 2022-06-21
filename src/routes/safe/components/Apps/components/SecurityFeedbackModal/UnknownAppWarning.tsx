@@ -24,7 +24,7 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
         ⚠️Warning!
       </StyledTitle>
       <Text size="xl" color="error">
-        <b>The application you are trying to use is not in our default list</b>
+        <b>The application you are trying to use is not on our approved list</b>
       </Text>
       <br />
       <Text size="lg">Check the link you are using and ensure it comes from a trusted source</Text>

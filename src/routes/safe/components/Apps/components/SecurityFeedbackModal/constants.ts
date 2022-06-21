@@ -1,7 +1,7 @@
 export const SECURITY_PRACTICES = [
   {
     id: '1',
-    title: 'Always use applications shared through trusted sources',
+    title: 'Always use applications from trusted sources',
     imageSrc: './safe-apps-security-practices/1.png',
   },
   {
