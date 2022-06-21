@@ -47,10 +47,10 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
       }
     }
 
-    const transitionEnd: any = document.addEventListener('transitionend', smooth)
+    document.addEventListener('transitionend', smooth)
 
     return () => {
-      document.removeEventListener('transitionend', transitionEnd)
+      document.removeEventListener('transitionend', smooth)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
