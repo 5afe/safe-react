@@ -1,6 +1,6 @@
 import { ReactElement, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { IconButton, Badge, ClickAwayListener, Paper, Popper } from '@material-ui/core'
+import { IconButton, Badge, ClickAwayListener, Paper, Popper, Divider } from '@material-ui/core'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 import styled from 'styled-components'
 
@@ -11,7 +11,7 @@ import {
   readNotification,
   selectNotifications,
 } from 'src/logic/notifications/store/notifications'
-import { black300, border, primary200, primary400, sm } from 'src/theme/variables'
+import { background, black300, border, primary200, primary400, sm } from 'src/theme/variables'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import NotificationList from 'src/components/AppLayout/Header/components/Notifications/NotificationList'
@@ -34,6 +34,8 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const [showAll, setShowAll] = useState<boolean>(false)
 
   const notifications = useSelector(selectNotifications)
+  const hasNotifications = notifications.length > 0
+
   const sortedNotifications = useMemo(() => getSortedNotifications(notifications), [notifications])
 
   const canExpand = notifications.length > NOTIFICATION_LIMIT
@@ -61,6 +63,12 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   const handleClickAway = () => {
     clickAway()
     setShowAll(false)
+  }
+
+  const handleClear = () => {
+    if (hasNotifications) {
+      dispatch(deleteAllNotifications())
+    }
   }
 
   return (
@@ -99,18 +107,19 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
                 <NotificationsTitle>Notifications</NotificationsTitle>
                 {hasUnread && <UnreadCount>{unreadCount}</UnreadCount>}
               </div>
-              <ClearAllButton onClick={() => dispatch(deleteAllNotifications())}>Clear All</ClearAllButton>
+              {hasNotifications && <ClearAllButton onClick={handleClear}>Clear All</ClearAllButton>}
             </NotificationsHeader>
+            <StyledDivier />
             <NotificationList notifications={notificationsToShow} />
             {canExpand && (
-              <div>
+              <NotificationsFooter>
                 <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
                   {showAll ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </ExpandIconButton>
                 <NotificationSubtitle>
                   {showAll ? 'Hide' : `${notifications.length - NOTIFICATION_LIMIT} other notifications`}
                 </NotificationSubtitle>
-              </div>
+              </NotificationsFooter>
             )}
           </NotificationsPopper>
         </Popper>
@@ -143,18 +152,26 @@ const NotificationsPopper = styled(Paper)`
   border-radius: ${sm};
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
   width: 438px;
-  padding: 30px 23px;
+  padding: 24px 23px;
 `
 
 const NotificationsHeader = styled.div`
-  height: 30px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 16px;
 `
 
+const StyledDivier = styled(Divider)`
+  width: 438px;
+  height: 2px;
+  background-color: ${background};
+  width: 406px;
+  margin: 16px -23px;
+`
+
 const NotificationsTitle = styled.h4`
+  all: unset;
   display: inline;
   font-weight: 700;
   font-size: 20px;
@@ -179,6 +196,13 @@ const ClearAllButton = styled.button`
   font-weight: 700;
   font-size: 16px;
   color: ${primary400};
+  :hover {
+    color: #005546; // Same as MUI Button
+  }
+`
+
+const NotificationsFooter = styled.div`
+  margin-top: 8px;
 `
 
 export const NotificationSubtitle = styled.span`
