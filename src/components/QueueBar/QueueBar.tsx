@@ -55,6 +55,7 @@ const QueueBar = ({ showQueueBar, setClosedBar }: QueueBarProps): ReactElement |
     <Wrapper expanded={expanded}>
       <ClickAwayListener onClickAway={() => setExpanded(false)} mouseEvent="onMouseDown" touchEvent="onTouchStart">
         <Accordion
+          data-testid="pending-transactions-queue"
           expanded={expanded}
           onChange={collapseQueueBar}
           TransitionProps={{
@@ -65,16 +66,12 @@ const QueueBar = ({ showQueueBar, setClosedBar }: QueueBarProps): ReactElement |
             },
           }}
         >
-          <StyledAccordionSummary
-            id="pending-tx-queue-summary"
-            aria-controls="queue-pending-tx-content"
-            expandIcon={<StyledExpandIcon />}
-          >
-            <Text size="xl" color="primary">
-              Queue ({queuedTxCount})
+          <StyledAccordionSummary data-testid="pending-transactions-queue-summary" expandIcon={<StyledExpandIcon />}>
+            <Text size="xl" color="primary" strong>
+              ({queuedTxCount}) Queue
             </Text>
 
-            <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue bar">
+            <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue">
               <CloseIcon />
             </StyledCloseIconButton>
           </StyledAccordionSummary>
