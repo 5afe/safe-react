@@ -6,6 +6,7 @@ import { LabelValue } from '@gnosis.pm/safe-react-gateway-sdk'
 import {
   ADD_HISTORY_TRANSACTIONS,
   ADD_QUEUED_TRANSACTIONS,
+  REMOVE_HISTORY_TRANSACTIONS,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import {
   HistoryGatewayResponse,
@@ -31,6 +32,8 @@ type BasePayload = { chainId: string; safeAddress: string; isTail?: boolean }
 
 export type HistoryPayload = BasePayload & { values: HistoryGatewayResponse['results'] }
 
+export type RemoveHistoryPayload = Omit<BasePayload, 'isTail'>
+
 export type QueuedPayload = BasePayload & { values: QueuedGatewayResponse['results'] }
 
 export type TransactionDetailsPayload = {
@@ -40,7 +43,7 @@ export type TransactionDetailsPayload = {
   value: Transaction['txDetails']
 }
 
-type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
+type Payload = HistoryPayload | RemoveHistoryPayload | QueuedPayload | TransactionDetailsPayload
 
 /**
  * Create a hash map of transactions by nonce.
@@ -101,6 +104,19 @@ export const gatewayTransactionsReducer = handleActions<GatewayTransactionsState
             ...state[chainId]?.[safeAddress],
             // extend history list
             history: isTail ? newHistory : sortObject(newHistory, 'desc'),
+          },
+        },
+      }
+    },
+
+    [REMOVE_HISTORY_TRANSACTIONS]: (state, action: Action<{ chainId: string; safeAddress: string }>) => {
+      const { chainId, safeAddress } = action.payload
+      return {
+        ...state,
+        [chainId]: {
+          [safeAddress]: {
+            ...state[chainId]?.[safeAddress],
+            history: {},
           },
         },
       }
