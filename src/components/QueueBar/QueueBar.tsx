@@ -1,63 +1,94 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import IconButton from '@material-ui/core/IconButton'
+import ExpandMoreIcon from '@material-ui/icons/ExpandLessRounded'
+import CloseIcon from '@material-ui/icons/CloseRounded'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import styled from 'styled-components'
 
-import { screenSm } from 'src/theme/variables'
+import { black300, screenSm } from 'src/theme/variables'
 import { TxsInfiniteScroll } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import { QueueTxList } from 'src/routes/safe/components/Transactions/TxList/QueueTxList'
 import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
 import { grey400, background } from 'src/theme/variables'
 
-const QueueBar = (): ReactElement | null => {
+type QueueBarProps = {
+  showQueueBar: boolean
+  setClosedBar: (close: boolean) => void
+}
+
+const QueueBar = ({ showQueueBar, setClosedBar }: QueueBarProps): ReactElement | null => {
   const [expanded, setExpanded] = useState(false)
 
   const collapseQueueBar = () => {
     setExpanded((expanded) => !expanded)
   }
 
-  const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const closeQueueBar = () => {
+    setClosedBar(true)
+    setExpanded(false)
+  }
+
+  const { isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
   const queuedTxCount = useMemo(
     () => (transactions ? transactions.next.count + transactions.queue.count : 0),
     [transactions],
   )
 
-  if (count === 0 || !transactions) {
+  useEffect(() => {
+    if (queuedTxCount) {
+      setClosedBar(false)
+      setExpanded(false)
+    }
+  }, [queuedTxCount, setClosedBar])
+
+  if (!showQueueBar) {
     return null
   }
 
   return (
     <Wrapper expanded={expanded}>
       <ClickAwayListener onClickAway={() => setExpanded(false)} mouseEvent="onMouseDown" touchEvent="onTouchStart">
-        <Accordion expanded={expanded} onChange={collapseQueueBar}>
+        <Accordion
+          expanded={expanded}
+          onChange={collapseQueueBar}
+          TransitionProps={{
+            timeout: {
+              appear: 400,
+              enter: 0,
+              exit: 500,
+            },
+          }}
+        >
           <StyledAccordionSummary
             id="pending-tx-queue-summary"
             aria-controls="queue-pending-tx-content"
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<StyledExpandIcon />}
           >
             <Text size="xl" color="primary">
               Queue ({queuedTxCount})
             </Text>
+
+            <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue bar">
+              <CloseIcon />
+            </StyledCloseIconButton>
           </StyledAccordionSummary>
           <StyledAccordionDetails>
             <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
               {/* Next list */}
               <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-                {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
+                {transactions && <QueueTxList transactions={transactions?.next.transactions} />}
               </TxLocationContext.Provider>
 
               {/* Queue list */}
               <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-                {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
+                {transactions && <QueueTxList transactions={transactions?.queue.transactions} />}
               </TxLocationContext.Provider>
-
-              <div style={{ height: 120 }} />
             </TxsInfiniteScroll>
           </StyledAccordionDetails>
         </Accordion>
@@ -70,12 +101,12 @@ export default QueueBar
 
 const Wrapper = styled.div<{ expanded: boolean }>`
   position: absolute;
-  bottom: ${({ expanded }) => (expanded ? '70%' : '0')};
+  bottom: ${({ expanded }) => (expanded ? 'calc(100vh - 200px)' : '0')};
   right: 0;
   width: calc(100vw - 217px);
   height: 70px;
 
-  transition: bottom 0.4s ease-in-out 0s;
+  transition: bottom 0.35s ease-in-out 0s;
 
   @media (max-width: ${screenSm}px) {
     width: 100%;
@@ -89,4 +120,18 @@ const StyledAccordionDetails = styled(AccordionDetails)`
 const StyledAccordionSummary = styled(AccordionSummary)`
   height: 70px;
   border-bottom: 2px solid ${grey400};
+  padding-right: 72px;
+  position: relative;
+`
+
+const StyledExpandIcon = styled(ExpandMoreIcon)`
+  color: ${black300};
+`
+
+const StyledCloseIconButton = styled(IconButton)`
+  position: absolute;
+  right: 14px;
+
+  color: ${black300};
+  margin-right: 4px;
 `
