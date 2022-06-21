@@ -241,14 +241,10 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
               confirmButtonProps={{
                 color: 'error',
                 onClick: () => {
+                  const url = appToRemove.url
+
+                  onRemoveApp(url)
                   removeApp(appToRemove.id)
-
-                  const url = JSON.parse(appToRemove.id)?.url
-
-                  if (url) {
-                    onRemoveApp(url)
-                  }
-
                   setAppToRemove(null)
                 },
                 text: 'Remove',
