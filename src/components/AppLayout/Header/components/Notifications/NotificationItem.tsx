@@ -1,15 +1,16 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { OptionsObject } from 'notistack'
+import { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 
 import { NotificationsState } from 'src/logic/notifications/store/notifications'
-import { black500 } from 'src/theme/variables'
+import { black500, background, black300 } from 'src/theme/variables'
 import { formatTime } from 'src/utils/date'
 import AlertIcon from 'src/assets/icons/alert.svg'
 import CheckIcon from 'src/assets/icons/check.svg'
 import ErrorIcon from 'src/assets/icons/error.svg'
 import InfoIcon from 'src/assets/icons/info.svg'
-import { UnreadNotificationBadge, NotificationSubtitle } from 'src/components/AppLayout/Header/components/Notifications'
+import { UnreadNotificationBadge } from 'src/components/AppLayout/Header/components/Notifications'
 
 const notificationIcon = {
   error: ErrorIcon,
@@ -21,32 +22,35 @@ const notificationIcon = {
 const getNotificationIcon = (variant: OptionsObject['variant'] = 'info'): string => notificationIcon[variant]
 
 const NoficationItem = ({ read, options, message, timestamp }: NotificationsState[number]): ReactElement => (
-  <Notification>
-    <UnreadNotificationBadge
-      variant="dot"
-      overlap="circle"
-      invisible={read}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-    >
-      <img src={getNotificationIcon(options?.variant)} />
-    </UnreadNotificationBadge>
-    <div>
-      <NotificationMessage>{message}</NotificationMessage>
-      <br />
-      <NotificationSubtitle>{formatTime(timestamp)}</NotificationSubtitle>
-    </div>
-  </Notification>
+  /*
+  //@ts-expect-error requires child to be button when using styled-components */
+  <NotificationListItem>
+    <ListItemAvatar>
+      <UnreadNotificationBadge
+        variant="dot"
+        overlap="circle"
+        invisible={read}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <img src={getNotificationIcon(options?.variant)} alt="Notification" />
+      </UnreadNotificationBadge>
+    </ListItemAvatar>
+    <ListItemText primary={<NotificationMessage>{message}</NotificationMessage>} secondary={formatTime(timestamp)} />
+  </NotificationListItem>
 )
 
-const Notification = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  > * {
-    padding: 8px;
+const NotificationListItem = styled(ListItem)`
+  &:not(:last-child) {
+    border-bottom: 2px solid ${background};
+  }
+  .MuiListItemText-secondary {
+    color: ${black300};
+  }
+  .MuiListItemAvatar-root {
+    min-width: 42px;
   }
 `
 
