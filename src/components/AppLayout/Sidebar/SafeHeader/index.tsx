@@ -76,6 +76,7 @@ const IconContainer = styled.div`
   display: flex;
   gap: 8px;
   justify-content: space-evenly;
+  align-items: center;
   margin: 14px 0;
 `
 const StyledButton = styled(Button)`

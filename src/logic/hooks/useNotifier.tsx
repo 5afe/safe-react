@@ -15,28 +15,40 @@ const useNotifier = (): void => {
 
   useEffect(() => {
     for (const notification of notifications) {
-      // Unspecified keys are automatically generated in `enqueueSnackbar` thunk
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const key = notification.options!.key!
+      const { key } = notification.options
 
+      // Dismiss notification via Notistack
       if (notification.dismissed) {
         closeSnackbar(key)
         continue
       }
 
+      // Do nothing if notification is already on screen
       if (onScreenKeys.includes(key)) {
         continue
       }
 
+      // `onExited` runs after a notification unmounts meaning that already
+      // closed notifications would 'close' again, marking them as unread
+      let wasClosed = false
+
+      // Display notification with Notistack
       enqueueSnackbar(notification.message, {
         ...notification.options,
         onExited: () => {
           // Cleanup store/cache when notification has unmounted
-          dispatch(closeNotification({ key }))
+          if (!wasClosed) {
+            dispatch(closeNotification({ key, read: false }))
+          }
           onScreenKeys = onScreenKeys.filter((onScreenKey) => onScreenKey !== key)
         },
         action: (
-          <IconButton onClick={() => dispatch(closeNotification({ key }))}>
+          <IconButton
+            onClick={() => {
+              dispatch(closeNotification({ key }))
+              wasClosed = true
+            }}
+          >
             <CloseIcon />
           </IconButton>
         ),
