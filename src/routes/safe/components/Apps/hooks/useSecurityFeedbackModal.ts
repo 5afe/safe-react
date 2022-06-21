@@ -23,7 +23,7 @@ const useSecurityFeedbackModal = (): {
 } => {
   const didMount = useRef(false)
 
-  const { isLoading, appList, getSafeApp } = useAppList()
+  const { isLoading, getSafeApp } = useAppList()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
 
@@ -72,14 +72,8 @@ const useSecurityFeedbackModal = (): {
   const isSafeAppInDefaultList = useMemo(() => {
     if (!url) return false
 
-    const urlInstance = new URL(url)
-    const safeAppUrl = `${urlInstance.hostname}/${urlInstance.pathname}`
-
-    return appList.some((appItem) => {
-      const appItemUrl = new URL(appItem.url)
-      return `${appItemUrl.hostname}/${appItemUrl.pathname}` === safeAppUrl
-    })
-  }, [appList, url])
+    return !!getSafeApp(url)
+  }, [getSafeApp, url])
 
   const isFirstTimeAccessingApp = useMemo(() => {
     if (!url) return true
