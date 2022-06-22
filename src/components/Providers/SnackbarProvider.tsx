@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     width: '340px',
   },
   success: {
-    background: '#fff',
+    background: '#CBF1EB',
   },
   error: {
     background: '#ffe6ea',
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
     background: '#fff3e2',
   },
   info: {
-    background: '#fff',
+    background: '#EBF7FF',
   },
   snackbar: {
     borderRadius: `${sm}`,
