@@ -82,6 +82,7 @@ const notificationsMiddleware =
           action.payload as unknown as HistoryPayload,
           userAddress,
           safesMap,
+          currentShortName,
         )
         // if we have a notification, dispatch it depending on transaction's status
         executedTxNotification && dispatch(showNotification(executedTxNotification))

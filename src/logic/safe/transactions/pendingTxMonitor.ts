@@ -35,17 +35,26 @@ const INITIAL_TIMEOUT = 10_000
 const TIMEOUT_MULTIPLIER = 2
 const MAX_ATTEMPTS = 6
 
-const monitorTx = async (
-  sessionBlockNumber: number,
-  txId: string,
-  txHash: string,
-  options: Partial<IBackOffOptions> = {
+const monitorTx = async ({
+  block,
+  txId,
+  txHash,
+  safeAddress,
+  shortName,
+  options = {
     startingDelay: INITIAL_TIMEOUT,
     timeMultiple: TIMEOUT_MULTIPLIER,
     numOfAttempts: MAX_ATTEMPTS,
   },
-): Promise<void> => {
-  return backOff(() => PendingTxMonitor._isTxMined(sessionBlockNumber, txHash), options)
+}: {
+  block: number
+  txId: string
+  txHash: string
+  safeAddress: string
+  shortName: string
+  options?: Partial<IBackOffOptions>
+}): Promise<void> => {
+  return backOff(() => PendingTxMonitor._isTxMined(block, txHash), options)
     .then((isMined) => {
       if (!isMined) {
         store.dispatch(removePendingTransaction({ id: txId }))
@@ -56,16 +65,11 @@ const monitorTx = async (
       // Unsuccessfully mined (threw in last backOff attempt)
       store.dispatch(removePendingTransaction({ id: txId }))
 
-      // TODO: Ensure that having switched chain hasn't altered this
-      const { currentShortName, currentSafeAddress } = currentSession(store.getState())
-
       const deeplink = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
-        [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug({
-          shortName: currentShortName,
-          safeAddress: currentSafeAddress,
-        }),
+        [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug({ shortName, safeAddress }),
         [TRANSACTION_ID_SLUG]: txId,
       })
+
       store.dispatch(
         showNotification({ ...NOTIFICATIONS.TX_PENDING_FAILED_MSG, link: { to: deeplink, title: 'Transaction' } }),
       )
@@ -73,7 +77,12 @@ const monitorTx = async (
 }
 
 const monitorAllTxs = async (): Promise<void> => {
-  const pendingTxsOnChain = pendingTxIdsByChain(store.getState())
+  const state = store.getState()
+
+  // Use details of Safe that monitoring starts on
+  const { currentShortName, currentSafeAddress } = currentSession(state) || {}
+
+  const pendingTxsOnChain = pendingTxIdsByChain(state)
   const pendingTxs = Object.entries(pendingTxsOnChain || {})
 
   // Don't check pending transactions if there are none
@@ -87,7 +96,13 @@ const monitorAllTxs = async (): Promise<void> => {
     const sessionBlockNumber = await web3.eth.getBlockNumber()
     await Promise.all(
       pendingTxs.map(([txId, { txHash, block = sessionBlockNumber }]) => {
-        return PendingTxMonitor.monitorTx(block, txId, txHash)
+        return PendingTxMonitor.monitorTx({
+          block,
+          txId,
+          txHash,
+          safeAddress: currentSafeAddress,
+          shortName: currentShortName,
+        })
       }),
     )
   } catch {
