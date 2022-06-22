@@ -37,6 +37,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import { IconButton, InputAdornment } from '@material-ui/core'
 import { Tooltip } from 'src/components/layout/Tooltip'
 import { isEqual } from 'lodash'
+import { isTxFilter } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
 export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -157,14 +158,6 @@ const Filter = (): ReactElement => {
     [search, history, pathname, chainId, dispatch, reset, safeAddress],
   )
 
-  useEffect(() => {
-    return () => {
-      // If search is programatically cleared on unmount, the router routes back to here
-      // Search is inherently cleared when unmounting either way
-      clearFilter({ clearSearch: false })
-    }
-  }, [clearFilter])
-
   const filterType = watch(FILTER_TYPE_FIELD_NAME)
 
   const onSubmit = (filter: FilterForm) => {
@@ -173,11 +166,9 @@ const Filter = (): ReactElement => {
       hideFilter()
     }
 
+    // Update the URL
     const query = Object.fromEntries(Object.entries(filter).filter(([, value]) => !!value))
-
     history.replace({ pathname, search: `?${new URLSearchParams(query).toString()}` })
-
-    dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress), filter }))
 
     const trackedFields = [
       FILTER_TYPE_FIELD_NAME,
@@ -198,6 +189,26 @@ const Filter = (): ReactElement => {
 
     hideFilter()
   }
+
+  useEffect(() => {
+    return () => {
+      // If search is programatically cleared on unmount, the router routes back to here
+      // Search is inherently cleared when unmounting either way
+      clearFilter({ clearSearch: false })
+    }
+  }, [clearFilter])
+
+  // Load a filtered history based on the URL
+  useEffect(() => {
+    if (!search) return
+
+    const query = Object.fromEntries(new URLSearchParams(search))
+
+    if (isTxFilter(query)) {
+      const filter = query as FilterForm
+      dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress), filter }))
+    }
+  }, [search, dispatch, chainId, safeAddress])
 
   const comingSoonAdornment = (
     <InputAdornment position="end">
