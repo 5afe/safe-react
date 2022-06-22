@@ -32,8 +32,6 @@ enum NOTIFICATION_IDS {
   TX_CONFIRMATION_FAILED_MSG,
   TX_FETCH_SIGNATURES_ERROR_MSG,
   SAFE_APPS_FETCH_ERROR_MSG,
-  SAFE_NAME_CHANGED_MSG,
-  OWNER_NAME_CHANGE_EXECUTED_MSG,
   SIGN_SETTINGS_CHANGE_MSG,
   SETTINGS_CHANGE_REJECTED_MSG,
   SETTINGS_CHANGE_EXECUTED_MSG,
@@ -120,17 +118,6 @@ export const NOTIFICATIONS: Record<keyof typeof NOTIFICATION_IDS, Notification> 
   SAFE_APPS_FETCH_ERROR_MSG: {
     message: 'Error fetching the Safe Apps, please refresh the page',
     options: { variant: VARIANT.ERROR, autoHideDuration: shortDuration },
-  },
-  // Safe Name
-  SAFE_NAME_CHANGED_MSG: {
-    message: 'Safe name changed',
-    options: { variant: VARIANT.SUCCESS, autoHideDuration: shortDuration },
-  },
-
-  // Owner Name
-  OWNER_NAME_CHANGE_EXECUTED_MSG: {
-    message: 'Owner name changed',
-    options: { variant: VARIANT.SUCCESS, autoHideDuration: shortDuration },
   },
 
   // Settings

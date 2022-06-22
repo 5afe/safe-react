@@ -7,6 +7,9 @@ import { store } from 'src/store'
 import { removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { pendingTxIdsByChain } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { generatePath } from 'react-router-dom'
+import { currentSession } from 'src/logic/currentSession/store/selectors'
+import { SAFE_ROUTES, SAFE_ADDRESS_SLUG, getPrefixedSafeAddressSlug, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 
 const _isTxMined = async (blockNumber: number, txHash: string): Promise<boolean> => {
   const MAX_WAITING_BLOCK = blockNumber + 50
@@ -52,7 +55,20 @@ const monitorTx = async (
     .catch(() => {
       // Unsuccessfully mined (threw in last backOff attempt)
       store.dispatch(removePendingTransaction({ id: txId }))
-      store.dispatch(showNotification(NOTIFICATIONS.TX_PENDING_FAILED_MSG))
+
+      // TODO: Ensure that having switched chain hasn't altered this
+      const { currentShortName, currentSafeAddress } = currentSession(store.getState())
+
+      const deeplink = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
+        [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug({
+          shortName: currentShortName,
+          safeAddress: currentSafeAddress,
+        }),
+        [TRANSACTION_ID_SLUG]: txId,
+      })
+      store.dispatch(
+        showNotification({ ...NOTIFICATIONS.TX_PENDING_FAILED_MSG, link: { to: deeplink, title: 'Transaction' } }),
+      )
     })
 }
 
