@@ -50,7 +50,7 @@ const Description = styled(Typography)`
 `
 
 const StyledList = styled(List)`
-  padding: 0 0;
+  padding: 0;
 `
 
 const ScrollContainer = styled(StyledScrollableBar)<{ $showScrollbar: boolean }>`

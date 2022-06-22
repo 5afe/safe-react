@@ -201,7 +201,7 @@ const ClearAllButton = styled.button`
 `
 
 const NotificationsFooter = styled.div`
-  padding: 16px 16px;
+  padding: 16px;
 `
 
 export const NotificationSubtitle = styled.span`
