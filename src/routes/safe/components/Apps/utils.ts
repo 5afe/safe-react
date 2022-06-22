@@ -5,11 +5,13 @@ import { SafeApp, SAFE_APP_FETCH_STATUS } from './types'
 
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
+import { getClientGatewayUrl, getNetworkId } from 'src/config'
+import { isValidURL } from 'src/utils/url'
 
 interface AppData {
   data?: {
     name: string
-    iconPath: string
+    logoUri: string
     description: string
     providedBy: string
     error?: string
@@ -17,10 +19,6 @@ interface AppData {
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
-
-const removeLastTrailingSlash = (url: string): string => {
-  return url.replace(/\/+$/, '')
-}
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {
@@ -58,16 +56,19 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     loadingStatus: SAFE_APP_FETCH_STATUS.ERROR,
   }
 
-  if (!appUrl?.length) {
+  if (!appUrl?.length || !isValidURL(appUrl.trim())) {
     return res
   }
 
-  res.url = appUrl.trim()
-  const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
+  res.url = new URL(appUrl.trim()).origin
 
   let appInfo: AppData | undefined
   try {
-    appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
+    appInfo = await axios.post(
+      `${getClientGatewayUrl()}/v1/chains/${getNetworkId()}/dapp_manifest`,
+      { dappUrl: res.url },
+      { timeout: 5_000 },
+    )
   } catch (error) {
     throw Error('Failed to fetch app manifest')
   }
@@ -84,7 +85,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
 
   const appInfoData = {
     name: appInfo.data.name,
-    iconPath: appInfo.data.iconPath,
+    logoUri: appInfo.data.logoUri,
     description: appInfo.data.description,
     providedBy: appInfo.data.providedBy,
   }
@@ -97,7 +98,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     loadingStatus: SAFE_APP_FETCH_STATUS.SUCCESS,
   }
 
-  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
+  const concatenatedImgPath = appInfo.data.logoUri
   if (await canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
