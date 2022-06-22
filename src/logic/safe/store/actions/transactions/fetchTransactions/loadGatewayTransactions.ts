@@ -26,7 +26,7 @@ export const _getTxHistory = async (
   safeAddress: string,
   filter?: FilterForm | Partial<FilterForm>,
   next?: string,
-) => {
+): Promise<TransactionListPage> => {
   let txListPage: TransactionListPage = {
     next: undefined,
     previous: undefined,
