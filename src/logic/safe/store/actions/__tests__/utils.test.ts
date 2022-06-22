@@ -99,6 +99,12 @@ describe('extractRemoteSafeInfo', () => {
         'SAFE_TX_GAS_OPTIONAL',
         'SPENDING_LIMIT',
       ] as FEATURES[],
+      implementation: {
+        value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
+        name: 'Gnosis Safe: Mastercopy 1.3.0',
+        logoUri:
+          'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
+      },
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules as any)
@@ -131,6 +137,12 @@ describe('extractRemoteSafeInfo', () => {
         'SAFE_TX_GAS_OPTIONAL',
         'SPENDING_LIMIT',
       ] as FEATURES[],
+      implementation: {
+        value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
+        name: 'Gnosis Safe: Mastercopy 1.3.0',
+        logoUri:
+          'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
+      },
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules as any)

@@ -40,8 +40,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  justify-content: center;
+  min-height: 147px; // Height of one line notification
 `
 
 const Description = styled(Typography)`

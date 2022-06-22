@@ -29,12 +29,11 @@ InfiniteScrollProvider.displayName = 'InfiniteScrollProvider'
 
 type InfiniteScrollProps = {
   children: ReactNode
-  hasMore: boolean
   next: () => Promise<void>
   config?: InViewHookResponse
 }
 
-export const InfiniteScroll = ({ children, hasMore, next, config }: InfiniteScrollProps): ReactElement => {
+export const InfiniteScroll = ({ children, next, config }: InfiniteScrollProps): ReactElement => {
   const { ref, inView } = useInView({
     threshold: 0,
     root: document.querySelector(`#${INFINITE_SCROLL_CONTAINER}`),
@@ -47,14 +46,14 @@ export const InfiniteScroll = ({ children, hasMore, next, config }: InfiniteScro
     // Avoid memory leak - queue/history have separate InfiniteScroll wrappers
     let isMounted = true
 
-    if (isMounted && inView && hasMore) {
+    if (isMounted && inView) {
       next()
     }
 
     return () => {
       isMounted = false
     }
-  }, [inView, hasMore, next])
+  }, [inView, next])
 
   return <InfiniteScrollProvider ref={ref}>{children}</InfiniteScrollProvider>
 }
