@@ -55,7 +55,7 @@ export const _getTxHistory = async (
 }
 
 export const _getHistoryPageUrl = (pageUrl?: string, filter?: FilterForm | Partial<FilterForm>): undefined | string => {
-  if (!pageUrl || !filter) {
+  if (!pageUrl || !filter || Object.keys(filter).length === 0) {
     return pageUrl
   }
 
@@ -68,7 +68,7 @@ export const _getHistoryPageUrl = (pageUrl?: string, filter?: FilterForm | Parti
   }
 
   Object.entries(filter)
-    .filter(([, value]) => Boolean(value))
+    .filter(([, value]) => value !== undefined)
     .forEach(([key, value]) => {
       url.searchParams.set(key, String(value))
     })
