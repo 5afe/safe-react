@@ -165,7 +165,8 @@ const Filter = (): ReactElement => {
     return () => {
       unsubscribe()
     }
-  }, [history, chainId, dispatch, filterType, pathname, safeAddress])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onSubmit = (filter: FilterForm) => {
     // Don't apply the same filter twice
