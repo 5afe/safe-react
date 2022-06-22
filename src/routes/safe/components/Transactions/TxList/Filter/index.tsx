@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Controller, DefaultValues, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -144,28 +144,28 @@ const Filter = (): ReactElement => {
     })
   }
 
-  const clearFilter = useCallback(
-    ({ clearSearch = true } = {}) => {
-      if (search && clearSearch) {
-        history.replace(pathname)
-        dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
-        reset(defaultValues)
-      }
-
-      hideFilter()
-    },
-    [search, history, pathname, chainId, dispatch, reset, safeAddress],
-  )
-
-  useEffect(() => {
-    return () => {
-      // If search is programatically cleared on unmount, the router routes back to here
-      // Search is inherently cleared when unmounting either way
-      clearFilter({ clearSearch: false })
-    }
-  }, [clearFilter])
+  const clearFilter = () => {
+    history.replace({ search: '' })
+    dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
+    reset(defaultValues)
+    hideFilter()
+  }
 
   const filterType = watch(FILTER_TYPE_FIELD_NAME)
+
+  useEffect(() => {
+    // We cannot rely on cleanup as setting search params (in onSubmit) unmounts the component
+    const unsubscribe = history.listen((newLocation) => {
+      const shouldResetHistory = filterType && newLocation.pathname !== pathname
+      if (shouldResetHistory) {
+        dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress) }))
+      }
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [history, chainId, dispatch, filterType, pathname, safeAddress])
 
   const onSubmit = (filter: FilterForm) => {
     // Don't apply the same filter twice
@@ -175,7 +175,7 @@ const Filter = (): ReactElement => {
 
     const query = Object.fromEntries(Object.entries(filter).filter(([, value]) => !!value))
 
-    history.replace({ pathname, search: `?${new URLSearchParams(query).toString()}` })
+    history.replace({ search: `?${new URLSearchParams(query).toString()}` })
 
     dispatch(loadTransactions({ chainId, safeAddress: checksumAddress(safeAddress), filter }))
 
