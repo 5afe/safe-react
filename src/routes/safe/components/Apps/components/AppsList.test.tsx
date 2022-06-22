@@ -23,6 +23,7 @@ beforeEach(() => {
   // populate custom app
   saveToStorage(appUtils.APPS_STORAGE_KEY, [
     {
+      name: 'Custom Drain Safe',
       url: 'https://apps.gnosis-safe.io/drain-safe',
     },
   ])
@@ -331,5 +332,21 @@ describe('Safe Apps -> AppsList -> Share Safe Apps', () => {
       // we show a snackbar
       expect(screen.getByText('Safe App URL copied to clipboard!')).toBeInTheDocument()
     })
+  })
+
+  it('Calls onRemoveApp when a custom app is removed', async () => {
+    const onRemoveAppMock = jest.fn()
+
+    render(<AppsList onRemoveApp={onRemoveAppMock} />, mockStore)
+
+    const openConfirmationModalBtn = await screen.findByLabelText(/remove drain safe custom safe App/i)
+
+    fireEvent.click(openConfirmationModalBtn)
+
+    const removeBtn = await screen.findByTestId('confirm-btn')
+
+    fireEvent.click(removeBtn)
+
+    expect(onRemoveAppMock).toHaveBeenCalledTimes(1)
   })
 })

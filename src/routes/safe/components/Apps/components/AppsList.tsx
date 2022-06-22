@@ -237,8 +237,9 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
           </Modal.Body>
           <Modal.Footer>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: () => setAppToRemove(null) }}
+              cancelButtonProps={{ testId: 'cancel-btn', onClick: () => setAppToRemove(null) }}
               confirmButtonProps={{
+                testId: 'confirm-btn',
                 color: 'error',
                 onClick: () => {
                   const url = appToRemove.url
