@@ -65,7 +65,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   let appInfo: AppData | undefined
   try {
     appInfo = await axios.post(
-      `${getClientGatewayUrl()}/v1/chains/${getNetworkId()}/dapp_manifest`,
+      `${getClientGatewayUrl()}/chains/${getNetworkId()}/dapp_manifest`,
       { dappUrl: res.url },
       { timeout: 5_000 },
     )
