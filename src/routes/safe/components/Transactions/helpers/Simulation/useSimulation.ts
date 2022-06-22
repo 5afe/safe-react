@@ -16,30 +16,36 @@ type UseSimulationReturn =
   | {
       simulationRequestStatus: FETCH_STATUS.NOT_ASKED | FETCH_STATUS.ERROR | FETCH_STATUS.LOADING
       simulation: undefined
-      simulateTransaction: (data: string, canExecuteTx: boolean, gasLimit?: string) => void
+      simulateTransaction: (data: string, to: string, canExecuteTx: boolean, gasLimit?: string) => void
       simulationLink: string
       simulationError?: string
+      resetSimulation: () => void
     }
   | {
       simulationRequestStatus: FETCH_STATUS.SUCCESS
       simulation: TenderlySimulation
-      simulateTransaction: (data: string, canExecuteTx: boolean, gasLimit?: string) => void
+      simulateTransaction: (data: string, to: string, canExecuteTx: boolean, gasLimit?: string) => void
       simulationLink: string
       simulationError?: string
+      resetSimulation: () => void
     }
 
 export const useSimulation = (): UseSimulationReturn => {
   const web3 = getWeb3()
-  const { chainId, address } = useSelector(currentSafe)
+  const { chainId, address: safeAddress } = useSelector(currentSafe)
   const userAddress = useSelector(userAccountSelector)
   const [simulation, setSimulation] = useState<TenderlySimulation | undefined>()
   const [simulationRequestStatus, setSimulationRequestStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
   const [simulationError, setSimulationError] = useState<string | undefined>(undefined)
 
   const simulationLink = useMemo(() => getSimulationLink(simulation?.simulation.id || ''), [simulation])
-
+  const resetSimulation = useCallback(() => {
+    setSimulationRequestStatus(FETCH_STATUS.NOT_ASKED)
+    setSimulationError(undefined)
+    setSimulation(undefined)
+  }, [])
   const simulateTransaction = useCallback(
-    async (data: string, canExecuteTx: boolean, gasLimit?: string) => {
+    async (data: string, to: string, canExecuteTx: boolean, gasLimit?: string) => {
       if (!web3 || !chainId) return
 
       setSimulationRequestStatus(FETCH_STATUS.LOADING)
@@ -52,12 +58,12 @@ export const useSimulation = (): UseSimulationReturn => {
         const simulationPayload: TenderlySimulatePayload = {
           network_id: chainId || '4',
           from: userAddress,
-          to: address,
+          to,
           input: data,
           gas: Number(gasLimit) ?? (await getBlockGasLimit()),
           gas_price: '0',
           state_objects: {
-            [address]: {
+            [safeAddress]: {
               balance: undefined,
               code: undefined,
               storage: canExecuteTx
@@ -81,7 +87,7 @@ export const useSimulation = (): UseSimulationReturn => {
         setSimulationError(error.message)
       }
     },
-    [address, chainId, userAddress, web3],
+    [safeAddress, chainId, userAddress, web3],
   )
 
   return {
@@ -90,5 +96,6 @@ export const useSimulation = (): UseSimulationReturn => {
     simulation,
     simulationLink,
     simulationError,
+    resetSimulation,
   } as UseSimulationReturn
 }

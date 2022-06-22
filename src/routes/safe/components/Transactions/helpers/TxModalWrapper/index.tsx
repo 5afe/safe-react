@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Text, Link } from '@gnosis.pm/safe-react-components'
-import { Box, Grid } from '@material-ui/core'
+import { Button } from '@gnosis.pm/safe-react-components'
+import { Grid } from '@material-ui/core'
 
 import {
   calculateTotalGasCost,
@@ -43,8 +43,8 @@ import { checkTransactionExecution, estimateGasForTransactionExecution } from 's
 import { useSimulation } from 'src/routes/safe/components/Transactions/helpers/Simulation/useSimulation'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { FETCH_STATUS } from 'src/utils/requests'
 import { isSimulationAvailable } from '../Simulation/simulation'
+import { SimulationResult } from '../Simulation/SimulationResult'
 
 type Props = {
   children: ReactNode
@@ -130,7 +130,8 @@ export const TxModalWrapper = ({
   const isSmartContract = useIsSmartContractWallet(userAddress)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
-  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError } = useSimulation()
+  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError, resetSimulation } =
+    useSimulation()
 
   const txParameters = useMemo(
     () => ({
@@ -225,6 +226,7 @@ export const TxModalWrapper = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+    resetSimulation()
   }
 
   const onSubmitClick = (txParameters: TxParameters) => {
@@ -250,8 +252,8 @@ export const TxModalWrapper = ({
       ...txParameters,
       sigs: canTxExecute ? txParameters.sigs : getPreValidatedSignatures(userAddress),
     }).encodeABI()
-    simulateTransaction(data, canTxExecute, gasLimit)
-  }, [txParameters, canTxExecute, userAddress, simulateTransaction, gasLimit])
+    simulateTransaction(data, safeAddress, canTxExecute, gasLimit)
+  }, [txParameters, canTxExecute, safeAddress, userAddress, simulateTransaction, gasLimit])
 
   return (
     <EditableTxParameters
@@ -272,43 +274,7 @@ export const TxModalWrapper = ({
           <Container>
             <Grid container alignItems="center" justifyContent="space-between" style={{ marginBottom: '16px' }}>
               {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
-
-              {isSimulationAvailable() && (
-                <Button size="md" onClick={simulateTx} variant="contained" style={{ marginLeft: 'auto' }}>
-                  Simulate
-                </Button>
-              )}
             </Grid>
-            {simulationRequestStatus === FETCH_STATUS.SUCCESS && (
-              <Box mb={2}>
-                {!simulation?.simulation.status ? (
-                  <Text color="inputFilled" size="lg">
-                    The batch failed during the simulation throwing error <b>{simulation?.transaction.error_message}</b>{' '}
-                    in the contract at <b>{simulation?.transaction.error_info?.address}</b>. Full simulation report is
-                    available{' '}
-                    <Link href={simulationLink} target="_blank" rel="noreferrer" size="lg">
-                      <b>on Tenderly</b>
-                    </Link>
-                    .
-                  </Text>
-                ) : (
-                  <Text color="inputFilled" size="lg">
-                    The batch was successfully simulated. Full simulation report is available{' '}
-                    <Link href={simulationLink} target="_blank" rel="noreferrer" size="lg">
-                      <b>on Tenderly</b>
-                    </Link>
-                    .
-                  </Text>
-                )}
-              </Box>
-            )}
-            {simulationRequestStatus === FETCH_STATUS.ERROR && Boolean(simulationError) && (
-              <Box mb={2}>
-                <Text color="error" size="lg">
-                  An unexpected error occured during simulation: <b>{simulationError}</b>
-                </Text>
-              </Box>
-            )}
             {doExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
@@ -317,7 +283,6 @@ export const TxModalWrapper = ({
                 parametersStatus={parametersStatus}
               />
             )}
-
             <TxParametersDetail
               onEdit={toggleEditMode}
               txParameters={txParameters}
@@ -348,7 +313,19 @@ export const TxModalWrapper = ({
                 testId: 'submit-tx-btn',
               }}
             />
+            {isSimulationAvailable() && (
+              <Button size="md" onClick={simulateTx} color="secondary" disabled={isSubmitDisabled}>
+                Simulate
+              </Button>
+            )}
           </Modal.Footer>
+          <SimulationResult
+            simulation={simulation}
+            simulationError={simulationError}
+            simulationLink={simulationLink}
+            simulationRequestStatus={simulationRequestStatus}
+            onClose={resetSimulation}
+          />
         </>
       )}
     </EditableTxParameters>

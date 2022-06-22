@@ -11,7 +11,7 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
+import { encodeMultiSendCall, getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
@@ -42,6 +42,10 @@ import { TransactionFailText } from 'src/components/TransactionFailText'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { BatchExecuteButton } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteButton'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { useSimulation } from '../helpers/Simulation/useSimulation'
+import { Button } from '@gnosis.pm/safe-react-components'
+import { SimulationResult } from '../helpers/Simulation/SimulationResult'
+import { isSimulationAvailable } from '../helpers/Simulation/simulation'
 
 const DecodedTransactions = ({
   transactions,
@@ -99,16 +103,15 @@ async function getTxDetails(transactions: Transaction[], dispatch: Dispatch) {
   )
 }
 
-async function getBatchExecuteData(
-  dispatch: Dispatch,
+function toMultiSendTxs(
   transactions: Transaction[],
   safeAddress: string,
   safeVersion: string,
   account: string,
-) {
+): MultiSendTx[] {
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
-  const txs: MultiSendTx[] = transactions.map((transaction) => {
+  return transactions.map((transaction) => {
     const txInfo = getTxInfo(transaction, safeAddress)
     const confirmations = getTxConfirmations(transaction)
     const sigs = generateSignaturesFromTxConfirmations(confirmations)
@@ -122,6 +125,15 @@ async function getBatchExecuteData(
       data,
     }
   })
+}
+
+async function getBatchExecuteData(
+  transactions: Transaction[],
+  safeAddress: string,
+  safeVersion: string,
+  account: string,
+) {
+  const txs = toMultiSendTxs(transactions, safeAddress, safeVersion, account)
 
   return getMultiSendJoinedTxs(txs)
 }
@@ -139,6 +151,8 @@ export const BatchExecute = React.memo((): ReactElement | null => {
   const [buttonStatus, setButtonStatus] = useState(ButtonStatus.LOADING)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
+  const { simulateTransaction, simulationRequestStatus, simulation, simulationLink, simulationError, resetSimulation } =
+    useSimulation()
 
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
@@ -156,13 +170,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
     setTxsWithDetails(transactionsWithDetails)
 
     try {
-      const batchExecuteData = await getBatchExecuteData(
-        dispatch,
-        transactionsWithDetails,
-        safeAddress,
-        currentVersion,
-        account,
-      )
+      const batchExecuteData = await getBatchExecuteData(transactionsWithDetails, safeAddress, currentVersion, account)
       setButtonStatus(isSameAddressAsSafe ? ButtonStatus.DISABLED : ButtonStatus.READY)
       setMultiSendCallData(batchExecuteData)
     } catch (err) {
@@ -182,6 +190,11 @@ export const BatchExecute = React.memo((): ReactElement | null => {
     })
 
     toggleModal()
+  }
+
+  const handleBatchSimulation = () => {
+    const txs = toMultiSendTxs(batchableTransactions, safeAddress, currentVersion, account)
+    simulateTransaction(encodeMultiSendCall(txs), getMultisendContractAddress(), true)
   }
 
   if (!account) {
@@ -250,7 +263,24 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               text: buttonStatus === ButtonStatus.LOADING ? 'Loading' : 'Submit',
             }}
           />
+          {isSimulationAvailable() && (
+            <Button
+              size="md"
+              onClick={handleBatchSimulation}
+              color="secondary"
+              disabled={batchableTransactions.length <= 1 || buttonStatus === ButtonStatus.LOADING}
+            >
+              Simulate
+            </Button>
+          )}
         </Modal.Footer>
+        <SimulationResult
+          simulation={simulation}
+          simulationError={simulationError}
+          simulationLink={simulationLink}
+          simulationRequestStatus={simulationRequestStatus}
+          onClose={resetSimulation}
+        />
       </Modal>
     </>
   )
