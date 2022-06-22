@@ -131,7 +131,9 @@ export const loadHistoryTransactions = async (
       historyPointers[chainId] = {}
     }
 
-    historyPointers[chainId][safeAddress] = getHistoryPointer(next, previous, filter)
+    if (!historyPointers[chainId][safeAddress]) {
+      historyPointers[chainId][safeAddress] = getHistoryPointer(next, previous, filter)
+    }
 
     return results
   } catch (e) {
