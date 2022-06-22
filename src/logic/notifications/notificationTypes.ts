@@ -13,7 +13,7 @@ const longDuration = 10000
 export type Notification = {
   message: SnackbarMessage
   options?: OptionsObject
-  action?: unknown // Will specify the type when actions are added
+  link?: { to: string; title: string }
 }
 
 enum NOTIFICATION_IDS {

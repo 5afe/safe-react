@@ -21,11 +21,11 @@ export const NOTIFICATION_LIMIT = 4
 export const getSortedNotifications = (notifications: NotificationsState): NotificationsState => {
   const chronologicalNotifications = notifications.sort((a, b) => b.timestamp - a.timestamp)
 
-  const unreadActionNotifications = chronologicalNotifications.filter(({ read, action }) => !read && action)
-  const unreadNotifications = chronologicalNotifications.filter(({ read, action }) => !read && !action)
+  const unreadLinkNotifications = chronologicalNotifications.filter(({ read, link }) => !read && link)
+  const unreadNotifications = chronologicalNotifications.filter(({ read, link }) => !read && !link)
   const readNotifications = chronologicalNotifications.filter(({ read }) => read)
 
-  return [...unreadActionNotifications, ...unreadNotifications, ...readNotifications]
+  return [...unreadLinkNotifications, ...unreadNotifications, ...readNotifications]
 }
 
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
@@ -66,7 +66,10 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   }
 
   const handleClickAway = () => {
-    handleRead()
+    if (open) {
+      handleRead()
+      setShowAll(false)
+    }
     clickAway()
   }
 
@@ -114,7 +117,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
               </div>
               {hasNotifications && <ClearAllButton onClick={handleClear}>Clear All</ClearAllButton>}
             </NotificationsHeader>
-            <NotificationList notifications={notificationsToShow} />
+            <NotificationList notifications={notificationsToShow} handleClickAway={handleClickAway} />
             {canExpand && (
               <NotificationsFooter>
                 <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
@@ -198,7 +201,7 @@ const ClearAllButton = styled.button`
 `
 
 const NotificationsFooter = styled.div`
-  padding: 24px 32px 16px;
+  padding: 16px;
 `
 
 export const NotificationSubtitle = styled.span`

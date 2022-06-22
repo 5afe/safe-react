@@ -5,6 +5,7 @@ import { IconButton } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 
 import { selectNotifications, closeNotification } from 'src/logic/notifications/store/notifications'
+import NotificationLink from 'src/components/AppLayout/Header/components/Notifications/NotificationLink'
 
 let onScreenKeys: SnackbarKey[] = []
 
@@ -33,26 +34,40 @@ const useNotifier = (): void => {
       let wasClosed = false
 
       // Display notification with Notistack
-      enqueueSnackbar(notification.message, {
-        ...notification.options,
-        onExited: () => {
-          // Cleanup store/cache when notification has unmounted
-          if (!wasClosed) {
-            dispatch(closeNotification({ key, read: false }))
-          }
-          onScreenKeys = onScreenKeys.filter((onScreenKey) => onScreenKey !== key)
+      enqueueSnackbar(
+        <div>
+          <div>{notification.message}</div>
+          {notification.link && (
+            <NotificationLink
+              {...notification.link}
+              onClick={() => {
+                closeSnackbar(key)
+                wasClosed = true
+              }}
+            />
+          )}
+        </div>,
+        {
+          ...notification.options,
+          onExited: () => {
+            // Cleanup store/cache when notification has unmounted
+            if (!wasClosed) {
+              dispatch(closeNotification({ key, read: false }))
+            }
+            onScreenKeys = onScreenKeys.filter((onScreenKey) => onScreenKey !== key)
+          },
+          action: (
+            <IconButton
+              onClick={() => {
+                dispatch(closeNotification({ key }))
+                wasClosed = true
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          ),
         },
-        action: (
-          <IconButton
-            onClick={() => {
-              dispatch(closeNotification({ key }))
-              wasClosed = true
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        ),
-      })
+      )
 
       onScreenKeys = [...onScreenKeys, key]
     }
