@@ -16,52 +16,34 @@ import {
   getMultisigFilter,
   getModuleFilter,
 } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
-import { ChainId } from 'src/config/chain.d'
-import { operations } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/api'
 
 /*************/
 /*  HISTORY  */
 /*************/
-const historyPointers: {
-  [chainId: string]: {
-    [safeAddress: string]: {
-      next?: string
-      previous?: string
-    }
-  }
-} = {}
 
-const getHistoryTxListPage = async (
-  chainId: ChainId,
+export const _getTxHistory = async (
+  chainId: string,
   safeAddress: string,
   filter?: FilterForm | Partial<FilterForm>,
-): Promise<TransactionListPage> => {
+  next?: string,
+) => {
   let txListPage: TransactionListPage = {
     next: undefined,
     previous: undefined,
     results: [],
   }
 
-  const { next } = historyPointers[chainId]?.[safeAddress] || {}
-
-  let query:
-    | operations['incoming_transfers' | 'incoming_transfers' | 'module_transactions']['parameters']['query']
-    | undefined
-
   switch (filter?.[FILTER_TYPE_FIELD_NAME]) {
     case FilterType.INCOMING: {
-      query = filter ? getIncomingFilter(filter) : undefined
-      txListPage = await getIncomingTransfers(chainId, safeAddress, query, next)
+      txListPage = await getIncomingTransfers(chainId, safeAddress, getIncomingFilter(filter), next)
       break
     }
     case FilterType.MULTISIG: {
-      query = filter ? getMultisigFilter(filter, true) : undefined
-      txListPage = await getMultisigTransactions(chainId, safeAddress, query, next)
+      txListPage = await getMultisigTransactions(chainId, safeAddress, getMultisigFilter(filter, true), next)
       break
     }
     case FilterType.MODULE: {
-      query = filter ? getModuleFilter(filter) : undefined
-      txListPage = await getModuleTransactions(chainId, safeAddress, query, next)
+      txListPage = await getModuleTransactions(chainId, safeAddress, getModuleFilter(filter), next)
       break
     }
     default: {
@@ -69,31 +51,41 @@ const getHistoryTxListPage = async (
     }
   }
 
-  const getPageUrl = (pageUrl?: string): string | undefined => {
-    if (!pageUrl || !query) {
-      return pageUrl
-    }
+  return txListPage
+}
 
-    let url: URL
+export const _getHistoryPageUrl = (pageUrl?: string, filter?: FilterForm | Partial<FilterForm>): undefined | string => {
+  if (!pageUrl || !filter) {
+    return pageUrl
+  }
 
-    try {
-      url = new URL(pageUrl)
-    } catch {
-      return pageUrl
-    }
+  let url: URL
 
-    Object.entries(query).forEach(([key, value]) => {
+  try {
+    url = new URL(pageUrl)
+  } catch {
+    return pageUrl
+  }
+
+  Object.entries(filter)
+    .filter(([, value]) => Boolean(value))
+    .forEach(([key, value]) => {
       url.searchParams.set(key, String(value))
     })
 
-    return url.toString()
-  }
-
-  historyPointers[chainId][safeAddress].next = getPageUrl(txListPage?.next)
-  historyPointers[chainId][safeAddress].previous = getPageUrl(txListPage?.previous)
-
-  return txListPage
+  return url.toString()
 }
+
+const historyPointers: { [chainId: string]: { [safeAddress: string]: { next?: string; previous?: string } } } = {}
+
+const getHistoryPointer = (
+  next?: string,
+  previous?: string,
+  filter?: FilterForm | Partial<FilterForm>,
+): { next?: string; previous?: string } => ({
+  next: _getHistoryPageUrl(next, filter),
+  previous: _getHistoryPageUrl(previous, filter),
+})
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -102,17 +94,26 @@ const getHistoryTxListPage = async (
  */
 export const loadPagedHistoryTransactions = async (
   safeAddress: string,
+  filter?: FilterForm | Partial<FilterForm>,
 ): Promise<{ values: HistoryGatewayResponse['results']; next?: string } | undefined> => {
   const chainId = _getChainId()
-
-  if (!historyPointers[chainId]?.[safeAddress]?.next) {
+  // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
+  // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
+  if (!historyPointers[chainId][safeAddress]?.next) {
     throw new CodedException(Errors._608)
   }
 
   try {
-    const { results, next } = await getHistoryTxListPage(chainId, safeAddress)
+    const { results, next, previous } = await _getTxHistory(
+      chainId,
+      checksumAddress(safeAddress),
+      filter,
+      historyPointers[chainId][safeAddress].next,
+    )
 
-    return { values: results, next }
+    historyPointers[chainId][safeAddress] = getHistoryPointer(next, previous, filter)
+
+    return { values: results, next: historyPointers[chainId][safeAddress].next }
   } catch (e) {
     throw new CodedException(Errors._602, e.message)
   }
@@ -123,20 +124,14 @@ export const loadHistoryTransactions = async (
   filter?: FilterForm | Partial<FilterForm>,
 ): Promise<HistoryGatewayResponse['results']> => {
   const chainId = _getChainId()
-
-  if (!historyPointers[chainId]) {
-    historyPointers[chainId] = {}
-  }
-
-  if (!historyPointers[chainId][safeAddress] || filter) {
-    historyPointers[chainId][safeAddress] = {
-      next: undefined,
-      previous: undefined,
-    }
-  }
-
   try {
-    const { results } = await getHistoryTxListPage(chainId, safeAddress, filter)
+    const { results, next, previous } = await _getTxHistory(chainId, checksumAddress(safeAddress), filter)
+
+    if (!historyPointers[chainId]) {
+      historyPointers[chainId] = {}
+    }
+
+    historyPointers[chainId][safeAddress] = getHistoryPointer(next, previous, filter)
 
     return results
   } catch (e) {
