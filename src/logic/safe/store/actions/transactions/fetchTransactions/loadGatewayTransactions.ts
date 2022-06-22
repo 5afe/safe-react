@@ -144,6 +144,24 @@ export const loadHistoryTransactions = async (
   }
 }
 
+export const loadHistoryTip = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
+  const chainId = _getChainId()
+
+  try {
+    const { results, next, previous } = await getTransactionHistory(chainId, safeAddress)
+
+    // If it's the very first request to fetch the history for this Safe
+    if (!historyPointers[chainId]?.[safeAddress]) {
+      historyPointers[chainId] = historyPointers[chainId] || {}
+      historyPointers[chainId][safeAddress] = { next, previous }
+    }
+
+    return results
+  } catch (e) {
+    throw new CodedException(Errors._602, e.message)
+  }
+}
+
 /************/
 /*  QUEUED  */
 /************/
