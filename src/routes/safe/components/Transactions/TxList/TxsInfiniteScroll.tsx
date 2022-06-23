@@ -8,7 +8,6 @@ type TxsInfiniteScrollProps = {
   children: ReactNode
   next: () => Promise<void>
   isLoading: boolean
-  hasMore: boolean
 }
 
 export const TxsInfiniteScroll = ({ children, next, isLoading }: TxsInfiniteScrollProps): ReactElement => {

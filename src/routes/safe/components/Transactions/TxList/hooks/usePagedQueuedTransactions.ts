@@ -9,7 +9,6 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type PagedQueuedTransactions = {
   count: number
-  hasMore: boolean
   isLoading: boolean
   transactions?: QueueTransactionsInfo
   next: () => Promise<void>

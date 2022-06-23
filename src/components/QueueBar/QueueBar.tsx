@@ -23,7 +23,7 @@ type QueueBarProps = {
 const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
   const [expanded, setExpanded] = useState(false)
 
-  const { isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const { isLoading, next, transactions } = usePagedQueuedTransactions()
 
   const collapseQueueBar = () => {
     setExpanded((expanded) => !expanded)
@@ -68,7 +68,7 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
             </StyledCloseIconButton>
           </StyledAccordionSummary>
           <StyledAccordionDetails>
-            <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+            <TxsInfiniteScroll next={next} isLoading={isLoading}>
               {/* Next list */}
               <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
                 {transactions && <QueueTxList transactions={transactions?.next.transactions} />}
@@ -90,15 +90,19 @@ export default QueueBar
 
 const Wrapper = styled.div<{ expanded: boolean }>`
   position: relative;
-  bottom: ${({ expanded }) => (expanded ? 'calc(100vh - 200px)' : '0')};
+  bottom: ${({ expanded }) => (expanded ? 'calc(100vh - 375px)' : '0')};
   right: 0;
-  height: 70px;
+  height: 72px;
 
   transition: bottom 0.35s ease-in-out 0s;
 `
 
 const StyledAccordionDetails = styled(AccordionDetails)`
   background-color: ${background};
+
+  > :nth-child(1) {
+    height: calc(100vh - 400px);
+  }
 `
 
 const StyledAccordionSummary = styled(AccordionSummary)`
