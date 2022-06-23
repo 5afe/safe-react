@@ -15,7 +15,7 @@ export const SECURITY_PRACTICES = [
   },
   {
     id: '4',
-    title: 'Review your transaction queue and transaction information when having more than one owner configured',
+    title: 'Review your transaction queue if your Safe has more than one owner. Avoid pending transactions',
     imageSrc: './safe-apps-security-practices/3.png',
   },
 ]
