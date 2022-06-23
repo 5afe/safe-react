@@ -38,7 +38,7 @@ export const InvalidMasterCopyError = (): React.ReactElement | null => {
     <MuiAlert severity="error" onClose={() => setShowMasterCopyError(false)}>
       This Safe was created with an unsupported base contract. The web interface might not work correctly. We recommend
       using the{' '}
-      <Link href={CLI_LINK} size="xl" target="_blank" rel="noopener noreferrer">
+      <Link href={CLI_LINK} size="lg" target="_blank" rel="noopener noreferrer">
         command line interface
       </Link>{' '}
       instead.
