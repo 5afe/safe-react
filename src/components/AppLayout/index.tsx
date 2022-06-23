@@ -189,7 +189,7 @@ const Layout: React.FC<Props> = ({
           <div>{children}</div>
           {hasFooter && <Footer />}
         </ContentWrapper>
-        <QueueBar showQueueBar={showQueueBar} setClosedBar={setClosedQueueBar} />
+        {showQueueBar && <QueueBar setClosedBar={setClosedQueueBar} />}
       </BodyWrapper>
 
       {!mobileNotSupportedClosed && <MobileNotSupported onClose={closeMobileNotSupported} />}

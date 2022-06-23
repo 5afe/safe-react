@@ -130,7 +130,7 @@ describe('<QueueBar>', () => {
 
     const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar showQueueBar setClosedBar={setClosedBarSpy} />, customState)
+    render(<QueueBar setClosedBar={setClosedBarSpy} />, customState)
 
     const queueNode = screen.getByTestId('pending-transactions-queue')
 
@@ -171,7 +171,7 @@ describe('<QueueBar>', () => {
 
     const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar showQueueBar setClosedBar={setClosedBarSpy} />, customState)
+    render(<QueueBar setClosedBar={setClosedBarSpy} />, customState)
 
     const closeQueueButtonNode = screen.getByLabelText('close pending transactions queue')
 
@@ -213,7 +213,7 @@ describe('<QueueBar>', () => {
     }
     const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar showQueueBar setClosedBar={setClosedBarSpy} />, customState)
+    render(<QueueBar setClosedBar={setClosedBarSpy} />, customState)
 
     const queueNode = screen.getByTestId('pending-transactions-queue-summary')
 
@@ -225,15 +225,5 @@ describe('<QueueBar>', () => {
     fireEvent.click(screen.getByText('(1) Queue'))
 
     expect(queueNode).toHaveAttribute('aria-expanded', 'true')
-  })
-
-  it('Hides the QueueBar bar', () => {
-    render(<QueueBar showQueueBar={false} setClosedBar={jest.fn()} />)
-
-    const queueNode = screen.queryByTestId('pending-transactions-queue')
-
-    expect(queueNode).not.toBeInTheDocument()
-
-    expect(screen.queryByText('Queue')).not.toBeInTheDocument()
   })
 })

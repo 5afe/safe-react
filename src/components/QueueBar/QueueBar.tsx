@@ -17,11 +17,10 @@ import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transacti
 import { grey400, background } from 'src/theme/variables'
 
 type QueueBarProps = {
-  showQueueBar: boolean
   setClosedBar: (close: boolean) => void
 }
 
-const QueueBar = ({ showQueueBar, setClosedBar }: QueueBarProps): ReactElement | null => {
+const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement | null => {
   const [expanded, setExpanded] = useState(false)
 
   const collapseQueueBar = () => {
@@ -46,10 +45,6 @@ const QueueBar = ({ showQueueBar, setClosedBar }: QueueBarProps): ReactElement |
       setExpanded(false)
     }
   }, [queuedTxCount, setClosedBar])
-
-  if (!showQueueBar) {
-    return null
-  }
 
   return (
     <Wrapper expanded={expanded}>
