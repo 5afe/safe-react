@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -34,10 +34,7 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement | null => {
 
   const { isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
-  const queuedTxCount = useMemo(
-    () => (transactions ? transactions.next.count + transactions.queue.count : 0),
-    [transactions],
-  )
+  const queuedTxCount = transactions ? transactions.next.count + transactions.queue.count : 0
 
   useEffect(() => {
     if (queuedTxCount) {
