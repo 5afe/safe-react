@@ -9,7 +9,7 @@ import CloseIcon from '@material-ui/icons/CloseRounded'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import styled from 'styled-components'
 
-import { black300, screenSm } from 'src/theme/variables'
+import { black300 } from 'src/theme/variables'
 import { TxsInfiniteScroll } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import { QueueTxList } from 'src/routes/safe/components/Transactions/TxList/QueueTxList'
@@ -89,17 +89,12 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement | null => {
 export default QueueBar
 
 const Wrapper = styled.div<{ expanded: boolean }>`
-  position: absolute;
+  position: relative;
   bottom: ${({ expanded }) => (expanded ? 'calc(100vh - 200px)' : '0')};
   right: 0;
-  width: calc(100vw - 217px);
   height: 70px;
 
   transition: bottom 0.35s ease-in-out 0s;
-
-  @media (max-width: ${screenSm}px) {
-    width: 100%;
-  }
 `
 
 const StyledAccordionDetails = styled(AccordionDetails)`

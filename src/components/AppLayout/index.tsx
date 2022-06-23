@@ -40,7 +40,6 @@ const BodyWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  position: relative;
 `
 
 const slideIn = keyframes`
@@ -95,21 +94,18 @@ const SidebarWrapper = styled.aside`
   }
 `
 
-const ContentWrapper = styled.div<{ showQueueBar: boolean }>`
+const ContentWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
+`
 
+const MainContentWrapper = styled.div`
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
   padding: 8px 24px;
-  margin-bottom: ${({ showQueueBar }) => (showQueueBar ? '70px' : '0')};
-
-  > :nth-child(1) {
-    flex-grow: 1;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-  }
 `
 
 type Props = {
@@ -185,11 +181,11 @@ const Layout: React.FC<Props> = ({
             />
           </SidebarWrapper>
         )}
-        <ContentWrapper showQueueBar={showQueueBar}>
-          <div>{children}</div>
+        <ContentWrapper>
+          <MainContentWrapper>{children}</MainContentWrapper>
+          {showQueueBar && <QueueBar setClosedBar={setClosedQueueBar} />}
           {hasFooter && <Footer />}
         </ContentWrapper>
-        {showQueueBar && <QueueBar setClosedBar={setClosedQueueBar} />}
       </BodyWrapper>
 
       {!mobileNotSupportedClosed && <MobileNotSupported onClose={closeMobileNotSupported} />}
