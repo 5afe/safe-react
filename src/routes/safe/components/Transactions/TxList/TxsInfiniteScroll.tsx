@@ -7,8 +7,8 @@ import { HorizontallyCentered, ScrollableTransactionsContainer } from './styled'
 type TxsInfiniteScrollProps = {
   children: ReactNode
   next: () => Promise<void>
-  hasMore: boolean
   isLoading: boolean
+  hasMore: boolean
 }
 
 export const TxsInfiniteScroll = ({ children, next, hasMore, isLoading }: TxsInfiniteScrollProps): ReactElement => {
