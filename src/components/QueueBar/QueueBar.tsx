@@ -60,7 +60,7 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
         >
           <StyledAccordionSummary data-testid="pending-transactions-queue-summary" expandIcon={<StyledExpandIcon />}>
             <Text size="xl" color="primary" strong>
-              ({queuedTxCount}) Queue
+              ({queuedTxCount}) Transaction Queue
             </Text>
 
             <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue">

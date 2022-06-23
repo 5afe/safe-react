@@ -136,7 +136,7 @@ describe('<QueueBar>', () => {
 
     expect(queueNode).toBeInTheDocument()
 
-    expect(screen.getByText('(1) Queue')).toBeInTheDocument()
+    expect(screen.getByText('(1) Transaction Queue')).toBeInTheDocument()
 
     // shows pending transaction preview info
     expect(screen.getByText(currentNonce)).toBeInTheDocument()
@@ -222,7 +222,7 @@ describe('<QueueBar>', () => {
     expect(queueNode).toHaveAttribute('aria-expanded', 'false')
 
     // collapses the queue
-    fireEvent.click(screen.getByText('(1) Queue'))
+    fireEvent.click(screen.getByText('(1) Transaction Queue'))
 
     expect(queueNode).toHaveAttribute('aria-expanded', 'true')
   })
