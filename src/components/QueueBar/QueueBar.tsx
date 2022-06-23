@@ -20,8 +20,10 @@ type QueueBarProps = {
   setClosedBar: (close: boolean) => void
 }
 
-const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement | null => {
+const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
   const [expanded, setExpanded] = useState(false)
+
+  const { isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
   const collapseQueueBar = () => {
     setExpanded((expanded) => !expanded)
@@ -31,8 +33,6 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement | null => {
     setClosedBar(true)
     setExpanded(false)
   }
-
-  const { isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
   const queuedTxCount = transactions ? transactions.next.count + transactions.queue.count : 0
 
