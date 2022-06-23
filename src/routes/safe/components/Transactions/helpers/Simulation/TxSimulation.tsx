@@ -7,6 +7,8 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { isSimulationAvailable } from './simulation'
 import { SimulationResult } from './SimulationResult'
 import { useSimulation } from './useSimulation'
+import Track from 'src/components/Track'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
 
 const StyledAccordionSummary = styled(AccordionSummary)`
   & .MuiAccordionSummary-content {
@@ -49,13 +51,15 @@ export const TxSimulation = ({ tx, canTxExecute, gasLimit }: TxSimulationProps):
     <Accordion compact expanded={false}>
       <StyledAccordionSummary>
         <Text size="xl">Transaction validity</Text>
-        <Button
-          variant="text"
-          color="secondary"
-          onClick={() => simulateTransaction(tx.data, tx.to, canTxExecute, gasLimit)}
-        >
-          Simulate
-        </Button>
+        <Track {...MODALS_EVENTS.SIMULATE_TX}>
+          <Button
+            variant="text"
+            color="secondary"
+            onClick={() => simulateTransaction(tx.data, tx.to, canTxExecute, gasLimit)}
+          >
+            Simulate
+          </Button>
+        </Track>
       </StyledAccordionSummary>
     </Accordion>
   ) : (
