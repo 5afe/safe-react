@@ -12,7 +12,6 @@ import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 type PagedTransactions = {
   count: number
   transactions: TransactionDetails['transactions']
-  hasMore: boolean
   next: () => Promise<void>
   isLoading: boolean
 }
@@ -23,7 +22,6 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
 
   const dispatch = useDispatch()
   const { safeAddress } = useSafeAddress()
-  const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
   const next = useCallback(async () => {
@@ -40,24 +38,17 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
     }
 
     if (!results) {
-      setHasMore(false)
       setIsLoading(false)
       return
     }
 
-    const { values, next } = results
-
-    if (next === null) {
-      setHasMore(false)
-    }
+    const { values } = results
 
     if (values) {
       dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
-    } else {
-      setHasMore(false)
     }
     setIsLoading(false)
   }, [chainId, dispatch, safeAddress])
 
-  return { count, transactions, hasMore, next, isLoading }
+  return { count, transactions, next, isLoading }
 }

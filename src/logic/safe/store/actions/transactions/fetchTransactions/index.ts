@@ -7,23 +7,30 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { loadHistoryTransactions, loadQueuedTransactions } from './loadGatewayTransactions'
 import { AppReduxState } from 'src/store'
+import { history } from 'src/routes/routes'
+import { isTxFilter } from 'src/routes/safe/components/Transactions/TxList/Filter/utils'
 
 export default (chainId: string, safeAddress: string) =>
   async (dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>): Promise<void> => {
-    const loadTxs = async (
-      loadFn: typeof loadHistoryTransactions | typeof loadQueuedTransactions,
-      actionFn: typeof addHistoryTransactions | typeof addQueuedTransactions,
-    ) => {
+    const loadHistory = async () => {
       try {
-        const values = (await loadFn(safeAddress)) as any[]
-        dispatch(actionFn({ chainId, safeAddress, values }))
+        const query = Object.fromEntries(new URLSearchParams(history.location.search))
+        const filter = isTxFilter(query) ? query : undefined
+        const values = await loadHistoryTransactions(safeAddress, filter)
+        dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
       } catch (e) {
         e.log()
       }
     }
 
-    await Promise.all([
-      loadTxs(loadHistoryTransactions, addHistoryTransactions),
-      loadTxs(loadQueuedTransactions, addQueuedTransactions),
-    ])
+    const loadQueue = async () => {
+      try {
+        const values = await loadQueuedTransactions(safeAddress)
+        dispatch(addQueuedTransactions({ chainId, safeAddress, values }))
+      } catch (e) {
+        e.log()
+      }
+    }
+
+    await Promise.all([loadHistory(), loadQueue()])
   }

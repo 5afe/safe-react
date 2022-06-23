@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadPagedQueuedTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addQueuedTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
@@ -22,7 +21,6 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
 
   const dispatch = useDispatch()
   const { safeAddress } = useSafeAddress()
-  const [hasMore, setHasMore] = useState(true)
 
   const nextPage = async () => {
     let results: Await<ReturnType<typeof loadPagedQueuedTransactions>>
@@ -35,21 +33,8 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
       }
     }
 
-    if (!results) {
-      setHasMore(false)
-      return
-    }
-
-    const { values, next } = results
-
-    if (next === null) {
-      setHasMore(false)
-    }
-
-    if (values) {
-      dispatch(addQueuedTransactions({ chainId, safeAddress, values }))
-    } else {
-      setHasMore(false)
+    if (results) {
+      dispatch(addQueuedTransactions({ chainId, safeAddress, values: results.values }))
     }
   }
 
@@ -60,5 +45,5 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
 
   const isLoading = typeof transactions === 'undefined' || typeof count === 'undefined'
 
-  return { count, isLoading, transactions, hasMore, next: nextPage }
+  return { count, isLoading, transactions, next: nextPage }
 }

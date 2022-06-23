@@ -2,7 +2,6 @@ import { fireEvent, render, screen, getByText, waitFor, queryByText } from 'src/
 import { CurrencyDropdown } from '.'
 import { history, ROOT_ROUTE } from 'src/routes/routes'
 import { mockedEndpoints } from 'src/setupTests'
-import {} from 'src/utils/constants'
 
 const mockedAvailableCurrencies = ['USD', 'EUR', 'AED', 'AFN', 'ALL', 'ARS']
 const rinkebyNetworkId = '4'
