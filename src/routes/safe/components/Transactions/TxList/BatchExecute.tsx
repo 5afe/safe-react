@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -42,9 +42,8 @@ import { TransactionFailText } from 'src/components/TransactionFailText'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { BatchExecuteButton } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteButton'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { useSimulation } from '../helpers/Simulation/useSimulation'
-import { Button } from '@gnosis.pm/safe-react-components'
-import { SimulationResult } from '../helpers/Simulation/SimulationResult'
+import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
+import { TxSimulation } from '../helpers/Simulation/TxSimulation'
 import { isSimulationAvailable } from '../helpers/Simulation/simulation'
 
 const DecodedTransactions = ({
@@ -151,8 +150,6 @@ export const BatchExecute = React.memo((): ReactElement | null => {
   const [buttonStatus, setButtonStatus] = useState(ButtonStatus.LOADING)
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
   const isSameAddressAsSafe = useSelector(sameAddressAsSafeSelector)
-  const { simulateTransaction, simulationRequestStatus, simulation, simulationLink, simulationError, resetSimulation } =
-    useSimulation()
 
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
@@ -192,10 +189,16 @@ export const BatchExecute = React.memo((): ReactElement | null => {
     toggleModal()
   }
 
-  const handleBatchSimulation = () => {
-    const txs = toMultiSendTxs(batchableTransactions, safeAddress, currentVersion, account)
-    simulateTransaction(encodeMultiSendCall(txs), getMultisendContractAddress(), true)
-  }
+  const multiSendTx: Omit<BaseTransaction, 'value'> | null = useMemo(() => {
+    if (!account || !safeAddress || !currentVersion || txsWithDetails.length === 0) {
+      return null
+    }
+    const txs = toMultiSendTxs(txsWithDetails, safeAddress, currentVersion, account)
+    return {
+      data: encodeMultiSendCall(txs),
+      to: getMultisendContractAddress(),
+    }
+  }, [account, txsWithDetails, currentVersion, safeAddress])
 
   if (!account) {
     return null
@@ -230,7 +233,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               explorerUrl={getExplorerInfo(multiSendContractAddress)}
             />
           </Row>
-          <Row margin="md">
+          <Row>
             <DecodeTxsWrapper>
               {txsWithDetails.length ? (
                 <DecodedTransactions transactions={txsWithDetails} safeAddress={safeAddress} />
@@ -243,6 +246,8 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               )}
             </DecodeTxsWrapper>
           </Row>
+          {multiSendTx && isSimulationAvailable() && <TxSimulation canTxExecute tx={multiSendTx} />}
+
           <Paragraph size="md" align="center" color="disabled" noMargin>
             Be aware that if any of the included transactions revert, none of them will be executed. This will result in
             the loss of the allocated transaction fees.
@@ -263,24 +268,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               text: buttonStatus === ButtonStatus.LOADING ? 'Loading' : 'Submit',
             }}
           />
-          {isSimulationAvailable() && (
-            <Button
-              size="md"
-              onClick={handleBatchSimulation}
-              color="secondary"
-              disabled={batchableTransactions.length <= 1 || buttonStatus === ButtonStatus.LOADING}
-            >
-              Simulate
-            </Button>
-          )}
         </Modal.Footer>
-        <SimulationResult
-          simulation={simulation}
-          simulationError={simulationError}
-          simulationLink={simulationLink}
-          simulationRequestStatus={simulationRequestStatus}
-          onClose={resetSimulation}
-        />
       </Modal>
     </>
   )

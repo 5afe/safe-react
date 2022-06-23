@@ -26,7 +26,7 @@ export const SimulationResult = ({
         <Box
           bgcolor={isError ? '#FFF3F5' : '#EFFAF8'}
           alignItems="center"
-          margin="0px 24px 16px 24px"
+          margin="0px"
           padding="24px"
           borderRadius="8px"
         >
@@ -37,7 +37,7 @@ export const SimulationResult = ({
                 <Text color={'error'} size="lg">
                   <b>Failed</b>
                 </Text>
-                <IconButton style={{ marginLeft: 'auto' }} disableRipple onClick={onClose} size="small">
+                <IconButton style={{ marginLeft: 'auto', padding: '0px' }} disableRipple onClick={onClose} size="small">
                   <Close fontSize="small" />
                 </IconButton>
               </Box>
@@ -64,7 +64,7 @@ export const SimulationResult = ({
                 <Text color={'primary'} size="lg">
                   <b>Success</b>
                 </Text>
-                <IconButton style={{ marginLeft: 'auto' }} disableRipple onClick={onClose} size="small">
+                <IconButton style={{ marginLeft: 'auto', padding: '0px' }} disableRipple onClick={onClose} size="small">
                   <Close fontSize="small" />
                 </IconButton>
               </Box>

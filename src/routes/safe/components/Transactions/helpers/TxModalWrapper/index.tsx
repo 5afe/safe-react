@@ -1,6 +1,5 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { Button } from '@gnosis.pm/safe-react-components'
 import { Grid } from '@material-ui/core'
 
 import {
@@ -40,11 +39,9 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { DEFAULT_GAS_LIMIT, useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
 import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
 import { checkTransactionExecution, estimateGasForTransactionExecution } from 'src/logic/safe/transactions/gas'
-import { useSimulation } from 'src/routes/safe/components/Transactions/helpers/Simulation/useSimulation'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { isSimulationAvailable } from '../Simulation/simulation'
-import { SimulationResult } from '../Simulation/SimulationResult'
+import { TxSimulation } from '../Simulation/TxSimulation'
 
 type Props = {
   children: ReactNode
@@ -130,8 +127,6 @@ export const TxModalWrapper = ({
   const isSmartContract = useIsSmartContractWallet(userAddress)
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
-  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError, resetSimulation } =
-    useSimulation()
 
   const txParameters = useMemo(
     () => ({
@@ -226,7 +221,6 @@ export const TxModalWrapper = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
-    resetSimulation()
   }
 
   const onSubmitClick = (txParameters: TxParameters) => {
@@ -245,15 +239,14 @@ export const TxModalWrapper = ({
 
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
-  const simulateTx = useCallback(() => {
+  const simulateTxData = useMemo(() => {
     // If a transaction is executable we simulate with the proposed / selected gasLimit and the actual signatures
     // Otherwise we overwrite the threshold to 1 on tenderly and create a signature
-    const data = getExecutionTransaction({
+    return getExecutionTransaction({
       ...txParameters,
       sigs: canTxExecute ? txParameters.sigs : getPreValidatedSignatures(userAddress),
     }).encodeABI()
-    simulateTransaction(data, safeAddress, canTxExecute, gasLimit)
-  }, [txParameters, canTxExecute, safeAddress, userAddress, simulateTransaction, gasLimit])
+  }, [txParameters, canTxExecute, userAddress])
 
   return (
     <EditableTxParameters
@@ -290,6 +283,14 @@ export const TxModalWrapper = ({
               isOffChainSignature={isOffChainSignature}
               parametersStatus={parametersStatus}
             />
+            <TxSimulation
+              canTxExecute={canTxExecute}
+              tx={{
+                data: simulateTxData,
+                to: safeAddress,
+              }}
+              gasLimit={gasLimit}
+            />
           </Container>
 
           <ReviewInfoText
@@ -313,19 +314,7 @@ export const TxModalWrapper = ({
                 testId: 'submit-tx-btn',
               }}
             />
-            {isSimulationAvailable() && (
-              <Button size="md" onClick={simulateTx} color="secondary" disabled={isSubmitDisabled}>
-                Simulate
-              </Button>
-            )}
           </Modal.Footer>
-          <SimulationResult
-            simulation={simulation}
-            simulationError={simulationError}
-            simulationLink={simulationLink}
-            simulationRequestStatus={simulationRequestStatus}
-            onClose={resetSimulation}
-          />
         </>
       )}
     </EditableTxParameters>
