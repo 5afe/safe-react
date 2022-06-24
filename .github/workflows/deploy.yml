@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - run: echo '>>> ${{ secrets.AWS_REGION }} <<<'
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
