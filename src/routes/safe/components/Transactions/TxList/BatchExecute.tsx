@@ -246,7 +246,9 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               )}
             </DecodeTxsWrapper>
           </Row>
-          {multiSendTx && isSimulationAvailable() && <TxSimulation canTxExecute tx={multiSendTx} />}
+          {multiSendTx && isSimulationAvailable() && (
+            <TxSimulation canTxExecute tx={multiSendTx} disabled={buttonStatus !== ButtonStatus.READY} />
+          )}
 
           <Paragraph size="md" align="center" color="disabled" noMargin>
             Be aware that if any of the included transactions revert, none of them will be executed. This will result in

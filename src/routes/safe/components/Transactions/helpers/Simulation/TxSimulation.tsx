@@ -42,9 +42,15 @@ type TxSimulationProps = {
   tx: Omit<BaseTransaction, 'value'>
   canTxExecute: boolean
   gasLimit?: string
+  disabled: boolean
 }
 
-export const TxSimulation = ({ tx, canTxExecute, gasLimit }: TxSimulationProps): React.ReactElement | null => {
+export const TxSimulation = ({
+  tx,
+  canTxExecute,
+  gasLimit,
+  disabled,
+}: TxSimulationProps): React.ReactElement | null => {
   const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError, resetSimulation } =
     useSimulation()
   const { chainId, address: safeAddress } = useSelector(currentSafe)
@@ -75,7 +81,7 @@ export const TxSimulation = ({ tx, canTxExecute, gasLimit }: TxSimulationProps):
       <StyledAccordionSummary>
         <Text size="xl">Transaction validity</Text>
         <Track {...MODALS_EVENTS.SIMULATE_TX}>
-          <Button variant="text" color="secondary" onClick={() => handleSimulation()}>
+          <Button variant="text" disabled={disabled} color="secondary" onClick={() => handleSimulation()}>
             Simulate
           </Button>
         </Track>

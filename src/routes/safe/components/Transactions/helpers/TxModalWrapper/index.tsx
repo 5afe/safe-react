@@ -240,13 +240,17 @@ export const TxModalWrapper = ({
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
   const simulateTxData = useMemo(() => {
+    // is submitStatus is not ready we are not done with gas estimation / tx creation
+    if (submitStatus !== ButtonStatus.READY) {
+      return ''
+    }
     // If a transaction is executable we simulate with the proposed / selected gasLimit and the actual signatures
     // Otherwise we overwrite the threshold to 1 on tenderly and create a signature
     return getExecutionTransaction({
       ...txParameters,
       sigs: canTxExecute ? txParameters.sigs : getPreValidatedSignatures(userAddress),
     }).encodeABI()
-  }, [txParameters, canTxExecute, userAddress])
+  }, [submitStatus, txParameters, canTxExecute, userAddress])
 
   return (
     <EditableTxParameters
@@ -290,6 +294,7 @@ export const TxModalWrapper = ({
                 to: safeAddress,
               }}
               gasLimit={gasLimit}
+              disabled={submitStatus !== ButtonStatus.READY}
             />
           </Container>
 

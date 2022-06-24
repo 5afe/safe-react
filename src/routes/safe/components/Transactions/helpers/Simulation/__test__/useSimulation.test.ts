@@ -3,10 +3,8 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { useSimulation } from '../useSimulation'
 import axios from 'axios'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { mockGetSafeInfoResponse } from 'src/logic/safe/utils/mocks/getSafeMock'
 import { waitFor } from '@testing-library/react'
 import { TenderlySimulatePayload, TenderlySimulation } from '../types'
-import { storage } from 'src/utils/storage'
 
 describe('useSimulation()', () => {
   it('should have the correct initital values', () => {
@@ -102,7 +100,7 @@ describe('useSimulation()', () => {
     expect(result.current.simulation).toBeUndefined()
   })
 
-  it('should set simulation for not-executable transaction on success and simulation can be reset.', async () => {
+  it('should set simulation for not-executable transaction on success', async () => {
     const safeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
     const mockAxiosPost = jest.spyOn(axios, 'post')
     const mockAnswer: TenderlySimulation = {
@@ -145,12 +143,5 @@ describe('useSimulation()', () => {
     })
 
     expect(mockAxiosPost).toHaveBeenCalledTimes(1)
-
-    await act(async () => {
-      result.current.resetSimulation()
-    })
-
-    expect(result.current.simulationRequestStatus).toEqual(FETCH_STATUS.NOT_ASKED)
-    expect(result.current.simulation).toBeUndefined()
   })
 })
