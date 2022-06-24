@@ -3,8 +3,8 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AppReduxState } from 'src/store'
 import { AvailableCurrenciesPayload } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { setAvailableCurrencies } from 'src/logic/currencyValues/store/actions/setAvailableCurrencies'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getFiatCurrencies } from '@gnosis.pm/safe-react-gateway-sdk'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const updateAvailableCurrencies =
   () =>

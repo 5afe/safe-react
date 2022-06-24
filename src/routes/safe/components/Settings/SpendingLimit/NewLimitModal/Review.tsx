@@ -278,7 +278,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             </Text>
           )}
         </Col>
-        <Col margin="md">
+        <Col margin="md" style={{ wordBreak: 'break-all' }}>
           <AddressInfo address={values.beneficiary} title="Beneficiary" color="placeHolder" />
         </Col>
         <Col margin="md">

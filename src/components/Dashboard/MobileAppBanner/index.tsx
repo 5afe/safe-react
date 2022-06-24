@@ -136,6 +136,7 @@ const MobileAppBanner = (): ReactElement | null => {
 
   const onClose = useCallback(() => {
     setClosing(true)
+    trackEvent(MOBILE_APP_EVENTS.dashboardBannerClose)
   }, [])
 
   const onDone = useCallback(() => {
@@ -153,9 +154,9 @@ const MobileAppBanner = (): ReactElement | null => {
           <>
             <StyledBanner $count={count} onClick={onClick} />
 
-            <StyledCloseButton onClick={onClose} />
+            <StyledCloseButton onClick={onClose} aria-label="Close mobile banner" />
 
-            <StyledBackButton onClick={onBack} />
+            <StyledBackButton onClick={onBack} aria-label="Previous mobile banner slide" />
 
             {count === 1 && (
               <StyledAppstoreButton>

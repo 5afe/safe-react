@@ -11,6 +11,7 @@ import {
   getExecutionTransaction,
   saveTxToHistory,
   tryOffChainSigning,
+  TX_NOTIFICATION_TYPES,
 } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas, SafeTxGasEstimationProps, createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
@@ -38,9 +39,9 @@ import { WALLET_EVENTS } from 'src/utils/events/wallet'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
-  notifiedTransaction: string
+  notifiedTransaction: TX_NOTIFICATION_TYPES
   operation?: number
-  origin?: string | null
+  origin?: string
   safeAddress: string
   to: string
   txData?: string
@@ -52,7 +53,7 @@ export interface CreateTransactionArgs {
 }
 
 type RequiredTxProps = CreateTransactionArgs &
-  Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab' | 'origin'>>
+  Required<Pick<CreateTransactionArgs, 'txData' | 'operation' | 'navigateToTransactionsTab'>>
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
@@ -271,7 +272,7 @@ export class TxSender {
     this.safeInstance = getGnosisSafeInstanceAt(txProps.safeAddress, this.safeVersion)
 
     // Notifications
-    this.notifications = createTxNotifications(txProps.notifiedTransaction, txProps.origin, dispatch)
+    this.notifications = createTxNotifications(dispatch, txProps.notifiedTransaction, txProps.origin)
 
     // Use the user-provided none or the recommented nonce
     this.nonce = txProps.txNonce?.toString() || (await getNonce(txProps.safeAddress, this.safeVersion))
@@ -298,7 +299,7 @@ export const createTransaction = (
       txData: props.txData ?? EMPTY_DATA,
       operation: props.operation ?? Operation.CALL,
       navigateToTransactionsTab: props.navigateToTransactionsTab ?? true,
-      origin: props.origin ?? null,
+      origin: props.origin,
     }
 
     // Populate instance vars

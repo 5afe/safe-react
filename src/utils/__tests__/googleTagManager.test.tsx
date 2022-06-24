@@ -1,9 +1,10 @@
 import * as TagManager from 'react-gtm-module'
 import { matchPath } from 'react-router-dom'
+import * as reactRouterDom from 'react-router-dom'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { history } from 'src/routes/routes'
-import { getAnonymizedLocation, usePageTracking, GTM_EVENT } from 'src/utils/googleTagManager'
+import { getAnonymizedPathname, usePageTracking, GTM_EVENT } from 'src/utils/googleTagManager'
 import { waitFor } from '@testing-library/react'
 
 jest.mock('react-router-dom', () => ({
@@ -27,35 +28,69 @@ describe('googleTagManager', () => {
         },
       }))
 
-      const anonymizedLocation = getAnonymizedLocation({
-        pathname: '/rin/0x0000000000000000000000000000000000000000',
-        search: '?test=true',
-        hash: '#hash',
-        state: null,
-      })
+      const anonymizedPathname = getAnonymizedPathname('/rin/0x0000000000000000000000000000000000000000')
 
-      expect(anonymizedLocation).toBe('/rin/SAFE_ADDRESS?test=true#hash')
+      expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS')
     })
-    it('anonymizes transaction ids', () => {
+    it('anonymizes history route', () => {
       ;(matchPath as jest.Mock).mockImplementation(() => ({
         isExact: false,
         path: '',
         url: '',
         params: {
           prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
-          txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
         },
       }))
 
-      const anonymizedLocation = getAnonymizedLocation({
-        pathname:
-          '/rin/0x0000000000000000000000000000000000000000/transactions/multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
-        search: '?test=true',
-        hash: '#hash',
-        state: null,
-      })
+      const anonymizedPathname = getAnonymizedPathname(
+        '/rin/0x0000000000000000000000000000000000000000/transactions/history',
+      )
 
-      expect(anonymizedLocation).toBe('/rin/SAFE_ADDRESS/transactions/TRANSACTION_ID?test=true#hash')
+      expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS/transactions/history')
+    })
+    it('anonymizes queue route', () => {
+      ;(matchPath as jest.Mock).mockImplementation(() => ({
+        isExact: false,
+        path: '',
+        url: '',
+        params: {
+          prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+        },
+      }))
+
+      const anonymizedPathname = getAnonymizedPathname(
+        '/rin/0x0000000000000000000000000000000000000000/transactions/queue',
+      )
+
+      expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS/transactions/queue')
+    })
+    it('anonymizes transaction ids', () => {
+      ;(matchPath as jest.Mock)
+        .mockImplementationOnce(() => ({
+          isExact: false,
+          path: '',
+          url: '',
+          params: {
+            prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+            txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+          },
+        }))
+        .mockImplementationOnce(() => ({
+          isExact: false,
+          path: '',
+          url: '',
+          params: {
+            prefixedSafeAddress: '0x0000000000000000000000000000000000000000',
+            txId: 'multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+          },
+        }))
+        .mockImplementationOnce(() => null)
+
+      const anonymizedPathname = getAnonymizedPathname(
+        '/rin/0x0000000000000000000000000000000000000000/transactions/multisig_0xb3b83bf204C458B461de9B0CD2739DB152b4fa5A_0x73e9512853f394f4c3485752a56806f61a5a0a98d8c13877ee3e7ae5d2769d2b',
+      )
+
+      expect(anonymizedPathname).toBe('/rin/SAFE_ADDRESS/transactions/TRANSACTION_ID')
     })
     it("doesn't anonymize other links", () => {
       ;(matchPath as jest.Mock).mockImplementation(() => ({
@@ -65,14 +100,9 @@ describe('googleTagManager', () => {
         params: {},
       }))
 
-      const anonymizedLocation = getAnonymizedLocation({
-        pathname: '/other/test/link',
-        search: '?test=true',
-        hash: '#hash',
-        state: null,
-      })
+      const anonymizedPathname = getAnonymizedPathname('/other/test/link')
 
-      expect(anonymizedLocation).toBe('/other/test/link?test=true#hash')
+      expect(anonymizedPathname).toBe('/other/test/link')
     })
   })
   describe('loadGoogleTagManager', () => {
@@ -125,11 +155,11 @@ describe('googleTagManager', () => {
         auth: 'auth123',
         preview: 'env-3',
         dataLayer: {
-          'gtm.allowlist': ['gaawc', 'gaawe'],
           'gtm.blocklist': ['j', 'jsm', 'customScripts'],
           event: 'pageview',
           chainId: '4',
-          page: '/',
+          pageLocation: 'http://localhost/',
+          pagePath: '/',
         },
       })
     })

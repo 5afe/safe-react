@@ -4,7 +4,7 @@ import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { _getChainId, getChainName } from 'src/config'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
-import { getSupportedWallets, isCypressAskingForConnectedState } from 'src/logic/wallets/utils/walletList'
+import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { ChainId, CHAIN_ID } from 'src/config/chain.d'
 import { loadFromStorageWithExpiry, removeFromStorageWithExpiry, saveToStorageWithExpiry } from 'src/utils/storage'
 import { store } from 'src/store'
@@ -12,7 +12,7 @@ import updateProviderWallet from 'src/logic/wallets/store/actions/updateProvider
 import updateProviderAccount from 'src/logic/wallets/store/actions/updateProviderAccount'
 import updateProviderNetwork from 'src/logic/wallets/store/actions/updateProviderNetwork'
 import updateProviderEns from 'src/logic/wallets/store/actions/updateProviderEns'
-import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
+import { closeAllNotifications } from '../notifications/store/notifications'
 import { getChains } from 'src/config/cache/chains'
 import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 import { isPairingModule } from 'src/logic/wallets/pairing/utils'
@@ -27,10 +27,6 @@ export const saveLastUsedProvider = (name: string): void => {
 }
 
 export const loadLastUsedProvider = (): string | undefined => {
-  if (isCypressAskingForConnectedState()) {
-    return 'e2e-wallet'
-  }
-
   return loadFromStorageWithExpiry<string>(LAST_USED_PROVIDER_KEY)
 }
 
@@ -68,7 +64,7 @@ const getOnboard = (chainId: ChainId): API => {
       },
       network: (networkId) => {
         store.dispatch(updateProviderNetwork(networkId?.toString() || ''))
-        store.dispatch(closeSnackbar({ dismissAll: true }))
+        store.dispatch(closeAllNotifications())
       },
       ens: hasENSSupport(chainId)
         ? (ens) => {

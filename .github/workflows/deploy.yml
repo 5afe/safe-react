@@ -19,7 +19,6 @@ env:
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_ETHERSCAN_API_KEY: ${{ secrets.REACT_APP_ETHERSCAN_API_KEY }}
   REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY }}
-  REACT_APP_E2E_MNEMONIC: ${{ secrets.REACT_APP_E2E_MNEMONIC }}
 
 jobs:
   debug:
@@ -176,3 +175,5 @@ jobs:
           browser: chrome
           record: false
           config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
+        env:
+          CYPRESS_ENV: ${{ env.REACT_APP_ENV}}

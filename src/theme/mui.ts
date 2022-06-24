@@ -28,6 +28,7 @@ import {
   xs,
   black300,
   black400,
+  infoColor,
 } from './variables'
 
 const palette = {
@@ -228,16 +229,6 @@ const theme = createTheme({
         },
       },
     },
-    MuiAutocomplete: {
-      inputRoot: {
-        padding: '0 !important',
-      },
-      root: {
-        input: {
-          padding: '16px',
-        },
-      },
-    },
     MuiOutlinedInput: {
       root: {
         padding: 0,
@@ -277,6 +268,14 @@ const theme = createTheme({
       },
       adornedEnd: {
         paddingRight: md,
+      },
+    },
+    MuiAutocomplete: {
+      inputRoot: {
+        padding: '0px !important',
+      },
+      input: {
+        padding: '16px !important',
       },
     },
     MuiSelect: {
@@ -321,50 +320,6 @@ const theme = createTheme({
     MuiSvgIcon: {
       colorSecondary: {
         color: secondaryText,
-      },
-    },
-    MuiSnackbar: {
-      root: {
-        maxWidth: '100%',
-        width: '340px',
-      },
-    },
-    MuiSnackbarContent: {
-      root: {
-        borderRadius: `${sm} !important`,
-        boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        padding: '20px',
-        width: '100%',
-      },
-      message: {
-        color: fontColor,
-        flexGrow: '1',
-        fontFamily: 'Averta',
-        fontSize: '14px',
-        lineHeight: '1.43',
-        padding: '0 10px 0 0',
-        '& > span': {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'stretch',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          maxHeight: '160px',
-          wordBreak: 'break-word',
-          '& > img': {
-            display: 'block',
-            marginRight: '13px',
-          },
-        },
-      },
-      action: {
-        paddingLeft: '0',
-        '& > button': {
-          color: secondaryText,
-        },
       },
     },
     MuiTab: {
@@ -504,11 +459,17 @@ const theme = createTheme({
     MuiAlert: {
       root: {
         color: fontColor,
-        height: '48px',
         alignItems: 'center',
       },
       standardWarning: {
         backgroundColor: alertWarning,
+      },
+      standardInfo: {
+        backgroundColor: infoColor,
+        borderRadius: '8px',
+        '& svg': {
+          color: secondary,
+        },
       },
       icon: {
         '& > svg': {

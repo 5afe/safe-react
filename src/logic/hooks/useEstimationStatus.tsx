@@ -4,22 +4,17 @@ import { EstimationStatus } from './useEstimateTransactionGas'
 import { ButtonStatus } from 'src/components/Modal'
 
 export const useEstimationStatus = (
-  txEstimationStatus?: EstimationStatus,
+  txEstimationStatus: EstimationStatus,
 ): [buttonStatus: ButtonStatus, setButtonStatus: Dispatch<SetStateAction<ButtonStatus>>] => {
   const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
 
   useEffect(() => {
     let mounted = true
 
-    if (mounted) {
-      switch (txEstimationStatus) {
-        case EstimationStatus.LOADING:
-          setButtonStatus(ButtonStatus.LOADING)
-          break
-        default:
-          setButtonStatus(ButtonStatus.READY)
-          break
-      }
+    if (txEstimationStatus === EstimationStatus.LOADING) {
+      mounted && setButtonStatus(ButtonStatus.LOADING)
+    } else {
+      mounted && setButtonStatus(ButtonStatus.READY)
     }
 
     return () => {

@@ -108,7 +108,7 @@ export const TxModalWrapper = ({
   isSubmitDisabled,
   isRejectTx = false,
 }: Props): React.ReactElement => {
-  const [manualSafeTxGas, setManualSafeTxGas] = useState<string>('0')
+  const [manualSafeTxGas, setManualSafeTxGas] = useState<string>()
   const [manualGasPrice, setManualGasPrice] = useState<string>()
   const [manualMaxPrioFee, setManualMaxPrioFee] = useState<string>()
   const [manualGasLimit, setManualGasLimit] = useState<string>()
@@ -128,6 +128,15 @@ export const TxModalWrapper = ({
   const isOffChainSignature = checkIfOffChainSignatureIsPossible(doExecute, isSmartContract, safeVersion)
   const approvalAndExecution = isApproveAndExecute(Number(threshold), confirmationsLen, preApprovingOwner)
 
+  const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
+    isRejectTx,
+    txData,
+    txRecipient: txTo || safeAddress,
+    txAmount: txValue,
+    operation,
+  })
+  if (safeTxGas == null) safeTxGas = safeTxGasEstimation
+
   const txParameters = useMemo(
     () => ({
       baseGas: '0',
@@ -138,12 +147,13 @@ export const TxModalWrapper = ({
       operation: operation || Operation.CALL,
       refundReceiver: ZERO_ADDRESS,
       safeInstance: getGnosisSafeInstanceAt(safeAddress, safeVersion),
-      safeTxGas: safeTxGas || manualSafeTxGas || '0',
+      safeTxGas: manualSafeTxGas || safeTxGas || '0',
       sender: userAddress,
       sigs: generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? userAddress : undefined),
       to: txTo || safeAddress,
       valueInWei: txValue,
       safeAddress,
+      approvalAndExecution,
     }),
     [
       approvalAndExecution,
@@ -171,17 +181,6 @@ export const TxModalWrapper = ({
     return checkTransactionExecution({ ...txParameters, gasLimit })
   }, [gasLimit, txParameters])
 
-  const txEstimationExecutionStatus = useExecutionStatus(checkTxExecution, doExecute, txParameters.data, gasLimit)
-
-  const { result: safeTxGasEstimation, error: safeTxGasError } = useEstimateSafeTxGas({
-    isRejectTx,
-    txData,
-    txRecipient: txTo || safeAddress,
-    txAmount: txValue,
-    operation,
-  })
-  if (safeTxGas == null) safeTxGas = safeTxGasEstimation
-
   const { gasPriceFormatted, gasPrice, gasMaxPrioFee, gasMaxPrioFeeFormatted } = useEstimateTransactionGas({
     manualGasPrice,
     manualMaxPrioFee,
@@ -190,9 +189,18 @@ export const TxModalWrapper = ({
   })
 
   const getGasCostFormatted = useCallback(() => {
-    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT) return '> 0.001'
+    if (!gasLimit || gasLimit === DEFAULT_GAS_LIMIT || !gasPrice || !gasMaxPrioFee) return '> 0.001'
     return calculateTotalGasCost(gasLimit, gasPrice, gasMaxPrioFee, nativeCurrency.decimals).gasCostFormatted
   }, [gasLimit, gasMaxPrioFee, gasPrice, nativeCurrency.decimals])
+
+  const txEstimationExecutionStatus = useExecutionStatus({
+    checkTxExecution,
+    isExecution: doExecute,
+    txData: txParameters.data,
+    gasLimit,
+    gasPrice,
+    gasMaxPrioFee,
+  })
 
   const [submitStatus, setSubmitStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
