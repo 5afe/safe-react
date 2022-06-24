@@ -9,6 +9,10 @@ import { SimulationResult } from './SimulationResult'
 import { useSimulation } from './useSimulation'
 import Track from 'src/components/Track'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
+import { useSelector } from 'react-redux'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 const StyledAccordionSummary = styled(AccordionSummary)`
   & .MuiAccordionSummary-content {
@@ -43,6 +47,25 @@ type TxSimulationProps = {
 export const TxSimulation = ({ tx, canTxExecute, gasLimit }: TxSimulationProps): React.ReactElement | null => {
   const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError, resetSimulation } =
     useSimulation()
+  const { chainId, address: safeAddress } = useSelector(currentSafe)
+  const userAddress = useSelector(userAccountSelector)
+  const web3 = getWeb3()
+
+  const getBlockGasLimit = async () => {
+    const latestBlock = await web3.eth.getBlock('latest')
+    return parseInt(latestBlock.gasLimit.toString())
+  }
+
+  const handleSimulation = async () => {
+    simulateTransaction(
+      tx,
+      chainId ?? '4',
+      safeAddress,
+      userAddress,
+      canTxExecute,
+      Number(gasLimit) ?? (await getBlockGasLimit()),
+    )
+  }
 
   if (!isSimulationAvailable()) {
     return null
@@ -52,11 +75,7 @@ export const TxSimulation = ({ tx, canTxExecute, gasLimit }: TxSimulationProps):
       <StyledAccordionSummary>
         <Text size="xl">Transaction validity</Text>
         <Track {...MODALS_EVENTS.SIMULATE_TX}>
-          <Button
-            variant="text"
-            color="secondary"
-            onClick={() => simulateTransaction(tx.data, tx.to, canTxExecute, gasLimit)}
-          >
+          <Button variant="text" color="secondary" onClick={() => handleSimulation()}>
             Simulate
           </Button>
         </Track>
