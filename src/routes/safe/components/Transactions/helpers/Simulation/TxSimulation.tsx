@@ -1,7 +1,7 @@
 import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
 
-import { Accordion, AccordionSummary, Text } from '@gnosis.pm/safe-react-components'
+import { Accordion, AccordionSummary, Loader, Text } from '@gnosis.pm/safe-react-components'
 import { Button } from '@material-ui/core'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { isSimulationAvailable } from './simulation'
@@ -38,6 +38,10 @@ const StyledResultAccordionSummary = styled(AccordionSummary)`
   }
 `
 
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
 type TxSimulationProps = {
   tx: Omit<BaseTransaction, 'value'>
   canTxExecute: boolean
@@ -51,7 +55,7 @@ export const TxSimulation = ({
   gasLimit,
   disabled,
 }: TxSimulationProps): React.ReactElement | null => {
-  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, simulationError, resetSimulation } =
+  const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, requestError, resetSimulation } =
     useSimulation()
   const { chainId, address: safeAddress } = useSelector(currentSafe)
   const userAddress = useSelector(userAccountSelector)
@@ -76,13 +80,25 @@ export const TxSimulation = ({
   if (!isSimulationAvailable()) {
     return null
   }
-  return simulationRequestStatus === FETCH_STATUS.NOT_ASKED || simulationRequestStatus === FETCH_STATUS.LOADING ? (
+
+  const isSimulationFinished =
+    simulationRequestStatus === FETCH_STATUS.ERROR || simulationRequestStatus === FETCH_STATUS.SUCCESS
+  const isSimulationLoading = simulationRequestStatus === FETCH_STATUS.LOADING
+  const showSimulationButton = !isSimulationFinished
+
+  return showSimulationButton ? (
     <Accordion compact expanded={false}>
       <StyledAccordionSummary>
         <Text size="xl">Transaction validity</Text>
         <Track {...MODALS_EVENTS.SIMULATE_TX}>
-          <Button variant="text" disabled={disabled} color="secondary" onClick={() => handleSimulation()}>
-            Simulate
+          <Button
+            variant="text"
+            disabled={disabled || isSimulationLoading}
+            color="secondary"
+            onClick={handleSimulation}
+          >
+            {isSimulationLoading && <Loader size="xs" color="secondaryLight" />}
+            <LoaderText>Simulate</LoaderText>
           </Button>
         </Track>
       </StyledAccordionSummary>
@@ -95,7 +111,7 @@ export const TxSimulation = ({
           simulation={simulation}
           simulationRequestStatus={simulationRequestStatus}
           simulationLink={simulationLink}
-          simulationError={simulationError}
+          requestError={requestError}
         />
       </StyledResultAccordionSummary>
     </Accordion>

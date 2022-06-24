@@ -22,7 +22,7 @@ type UseSimulationReturn =
         gasLimit: number,
       ) => void
       simulationLink: string
-      simulationError?: string
+      requestError?: string
       resetSimulation: () => void
     }
   | {
@@ -37,19 +37,19 @@ type UseSimulationReturn =
         gasLimit: number,
       ) => void
       simulationLink: string
-      simulationError?: string
+      requestError?: string
       resetSimulation: () => void
     }
 
 export const useSimulation = (): UseSimulationReturn => {
   const [simulation, setSimulation] = useState<TenderlySimulation | undefined>()
   const [simulationRequestStatus, setSimulationRequestStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
-  const [simulationError, setSimulationError] = useState<string | undefined>(undefined)
+  const [requestError, setRequestError] = useState<string | undefined>(undefined)
 
   const simulationLink = useMemo(() => getSimulationLink(simulation?.simulation.id || ''), [simulation])
   const resetSimulation = useCallback(() => {
     setSimulationRequestStatus(FETCH_STATUS.NOT_ASKED)
-    setSimulationError(undefined)
+    setRequestError(undefined)
     setSimulation(undefined)
   }, [])
   const simulateTransaction = useCallback(
@@ -88,11 +88,11 @@ export const useSimulation = (): UseSimulationReturn => {
         const simulationResponse = await axios.post(TENDERLY_SIMULATE_ENDPOINT_URL, simulationPayload)
         setSimulation(simulationResponse.data)
         setSimulationRequestStatus(FETCH_STATUS.SUCCESS)
-        setSimulationError(undefined)
+        setRequestError(undefined)
       } catch (error) {
         console.error(error)
         setSimulationRequestStatus(FETCH_STATUS.ERROR)
-        setSimulationError(error.message)
+        setRequestError(error.message)
       }
     },
     [],
@@ -103,7 +103,7 @@ export const useSimulation = (): UseSimulationReturn => {
     simulationRequestStatus,
     simulation,
     simulationLink,
-    simulationError,
+    requestError,
     resetSimulation,
   } as UseSimulationReturn
 }

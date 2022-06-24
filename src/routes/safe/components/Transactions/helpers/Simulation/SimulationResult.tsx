@@ -8,7 +8,7 @@ type SimulationResultProps = {
   simulationRequestStatus: string
   simulation?: TenderlySimulation
   simulationLink?: string
-  simulationError?: string
+  requestError?: string
   onClose: () => void
 }
 
@@ -16,21 +16,24 @@ export const SimulationResult = ({
   simulationRequestStatus,
   simulation,
   simulationLink,
-  simulationError,
+  requestError,
   onClose,
 }: SimulationResultProps): React.ReactElement => {
-  const isError = !!simulationError || !simulation?.simulation.status
+  const isErroneous = !!requestError || !simulation?.simulation.status
+  const isSimulationFinished =
+    simulationRequestStatus === FETCH_STATUS.SUCCESS || simulationRequestStatus === FETCH_STATUS.ERROR
+
   return (
     <>
-      {(simulationRequestStatus === FETCH_STATUS.SUCCESS || Boolean(simulationError)) && (
+      {isSimulationFinished && (
         <Box
-          bgcolor={isError ? '#FFF3F5' : '#EFFAF8'}
+          bgcolor={isErroneous ? '#FFF3F5' : '#EFFAF8'}
           alignItems="center"
           margin="0px"
           padding="24px"
           borderRadius="8px"
         >
-          {isError ? (
+          {isErroneous ? (
             <>
               <Box display="flex" sx={{ gridGap: '4px' }}>
                 <Icon type="alert" color="error" size="sm" />
@@ -41,9 +44,9 @@ export const SimulationResult = ({
                   <Close fontSize="small" />
                 </IconButton>
               </Box>
-              {simulationError ? (
+              {requestError ? (
                 <Text color="error" size="lg">
-                  An unexpected error occured during simulation: <b>{simulationError}</b>
+                  An unexpected error occured during simulation: <b>{requestError}</b>
                 </Text>
               ) : (
                 <Text color="inputFilled" size="lg">

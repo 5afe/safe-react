@@ -9,7 +9,7 @@ import { TenderlySimulatePayload, TenderlySimulation } from '../types'
 describe('useSimulation()', () => {
   it('should have the correct initital values', () => {
     const { result } = renderHook(() => useSimulation())
-    const { simulation, simulationLink, simulationError, simulationRequestStatus } = result.current
+    const { simulation, simulationLink, requestError: simulationError, simulationRequestStatus } = result.current
 
     expect(simulation).toBeUndefined()
     expect(simulationLink).not.toBeUndefined()
@@ -35,7 +35,7 @@ describe('useSimulation()', () => {
     )
 
     await waitFor(() => {
-      const { simulationRequestStatus, simulationError, resetSimulation } = result.current
+      const { simulationRequestStatus, requestError: simulationError, resetSimulation } = result.current
       expect(simulationRequestStatus).toEqual(FETCH_STATUS.ERROR)
       expect(simulationError).toEqual('404 not found')
     })
@@ -47,7 +47,7 @@ describe('useSimulation()', () => {
     })
 
     expect(result.current.simulationRequestStatus).toEqual(FETCH_STATUS.NOT_ASKED)
-    expect(result.current.simulationError).toBeUndefined()
+    expect(result.current.requestError).toBeUndefined()
   })
 
   it('should set simulation for executable transaction on success and simulation can be reset.', async () => {
