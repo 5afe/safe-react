@@ -99,7 +99,7 @@ export const checkTransactionExecution = async ({
   valueInWei,
   sender,
   gasLimit,
-}: TxArgs & { safeAddress: string; gasLimit: string | undefined }): Promise<boolean> => {
+}: TxArgs & { gasLimit: string | undefined }): Promise<boolean> => {
   return safeInstance.methods
     .execTransaction(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, sigs)
     .call({
