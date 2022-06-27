@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import styled from 'styled-components'
-import { Text } from '@gnosis.pm/safe-react-components'
+import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import { StyledTitle } from './styles'
 
 type UnknownAppWarningProps = {
@@ -19,15 +19,14 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
   }
 
   return (
-    <Box flexDirection="column">
-      <StyledTitle size="sm" color="error" bold centered={!!onHideWarning}>
-        ⚠️Warning!
+    <StyledBox display="flex" flexDirection="column" height="100%" alignItems="center" mt={8}>
+      <StyledIcon type="alert" size="md" />
+      <StyledTitle size="sm" bold centered={!!onHideWarning}>
+        Warning
       </StyledTitle>
-      <Text size="xl" color="error">
-        <b>The application you are trying to use is not on our approved list</b>
-      </Text>
+      <StyledWarningText size="xl">The application you are trying to use is not on our approved list</StyledWarningText>
       <br />
-      <Text size="lg">Check the link you are using and ensure it comes from a trusted source</Text>
+      <StyledText size="lg">Check the link you are using and ensure it comes from a trusted source</StyledText>
       {onHideWarning && (
         <StyledFormControlLabel
           control={
@@ -40,18 +39,28 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
           label="Do not show this warning again"
         />
       )}
-    </Box>
+    </StyledBox>
   )
 }
 
+const StyledBox = styled(Box)`
+  color: #e8663d;
+`
+
+const StyledWarningText = styled(Text)`
+  color: inherit;
+  text-align: center;
+`
+
+const StyledText = styled(Text)`
+  text-align: center;
+`
+
+const StyledIcon = styled(Icon)``
+
 const StyledFormControlLabel = styled(FormControlLabel)`
-  && {
-    margin-top: 15px;
-    margin-right: 0;
-    flex-direction: row-reverse;
-    justify-self: flex-end;
-    display: flex;
-  }
+  flex: 1;
+  color: #000;
 `
 
 export default UnknownAppWarning

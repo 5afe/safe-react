@@ -5,7 +5,7 @@ export const StyledTitle = styled(Title)<{ color?: string; bold?: boolean; cente
   font-size: 20px;
   text-align: ${({ centered }) => (centered ? 'center' : 'left')};
   margin: 24px 0;
-  color: ${({ color, theme }) => (color ? theme.colors[color] : theme.colors.text)};
+  color: inherit;
   font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};
 `
 
