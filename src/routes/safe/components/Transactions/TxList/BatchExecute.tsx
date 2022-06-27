@@ -246,7 +246,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               )}
             </DecodeTxsWrapper>
           </Row>
-          {multiSendTx && isSimulationAvailable() && (
+          {multiSendTx && isSimulationAvailable && (
             <TxSimulation canTxExecute tx={multiSendTx} disabled={buttonStatus !== ButtonStatus.READY} />
           )}
 

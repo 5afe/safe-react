@@ -144,16 +144,6 @@ const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend =
   return new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown as MultiSend
 }
 
-export const getMultiSendCallOnlyAddress = (chainId: string): string => {
-  const deployment = getMultiSendCallOnlyDeployment({ network: chainId })
-
-  if (!deployment) {
-    throw new Error('MultiSendCallOnly deployment not found')
-  }
-
-  return deployment.networkAddresses[chainId]
-}
-
 /**
  * Returns an address of SignMessageLib for passed chainId
  * @param {ChainId} chainId

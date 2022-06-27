@@ -74,6 +74,11 @@ export const useSimulation = (): UseSimulationReturn => {
             [safeAddress]: {
               balance: undefined,
               code: undefined,
+              /**
+               * If the tx can not be executed (i.e. because signatures are missing)
+               * we overwrite the threshold of the contract with 1 such that the tx can be executed with only 1 signature.
+               * Otherwise the simulation would always fail when checking the owner signatures.
+               */
               storage: canExecuteTx
                 ? undefined
                 : {

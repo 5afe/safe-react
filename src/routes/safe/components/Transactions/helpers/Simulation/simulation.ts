@@ -7,7 +7,8 @@ import axios from 'axios'
 import Web3 from 'web3'
 import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { getMultiSendCallOnlyAddress } from 'src/logic/contracts/safeContracts'
+import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TENDERLY_ORG_NAME, TENDERLY_PROJECT_NAME, TENDERLY_SIMULATE_ENDPOINT_URL } from 'src/utils/constants'
 
 type OptionalExceptFor<T, TRequired extends keyof T = keyof T> = Partial<Pick<T, Exclude<keyof T, TRequired>>> &
@@ -19,9 +20,8 @@ const getSimulation = async (tx: TenderlySimulatePayload): Promise<TenderlySimul
   return response.data
 }
 
-const isSimulationAvailable = (): boolean => {
-  return Boolean(TENDERLY_SIMULATE_ENDPOINT_URL) && Boolean(TENDERLY_ORG_NAME) && Boolean(TENDERLY_PROJECT_NAME)
-}
+const isSimulationAvailable =
+  Boolean(TENDERLY_SIMULATE_ENDPOINT_URL) && Boolean(TENDERLY_ORG_NAME) && Boolean(TENDERLY_PROJECT_NAME)
 
 const getSimulationLink = (simulationId: string): string => {
   return `https://dashboard.tenderly.co/public/${TENDERLY_ORG_NAME}/${TENDERLY_PROJECT_NAME}/simulator/${simulationId}`
@@ -125,13 +125,6 @@ const encodeSafeExecuteTransactionCall = (tx: SignedSafeTransaction): string => 
   return encodedSafeExecuteTransactionCall
 }
 
-const getPreValidatedSignature = (address: string): string => {
-  return `0x000000000000000000000000${address.replace(
-    '0x',
-    '',
-  )}000000000000000000000000000000000000000000000000000000000000000001`
-}
-
 type SimulationTxParams = {
   safeAddress: string
   safeNonce: string
@@ -151,7 +144,7 @@ const getSingleTransactionExecutionData = (tx: SimulationTxParams): string => {
   })
   const signedSafeTransaction: SignedSafeTransaction = {
     ...safeTransaction,
-    signatures: getPreValidatedSignature(tx.executionOwner),
+    signatures: getPreValidatedSignatures(tx.executionOwner),
   }
 
   const executionTransactionData = encodeSafeExecuteTransactionCall(signedSafeTransaction)
@@ -161,7 +154,7 @@ const getSingleTransactionExecutionData = (tx: SimulationTxParams): string => {
 
 const getMultiSendExecutionData = (tx: SimulationTxParams): string => {
   const safeTransactionData = encodeMultiSendCall(tx.transactions)
-  const multiSendAddress = getMultiSendCallOnlyAddress(tx.chainId)
+  const multiSendAddress = getMultisendContractAddress()
   const safeTransaction = buildSafeTransaction({
     to: multiSendAddress,
     value: '0',
@@ -171,7 +164,7 @@ const getMultiSendExecutionData = (tx: SimulationTxParams): string => {
   })
   const signedSafeTransaction: SignedSafeTransaction = {
     ...safeTransaction,
-    signatures: getPreValidatedSignature(tx.executionOwner),
+    signatures: getPreValidatedSignatures(tx.executionOwner),
   }
 
   const executionTransactionData = encodeSafeExecuteTransactionCall(signedSafeTransaction)

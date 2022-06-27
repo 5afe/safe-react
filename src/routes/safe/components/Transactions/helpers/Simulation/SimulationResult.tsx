@@ -1,8 +1,24 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import { Box, IconButton } from '@material-ui/core'
-import { Close } from '@material-ui/icons'
+import { Alert, AlertTitle } from '@material-ui/lab'
 import { FETCH_STATUS } from 'src/utils/requests'
+import styled from 'styled-components'
 import { TenderlySimulation } from './types'
+
+const StyledAlert = styled(Alert)`
+  align-items: flex-start;
+
+  &.MuiAlert-standardError {
+    background-color: #fff3f5;
+  }
+
+  &.MuiAlert-standardSuccess {
+    background-color: #effaf8;
+  }
+
+  & .MuiIconButton-root {
+    padding: 3px !important;
+  }
+`
 
 type SimulationResultProps = {
   simulationRequestStatus: string
@@ -26,24 +42,14 @@ export const SimulationResult = ({
   return (
     <>
       {isSimulationFinished && (
-        <Box
-          bgcolor={isErroneous ? '#FFF3F5' : '#EFFAF8'}
-          alignItems="center"
-          margin="0px"
-          padding="24px"
-          borderRadius="8px"
-        >
+        <>
           {isErroneous ? (
-            <>
-              <Box display="flex" sx={{ gridGap: '4px' }}>
-                <Icon type="alert" color="error" size="sm" />
+            <StyledAlert severity="error" onClose={onClose} icon={<Icon type="alert" color="error" size="sm" />}>
+              <AlertTitle>
                 <Text color={'error'} size="lg">
                   <b>Failed</b>
                 </Text>
-                <IconButton style={{ marginLeft: 'auto', padding: '0px' }} disableRipple onClick={onClose} size="small">
-                  <Close fontSize="small" />
-                </IconButton>
-              </Box>
+              </AlertTitle>
               {requestError ? (
                 <Text color="error" size="lg">
                   An unexpected error occured during simulation: <b>{requestError}</b>
@@ -59,18 +65,14 @@ export const SimulationResult = ({
                   .
                 </Text>
               )}
-            </>
+            </StyledAlert>
           ) : (
-            <>
-              <Box display="flex" paddingBottom={'8px'} sx={{ gridGap: '4px' }}>
-                <Icon type="check" color="primary" size="sm" />
+            <StyledAlert severity="success" icon={<Icon type="check" color="primary" size="sm" />} onClose={onClose}>
+              <AlertTitle>
                 <Text color={'primary'} size="lg">
                   <b>Success</b>
                 </Text>
-                <IconButton style={{ marginLeft: 'auto', padding: '0px' }} disableRipple onClick={onClose} size="small">
-                  <Close fontSize="small" />
-                </IconButton>
-              </Box>
+              </AlertTitle>
               <Text color="inputFilled" size="lg">
                 The batch was successfully simulated. Full simulation report is available{' '}
                 <Link href={simulationLink} target="_blank" rel="noreferrer" size="lg">
@@ -78,9 +80,9 @@ export const SimulationResult = ({
                 </Link>
                 .
               </Text>
-            </>
+            </StyledAlert>
           )}
-        </Box>
+        </>
       )}
     </>
   )

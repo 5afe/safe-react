@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import useAsync from 'src/logic/hooks/useAsync'
 
 const StyledAccordionSummary = styled(AccordionSummary)`
   & .MuiAccordionSummary-content {
@@ -61,29 +62,24 @@ export const TxSimulation = ({
   const userAddress = useSelector(userAccountSelector)
   const web3 = getWeb3()
 
-  const getBlockGasLimit = async () => {
+  const [blockGasLimit] = useAsync(async () => {
     const latestBlock = await web3.eth.getBlock('latest')
-    return parseInt(latestBlock.gasLimit.toString())
-  }
+    return latestBlock.gasLimit
+  }, [web3.eth])
+
+  const simulationGasLimit = Number(gasLimit) || blockGasLimit || 0
 
   const handleSimulation = async () => {
-    simulateTransaction(
-      tx,
-      chainId ?? '4',
-      safeAddress,
-      userAddress,
-      canTxExecute,
-      Number(gasLimit) ?? (await getBlockGasLimit()),
-    )
+    simulateTransaction(tx, chainId ?? '4', safeAddress, userAddress, canTxExecute, simulationGasLimit)
   }
 
-  if (!isSimulationAvailable()) {
+  if (!isSimulationAvailable) {
     return null
   }
 
   const isSimulationFinished =
     simulationRequestStatus === FETCH_STATUS.ERROR || simulationRequestStatus === FETCH_STATUS.SUCCESS
-  const isSimulationLoading = simulationRequestStatus === FETCH_STATUS.LOADING
+  const isSimulationLoading = simulationRequestStatus === FETCH_STATUS.LOADING || simulationGasLimit === 0
   const showSimulationButton = !isSimulationFinished
 
   return showSimulationButton ? (
