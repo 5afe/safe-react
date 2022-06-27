@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core'
 import styled from 'styled-components'
-import { Text, Dot } from '@gnosis.pm/safe-react-components'
-import { StyledTitle } from './styles'
+import { Text, Dot, Icon } from '@gnosis.pm/safe-react-components'
+import { StyledSecurityTitle, StyledTitle } from './styles'
 import { SecurityFeedbackPractice } from '../../types'
 
 type SecurityFeedbackListProps = {
@@ -12,6 +12,10 @@ type SecurityFeedbackListProps = {
 const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps): React.ReactElement => {
   return (
     <>
+      <Icon size="md" type="privacyPolicy" />
+      <StyledSecurityTitle size="lg">
+        Secure your activity with Safe dApps by following simple rules
+      </StyledSecurityTitle>
       <StyledTitle size="sm" centered>
         Best security practices when interacting with Safe Apps
       </StyledTitle>

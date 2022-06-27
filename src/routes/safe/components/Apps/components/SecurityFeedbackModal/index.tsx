@@ -1,6 +1,7 @@
-import { memo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Grid from '@material-ui/core/Grid'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import { alpha } from '@material-ui/core/styles'
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import Slider from './Slider'
@@ -31,17 +32,44 @@ const SecurityFeedbackModal = ({
   isExtendedListReviewed,
 }: SecurityFeedbackModalProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(1)
 
   const handleComplete = () => {
     onConfirm(hideWarning)
   }
 
+  const handleSlideChange = (step: number) => {
+    setCurrentSlide(step + 1)
+  }
+
+  const progressValue = useMemo(() => {
+    let totalSlides = 0
+
+    if (!isConsentAccepted) {
+      totalSlides += 1
+    }
+
+    if (isFirstTimeAccessingApp && isExtendedListReviewed) {
+      totalSlides += 1
+    }
+
+    if (isFirstTimeAccessingApp && !isExtendedListReviewed) {
+      totalSlides += SECURITY_PRACTICES.length
+    }
+
+    if (!isSafeAppInDefaultList && isFirstTimeAccessingApp) {
+      totalSlides += 1
+    }
+
+    return (currentSlide * 100) / totalSlides
+  }, [currentSlide, isConsentAccepted, isExtendedListReviewed, isFirstTimeAccessingApp, isSafeAppInDefaultList])
+
   return (
     <StyledContainer>
       <StyledWrapper>
-        <Grid container justifyContent="center" alignItems="center" direction="column">
-          <StyledIcon type="apps" size="md" color="primary" />
-          <Slider onCancel={onCancel} onComplete={handleComplete}>
+        <StyledLinearProgress variant="determinate" value={progressValue} />
+        <StyledGrid container justifyContent="center" alignItems="center" direction="column">
+          <Slider onCancel={onCancel} onComplete={handleComplete} onSlideChange={handleSlideChange}>
             {!isConsentAccepted && <LegalDisclaimer />}
             {isFirstTimeAccessingApp && isExtendedListReviewed && (
               <SecurityFeedbackList practices={SECURITY_PRACTICES} appUrl={appUrl} />
@@ -53,13 +81,15 @@ const SecurityFeedbackModal = ({
                   <SecurityFeedbackContent key={practice.id} {...practice} />
                 ) : (
                   <SecurityFeedbackContent key={practice.id} title={practice.title}>
-                    <StyledSecurityFeedbackContentText size="xl">{appUrl}</StyledSecurityFeedbackContentText>
+                    <StyledSecurityFeedbackContentText size="xl">
+                      <StyledIcon type="check" color="primary" size="sm" /> {appUrl}
+                    </StyledSecurityFeedbackContentText>
                   </SecurityFeedbackContent>
                 )
               })}
             {!isSafeAppInDefaultList && isFirstTimeAccessingApp && <UnknownAppWarning onHideWarning={setHideWarning} />}
           </Slider>
-        </Grid>
+        </StyledGrid>
       </StyledWrapper>
     </StyledContainer>
   )
@@ -70,26 +100,44 @@ const StyledContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 `
 
 const StyledWrapper = styled.div`
   width: 450px;
-  padding: 50px 24px 24px 24px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
   box-shadow: 1px 2px 10px 0 ${({ theme }) => alpha(theme.colors.shadow.color, 0.18)};
 `
 
+const StyledGrid = styled(Grid)`
+  text-align: center;
+  padding: 24px;
+`
+
 const StyledIcon = styled(Icon)`
-  svg {
-    width: 46px;
-    height: 46px;
-  }
+  position: relative;
+  top: 3px;
 `
 
 const StyledSecurityFeedbackContentText = styled(Text)`
+  font-size: 12px;
   font-weight: bold;
   overflow-wrap: anywhere;
+  background-color: #effaf8;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 75%;
+`
+
+const StyledLinearProgress = styled(LinearProgress)`
+  height: 6px;
+  background-color: #fff;
+  border-radius: 8px 8px 0 0;
+  .MuiLinearProgress-bar {
+    background-color: ${({ theme }) => theme.colors.primary};
+    border-radius: 8px;
+  }
 `
 
 export default memo(SecurityFeedbackModal)

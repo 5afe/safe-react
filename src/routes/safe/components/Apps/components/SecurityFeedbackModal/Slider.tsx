@@ -3,13 +3,11 @@ import styled from 'styled-components'
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@gnosis.pm/safe-react-components'
 import { Box } from '@material-ui/core'
-import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-
 type SliderProps = {
   onCancel: () => void
+  onSlideChange: (slideIndex: number) => void
   onComplete: () => void
 }
-
 type SliderState = {
   translate: number
   activeSlide: number
@@ -19,7 +17,7 @@ type SliderState = {
 
 const SLIDER_TIMEOUT = 500
 
-const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
+const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, children }) => {
   const allSlides = React.Children.toArray(children).filter(Boolean) as React.ReactElement[]
   const stateRef = useRef<SliderState>({
     translate: 1,
@@ -101,24 +99,28 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
       return
     }
 
-    setDisabledBtn(true)
+    const activeSlide = stateRef.current.activeSlide === allSlides.length - 1 ? 0 : stateRef.current.activeSlide + 1
 
+    onSlideChange(activeSlide)
+    setDisabledBtn(true)
     setState({
       ...stateRef.current,
       translate: 2,
-      activeSlide: stateRef.current.activeSlide === allSlides.length - 1 ? 0 : stateRef.current.activeSlide + 1,
+      activeSlide,
     })
   }
 
   const prevSlide = () => {
     if (disabledBtn) return
 
-    setDisabledBtn(true)
+    const activeSlide = stateRef.current.activeSlide === 0 ? allSlides.length - 1 : stateRef.current.activeSlide - 1
 
+    onSlideChange(activeSlide)
+    setDisabledBtn(true)
     setState({
       ...stateRef.current,
       translate: 0,
-      activeSlide: stateRef.current.activeSlide === 0 ? allSlides.length - 1 : stateRef.current.activeSlide - 1,
+      activeSlide,
     })
   }
 
@@ -137,12 +139,6 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onComplete, children }) => {
           ))}
         </StyledInner>
       </StyledContainer>
-      <Box display="flex" justifyContent="center" m={5}>
-        {allSlides.length > 1 &&
-          allSlides.map((_, index) => (
-            <StyledDot key={index} color={index === stateRef.current.activeSlide ? 'primary' : 'secondaryLight'} />
-          ))}
-      </Box>
       <Box display="flex" justifyContent="center" width="100%">
         <Button
           color="primary"
@@ -184,15 +180,7 @@ const StyledInner = styled.div`
   min-width: 100%;
   min-height: 100%;
   transform: translateX(0);
-  height: 400px;
-`
-
-const StyledDot = styled.div<{ color: ThemeColors }>`
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: ${(props) => props.theme.colors[props.color]};
-  margin: 0 8px;
+  height: 420px;
 `
 
 const SliderItem = styled.div`

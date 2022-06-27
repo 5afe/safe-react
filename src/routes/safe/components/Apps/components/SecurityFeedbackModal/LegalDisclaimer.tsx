@@ -1,9 +1,10 @@
 import { Text, Link } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
-import { StyledTitle } from './styles'
+import { StyledSecurityTitle, StyledTitle } from './styles'
 
 const LegalDisclaimer = (): JSX.Element => (
   <>
+    <StyledSecurityTitle size="lg">Before starting to use Safe dApps...</StyledSecurityTitle>
     <StyledTitle size="sm" centered>
       Disclaimer
     </StyledTitle>
