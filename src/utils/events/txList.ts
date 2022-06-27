@@ -26,6 +26,10 @@ const TX_LIST = {
     event: GTM_EVENT.CLICK,
     action: 'Reject transaction',
   },
+  FILTER: {
+    event: GTM_EVENT.CLICK,
+    action: 'Filter transactions',
+  },
   BATCH_EXECUTE: {
     event: GTM_EVENT.CLICK,
     action: 'Batch Execute',

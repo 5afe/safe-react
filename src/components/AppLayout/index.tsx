@@ -11,6 +11,7 @@ import { MobileNotSupported } from './MobileNotSupported'
 import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
+import { InvalidMasterCopyError } from 'src/components/AppLayout/InvalidMasterCopyError'
 
 const Container = styled.div`
   height: 100vh;
@@ -23,6 +24,7 @@ const Container = styled.div`
 
 const HeaderWrapper = styled.nav`
   height: 52px;
+  min-height: 52px;
   width: 100%;
   z-index: 1299;
 
@@ -157,6 +159,8 @@ const Layout: React.FC<Props> = ({
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
+      <InvalidMasterCopyError />
+
       <BodyWrapper>
         {showSideBar && (
           <SidebarWrapper data-testid="sidebar" $expanded={expanded} onClick={onSidebarClick}>
