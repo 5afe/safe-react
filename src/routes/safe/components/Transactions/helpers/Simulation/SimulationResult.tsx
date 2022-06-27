@@ -52,7 +52,7 @@ export const SimulationResult = ({
               </AlertTitle>
               {requestError ? (
                 <Text color="error" size="lg">
-                  An unexpected error occured during simulation: <b>{requestError}</b>
+                  An unexpected error occurred during simulation: <b>{requestError}</b>
                 </Text>
               ) : (
                 <Text color="inputFilled" size="lg">
