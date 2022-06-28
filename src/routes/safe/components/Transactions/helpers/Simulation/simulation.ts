@@ -11,11 +11,11 @@ const getSimulation = async (tx: TenderlySimulatePayload): Promise<TenderlySimul
   return response.data
 }
 
-const isSimulationEnvSetup =
+const isSimulationEnvSet =
   Boolean(TENDERLY_SIMULATE_ENDPOINT_URL) && Boolean(TENDERLY_ORG_NAME) && Boolean(TENDERLY_PROJECT_NAME)
 
 const getSimulationLink = (simulationId: string): string => {
   return `https://dashboard.tenderly.co/public/${TENDERLY_ORG_NAME}/${TENDERLY_PROJECT_NAME}/simulator/${simulationId}`
 }
 
-export { getSimulationLink, getSimulation, isSimulationEnvSetup }
+export { getSimulationLink, getSimulation, isSimulationEnvSet }

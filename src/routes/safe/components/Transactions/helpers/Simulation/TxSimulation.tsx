@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Accordion, AccordionSummary, Loader, Text } from '@gnosis.pm/safe-react-components'
 import { Button } from '@material-ui/core'
 import { FETCH_STATUS } from 'src/utils/requests'
-import { isSimulationEnvSetup } from './simulation'
+import { isSimulationEnvSet } from './simulation'
 import { SimulationResult } from './SimulationResult'
 import { useSimulation } from './useSimulation'
 import Track from 'src/components/Track'
@@ -76,7 +76,7 @@ export const TxSimulation = ({
     simulateTransaction(tx, chainId ?? '4', safeAddress, userAddress, canTxExecute, simulationGasLimit)
   }
 
-  if (!isSimulationEnvSetup && !chainFeatures.includes(FEATURES.TX_SIMULATION)) {
+  if (!isSimulationEnvSet && !chainFeatures.includes(FEATURES.TX_SIMULATION)) {
     return null
   }
 
