@@ -220,7 +220,7 @@ const AddressBookTable = (): ReactElement => {
             defaultOrderBy={AB_NAME_ID}
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
-            label="Owners"
+            label="Address Book"
             size={addressBook?.length || 0}
           >
             {(sortedData) =>

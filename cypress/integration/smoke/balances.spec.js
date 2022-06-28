@@ -3,10 +3,10 @@ const balanceRowTestId = '[data-testid=balance-row]'
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
 const ASSETS_LENGTH = 7
 const DAI_ROW_NUMBER = 0
+const WETH_ROW_NUMBER = 1
+const USDC_ROW_NUMBER = 2
 const TOKEN_AMOUNT_COLUMN = 1
 const FIAT_AMOUNT_COLUMN = 2
-const WETH_ROW_NUMBER = 1
-const USDC_ROW_NUMBER = 3
 
 
 describe('Assets > Coins', () => {
