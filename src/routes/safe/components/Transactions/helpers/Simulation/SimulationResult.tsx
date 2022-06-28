@@ -6,6 +6,7 @@ import { TenderlySimulation } from './types'
 
 const StyledAlert = styled(Alert)`
   align-items: flex-start;
+  width: 100%;
 
   &.MuiAlert-standardError {
     background-color: #fff3f5;

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Accordion, AccordionSummary, Loader, Text } from '@gnosis.pm/safe-react-components'
 import { Button } from '@material-ui/core'
 import { FETCH_STATUS } from 'src/utils/requests'
-import { isSimulationAvailable } from './simulation'
+import { isSimulationEnvSetup } from './simulation'
 import { SimulationResult } from './SimulationResult'
 import { useSimulation } from './useSimulation'
 import Track from 'src/components/Track'
@@ -14,6 +14,8 @@ import { currentSafe } from 'src/logic/safe/store/selectors'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import useAsync from 'src/logic/hooks/useAsync'
+import { enabledFeatures } from 'src/logic/safe/utils/safeVersion'
+import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const StyledAccordionSummary = styled(AccordionSummary)`
   & .MuiAccordionSummary-content {
@@ -59,6 +61,7 @@ export const TxSimulation = ({
   const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, requestError, resetSimulation } =
     useSimulation()
   const { chainId, address: safeAddress } = useSelector(currentSafe)
+  const chainFeatures = enabledFeatures()
   const userAddress = useSelector(userAccountSelector)
   const web3 = getWeb3()
 
@@ -73,7 +76,7 @@ export const TxSimulation = ({
     simulateTransaction(tx, chainId ?? '4', safeAddress, userAddress, canTxExecute, simulationGasLimit)
   }
 
-  if (!isSimulationAvailable) {
+  if (!isSimulationEnvSetup && !chainFeatures.includes(FEATURES.TX_SIMULATION)) {
     return null
   }
 

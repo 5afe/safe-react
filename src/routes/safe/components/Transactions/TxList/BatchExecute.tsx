@@ -44,7 +44,6 @@ import { BatchExecuteButton } from 'src/routes/safe/components/Transactions/TxLi
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
 import { TxSimulation } from '../helpers/Simulation/TxSimulation'
-import { isSimulationAvailable } from '../helpers/Simulation/simulation'
 
 const DecodedTransactions = ({
   transactions,
@@ -246,9 +245,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               )}
             </DecodeTxsWrapper>
           </Row>
-          {multiSendTx && isSimulationAvailable && (
-            <TxSimulation canTxExecute tx={multiSendTx} disabled={buttonStatus !== ButtonStatus.READY} />
-          )}
+          {multiSendTx && <TxSimulation canTxExecute tx={multiSendTx} disabled={buttonStatus !== ButtonStatus.READY} />}
 
           <Paragraph size="md" align="center" color="disabled" noMargin>
             Be aware that if any of the included transactions revert, none of them will be executed. This will result in
