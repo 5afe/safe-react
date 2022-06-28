@@ -14,7 +14,9 @@ const DelegateCallWarning = ({ showWarning = false }: { showWarning: boolean }):
         {showWarning && (
           <>
             <br />
-            <Link href={UNEXPECTED_DELEGATE_ARTICLE}>Learn more</Link>
+            <Link href={UNEXPECTED_DELEGATE_ARTICLE} rel="noopener noreferrer" target="_blank">
+              Learn more
+            </Link>
           </>
         )}
       </>
