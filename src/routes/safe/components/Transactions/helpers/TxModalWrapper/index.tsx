@@ -307,7 +307,7 @@ export const TxModalWrapper = ({
                 to: safeAddress,
               }}
               gasLimit={gasLimit}
-              disabled={submitStatus !== ButtonStatus.READY}
+              disabled={isSubmitDisabled || submitStatus !== ButtonStatus.READY}
             />
           </Container>
 
