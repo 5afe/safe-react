@@ -115,6 +115,8 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   border-bottom: 2px solid ${grey400};
   padding-right: 72px;
   position: relative;
+
+  background-color: ${background};
 `
 
 const StyledExpandIcon = styled(ExpandMoreIcon)`
