@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Icon, Text } from '@gnosis.pm/safe-react-components'
 import { StyledSecurityTitle, StyledTitle } from './styles'
 import { SecurityFeedbackPractice } from '../../types'
-import { Icon } from '@gnosis.pm/safe-react-components'
 
 type SecurityFeedbackContentProps = Omit<SecurityFeedbackPractice, 'id'>
 
 const SecurityFeedbackContent: React.FC<SecurityFeedbackContentProps> = ({
   title,
+  subtitle,
   imageSrc,
   children,
 }): React.ReactElement => {
@@ -22,6 +23,12 @@ const SecurityFeedbackContent: React.FC<SecurityFeedbackContentProps> = ({
       <StyledTitle size="xs" centered>
         {title}
       </StyledTitle>
+
+      {subtitle && (
+        <StyledText size="xl" color="text">
+          {subtitle}
+        </StyledText>
+      )}
     </>
   )
 }
@@ -32,6 +39,10 @@ const StyledContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 10px 0;
+`
+
+const StyledText = styled(Text)`
+  text-align: center;
 `
 
 const StyledImage = styled.img`

@@ -97,7 +97,7 @@ const SecurityFeedbackModal = ({
                 return practice.imageSrc ? (
                   <SecurityFeedbackContent key={practice.id} {...practice} />
                 ) : (
-                  <SecurityFeedbackContent key={practice.id} title={practice.title}>
+                  <SecurityFeedbackContent key={practice.id} {...practice}>
                     <StyledSecurityFeedbackContentText size="xl">
                       <StyledIcon type="check" color="primary" size="sm" /> {appUrl}
                     </StyledSecurityFeedbackContentText>

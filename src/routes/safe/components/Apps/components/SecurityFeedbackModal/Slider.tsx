@@ -180,7 +180,7 @@ const StyledInner = styled.div`
   min-width: 100%;
   min-height: 100%;
   transform: translateX(0);
-  height: 420px;
+  height: 430px;
 `
 
 const SliderItem = styled.div`

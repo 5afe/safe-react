@@ -27,6 +27,7 @@ const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps):
           </StyledDot>
           <Box flexDirection="column">
             <Text size="lg">{practice.title}</Text>
+            {practice.subtitle && <Text size="lg">{practice.subtitle}</Text>}
             {!practice.imageSrc && (
               <StyledText size="lg">
                 <b>{appUrl}</b>

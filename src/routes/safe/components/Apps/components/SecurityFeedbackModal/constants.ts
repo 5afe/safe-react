@@ -6,7 +6,8 @@ export const SECURITY_PRACTICES = [
   },
   {
     id: '2',
-    title: 'Review the application you are trying to use. Do you know the domain and trust it?',
+    title: 'Review the application you are trying to use',
+    subtitle: 'Do you know the domain and trust it?',
   },
   {
     id: '3',
@@ -15,7 +16,7 @@ export const SECURITY_PRACTICES = [
   },
   {
     id: '4',
-    title: 'Review your transaction queue if your Safe has more than one owner. Avoid pending transactions',
+    title: 'Review your transaction queue and history to double check the transaction data',
     imageSrc: './safe-apps-security-practices/3.png',
   },
 ]

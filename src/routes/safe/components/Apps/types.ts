@@ -15,5 +15,6 @@ export type StoredSafeApp = {
 export type SecurityFeedbackPractice = {
   id: string
   title: string
+  subtitle?: string
   imageSrc?: string
 }
