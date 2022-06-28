@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandLessRounded'
 import CloseIcon from '@material-ui/icons/CloseRounded'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import styled from 'styled-components'
+import Backdrop from '@material-ui/core/Backdrop'
 
 import { black300 } from 'src/theme/variables'
 import { TxsInfiniteScroll } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'
@@ -44,45 +45,48 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
   }, [queuedTxCount, setClosedBar])
 
   return (
-    <Wrapper expanded={expanded}>
-      <ClickAwayListener onClickAway={() => setExpanded(false)} mouseEvent="onMouseDown" touchEvent="onTouchStart">
-        <Accordion
-          data-testid="pending-transactions-queue"
-          expanded={expanded}
-          onChange={collapseQueueBar}
-          TransitionProps={{
-            timeout: {
-              appear: 400,
-              enter: 0,
-              exit: 500,
-            },
-          }}
-        >
-          <StyledAccordionSummary data-testid="pending-transactions-queue-summary" expandIcon={<StyledExpandIcon />}>
-            <Text size="xl" color="primary" strong>
-              ({queuedTxCount}) Transaction Queue
-            </Text>
+    <>
+      <Wrapper expanded={expanded}>
+        <ClickAwayListener onClickAway={() => setExpanded(false)} mouseEvent="onMouseDown" touchEvent="onTouchStart">
+          <Accordion
+            data-testid="pending-transactions-queue"
+            expanded={expanded}
+            onChange={collapseQueueBar}
+            TransitionProps={{
+              timeout: {
+                appear: 400,
+                enter: 0,
+                exit: 500,
+              },
+            }}
+          >
+            <StyledAccordionSummary data-testid="pending-transactions-queue-summary" expandIcon={<StyledExpandIcon />}>
+              <Text size="xl" color="primary" strong>
+                ({queuedTxCount}) Transaction Queue
+              </Text>
 
-            <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue">
-              <CloseIcon />
-            </StyledCloseIconButton>
-          </StyledAccordionSummary>
-          <StyledAccordionDetails>
-            <TxsInfiniteScroll next={next} isLoading={isLoading}>
-              {/* Next list */}
-              <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-                {transactions && <QueueTxList transactions={transactions?.next.transactions} />}
-              </TxLocationContext.Provider>
+              <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue">
+                <CloseIcon />
+              </StyledCloseIconButton>
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>
+              <TxsInfiniteScroll next={next} isLoading={isLoading}>
+                {/* Next list */}
+                <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
+                  {transactions && <QueueTxList transactions={transactions?.next.transactions} />}
+                </TxLocationContext.Provider>
 
-              {/* Queue list */}
-              <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-                {transactions && <QueueTxList transactions={transactions?.queue.transactions} />}
-              </TxLocationContext.Provider>
-            </TxsInfiniteScroll>
-          </StyledAccordionDetails>
-        </Accordion>
-      </ClickAwayListener>
-    </Wrapper>
+                {/* Queue list */}
+                <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+                  {transactions && <QueueTxList transactions={transactions?.queue.transactions} />}
+                </TxLocationContext.Provider>
+              </TxsInfiniteScroll>
+            </StyledAccordionDetails>
+          </Accordion>
+        </ClickAwayListener>
+      </Wrapper>
+      <StyledBackdrop open={expanded} />
+    </>
   )
 }
 
@@ -93,6 +97,7 @@ const Wrapper = styled.div<{ expanded: boolean }>`
   bottom: ${({ expanded }) => (expanded ? 'calc(100vh - 375px)' : '0')};
   right: 0;
   height: 72px;
+  z-index: 1;
 
   transition: bottom 0.35s ease-in-out 0s;
 `
@@ -122,4 +127,8 @@ const StyledCloseIconButton = styled(IconButton)`
 
   color: ${black300};
   margin-right: 4px;
+`
+
+const StyledBackdrop = styled(Backdrop)`
+  z-index: 0;
 `
