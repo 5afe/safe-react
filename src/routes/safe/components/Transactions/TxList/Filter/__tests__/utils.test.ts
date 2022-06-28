@@ -120,7 +120,7 @@ describe('utils', () => {
 
       expect(utils.getIncomingFilter(filter)).toEqual({
         execution_date__gte: '1970-01-01T00:00:00.000Z',
-        execution_date__lte: '2000-01-01T00:00:00.000Z',
+        execution_date__lte: '2000-01-01T23:59:59.999Z',
         value: '123000000000000000000',
       })
     })
@@ -140,7 +140,7 @@ describe('utils', () => {
       expect(utils.getMultisigFilter(filter)).toEqual({
         to: '0x1234567890123456789012345678901234567890',
         execution_date__gte: '1970-01-01T00:00:00.000Z',
-        execution_date__lte: '2000-01-01T00:00:00.000Z',
+        execution_date__lte: '2000-01-01T23:59:59.999Z',
         value: '123000000000000000000',
         nonce: '123',
       })
@@ -159,7 +159,7 @@ describe('utils', () => {
       expect(utils.getMultisigFilter(filter, true)).toEqual({
         to: '0x1234567890123456789012345678901234567890',
         execution_date__gte: '1970-01-01T00:00:00.000Z',
-        execution_date__lte: '2000-01-01T00:00:00.000Z',
+        execution_date__lte: '2000-01-01T23:59:59.999Z',
         value: '123000000000000000000',
         nonce: '123',
         executed: 'true',

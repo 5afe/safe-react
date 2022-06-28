@@ -125,7 +125,7 @@ const Filter = (): ReactElement => {
     defaultValues: initialValues,
     shouldUnregister: true,
   })
-  const { handleSubmit, reset, watch, control } = methods
+  const { handleSubmit, reset, watch, control, getValues } = methods
 
   const toggleFilter = () => {
     if (showFilter) {
@@ -235,6 +235,14 @@ const Filter = (): ReactElement => {
                             label="From"
                             type="date"
                             control={control}
+                            rules={{
+                              validate: (value) => {
+                                const to = getValues(DATE_TO_FIELD_NAME)
+                                if (value && to && value > to) {
+                                  return 'Cannot be after to date'
+                                }
+                              },
+                            }}
                           />
                           {/* @ts-expect-error - styled-components don't have strict types */}
                           <StyledRHFTextField<FilterForm>
@@ -242,6 +250,15 @@ const Filter = (): ReactElement => {
                             label="To"
                             type="date"
                             control={control}
+                            rules={{
+                              validate: (value) => {
+                                const from = getValues(DATE_FROM_FIELD_NAME)
+                                if (value && from && value < from) {
+                                  console.log('invalid')
+                                  return 'Cannot be before from date'
+                                }
+                              },
+                            }}
                           />
                           <RHFTextField<FilterForm>
                             name={AMOUNT_FIELD_NAME}

@@ -81,10 +81,15 @@ const getTransactionFilter = ({
   execution_date__lte,
   value,
 }: Filter): Partial<IncomingFilter | OutgoingFilter> => {
-  const getISOString = (date: string): string => new Date(date).toISOString()
+  const getStartOfDay = (date: string): number => new Date(date).setUTCHours(0, 0, 0, 0)
+  const getEndOfDay = (date: string): number => new Date(date).setUTCHours(23, 59, 59, 999)
   return {
-    ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
-    ...(execution_date__lte && { execution_date__lte: getISOString(execution_date__lte) }),
+    ...(execution_date__gte && {
+      execution_date__gte: new Date(getStartOfDay(execution_date__gte)).toISOString(),
+    }),
+    ...(execution_date__lte && {
+      execution_date__lte: new Date(getEndOfDay(execution_date__lte)).toISOString(),
+    }),
     ...(value && { value: toWei(value) }),
   }
 }
