@@ -18,15 +18,29 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
     setToggleHideWarning(!toggleHideWarning)
   }
 
+  const isColumnLayout = !!onHideWarning
+
   return (
-    <StyledBox display="flex" flexDirection="column" height="100%" alignItems="center" mt={8}>
-      <StyledIcon type="alert" size="md" />
-      <StyledTitle size="sm" bold centered={!!onHideWarning}>
-        Warning
-      </StyledTitle>
-      <StyledWarningText size="xl">The application you are trying to use is not on our approved list</StyledWarningText>
+    <StyledBox
+      display={isColumnLayout ? 'flex' : 'block'}
+      flexDirection="column"
+      height={isColumnLayout ? '100%' : 'auto'}
+      alignItems="center"
+      mt={isColumnLayout ? 8 : 0}
+    >
+      <Box display={isColumnLayout ? 'block' : 'flex'} alignItems="center">
+        <StyledIcon type="alert" size="md" isColumnLayout={isColumnLayout} />
+        <StyledWarningTitle size="sm" bold isColumnLayout={isColumnLayout}>
+          Warning
+        </StyledWarningTitle>
+      </Box>
+      <StyledWarningText isColumnLayout={isColumnLayout} size="xl">
+        The application you are trying to use is not on our approved list
+      </StyledWarningText>
       <br />
-      <StyledText size="lg">Check the link you are using and ensure it comes from a trusted source</StyledText>
+      <StyledText isColumnLayout={isColumnLayout} size="lg">
+        Check the link you are using and ensure it comes from a trusted source
+      </StyledText>
       {onHideWarning && (
         <StyledFormControlLabel
           control={
@@ -36,7 +50,7 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
               name="Warning message preference"
             />
           }
-          label="Do not show this warning again"
+          label="Don't show this warning again"
         />
       )}
     </StyledBox>
@@ -47,20 +61,41 @@ const StyledBox = styled(Box)`
   color: #e8663d;
 `
 
-const StyledWarningText = styled(Text)`
+const StyledWarningTitle = styled(StyledTitle)<{ isColumnLayout: boolean }>`
+  font-size: 24px;
+  margin-left: 4px;
+  margin-top: ${({ isColumnLayout }) => (isColumnLayout ? '12px' : '24px')};
+`
+
+const StyledWarningText = styled(Text)<{ isColumnLayout: boolean }>`
   color: inherit;
-  text-align: center;
+  text-align: ${({ isColumnLayout }) => (isColumnLayout ? 'center' : 'left')};
 `
 
-const StyledText = styled(Text)`
-  text-align: center;
+const StyledText = styled(Text)<{ isColumnLayout: boolean }>`
+  text-align: ${({ isColumnLayout }) => (isColumnLayout ? 'center' : 'left')};
 `
 
-const StyledIcon = styled(Icon)``
+const StyledIcon = styled(Icon)<{ isColumnLayout: boolean }>`
+  svg {
+    width: ${({ isColumnLayout }) => (isColumnLayout ? '32px' : '24px')};
+    height: ${({ isColumnLayout }) => (isColumnLayout ? '32px' : '24px')};
+  }
+  .icon-color {
+    fill: #e8663d;
+  }
+
+  .icon-stroke {
+    stroke: #e8663d;
+  }
+`
 
 const StyledFormControlLabel = styled(FormControlLabel)`
   flex: 1;
   color: #000;
+  .MuiIconButton-root:not(.Mui-checked) {
+    color: ${({ theme }) => theme.colors.inputDisabled};
+  }
 `
 
 export default UnknownAppWarning

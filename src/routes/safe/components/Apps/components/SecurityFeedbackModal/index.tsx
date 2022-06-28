@@ -42,7 +42,7 @@ const SecurityFeedbackModal = ({
     setCurrentSlide(step + 1)
   }
 
-  const progressValue = useMemo(() => {
+  const totalSlides = useMemo(() => {
     let totalSlides = 0
 
     if (!isConsentAccepted) {
@@ -61,13 +61,30 @@ const SecurityFeedbackModal = ({
       totalSlides += 1
     }
 
+    return totalSlides
+  }, [isConsentAccepted, isExtendedListReviewed, isFirstTimeAccessingApp, isSafeAppInDefaultList])
+
+  const progressValue = useMemo(() => {
     return (currentSlide * 100) / totalSlides
-  }, [currentSlide, isConsentAccepted, isExtendedListReviewed, isFirstTimeAccessingApp, isSafeAppInDefaultList])
+  }, [currentSlide, totalSlides])
+
+  const isLastSlide = useMemo(() => {
+    return currentSlide === totalSlides
+  }, [currentSlide, totalSlides])
+
+  const shouldShowUnknownAppWarning = useMemo(
+    () => !isSafeAppInDefaultList && isFirstTimeAccessingApp,
+    [isFirstTimeAccessingApp, isSafeAppInDefaultList],
+  )
 
   return (
     <StyledContainer>
       <StyledWrapper>
-        <StyledLinearProgress variant="determinate" value={progressValue} />
+        <StyledLinearProgress
+          variant="determinate"
+          value={progressValue}
+          isWarningStep={isLastSlide && shouldShowUnknownAppWarning}
+        />
         <StyledGrid container justifyContent="center" alignItems="center" direction="column">
           <Slider onCancel={onCancel} onComplete={handleComplete} onSlideChange={handleSlideChange}>
             {!isConsentAccepted && <LegalDisclaimer />}
@@ -87,7 +104,7 @@ const SecurityFeedbackModal = ({
                   </SecurityFeedbackContent>
                 )
               })}
-            {!isSafeAppInDefaultList && isFirstTimeAccessingApp && <UnknownAppWarning onHideWarning={setHideWarning} />}
+            {shouldShowUnknownAppWarning && <UnknownAppWarning onHideWarning={setHideWarning} />}
           </Slider>
         </StyledGrid>
       </StyledWrapper>
@@ -130,12 +147,12 @@ const StyledSecurityFeedbackContentText = styled(Text)`
   max-width: 75%;
 `
 
-const StyledLinearProgress = styled(LinearProgress)`
+const StyledLinearProgress = styled(LinearProgress)<{ isWarningStep: boolean }>`
   height: 6px;
   background-color: #fff;
   border-radius: 8px 8px 0 0;
   .MuiLinearProgress-bar {
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme, isWarningStep }) => (isWarningStep ? '#e8663d' : theme.colors.primary)};
     border-radius: 8px;
   }
 `
