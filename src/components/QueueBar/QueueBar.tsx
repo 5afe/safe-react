@@ -10,12 +10,11 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import styled from 'styled-components'
 import Backdrop from '@material-ui/core/Backdrop'
 
-import { black300 } from 'src/theme/variables'
+import { black300, primary200, grey400, background } from 'src/theme/variables'
 import { TxsInfiniteScroll } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import { QueueTxList } from 'src/routes/safe/components/Transactions/TxList/QueueTxList'
 import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
-import { grey400, background } from 'src/theme/variables'
 
 type QueueBarProps = {
   setClosedBar: (close: boolean) => void
@@ -116,7 +115,9 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   padding-right: 72px;
   position: relative;
 
-  background-color: ${background};
+  &:hover {
+    background-color: ${primary200};
+  }
 `
 
 const StyledExpandIcon = styled(ExpandMoreIcon)`
