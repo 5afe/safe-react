@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -11,7 +11,7 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt, getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
+import { encodeMultiSendCall, getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getBatchableTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
@@ -42,6 +42,8 @@ import { TransactionFailText } from 'src/components/TransactionFailText'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { BatchExecuteButton } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteButton'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
+import { TxSimulation } from '../helpers/Simulation/TxSimulation'
 
 const DecodedTransactions = ({
   transactions,
@@ -99,16 +101,15 @@ async function getTxDetails(transactions: Transaction[], dispatch: Dispatch) {
   )
 }
 
-async function getBatchExecuteData(
-  dispatch: Dispatch,
+function toMultiSendTxs(
   transactions: Transaction[],
   safeAddress: string,
   safeVersion: string,
   account: string,
-) {
+): MultiSendTx[] {
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
-  const txs: MultiSendTx[] = transactions.map((transaction) => {
+  return transactions.map((transaction) => {
     const txInfo = getTxInfo(transaction, safeAddress)
     const confirmations = getTxConfirmations(transaction)
     const sigs = generateSignaturesFromTxConfirmations(confirmations)
@@ -122,6 +123,15 @@ async function getBatchExecuteData(
       data,
     }
   })
+}
+
+async function getBatchExecuteData(
+  transactions: Transaction[],
+  safeAddress: string,
+  safeVersion: string,
+  account: string,
+) {
+  const txs = toMultiSendTxs(transactions, safeAddress, safeVersion, account)
 
   return getMultiSendJoinedTxs(txs)
 }
@@ -156,13 +166,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
     setTxsWithDetails(transactionsWithDetails)
 
     try {
-      const batchExecuteData = await getBatchExecuteData(
-        dispatch,
-        transactionsWithDetails,
-        safeAddress,
-        currentVersion,
-        account,
-      )
+      const batchExecuteData = await getBatchExecuteData(transactionsWithDetails, safeAddress, currentVersion, account)
       setButtonStatus(isSameAddressAsSafe ? ButtonStatus.DISABLED : ButtonStatus.READY)
       setMultiSendCallData(batchExecuteData)
     } catch (err) {
@@ -183,6 +187,17 @@ export const BatchExecute = React.memo((): ReactElement | null => {
 
     toggleModal()
   }
+
+  const multiSendTx: Omit<BaseTransaction, 'value'> | null = useMemo(() => {
+    if (!account || !safeAddress || !currentVersion || txsWithDetails.length === 0) {
+      return null
+    }
+    const txs = toMultiSendTxs(txsWithDetails, safeAddress, currentVersion, account)
+    return {
+      data: encodeMultiSendCall(txs),
+      to: getMultisendContractAddress(),
+    }
+  }, [account, txsWithDetails, currentVersion, safeAddress])
 
   if (!account) {
     return null
@@ -217,7 +232,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               explorerUrl={getExplorerInfo(multiSendContractAddress)}
             />
           </Row>
-          <Row margin="md">
+          <Row>
             <DecodeTxsWrapper>
               {txsWithDetails.length ? (
                 <DecodedTransactions transactions={txsWithDetails} safeAddress={safeAddress} />
@@ -230,6 +245,8 @@ export const BatchExecute = React.memo((): ReactElement | null => {
               )}
             </DecodeTxsWrapper>
           </Row>
+          {multiSendTx && <TxSimulation canTxExecute tx={multiSendTx} disabled={buttonStatus !== ButtonStatus.READY} />}
+
           <Paragraph size="md" align="center" color="disabled" noMargin>
             Be aware that if any of the included transactions revert, none of them will be executed. This will result in
             the loss of the allocated transaction fees.
