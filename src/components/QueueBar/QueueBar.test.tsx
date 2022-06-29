@@ -3,6 +3,12 @@ import QueueBar from './QueueBar'
 import { CHAIN_ID } from 'src/config/chain.d'
 import { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 
+const MULTISEND_ADDRESS = '0x4242424242424242424242424242424242424242'
+jest.mock('src/logic/contracts/safeContracts', () => ({
+  ...jest.requireActual('src/logic/contracts/safeContracts'),
+  getMultisendContractAddress: () => MULTISEND_ADDRESS,
+}))
+
 const safeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'
 const ownerAddress = '0x680cde08860141F9D223cE4E620B10Cd6741037E'
 const pendingOwnerAddress = '0x6B93e189650eEa58186161bB80F786E0dF86aF16'

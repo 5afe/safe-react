@@ -11,10 +11,8 @@ import styled from 'styled-components'
 import Backdrop from '@material-ui/core/Backdrop'
 
 import { black300, primary200, grey400, background } from 'src/theme/variables'
-import { TxsInfiniteScroll } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'
-import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
-import { QueueTxList } from 'src/routes/safe/components/Transactions/TxList/QueueTxList'
 import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
+import { QueueTransactions } from 'src/routes/safe/components/Transactions/TxList/QueueTransactions'
 
 type QueueBarProps = {
   setClosedBar: (close: boolean) => void
@@ -23,7 +21,7 @@ type QueueBarProps = {
 const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
   const [expanded, setExpanded] = useState(false)
 
-  const { isLoading, next, transactions } = usePagedQueuedTransactions()
+  const { transactions } = usePagedQueuedTransactions()
 
   const collapseQueueBar = () => {
     setExpanded((expanded) => !expanded)
@@ -69,17 +67,7 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
               </StyledCloseIconButton>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-              <TxsInfiniteScroll next={next} isLoading={isLoading}>
-                {/* Next list */}
-                <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-                  {transactions && <QueueTxList transactions={transactions?.next.transactions} />}
-                </TxLocationContext.Provider>
-
-                {/* Queue list */}
-                <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-                  {transactions && <QueueTxList transactions={transactions?.queue.transactions} />}
-                </TxLocationContext.Provider>
-              </TxsInfiniteScroll>
+              <QueueTransactions />
             </StyledAccordionDetails>
           </Accordion>
         </ClickAwayListener>
@@ -103,9 +91,16 @@ const Wrapper = styled.div<{ expanded: boolean }>`
 
 const StyledAccordionDetails = styled(AccordionDetails)`
   background-color: ${background};
+  flex-direction: column;
 
-  > :nth-child(1) {
+  > span {
+    margin-top: -60px;
+    margin-right: 80px;
+  }
+
+  > div#infinite-scroll-container {
     height: calc(100vh - 400px);
+    margin-top: 10px;
   }
 `
 
