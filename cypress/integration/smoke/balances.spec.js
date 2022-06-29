@@ -2,12 +2,9 @@ const balanceRowTestId = '[data-testid=balance-row]'
 
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
 const ASSETS_LENGTH = 7
-const DAI_ROW_NUMBER = 0
+const ASSET_NAME_COLUMN = 0
 const TOKEN_AMOUNT_COLUMN = 1
 const FIAT_AMOUNT_COLUMN = 2
-const WETH_ROW_NUMBER = 1
-const USDC_ROW_NUMBER = 3
-
 
 describe('Assets > Coins', () => {
   // Fiat balance regex
@@ -27,51 +24,63 @@ describe('Assets > Coins', () => {
     })
 
     it('should have Dai', () => {
-      // First row should be Dai
-      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).contains('Dai')
+      // Row should have an image with alt text "Dai"
+      cy.contains('Dai')
+        .parents('tr')
+        .within(() => {
+          cy.get('img[alt="Dai"]').should('be.visible')
+        })
 
-      // Row should have a image with alt text "Dai"
-      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).find('img[alt="Dai"]').should('be.visible')
+      // Asset name column contains link to block explorer
+      cy.contains('Dai')
+        .parents('tr')
+        .find('td')
+        .eq(ASSET_NAME_COLUMN)
+        .get('a[aria-label="Show details on Etherscan"]')
+        .should('be.visible')
 
-      // Link to show details
-      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).find('a[aria-label="Show details on Etherscan"]').should('be.visible')
-
-      // Balance should end with DAI
-      cy.get(balanceRowTestId).eq(DAI_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('DAI')
+      // Balance should contain DAI
+      cy.contains('Dai').parents('tr').find('td').eq(TOKEN_AMOUNT_COLUMN).contains('DAI')
     })
 
     it('should have Wrapped Ether', () => {
-      // Second row should be Wrapped Ether
-      cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).contains('Wrapped Ether')
+      // Row should have an image with alt text "Wrapped Ether"
+      cy.contains('Wrapped Ether')
+        .parents('tr')
+        .within(() => {
+          cy.get('img[alt="Wrapped Ether"]').should('be.visible')
+        })
 
-      // Row should have a image with alt text "Wrapped Eth"
-      cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).find('img[alt="Wrapped Ether"]').should('be.visible')
-
-      // Link to show details
-      cy.get(balanceRowTestId)
-        .eq(WETH_ROW_NUMBER)
-        .find('a[aria-label="Show details on Etherscan"]')
+      // Asset name column contains link to block explorer
+      cy.contains('Wrapped Ether')
+        .parents('tr')
+        .find('td')
+        .eq(ASSET_NAME_COLUMN)
+        .get('a[aria-label="Show details on Etherscan"]')
         .should('be.visible')
 
-      // Balance should end with WETH
-      cy.get(balanceRowTestId).eq(WETH_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('WETH')
+      // Balance should contain WETH
+      cy.contains('Wrapped Ether').parents('tr').find('td').eq(TOKEN_AMOUNT_COLUMN).contains('WETH')
     })
 
     it('should have USD Coin', () => {
-      // Third row should be USD Coin
-      cy.get(balanceRowTestId).eq(USDC_ROW_NUMBER).contains('USD Coin')
+      // Row should have an image with alt text "USD Coin"
+      cy.contains('USD Coin')
+        .parents('tr')
+        .within(() => {
+          cy.get('img[alt="USD Coin"]').should('be.visible')
+        })
 
-      // Row should have a image with alt text "USD Coin"
-      cy.get(balanceRowTestId).eq(USDC_ROW_NUMBER).find('img[alt="USD Coin"]').should('be.visible')
-
-      // Link to show details
-      cy.get(balanceRowTestId)
-        .eq(USDC_ROW_NUMBER)
-        .find('a[aria-label="Show details on Etherscan"]')
+      // Asset name column contains link to block explorer
+      cy.contains('USD Coin')
+        .parents('tr')
+        .find('td')
+        .eq(ASSET_NAME_COLUMN)
+        .get('a[aria-label="Show details on Etherscan"]')
         .should('be.visible')
 
-      // Balance should end with USDC
-      cy.get(balanceRowTestId).eq(USDC_ROW_NUMBER).find('td').eq(TOKEN_AMOUNT_COLUMN).contains('USDC')
+      // Balance should contain USDC
+      cy.contains('USD Coin').parents('tr').find('td').eq(TOKEN_AMOUNT_COLUMN).contains('USDC')
     })
   })
 

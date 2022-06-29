@@ -37,7 +37,7 @@ type Props = {
 }
 
 const AlertTooltipWarning = ({ tooltip, message, isWarning = false }: Props): ReactElement => (
-  <StyledTooltip title={tooltip} arrow placement="top-start">
+  <StyledTooltip title={tooltip} arrow placement="top-start" interactive>
     <StyledAlert severity="info" $isWarning={isWarning}>
       {message}
     </StyledAlert>

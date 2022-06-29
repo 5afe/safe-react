@@ -1,5 +1,6 @@
 import 'cypress-file-upload'
 const path = require('path')
+import { format } from 'date-fns'
 
 const NAME = 'Owner1'
 const EDITED_NAME = 'Edited Owner1'
@@ -17,55 +18,102 @@ const GNO_CSV_ENTRY = {
 }
 
 describe('Address book', () => {
-  it('should add and remove Address Book entries', () => {
+  before(() => {
     cy.visit(`/${RINKEBY_TEST_SAFE}/address-book`)
+    cy.contains('a', 'Accept selection').click()
+    // Waits for the Address Book table to be in the page
+    cy.get('[aria-labelledby="Address Book"]').should('be.visible')
+  })
 
-    // Add a new entry manually
-    cy.findByText('Create entry', { timeout: 6000 }).click()
-    cy.findByTestId('create-entry-input-name').type(NAME)
-    cy.findByTestId('create-entry-input-address').type(ENS_NAME)
-    cy.findByTestId('save-new-entry-btn-id').click()
+  describe('should add remove and edit entries in the address book', () => {
+    it('should add an entry', () => {
+      // Add a new entry manually
+      cy.findByText('Create entry').click()
+      cy.findByTestId('create-entry-input-name').type(NAME)
+      cy.findByTestId('create-entry-input-address').type(ENS_NAME)
+      cy.findByTestId('save-new-entry-btn-id').click()
 
-    cy.findByText(NAME).should('exist')
-    cy.findByText(ADDRESS).should('exist')
+      cy.findByText(NAME).should('exist')
+      cy.findByText(ADDRESS).should('exist')
 
-    // Edit the entry
-    cy.get('[title="Edit entry"]').click({ force: true }) //This is because the button is hidden
-    cy.findByTestId('create-entry-input-name').clear().type(EDITED_NAME)
-    cy.findByTestId('save-new-entry-btn-id').click()
-    cy.findByText(NAME).should('not.exist')
-    cy.findByText(EDITED_NAME).should('exist')
+      // Close the notification
+      cy.get('[aria-describedby="notistack-snackbar"]').find('button').click()
+    })
 
-    // Delete the entry
-    cy.get('[title="Delete entry"]').click({ force: true }) //This is because the button is hidden
-    cy.findByText('Delete').should('exist').click()
-    cy.findByText(EDITED_NAME).should('not.exist')
-    cy.get('.MuiSnackbarContent-action').click({ multiple: true }) // close the snackbar
+    it('should edit an entry', () => {
+      // Click the edit button in the first entry
+      cy.get('[data-testid=address-book-row]')
+        .first()
+        .get('[title="Edit entry"]')
+        // <div> is not visible because its parent has CSS property: visibility: hidden
+        // so we have to use {force: true}
+        .click({ force: true })
 
-    // Import CSV
-    cy.get('[data-track="address-book: Import"]').click()
-    cy.get('[type="file"]').attachFile('../fixtures/address_book_test.csv')
-    cy.get('.modal-footer').findByText('Import').click()
-    cy.findByText(RINKEBY_CSV_ENTRY.name).should('exist')
-    cy.findByText(RINKEBY_CSV_ENTRY.address).should('exist')
+      cy.findByTestId('create-entry-input-name').clear().type(EDITED_NAME)
+      cy.findByTestId('save-new-entry-btn-id').click()
+      cy.findByText(NAME).should('not.exist')
+      cy.findByText(EDITED_NAME).should('exist')
 
-    // Go to a Safe on Gnosis Chain
-    cy.get('nav').findByText('Rinkeby').click()
-    cy.findByText('Gnosis Chain').click()
-    cy.visit(`/${GNO_TEST_SAFE}/address-book`)
-    cy.findByText(GNO_CSV_ENTRY.name).should('exist')
-    cy.findByText(GNO_CSV_ENTRY.address).should('exist')
+      // Close the notification
+      cy.get('[aria-describedby="notistack-snackbar"]').find('button').click()
+    })
 
-    // Download the export file
-    const date = new Date()
-    const day = `00${date.getUTCDate()}`.slice(-2)
-    const month = `00${date.getUTCMonth() + 1}`.slice(-2)
-    const year = date.getUTCFullYear()
-    const fileName = `gnosis-safe-address-book-${year}-${month}-${day}.csv`
+    it('should delete an entry', () => {
+      // Click the delete button in the first entry
+      cy.get('[data-testid=address-book-row]').first().get('[title="Delete entry"]').click({ force: true })
+      cy.findByText('Delete').should('exist').click()
+      cy.findByText(EDITED_NAME).should('not.exist')
 
-    cy.get('[data-track="address-book: Export"]').click()
-    cy.findByText('Download').click()
-    const downloadsFolder = Cypress.config('downloadsFolder')
-    cy.readFile(path.join(downloadsFolder, fileName)).should('exist')
+      // Snackbars are overlapping each other due to the test speed
+      cy.get('[aria-describedby="notistack-snackbar"]').should('have.length', 1)
+      // Close the notification
+      cy.get('[aria-describedby="notistack-snackbar"]').find('[type="button"]').click()
+    })
+  })
+
+  describe('should import and export address book files', () => {
+    it('should import an address book csv file', () => {
+      // Import CSV
+      cy.get('[data-track="address-book: Import"]').click()
+      cy.get('[type="file"]').attachFile('../fixtures/address_book_test.csv')
+      cy.get('.modal-footer').findByText('Import').click()
+      cy.findByText(RINKEBY_CSV_ENTRY.name).should('exist')
+      cy.findByText(RINKEBY_CSV_ENTRY.address).should('exist')
+
+      // Close the notification
+      cy.get('[aria-describedby="notistack-snackbar"]').find('[type="button"]').click()
+    })
+
+    it('should find Gnosis Chain imported address', () => {
+      // Go to a Safe on Gnosis Chain
+      cy.get('nav').findByText('Rinkeby').click()
+      cy.findByText('Gnosis Chain').click()
+
+      // Navigate to the Address Book page
+      cy.visit(`/${GNO_TEST_SAFE}/address-book`)
+
+      // Close cookies banner
+      cy.contains('a', 'Accept selection').click()
+      // Waits for the Address Book table to be in the page
+      cy.get('[aria-labelledby="Address Book"]').should('be.visible')
+
+      // Finds the imported Gnosis Chain address
+      cy.findByText(GNO_CSV_ENTRY.name).should('exist')
+      cy.findByText(GNO_CSV_ENTRY.address).should('exist')
+    })
+
+    it('should download correctly the address book file', () => {
+      // Download the export file
+      const date = format(new Date(), 'yyyy-MM-dd')
+      const fileName = `gnosis-safe-address-book-${date}.csv`
+
+      cy.get('[data-track="address-book: Export"]').click()
+      cy.findByText('Download').click()
+      const downloadsFolder = Cypress.config('downloadsFolder')
+      cy.readFile(path.join(downloadsFolder, fileName)).should('exist')
+
+      // Close the notification
+      cy.get('[aria-describedby="notistack-snackbar"]').find('[type="button"]').click()
+    })
   })
 })
