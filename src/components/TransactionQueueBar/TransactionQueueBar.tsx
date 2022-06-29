@@ -52,7 +52,7 @@ const TransactionQueueBar = (): ReactElement | null => {
     <>
       <Wrapper expanded={expanded}>
         <ClickAwayListener onClickAway={() => setExpanded(false)} mouseEvent="onMouseDown" touchEvent="onTouchStart">
-          <Accordion
+          <StyledAccordion
             data-testid="transaction-queue-bar"
             expanded={expanded}
             onChange={onClickQueueBar}
@@ -76,7 +76,7 @@ const TransactionQueueBar = (): ReactElement | null => {
             <StyledAccordionDetails>
               <QueueTransactions />
             </StyledAccordionDetails>
-          </Accordion>
+          </StyledAccordion>
         </ClickAwayListener>
       </Wrapper>
       <StyledBackdrop open={expanded} />
@@ -94,6 +94,12 @@ const Wrapper = styled.div<{ expanded: boolean }>`
   z-index: 1;
 
   transition: bottom 0.35s ease-in-out 0s;
+`
+const StyledAccordion = styled(Accordion)`
+  &.MuiAccordion-root.Mui-expanded {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
 `
 
 const StyledAccordionDetails = styled(AccordionDetails)`
@@ -114,8 +120,17 @@ const StyledAccordionDetails = styled(AccordionDetails)`
 const StyledAccordionSummary = styled(AccordionSummary)`
   height: 70px;
   border-bottom: 2px solid ${grey400};
+  border-top: 1px solid ${grey400};
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   padding-right: 72px;
   position: relative;
+
+  &.Mui-expanded {
+    border-top: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
 
   &:hover {
     background-color: ${primary200};
