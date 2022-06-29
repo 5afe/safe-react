@@ -81,15 +81,25 @@ const getTransactionFilter = ({
   execution_date__lte,
   value,
 }: Filter): Partial<IncomingFilter | OutgoingFilter> => {
-  const getLocalStartOfDay = (date: string): number => new Date(date).setHours(0, 0, 0, 0)
-  const getLocalEndOfDay = (date: string): number => new Date(date).setHours(23, 59, 59, 999)
+  const getStartOfDay = (date: string): string => {
+    const now = new Date(date)
+    const local = now.setUTCMinutes(now.getTimezoneOffset())
+    return new Date(local).toISOString()
+  }
+
+  const getEndOfDay = (date: string): string => {
+    const now = new Date(date)
+    const hourOffset = now.getTimezoneOffset() / 60
+    const local = now.setUTCHours(23 + hourOffset, 59, 59, 999)
+    return new Date(local).toISOString()
+  }
 
   return {
     ...(execution_date__gte && {
-      execution_date__gte: new Date(getLocalStartOfDay(execution_date__gte)).toISOString(),
+      execution_date__gte: getStartOfDay(execution_date__gte),
     }),
     ...(execution_date__lte && {
-      execution_date__lte: new Date(getLocalEndOfDay(execution_date__lte)).toISOString(),
+      execution_date__lte: getEndOfDay(execution_date__lte),
     }),
     ...(value && { value: toWei(value) }),
   }
