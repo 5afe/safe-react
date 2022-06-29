@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
 
@@ -144,11 +144,19 @@ const Layout: React.FC<Props> = ({
   const [closedQueueBar, setClosedQueueBar] = useState(false)
 
   const { transactions } = usePagedQueuedTransactions()
-  const hasPendingTransactions = transactions?.next.count !== 0
+
+  const queuedTxCount = transactions ? transactions.next.count + transactions.queue.count : 0
+  const hasPendingTransactions = queuedTxCount !== 0
 
   const isSafeAppView = !!useSafeAppUrl().getAppUrl()
   const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS) && isSafeAppView
   const showQueueBar = isSafeAppRoute && hasPendingTransactions && !closedQueueBar && !!transactions
+
+  useEffect(() => {
+    if (queuedTxCount) {
+      setClosedQueueBar(false)
+    }
+  }, [queuedTxCount])
 
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(
@@ -183,7 +191,7 @@ const Layout: React.FC<Props> = ({
         )}
         <ContentWrapper>
           <MainContentWrapper>{children}</MainContentWrapper>
-          {showQueueBar && <QueueBar setClosedBar={setClosedQueueBar} />}
+          {showQueueBar && <QueueBar setClosedBar={setClosedQueueBar} queuedTxCount={queuedTxCount} />}
           {hasFooter && <Footer />}
         </ContentWrapper>
       </BodyWrapper>

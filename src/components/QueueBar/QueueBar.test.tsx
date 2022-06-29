@@ -136,7 +136,7 @@ describe('<QueueBar>', () => {
 
     const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar setClosedBar={setClosedBarSpy} />, customState)
+    render(<QueueBar setClosedBar={setClosedBarSpy} queuedTxCount={1} />, customState)
 
     const queueNode = screen.getByTestId('pending-transactions-queue')
 
@@ -177,19 +177,18 @@ describe('<QueueBar>', () => {
 
     const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar setClosedBar={setClosedBarSpy} />, customState)
+    render(<QueueBar setClosedBar={setClosedBarSpy} queuedTxCount={1} />, customState)
 
     const closeQueueButtonNode = screen.getByLabelText('close pending transactions queue')
 
     expect(closeQueueButtonNode).toBeInTheDocument()
 
-    // we open the Queue if it was closed
-    expect(setClosedBarSpy).toHaveBeenCalledWith(false)
-    expect(setClosedBarSpy).not.toHaveBeenCalledWith(true)
+    expect(setClosedBarSpy).not.toHaveBeenCalled()
 
     fireEvent.click(closeQueueButtonNode)
 
     expect(setClosedBarSpy).toHaveBeenCalledWith(true)
+    expect(setClosedBarSpy).toHaveBeenCalledTimes(1)
   })
 
   it('Collapses the QueueBar bar', () => {
@@ -219,7 +218,7 @@ describe('<QueueBar>', () => {
     }
     const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar setClosedBar={setClosedBarSpy} />, customState)
+    render(<QueueBar setClosedBar={setClosedBarSpy} queuedTxCount={1} />, customState)
 
     const queueNode = screen.getByTestId('pending-transactions-queue-summary')
 

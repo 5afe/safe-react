@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Text } from '@gnosis.pm/safe-react-components'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -11,19 +11,17 @@ import styled from 'styled-components'
 import Backdrop from '@material-ui/core/Backdrop'
 
 import { black300, primary200, grey400, background } from 'src/theme/variables'
-import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
 import { QueueTransactions } from 'src/routes/safe/components/Transactions/TxList/QueueTransactions'
 
 type QueueBarProps = {
   setClosedBar: (close: boolean) => void
+  queuedTxCount: number
 }
 
-const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
+const QueueBar = ({ setClosedBar, queuedTxCount }: QueueBarProps): ReactElement => {
   const [expanded, setExpanded] = useState(false)
 
-  const { transactions } = usePagedQueuedTransactions()
-
-  const collapseQueueBar = () => {
+  const onClickQueueBar = () => {
     setExpanded((expanded) => !expanded)
   }
 
@@ -32,15 +30,6 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
     setExpanded(false)
   }
 
-  const queuedTxCount = transactions ? transactions.next.count + transactions.queue.count : 0
-
-  useEffect(() => {
-    if (queuedTxCount) {
-      setClosedBar(false)
-      setExpanded(false)
-    }
-  }, [queuedTxCount, setClosedBar])
-
   return (
     <>
       <Wrapper expanded={expanded}>
@@ -48,7 +37,7 @@ const QueueBar = ({ setClosedBar }: QueueBarProps): ReactElement => {
           <Accordion
             data-testid="pending-transactions-queue"
             expanded={expanded}
-            onChange={collapseQueueBar}
+            onChange={onClickQueueBar}
             TransitionProps={{
               timeout: {
                 appear: 400,
