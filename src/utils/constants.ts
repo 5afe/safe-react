@@ -31,6 +31,15 @@ export const GOOGLE_TAG_MANAGER_AUTH_LIVE = process.env.REACT_APP_GOOGLE_TAG_MAN
 export const GOOGLE_TAG_MANAGER_AUTH_LATEST = process.env.REACT_APP_GOOGLE_TAG_MANAGER_LATEST_AUTH || ''
 export const GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH = process.env.REACT_APP_GOOGLE_TAG_MANAGER_DEVELOPMENT_AUTH || ''
 
+// Simulation
+// api docs: https://www.notion.so/Simulate-API-Documentation-6f7009fe6d1a48c999ffeb7941efc104
+export const TENDERLY_SIMULATE_ENDPOINT_URL = process.env.REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL || ''
+export const TENDERLY_PROJECT_NAME = process.env.REACT_APP_TENDERLY_PROJECT_NAME || ''
+export const TENDERLY_ORG_NAME = process.env.REACT_APP_TENDERLY_ORG_NAME || ''
+
+// Cypress tests
+export const E2E_MNEMONIC = process.env.REACT_APP_E2E_MNEMONIC || ''
+
 // localStorage-related constants
 export const LS_NAMESPACE = 'SAFE'
 export const LS_SEPARATOR = '__'

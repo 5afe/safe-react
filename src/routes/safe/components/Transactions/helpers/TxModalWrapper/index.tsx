@@ -1,5 +1,6 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { Grid } from '@material-ui/core'
 
 import {
   calculateTotalGasCost,
@@ -26,7 +27,11 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getNativeCurrency } from 'src/config'
 import { useEstimateSafeTxGas } from 'src/logic/hooks/useEstimateSafeTxGas'
-import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
+import {
+  checkIfOffChainSignatureIsPossible,
+  generateSignaturesFromTxConfirmations,
+  getPreValidatedSignatures,
+} from 'src/logic/safe/safeTxSigner'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import useIsSmartContractWallet from 'src/logic/hooks/useIsSmartContractWallet'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
@@ -34,6 +39,9 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { DEFAULT_GAS_LIMIT, useEstimateGasLimit } from 'src/logic/hooks/useEstimateGasLimit'
 import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
 import { checkTransactionExecution, estimateGasForTransactionExecution } from 'src/logic/safe/transactions/gas'
+import { getExecutionTransaction } from 'src/logic/safe/transactions'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { TxSimulation, isTxSimulationEnabled } from '../Simulation/TxSimulation'
 
 type Props = {
   children: ReactNode
@@ -131,18 +139,20 @@ export const TxModalWrapper = ({
 
   const txParameters = useMemo(
     () => ({
-      safeAddress,
-      safeVersion,
-      txRecipient: txTo || safeAddress,
-      txConfirmations,
-      txAmount: txValue,
-      txData,
-      operation: operation || Operation.CALL,
-      from: userAddress,
+      baseGas: '0',
+      data: txData,
       gasPrice: '0',
       gasToken: ZERO_ADDRESS,
+      nonce: txNonce ? parseInt(txNonce) : 0,
+      operation: operation || Operation.CALL,
       refundReceiver: ZERO_ADDRESS,
+      safeInstance: getGnosisSafeInstanceAt(safeAddress, safeVersion),
       safeTxGas: manualSafeTxGas || safeTxGas || '0',
+      sender: userAddress,
+      sigs: generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? userAddress : undefined),
+      to: txTo || safeAddress,
+      valueInWei: txValue,
+      safeAddress,
       approvalAndExecution,
     }),
     [
@@ -154,6 +164,7 @@ export const TxModalWrapper = ({
       safeVersion,
       txConfirmations,
       txData,
+      txNonce,
       txTo,
       txValue,
       userAddress,
@@ -164,7 +175,7 @@ export const TxModalWrapper = ({
     return estimateGasForTransactionExecution(txParameters)
   }, [txParameters])
 
-  const gasLimit = useEstimateGasLimit(estimateGasLimit, doExecute, txParameters.txData, manualGasLimit)
+  const gasLimit = useEstimateGasLimit(estimateGasLimit, doExecute, txParameters.data, manualGasLimit)
 
   const checkTxExecution = useCallback((): Promise<boolean> => {
     return checkTransactionExecution({ ...txParameters, gasLimit })
@@ -185,7 +196,7 @@ export const TxModalWrapper = ({
   const txEstimationExecutionStatus = useExecutionStatus({
     checkTxExecution,
     isExecution: doExecute,
-    txData: txParameters.txData,
+    txData: txParameters.data,
     gasLimit,
     gasPrice,
     gasMaxPrioFee,
@@ -236,6 +247,28 @@ export const TxModalWrapper = ({
 
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
+  const simulateTxData = useMemo(() => {
+    if (!isTxSimulationEnabled()) {
+      return ''
+    }
+
+    // is submitStatus is not ready we are not done with gas estimation / tx creation
+    if (submitStatus !== ButtonStatus.READY && txParameters.data) {
+      return ''
+    }
+    try {
+      // If a transaction is executable we simulate with the proposed / selected gasLimit and the actual signatures
+      // Otherwise we overwrite the threshold to 1 on tenderly and create a signature
+      return getExecutionTransaction({
+        ...txParameters,
+        sigs: canTxExecute ? txParameters.sigs : getPreValidatedSignatures(userAddress),
+      }).encodeABI()
+    } catch (error) {
+      console.error(`Error while creating simulation tx: ${error}`)
+      return ''
+    }
+  }, [submitStatus, txParameters, canTxExecute, userAddress])
+
   return (
     <EditableTxParameters
       isExecution={doExecute}
@@ -253,8 +286,9 @@ export const TxModalWrapper = ({
           {children}
 
           <Container>
-            {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
-
+            <Grid container alignItems="center" justifyContent="space-between" style={{ marginBottom: '16px' }}>
+              {showCheckbox && <ExecuteCheckbox checked={executionApproved} onChange={setExecutionApproved} />}
+            </Grid>
             {doExecute && (
               <TxEstimatedFeesDetail
                 txParameters={txParameters}
@@ -263,7 +297,6 @@ export const TxModalWrapper = ({
                 parametersStatus={parametersStatus}
               />
             )}
-
             <TxParametersDetail
               onEdit={toggleEditMode}
               txParameters={txParameters}
@@ -271,6 +304,18 @@ export const TxModalWrapper = ({
               isOffChainSignature={isOffChainSignature}
               parametersStatus={parametersStatus}
             />
+
+            {simulateTxData && (
+              <TxSimulation
+                canTxExecute={canTxExecute}
+                tx={{
+                  data: simulateTxData,
+                  to: safeAddress,
+                }}
+                gasLimit={gasLimit}
+                disabled={isSubmitDisabled || submitStatus !== ButtonStatus.READY}
+              />
+            )}
           </Container>
 
           <ReviewInfoText

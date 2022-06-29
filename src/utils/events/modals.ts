@@ -38,6 +38,10 @@ const MODALS = {
     event: GTM_EVENT.META,
     action: 'Use spending limit',
   },
+  SIMULATE_TX: {
+    event: GTM_EVENT.CLICK,
+    action: 'Simulate transaction',
+  },
 }
 
 const MODALS_CATEGORY = 'modals'

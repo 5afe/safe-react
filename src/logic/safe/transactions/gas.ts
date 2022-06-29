@@ -1,15 +1,14 @@
 import { List } from 'immutable'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf } from 'src/logic/wallets/ethTransactions'
-import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { fetchSafeTxGasEstimation } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { hasFeature } from '../utils/safeVersion'
 import { PayableTx } from 'src/types/contracts/types'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 
 export type SafeTxGasEstimationProps = {
   safeAddress: string
@@ -61,59 +60,50 @@ export type TransactionExecutionEstimationProps = {
 }
 
 export const estimateGasForTransactionExecution = async ({
-  safeAddress,
-  safeVersion,
-  txRecipient,
-  txConfirmations,
-  txAmount,
-  txData,
-  operation,
-  from,
+  baseGas,
+  data,
   gasPrice,
   gasToken,
+  operation,
   refundReceiver,
+  safeInstance,
   safeTxGas,
-  approvalAndExecution,
-}: TransactionExecutionEstimationProps): Promise<number> => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-  // If it's approvalAndExecution we have to add a preapproved signature else we have all signatures
-  const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
-
+  sigs,
+  to,
+  valueInWei,
+  safeAddress,
+  sender,
+}: TxArgs & { safeAddress: string }): Promise<number> => {
   const estimationData = safeInstance.methods
-    .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
+    .execTransaction(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, sigs)
     .encodeABI()
 
   return calculateGasOf({
     data: estimationData,
-    from,
+    from: sender,
     to: safeAddress,
   })
 }
 
 export const checkTransactionExecution = async ({
-  safeAddress,
-  safeVersion,
-  txRecipient,
-  txConfirmations,
-  txAmount,
-  txData,
-  operation,
-  from,
+  baseGas,
+  data,
   gasPrice,
   gasToken,
-  gasLimit,
+  operation,
   refundReceiver,
+  safeInstance,
   safeTxGas,
-  approvalAndExecution,
-}: TransactionExecutionEstimationProps): Promise<boolean> => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
-  // If it's approvalAndExecution we have to add a preapproved signature else we have all signatures
-  const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
-
+  sigs,
+  to,
+  valueInWei,
+  sender,
+  gasLimit,
+}: TxArgs & { gasLimit: string | undefined }): Promise<boolean> => {
   return safeInstance.methods
-    .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
+    .execTransaction(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, sigs)
     .call({
-      from,
+      from: sender,
       gas: gasLimit,
     })
     .then(() => true)
