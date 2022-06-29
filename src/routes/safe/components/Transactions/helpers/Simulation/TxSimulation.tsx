@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
 
@@ -52,12 +53,7 @@ type TxSimulationProps = {
   disabled: boolean
 }
 
-export const TxSimulation = ({
-  tx,
-  canTxExecute,
-  gasLimit,
-  disabled,
-}: TxSimulationProps): React.ReactElement | null => {
+const TxSimulationBlock = ({ tx, canTxExecute, gasLimit, disabled }: TxSimulationProps): ReactElement => {
   const { simulateTransaction, simulation, simulationRequestStatus, simulationLink, requestError, resetSimulation } =
     useSimulation()
   const { chainId, address: safeAddress } = useSelector(currentSafe)
@@ -73,10 +69,6 @@ export const TxSimulation = ({
 
   const handleSimulation = async () => {
     simulateTransaction(tx, chainId ?? '4', safeAddress, userAddress, canTxExecute, simulationGasLimit)
-  }
-
-  if (!isSimulationEnvSet && !hasFeature(FEATURES.TX_SIMULATION)) {
-    return null
   }
 
   const isSimulationFinished =
@@ -114,4 +106,12 @@ export const TxSimulation = ({
       </StyledResultAccordionSummary>
     </Accordion>
   )
+}
+
+export const TxSimulation = (props: TxSimulationProps): ReactElement | null => {
+  if (!isSimulationEnvSet || !hasFeature(FEATURES.TX_SIMULATION)) {
+    return null
+  }
+
+  return <TxSimulationBlock {...props} />
 }
