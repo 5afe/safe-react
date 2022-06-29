@@ -1,8 +1,8 @@
 import { Box } from '@material-ui/core'
 import styled from 'styled-components'
-import { Text, Dot, Icon } from '@gnosis.pm/safe-react-components'
-import { StyledTitle } from './styles'
+import { Text, Dot, Icon, Title } from '@gnosis.pm/safe-react-components'
 import { SecurityFeedbackPractice } from '../../types'
+import SecurityFeedbackDomain from './SecurityFeedbackDomain'
 
 type SecurityFeedbackListProps = {
   practices: SecurityFeedbackPractice[]
@@ -12,10 +12,8 @@ type SecurityFeedbackListProps = {
 const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps): React.ReactElement => {
   return (
     <>
-      <Icon size="md" type="privacyPolicy" color="primary" />
-      <StyledTitle size="sm" centered>
-        Best security practices when interacting with Safe Apps
-      </StyledTitle>
+      <StyledIcon size="md" type="privacyPolicy" color="primary" />
+      <StyledTitle size="xs">Best security practices when interacting with Safe Apps</StyledTitle>
 
       {practices.map((practice, index) => (
         <Box key={index} display="flex" marginBottom={2} alignItems="flex-start">
@@ -23,12 +21,12 @@ const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps):
             <StyledDotText size="sm">{index + 1}</StyledDotText>
           </StyledDot>
           <Box flexDirection="column">
-            <Text size="lg">{practice.title}</Text>
-            {practice.subtitle && <Text size="lg">{practice.subtitle}</Text>}
+            <Text size="xl">{practice.title}</Text>
+            {practice.subtitle && <Text size="xl">{practice.subtitle}</Text>}
             {!practice.imageSrc && (
-              <StyledText size="lg">
-                <b>{appUrl}</b>
-              </StyledText>
+              <StyledUrlContainer>
+                <SecurityFeedbackDomain url={appUrl} />
+              </StyledUrlContainer>
             )}
           </Box>
         </Box>
@@ -37,23 +35,36 @@ const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps):
   )
 }
 
+const StyledUrlContainer = styled.div`
+  display: block;
+  text-align: left;
+  margin: 10px 0 0 0;
+  p {
+    display: inline;
+  }
+`
+
+const StyledIcon = styled(Icon)`
+  margin-top: 10px;
+`
+
+const StyledTitle = styled(Title)`
+  font-weight: bold;
+  text-align: center;
+`
+
 const StyledDot = styled(Dot)`
-  min-width: 20px;
-  width: 20px;
-  height: 20px;
-  margin-right: 20px;
+  min-width: 19px;
+  width: 19px;
+  height: 19px;
+  margin-right: 19px;
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.secondaryHover};
 `
 
 const StyledDotText = styled(Text)`
   position: absolute;
-  font-size: 10px;
-`
-
-const StyledText = styled(Text)`
-  overflow-wrap: anywhere;
-  margin: 10px 0;
+  font-size: 11px;
 `
 
 export default SecurityFeedbackList

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { alpha } from '@material-ui/core/styles'
-import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import Slider from './Slider'
 import LegalDisclaimer from './LegalDisclaimer'
 import SecurityFeedbackList from './SecurityFeedbackList'
@@ -11,6 +10,7 @@ import UnknownAppWarning from './UnknownAppWarning'
 import { SECURITY_PRACTICES } from './constants'
 import SecurityFeedbackContent from './SecurityFeedbackContent'
 import { SecurityFeedbackPractice } from '../../types'
+import SecurityFeedbackDomain from './SecurityFeedbackDomain'
 
 interface SecurityFeedbackModalProps {
   onCancel: () => void
@@ -98,9 +98,7 @@ const SecurityFeedbackModal = ({
                   <SecurityFeedbackContent key={practice.id} {...practice} />
                 ) : (
                   <SecurityFeedbackContent key={practice.id} {...practice}>
-                    <StyledSecurityFeedbackContentText size="xl">
-                      <StyledIcon type="check" color="primary" size="sm" /> {appUrl}
-                    </StyledSecurityFeedbackContentText>
+                    <SecurityFeedbackDomain url={appUrl} />
                   </SecurityFeedbackContent>
                 )
               })}
@@ -130,21 +128,6 @@ const StyledWrapper = styled.div`
 const StyledGrid = styled(Grid)`
   text-align: center;
   padding: 24px;
-`
-
-const StyledIcon = styled(Icon)`
-  position: relative;
-  top: 3px;
-`
-
-const StyledSecurityFeedbackContentText = styled(Text)`
-  font-size: 12px;
-  font-weight: bold;
-  overflow-wrap: anywhere;
-  background-color: #effaf8;
-  padding: 10px;
-  border-radius: 8px;
-  max-width: 75%;
 `
 
 const StyledLinearProgress = styled(LinearProgress)<{ isWarningStep: boolean }>`
