@@ -108,8 +108,12 @@ const TxSimulationBlock = ({ tx, canTxExecute, gasLimit, disabled }: TxSimulatio
   )
 }
 
+export const isTxSimulationEnabled = (): boolean => {
+  return isSimulationEnvSet && hasFeature(FEATURES.TX_SIMULATION)
+}
+
 export const TxSimulation = (props: TxSimulationProps): ReactElement | null => {
-  if (!isSimulationEnvSet || !hasFeature(FEATURES.TX_SIMULATION)) {
+  if (!isTxSimulationEnabled()) {
     return null
   }
 

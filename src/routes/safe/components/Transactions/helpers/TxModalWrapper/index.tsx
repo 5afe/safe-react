@@ -41,7 +41,7 @@ import { useExecutionStatus } from 'src/logic/hooks/useExecutionStatus'
 import { checkTransactionExecution, estimateGasForTransactionExecution } from 'src/logic/safe/transactions/gas'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { TxSimulation } from '../Simulation/TxSimulation'
+import { TxSimulation, isTxSimulationEnabled } from '../Simulation/TxSimulation'
 
 type Props = {
   children: ReactNode
@@ -248,6 +248,10 @@ export const TxModalWrapper = ({
   const gasCost = `${getGasCostFormatted()} ${nativeCurrency.symbol}`
 
   const simulateTxData = useMemo(() => {
+    if (!isTxSimulationEnabled()) {
+      return ''
+    }
+
     // is submitStatus is not ready we are not done with gas estimation / tx creation
     if (submitStatus !== ButtonStatus.READY && txParameters.data) {
       return ''
@@ -300,15 +304,18 @@ export const TxModalWrapper = ({
               isOffChainSignature={isOffChainSignature}
               parametersStatus={parametersStatus}
             />
-            <TxSimulation
-              canTxExecute={canTxExecute}
-              tx={{
-                data: simulateTxData,
-                to: safeAddress,
-              }}
-              gasLimit={gasLimit}
-              disabled={isSubmitDisabled || submitStatus !== ButtonStatus.READY}
-            />
+
+            {simulateTxData && (
+              <TxSimulation
+                canTxExecute={canTxExecute}
+                tx={{
+                  data: simulateTxData,
+                  to: safeAddress,
+                }}
+                gasLimit={gasLimit}
+                disabled={isSubmitDisabled || submitStatus !== ButtonStatus.READY}
+              />
+            )}
           </Container>
 
           <ReviewInfoText
