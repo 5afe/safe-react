@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
 
@@ -11,9 +11,7 @@ import { MobileNotSupported } from './MobileNotSupported'
 import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
-import QueueBar from '../QueueBar/QueueBar'
-import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import TransactionQueueBar from '../TransactionQueueBar/TransactionQueueBar'
 import { InvalidMasterCopyError } from 'src/components/AppLayout/InvalidMasterCopyError'
 
 const Container = styled.div`
@@ -141,23 +139,6 @@ const Layout: React.FC<Props> = ({
     path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
   })
 
-  const [closedQueueBar, setClosedQueueBar] = useState(false)
-
-  const { transactions } = usePagedQueuedTransactions()
-
-  const queuedTxCount = transactions ? transactions.next.count + transactions.queue.count : 0
-  const hasPendingTransactions = queuedTxCount !== 0
-
-  const isSafeAppView = !!useSafeAppUrl().getAppUrl()
-  const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS) && isSafeAppView
-  const showQueueBar = isSafeAppRoute && hasPendingTransactions && !closedQueueBar && !!transactions
-
-  useEffect(() => {
-    if (queuedTxCount) {
-      setClosedQueueBar(false)
-    }
-  }, [queuedTxCount])
-
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(
     (e: React.MouseEvent): void => {
@@ -191,7 +172,7 @@ const Layout: React.FC<Props> = ({
         )}
         <ContentWrapper>
           <MainContentWrapper>{children}</MainContentWrapper>
-          {showQueueBar && <QueueBar setClosedBar={setClosedQueueBar} queuedTxCount={queuedTxCount} />}
+          <TransactionQueueBar />
           {hasFooter && <Footer />}
         </ContentWrapper>
       </BodyWrapper>

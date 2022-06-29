@@ -1,7 +1,8 @@
 import { render, fireEvent, screen } from 'src/utils/test-utils'
-import QueueBar from './QueueBar'
+import TransactionQueueBar from './TransactionQueueBar'
 import { CHAIN_ID } from 'src/config/chain.d'
 import { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
+import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 
 const MULTISEND_ADDRESS = '0x4242424242424242424242424242424242424242'
 jest.mock('src/logic/contracts/safeContracts', () => ({
@@ -107,8 +108,12 @@ const pendingTransaction = {
   },
 }
 
-describe('<QueueBar>', () => {
-  it('Renders the QueueBar bar', () => {
+describe('<TransactionQueueBar>', () => {
+  afterEach(() => {
+    history.push('/')
+  })
+
+  it('Renders the TransactionQueueBar bar within a Safe App', () => {
     const customState = {
       providers: {
         name: 'MetaMask',
@@ -134,13 +139,16 @@ describe('<QueueBar>', () => {
       },
     }
 
-    const setClosedBarSpy = jest.fn()
+    const safeAppUrl = generateSafeRoute(SAFE_ROUTES.APPS, { safeAddress, shortName: 'rin' })
+    const safeAppPathname = `${safeAppUrl}?appUrl=https://apps.gnosis-safe.io/tx-builder`
 
-    render(<QueueBar setClosedBar={setClosedBarSpy} queuedTxCount={1} />, customState)
+    history.push(safeAppPathname)
 
-    const queueNode = screen.getByTestId('pending-transactions-queue')
+    render(<TransactionQueueBar />, customState)
 
-    expect(queueNode).toBeInTheDocument()
+    const queueBarNode = screen.getByTestId('transaction-queue-bar')
+
+    expect(queueBarNode).toBeInTheDocument()
 
     expect(screen.getByText('(1) Transaction Queue')).toBeInTheDocument()
 
@@ -149,7 +157,7 @@ describe('<QueueBar>', () => {
     expect(screen.getByText('Needs confirmations')).toBeInTheDocument()
   })
 
-  it('Closes the QueueBar bar', () => {
+  it('Hides the TransactionQueueBar bar outside of a Safe App', () => {
     const customState = {
       providers: {
         name: 'MetaMask',
@@ -175,23 +183,16 @@ describe('<QueueBar>', () => {
       },
     }
 
-    const setClosedBarSpy = jest.fn()
+    history.push('/')
 
-    render(<QueueBar setClosedBar={setClosedBarSpy} queuedTxCount={1} />, customState)
+    render(<TransactionQueueBar />, customState)
 
-    const closeQueueButtonNode = screen.getByLabelText('close pending transactions queue')
+    const queueBarNode = screen.queryByTestId('transaction-queue-bar')
 
-    expect(closeQueueButtonNode).toBeInTheDocument()
-
-    expect(setClosedBarSpy).not.toHaveBeenCalled()
-
-    fireEvent.click(closeQueueButtonNode)
-
-    expect(setClosedBarSpy).toHaveBeenCalledWith(true)
-    expect(setClosedBarSpy).toHaveBeenCalledTimes(1)
+    expect(queueBarNode).not.toBeInTheDocument()
   })
 
-  it('Collapses the QueueBar bar', () => {
+  it('Closes the TransactionQueueBar component', () => {
     const customState = {
       providers: {
         name: 'MetaMask',
@@ -216,19 +217,70 @@ describe('<QueueBar>', () => {
         },
       },
     }
-    const setClosedBarSpy = jest.fn()
 
-    render(<QueueBar setClosedBar={setClosedBarSpy} queuedTxCount={1} />, customState)
+    const safeAppUrl = generateSafeRoute(SAFE_ROUTES.APPS, { safeAddress, shortName: 'rin' })
+    const safeAppPathname = `${safeAppUrl}?appUrl=https://apps.gnosis-safe.io/tx-builder`
 
-    const queueNode = screen.getByTestId('pending-transactions-queue-summary')
+    history.push(safeAppPathname)
 
-    expect(queueNode).toBeInTheDocument()
+    render(<TransactionQueueBar />, customState)
 
-    expect(queueNode).toHaveAttribute('aria-expanded', 'false')
+    const queueBarNode = screen.getByTestId('transaction-queue-bar')
+
+    expect(queueBarNode).toBeInTheDocument()
+
+    const closeQueueBarButtonNode = screen.getByLabelText('close transaction queue bar')
+
+    expect(closeQueueBarButtonNode).toBeInTheDocument()
+
+    fireEvent.click(closeQueueBarButtonNode)
+
+    expect(closeQueueBarButtonNode).not.toBeInTheDocument()
+    expect(queueBarNode).not.toBeInTheDocument()
+  })
+
+  it('Collapses the TransactionQueueBar bar', () => {
+    const customState = {
+      providers: {
+        name: 'MetaMask',
+        loaded: true,
+        available: true,
+        account: ownerAddress,
+        network: '4',
+      },
+      [CURRENT_SESSION_REDUCER_ID]: {
+        currentSafeAddress: safeAddress,
+      },
+      gatewayTransactions: {
+        [CHAIN_ID.RINKEBY]: {
+          [safeAddress]: {
+            queued: {
+              next: {
+                [currentNonce]: [pendingTransaction],
+              },
+              queued: {},
+            },
+          },
+        },
+      },
+    }
+
+    const safeAppUrl = generateSafeRoute(SAFE_ROUTES.APPS, { safeAddress, shortName: 'rin' })
+    const safeAppPathname = `${safeAppUrl}?appUrl=https://apps.gnosis-safe.io/tx-builder`
+
+    history.push(safeAppPathname)
+
+    render(<TransactionQueueBar />, customState)
+
+    const queueBarNode = screen.getByTestId('transaction-queue-bar-summary')
+
+    expect(queueBarNode).toBeInTheDocument()
+
+    expect(queueBarNode).toHaveAttribute('aria-expanded', 'false')
 
     // collapses the queue
     fireEvent.click(screen.getByText('(1) Transaction Queue'))
 
-    expect(queueNode).toHaveAttribute('aria-expanded', 'true')
+    expect(queueBarNode).toHaveAttribute('aria-expanded', 'true')
   })
 })

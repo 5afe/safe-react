@@ -1,4 +1,5 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import { Text } from '@gnosis.pm/safe-react-components'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -12,30 +13,47 @@ import Backdrop from '@material-ui/core/Backdrop'
 
 import { black300, primary200, grey400, background } from 'src/theme/variables'
 import { QueueTransactions } from 'src/routes/safe/components/Transactions/TxList/QueueTransactions'
+import { usePagedQueuedTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/usePagedQueuedTransactions'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { SAFE_ROUTES } from 'src/routes/routes'
 
-type QueueBarProps = {
-  setClosedBar: (close: boolean) => void
-  queuedTxCount: number
-}
-
-const QueueBar = ({ setClosedBar, queuedTxCount }: QueueBarProps): ReactElement => {
+const TransactionQueueBar = (): ReactElement | null => {
+  const [closed, setClosed] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
   const onClickQueueBar = () => {
     setExpanded((expanded) => !expanded)
   }
 
-  const closeQueueBar = () => {
-    setClosedBar(true)
+  const onCloseQueueBar = () => {
+    setClosed(true)
     setExpanded(false)
   }
 
-  return (
+  const { transactions } = usePagedQueuedTransactions()
+
+  const queuedTxCount = transactions ? transactions.next.count + transactions.queue.count : 0
+  const hasPendingTransactions = queuedTxCount !== 0
+
+  // if a new transaction is proposed, we show the transaction queue bar
+  useEffect(() => {
+    if (queuedTxCount) {
+      setClosed(false)
+      setExpanded(false)
+    }
+  }, [queuedTxCount])
+
+  const isSafeAppView = !!useSafeAppUrl().getAppUrl()
+  const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS) && isSafeAppView
+
+  const showQueueBar = isSafeAppRoute && hasPendingTransactions && !closed
+
+  return showQueueBar ? (
     <>
       <Wrapper expanded={expanded}>
         <ClickAwayListener onClickAway={() => setExpanded(false)} mouseEvent="onMouseDown" touchEvent="onTouchStart">
           <Accordion
-            data-testid="pending-transactions-queue"
+            data-testid="transaction-queue-bar"
             expanded={expanded}
             onChange={onClickQueueBar}
             TransitionProps={{
@@ -46,12 +64,12 @@ const QueueBar = ({ setClosedBar, queuedTxCount }: QueueBarProps): ReactElement 
               },
             }}
           >
-            <StyledAccordionSummary data-testid="pending-transactions-queue-summary" expandIcon={<StyledExpandIcon />}>
+            <StyledAccordionSummary data-testid="transaction-queue-bar-summary" expandIcon={<StyledExpandIcon />}>
               <Text size="xl" color="primary" strong>
                 ({queuedTxCount}) Transaction Queue
               </Text>
 
-              <StyledCloseIconButton onClick={closeQueueBar} aria-label="close pending transactions queue">
+              <StyledCloseIconButton onClick={onCloseQueueBar} aria-label="close transaction queue bar">
                 <CloseIcon />
               </StyledCloseIconButton>
             </StyledAccordionSummary>
@@ -63,10 +81,10 @@ const QueueBar = ({ setClosedBar, queuedTxCount }: QueueBarProps): ReactElement 
       </Wrapper>
       <StyledBackdrop open={expanded} />
     </>
-  )
+  ) : null
 }
 
-export default QueueBar
+export default TransactionQueueBar
 
 const Wrapper = styled.div<{ expanded: boolean }>`
   position: relative;
