@@ -4,11 +4,12 @@ import { Icon, Text } from '@gnosis.pm/safe-react-components'
 
 type SecurityFeedbackDomainProps = {
   url: string
+  showInOneLine?: boolean
 }
 
-const SecurityFeedbackDomain: React.FC<SecurityFeedbackDomainProps> = ({ url }): React.ReactElement => {
+const SecurityFeedbackDomain: React.FC<SecurityFeedbackDomainProps> = ({ url, showInOneLine }): React.ReactElement => {
   return (
-    <StyledSecurityFeedbackContentText size="xl">
+    <StyledSecurityFeedbackContentText size="xl" showInOneLine={!!showInOneLine}>
       <StyledIcon type="check" color="primary" size="sm" /> {url}
     </StyledSecurityFeedbackContentText>
   )
@@ -20,7 +21,8 @@ const StyledIcon = styled(Icon)`
   padding-right: 4px;
 `
 
-const StyledSecurityFeedbackContentText = styled(Text)`
+const StyledSecurityFeedbackContentText = styled(Text)<{ showInOneLine: boolean }>`
+  display: block;
   font-size: 12px;
   font-weight: bold;
   overflow-wrap: anywhere;
@@ -28,6 +30,11 @@ const StyledSecurityFeedbackContentText = styled(Text)`
   padding: 10px 15px 10px 10px;
   border-radius: 8px;
   max-width: 75%;
+  ${({ showInOneLine }) =>
+    showInOneLine &&
+    `overflow-y: hidden;
+     white-space: nowrap;
+     `}
 `
 
 export default SecurityFeedbackDomain

@@ -26,7 +26,7 @@ const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps):
             {practice.subtitle && <Text size="xl">{practice.subtitle}</Text>}
             {!practice.imageSrc && (
               <StyledUrlContainer>
-                <SecurityFeedbackDomain url={appUrl} />
+                <SecurityFeedbackDomain url={appUrl} showInOneLine />
               </StyledUrlContainer>
             )}
           </Box>
@@ -41,7 +41,7 @@ const StyledUrlContainer = styled.div`
   text-align: left;
   margin: 10px 0 0 0;
   p {
-    display: inline;
+    width: 380px;
   }
 `
 

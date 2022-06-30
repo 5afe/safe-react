@@ -8,6 +8,7 @@ type SliderProps = {
   onSlideChange: (slideIndex: number) => void
   onComplete: () => void
 }
+
 type SliderState = {
   translate: number
   activeSlide: number
