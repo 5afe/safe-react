@@ -33,9 +33,6 @@ import { loadHistoryTransactions } from 'src/logic/safe/store/actions/transactio
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
-import { IconButton, InputAdornment } from '@material-ui/core'
-import { Tooltip } from 'src/components/layout/Tooltip'
 import { isEqual } from 'lodash'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
@@ -128,7 +125,7 @@ const Filter = (): ReactElement => {
     defaultValues: initialValues,
     shouldUnregister: true,
   })
-  const { handleSubmit, reset, watch, control } = methods
+  const { handleSubmit, reset, watch, control, getValues } = methods
 
   const toggleFilter = () => {
     if (showFilter) {
@@ -182,8 +179,8 @@ const Filter = (): ReactElement => {
 
     const trackedFields = [
       FILTER_TYPE_FIELD_NAME,
-      // DATE_FROM_FIELD_NAME,
-      // DATE_TO_FIELD_NAME,
+      DATE_FROM_FIELD_NAME,
+      DATE_TO_FIELD_NAME,
       RECIPIENT_FIELD_NAME,
       AMOUNT_FIELD_NAME,
       TOKEN_ADDRESS_FIELD_NAME,
@@ -199,16 +196,6 @@ const Filter = (): ReactElement => {
 
     hideFilter()
   }
-
-  const comingSoonAdornment = (
-    <InputAdornment position="end">
-      <Tooltip title="Coming soon" arrow>
-        <IconButton>
-          <HourglassEmptyIcon />
-        </IconButton>
-      </Tooltip>
-    </InputAdornment>
-  )
 
   return (
     <>
@@ -246,19 +233,32 @@ const Filter = (): ReactElement => {
                           <StyledRHFTextField<FilterForm>
                             name={DATE_FROM_FIELD_NAME}
                             label="From"
-                            // type="date"
+                            type="date"
                             control={control}
-                            disabled
-                            endAdornment={comingSoonAdornment}
+                            rules={{
+                              validate: (value) => {
+                                const to = getValues(DATE_TO_FIELD_NAME)
+                                if (value && to && value > to) {
+                                  return 'Cannot be after to date'
+                                }
+                              },
+                            }}
                           />
                           {/* @ts-expect-error - styled-components don't have strict types */}
                           <StyledRHFTextField<FilterForm>
                             name={DATE_TO_FIELD_NAME}
                             label="To"
-                            // type="date"
+                            type="date"
                             control={control}
-                            disabled
-                            endAdornment={comingSoonAdornment}
+                            rules={{
+                              validate: (value) => {
+                                const from = getValues(DATE_FROM_FIELD_NAME)
+                                if (value && from && value < from) {
+                                  console.log('invalid')
+                                  return 'Cannot be before from date'
+                                }
+                              },
+                            }}
                           />
                           <RHFTextField<FilterForm>
                             name={AMOUNT_FIELD_NAME}

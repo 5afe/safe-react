@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.27.0",
+  "version": "3.28.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -34,7 +34,7 @@
     "prettier": "prettier './src/**/*.{js,jsx,ts,tsx}'",
     "start": "rescripts start",
     "start:docker": "docker-compose build && docker-compose up",
-    "test": "cross-env REACT_APP_ENV=test rescripts test --env=jsdom",
+    "test": "cross-env TZ=Europe/Berlin REACT_APP_ENV=test rescripts test --env=jsdom",
     "test:coverage": "REACT_APP_ENV=test yarn test --coverage --watchAll=false",
     "test:ci": "REACT_APP_ENV=test yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand --outputFile=jest.results.json",
     "update-mocks": "./scripts/update-mocks.sh",
