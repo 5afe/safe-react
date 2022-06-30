@@ -81,10 +81,26 @@ const getTransactionFilter = ({
   execution_date__lte,
   value,
 }: Filter): Partial<IncomingFilter | OutgoingFilter> => {
-  const getISOString = (date: string): string => new Date(date).toISOString()
+  const getStartOfDay = (value: string): string => {
+    const date = new Date(value)
+    const utc = date.setUTCMinutes(date.getTimezoneOffset())
+    return new Date(utc).toISOString()
+  }
+
+  const getEndOfDay = (value: string): string => {
+    const date = new Date(value)
+    // 23:59:59.999 + offset
+    const utc = date.setUTCMinutes(23 * 60 + 59 + date.getTimezoneOffset(), 59, 999)
+    return new Date(utc).toISOString()
+  }
+
   return {
-    ...(execution_date__gte && { execution_date__gte: getISOString(execution_date__gte) }),
-    ...(execution_date__lte && { execution_date__lte: getISOString(execution_date__lte) }),
+    ...(execution_date__gte && {
+      execution_date__gte: getStartOfDay(execution_date__gte),
+    }),
+    ...(execution_date__lte && {
+      execution_date__lte: getEndOfDay(execution_date__lte),
+    }),
     ...(value && { value: toWei(value) }),
   }
 }
