@@ -41,6 +41,10 @@ export const extendedSafeTokensSelector = createSelector(
       return List([])
     }
 
+    if (safeBalances.length === 0) {
+      safeBalances = [{ tokenBalance: '0', tokenAddress: ethAsToken?.address }]
+    }
+
     safeBalances.forEach((safeBalance) => {
       const tokenAddress = safeBalance.tokenAddress
 
