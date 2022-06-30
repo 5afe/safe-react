@@ -58,6 +58,14 @@ const OVERVIEW = {
     event: GTM_EVENT.CLICK,
     action: 'New transaction',
   },
+  NOTIFICATION_CENTER: {
+    event: GTM_EVENT.CLICK,
+    action: 'Open Notification Center',
+  },
+  NOTIFICATION_INTERACTION: {
+    event: GTM_EVENT.CLICK,
+    action: 'Interact with notification',
+  },
 }
 
 export const OVERVIEW_CATEGORY = 'overview'

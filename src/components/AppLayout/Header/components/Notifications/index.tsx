@@ -15,6 +15,8 @@ import { background, black300, border, primary200, primary400, sm } from 'src/th
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import NotificationList from 'src/components/AppLayout/Header/components/Notifications/NotificationList'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 export const NOTIFICATION_LIMIT = 4
 
@@ -61,6 +63,9 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   }
 
   const handleClickBell = () => {
+    if (!open) {
+      trackEvent(OVERVIEW_EVENTS.NOTIFICATION_CENTER)
+    }
     handleRead()
     toggle()
   }
