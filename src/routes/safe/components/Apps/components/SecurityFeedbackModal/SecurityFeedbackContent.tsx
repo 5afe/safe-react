@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Icon, Title } from '@gnosis.pm/safe-react-components'
-import { StyledSecurityTitle } from './styles'
-import { SecurityFeedbackPractice } from '../../types'
+
+import { StyledSecurityTitle } from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
+import { SecurityFeedbackPractice } from 'src/routes/safe/components/Apps/types'
 
 type SecurityFeedbackContentProps = Omit<SecurityFeedbackPractice, 'id'>
 
@@ -58,7 +59,6 @@ const StyledTitle = styled(Title)`
 const StyledImage = styled.img`
   max-width: 100%;
   max-height: 100%;
-
   margin-top: 15px;
 `
 

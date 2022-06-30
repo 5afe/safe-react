@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { useState, useRef, useEffect } from 'react'
-import { Button } from '@gnosis.pm/safe-react-components'
 import { Box } from '@material-ui/core'
+import { Button } from '@gnosis.pm/safe-react-components'
+
 type SliderProps = {
   onCancel: () => void
   onSlideChange: (slideIndex: number) => void

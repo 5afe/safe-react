@@ -4,7 +4,8 @@ import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import styled from 'styled-components'
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
-import { StyledTitle } from './styles'
+
+import { StyledTitle } from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
 
 type UnknownAppWarningProps = {
   onHideWarning?: (hideWarning: boolean) => void

@@ -1,6 +1,10 @@
 import { Text, Link } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
-import { StyledSecurityTitle, StyledTitle } from './styles'
+
+import {
+  StyledSecurityTitle,
+  StyledTitle,
+} from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
 
 const LegalDisclaimer = (): JSX.Element => (
   <StyledContainer>

@@ -1,7 +1,8 @@
 import { Box } from '@material-ui/core'
 import styled from 'styled-components'
 import { Text, Dot, Icon, Title } from '@gnosis.pm/safe-react-components'
-import { SecurityFeedbackPractice } from '../../types'
+
+import { SecurityFeedbackPractice } from 'src/routes/safe/components/Apps/types'
 import SecurityFeedbackDomain from './SecurityFeedbackDomain'
 
 type SecurityFeedbackListProps = {
