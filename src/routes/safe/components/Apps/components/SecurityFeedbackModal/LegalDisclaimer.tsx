@@ -25,7 +25,7 @@ const LegalDisclaimer = (): JSX.Element => (
     <br />
     <Text size="xl">
       I have read and understood the{' '}
-      <StyledLink href="https://gnosis-safe.io/terms" size="xl" rel="noopener noreferrer" target="_blank" style={{}}>
+      <StyledLink href="https://gnosis-safe.io/terms" size="xl" rel="noopener noreferrer" target="_blank">
         Terms
       </StyledLink>{' '}
       and this Disclaimer, and agree to be bound by them.
