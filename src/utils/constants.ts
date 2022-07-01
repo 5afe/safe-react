@@ -22,10 +22,6 @@ export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 
 export const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY
 export const ETHGASSTATION_API_KEY = process.env.REACT_APP_ETHGASSTATION_API_KEY
-export const CONFIG_SERVICE_URL =
-  process.env.CONFIG_SERVICE_URL || IS_PRODUCTION
-    ? 'https://safe-config.gnosis.io/api/v1'
-    : 'https://safe-config.staging.gnosisdev.com/api/v1'
 export const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
 export const SPENDING_LIMIT_MODULE_ADDRESS =
   process.env.REACT_APP_SPENDING_LIMIT_MODULE_ADDRESS || '0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134'

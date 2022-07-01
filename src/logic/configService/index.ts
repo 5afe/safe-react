@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { getNetworkId } from 'src/config'
+import { getConfig, getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
-import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 export type AppData = {
   url: string
@@ -18,5 +17,6 @@ enum Endpoints {
 
 export const fetchSafeAppsList = async (): Promise<AppData[]> => {
   const networkId = getNetworkId()
-  return axios.get(`${CONFIG_SERVICE_URL}${Endpoints['SAFE_APPS']}?chainId=${networkId}`).then(({ data }) => data)
+  const config = getConfig()
+  return axios.get(`${config.configServiceUrl}${Endpoints['SAFE_APPS']}?chainId=${networkId}`).then(({ data }) => data)
 }

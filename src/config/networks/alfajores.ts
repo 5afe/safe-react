@@ -8,8 +8,9 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://client-gateway.celo-safe.io/v1',
-  txServiceUrl: 'https://transaction-service.celo-safe.io/api/v1',
+  clientGatewayUrl: 'https://client-gateway.gnosis-safe-staging.celo-networks-dev.org/v1',
+  txServiceUrl: 'https://transaction-service.gnosis-safe-staging.celo-networks-dev.org/api/v1',
+  configServiceUrl: 'https://config-service.gnosis-safe-staging.celo-networks-dev.org/api/v1',
   safeUrl: 'https://alfajores.safe.celo.org',
   gasPriceOracles: [
     {

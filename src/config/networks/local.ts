@@ -4,6 +4,7 @@ import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'http://localhost:8001/v1',
   txServiceUrl: 'http://localhost:8000/api/v1',
+  configServiceUrl: 'http://localhost:8002/api/v1',
   safeUrl: 'http://localhost:3000/app',
   gasPriceOracles: [
     {
