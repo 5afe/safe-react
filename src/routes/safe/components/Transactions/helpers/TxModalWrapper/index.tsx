@@ -253,9 +253,10 @@ export const TxModalWrapper = ({
     }
 
     // is submitStatus is not ready we are not done with gas estimation / tx creation
-    if (submitStatus !== ButtonStatus.READY && txParameters.data) {
+    if (submitStatus !== ButtonStatus.READY || !txParameters.data) {
       return ''
     }
+
     try {
       // If a transaction is executable we simulate with the proposed / selected gasLimit and the actual signatures
       // Otherwise we overwrite the threshold to 1 on tenderly and create a signature
