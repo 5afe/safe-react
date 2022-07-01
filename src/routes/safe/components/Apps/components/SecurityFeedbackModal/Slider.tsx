@@ -50,7 +50,7 @@ const Slider: React.FC<SliderProps> = ({ onSlideChange, children, initialStep })
     setDisabledBtn(true)
   }
 
-  const isFirstStep = activeStep === 1
+  const isFirstStep = activeStep === 0
 
   return (
     <>

@@ -36,10 +36,10 @@ describe('<SecurityFeedbackModal />', () => {
     expect(screen.queryByText('1')).not.toBeInTheDocument()
   })
 
-  it.skip('should avoid to show the Extended List when already reviewed', () => {
+  it('should avoid to show the Extended List when already reviewed', () => {
     render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed />)
 
-    expect(screen.queryAllByText('1').length).toEqual(2)
+    expect(screen.getByText('1')).toBeInTheDocument()
   })
 
   it('should show a warning when the application is not in the default list', () => {
@@ -87,7 +87,7 @@ describe('<SecurityFeedbackModal />', () => {
     expect(baseProps.onConfirm).toHaveBeenCalledTimes(1)
   })
 
-  it.skip('should call onCancel() when clicking the Cancel button', () => {
+  it('should call onCancel() when clicking the Cancel button', () => {
     render(<SecurityFeedbackModal {...baseProps} isFirstTimeAccessingApp isExtendedListReviewed={false} />)
 
     fireEvent.click(screen.getByText(/cancel/i))
