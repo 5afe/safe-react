@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { Box } from '@material-ui/core'
 import { Button } from '@gnosis.pm/safe-react-components'
@@ -19,13 +19,7 @@ type SliderState = {
 const SLIDER_TIMEOUT = 500
 
 const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, children }) => {
-  const allSlides = React.Children.toArray(children).filter(Boolean) as React.ReactElement[]
-  const stateRef = useRef<SliderState>({
-    translate: 1,
-    activeSlide: 0,
-    transition: 0.45,
-    renderedSlides: [],
-  })
+  const allSlides = useMemo(() => React.Children.toArray(children).filter(Boolean) as React.ReactElement[], [children])
   const firstSlide = allSlides?.[0]
   const secondSlide = allSlides?.[1]
   const lastSlide = allSlides?.[allSlides?.length - 1]
@@ -37,12 +31,27 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
     renderedSlides: [lastSlide, firstSlide, secondSlide],
   })
 
-  stateRef.current = state
-
   useEffect(() => {
     const smooth = (e: TransitionEvent) => {
       if ((e.target as HTMLElement).className.includes('inner')) {
-        smoothTransition()
+        setState((state) => {
+          let slides: React.ReactElement[] = []
+
+          if (state.activeSlide === allSlides.length - 1) {
+            slides = [allSlides[allSlides.length - 2], lastSlide, firstSlide]
+          } else if (state.activeSlide === 0) {
+            slides = [lastSlide, firstSlide, secondSlide]
+          } else {
+            slides = allSlides.slice(state.activeSlide - 1, state.activeSlide + 2)
+          }
+
+          return {
+            ...state,
+            renderedSlides: slides,
+            translate: 1,
+            transition: 0,
+          }
+        })
       }
     }
 
@@ -51,8 +60,7 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
     return () => {
       document.removeEventListener('transitionend', smooth)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [allSlides, firstSlide, lastSlide, secondSlide])
 
   useEffect(() => {
     let id: ReturnType<typeof setTimeout>
@@ -69,43 +77,25 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
   }, [disabledBtn])
 
   useEffect(() => {
-    if (stateRef.current.transition === 0) {
+    if (state.transition === 0) {
       setState((prev) => ({ ...prev, transition: 0.45 }))
     }
   }, [state.transition])
 
-  const smoothTransition = () => {
-    let slides: React.ReactElement[] = []
-
-    if (stateRef.current.activeSlide === allSlides.length - 1) {
-      slides = [allSlides[allSlides.length - 2], lastSlide, firstSlide]
-    } else if (stateRef.current.activeSlide === 0) {
-      slides = [lastSlide, firstSlide, secondSlide]
-    } else {
-      slides = allSlides.slice(stateRef.current.activeSlide - 1, stateRef.current.activeSlide + 2)
-    }
-
-    setState({
-      ...stateRef.current,
-      renderedSlides: slides,
-      translate: 1,
-      transition: 0,
-    })
-  }
   const nextSlide = () => {
     if (disabledBtn) return
 
-    if (stateRef.current.activeSlide === allSlides.length - 1) {
+    if (state.activeSlide === allSlides.length - 1) {
       onComplete()
       return
     }
 
-    const activeSlide = stateRef.current.activeSlide === allSlides.length - 1 ? 0 : stateRef.current.activeSlide + 1
+    const activeSlide = state.activeSlide === allSlides.length - 1 ? 0 : state.activeSlide + 1
 
     onSlideChange(activeSlide)
     setDisabledBtn(true)
     setState({
-      ...stateRef.current,
+      ...state,
       translate: 2,
       activeSlide,
     })
@@ -114,12 +104,12 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
   const prevSlide = () => {
     if (disabledBtn) return
 
-    const activeSlide = stateRef.current.activeSlide === 0 ? allSlides.length - 1 : stateRef.current.activeSlide - 1
+    const activeSlide = state.activeSlide === 0 ? allSlides.length - 1 : state.activeSlide - 1
 
     onSlideChange(activeSlide)
     setDisabledBtn(true)
     setState({
-      ...stateRef.current,
+      ...state,
       translate: 0,
       activeSlide,
     })
@@ -131,11 +121,11 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
         <StyledInner
           className="inner"
           style={{
-            transition: `transform ${stateRef.current.transition}s ease`,
-            transform: `translateX(-${stateRef.current.translate * 100}%)`,
+            transition: `transform ${state.transition}s ease`,
+            transform: `translateX(-${state.translate * 100}%)`,
           }}
         >
-          {stateRef.current.renderedSlides.map((slide, index) => (
+          {state.renderedSlides.map((slide, index) => (
             <SliderItem key={index}>{slide}</SliderItem>
           ))}
         </StyledInner>
@@ -146,9 +136,9 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
           size="md"
           variant="bordered"
           fullWidth
-          onClick={stateRef.current.activeSlide === 0 ? onCancel : prevSlide}
+          onClick={state.activeSlide === 0 ? onCancel : prevSlide}
         >
-          {stateRef.current.activeSlide === 0 ? 'Cancel' : 'Back'}
+          {state.activeSlide === 0 ? 'Cancel' : 'Back'}
         </Button>
 
         <Button
