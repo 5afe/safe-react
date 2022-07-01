@@ -90,7 +90,7 @@ const SecurityFeedbackModal = ({
         <StyledLinearProgress
           variant="determinate"
           value={progressValue}
-          isWarningStep={isLastSlide && shouldShowUnknownAppWarning}
+          $isWarningStep={isLastSlide && shouldShowUnknownAppWarning}
         />
         <StyledGrid container justifyContent="center" alignItems="center" direction="column">
           <Slider onSlideChange={handleSlideChange}>
@@ -137,12 +137,12 @@ const StyledGrid = styled(Grid)`
   padding: 24px;
 `
 
-const StyledLinearProgress = styled(LinearProgress)<{ isWarningStep: boolean }>`
+const StyledLinearProgress = styled(LinearProgress)<{ $isWarningStep: boolean }>`
   height: 6px;
   background-color: #fff;
   border-radius: 8px 8px 0 0;
   .MuiLinearProgress-bar {
-    background-color: ${({ theme, isWarningStep }) => (isWarningStep ? '#e8663d' : theme.colors.primary)};
+    background-color: ${({ theme, $isWarningStep }) => ($isWarningStep ? '#e8663d' : theme.colors.primary)};
     border-radius: 8px;
   }
 `
