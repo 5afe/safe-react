@@ -4,63 +4,17 @@ import { Box } from '@material-ui/core'
 import { Button } from '@gnosis.pm/safe-react-components'
 
 type SliderProps = {
-  onCancel: () => void
   onSlideChange: (slideIndex: number) => void
-  onComplete: () => void
-}
-
-type SliderState = {
-  translate: number
-  activeSlide: number
-  transition: number
-  renderedSlides: React.ReactElement[]
+  initialStep?: number
 }
 
 const SLIDER_TIMEOUT = 500
 
-const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, children }) => {
+const Slider: React.FC<SliderProps> = ({ onSlideChange, children, initialStep }) => {
   const allSlides = useMemo(() => React.Children.toArray(children).filter(Boolean) as React.ReactElement[], [children])
-  const firstSlide = allSlides?.[0]
-  const secondSlide = allSlides?.[1]
-  const lastSlide = allSlides?.[allSlides?.length - 1]
+
+  const [activeStep, setActiveStep] = useState(initialStep || 0)
   const [disabledBtn, setDisabledBtn] = useState(false)
-  const [state, setState] = useState<SliderState>({
-    translate: 1,
-    activeSlide: 0,
-    transition: 0.45,
-    renderedSlides: [lastSlide, firstSlide, secondSlide],
-  })
-
-  useEffect(() => {
-    const smooth = (e: TransitionEvent) => {
-      if ((e.target as HTMLElement).className.includes('inner')) {
-        setState((state) => {
-          let slides: React.ReactElement[] = []
-
-          if (state.activeSlide === allSlides.length - 1) {
-            slides = [allSlides[allSlides.length - 2], lastSlide, firstSlide]
-          } else if (state.activeSlide === 0) {
-            slides = [lastSlide, firstSlide, secondSlide]
-          } else {
-            slides = allSlides.slice(state.activeSlide - 1, state.activeSlide + 2)
-          }
-
-          return {
-            ...state,
-            renderedSlides: slides,
-            translate: 1,
-            transition: 0,
-          }
-        })
-      }
-    }
-
-    document.addEventListener('transitionend', smooth)
-
-    return () => {
-      document.removeEventListener('transitionend', smooth)
-    }
-  }, [allSlides, firstSlide, lastSlide, secondSlide])
 
   useEffect(() => {
     let id: ReturnType<typeof setTimeout>
@@ -76,69 +30,40 @@ const Slider: React.FC<SliderProps> = ({ onCancel, onSlideChange, onComplete, ch
     }
   }, [disabledBtn])
 
-  useEffect(() => {
-    if (state.transition === 0) {
-      setState((prev) => ({ ...prev, transition: 0.45 }))
-    }
-  }, [state.transition])
-
   const nextSlide = () => {
     if (disabledBtn) return
 
-    if (state.activeSlide === allSlides.length - 1) {
-      onComplete()
-      return
-    }
+    const nextStep = activeStep + 1
 
-    const activeSlide = state.activeSlide === allSlides.length - 1 ? 0 : state.activeSlide + 1
-
-    onSlideChange(activeSlide)
+    onSlideChange(nextStep)
+    setActiveStep(nextStep)
     setDisabledBtn(true)
-    setState({
-      ...state,
-      translate: 2,
-      activeSlide,
-    })
   }
 
   const prevSlide = () => {
     if (disabledBtn) return
 
-    const activeSlide = state.activeSlide === 0 ? allSlides.length - 1 : state.activeSlide - 1
+    const prevStep = activeStep - 1
 
-    onSlideChange(activeSlide)
+    onSlideChange(prevStep)
+    setActiveStep(prevStep)
     setDisabledBtn(true)
-    setState({
-      ...state,
-      translate: 0,
-      activeSlide,
-    })
   }
+
+  const isFirstStep = activeStep === 1
 
   return (
     <>
       <StyledContainer className="container">
-        <StyledInner
-          className="inner"
-          style={{
-            transition: `transform ${state.transition}s ease`,
-            transform: `translateX(-${state.translate * 100}%)`,
-          }}
-        >
-          {state.renderedSlides.map((slide, index) => (
+        <StyledInner className="inner" activeStep={activeStep}>
+          {allSlides.map((slide, index) => (
             <SliderItem key={index}>{slide}</SliderItem>
           ))}
         </StyledInner>
       </StyledContainer>
       <Box display="flex" justifyContent="center" width="100%">
-        <Button
-          color="primary"
-          size="md"
-          variant="bordered"
-          fullWidth
-          onClick={state.activeSlide === 0 ? onCancel : prevSlide}
-        >
-          {state.activeSlide === 0 ? 'Cancel' : 'Back'}
+        <Button color="primary" size="md" variant="bordered" fullWidth onClick={prevSlide}>
+          {isFirstStep ? 'Cancel' : 'Back'}
         </Button>
 
         <Button
@@ -165,13 +90,16 @@ const StyledContainer = styled.div`
   overflow: hidden;
 `
 
-const StyledInner = styled.div`
+const StyledInner = styled.div<{ activeStep: number }>`
   position: relative;
   display: flex;
   min-width: 100%;
   min-height: 100%;
   transform: translateX(0);
   height: 426px;
+
+  transition: transform 0.5s ease;
+  transform: translateX(-${({ activeStep }) => activeStep * 100}%);
 `
 
 const SliderItem = styled.div`

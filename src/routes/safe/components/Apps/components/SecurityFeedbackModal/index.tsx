@@ -32,15 +32,7 @@ const SecurityFeedbackModal = ({
   isExtendedListReviewed,
 }: SecurityFeedbackModalProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
-  const [currentSlide, setCurrentSlide] = useState(1)
-
-  const handleComplete = () => {
-    onConfirm(hideWarning)
-  }
-
-  const handleSlideChange = (step: number) => {
-    setCurrentSlide(step + 1)
-  }
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const totalSlides = useMemo(() => {
     let totalSlides = 0
@@ -64,12 +56,27 @@ const SecurityFeedbackModal = ({
     return totalSlides
   }, [isConsentAccepted, isExtendedListReviewed, isFirstTimeAccessingApp, isSafeAppInDefaultList])
 
+  const handleSlideChange = (newStep: number) => {
+    const isFirstStep = newStep === -1
+    const isLastStep = newStep === totalSlides
+
+    if (isFirstStep) {
+      onCancel()
+    }
+
+    if (isLastStep) {
+      onConfirm(hideWarning)
+    }
+
+    setCurrentSlide(newStep)
+  }
+
   const progressValue = useMemo(() => {
-    return (currentSlide * 100) / totalSlides
+    return ((currentSlide + 1) * 100) / totalSlides
   }, [currentSlide, totalSlides])
 
   const isLastSlide = useMemo(() => {
-    return currentSlide === totalSlides
+    return currentSlide === totalSlides - 1
   }, [currentSlide, totalSlides])
 
   const shouldShowUnknownAppWarning = useMemo(
@@ -86,7 +93,7 @@ const SecurityFeedbackModal = ({
           isWarningStep={isLastSlide && shouldShowUnknownAppWarning}
         />
         <StyledGrid container justifyContent="center" alignItems="center" direction="column">
-          <Slider onCancel={onCancel} onComplete={handleComplete} onSlideChange={handleSlideChange}>
+          <Slider onSlideChange={handleSlideChange}>
             {!isConsentAccepted && <LegalDisclaimer />}
             {isFirstTimeAccessingApp && isExtendedListReviewed && (
               <SecurityFeedbackList practices={SECURITY_PRACTICES} appUrl={appUrl} />
