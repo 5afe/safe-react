@@ -35,7 +35,7 @@ describe('Tx Modal', () => {
       cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
     })
 
-    it.only('should display Send Funds modal with all the form elements', () => {
+    it('should display Send Funds modal with all the form elements', () => {
       // Opens Tx Modal
       cy.contains('New Transaction').click()
 
@@ -74,6 +74,24 @@ describe('Tx Modal', () => {
 
       // Modal is closed
       cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
+    })
+
+    it('should validate the form fields', () => {
+      // Opens Tx Modal
+      cy.contains('New Transaction').click()
+
+      // Click on Send Funds
+      cy.contains('Send funds').click()
+
+      // Click on the Token selector
+      cy.contains('Select an asset*').click()
+
+      const ownedTokens = ['Dai', 'Wrapped Ether', 'Ether', 'Uniswap', 'Gnosis', '0x', 'USD Coin']
+      ownedTokens.forEach((token) => {
+        cy.get('ul[role="listbox"]').contains(token)
+      })
+
+      // to continue
     })
   })
 })
