@@ -15,6 +15,9 @@ import { Overwrite } from 'src/types/helpers'
 import { TxModalWrapper } from '../../helpers/TxModalWrapper'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { useRouteMatch } from 'react-router-dom'
+import { SAFE_ROUTES } from 'src/routes/routes'
 
 type Props = {
   isOpen: boolean
@@ -34,6 +37,12 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
 
   const nonce = isMultisigExecutionInfo(transaction.executionInfo) ? transaction.executionInfo.nonce : 0
 
+  const isSafeAppView = !!useSafeAppUrl().getAppUrl()
+  const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS) && isSafeAppView
+
+  // if we are in a Safe App we show the transaction queue bar instead of redirect
+  const navigateToTransactionsTab = !isSafeAppRoute
+
   const sendReplacementTransaction = (txParameters: TxParameters, delayExecution: boolean) => {
     dispatch(
       createTransaction({
@@ -46,6 +55,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
         ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
         delayExecution,
+        navigateToTransactionsTab,
       }),
     )
     onClose()
