@@ -14,7 +14,7 @@ describe('Tx Modal', () => {
 
   describe('Send funds modal', () => {
     it('should open the modal when clicking New Transaction', () => {
-      // Modal should be blosed
+      // Modal should be closed
       cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
 
       // Opens Tx Modal
@@ -38,48 +38,14 @@ describe('Tx Modal', () => {
       cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
     })
 
-    it('should display Send Funds modal with all the form elements', () => {
-      // Opens Tx Modal
+    it('should close the modal by clicking cancel', () => {
+      // Opens Send Funds modal
       cy.contains('New Transaction').click()
-
-      // Click on Send Funds
       cy.contains('Send funds').click()
 
-      // Modal header
-      cy.get('form')
-        .prev()
-        .prev()
-        .within(() => {
-          // Send Funds modal is open
-          cy.contains('Send funds').should('be.visible')
-          cy.contains('Step 1 of 2').should('be.visible')
-
-          // Current network is same as Safe
-          cy.contains('Rinkeby').should('be.visible')
-        })
-
-      // It contains the form elements
-      cy.get('form').within(() => {
-        // Sending from the current Safe address
-        const [chainPrefix, safeAddress] = TEST_SAFE.split(':')
-        cy.contains(chainPrefix)
-        cy.contains(safeAddress)
-
-        // Current ETH balance
-        cy.contains('Balance:').contains('0.3 ETH')
-
-        // Recipient field
-        cy.get('#address-book-input').should('be.visible')
-
-        // Token selector
-        cy.contains('Select an asset*').should('be.visible')
-
-        // Amount field
-        cy.contains('Amount').should('be.visible')
-      })
-
-      // Review button is disabled
-      cy.get('button[type="submit"]').should('be.disabled')
+      // Send Funds modal is open
+      cy.contains('Send funds').should('be.visible')
+      cy.contains('Step 1 of 2').should('be.visible')
 
       // Close modal when clicking Cancel
       cy.contains('Cancel').click()
@@ -88,13 +54,57 @@ describe('Tx Modal', () => {
       cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
     })
 
-    describe('Send funds form validation', () => {
+    describe('Send Funds form', () => {
       before(() => {
-        // Opens Tx Modal
+        // Open Send Funds Modal
         cy.contains('New Transaction').click()
-
-        // Click on Send Funds
         cy.contains('Send funds').click()
+      })
+
+      it('should display Send Funds modal with all the form elements', () => {
+        // Modal header
+        cy.get('form')
+          .prev()
+          .prev()
+          .within(() => {
+            // Send Funds modal is open
+            cy.contains('Send funds').should('be.visible')
+            cy.contains('Step 1 of 2').should('be.visible')
+
+            // Current network is same as Safe
+            cy.contains('Rinkeby').should('be.visible')
+          })
+
+        // It contains the form elements
+        cy.get('form').within(() => {
+          // Sending from the current Safe address
+          const [chainPrefix, safeAddress] = TEST_SAFE.split(':')
+          cy.contains(chainPrefix)
+          cy.contains(safeAddress)
+
+          // Current ETH balance
+          cy.contains('Balance:').contains('0.3 ETH')
+
+          // Recipient field
+          cy.get('#address-book-input').should('be.visible')
+
+          // Token selector
+          cy.contains('Select an asset*').should('be.visible')
+
+          // Amount field
+          cy.contains('Amount').should('be.visible')
+        })
+
+        // Review button is disabled
+        cy.get('button[type="submit"]').should('be.disabled')
+      })
+
+      it('should resolve the ENS name', () => {
+        // Fills recipient with ens
+        cy.get('#address-book-input').type(RECIPIENT_ENS)
+
+        // Waits for resolving the ENS
+        cy.contains(RECIPIENT_ADDRESS).should('be.visible')
       })
 
       it('should have all tokens available in the token selector', () => {
@@ -146,14 +156,6 @@ describe('Tx Modal', () => {
         cy.get('input[placeholder="Amount*"]').should('have.value', '0.000004')
       })
 
-      it('should resolve the ENS name', () => {
-        // Fills recipient with ens
-        cy.get('#address-book-input').type(RECIPIENT_ENS)
-
-        // Waits for resolving the ENS
-        cy.contains(RECIPIENT_ADDRESS).should('be.visible')
-      })
-
       it('should advance to the Review step', () => {
         // Clicks Review
         cy.contains('Review').click()
@@ -163,7 +165,7 @@ describe('Tx Modal', () => {
       })
     })
 
-    describe('Review modal contains correct parameters', () => {
+    describe('Review modal', () => {
       before(() => {
         // Wait max 10s for estimate to finish
         cy.contains('Submit', { timeout: 10000 })
