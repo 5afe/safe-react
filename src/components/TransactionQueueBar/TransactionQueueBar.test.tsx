@@ -152,9 +152,9 @@ describe('<TransactionQueueBar>', () => {
 
     expect(screen.getByText('(1) Transaction Queue')).toBeInTheDocument()
 
-    // shows pending transaction preview info
-    expect(screen.getByText(currentNonce)).toBeInTheDocument()
-    expect(screen.getByText('Needs confirmations')).toBeInTheDocument()
+    // collapsed by default
+    const queueBarSummaryNode = screen.getByTestId('transaction-queue-bar-summary')
+    expect(queueBarSummaryNode).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('Hides the TransactionQueueBar bar outside of a Safe App', () => {
@@ -282,5 +282,9 @@ describe('<TransactionQueueBar>', () => {
     fireEvent.click(screen.getByText('(1) Transaction Queue'))
 
     expect(queueBarNode).toHaveAttribute('aria-expanded', 'true')
+
+    // shows pending transaction preview info
+    expect(screen.getByText(currentNonce)).toBeInTheDocument()
+    expect(screen.getByText('Needs confirmations')).toBeInTheDocument()
   })
 })

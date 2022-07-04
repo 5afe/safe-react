@@ -39,8 +39,8 @@ const TransactionQueueBar = (): ReactElement | null => {
   useEffect(() => {
     if (queuedTxCount) {
       setClosed(false)
-      setExpanded(false)
     }
+    setExpanded(false)
   }, [queuedTxCount])
 
   const isSafeAppView = !!useSafeAppUrl().getAppUrl()
@@ -62,6 +62,8 @@ const TransactionQueueBar = (): ReactElement | null => {
                 enter: 0,
                 exit: 500,
               },
+              unmountOnExit: true,
+              mountOnEnter: true,
             }}
           >
             <StyledAccordionSummary data-testid="transaction-queue-bar-summary" expandIcon={<StyledExpandIcon />}>
