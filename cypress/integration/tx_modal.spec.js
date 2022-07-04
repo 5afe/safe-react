@@ -1,5 +1,6 @@
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
-const RECIPIENT_ADDRESS = 'diogo.eth'
+const RECIPIENT_ENS = 'diogo.eth'
+const RECIPIENT_ADDRESS = '0x6a5602335a878ADDCa4BF63a050E34946B56B5bC'
 const SAFE_NONCE = '5'
 
 describe('Tx Modal', () => {
@@ -44,9 +45,18 @@ describe('Tx Modal', () => {
       // Click on Send Funds
       cy.contains('Send funds').click()
 
-      // Send Funds modal is open
-      cy.contains('Send funds').should('be.visible')
-      cy.contains('Step 1 of 2').should('be.visible')
+      // Modal header
+      cy.get('form')
+        .prev()
+        .prev()
+        .within(() => {
+          // Send Funds modal is open
+          cy.contains('Send funds').should('be.visible')
+          cy.contains('Step 1 of 2').should('be.visible')
+
+          // Current network is same as Safe
+          cy.contains('Rinkeby').should('be.visible')
+        })
 
       // It contains the form elements
       cy.get('form').within(() => {
@@ -136,10 +146,15 @@ describe('Tx Modal', () => {
         cy.get('input[placeholder="Amount*"]').should('have.value', '0.000004')
       })
 
-      it('should advance to the Review step', () => {
-        // Fills recipient
-        cy.get('#address-book-input').type(RECIPIENT_ADDRESS)
+      it('should resolve the ENS name', () => {
+        // Fills recipient with ens
+        cy.get('#address-book-input').type(RECIPIENT_ENS)
 
+        // Waits for resolving the ENS
+        cy.contains(RECIPIENT_ADDRESS).should('be.visible')
+      })
+
+      it('should advance to the Review step', () => {
         // Clicks Review
         cy.contains('Review').click()
 
@@ -149,6 +164,21 @@ describe('Tx Modal', () => {
     })
 
     describe('Review modal contains correct parameters', () => {
+      before(() => {
+        // Wait max 10s for estimate to finish
+        cy.contains('Submit', { timeout: 10000 })
+      })
+
+      it('should have the same parameters as the previous step', () => {
+        // Sender
+        cy.contains('Sending from').parent().next().contains(TEST_SAFE)
+        // Recipient
+        cy.contains('Recipient').parent().next().contains(RECIPIENT_ADDRESS)
+
+        // Token value
+        cy.contains('0.000004 GNO')
+      })
+
       it.skip('should contain a hardcoded gas limit value', () => {
         const GAS_LIIMIT = '55784'
         // Click Advanced parameters
