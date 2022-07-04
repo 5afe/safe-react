@@ -15,17 +15,19 @@ import { background, black300, border, primary200, primary400, sm } from 'src/th
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import NotificationList from 'src/components/AppLayout/Header/components/Notifications/NotificationList'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import { trackEvent } from 'src/utils/googleTagManager'
 
 export const NOTIFICATION_LIMIT = 4
 
 export const getSortedNotifications = (notifications: NotificationsState): NotificationsState => {
   const chronologicalNotifications = notifications.sort((a, b) => b.timestamp - a.timestamp)
 
-  const unreadActionNotifications = chronologicalNotifications.filter(({ read, action }) => !read && action)
-  const unreadNotifications = chronologicalNotifications.filter(({ read, action }) => !read && !action)
+  const unreadLinkNotifications = chronologicalNotifications.filter(({ read, link }) => !read && link)
+  const unreadNotifications = chronologicalNotifications.filter(({ read, link }) => !read && !link)
   const readNotifications = chronologicalNotifications.filter(({ read }) => read)
 
-  return [...unreadActionNotifications, ...unreadNotifications, ...readNotifications]
+  return [...unreadLinkNotifications, ...unreadNotifications, ...readNotifications]
 }
 
 const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
@@ -61,12 +63,18 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
   }
 
   const handleClickBell = () => {
+    if (!open) {
+      trackEvent(OVERVIEW_EVENTS.NOTIFICATION_CENTER)
+    }
     handleRead()
     toggle()
   }
 
   const handleClickAway = () => {
-    handleRead()
+    if (open) {
+      handleRead()
+      setShowAll(false)
+    }
     clickAway()
   }
 
@@ -114,7 +122,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
               </div>
               {hasNotifications && <ClearAllButton onClick={handleClear}>Clear All</ClearAllButton>}
             </NotificationsHeader>
-            <NotificationList notifications={notificationsToShow} />
+            <NotificationList notifications={notificationsToShow} handleClickAway={handleClickAway} />
             {canExpand && (
               <NotificationsFooter>
                 <ExpandIconButton onClick={() => setShowAll((prev) => !prev)} disableRipple>
@@ -198,7 +206,7 @@ const ClearAllButton = styled.button`
 `
 
 const NotificationsFooter = styled.div`
-  padding: 24px 32px 16px;
+  padding: 16px;
 `
 
 export const NotificationSubtitle = styled.span`

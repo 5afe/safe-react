@@ -69,10 +69,17 @@ describe('PendingTxMonitor', () => {
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
-      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
-        numOfAttempts: 1,
-        startingDelay: 0,
-        timeMultiple: 0,
+      await PendingTxMonitor.monitorTx({
+        block: 0,
+        txId: 'fakeTxId',
+        txHash: 'fakeTxHash',
+        safeAddress: '0x0000000000000000000000000000000000000000',
+        shortName: 'rin',
+        options: {
+          numOfAttempts: 1,
+          startingDelay: 0,
+          timeMultiple: 0,
+        },
       })
 
       expect(dispatchSpy).not.toBeCalled()
@@ -82,10 +89,17 @@ describe('PendingTxMonitor', () => {
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
-      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
-        numOfAttempts: 1,
-        startingDelay: 0,
-        timeMultiple: 0,
+      await PendingTxMonitor.monitorTx({
+        block: 0,
+        txId: 'fakeTxId',
+        txHash: 'fakeTxHash',
+        safeAddress: '0x0000000000000000000000000000000000000000',
+        shortName: 'rin',
+        options: {
+          numOfAttempts: 1,
+          startingDelay: 0,
+          timeMultiple: 0,
+        },
       })
 
       expect(dispatchSpy).toBeCalledWith({
@@ -99,10 +113,17 @@ describe('PendingTxMonitor', () => {
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
-      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
-        numOfAttempts: 1,
-        startingDelay: 0,
-        timeMultiple: 0,
+      await PendingTxMonitor.monitorTx({
+        block: 0,
+        txId: 'fakeTxId',
+        txHash: 'fakeTxHash',
+        safeAddress: '0x0000000000000000000000000000000000000000',
+        shortName: 'rin',
+        options: {
+          numOfAttempts: 1,
+          startingDelay: 0,
+          timeMultiple: 0,
+        },
       })
 
       expect(dispatchSpy).toHaveBeenCalledTimes(1)
@@ -117,10 +138,17 @@ describe('PendingTxMonitor', () => {
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
-      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
-        numOfAttempts: 1,
-        startingDelay: 0,
-        timeMultiple: 0,
+      await PendingTxMonitor.monitorTx({
+        block: 0,
+        txId: 'fakeTxId',
+        txHash: 'fakeTxHash',
+        safeAddress: '0x0000000000000000000000000000000000000000',
+        shortName: 'rin',
+        options: {
+          numOfAttempts: 1,
+          startingDelay: 0,
+          timeMultiple: 0,
+        },
       })
 
       expect(dispatchSpy).toHaveBeenCalledTimes(2)
@@ -131,10 +159,17 @@ describe('PendingTxMonitor', () => {
 
       const dispatchSpy = jest.spyOn(store.store, 'dispatch').mockImplementation(() => jest.fn())
 
-      await PendingTxMonitor.monitorTx(0, 'fakeTxId', 'fakeTxHash', {
-        numOfAttempts: 1,
-        startingDelay: 0,
-        timeMultiple: 0,
+      await PendingTxMonitor.monitorTx({
+        block: 0,
+        txId: 'fakeTxId',
+        txHash: 'fakeTxHash',
+        safeAddress: '0x0000000000000000000000000000000000000000',
+        shortName: 'rin',
+        options: {
+          numOfAttempts: 1,
+          startingDelay: 0,
+          timeMultiple: 0,
+        },
       })
 
       expect(dispatchSpy).toHaveBeenCalledTimes(2)
