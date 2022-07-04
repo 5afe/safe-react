@@ -9,6 +9,9 @@ import { AppReduxState } from 'src/store'
 import { md, sm } from 'src/theme/variables'
 import styled from 'styled-components'
 import { BatchExecuteHoverContext } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { useRouteMatch } from 'react-router-dom'
+import { SAFE_ROUTES } from 'src/routes/routes'
 
 interface BatchExecuteButtonProps {
   onClick: () => void
@@ -35,8 +38,15 @@ export const BatchExecuteButton = ({ onClick }: BatchExecuteButtonProps): ReactE
     hoverContext.setActiveHover()
   }, [hoverContext])
 
+  const isSafeAppView = !!useSafeAppUrl().getAppUrl()
+  const isSafeAppRoute = !!useRouteMatch(SAFE_ROUTES.APPS) && isSafeAppView
+
   return (
-    <OnboardingTooltip text="Confirmed transactions can be executed in batches" widgetLocalStorageId={HELP_STORAGE_KEY}>
+    <OnboardingTooltip
+      defaultHidden={isSafeAppRoute}
+      text="Confirmed transactions can be executed in batches"
+      widgetLocalStorageId={HELP_STORAGE_KEY}
+    >
       <ButtonWrapper>
         <Tooltip
           title={

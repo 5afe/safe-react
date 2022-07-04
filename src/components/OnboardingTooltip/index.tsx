@@ -13,16 +13,17 @@ import { Tooltip } from '../layout/Tooltip'
 export const OnboardingTooltip = ({
   children,
   widgetLocalStorageId,
+  defaultHidden,
   text,
 }: {
   children: React.ReactElement
   widgetLocalStorageId: string
-
+  defaultHidden?: boolean
   text: string
 }): React.ReactElement => {
   const [widgetHidden, setWidgetHidden] = useCachedState<boolean>(widgetLocalStorageId)
 
-  return widgetHidden ? (
+  return widgetHidden || defaultHidden ? (
     children
   ) : (
     <StyledTooltip
