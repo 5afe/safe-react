@@ -91,7 +91,42 @@ describe('Tx Modal', () => {
         cy.get('ul[role="listbox"]').contains(token)
       })
 
-      // to continue
+      // Select a token
+      cy.get('ul[role="listbox"]').contains('Gnosis').click()
+
+      // Insert an incorrect amount
+      cy.get('input[placeholder="Amount*"]').type('0.4')
+
+      // Selecting more than the balance is not allowed
+      cy.contains('Maximum value is 0.000004')
+
+      // Form field contains an error class
+      cy.get('input[placeholder="Amount*"]')
+        // Parent div is MuiInputBase-root
+        .parent('div')
+        .should(($div) => {
+          // Turn the classList into an array
+          const classList = Array.from($div[0].classList)
+          expect(classList).to.include('MuiInputBase-root').and.to.include('Mui-error')
+        })
+
+      // Insert a correct amount
+      cy.get('input[placeholder="Amount*"]').clear().type('0.000002')
+
+      // Form field does not contain an error class
+      cy.get('input[placeholder="Amount*"]')
+        // Parent div is MuiInputBase-root
+        .parent('div')
+        .should(($div) => {
+          // Turn the classList into an array
+          const classList = Array.from($div[0].classList)
+          // Check if it contains the error class
+          expect(classList).to.include('MuiInputBase-root').and.not.to.include('Mui-error')
+        })
+
+      // Click Send max fills the input with token total amount
+      cy.contains('Send max').click()
+      cy.get('input[placeholder="Amount*"]').should('have.value', '0.000004')
     })
   })
 })
