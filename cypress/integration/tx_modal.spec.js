@@ -135,9 +135,8 @@ describe('Tx Modal', () => {
         cy.contains('Send max').click()
         cy.get('input[placeholder="Amount*"]').should('have.value', '0.000004')
       })
-    })
-    describe('Review modal contains correct parameters', () => {
-      it('should contain the Safe nonce upon clicking Advanced parameters', () => {
+
+      it('should advance to the Review step', () => {
         // Fills recipient
         cy.get('#address-book-input').type(RECIPIENT_ADDRESS)
 
@@ -146,10 +145,22 @@ describe('Tx Modal', () => {
 
         // Modal step 2
         cy.contains('Step 2 of 2').should('be.visible')
+      })
+    })
 
+    describe('Review modal contains correct parameters', () => {
+      it.skip('should contain a hardcoded gas limit value', () => {
+        const GAS_LIIMIT = '55784'
+        // Click Advanced parameters
+        cy.contains('Estimated fee price').click()
+
+        // Find Safe nonce
+        cy.contains('Gas limit').next().contains(GAS_LIIMIT).should('be.visible')
+      })
+
+      it('should contain the Safe nonce upon clicking Advanced parameters', () => {
         // Click Advanced parameters
         cy.contains('Advanced parameters').click()
-
         // Find Safe nonce
         cy.contains('Safe nonce').next().contains(SAFE_NONCE).should('be.visible')
       })
