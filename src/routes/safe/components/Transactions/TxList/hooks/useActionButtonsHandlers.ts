@@ -60,7 +60,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
           dispatch(
             showNotification({
               ...NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG,
-              link: { to: deeplink, title: 'Transaction' },
+              link: { to: deeplink, title: 'View Transaction' },
             }),
           )
           return
