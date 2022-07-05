@@ -109,7 +109,7 @@ const SecurityFeedbackModal = ({
                   </SecurityFeedbackContent>
                 )
               })}
-            {shouldShowUnknownAppWarning && <UnknownAppWarning onHideWarning={setHideWarning} />}
+            {shouldShowUnknownAppWarning && <UnknownAppWarning url={appUrl} onHideWarning={setHideWarning} />}
           </Slider>
         </StyledGrid>
       </StyledWrapper>

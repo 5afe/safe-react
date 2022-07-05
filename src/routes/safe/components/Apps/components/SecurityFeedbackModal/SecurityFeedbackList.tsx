@@ -3,14 +3,13 @@ import styled from 'styled-components'
 import { Text, Dot, Icon, Title } from '@gnosis.pm/safe-react-components'
 
 import { SecurityFeedbackPractice } from 'src/routes/safe/components/Apps/types'
-import SecurityFeedbackDomain from './SecurityFeedbackDomain'
 
 type SecurityFeedbackListProps = {
   practices: SecurityFeedbackPractice[]
   appUrl: string
 }
 
-const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps): React.ReactElement => {
+const SecurityFeedbackList = ({ practices }: SecurityFeedbackListProps): React.ReactElement => {
   return (
     <>
       <StyledIcon size="md" type="privacyPolicy" color="primary" />
@@ -24,26 +23,12 @@ const SecurityFeedbackList = ({ practices, appUrl }: SecurityFeedbackListProps):
           <Box flexDirection="column">
             <Text size="xl">{practice.title}</Text>
             {practice.subtitle && <Text size="xl">{practice.subtitle}</Text>}
-            {!practice.imageSrc && (
-              <StyledUrlContainer>
-                <SecurityFeedbackDomain url={appUrl} showInOneLine />
-              </StyledUrlContainer>
-            )}
           </Box>
         </Box>
       ))}
     </>
   )
 }
-
-const StyledUrlContainer = styled.div`
-  display: block;
-  text-align: left;
-  margin: 10px 0 0 0;
-  p {
-    width: 380px;
-  }
-`
 
 const StyledIcon = styled(Icon)`
   margin-top: 10px;

@@ -6,12 +6,14 @@ import styled from 'styled-components'
 import { Text, Icon } from '@gnosis.pm/safe-react-components'
 
 import { StyledTitle } from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
+import SecurityFeedbackDomain from './SecurityFeedbackDomain'
 
 type UnknownAppWarningProps = {
+  url?: string
   onHideWarning?: (hideWarning: boolean) => void
 }
 
-const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.ReactElement => {
+const UnknownAppWarning = ({ url, onHideWarning }: UnknownAppWarningProps): React.ReactElement => {
   const [toggleHideWarning, setToggleHideWarning] = useState(false)
 
   const handleToggleWarningPreference = (): void => {
@@ -27,9 +29,8 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
       flexDirection="column"
       height={isColumnLayout ? '100%' : 'auto'}
       alignItems="center"
-      mt={isColumnLayout ? 8 : 0}
     >
-      <Box display={isColumnLayout ? 'block' : 'flex'} alignItems="center">
+      <Box display={isColumnLayout ? 'block' : 'flex'} alignItems="center" mt={isColumnLayout ? 6 : 0}>
         <StyledIcon type="alert" size="md" isColumnLayout={isColumnLayout} />
         <StyledWarningTitle size="sm" bold isColumnLayout={isColumnLayout}>
           Warning
@@ -42,6 +43,9 @@ const UnknownAppWarning = ({ onHideWarning }: UnknownAppWarningProps): React.Rea
       <StyledText isColumnLayout={isColumnLayout} size="lg">
         Check the link you are using and ensure it comes from a trusted source
       </StyledText>
+      <br />
+      {url && <SecurityFeedbackDomain url={url} showInOneLine />}
+      <br />
       {onHideWarning && (
         <StyledFormControlLabel
           control={
