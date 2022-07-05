@@ -140,14 +140,17 @@ describe('Tx Modal', () => {
         cy.contains('0.000004 GNO')
       })
 
-      it('should contain a hardcoded gas limit value', ;() => {
+      it('should contain a hardcoded gas limit value', () => {
         const GAS_LIIMIT = '79804' // fix if sending 0.000004 GNO to diogo.eth
 
         // Click Advanced parameters
         cy.contains('Estimated fee price').click()
 
-        // Find Safe nonce
+        // Find Gas limit
         cy.contains('Gas limit').next().contains(GAS_LIIMIT).should('be.visible')
+
+        // Close info again
+        cy.contains('Estimated fee price').click()
       })
 
       it('should contain the Safe nonce upon clicking Advanced parameters', () => {
@@ -155,6 +158,45 @@ describe('Tx Modal', () => {
         cy.contains('Advanced parameters').click()
         // Find Safe nonce
         cy.contains('Safe nonce').next().contains(SAFE_NONCE).should('be.visible')
+
+        // Close dialog again
+        cy.contains('Advanced parameters').click()
+      })
+
+      it('should initially have a successful simulation', () => {
+        // Simulate
+        cy.contains('Simulate').click()
+
+        // result exists after max 10 seconds
+        cy.contains('The transaction was successfully simulated', { timeout: 10000 })
+      })
+
+      it('should show unexpected error for a very low gas limit', () => {
+        // Set Gas Limit to too low
+        cy.contains('Estimated fee price').click()
+        cy.contains('Edit').click()
+        cy.get('input[placeholder="Gas limit"]').clear().type('69')
+        cy.contains('Confirm').click()
+
+        // Simulate
+        cy.contains('Simulate').click()
+
+        // error exists after max 10 seconds
+        cy.contains('An unexpected error occurred during simulation:', { timeout: 10000 })
+      })
+
+      it('should simulate with failed transaction for a slightly too low gas limit', () => {
+        // Set Gas Limit to too low
+        cy.contains('Estimated fee price').click()
+        cy.contains('Edit').click()
+        cy.get('input[placeholder="Gas limit"]').clear().type('75000')
+        cy.contains('Confirm').click()
+
+        // Simulate
+        cy.contains('Simulate').click()
+
+        // failed tx exists after max 10 seconds
+        cy.contains('out of gas', { timeout: 10000 })
       })
     })
   })
