@@ -1,7 +1,7 @@
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
 const RECIPIENT_ENS = 'diogo.eth'
 const RECIPIENT_ADDRESS = '0x6a5602335a878ADDCa4BF63a050E34946B56B5bC'
-const SAFE_NONCE = '5'
+const SAFE_NONCE = '6'
 
 describe('Tx Modal', () => {
   before(() => {
@@ -13,47 +13,6 @@ describe('Tx Modal', () => {
   })
 
   describe('Send funds modal', () => {
-    it('should open the modal when clicking New Transaction', () => {
-      // Modal should be closed
-      cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
-
-      // Opens Tx Modal
-      cy.contains('New Transaction').click()
-      cy.get('[aria-describedby="Send Tokens Form"]').should('be.visible')
-      cy.get('.smaller-modal-window').contains('Send')
-    })
-
-    it('should close the modal by clicking outside of the modal', () => {
-      // Modal is open
-      cy.get('.smaller-modal-window').contains('Send')
-
-      // Click outside of the .smaller-modal-window to close the modal
-      cy.get('.smaller-modal-window').then(($target) => {
-        let coords = $target[0].getBoundingClientRect()
-        const { x, y } = coords
-        cy.get('body').click(x - 10, y - 10)
-      })
-
-      // Modal is closed
-      cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
-    })
-
-    it('should close the modal by clicking cancel', () => {
-      // Opens Send Funds modal
-      cy.contains('New Transaction').click()
-      cy.contains('Send funds').click()
-
-      // Send Funds modal is open
-      cy.contains('Send funds').should('be.visible')
-      cy.contains('Step 1 of 2').should('be.visible')
-
-      // Close modal when clicking Cancel
-      cy.contains('Cancel').click()
-
-      // Modal is closed
-      cy.get('[aria-describedby="Send Tokens Form"]').should('not.exist')
-    })
-
     describe('Send Funds form', () => {
       before(() => {
         // Open Send Funds Modal
@@ -101,7 +60,7 @@ describe('Tx Modal', () => {
 
       it('should resolve the ENS name', () => {
         // Fills recipient with ens
-        cy.get('#address-book-input').type(RECIPIENT_ENS)
+        cy.get('label[for="address-book-input"]').next().type(RECIPIENT_ENS)
 
         // Waits for resolving the ENS
         cy.contains(RECIPIENT_ADDRESS).should('be.visible')
