@@ -22,17 +22,15 @@ describe('Tx Modal', () => {
 
       it('should display Send Funds modal with all the form elements', () => {
         // Modal header
-        cy.get('form')
-          .prev()
-          .prev()
-          .within(() => {
-            // Send Funds modal is open
-            cy.contains('Send funds').should('be.visible')
-            cy.contains('Step 1 of 2').should('be.visible')
-
-            // Current network is same as Safe
-            cy.contains('Rinkeby').should('be.visible')
-          })
+        cy.contains('Send funds')
+          .should('be.visible')
+          .next()
+          .contains('Step 1 of 2')
+          .should('be.visible')
+          .next()
+          // Current network is same as Safe
+          .contains('Rinkeby')
+          .should('be.visible')
 
         // It contains the form elements
         cy.get('form').within(() => {
@@ -140,14 +138,17 @@ describe('Tx Modal', () => {
         cy.contains('0.000004 GNO')
       })
 
-      it('should contain a hardcoded gas limit value', () => {
-        const GAS_LIIMIT = '79804' // fix if sending 0.000004 GNO to diogo.eth
+      it('should contain a correctly estimated gas limit value', () => {
+        const GAS_LIMIT = '79804' // gas limit is deterministic
+
+        // Estimated gas price is loaded
+        cy.contains('Estimated fee price').next().should('not.have.text', '> 0.001 ETH')
 
         // Click Advanced parameters
         cy.contains('Estimated fee price').click()
 
         // Find Gas limit
-        cy.contains('Gas limit').next().contains(GAS_LIIMIT).should('be.visible')
+        cy.contains('Gas limit').next().contains(GAS_LIMIT).should('be.visible')
 
         // Close info again
         cy.contains('Estimated fee price').click()
