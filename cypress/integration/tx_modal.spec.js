@@ -140,6 +140,16 @@ describe('Tx Modal', () => {
         cy.contains('0.000004 GNO')
       })
 
+      it('should contain a hardcoded gas limit value', ;() => {
+        const GAS_LIIMIT = '79804' // fix if sending 0.000004 GNO to diogo.eth
+
+        // Click Advanced parameters
+        cy.contains('Estimated fee price').click()
+
+        // Find Safe nonce
+        cy.contains('Gas limit').next().contains(GAS_LIIMIT).should('be.visible')
+      })
+
       it('should contain the Safe nonce upon clicking Advanced parameters', () => {
         // Click Advanced parameters
         cy.contains('Advanced parameters').click()
