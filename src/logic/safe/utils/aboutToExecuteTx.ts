@@ -52,7 +52,7 @@ export const getNotification = (
         [TRANSACTION_ID_SLUG]: executedTx.id,
       })
 
-      return { ...notification, link: { title: 'Transaction', to } }
+      return { ...notification, link: { title: 'View Transaction', to } }
     }
   }
 }
