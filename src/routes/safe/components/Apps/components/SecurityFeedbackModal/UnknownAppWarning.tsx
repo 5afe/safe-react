@@ -37,7 +37,7 @@ const UnknownAppWarning = ({ url, onHideWarning }: UnknownAppWarningProps): Reac
         </StyledWarningTitle>
       </Box>
       <StyledWarningText isColumnLayout={isColumnLayout} size="xl">
-        The application you are trying to use is not on our approved list
+        The application you are trying to use is not on our default list
       </StyledWarningText>
       <br />
       <StyledText isColumnLayout={isColumnLayout} size="lg">
