@@ -1,6 +1,5 @@
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
 const RECIPIENT_ADDRESS = '0x6a5602335a878ADDCa4BF63a050E34946B56B5bC'
-const SAFE_NONCE = '6'
 
 describe('Tx Simulation', () => {
   before(() => {
