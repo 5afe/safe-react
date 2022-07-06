@@ -163,42 +163,6 @@ describe('Tx Modal', () => {
         // Close dialog again
         cy.contains('Advanced parameters').click()
       })
-
-      it('should initially have a successful simulation', () => {
-        // Simulate
-        cy.contains('Simulate').click()
-
-        // result exists after max 10 seconds
-        cy.contains('The transaction was successfully simulated', { timeout: 10000 })
-      })
-
-      it('should show unexpected error for a very low gas limit', () => {
-        // Set Gas Limit to too low
-        cy.contains('Estimated fee price').click()
-        cy.contains('Edit').click()
-        cy.get('input[placeholder="Gas limit"]').clear().type('69')
-        cy.contains('Confirm').click()
-
-        // Simulate
-        cy.contains('Simulate').click()
-
-        // error exists after max 10 seconds
-        cy.contains('An unexpected error occurred during simulation:', { timeout: 10000 })
-      })
-
-      it('should simulate with failed transaction for a slightly too low gas limit', () => {
-        // Set Gas Limit to too low
-        cy.contains('Estimated fee price').click()
-        cy.contains('Edit').click()
-        cy.get('input[placeholder="Gas limit"]').clear().type('75000')
-        cy.contains('Confirm').click()
-
-        // Simulate
-        cy.contains('Simulate').click()
-
-        // failed tx exists after max 10 seconds
-        cy.contains('out of gas', { timeout: 10000 })
-      })
     })
   })
 })
