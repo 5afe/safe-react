@@ -12,24 +12,24 @@ const LegalDisclaimer = (): JSX.Element => (
     <StyledTitle size="sm" bold centered>
       Disclaimer
     </StyledTitle>
-    <Text size="xl">
+    <StyledText size="xl">
       You are now accessing third-party apps, which we do not own, control, maintain or audit. We are not liable for any
       loss you may suffer in connection with interacting with the apps, which is at your own risk.
-    </Text>
+    </StyledText>
     <br />
     <br />
-    <Text size="xl">
+    <StyledText size="xl">
       You must read our Terms, which contain more detailed provisions binding on you relating to the apps.
-    </Text>
+    </StyledText>
     <br />
     <br />
-    <Text size="xl">
+    <StyledText size="xl">
       I have read and understood the{' '}
       <StyledLink href="https://gnosis-safe.io/terms" size="xl" rel="noopener noreferrer" target="_blank">
         Terms
       </StyledLink>{' '}
       and this Disclaimer, and agree to be bound by them.
-    </Text>
+    </StyledText>
   </StyledContainer>
 )
 
@@ -42,6 +42,10 @@ const StyledContainer = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
+`
+
+const StyledText = styled(Text)`
+  text-align: justify;
 `
 
 export default LegalDisclaimer
