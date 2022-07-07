@@ -37,11 +37,11 @@ const UnknownAppWarning = ({ url, onHideWarning }: UnknownAppWarningProps): Reac
         </StyledWarningTitle>
       </Box>
       <StyledWarningText isColumnLayout={isColumnLayout} size="xl">
-        The application you are trying to use is not on our default list
+        The application you are trying to access is not in the default Safe Apps list
       </StyledWarningText>
       <br />
       <StyledText isColumnLayout={isColumnLayout} size="lg">
-        Check the link you are using and ensure it comes from a trusted source
+        Check the link you are using and ensure that it comes from a source you trust
       </StyledText>
       <br />
       {url && <SecurityFeedbackDomain url={url} showInOneLine />}
