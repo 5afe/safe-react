@@ -34,11 +34,15 @@ import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import PermissionsPrompt from './PermissionsPrompt'
+import { usePermissions } from '../hooks/usePermissions'
+import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -93,6 +97,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const granted = useSelector(grantedSelector)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
@@ -106,6 +111,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
   const { remoteSafeApps } = useRemoteSafeApps()
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
+  const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions } = usePermissions()
 
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
@@ -219,10 +225,26 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeBalances, async (msg) => {
       const { currency = 'usd' } = msg.data.params as GetBalanceParams
-
+      console.log(msg.data.params as GetBalanceParams)
       const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currency })
 
       return balances
+    })
+
+    communicator?.on(Methods.wallet_getPermissions, (msg) => {
+      return getPermissions(msg.origin)
+    })
+
+    communicator?.on(Methods.wallet_requestPermissions, async (msg) => {
+      setPermissionsRequest({
+        origin: msg.origin,
+        request: msg.data.params as PermissionRequest[],
+        requestId: msg.data.id,
+      })
+    })
+
+    communicator?.on(Methods.getAddressBook, async () => {
+      return addressBook
     })
 
     communicator?.on(Methods.rpcCall, async (msg) => {
@@ -290,6 +312,9 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     shortName,
     safeAppWeb3Provider,
     granted,
+    addressBook,
+    getPermissions,
+    setPermissionsRequest,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
@@ -316,6 +341,17 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.send('Transaction was rejected', requestId as string, true)
 
     trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
+  }
+
+  const onAcceptPermissions = (origin: string, requestId: RequestId) => {
+    addPermissions()
+    communicator?.send(getPermissions(origin), requestId as string)
+    setPermissionsRequest(undefined)
+  }
+
+  const onRejectPermissions = (requestId: RequestId) => {
+    communicator?.send('Permissions were rejected', requestId as string, true)
+    setPermissionsRequest(undefined)
   }
 
   useEffect(() => {
@@ -391,6 +427,17 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         onUserConfirm={onUserTxConfirm}
         onTxReject={onTxReject}
       />
+
+      {permissionsRequest && (
+        <PermissionsPrompt
+          isOpen
+          origin={permissionsRequest.origin}
+          requestId={permissionsRequest.requestId}
+          onAccept={onAcceptPermissions}
+          onCancel={onRejectPermissions}
+          permissions={permissionsRequest.request}
+        />
+      )}
     </AppWrapper>
   )
 }
