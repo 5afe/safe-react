@@ -11,7 +11,7 @@ describe('Adding an owner', () => {
     cy.findByText('Accept selection').click()
 
     // Advanced Settings page is loaded
-    cy.contains('Safe Nonce', { timeout: 5000 })
+    cy.contains('Safe Nonce', { timeout: 10000 })
     // Get current nonce from Settings > Advanced
     cy.findByTestId('current-nonce').then((element) => {
       currentNonce = parseInt(element.text())
