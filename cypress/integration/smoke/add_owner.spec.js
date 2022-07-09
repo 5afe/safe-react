@@ -2,7 +2,7 @@ const NEW_OWNER = '0x49d4450977E2c95362C13D3a31a09311E0Ea26A6'
 const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
 const offset = 7
 
-describe('Advanced Options', () => {
+describe('Adding an owner', () => {
   let currentNonce = 0
   before(() => {
     cy.connectE2EWallet()
