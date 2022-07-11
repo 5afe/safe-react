@@ -344,8 +344,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   }
 
   const onAcceptPermissions = (origin: string, requestId: RequestId) => {
-    addPermissions()
-    communicator?.send(getPermissions(origin), requestId as string)
+    const updatedPermissions = addPermissions()
+    communicator?.send(updatedPermissions, requestId as string)
     setPermissionsRequest(undefined)
   }
 

@@ -33,9 +33,9 @@ const usePermissions = (): UsePermissionsProps => {
     saveToStorage(APPS_PERMISSIONS, permissions)
   }, [permissions])
 
-  const addPermissions = useCallback((): void => {
+  const addPermissions = useCallback((): Permission[] => {
     if (!permissionsRequest) {
-      return
+      return []
     }
 
     const newPermissions: Permission[] = []
@@ -54,15 +54,19 @@ const usePermissions = (): UsePermissionsProps => {
       }
     })
 
+    const updatedPermissions = [...(permissions[permissionsRequest.origin] || []), ...newPermissions]
+
     setPermissions({
       ...permissions,
-      [permissionsRequest.origin]: [...(permissions[permissionsRequest.origin] || []), ...newPermissions],
+      [permissionsRequest.origin]: updatedPermissions,
     })
+
+    return updatedPermissions
   }, [permissions, permissionsRequest])
 
   const getPermissions = useCallback(
     (origin: string) => {
-      return permissions[origin]
+      return permissions[origin] || []
     },
     [permissions],
   )
