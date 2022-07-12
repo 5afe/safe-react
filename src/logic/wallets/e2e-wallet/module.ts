@@ -1,6 +1,6 @@
 import HDWalletProvider from '@truffle/hdwallet-provider'
 import { WalletModule } from 'bnc-onboard/dist/src/interfaces'
-import { getPublicRpcUrl } from 'src/config'
+import { getRpcServiceUrl } from 'src/config'
 import CypressLogo from 'src/assets/icons/cypress_logo.svg'
 
 const WALLET_NAME = 'E2E Wallet'
@@ -14,7 +14,7 @@ const getE2EWalletModule = (): WalletModule => {
       const { createModernProviderInterface } = helpers
       const provider = new HDWalletProvider({
         mnemonic: window.Cypress.env('CYPRESS_MNEMONIC'),
-        providerOrUrl: getPublicRpcUrl(),
+        providerOrUrl: getRpcServiceUrl(),
       })
       return {
         provider,
