@@ -33,6 +33,10 @@ const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
 }
 
+export const isSameUrl = (url1: string, url2: string): boolean => {
+  return removeLastTrailingSlash(url1) === removeLastTrailingSlash(url2)
+}
+
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {
     return JSON.parse(origin)

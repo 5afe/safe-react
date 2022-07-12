@@ -7,6 +7,7 @@ import { usePinnedSafeApps } from './usePinnedSafeApps'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
+import { isSameUrl } from '../../utils'
 
 type UseAppListReturnType = {
   allApps: SafeApp[]
@@ -92,7 +93,7 @@ const useAppList = (): UseAppListReturnType => {
       return appList.find((app: SafeApp) => {
         const appUrlInstance = new URL(app?.url)
 
-        if (`${appUrlInstance?.hostname}/${appUrlInstance?.pathname}` === safeAppUrl) {
+        if (isSameUrl(`${appUrlInstance?.hostname}/${appUrlInstance?.pathname}`, safeAppUrl)) {
           return app
         }
       })
