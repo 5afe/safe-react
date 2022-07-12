@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { TransactionListItem, Transaction, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import { closeNotification, showNotification } from 'src/logic/notifications/store/notifications'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { getAwaitingGatewayTransactions } from 'src/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
@@ -19,21 +19,15 @@ import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { store as reduxStore } from 'src/store/index'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { history, generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
+import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { isTxPending } from 'src/logic/safe/store/selectors/pendingTransactions'
 import { PROVIDER_ACTIONS } from 'src/logic/wallets/store/actions'
 import { ADD_CURRENT_SAFE_ADDRESS } from 'src/logic/currentSession/store/actions/addCurrentSafeAddress'
 
 const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
 
-const sendAwaitingTransactionNotification = (
-  dispatch,
-  safeAddress,
-  awaitingTxsSubmissionDateList,
-  notificationKey,
-  notificationClickedCb,
-): void => {
-  if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList || !notificationKey) {
+const sendAwaitingTransactionNotification = (dispatch, safeAddress, awaitingTxsSubmissionDateList, link): void => {
+  if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList) {
     return
   }
   if (awaitingTxsSubmissionDateList.length === 0) {
@@ -56,11 +50,7 @@ const sendAwaitingTransactionNotification = (
   dispatch(
     showNotification({
       ...NOTIFICATIONS.TX_WAITING_MSG,
-      options: {
-        ...NOTIFICATIONS.TX_WAITING_MSG.options,
-        onClick: notificationClickedCb,
-        key: notificationKey,
-      },
+      link,
     }),
   )
 
@@ -92,6 +82,7 @@ const notificationsMiddleware =
           action.payload as unknown as HistoryPayload,
           userAddress,
           safesMap,
+          currentShortName,
         )
         // if we have a notification, dispatch it depending on transaction's status
         executedTxNotification && dispatch(showNotification(executedTxNotification))
@@ -122,25 +113,15 @@ const notificationsMiddleware =
           break
         }
 
-        const notificationKey = `${safeAddress}-awaiting`
-
-        const onNotificationClicked = () => {
-          dispatch(closeNotification({ key: notificationKey }))
-          history.push(
-            generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_HISTORY, {
-              shortName: currentShortName,
-              safeAddress,
-            }),
-          )
+        const link = {
+          to: generateSafeRoute(SAFE_ROUTES.TRANSACTIONS_QUEUE, {
+            shortName: currentShortName,
+            safeAddress,
+          }),
+          title: 'View Transaction Queue',
         }
 
-        sendAwaitingTransactionNotification(
-          dispatch,
-          safeAddress,
-          awaitingTxsSubmissionDateList,
-          notificationKey,
-          onNotificationClicked,
-        )
+        sendAwaitingTransactionNotification(dispatch, safeAddress, awaitingTxsSubmissionDateList, link)
 
         break
       }
@@ -156,26 +137,19 @@ const notificationsMiddleware =
         const isUserOwner = grantedSelector(state)
         const version = await getSafeVersionInfo(safe.currentVersion)
 
-        const notificationKey = `${curSafeAddress}-update`
-        const onNotificationClicked = () => {
-          dispatch(closeNotification({ key: notificationKey }))
-          history.push(
-            generateSafeRoute(SAFE_ROUTES.SETTINGS_DETAILS, {
-              shortName: currentShortName,
-              safeAddress: curSafeAddress,
-            }),
-          )
+        const link = {
+          to: generateSafeRoute(SAFE_ROUTES.SETTINGS_DETAILS, {
+            shortName: currentShortName,
+            safeAddress: curSafeAddress,
+          }),
+          title: 'Update Safe',
         }
 
         if (version?.needUpdate && isUserOwner) {
           dispatch(
             showNotification({
               ...NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE,
-              options: {
-                ...NOTIFICATIONS.SAFE_NEW_VERSION_AVAILABLE.options,
-                key: notificationKey,
-                onClick: onNotificationClicked,
-              },
+              link,
             }),
           )
         }

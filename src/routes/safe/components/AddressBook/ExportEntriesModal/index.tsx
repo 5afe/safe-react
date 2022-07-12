@@ -62,11 +62,8 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
     //This timeout prevents modal to be closed abruptly
     setLoading(true)
     setTimeout(() => {
-      if (!loading) {
-        const action = error
-          ? NOTIFICATIONS.ADDRESS_BOOK_EXPORT_ENTRIES_ERROR
-          : NOTIFICATIONS.ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS
-        dispatch(showNotification(action))
+      if (!loading && error) {
+        dispatch(showNotification(NOTIFICATIONS.ADDRESS_BOOK_EXPORT_ENTRIES_ERROR))
       }
       onClose()
     }, 600)

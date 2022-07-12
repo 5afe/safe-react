@@ -23,9 +23,9 @@ function Providers({ children, store, styledTheme, muiTheme, history }: Provider
     <ThemeProvider theme={styledTheme}>
       <Provider store={store}>
         <MuiThemeProvider theme={muiTheme}>
-          <SnackbarProvider>
-            <Router history={history}>{children}</Router>
-          </SnackbarProvider>
+          <Router history={history}>
+            <SnackbarProvider>{children}</SnackbarProvider>
+          </Router>
         </MuiThemeProvider>
       </Provider>
     </ThemeProvider>

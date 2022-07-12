@@ -18,6 +18,9 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import { generatePath } from 'react-router-dom'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { SAFE_ROUTES, SAFE_ADDRESS_SLUG, getPrefixedSafeAddressSlug, TRANSACTION_ID_SLUG } from 'src/routes/routes'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -38,6 +41,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
   const txStatus = useTxStatus(transaction)
   const isPending = txStatus === LocalTransactionStatus.PENDING
+  const { shortName, safeAddress } = useSafeAddress()
 
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -48,7 +52,17 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
           (canExecute && details.confirmationsRequired > details.confirmations.length) ||
           (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)
         ) {
-          dispatch(showNotification(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
+          const deeplink = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
+            [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug({ shortName, safeAddress }),
+            [TRANSACTION_ID_SLUG]: transaction.id,
+          })
+
+          dispatch(
+            showNotification({
+              ...NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG,
+              link: { to: deeplink, title: 'View Transaction' },
+            }),
+          )
           return
         }
       }
@@ -61,7 +75,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
         transactionId: transaction.id,
       })
     },
-    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails],
+    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails, safeAddress, shortName],
   )
 
   const handleCancelButtonClick = useCallback(

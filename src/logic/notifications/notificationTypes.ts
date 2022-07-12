@@ -13,7 +13,7 @@ const longDuration = 10000
 export type Notification = {
   message: SnackbarMessage
   options?: OptionsObject
-  action?: unknown // Will specify the type when actions are added
+  link?: { to: string; title: string }
 }
 
 enum NOTIFICATION_IDS {
@@ -32,8 +32,6 @@ enum NOTIFICATION_IDS {
   TX_CONFIRMATION_FAILED_MSG,
   TX_FETCH_SIGNATURES_ERROR_MSG,
   SAFE_APPS_FETCH_ERROR_MSG,
-  SAFE_NAME_CHANGED_MSG,
-  OWNER_NAME_CHANGE_EXECUTED_MSG,
   SIGN_SETTINGS_CHANGE_MSG,
   SETTINGS_CHANGE_REJECTED_MSG,
   SETTINGS_CHANGE_EXECUTED_MSG,
@@ -50,11 +48,6 @@ enum NOTIFICATION_IDS {
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
   REMOVE_SPENDING_LIMIT_FAILED_MSG,
-  ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
-  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS,
-  ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS,
-  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS,
-  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS,
   ADDRESS_BOOK_EXPORT_ENTRIES_ERROR,
   SAFE_NEW_VERSION_AVAILABLE,
   SHARE_SAFE_APP_URL_COPIED,
@@ -125,17 +118,6 @@ export const NOTIFICATIONS: Record<keyof typeof NOTIFICATION_IDS, Notification> 
   SAFE_APPS_FETCH_ERROR_MSG: {
     message: 'Error fetching the Safe Apps, please refresh the page',
     options: { variant: VARIANT.ERROR, autoHideDuration: shortDuration },
-  },
-  // Safe Name
-  SAFE_NAME_CHANGED_MSG: {
-    message: 'Safe name changed',
-    options: { variant: VARIANT.SUCCESS, autoHideDuration: shortDuration },
-  },
-
-  // Owner Name
-  OWNER_NAME_CHANGE_EXECUTED_MSG: {
-    message: 'Owner name changed',
-    options: { variant: VARIANT.SUCCESS, autoHideDuration: shortDuration },
   },
 
   // Settings
@@ -208,26 +190,6 @@ export const NOTIFICATIONS: Record<keyof typeof NOTIFICATION_IDS, Notification> 
   },
 
   // Address book
-  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: {
-    message: 'Entry created successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: {
-    message: 'Entry saved successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS: {
-    message: 'Entries imported successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
-    message: 'Entry deleted successfully',
-    options: { variant: VARIANT.SUCCESS },
-  },
-  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS: {
-    message: 'Address book exported',
-    options: { variant: VARIANT.SUCCESS },
-  },
   ADDRESS_BOOK_EXPORT_ENTRIES_ERROR: {
     message: 'An error occurred while generating the address book CSV.',
     options: { variant: VARIANT.ERROR },
