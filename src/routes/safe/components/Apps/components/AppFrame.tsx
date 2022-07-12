@@ -94,7 +94,7 @@ const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be 
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
-  const { nativeCurrency, chainId, chainName, shortName } = getChainInfo()
+  const { nativeCurrency, chainId, chainName, shortName, blockExplorerUriTemplate } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const granted = useSelector(grantedSelector)
   const addressBook = useSelector(currentNetworkAddressBook)
@@ -297,6 +297,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         chainId,
         shortName,
         nativeCurrency,
+        blockExplorerUriTemplate,
       }
     })
   }, [
@@ -312,6 +313,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     shortName,
     safeAppWeb3Provider,
     granted,
+    blockExplorerUriTemplate,
     addressBook,
     getPermissions,
     setPermissionsRequest,

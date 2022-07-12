@@ -71,7 +71,7 @@ const monitorTx = async ({
       })
 
       store.dispatch(
-        showNotification({ ...NOTIFICATIONS.TX_PENDING_FAILED_MSG, link: { to: deeplink, title: 'Transaction' } }),
+        showNotification({ ...NOTIFICATIONS.TX_PENDING_FAILED_MSG, link: { to: deeplink, title: 'View Transaction' } }),
       )
     })
 }

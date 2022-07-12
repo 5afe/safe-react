@@ -118,7 +118,7 @@ const notificationsMiddleware =
             shortName: currentShortName,
             safeAddress,
           }),
-          title: 'Transaction Queue',
+          title: 'View Transaction Queue',
         }
 
         sendAwaitingTransactionNotification(dispatch, safeAddress, awaitingTxsSubmissionDateList, link)
