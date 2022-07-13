@@ -159,7 +159,7 @@ export const createTransaction =
       await tx
         .send(sendParams)
         .once('transactionHash', async (hash) => {
-          onUserConfirm?.(safeTxHash)
+          onUserConfirm?.(hash)
 
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))

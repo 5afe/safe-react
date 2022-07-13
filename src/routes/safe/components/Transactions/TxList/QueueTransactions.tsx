@@ -26,9 +26,9 @@ export const QueueTransactions = (): ReactElement => {
   // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
   if (count === 0 || !transactions) {
     return (
-      <NoTransactions>
+      <NoTransactions style={{ alignItems: 'center' }}>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />
-        <Title size="xs">Queue transactions will appear here </Title>
+        <Title size="xs">Transactions awaiting further signatures will appear here </Title>
       </NoTransactions>
     )
   }

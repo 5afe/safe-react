@@ -9,7 +9,7 @@ import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
 
 const items: Item[] = [
-  { id: 'queue', label: 'Queue' },
+  { id: 'queue', label: 'Awaiting signatures' },
   { id: 'history', label: 'History' },
 ]
 
