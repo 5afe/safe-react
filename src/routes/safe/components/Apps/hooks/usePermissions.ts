@@ -1,8 +1,8 @@
 import { Permission, PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import { useState, useEffect, useCallback } from 'react'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import local from 'src/utils/storage/local'
 
-const APPS_PERMISSIONS = 'SAFE_APPS_PERMISSIONS'
+const APPS_PERMISSIONS = 'APPS_PERMISSIONS'
 
 type PermissionsRequestState = {
   origin: string
@@ -26,11 +26,11 @@ const usePermissions = (): UsePermissionsProps => {
   }, [permissionsRequest])
 
   useEffect(() => {
-    setPermissions(loadFromStorage(APPS_PERMISSIONS) || {})
+    setPermissions(local.getItem(APPS_PERMISSIONS) || {})
   }, [])
 
   useEffect(() => {
-    saveToStorage(APPS_PERMISSIONS, permissions)
+    local.setItem(APPS_PERMISSIONS, permissions)
   }, [permissions])
 
   const addPermissions = useCallback((): Permission[] => {
