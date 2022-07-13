@@ -216,7 +216,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
       <Button
         size="md"
         color="primary"
-        variant="outlined"
+        variant={cancelButtonProps.variant || 'outlined'}
         type={cancelOnClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
         data-testid={cancelTestId}

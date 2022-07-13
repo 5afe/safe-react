@@ -4,6 +4,15 @@ import { ReactElement } from 'react'
 
 import { Modal } from 'src/components/Modal'
 
+const DESCRIPTIONS = {
+  getAddressBook: 'Access to your address book',
+}
+
+const getDescription = (permission: PermissionRequest): string => {
+  const method = Object.keys(permission)[0]
+  return DESCRIPTIONS[method] || method
+}
+
 interface PermissionsPromptProps {
   origin: string
   requestId: string
@@ -28,23 +37,28 @@ const PermissionsPrompt = ({
       open={isOpen}
       title="Requested permissions"
     >
-      <Modal.Header>
-        <Modal.Header.Title>Requested permissions</Modal.Header.Title>
+      <Modal.Header onClose={() => onCancel(requestId)}>
+        <Modal.Header.Title>Permissions Request</Modal.Header.Title>
       </Modal.Header>
       <Modal.Body>
         <Text size="xl">
-          <b>{origin}</b> is requesting permissions for calling:
+          <b>{origin}</b> is requesting permissions for:
         </Text>
         <ul>
           {permissions.map((permission, index) => (
-            <li key={index}>{Object.keys(permission)[0]}</li>
+            <li key={index}>{getDescription(permission)}</li>
           ))}
         </ul>
       </Modal.Body>
       <Modal.Footer>
         <Modal.Footer.Buttons
-          cancelButtonProps={{ text: 'Reject', onClick: () => onCancel(requestId) }}
-          confirmButtonProps={{ color: 'error', text: 'Accept', onClick: () => onAccept(origin, requestId) }}
+          cancelButtonProps={{
+            text: 'Reject',
+            color: 'error',
+            variant: 'contained',
+            onClick: () => onCancel(requestId),
+          }}
+          confirmButtonProps={{ text: 'Accept', color: 'primary', onClick: () => onAccept(origin, requestId) }}
         />
       </Modal.Footer>
     </Modal>
