@@ -43,7 +43,7 @@ const PermissionsPrompt = ({
       </Modal.Body>
       <Modal.Footer>
         <Modal.Footer.Buttons
-          cancelButtonProps={{ onClick: () => onCancel(requestId) }}
+          cancelButtonProps={{ text: 'Reject', onClick: () => onCancel(requestId) }}
           confirmButtonProps={{ color: 'error', text: 'Accept', onClick: () => onAccept(origin, requestId) }}
         />
       </Modal.Footer>
