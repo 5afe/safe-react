@@ -225,7 +225,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
     communicator?.on(Methods.getSafeBalances, async (msg) => {
       const { currency = 'usd' } = msg.data.params as GetBalanceParams
-      console.log(msg.data.params as GetBalanceParams)
+
       const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currency })
 
       return balances
@@ -244,6 +244,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     })
 
     communicator?.on(Methods.getAddressBook, async () => {
+      //TODO: Check permissions here. How to get the requiredPermissions
       return addressBook
     })
 
