@@ -22,10 +22,6 @@ const usePermissions = (): UsePermissionsProps => {
   const [permissionsRequest, setPermissionsRequest] = useState<PermissionsRequestState | undefined>()
 
   useEffect(() => {
-    console.log(permissionsRequest)
-  }, [permissionsRequest])
-
-  useEffect(() => {
     setPermissions(local.getItem(APPS_PERMISSIONS) || {})
   }, [])
 
