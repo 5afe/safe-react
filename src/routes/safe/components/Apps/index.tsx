@@ -1,23 +1,43 @@
+import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
 import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
-import LegalDisclaimer from 'src/routes/safe/components/Apps/components/LegalDisclaimer'
-import { useLegalConsent } from 'src/routes/safe/components/Apps/hooks/useLegalConsent'
-import SafeAppsErrorBoundary from './components/SafeAppsErrorBoundary'
-import SafeAppsLoadError from './components/SafeAppsLoadError'
+import SecurityFeedbackModal from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal'
+import SafeAppsErrorBoundary from 'src/routes/safe/components/Apps/components/SafeAppsErrorBoundary'
+import SafeAppsLoadError from 'src/routes/safe/components/Apps/components/SafeAppsLoadError'
+import { useSecurityFeedbackModal } from './hooks/useSecurityFeedbackModal'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
-  const { consentReceived, onConsentReceipt } = useLegalConsent()
 
-  const goBack = () => history.goBack()
+  const {
+    isModalVisible,
+    isSafeAppInDefaultList,
+    isFirstTimeAccessingApp,
+    isConsentAccepted,
+    isExtendedListReviewed,
+    onComplete,
+    onRemoveCustomApp,
+  } = useSecurityFeedbackModal()
+
+  const goBack = useCallback(() => history.goBack(), [history])
 
   if (url) {
-    if (!consentReceived) {
-      return <LegalDisclaimer onCancel={goBack} onConfirm={onConsentReceipt} />
+    if (isModalVisible) {
+      return (
+        <SecurityFeedbackModal
+          onCancel={goBack}
+          onConfirm={onComplete}
+          appUrl={url}
+          isConsentAccepted={isConsentAccepted}
+          isSafeAppInDefaultList={isSafeAppInDefaultList}
+          isFirstTimeAccessingApp={isFirstTimeAccessingApp}
+          isExtendedListReviewed={isExtendedListReviewed}
+        />
+      )
     }
 
     return (
@@ -26,7 +46,7 @@ const Apps = (): React.ReactElement => {
       </SafeAppsErrorBoundary>
     )
   } else {
-    return <AppsList />
+    return <AppsList onRemoveApp={onRemoveCustomApp} />
   }
 }
 
