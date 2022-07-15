@@ -1,3 +1,4 @@
+import { Methods } from '@gnosis.pm/safe-apps-sdk'
 import { Permission, PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import { useState, useEffect, useCallback } from 'react'
 import local from 'src/utils/storage/local'
@@ -15,6 +16,7 @@ type UseSafePermissionsProps = {
   permissionsRequest: SafePermissionsRequestState | undefined
   setPermissionsRequest: (permissionsRequest?: SafePermissionsRequestState) => void
   addPermissions: () => void
+  hasPermissions: (origin: string, permission: Methods) => boolean
 }
 
 const useSafePermissions = (): UseSafePermissionsProps => {
@@ -67,11 +69,19 @@ const useSafePermissions = (): UseSafePermissionsProps => {
     [permissions],
   )
 
+  const hasPermissions = useCallback(
+    (origin: string, permission: Methods) => {
+      return permissions[origin]?.some((p) => p.parentCapability === permission)
+    },
+    [permissions],
+  )
+
   return {
     permissionsRequest,
     setPermissionsRequest,
     getPermissions,
     addPermissions,
+    hasPermissions,
   }
 }
 

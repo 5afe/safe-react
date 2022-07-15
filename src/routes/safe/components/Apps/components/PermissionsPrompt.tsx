@@ -5,7 +5,7 @@ import { ReactElement } from 'react'
 import { Modal } from 'src/components/Modal'
 
 const DESCRIPTIONS = {
-  getAddressBook: 'Access to your address book',
+  requestAddressBook: 'Access to your address book',
 }
 
 const getDescription = (permission: PermissionRequest): string => {

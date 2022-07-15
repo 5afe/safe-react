@@ -111,7 +111,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
   const { remoteSafeApps } = useRemoteSafeApps()
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
-  const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions } = useSafePermissions()
+  const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions, hasPermissions } =
+    useSafePermissions()
 
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
@@ -243,9 +244,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       })
     })
 
-    communicator?.on(Methods.getAddressBook, async () => {
-      //TODO: Check permissions here. How to get the requiredPermissions
-      return addressBook
+    communicator?.on(Methods.requestAddressBook, async (msg) => {
+      if (hasPermissions(msg.origin, Methods.requestAddressBook)) {
+        return addressBook
+      }
     })
 
     communicator?.on(Methods.rpcCall, async (msg) => {
@@ -318,6 +320,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     addressBook,
     getPermissions,
     setPermissionsRequest,
+    hasPermissions,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
