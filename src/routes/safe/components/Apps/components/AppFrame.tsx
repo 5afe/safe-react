@@ -41,7 +41,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import PermissionsPrompt from './PermissionsPrompt'
-import { usePermissions } from '../hooks/usePermissions'
+import { useSafePermissions } from '../hooks/permissions/useSafePermissions'
 import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 
 const AppWrapper = styled.div`
@@ -111,7 +111,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
   const { remoteSafeApps } = useRemoteSafeApps()
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
-  const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions } = usePermissions()
+  const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions } = useSafePermissions()
 
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(

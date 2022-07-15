@@ -2,31 +2,31 @@ import { Permission, PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src
 import { useState, useEffect, useCallback } from 'react'
 import local from 'src/utils/storage/local'
 
-const APPS_PERMISSIONS = 'APPS_PERMISSIONS'
+const SAFE_PERMISSIONS = 'SAFE_PERMISSIONS'
 
-type PermissionsRequestState = {
+type SafePermissionsRequestState = {
   origin: string
   requestId: string
   request: PermissionRequest[]
 }
 
-type UsePermissionsProps = {
+type UseSafePermissionsProps = {
   getPermissions: (origin: string) => Permission[]
-  permissionsRequest: PermissionsRequestState | undefined
-  setPermissionsRequest: (permissionsRequest?: PermissionsRequestState) => void
+  permissionsRequest: SafePermissionsRequestState | undefined
+  setPermissionsRequest: (permissionsRequest?: SafePermissionsRequestState) => void
   addPermissions: () => void
 }
 
-const usePermissions = (): UsePermissionsProps => {
+const useSafePermissions = (): UseSafePermissionsProps => {
   const [permissions, setPermissions] = useState<{ [origin: string]: Permission[] }>({})
-  const [permissionsRequest, setPermissionsRequest] = useState<PermissionsRequestState | undefined>()
+  const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequestState | undefined>()
 
   useEffect(() => {
-    setPermissions(local.getItem(APPS_PERMISSIONS) || {})
+    setPermissions(local.getItem(SAFE_PERMISSIONS) || {})
   }, [])
 
   useEffect(() => {
-    local.setItem(APPS_PERMISSIONS, permissions)
+    local.setItem(SAFE_PERMISSIONS, permissions)
   }, [permissions])
 
   const addPermissions = useCallback((): Permission[] => {
@@ -75,4 +75,4 @@ const usePermissions = (): UsePermissionsProps => {
   }
 }
 
-export { usePermissions }
+export { useSafePermissions }
