@@ -11,3 +11,10 @@ export type SafeApp = Omit<SafeAppData, 'id'> & {
 export type StoredSafeApp = {
   url: string
 }
+
+export type SecurityFeedbackPractice = {
+  id: string
+  title: string
+  subtitle?: string
+  imageSrc?: string
+}

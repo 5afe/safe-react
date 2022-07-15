@@ -89,7 +89,11 @@ const AddCustomAppLogo = styled.img`
   margin-bottom: 4px;
 `
 
-const AppsList = (): React.ReactElement => {
+type AppListProps = {
+  onRemoveApp: (appUrl: string) => void
+}
+
+const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
   const { safeAddress } = useSafeAddress()
   const [appSearch, setAppSearch] = useState('')
   const { allApps, appList, removeApp, isLoading, pinnedSafeApps, togglePin, customApps, addCustomApp } = useAppList()
@@ -233,10 +237,14 @@ const AppsList = (): React.ReactElement => {
           </Modal.Body>
           <Modal.Footer>
             <Modal.Footer.Buttons
-              cancelButtonProps={{ onClick: () => setAppToRemove(null) }}
+              cancelButtonProps={{ testId: 'cancel-btn', onClick: () => setAppToRemove(null) }}
               confirmButtonProps={{
+                testId: 'confirm-btn',
                 color: 'error',
                 onClick: () => {
+                  const url = appToRemove.url
+
+                  onRemoveApp(url)
                   removeApp(appToRemove.id)
                   setAppToRemove(null)
                 },
