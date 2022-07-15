@@ -8,7 +8,7 @@ import {
   DeleteSpendingLimitDetails,
   isDeleteAllowance,
   isSetAllowance,
-  isSpendingLimitTx,
+  isSupportedSpendingLimitAddress,
   ModifySpendingLimitDetails,
 } from './SpendingLimitDetails'
 import { TxInfoDetails } from './TxInfoDetails'
@@ -76,12 +76,12 @@ export const TxData = ({ txData, txInfo }: TxDataProps): ReactElement | null => 
   }
 
   // FixMe: this way won't scale well
-  if (isSpendingLimitTx(txInfo) && isSetAllowance(txData.dataDecoded.method)) {
+  if (isSupportedSpendingLimitAddress(txInfo) && isSetAllowance(txData.dataDecoded.method)) {
     return <ModifySpendingLimitDetails txData={txData} txInfo={txInfo} />
   }
 
   // FixMe: this way won't scale well
-  if (isSpendingLimitTx(txInfo) && isDeleteAllowance(txData.dataDecoded.method)) {
+  if (isSupportedSpendingLimitAddress(txInfo) && isDeleteAllowance(txData.dataDecoded.method)) {
     return <DeleteSpendingLimitDetails txData={txData} txInfo={txInfo} />
   }
 
