@@ -2,7 +2,7 @@ import { TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { ReactElement, ReactNode } from 'react'
 
 import { getNativeCurrency } from 'src/config'
-import { ExpandedTxDetails, isCustomTxInfo, isMultiSendTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isCustomTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import {
   DeleteSpendingLimitDetails,
@@ -16,7 +16,7 @@ import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
 import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getInteractionTitle } from '../helpers/utils'
-import { isSupportedMultiSendAddress } from 'src/logic/safe/transactions/multisend'
+import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 type DetailsWithTxInfoProps = {
   children: ReactNode
@@ -69,8 +69,7 @@ export const TxData = ({ txData, txInfo }: TxDataProps): ReactElement | null => 
     )
   }
 
-  // known MultiSend contract address and methodName 'multiSend'
-  if (isSupportedMultiSendAddress(txInfo) && isMultiSendTxInfo(txInfo)) {
+  if (isSupportedMultiSendCall(txInfo)) {
     return <MultiSendDetails txData={txData} />
   }
 

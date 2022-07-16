@@ -2,7 +2,7 @@ import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getMultisendContract, getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
-import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultiSend, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { isCustomTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { sameString } from 'src/utils/strings'
 
@@ -44,3 +44,6 @@ export const isSupportedMultiSendAddress = (txInfo: TransactionInfo): boolean =>
 
   return sameString(multiSendAddress, toAddress)
 }
+
+export const isSupportedMultiSendCall = (txInfo: TransactionInfo): txInfo is MultiSend =>
+  isSupportedMultiSendAddress(txInfo) && isCustomTxInfo(txInfo) && txInfo.methodName === 'multiSend'
