@@ -21,7 +21,7 @@ export interface AppManifest {
   description: string
   icons?: AppManifestIcon[]
   providedBy: string
-  safe_apps_permissions: AllowedFeatures[]
+  safe_apps_permissions?: AllowedFeatures[]
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
@@ -47,7 +47,7 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
-const isPermissionsPropertyValid = (permissions: AllowedFeatures[]): boolean => {
+const isPermissionsPropertyValid = (permissions?: AllowedFeatures[]): boolean => {
   if (!permissions) {
     return true
   }

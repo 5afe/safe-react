@@ -97,6 +97,7 @@ describe('rankTrackedSafeApps', () => {
         },
         fetchStatus: FETCH_STATUS.SUCCESS,
         tags: [],
+        safeAppsPermissions: [],
       },
     ]
 

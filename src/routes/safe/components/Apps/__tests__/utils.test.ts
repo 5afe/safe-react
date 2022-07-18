@@ -14,6 +14,7 @@ describe('SafeApp manifest', () => {
         },
       ],
       providedBy: 'test',
+      safeAppsPermissions: [],
     }
 
     const result = isAppManifestValid(manifest)
