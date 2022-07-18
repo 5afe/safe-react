@@ -131,7 +131,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
     iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description,
     providedBy: appInfo.providedBy,
-    safeAppsPermissions: appInfo.safe_apps_permissions,
+    safeAppsPermissions: appInfo.safe_apps_permissions || [],
   }
 
   res = {

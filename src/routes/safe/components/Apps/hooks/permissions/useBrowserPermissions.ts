@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import local from 'src/utils/storage/local'
-import { AllowedFeatures, SafeApp } from '../../types'
+import { AllowedFeatures } from '../../types'
 
 const BROWSER_PERMISSIONS = 'BROWSER_PERMISSIONS'
 
@@ -8,6 +8,7 @@ type BrowserPermissions = { [origin: string]: AllowedFeatures[] }
 
 type UseBrowserPermissionsProps = {
   permissions: BrowserPermissions
+  getPermissions: (origin: string) => AllowedFeatures[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +18,7 @@ const generateAllowList = (features: AllowedFeatures[], origin: string): string 
   }, '')
 }
 
-const useBrowserPermissions = (app: SafeApp): UseBrowserPermissionsProps => {
+const useBrowserPermissions = (): UseBrowserPermissionsProps => {
   const [permissions, setPermissions] = useState<BrowserPermissions>({})
 
   useEffect(() => {
@@ -28,20 +29,16 @@ const useBrowserPermissions = (app: SafeApp): UseBrowserPermissionsProps => {
     local.setItem(BROWSER_PERMISSIONS, permissions)
   }, [permissions])
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const hasPermissions = useMemo((): boolean => {
-    if (!app) {
-      return false
-    }
-
-    const currentAllowedFeatures = permissions?.[app.url] || []
-    const requiredFeatures = Object.values(app.safeAppsPermissions) || []
-
-    return requiredFeatures.every((feature) => currentAllowedFeatures.includes(feature))
-  }, [app, permissions])
+  const getPermissions = useCallback(
+    (origin: string) => {
+      return permissions[origin] || []
+    },
+    [permissions],
+  )
 
   return {
     permissions,
+    getPermissions,
   }
 }
 

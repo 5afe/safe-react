@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
+import { useSafeAppManifest } from './useSafeAppManifest'
+import { useBrowserPermissions } from './permissions/useBrowserPermissions'
 
 const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
 
@@ -24,10 +26,11 @@ const useSecurityFeedbackModal = (): {
 } => {
   const didMount = useRef(false)
 
-  const { isLoading, getSafeApp } = useAppList()
+  const { isLoading: isSafeAppListLoading, getSafeApp } = useAppList()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
-
+  const { isLoading: isSafeAppManifestLoading, safeApp } = useSafeAppManifest(url)
+  const { getPermissions } = useBrowserPermissions()
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
   const [customAppsReviewed, setCustomAppsReviewed] = useState<string[]>([])
@@ -87,13 +90,13 @@ const useSecurityFeedbackModal = (): {
   const isPermissionsReviewCompleted = useMemo(() => {
     if (!url) return false
 
-    const safeApp = getSafeApp(url)
-    console.log(safeApp)
-    return true
-  }, [getSafeApp, url])
+    const currentAllowedFeatures = getPermissions(url)
+
+    return safeApp.safeAppsPermissions.every((feature) => currentAllowedFeatures.includes(feature))
+  }, [getPermissions, safeApp.safeAppsPermissions, url])
 
   const isModalVisible = useMemo(() => {
-    const isComponentReady = !isLoading && didMount.current
+    const isComponentReady = !isSafeAppListLoading && !isSafeAppManifestLoading && didMount.current
     const shouldShowLegalDisclaimer = !consentAccepted
     const shouldShowAllowedFeatures = !isPermissionsReviewCompleted
     const shouldShowSecurityPractices = isSafeAppInDefaultList && isFirstTimeAccessingApp
@@ -108,12 +111,13 @@ const useSecurityFeedbackModal = (): {
         shouldShowAllowedFeatures)
     )
   }, [
+    isSafeAppListLoading,
+    isSafeAppManifestLoading,
     consentAccepted,
-    isDisclaimerReadingCompleted,
-    isFirstTimeAccessingApp,
-    isLoading,
-    isSafeAppInDefaultList,
     isPermissionsReviewCompleted,
+    isSafeAppInDefaultList,
+    isFirstTimeAccessingApp,
+    isDisclaimerReadingCompleted,
   ])
 
   const onComplete = useCallback(

@@ -23,10 +23,9 @@ import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { LegacyMethods, useAppCommunicator } from '../communicator'
 import { SafeApp } from '../types'
-import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { EMPTY_SAFE_APP, getLegacyChainName } from '../utils'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
@@ -43,7 +42,7 @@ import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppU
 import PermissionsPrompt from './PermissionsPrompt'
 import { useSafePermissions } from '../hooks/permissions/useSafePermissions'
 import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
-import { useBrowserPermissions } from '../hooks/permissions/useBrowserPermissions'
+import { useSafeAppManifest } from '../hooks/useSafeAppManifest'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -103,7 +102,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
-  const [safeApp, setSafeApp] = useState<SafeApp>(() => getEmptySafeApp(appUrl))
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
   const timer = useRef<number>()
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
@@ -114,13 +112,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
   const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions, hasPermissions } =
     useSafePermissions()
-  useBrowserPermissions(safeApp)
-  console.log(remoteSafeApps)
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
     () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),
     [safeAppsRpc],
   )
+  const { safeApp } = useSafeAppManifest(appUrl)
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -366,17 +363,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     if (!appUrl) {
       throw Error(URL_NOT_PROVIDED_ERROR)
     }
-
-    const loadApp = async () => {
-      try {
-        const app = await getAppInfoFromUrl(appUrl, false)
-        setSafeApp(app)
-      } catch (err) {
-        logError(Errors._900, `${appUrl}, ${err.message}`)
-      }
-    }
-
-    loadApp()
   }, [appUrl])
 
   useEffect(() => {
