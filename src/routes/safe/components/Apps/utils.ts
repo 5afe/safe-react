@@ -6,7 +6,7 @@ import appsIconSvg from 'src/assets/icons/apps.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { SafeApp } from './types'
+import { AllowedFeatures, SafeApp } from './types'
 
 type AppManifestIcon = {
   src: string
@@ -21,6 +21,7 @@ export interface AppManifest {
   description: string
   icons?: AppManifestIcon[]
   providedBy: string
+  safe_apps_permissions: AllowedFeatures[]
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
@@ -46,13 +47,31 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
+const isPermissionsPropertyValid = (permissions: AllowedFeatures[]): boolean => {
+  if (!permissions) {
+    return true
+  }
+
+  if (!Array.isArray(permissions)) {
+    return false
+  }
+
+  const features = Object.values(AllowedFeatures)
+
+  return permissions.every((permission) => {
+    return features.includes(permission)
+  })
+}
+
 export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
   appInfo.name !== EMPTY_SAFE_APP &&
   // `description` exists
-  !!appInfo.description
+  !!appInfo.description &&
+  // permissions are valid if they are not empty
+  isPermissionsPropertyValid(appInfo.safe_apps_permissions)
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
@@ -67,6 +86,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
       type: SafeAppAccessPolicyTypes.NoRestrictions,
     },
     tags: [],
+    safeAppsPermissions: [],
   }
 }
 
@@ -111,6 +131,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
     iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description,
     providedBy: appInfo.providedBy,
+    safeAppsPermissions: appInfo.safe_apps_permissions,
   }
 
   res = {

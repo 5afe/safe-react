@@ -43,6 +43,7 @@ import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppU
 import PermissionsPrompt from './PermissionsPrompt'
 import { useSafePermissions } from '../hooks/permissions/useSafePermissions'
 import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
+import { useBrowserPermissions } from '../hooks/permissions/useBrowserPermissions'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -113,7 +114,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
   const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions, hasPermissions } =
     useSafePermissions()
-
+  useBrowserPermissions(safeApp)
+  console.log(remoteSafeApps)
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
     () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),

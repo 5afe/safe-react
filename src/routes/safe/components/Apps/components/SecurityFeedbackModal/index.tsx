@@ -11,6 +11,7 @@ import { SECURITY_PRACTICES } from './constants'
 import SecurityFeedbackContent from './SecurityFeedbackContent'
 import { SecurityFeedbackPractice } from '../../types'
 import SecurityFeedbackDomain from './SecurityFeedbackDomain'
+import SecurityFeedbackAllowedFeatures from './SecurityFeedbackAllowedFeatures'
 
 interface SecurityFeedbackModalProps {
   onCancel: () => void
@@ -20,6 +21,7 @@ interface SecurityFeedbackModalProps {
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
   isExtendedListReviewed: boolean
+  isPermissionsReviewCompleted: boolean
 }
 
 const SecurityFeedbackModal = ({
@@ -30,6 +32,7 @@ const SecurityFeedbackModal = ({
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
   isExtendedListReviewed,
+  isPermissionsReviewCompleted,
 }: SecurityFeedbackModalProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -53,8 +56,17 @@ const SecurityFeedbackModal = ({
       totalSlides += 1
     }
 
+    if (!isPermissionsReviewCompleted) {
+      totalSlides += 1
+    }
     return totalSlides
-  }, [isConsentAccepted, isExtendedListReviewed, isFirstTimeAccessingApp, isSafeAppInDefaultList])
+  }, [
+    isConsentAccepted,
+    isExtendedListReviewed,
+    isFirstTimeAccessingApp,
+    isSafeAppInDefaultList,
+    isPermissionsReviewCompleted,
+  ])
 
   const handleSlideChange = (newStep: number) => {
     const isFirstStep = newStep === -1
@@ -109,6 +121,7 @@ const SecurityFeedbackModal = ({
                   </SecurityFeedbackContent>
                 )
               })}
+            {!isPermissionsReviewCompleted && <SecurityFeedbackAllowedFeatures />}
             {shouldShowUnknownAppWarning && <UnknownAppWarning url={appUrl} onHideWarning={setHideWarning} />}
           </Slider>
         </StyledGrid>

@@ -12,6 +12,7 @@ describe('<SecurityFeedbackModal />', () => {
     isFirstTimeAccessingApp: false,
     isSafeAppInDefaultList: true,
     isConsentAccepted: true,
+    isPermissionsReviewCompleted: true,
   }
 
   it('should show the Legal Disclaimer if not previously accepted', () => {

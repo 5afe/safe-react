@@ -18,6 +18,7 @@ const Apps = (): React.ReactElement => {
     isSafeAppInDefaultList,
     isFirstTimeAccessingApp,
     isConsentAccepted,
+    isPermissionsReviewCompleted,
     isExtendedListReviewed,
     onComplete,
     onRemoveCustomApp,
@@ -36,6 +37,7 @@ const Apps = (): React.ReactElement => {
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}
           isExtendedListReviewed={isExtendedListReviewed}
+          isPermissionsReviewCompleted={isPermissionsReviewCompleted}
         />
       )
     }

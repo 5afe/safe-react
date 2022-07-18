@@ -18,6 +18,7 @@ const useSecurityFeedbackModal = (): {
   isFirstTimeAccessingApp: boolean
   isConsentAccepted: boolean
   isExtendedListReviewed: boolean
+  isPermissionsReviewCompleted: boolean
   onComplete: (shouldHide: boolean) => void
   onRemoveCustomApp: (appUrl: string) => void
 } => {
@@ -83,15 +84,37 @@ const useSecurityFeedbackModal = (): {
     return safeAppId ? !appsReviewed?.includes(safeAppId) : !customAppsReviewed?.includes(url)
   }, [appsReviewed, customAppsReviewed, getSafeApp, url])
 
+  const isPermissionsReviewCompleted = useMemo(() => {
+    if (!url) return false
+
+    const safeApp = getSafeApp(url)
+    console.log(safeApp)
+    return true
+  }, [getSafeApp, url])
+
   const isModalVisible = useMemo(() => {
     const isComponentReady = !isLoading && didMount.current
     const shouldShowLegalDisclaimer = !consentAccepted
+    const shouldShowAllowedFeatures = !isPermissionsReviewCompleted
     const shouldShowSecurityPractices = isSafeAppInDefaultList && isFirstTimeAccessingApp
     const shouldShowUnknownAppWarning =
       !isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted
 
-    return isComponentReady && (shouldShowLegalDisclaimer || shouldShowSecurityPractices || shouldShowUnknownAppWarning)
-  }, [consentAccepted, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList])
+    return (
+      isComponentReady &&
+      (shouldShowLegalDisclaimer ||
+        shouldShowSecurityPractices ||
+        shouldShowUnknownAppWarning ||
+        shouldShowAllowedFeatures)
+    )
+  }, [
+    consentAccepted,
+    isDisclaimerReadingCompleted,
+    isFirstTimeAccessingApp,
+    isLoading,
+    isSafeAppInDefaultList,
+    isPermissionsReviewCompleted,
+  ])
 
   const onComplete = useCallback(
     (shouldHide: boolean) => {
@@ -132,6 +155,7 @@ const useSecurityFeedbackModal = (): {
     isModalVisible,
     isSafeAppInDefaultList,
     isFirstTimeAccessingApp,
+    isPermissionsReviewCompleted,
     isConsentAccepted: consentAccepted,
     isExtendedListReviewed: extendedListReviewed,
     onComplete,
