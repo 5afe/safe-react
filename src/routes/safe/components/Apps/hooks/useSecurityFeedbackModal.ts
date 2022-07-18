@@ -4,6 +4,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { useSafeAppManifest } from './useSafeAppManifest'
 import { useBrowserPermissions } from './permissions/useBrowserPermissions'
+import { PermissionStatus } from '../types'
 
 const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
 
@@ -90,9 +91,15 @@ const useSecurityFeedbackModal = (): {
   const isPermissionsReviewCompleted = useMemo(() => {
     if (!url) return false
 
-    const currentAllowedFeatures = getPermissions(url)
+    const currentAllowedFeatures = getPermissions(url).filter(
+      (permission) => permission.status === PermissionStatus.GRANTED,
+    )
 
-    return safeApp.safeAppsPermissions.every((feature) => currentAllowedFeatures.includes(feature))
+    return safeApp.safeAppsPermissions.every((permission) =>
+      currentAllowedFeatures.some(
+        ({ feature, status }) => feature === permission && status === PermissionStatus.GRANTED,
+      ),
+    )
   }, [getPermissions, safeApp.safeAppsPermissions, url])
 
   const isModalVisible = useMemo(() => {
@@ -142,9 +149,13 @@ const useSecurityFeedbackModal = (): {
         setExtendedListReviewed(true)
       }
 
+      if (!isPermissionsReviewCompleted) {
+        // TODO: Store permissions decision
+      }
+
       setIsDisclaimerReadingCompleted(true)
     },
-    [appsReviewed, customAppsReviewed, extendedListReviewed, getSafeApp, url],
+    [appsReviewed, customAppsReviewed, extendedListReviewed, getSafeApp, isPermissionsReviewCompleted, url],
   )
 
   const onRemoveCustomApp = useCallback(

@@ -1,14 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import local from 'src/utils/storage/local'
-import { AllowedFeatures } from '../../types'
+import { AllowedFeatures, PermissionStatus } from '../../types'
 
 const BROWSER_PERMISSIONS = 'BROWSER_PERMISSIONS'
 
-type BrowserPermissions = { [origin: string]: AllowedFeatures[] }
+type BrowserPermission = { feature: AllowedFeatures; status: PermissionStatus }
+
+type BrowserPermissions = { [origin: string]: BrowserPermission[] }
 
 type UseBrowserPermissionsProps = {
   permissions: BrowserPermissions
-  getPermissions: (origin: string) => AllowedFeatures[]
+  getPermissions: (origin: string) => BrowserPermission[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

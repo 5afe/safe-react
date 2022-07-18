@@ -19,6 +19,12 @@ export type SecurityFeedbackPractice = {
   imageSrc?: string
 }
 
+export enum PermissionStatus {
+  GRANTED = 'granted',
+  PROMPT = 'prompt',
+  DENIED = 'denied',
+}
+
 export enum AllowedFeatures {
   // Standarized
   'accelerometer',
