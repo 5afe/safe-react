@@ -11,12 +11,12 @@ import {
   ModifySpendingLimitDetails,
 } from './SpendingLimitDetails'
 import { TxInfoDetails } from './TxInfoDetails'
-import { sameString } from 'src/utils/strings'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
 import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getInteractionTitle } from '../helpers/utils'
+import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 type DetailsWithTxInfoProps = {
   children: ReactNode
@@ -69,8 +69,7 @@ export const TxData = ({ txData, txInfo }: TxDataProps): ReactElement | null => 
     )
   }
 
-  // known data and particularly `multiSend` data type
-  if (sameString(txData.dataDecoded.method, 'multiSend')) {
+  if (isSupportedMultiSendCall(txInfo)) {
     return <MultiSendDetails txData={txData} />
   }
 

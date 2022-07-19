@@ -7,7 +7,6 @@ import {
   ExpandedTxDetails,
   isCustomTxInfo,
   isModuleExecutionInfo,
-  isMultiSendTxInfo,
   isMultiSigExecutionDetails,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
@@ -30,6 +29,7 @@ import TxModuleInfo from './TxModuleInfo'
 import Track from 'src/components/Track'
 import { TX_LIST_EVENTS } from 'src/utils/events/txList'
 import TxShareButton from './TxShareButton'
+import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -98,7 +98,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const currentUser = useSelector(userAccountSelector)
-  const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
+  const isMultiSend = data && isSupportedMultiSendCall(data.txInfo)
   const shouldShowStepper = data?.detailedExecutionInfo && isMultiSigExecutionDetails(data.detailedExecutionInfo)
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
@@ -154,8 +154,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
         </div>
         {getModuleDetails()}
         <div
-          className={cn('tx-details', {
-            'no-padding': isMultiSendTxInfo(data.txInfo),
+          className={cn('tx-details', 'no-padding', {
             'not-executed': !data.executedAt,
             'will-be-replaced': willBeReplaced,
           })}
@@ -167,7 +166,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       <>
         <div
           className={cn('tx-details', {
-            'no-padding': isMultiSendTxInfo(data.txInfo) || noTxDataBlock,
+            'no-padding': noTxDataBlock,
             'not-executed': !data.executedAt,
             'will-be-replaced': willBeReplaced,
           })}
