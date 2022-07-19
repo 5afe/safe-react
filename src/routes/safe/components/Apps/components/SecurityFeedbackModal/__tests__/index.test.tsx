@@ -8,6 +8,7 @@ describe('<SecurityFeedbackModal />', () => {
     onConfirm: jest.fn(),
     onCancel: jest.fn(),
     appUrl: 'https://safe-app.test.eth',
+    features: [],
     isExtendedListReviewed: false,
     isFirstTimeAccessingApp: false,
     isSafeAppInDefaultList: true,
