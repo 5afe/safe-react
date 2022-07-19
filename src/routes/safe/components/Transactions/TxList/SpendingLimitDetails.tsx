@@ -9,6 +9,9 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/component
 import { TransactionData, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { StyledDetailsTitle, StyledTxInfoDetails } from 'src/routes/safe/components/Transactions/TxList/styled'
+import { isCustomTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import { getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
+import { _getChainId } from 'src/config'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'
@@ -23,6 +26,13 @@ export const isDeleteAllowance = (method?: string): boolean => {
 
 export const isSpendingLimitMethod = (method?: string): boolean => {
   return isSetAllowance(method) || isDeleteAllowance(method)
+}
+
+export const isSupportedSpendingLimitAddress = (txInfo: TransactionInfo): boolean => {
+  const toAddress = isCustomTxInfo(txInfo) ? txInfo.to.value : ''
+  const spendingLimitModuleAddress = getSpendingLimitModuleAddress(_getChainId())
+
+  return sameString(spendingLimitModuleAddress, toAddress)
 }
 
 const StyledInfoBlock = styled.div`
