@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<script>
+  ;(function () {
+    const allowedOrigins = [
+      'https://web-core.pages.dev',
+      'https://beta.safe.global',
+      'https://app.safe.global',
+    ]
+    // Send the entire localStorage if the origin is allowed
+    window.addEventListener('message', function (event) {
+      if (allowedOrigins.includes(event.origin)) {
+        event.source.postMessage(
+          {
+            type: 'migration-data',
+            payload: JSON.parse(JSON.stringify(localStorage)),
+          },
+          event.origin
+        )
+      }
+    })
+  })()
+</script>
