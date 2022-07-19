@@ -87,6 +87,8 @@ const useAppList = (): UseAppListReturnType => {
 
   const getSafeApp = useCallback(
     (url: string): SafeApp | undefined => {
+      if (!url) return
+
       const urlInstance = new URL(url)
       const safeAppUrl = `${urlInstance.hostname}/${urlInstance.pathname}`
 

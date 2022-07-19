@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
-import { useSafeAppManifest } from './useSafeAppManifest'
-import { BrowserPermission, useBrowserPermissions } from './permissions/useBrowserPermissions'
-import { PermissionStatus } from '../types'
+import { BrowserPermission } from './permissions/useBrowserPermissions'
+import { PermissionStatus, SafeApp } from '../types'
 
 const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
 
@@ -15,7 +12,21 @@ type SecurityFeedbackModalStorage = {
   consentAccepted: boolean
 }
 
-const useSecurityFeedbackModal = (): {
+type useSecurityFeedbackModal = {
+  url: string
+  safeApp?: SafeApp
+  safeAppManifest?: SafeApp
+  addPermissions: (origin: string, permissions: BrowserPermission[]) => void
+  getPermissions: (origin: string) => BrowserPermission[]
+}
+
+const useSecurityFeedbackModal = ({
+  url,
+  safeApp,
+  safeAppManifest,
+  addPermissions,
+  getPermissions,
+}: useSecurityFeedbackModal): {
   isModalVisible: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
@@ -27,11 +38,6 @@ const useSecurityFeedbackModal = (): {
 } => {
   const didMount = useRef(false)
 
-  const { isLoading: isSafeAppListLoading, getSafeApp } = useAppList()
-  const { getAppUrl } = useSafeAppUrl()
-  const url = getAppUrl()
-  const { isLoading: isSafeAppManifestLoading, safeApp } = useSafeAppManifest(url)
-  const { addPermissions, getPermissions } = useBrowserPermissions()
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
   const [customAppsReviewed, setCustomAppsReviewed] = useState<string[]>([])
@@ -77,29 +83,29 @@ const useSecurityFeedbackModal = (): {
   const isSafeAppInDefaultList = useMemo(() => {
     if (!url) return false
 
-    return !!getSafeApp(url)
-  }, [getSafeApp, url])
+    return !!safeApp
+  }, [safeApp, url])
 
   const isFirstTimeAccessingApp = useMemo(() => {
     if (!url) return true
 
-    const safeAppId = getSafeApp(url)?.id
+    const safeAppId = safeApp?.id
 
     return safeAppId ? !appsReviewed?.includes(safeAppId) : !customAppsReviewed?.includes(url)
-  }, [appsReviewed, customAppsReviewed, getSafeApp, url])
+  }, [appsReviewed, customAppsReviewed, safeApp, url])
 
   const isPermissionsReviewCompleted = useMemo(() => {
     if (!url) return false
 
-    return safeApp.safeAppsPermissions.every((permission) =>
+    return !!safeAppManifest?.safeAppsPermissions.every((permission) =>
       getPermissions(url).some(({ feature, status }) => {
         return feature === permission && status !== PermissionStatus.PROMPT
       }),
     )
-  }, [getPermissions, safeApp.safeAppsPermissions, url])
+  }, [getPermissions, safeAppManifest, url])
 
   const isModalVisible = useMemo(() => {
-    const isComponentReady = !isSafeAppListLoading && !isSafeAppManifestLoading && didMount.current
+    const isComponentReady = didMount.current
     const shouldShowLegalDisclaimer = !consentAccepted
     const shouldShowAllowedFeatures = !isPermissionsReviewCompleted
     const shouldShowSecurityPractices = isSafeAppInDefaultList && isFirstTimeAccessingApp
@@ -114,8 +120,6 @@ const useSecurityFeedbackModal = (): {
         shouldShowAllowedFeatures)
     )
   }, [
-    isSafeAppListLoading,
-    isSafeAppManifestLoading,
     consentAccepted,
     isPermissionsReviewCompleted,
     isSafeAppInDefaultList,
@@ -127,7 +131,7 @@ const useSecurityFeedbackModal = (): {
     (shouldHide: boolean, browserPermissions: BrowserPermission[]) => {
       setConsentAccepted(true)
 
-      const safeAppId = getSafeApp(url)?.id
+      const safeAppId = safeApp?.id
 
       if (safeAppId && !appsReviewed.includes(safeAppId)) {
         const reviewedApps = [...appsReviewed, safeAppId]
@@ -156,8 +160,8 @@ const useSecurityFeedbackModal = (): {
       appsReviewed,
       customAppsReviewed,
       extendedListReviewed,
-      getSafeApp,
       isPermissionsReviewCompleted,
+      safeApp,
       url,
     ],
   )

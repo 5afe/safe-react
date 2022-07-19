@@ -8,12 +8,16 @@ import SafeAppsErrorBoundary from 'src/routes/safe/components/Apps/components/Sa
 import SafeAppsLoadError from 'src/routes/safe/components/Apps/components/SafeAppsLoadError'
 import { useSecurityFeedbackModal } from './hooks/useSecurityFeedbackModal'
 import { useSafeAppManifest } from './hooks/useSafeAppManifest'
+import { useAppList } from './hooks/appList/useAppList'
+import { useBrowserPermissions } from './hooks/permissions/useBrowserPermissions'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
-  const { safeApp } = useSafeAppManifest(url)
+  const { addPermissions, getPermissions, getAllowedFeaturesList } = useBrowserPermissions()
+  const { isLoading: isSafeAppListLoading, getSafeApp } = useAppList()
+  const { isLoading: isSafeAppManifestLoading, safeApp: safeAppManifest } = useSafeAppManifest(url)
 
   const {
     isModalVisible,
@@ -24,9 +28,13 @@ const Apps = (): React.ReactElement => {
     isExtendedListReviewed,
     onComplete,
     onRemoveCustomApp,
-  } = useSecurityFeedbackModal()
+  } = useSecurityFeedbackModal({ url, safeAppManifest, safeApp: getSafeApp(url), addPermissions, getPermissions })
 
   const goBack = useCallback(() => history.goBack(), [history])
+
+  if (isSafeAppListLoading || isSafeAppManifestLoading) {
+    return <div />
+  }
 
   if (url) {
     if (isModalVisible) {
@@ -35,7 +43,7 @@ const Apps = (): React.ReactElement => {
           onCancel={goBack}
           onConfirm={onComplete}
           appUrl={url}
-          features={safeApp.safeAppsPermissions}
+          features={safeAppManifest.safeAppsPermissions}
           isConsentAccepted={isConsentAccepted}
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}
@@ -47,7 +55,7 @@ const Apps = (): React.ReactElement => {
 
     return (
       <SafeAppsErrorBoundary render={() => <SafeAppsLoadError />}>
-        <AppFrame appUrl={url} />
+        <AppFrame appUrl={url} allowList={getAllowedFeaturesList(url)} />
       </SafeAppsErrorBoundary>
     )
   } else {

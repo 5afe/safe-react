@@ -50,9 +50,10 @@ const useBrowserPermissions = (): UseBrowserPermissionsProps => {
 
   const getAllowedFeaturesList = useCallback(
     (origin: string): string => {
-      return getPermissions(origin)?.reduce((acc, permission) => {
-        return acc + `,${permission.feature.toString()} ${origin}`
-      }, '')
+      return getPermissions(origin)
+        .filter(({ status }) => status === PermissionStatus.GRANTED)
+        .map((permission) => permission.feature)
+        .join('; ')
     },
     [getPermissions],
   )

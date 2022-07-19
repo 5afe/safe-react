@@ -1,4 +1,4 @@
-import { ReactElement, SyntheticEvent } from 'react'
+import { ReactElement, SyntheticEvent, useMemo } from 'react'
 import styled from 'styled-components'
 import Divider from '@material-ui/core/Divider'
 import { Title, Text } from '@gnosis.pm/safe-react-components'
@@ -7,8 +7,9 @@ import { getChainById } from 'src/config'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { black300 } from 'src/theme/variables'
 import fallbackSafeAppLogoSvg from 'src/assets/icons/apps.svg'
-import { useSecurityFeedbackModal } from 'src/routes/safe/components/Apps/hooks/useSecurityFeedbackModal'
 import UnknownAppWarning from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/UnknownAppWarning'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 
 type SafeAppDetailsTypes = {
   iconUrl: string
@@ -19,7 +20,13 @@ type SafeAppDetailsTypes = {
 
 const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeAppDetailsTypes): ReactElement => {
   const showAvailableChains = availableChains?.length > 0
-  const { isModalVisible: isLoaded, isSafeAppInDefaultList } = useSecurityFeedbackModal()
+  const { isLoading: isSafeAppListLoading, getSafeApp } = useAppList()
+  const { getAppUrl } = useSafeAppUrl()
+  const url = getAppUrl()
+
+  const isSafeAppInDefaultList = useMemo(() => {
+    return !!getSafeApp(url)
+  }, [getSafeApp, url])
 
   return (
     <>
@@ -51,7 +58,7 @@ const SafeAppDetails = ({ iconUrl, name, description, availableChains }: SafeApp
           <Separator />
         </>
       )}
-      {isLoaded && !isSafeAppInDefaultList && (
+      {!isSafeAppListLoading && !isSafeAppInDefaultList && (
         <>
           <UnknownAppWarning />
           <Separator />
