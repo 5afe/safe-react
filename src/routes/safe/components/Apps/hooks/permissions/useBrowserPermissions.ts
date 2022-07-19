@@ -19,13 +19,7 @@ type UseBrowserPermissionsProps = {
   permissionsRequest: BrowserPermissionsRequestState | undefined
   setPermissionsRequest: (permissionsRequest?: BrowserPermissionsRequestState) => void
   addPermissions: (origin: string, permissions: BrowserPermission[]) => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const generateAllowList = (features: AllowedFeatures[], origin: string): string => {
-  return features.reduce((acc, feature) => {
-    return acc + `,${feature.toString()} ${origin}`
-  }, '')
+  getAllowedFeaturesList: (origin: string) => string
 }
 
 const useBrowserPermissions = (): UseBrowserPermissionsProps => {
@@ -54,12 +48,22 @@ const useBrowserPermissions = (): UseBrowserPermissionsProps => {
     [permissions],
   )
 
+  const getAllowedFeaturesList = useCallback(
+    (origin: string): string => {
+      return getPermissions(origin)?.reduce((acc, permission) => {
+        return acc + `,${permission.feature.toString()} ${origin}`
+      }, '')
+    },
+    [getPermissions],
+  )
+
   return {
     permissions,
     getPermissions,
     permissionsRequest,
     setPermissionsRequest,
     addPermissions,
+    getAllowedFeaturesList,
   }
 }
 
