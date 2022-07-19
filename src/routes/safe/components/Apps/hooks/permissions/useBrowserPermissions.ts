@@ -4,13 +4,21 @@ import { AllowedFeatures, PermissionStatus } from '../../types'
 
 const BROWSER_PERMISSIONS = 'BROWSER_PERMISSIONS'
 
-type BrowserPermission = { feature: AllowedFeatures; status: PermissionStatus }
+export type BrowserPermission = { feature: AllowedFeatures; status: PermissionStatus }
 
 type BrowserPermissions = { [origin: string]: BrowserPermission[] }
+
+type BrowserPermissionsRequestState = {
+  origin: string
+  request: BrowserPermission[]
+}
 
 type UseBrowserPermissionsProps = {
   permissions: BrowserPermissions
   getPermissions: (origin: string) => BrowserPermission[]
+  permissionsRequest: BrowserPermissionsRequestState | undefined
+  setPermissionsRequest: (permissionsRequest?: BrowserPermissionsRequestState) => void
+  addPermissions: (origin: string, permissions: BrowserPermission[]) => void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,6 +30,7 @@ const generateAllowList = (features: AllowedFeatures[], origin: string): string 
 
 const useBrowserPermissions = (): UseBrowserPermissionsProps => {
   const [permissions, setPermissions] = useState<BrowserPermissions>({})
+  const [permissionsRequest, setPermissionsRequest] = useState<BrowserPermissionsRequestState | undefined>()
 
   useEffect(() => {
     setPermissions(local.getItem(BROWSER_PERMISSIONS) || {})
@@ -38,9 +47,19 @@ const useBrowserPermissions = (): UseBrowserPermissionsProps => {
     [permissions],
   )
 
+  const addPermissions = useCallback(
+    (origin: string, selectedPermissions: BrowserPermission[]) => {
+      setPermissions({ ...permissions, [origin]: selectedPermissions })
+    },
+    [permissions],
+  )
+
   return {
     permissions,
     getPermissions,
+    permissionsRequest,
+    setPermissionsRequest,
+    addPermissions,
   }
 }
 

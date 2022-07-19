@@ -7,11 +7,13 @@ import SecurityFeedbackModal from 'src/routes/safe/components/Apps/components/Se
 import SafeAppsErrorBoundary from 'src/routes/safe/components/Apps/components/SafeAppsErrorBoundary'
 import SafeAppsLoadError from 'src/routes/safe/components/Apps/components/SafeAppsLoadError'
 import { useSecurityFeedbackModal } from './hooks/useSecurityFeedbackModal'
+import { useSafeAppManifest } from './hooks/useSafeAppManifest'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
+  const { safeApp } = useSafeAppManifest(url)
 
   const {
     isModalVisible,
@@ -33,6 +35,7 @@ const Apps = (): React.ReactElement => {
           onCancel={goBack}
           onConfirm={onComplete}
           appUrl={url}
+          features={safeApp.safeAppsPermissions}
           isConsentAccepted={isConsentAccepted}
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}

@@ -3,7 +3,7 @@ import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import { useSafeAppManifest } from './useSafeAppManifest'
-import { useBrowserPermissions } from './permissions/useBrowserPermissions'
+import { BrowserPermission, useBrowserPermissions } from './permissions/useBrowserPermissions'
 import { PermissionStatus } from '../types'
 
 const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
@@ -22,7 +22,7 @@ const useSecurityFeedbackModal = (): {
   isConsentAccepted: boolean
   isExtendedListReviewed: boolean
   isPermissionsReviewCompleted: boolean
-  onComplete: (shouldHide: boolean) => void
+  onComplete: (shouldHide: boolean, permissions: BrowserPermission[]) => void
   onRemoveCustomApp: (appUrl: string) => void
 } => {
   const didMount = useRef(false)
@@ -31,7 +31,7 @@ const useSecurityFeedbackModal = (): {
   const { getAppUrl } = useSafeAppUrl()
   const url = getAppUrl()
   const { isLoading: isSafeAppManifestLoading, safeApp } = useSafeAppManifest(url)
-  const { getPermissions } = useBrowserPermissions()
+  const { addPermissions, getPermissions } = useBrowserPermissions()
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
   const [customAppsReviewed, setCustomAppsReviewed] = useState<string[]>([])
@@ -91,14 +91,10 @@ const useSecurityFeedbackModal = (): {
   const isPermissionsReviewCompleted = useMemo(() => {
     if (!url) return false
 
-    const currentAllowedFeatures = getPermissions(url).filter(
-      (permission) => permission.status === PermissionStatus.GRANTED,
-    )
-
     return safeApp.safeAppsPermissions.every((permission) =>
-      currentAllowedFeatures.some(
-        ({ feature, status }) => feature === permission && status === PermissionStatus.GRANTED,
-      ),
+      getPermissions(url).some(({ feature, status }) => {
+        return feature === permission && status !== PermissionStatus.PROMPT
+      }),
     )
   }, [getPermissions, safeApp.safeAppsPermissions, url])
 
@@ -128,7 +124,7 @@ const useSecurityFeedbackModal = (): {
   ])
 
   const onComplete = useCallback(
-    (shouldHide: boolean) => {
+    (shouldHide: boolean, browserPermissions: BrowserPermission[]) => {
       setConsentAccepted(true)
 
       const safeAppId = getSafeApp(url)?.id
@@ -150,12 +146,20 @@ const useSecurityFeedbackModal = (): {
       }
 
       if (!isPermissionsReviewCompleted) {
-        // TODO: Store permissions decision
+        addPermissions(url, browserPermissions)
       }
 
       setIsDisclaimerReadingCompleted(true)
     },
-    [appsReviewed, customAppsReviewed, extendedListReviewed, getSafeApp, isPermissionsReviewCompleted, url],
+    [
+      addPermissions,
+      appsReviewed,
+      customAppsReviewed,
+      extendedListReviewed,
+      getSafeApp,
+      isPermissionsReviewCompleted,
+      url,
+    ],
   )
 
   const onRemoveCustomApp = useCallback(
