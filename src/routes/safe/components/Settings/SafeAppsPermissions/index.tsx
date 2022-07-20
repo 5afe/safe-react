@@ -1,21 +1,72 @@
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 import Block from 'src/components/layout/Block'
 import styled from 'styled-components'
 import { lg } from 'src/theme/variables'
 import Heading from 'src/components/layout/Heading'
-
-// Other settings sections use MUI createStyles .container
-// will adjust that during dark mode implementation
-const Container = styled(Block)`
-  padding: ${lg};
-`
+import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useSafePermissions'
+import { useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useBrowserPermissions'
+import { Box } from '@material-ui/core'
+import { Checkbox, Text, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
+import { PermissionStatus } from '../../Apps/types'
 
 const SafeAppsPermissions = (): ReactElement => {
+  const { permissions: safePermissions } = useSafePermissions()
+  const { permissions: browserPermissions } = useBrowserPermissions()
+
+  const domains = useMemo(() => {
+    const safePermissionsSet = new Set(Object.keys(safePermissions))
+    const browserPermissionsSet = new Set(Object.keys(browserPermissions))
+    const mergedPermissionsSet = new Set([...safePermissionsSet, ...browserPermissionsSet])
+
+    return Array.from(mergedPermissionsSet)
+  }, [safePermissions, browserPermissions])
+
+  console.log('SAFE PERMISSIONS:', safePermissions)
+  console.log('BROWSER PERMISSIONS:', browserPermissions)
+  console.log('Domains:', domains)
+
   return (
     <Container>
       <Heading tag="h2">Safe Apps Permissions</Heading>
+      <Box mt={2}>
+        {domains.map((domain) => (
+          <Accordion compact key={domain}>
+            <AccordionSummary>
+              <Text size="lg">{domain}</Text>
+            </AccordionSummary>
+            <AccordionDetails>
+              {safePermissions[domain]?.map(({ parentCapability }) => {
+                return (
+                  <Checkbox
+                    key={parentCapability}
+                    name={parentCapability}
+                    checked
+                    onChange={(_, checked) => console.log(checked)}
+                    label={parentCapability}
+                  />
+                )
+              })}
+              {browserPermissions[domain]?.map(({ feature, status }) => {
+                return (
+                  <Checkbox
+                    key={feature}
+                    name={feature.toString()}
+                    checked={status === PermissionStatus.GRANTED ? true : false}
+                    onChange={(_, checked) => console.log(checked)}
+                    label={feature}
+                  />
+                )
+              })}
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Box>
     </Container>
   )
 }
+
+const Container = styled(Block)`
+  padding: ${lg};
+`
 
 export default SafeAppsPermissions

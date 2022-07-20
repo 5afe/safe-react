@@ -11,7 +11,10 @@ type SafePermissionsRequestState = {
   request: PermissionRequest[]
 }
 
+type SafePermissions = { [origin: string]: Permission[] }
+
 type UseSafePermissionsProps = {
+  permissions: SafePermissions
   getPermissions: (origin: string) => Permission[]
   permissionsRequest: SafePermissionsRequestState | undefined
   setPermissionsRequest: (permissionsRequest?: SafePermissionsRequestState) => void
@@ -20,7 +23,7 @@ type UseSafePermissionsProps = {
 }
 
 const useSafePermissions = (): UseSafePermissionsProps => {
-  const [permissions, setPermissions] = useState<{ [origin: string]: Permission[] }>({})
+  const [permissions, setPermissions] = useState<SafePermissions>({})
   const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequestState | undefined>()
 
   useEffect(() => {
@@ -77,6 +80,7 @@ const useSafePermissions = (): UseSafePermissionsProps => {
   )
 
   return {
+    permissions,
     permissionsRequest,
     setPermissionsRequest,
     getPermissions,
