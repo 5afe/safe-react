@@ -4,7 +4,6 @@ import {
   DateLabel,
   Label,
   ModuleExecutionDetails,
-  MultiSend,
   MultisigExecutionDetails,
   MultisigExecutionInfo,
   TransactionSummary,
@@ -95,10 +94,6 @@ export const isSettingsChangeTxInfo = (value: TransactionInfo): value is Setting
 
 export const isCustomTxInfo = (value: TransactionInfo): value is Custom => {
   return value.type === 'Custom'
-}
-
-export const isMultiSendTxInfo = (value: TransactionInfo): value is MultiSend => {
-  return isCustomTxInfo(value) && value.methodName === 'multiSend'
 }
 
 export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {

@@ -7,7 +7,6 @@ import {
   isTransferTxInfo,
   isSettingsChangeTxInfo,
   isCustomTxInfo,
-  isMultiSendTxInfo,
   isCreationTxInfo,
   isMultiSigExecutionDetails,
   isModuleExecutionInfo,
@@ -140,43 +139,6 @@ describe('isCustomTxInfo', () => {
 
     // @ts-ignore - Sending an invalid object
     expect(isCustomTxInfo(data)).toBe(false)
-  })
-})
-describe('isMultiSendTxInfo', () => {
-  it('returns true when it is a custom multisend transaction', () => {
-    const data = {
-      type: 'Custom',
-      methodName: 'multiSend',
-    }
-
-    // @ts-ignore - Sending an invalid object
-    expect(isMultiSendTxInfo(data)).toBe(true)
-  })
-  it('returns false when it is not a custom multisend transaction', () => {
-    const data = {
-      type: 'TEST',
-      methodName: 'multiSend',
-    }
-
-    // @ts-ignore - Sending an invalid object
-    expect(isMultiSendTxInfo(data)).toBe(false)
-  })
-  it('returns false when it is just a multisend transaction', () => {
-    const data = {
-      methodName: 'multiSend',
-    }
-
-    // @ts-ignore - Sending an invalid object
-    expect(isMultiSendTxInfo(data)).toBe(false)
-  })
-  it('returns false when it is not a custom multisend transaction', () => {
-    const data = {
-      type: 'TEST',
-      methodName: 'multiSend',
-    }
-
-    // @ts-ignore - Sending an invalid object
-    expect(isMultiSendTxInfo(data)).toBe(false)
   })
 })
 

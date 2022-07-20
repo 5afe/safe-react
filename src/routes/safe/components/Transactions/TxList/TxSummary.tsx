@@ -4,16 +4,13 @@ import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { formatDateTime } from 'src/utils/date'
-import {
-  ExpandedTxDetails,
-  isMultiSendTxInfo,
-  isMultiSigExecutionDetails,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import TxInfoMultiSend from './TxInfoMultiSend'
 import DelegateCallWarning from './DelegateCallWarning'
 import { TxDataRow } from 'src/routes/safe/components/Transactions/TxList/TxDataRow'
 import { sm } from 'src/theme/variables'
+import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 const StyledButtonLink = styled(ButtonLink)`
   margin-top: ${sm};
@@ -62,7 +59,7 @@ export const TxSummary = ({ txDetails }: Props): ReactElement => {
           <DelegateCallWarning showWarning={!txData.trustedDelegateCallTarget} />
         </div>
       )}
-      {isMultiSendTxInfo(txInfo) && (
+      {isSupportedMultiSendCall(txInfo) && (
         <>
           <TxInfoMultiSend txInfo={txInfo} />
           <br />
