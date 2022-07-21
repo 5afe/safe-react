@@ -20,6 +20,7 @@ type UseBrowserPermissionsProps = {
   setPermissionsRequest: (permissionsRequest?: BrowserPermissionsRequestState) => void
   addPermissions: (origin: string, permissions: BrowserPermission[]) => void
   getAllowedFeaturesList: (origin: string) => string
+  updateBrowserPermission: (origin: string, feature: AllowedFeatures, selected: boolean) => void
 }
 
 const useBrowserPermissions = (): UseBrowserPermissionsProps => {
@@ -58,6 +59,22 @@ const useBrowserPermissions = (): UseBrowserPermissionsProps => {
     [getPermissions],
   )
 
+  const updateBrowserPermission = useCallback(
+    (origin: string, feature: AllowedFeatures, selected: boolean) => {
+      setPermissions({
+        ...permissions,
+        [origin]: permissions[origin].map((p) => {
+          if (p.feature === feature) {
+            p.status = selected ? PermissionStatus.GRANTED : PermissionStatus.DENIED
+          }
+
+          return p
+        }),
+      })
+    },
+    [permissions],
+  )
+
   return {
     permissions,
     getPermissions,
@@ -65,6 +82,7 @@ const useBrowserPermissions = (): UseBrowserPermissionsProps => {
     setPermissionsRequest,
     addPermissions,
     getAllowedFeaturesList,
+    updateBrowserPermission,
   }
 }
 

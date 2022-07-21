@@ -22,7 +22,7 @@ import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { LegacyMethods, useAppCommunicator } from '../communicator'
-import { SafeApp } from '../types'
+import { PermissionStatus, SafeApp } from '../types'
 import { EMPTY_SAFE_APP, getLegacyChainName } from '../utils'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
@@ -40,9 +40,9 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import PermissionsPrompt from './PermissionsPrompt'
-import { useSafePermissions } from '../hooks/permissions/useSafePermissions'
 import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import { useSafeAppManifest } from '../hooks/useSafeAppManifest'
+import { useSafePermissions } from '../hooks/permissions/useSafePermissions'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -111,7 +111,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
   const { remoteSafeApps } = useRemoteSafeApps()
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
-  const { addPermissions, permissionsRequest, setPermissionsRequest, getPermissions, hasPermissions } =
+  const { confirmPermissionRequest, permissionsRequest, setPermissionsRequest, getPermissions, hasPermissions } =
     useSafePermissions()
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
@@ -248,6 +248,8 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
       if (hasPermissions(msg.origin, Methods.requestAddressBook)) {
         return addressBook
       }
+
+      return []
     })
 
     communicator?.on(Methods.rpcCall, async (msg) => {
@@ -350,12 +352,13 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
   }
 
   const onAcceptPermissions = (origin: string, requestId: RequestId) => {
-    const updatedPermissions = addPermissions()
-    communicator?.send(updatedPermissions, requestId as string)
+    const permissions = confirmPermissionRequest(PermissionStatus.GRANTED)
+    communicator?.send(permissions, requestId as string)
     setPermissionsRequest(undefined)
   }
 
   const onRejectPermissions = (requestId: RequestId) => {
+    confirmPermissionRequest(PermissionStatus.DENIED)
     communicator?.send('Permissions were rejected', requestId as string, true)
     setPermissionsRequest(undefined)
   }

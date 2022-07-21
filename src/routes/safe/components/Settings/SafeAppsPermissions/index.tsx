@@ -7,11 +7,11 @@ import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permis
 import { useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useBrowserPermissions'
 import { Box } from '@material-ui/core'
 import { Checkbox, Text, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
-import { PermissionStatus } from '../../Apps/types'
+import { AllowedFeatures, PermissionStatus } from '../../Apps/types'
 
 const SafeAppsPermissions = (): ReactElement => {
-  const { permissions: safePermissions } = useSafePermissions()
-  const { permissions: browserPermissions } = useBrowserPermissions()
+  const { permissions: safePermissions, updateSafePermission, isUserRestricted } = useSafePermissions()
+  const { permissions: browserPermissions, updateBrowserPermission } = useBrowserPermissions()
 
   const domains = useMemo(() => {
     const safePermissionsSet = new Set(Object.keys(safePermissions))
@@ -20,6 +20,11 @@ const SafeAppsPermissions = (): ReactElement => {
 
     return Array.from(mergedPermissionsSet)
   }, [safePermissions, browserPermissions])
+
+  const handleSafePermissionsChange = (origin: string, capability: string, checked: boolean) =>
+    updateSafePermission(origin, capability, checked)
+  const handleBrowserPermissionsChange = (origin: string, feature: AllowedFeatures, checked: boolean) =>
+    updateBrowserPermission(origin, feature, checked)
 
   console.log('SAFE PERMISSIONS:', safePermissions)
   console.log('BROWSER PERMISSIONS:', browserPermissions)
@@ -35,13 +40,13 @@ const SafeAppsPermissions = (): ReactElement => {
               <Text size="lg">{domain}</Text>
             </AccordionSummary>
             <AccordionDetails>
-              {safePermissions[domain]?.map(({ parentCapability }) => {
+              {safePermissions[domain]?.map(({ parentCapability, caveats }) => {
                 return (
                   <Checkbox
                     key={parentCapability}
                     name={parentCapability}
-                    checked
-                    onChange={(_, checked) => console.log(checked)}
+                    checked={!isUserRestricted(caveats)}
+                    onChange={(_, checked) => handleSafePermissionsChange(domain, parentCapability, checked)}
                     label={parentCapability}
                   />
                 )
@@ -52,7 +57,7 @@ const SafeAppsPermissions = (): ReactElement => {
                     key={feature}
                     name={feature.toString()}
                     checked={status === PermissionStatus.GRANTED ? true : false}
-                    onChange={(_, checked) => console.log(checked)}
+                    onChange={(_, checked) => handleBrowserPermissionsChange(domain, feature, checked)}
                     label={feature}
                   />
                 )

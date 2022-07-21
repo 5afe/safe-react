@@ -1,69 +1,105 @@
 import { Methods } from '@gnosis.pm/safe-apps-sdk'
-import { Permission, PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
+import { Permission, PermissionCaveat, PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import { useState, useEffect, useCallback } from 'react'
 import local from 'src/utils/storage/local'
+import { PermissionStatus } from '../../types'
 
 const SAFE_PERMISSIONS = 'SAFE_PERMISSIONS'
 
-type SafePermissionsRequestState = {
+type SafePermissions = { [origin: string]: Permission[] }
+
+type SafePermissionsRequest = {
   origin: string
   requestId: string
   request: PermissionRequest[]
 }
 
-type SafePermissions = { [origin: string]: Permission[] }
-
 type UseSafePermissionsProps = {
   permissions: SafePermissions
+  isUserRestricted: (caveats?: PermissionCaveat[]) => boolean
   getPermissions: (origin: string) => Permission[]
-  permissionsRequest: SafePermissionsRequestState | undefined
-  setPermissionsRequest: (permissionsRequest?: SafePermissionsRequestState) => void
-  addPermissions: () => void
+  permissionsRequest: SafePermissionsRequest | undefined
+  setPermissionsRequest: (permissionsRequest?: SafePermissionsRequest) => void
+  confirmPermissionRequest: (result: PermissionStatus) => Permission[]
   hasPermissions: (origin: string, permission: Methods) => boolean
+  updateSafePermission: (origin: string, capability: string, selected: boolean) => void
 }
 
 const useSafePermissions = (): UseSafePermissionsProps => {
   const [permissions, setPermissions] = useState<SafePermissions>({})
-  const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequestState | undefined>()
+  const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequest | undefined>()
 
   useEffect(() => {
     setPermissions(local.getItem(SAFE_PERMISSIONS) || {})
   }, [])
 
   useEffect(() => {
-    local.setItem(SAFE_PERMISSIONS, permissions)
+    if (!!Object.keys(permissions).length) {
+      local.setItem(SAFE_PERMISSIONS, permissions)
+    }
   }, [permissions])
 
-  const addPermissions = useCallback((): Permission[] => {
-    if (!permissionsRequest) {
-      return []
-    }
-
-    const newPermissions: Permission[] = []
-
-    permissionsRequest.request.forEach((requestedPermission) => {
-      if (
-        !permissions[permissionsRequest.origin]?.find(
-          (p: Permission) => p.parentCapability === Object.keys(requestedPermission)[0],
-        )
-      ) {
-        newPermissions.push({
-          invoker: permissionsRequest.origin,
-          parentCapability: Object.keys(requestedPermission)[0],
-          date: new Date().getTime(),
-        })
+  const confirmPermissionRequest = useCallback(
+    (result) => {
+      if (!permissionsRequest) {
+        return []
       }
-    })
 
-    const updatedPermissions = [...(permissions[permissionsRequest.origin] || []), ...newPermissions]
+      const newPermissions: Permission[] = [...(permissions[permissionsRequest.origin] || [])]
 
-    setPermissions({
-      ...permissions,
-      [permissionsRequest.origin]: updatedPermissions,
-    })
+      permissionsRequest.request.forEach((requestedPermission) => {
+        const capability = Object.keys(requestedPermission)[0]
+        const currentPermission = permissions[permissionsRequest.origin]?.find(
+          (p: Permission) => p.parentCapability === capability,
+        )
 
-    return updatedPermissions
-  }, [permissions, permissionsRequest])
+        if (!currentPermission) {
+          const newPermission: Permission = {
+            invoker: permissionsRequest.origin,
+            parentCapability: capability,
+            date: new Date().getTime(),
+          }
+
+          if (result === PermissionStatus.DENIED) {
+            newPermission.caveats = [
+              {
+                type: 'userRestricted',
+                value: true,
+              },
+            ]
+          }
+          newPermissions.push(newPermission)
+        } else {
+          newPermissions.map((permission) => {
+            if (permission.parentCapability === capability) {
+              const filteredCaveats = permission.caveats?.filter((caveat) => caveat.type !== 'userRestricted') || []
+              if (result === PermissionStatus.GRANTED) {
+                permission.caveats = filteredCaveats
+              } else {
+                permission.caveats = [
+                  ...filteredCaveats,
+                  {
+                    type: 'userRestricted',
+                    value: true,
+                  },
+                ]
+              }
+            }
+          })
+        }
+      })
+
+      const updatedPermissions = {
+        ...permissions,
+        [permissionsRequest.origin]: newPermissions,
+      }
+
+      setPermissions(updatedPermissions)
+
+      return newPermissions
+    },
+    [permissions, permissionsRequest],
+  )
 
   const getPermissions = useCallback(
     (origin: string) => {
@@ -74,18 +110,49 @@ const useSafePermissions = (): UseSafePermissionsProps => {
 
   const hasPermissions = useCallback(
     (origin: string, permission: Methods) => {
-      return permissions[origin]?.some((p) => p.parentCapability === permission)
+      return permissions[origin]?.some((p) => p.parentCapability === permission && !isUserRestricted(p.caveats))
+    },
+    [permissions],
+  )
+
+  const isUserRestricted = (caveats?: PermissionCaveat[]) =>
+    !!caveats?.some((caveat) => caveat.type === 'userRestricted' && caveat.value === true)
+
+  const updateSafePermission = useCallback(
+    (origin: string, capability: string, selected: boolean) => {
+      setPermissions({
+        ...permissions,
+        [origin]: permissions[origin].map((permission) => {
+          if (permission.parentCapability === capability) {
+            if (selected) {
+              permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== 'userRestricted') || []
+            } else if (!isUserRestricted(permission.caveats)) {
+              permission.caveats = [
+                ...(permission.caveats || []),
+                {
+                  type: 'userRestricted',
+                  value: true,
+                },
+              ]
+            }
+          }
+
+          return permission
+        }),
+      })
     },
     [permissions],
   )
 
   return {
     permissions,
+    isUserRestricted,
     permissionsRequest,
     setPermissionsRequest,
     getPermissions,
-    addPermissions,
+    confirmPermissionRequest,
     hasPermissions,
+    updateSafePermission,
   }
 }
 
