@@ -32,7 +32,9 @@ const useBrowserPermissions = (): UseBrowserPermissionsProps => {
   }, [])
 
   useEffect(() => {
-    local.setItem(BROWSER_PERMISSIONS, permissions)
+    if (!!Object.keys(permissions).length) {
+      local.setItem(BROWSER_PERMISSIONS, permissions)
+    }
   }, [permissions])
 
   const getPermissions = useCallback(
