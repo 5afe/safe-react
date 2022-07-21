@@ -240,8 +240,8 @@ export const GroupedTransactions = styled(StyledTransaction)`
 
   // builds the tree-view layout
   .tree-lines {
-    height: 100%;
-    margin-left: 30px;
+    height: auto;
+    margin: 0 0 0 30px;
     position: relative;
     width: 30%;
 
@@ -259,7 +259,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
         content: '';
         height: 22px;
         position: absolute;
-        top: 8px;
+        top: 18px;
         width: 100%;
       }
     }
@@ -274,7 +274,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
         border-left: 2px solid ${({ theme }) => theme.colors.separator};
         content: '';
         height: 100%;
-        margin-top: 14px;
+        margin-top: 26px;
         position: absolute;
         width: 100%;
       }
