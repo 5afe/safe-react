@@ -5,6 +5,7 @@ import local from 'src/utils/storage/local'
 import { PermissionStatus } from '../../types'
 
 const SAFE_PERMISSIONS = 'SAFE_PERMISSIONS'
+const USER_RESTRICTED = 'userRestricted'
 
 type SafePermissions = { [origin: string]: Permission[] }
 
@@ -63,7 +64,7 @@ const useSafePermissions = (): UseSafePermissionsProps => {
           if (result === PermissionStatus.DENIED) {
             newPermission.caveats = [
               {
-                type: 'userRestricted',
+                type: USER_RESTRICTED,
                 value: true,
               },
             ]
@@ -72,14 +73,14 @@ const useSafePermissions = (): UseSafePermissionsProps => {
         } else {
           newPermissions.map((permission) => {
             if (permission.parentCapability === capability) {
-              const filteredCaveats = permission.caveats?.filter((caveat) => caveat.type !== 'userRestricted') || []
+              const filteredCaveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
               if (result === PermissionStatus.GRANTED) {
                 permission.caveats = filteredCaveats
               } else {
                 permission.caveats = [
                   ...filteredCaveats,
                   {
-                    type: 'userRestricted',
+                    type: USER_RESTRICTED,
                     value: true,
                   },
                 ]
@@ -116,7 +117,7 @@ const useSafePermissions = (): UseSafePermissionsProps => {
   )
 
   const isUserRestricted = (caveats?: PermissionCaveat[]) =>
-    !!caveats?.some((caveat) => caveat.type === 'userRestricted' && caveat.value === true)
+    !!caveats?.some((caveat) => caveat.type === USER_RESTRICTED && caveat.value === true)
 
   const updateSafePermission = useCallback(
     (origin: string, capability: string, selected: boolean) => {
@@ -125,12 +126,12 @@ const useSafePermissions = (): UseSafePermissionsProps => {
         [origin]: permissions[origin].map((permission) => {
           if (permission.parentCapability === capability) {
             if (selected) {
-              permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== 'userRestricted') || []
+              permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
             } else if (!isUserRestricted(permission.caveats)) {
               permission.caveats = [
                 ...(permission.caveats || []),
                 {
-                  type: 'userRestricted',
+                  type: USER_RESTRICTED,
                   value: true,
                 },
               ]
