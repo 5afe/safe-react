@@ -1,0 +1,151 @@
+import { ReactElement, useMemo } from 'react'
+import { Skeleton } from '@material-ui/lab'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import { Text, Identicon } from '@gnosis.pm/safe-react-components'
+import { Box, Grid } from '@material-ui/core'
+
+import { SafeWidgetComponentProps } from 'src/components/Dashboard/SafeWidget/SafeWidget'
+import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
+import Threshold from 'src/components/AppLayout/Sidebar/Threshold'
+import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { Card, WidgetBody, WidgetContainer } from 'src/components/Dashboard/styled'
+import Button from 'src/components/layout/Button'
+import { md, lg } from 'src/theme/variables'
+import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
+
+const OverviewSafeWidget = ({ safeInfo }: SafeWidgetComponentProps): ReactElement => {
+  const { loaded, name, address, chain, owners, threshold, balances, nftTokens, nftLoaded } = safeInfo
+  const { shortName } = chain
+
+  const assetsLink = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, { safeAddress: address, shortName })
+  const nftsLink = generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES_COLLECTIBLES, { safeAddress: address, shortName })
+
+  // Native token is always returned even when its balance is 0
+  const tokenCount = useMemo(() => balances.filter((token) => token.tokenBalance !== '0').length, [balances])
+
+  return (
+    <WidgetContainer>
+      <WidgetBody>
+        {!loaded ? (
+          SkeletonOverview
+        ) : (
+          <Card>
+            <Grid container>
+              <Grid item xs={12}>
+                <IdenticonContainer>
+                  <Threshold threshold={threshold} owners={owners.length} size={14} />
+                  <Identicon address={address} size="xl" />
+                </IdenticonContainer>
+                <Box mb={2} overflow="hidden">
+                  <Text size="xl" strong>
+                    {name}
+                  </Text>
+                  <PrefixedEthHashInfo hash={address} textSize="xl" textColor="placeHolder" />
+                </Box>
+                <NetworkLabelContainer>
+                  <NetworkLabel />
+                </NetworkLabelContainer>
+              </Grid>
+            </Grid>
+
+            <Grid container>
+              <Grid item xs={3}>
+                <StyledLink to={assetsLink}>
+                  <Text color="inputDefault" size="lg">
+                    Tokens
+                  </Text>
+                  <StyledText size="xl">{tokenCount}</StyledText>
+                </StyledLink>
+              </Grid>
+
+              <Grid item xs={3}>
+                <StyledLink to={nftsLink}>
+                  <Text color="inputDefault" size="lg">
+                    NFTs
+                  </Text>
+                  {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+                </StyledLink>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Box display="flex" height={1} alignItems="flex-end" justifyContent="flex-end">
+                  <StyledLink to={assetsLink}>
+                    <Button size="medium" variant="contained" color="primary">
+                      View Assets
+                    </Button>
+                  </StyledLink>
+                </Box>
+              </Grid>
+            </Grid>
+          </Card>
+        )}
+      </WidgetBody>
+    </WidgetContainer>
+  )
+}
+
+export default OverviewSafeWidget
+
+const ValueSkeleton = <Skeleton variant="text" width={30} />
+
+const IdenticonContainer = styled.div`
+  position: relative;
+  margin-bottom: ${md};
+`
+
+const StyledText = styled(Text)`
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: bold;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`
+
+const NetworkLabelContainer = styled.div`
+  position: absolute;
+  top: ${lg};
+  right: ${lg};
+
+  & span {
+    bottom: auto;
+  }
+`
+
+const SkeletonOverview = (
+  <Card>
+    <Grid container>
+      <Grid item xs={12}>
+        <IdenticonContainer>
+          <Skeleton variant="circle" width="48px" height="48px" />
+        </IdenticonContainer>
+
+        <Box mb={2}>
+          <Text size="xl" strong>
+            <Skeleton variant="text" height={28} />
+          </Text>
+          <Skeleton variant="text" height={21} />
+        </Box>
+        <NetworkLabelContainer>
+          <Skeleton variant="text" width="80px" />
+        </NetworkLabelContainer>
+      </Grid>
+    </Grid>
+    <Grid container>
+      <Grid item xs={3}>
+        <Text color="inputDefault" size="lg">
+          Tokens
+        </Text>
+        <StyledText size="xl">{ValueSkeleton}</StyledText>
+      </Grid>
+      <Grid item xs={3}>
+        <Text color="inputDefault" size="lg">
+          NFTs
+        </Text>
+        <StyledText size="xl">{ValueSkeleton}</StyledText>
+      </Grid>
+    </Grid>
+  </Card>
+)

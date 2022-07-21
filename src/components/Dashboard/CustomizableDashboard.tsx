@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 import SettingsIcon from '@material-ui/icons/Settings'
 import { useMediaQuery, IconButton } from '@material-ui/core'
@@ -10,17 +10,30 @@ const COLUMN_CELL_SIZE = 50 // pixels
 const ROW_CELL_SIZE = 50 // pixels
 const WIDGET_GAP = 5 // pixels
 
+const overviewSafeWidget: WidgetType = {
+  widgetId: 0,
+  widgetType: 'overviewSafeWidget',
+  md: {
+    columnCells: 10,
+    rowCells: 5,
+  },
+  xs: {
+    columnCells: 6,
+    rowCells: 5,
+  },
+}
+
 const gasPriceWidget: WidgetType = {
   widgetId: 1,
   widgetType: 'gasPriceWidget',
   widgetEndointUrl:
     'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=W7N7ISIDY1JFPYUI2D2HWVMMD3RF88QCCD',
   pollingTime: 14000,
-  desktopSize: {
+  md: {
     columnCells: 4,
     rowCells: 2,
   },
-  mobileSize: {
+  xs: {
     columnCells: 4,
     rowCells: 2,
   },
@@ -30,11 +43,11 @@ const claimCowTokens: WidgetType = {
   widgetId: 2,
   widgetType: 'claimTokensWidget',
   widgetEndointUrl: 'http://localhost:3001/api',
-  desktopSize: {
+  md: {
     columnCells: 5,
     rowCells: 4,
   },
-  mobileSize: {
+  xs: {
     columnCells: 4,
     rowCells: 4,
   },
@@ -47,14 +60,14 @@ const claimCowTokens: WidgetType = {
 }
 
 const claimSafeTokens: WidgetType = {
-  widgetId: 2,
+  widgetId: 3,
   widgetType: 'claimTokensWidget',
   widgetEndointUrl: 'http://localhost:3002/api',
-  desktopSize: {
+  md: {
     columnCells: 5,
     rowCells: 4,
   },
-  mobileSize: {
+  xs: {
     columnCells: 4,
     rowCells: 4,
   },
@@ -68,74 +81,78 @@ const claimSafeTokens: WidgetType = {
 }
 
 const cowSwapWidget: WidgetType = {
-  widgetId: 3,
+  widgetId: 4,
   widgetType: 'iframe',
-  widgetIframeUrl: 'https://cowswap.exchange/',
-  desktopSize: {
+  widgetIframeUrl: 'https://cowswap.exchange/?widget=1',
+
+  md: {
     columnCells: 8,
-    rowCells: 16,
+    rowCells: 17,
   },
-  mobileSize: {
+  xs: {
     columnCells: 6,
     rowCells: 10,
   },
 }
 
 const uniSwapWidget: WidgetType = {
-  widgetId: 3,
+  widgetId: 5,
   widgetType: 'iframe',
   widgetIframeUrl: 'https://app.uniswap.org',
-  desktopSize: {
+  md: {
     columnCells: 7,
-    rowCells: 10,
+    rowCells: 9,
   },
-  mobileSize: {
+  xs: {
     columnCells: 6,
     rowCells: 9,
   },
 }
 
 const rampWidget: WidgetType = {
-  widgetId: 3,
+  widgetId: 6,
   widgetType: 'iframe',
   widgetIframeUrl: 'https://apps.gnosis-safe.io/ramp-network',
-  desktopSize: {
+  md: {
     columnCells: 7,
-    rowCells: 12,
+    rowCells: 11,
   },
-  mobileSize: {
+  xs: {
     columnCells: 7,
     rowCells: 10,
   },
 }
 
 const widgets: WidgetType[] = [
-  gasPriceWidget,
+  overviewSafeWidget,
   gasPriceWidget,
   claimCowTokens,
-  cowSwapWidget,
-  gasPriceWidget,
-  gasPriceWidget,
-  uniSwapWidget,
   claimSafeTokens,
+  cowSwapWidget,
+  uniSwapWidget,
   rampWidget,
 ]
 
 const CustomizableDashboard = (): ReactElement => {
+  const [editMode, setEditMode] = useState(false)
+
   const isMobile = useMediaQuery('(max-width:600px)')
+
+  console.log('Edit mode: ', editMode)
 
   return (
     <StyledGridContainer>
       <DashboardHeader>
         <DashboardTitle>customizable Dashboard POC</DashboardTitle>
-        <StyledIcon>
+        {/* TODO: Add tooltip */}
+        <StyledIcon onClick={() => setEditMode(true)}>
           <SettingsIcon />
         </StyledIcon>
       </DashboardHeader>
 
       <DashboardGrid>
         {widgets.map((widget) => {
-          const { rowCells, columnCells } = isMobile ? widget.mobileSize : widget.desktopSize
+          const { rowCells, columnCells } = isMobile ? widget.xs : widget.md
 
           return (
             <DashboardItem key={widget.widgetId} columnCells={columnCells} rowCells={rowCells}>
@@ -182,5 +199,4 @@ const DashboardItem = styled.div<{ columnCells: WidgetCellType; rowCells: Widget
   grid-row: span ${({ rowCells }) => rowCells * (ROW_CELL_SIZE / WIDGET_GAP) + 2};
 
   margin: ${WIDGET_GAP}px ${WIDGET_GAP}px;
-  outline: 2px dashed green;
 `

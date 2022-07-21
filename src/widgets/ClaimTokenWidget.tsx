@@ -6,7 +6,7 @@ import { Card } from '@gnosis.pm/safe-react-components'
 import { black500, extraLargeFontSize, largeFontSize } from 'src/theme/variables'
 import { SafeWidgetComponentProps } from 'src/components/Dashboard/SafeWidget/SafeWidget'
 
-function ClaimTokenWidget({ data, widget }: SafeWidgetComponentProps): ReactElement {
+const ClaimTokenWidget = ({ data, widget }: SafeWidgetComponentProps): ReactElement => {
   const { iconUrl, tokenSymbol } = widget.widgetProps as any
   const { totalAmount } = data || {}
   return (

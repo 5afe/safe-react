@@ -9,6 +9,8 @@ import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/se
 import GasPriceWidget from 'src/widgets/GasPriceWidget'
 import ClaimTokenWidget from 'src/widgets/ClaimTokenWidget'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
+import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
+import OverviewSafeWidget from 'src/widgets/OverviewSafeWidget'
 
 type SafeWidgetProps = {
   widget: WidgetType
@@ -19,18 +21,18 @@ export type WidgetCellType = DesktopCellsType | MobileCellsType
 // TODO: REFINE SIZE TYPES
 // width: 50px, 150px, 200px ... 500px
 // heigh: 10px, 20px, ... 990px
-export type DesktopCellsType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16
+export type DesktopCellsType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export type MobileCellsType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 // TODO: Create different types for iframeWidgetType & componentWidgetType
 export type WidgetType = {
   widgetId: number
   widgetType: string
-  desktopSize: {
+  md: {
     columnCells: DesktopCellsType
     rowCells: DesktopCellsType
   }
-  mobileSize: {
+  xs: {
     columnCells: MobileCellsType
     rowCells: MobileCellsType
   }
@@ -50,6 +52,7 @@ export type SafeWidgetComponentProps = {
 }
 
 const availableWidgets = {
+  overviewSafeWidget: OverviewSafeWidget,
   gasPriceWidget: GasPriceWidget,
   claimTokensWidget: ClaimTokenWidget,
   iframe: AppFrame,
@@ -66,17 +69,22 @@ const SafeWidget = ({ widget }: SafeWidgetProps): ReactElement => {
   const chainId = useSelector(currentChainId)
   const { shortName } = getChainById(chainId)
   const loaded = useSelector(currentSafeLoaded)
+  const nftTokens = useSelector(nftTokensSelector)
+  const nftLoaded = useSelector(nftLoadedSelector)
+
   const safeInfo = {
     address,
     name,
     owners,
     threshold,
     balances,
+    nftTokens,
     chain: {
       chainId,
       shortName,
     },
     loaded,
+    nftLoaded,
   }
 
   const callEndpoint = useCallback(async () => {

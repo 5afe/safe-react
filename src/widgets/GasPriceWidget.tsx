@@ -1,12 +1,12 @@
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Card } from '@gnosis.pm/safe-react-components'
 import LocalGasStationIcon from '@material-ui/icons/LocalGasStation'
 
 import { black400, black500, extraLargeFontSize, largeFontSize, mediumFontSize } from 'src/theme/variables'
-import { ReactElement } from 'react'
 import { SafeWidgetComponentProps } from 'src/components/Dashboard/SafeWidget/SafeWidget'
 
-function GasPriceWidget({ data, isLoading }: SafeWidgetComponentProps): ReactElement {
+const GasPriceWidget = ({ data, isLoading }: SafeWidgetComponentProps): ReactElement => {
   const result = data?.result || {}
   const { suggestBaseFee, ProposeGasPrice, SafeGasPrice, FastGasPrice } = result
 
