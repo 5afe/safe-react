@@ -9,7 +9,12 @@ import SecurityFeedbackList from './SecurityFeedbackList'
 import UnknownAppWarning from './UnknownAppWarning'
 import { SECURITY_PRACTICES } from './constants'
 import SecurityFeedbackContent from './SecurityFeedbackContent'
-import { AllowedFeatures, PermissionStatus, SecurityFeedbackPractice } from '../../types'
+import {
+  AllowedFeatures,
+  AllowedFeatureSelection,
+  PermissionStatus,
+  SecurityFeedbackPractice,
+} from 'src/routes/safe/components/Apps/types'
 import SecurityFeedbackDomain from './SecurityFeedbackDomain'
 import SecurityFeedbackAllowedFeatures from './SecurityFeedbackAllowedFeatures'
 import { BrowserPermission } from '../../hooks/permissions/useBrowserPermissions'
@@ -38,7 +43,7 @@ const SecurityFeedbackModal = ({
   isPermissionsReviewCompleted,
 }: SecurityFeedbackModalProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
-  const [selectedFeatures, setSelectedFeatures] = useState<{ feature: AllowedFeatures; checked: boolean }[]>(
+  const [selectedFeatures, setSelectedFeatures] = useState<AllowedFeatureSelection[]>(
     features.map((feature) => {
       return {
         feature,
@@ -70,6 +75,7 @@ const SecurityFeedbackModal = ({
     if (!isPermissionsReviewCompleted) {
       totalSlides += 1
     }
+
     return totalSlides
   }, [
     isConsentAccepted,
@@ -116,17 +122,17 @@ const SecurityFeedbackModal = ({
   )
 
   const handleFeatureSelectionChange = (feature: AllowedFeatures, checked: boolean) => {
-    const changedFeatures = selectedFeatures.map((f) => {
-      if (f.feature === feature) {
-        return {
-          feature,
-          checked,
+    setSelectedFeatures(
+      selectedFeatures.map((feat) => {
+        if (feat.feature === feature) {
+          return {
+            feature,
+            checked,
+          }
         }
-      }
-      return f
-    })
-
-    setSelectedFeatures(changedFeatures)
+        return feat
+      }),
+    )
   }
 
   return (

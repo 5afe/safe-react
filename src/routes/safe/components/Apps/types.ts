@@ -60,3 +60,5 @@ export enum AllowedFeatures {
   'gamepad',
   'speaker-selection',
 }
+
+export type AllowedFeatureSelection = { feature: AllowedFeatures; checked: boolean }

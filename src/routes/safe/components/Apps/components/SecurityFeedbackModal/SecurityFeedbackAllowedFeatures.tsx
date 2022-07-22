@@ -1,10 +1,12 @@
-import { Checkbox, Icon, Text } from '@gnosis.pm/safe-react-components'
 import React from 'react'
-import { AllowedFeatures } from '../../types'
-import { StyledSecurityTitle } from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
+import { Checkbox, Icon, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
+
+import { AllowedFeatures, AllowedFeatureSelection } from 'src/routes/safe/components/Apps/types'
+import { StyledSecurityTitle } from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
+
 type SecurityFeedbackAllowedFeaturesProps = {
-  features: { feature: AllowedFeatures; checked: boolean }[]
+  features: AllowedFeatureSelection[]
   onFeatureSelectionChange: (feature: AllowedFeatures, checked: boolean) => void
 }
 
@@ -36,4 +38,5 @@ const SecurityFeedbackAllowedFeatures: React.FC<SecurityFeedbackAllowedFeaturesP
 const StyledFeaturesContainer = styled.div`
   padding: 20px 20px 0 20px;
 `
+
 export default SecurityFeedbackAllowedFeatures

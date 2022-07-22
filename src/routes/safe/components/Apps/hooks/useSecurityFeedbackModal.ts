@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { BrowserPermission } from './permissions/useBrowserPermissions'
-import { PermissionStatus, SafeApp } from '../types'
+import { AllowedFeatures, PermissionStatus, SafeApp } from '../types'
 
 const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
 
@@ -97,11 +97,14 @@ const useSecurityFeedbackModal = ({
   const isPermissionsReviewCompleted = useMemo(() => {
     if (!url) return false
 
-    return !!safeAppManifest?.safeAppsPermissions.every((permission) =>
-      getPermissions(url).some(({ feature, status }) => {
-        return feature === permission && status !== PermissionStatus.PROMPT
-      }),
-    )
+    const safeAppRequiredFeatures = safeAppManifest?.safeAppsPermissions || []
+    const featureHasBeenGrantedOrDenied = (feature: AllowedFeatures) =>
+      getPermissions(url).some((permission: BrowserPermission) => {
+        return permission.feature === feature && permission.status !== PermissionStatus.PROMPT
+      })
+
+    // If the app add a new feature in the manifest we need to detect it and show the modal again
+    return !!safeAppRequiredFeatures.every(featureHasBeenGrantedOrDenied)
   }, [getPermissions, safeAppManifest, url])
 
   const isModalVisible = useMemo(() => {
