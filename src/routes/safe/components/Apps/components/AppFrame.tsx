@@ -42,7 +42,7 @@ import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import PermissionsPrompt from 'src/routes/safe/components/Apps/components/PermissionsPrompt'
 import { useSafeAppManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppManifest'
-import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useSafePermissions'
+import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
 
 const AppWrapper = styled.div`
   display: flex;

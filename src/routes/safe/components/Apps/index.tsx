@@ -9,7 +9,7 @@ import SafeAppsLoadError from 'src/routes/safe/components/Apps/components/SafeAp
 import { useSecurityFeedbackModal } from 'src/routes/safe/components/Apps/hooks/useSecurityFeedbackModal'
 import { useSafeAppManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppManifest'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
-import { useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useBrowserPermissions'
+import { useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()

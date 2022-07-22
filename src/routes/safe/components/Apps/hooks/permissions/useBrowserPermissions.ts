@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
-import local from 'src/utils/storage/local'
+import { useCallback } from 'react'
 import { AllowedFeatures, PermissionStatus } from '../../types'
+import { usePermissions } from './usePermissions'
 
 const BROWSER_PERMISSIONS = 'BROWSER_PERMISSIONS'
 
@@ -17,40 +17,13 @@ type UseBrowserPermissionsReturnType = {
 }
 
 const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
-  const [permissions, setPermissions] = useState<BrowserPermissions>({})
-
-  useEffect(() => {
-    setPermissions(local.getItem(BROWSER_PERMISSIONS) || {})
-  }, [])
-
-  useEffect(() => {
-    if (!!Object.keys(permissions).length) {
-      local.setItem(BROWSER_PERMISSIONS, permissions)
-    }
-  }, [permissions])
+  const [permissions, setPermissions] = usePermissions<BrowserPermissions>({}, BROWSER_PERMISSIONS)
 
   const getPermissions = useCallback(
     (origin: string) => {
       return permissions[origin] || []
     },
     [permissions],
-  )
-
-  const addPermissions = useCallback(
-    (origin: string, selectedPermissions: BrowserPermission[]) => {
-      setPermissions({ ...permissions, [origin]: selectedPermissions })
-    },
-    [permissions],
-  )
-
-  const getAllowedFeaturesList = useCallback(
-    (origin: string): string => {
-      return getPermissions(origin)
-        .filter(({ status }) => status === PermissionStatus.GRANTED)
-        .map((permission) => permission.feature)
-        .join('; ')
-    },
-    [getPermissions],
   )
 
   const updatePermission = useCallback(
@@ -66,7 +39,24 @@ const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
         }),
       })
     },
-    [permissions],
+    [permissions, setPermissions],
+  )
+
+  const addPermissions = useCallback(
+    (origin: string, selectedPermissions: BrowserPermission[]) => {
+      setPermissions({ ...permissions, [origin]: selectedPermissions })
+    },
+    [permissions, setPermissions],
+  )
+
+  const getAllowedFeaturesList = useCallback(
+    (origin: string): string => {
+      return getPermissions(origin)
+        .filter(({ status }) => status === PermissionStatus.GRANTED)
+        .map((permission) => permission.feature)
+        .join('; ')
+    },
+    [getPermissions],
   )
 
   return {

@@ -1,8 +1,8 @@
 import { Methods } from '@gnosis.pm/safe-apps-sdk'
 import { Permission, PermissionCaveat, PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
-import { useState, useEffect, useCallback } from 'react'
-import local from 'src/utils/storage/local'
+import { useState, useCallback } from 'react'
 import { PermissionStatus } from '../../types'
+import { usePermissions } from './usePermissions'
 
 const SAFE_PERMISSIONS = 'SAFE_PERMISSIONS'
 const USER_RESTRICTED = 'userRestricted'
@@ -18,27 +18,50 @@ type SafePermissionsRequest = {
 type UseSafePermissionsReturnType = {
   permissions: SafePermissions
   getPermissions: (origin: string) => Permission[]
+  updatePermission: (origin: string, capability: string, selected: boolean) => void
   permissionsRequest: SafePermissionsRequest | undefined
   setPermissionsRequest: (permissionsRequest?: SafePermissionsRequest) => void
   confirmPermissionRequest: (result: PermissionStatus) => Permission[]
-  updatePermission: (origin: string, capability: string, selected: boolean) => void
-  isUserRestricted: (caveats?: PermissionCaveat[]) => boolean
   hasPermission: (origin: string, permission: Methods) => boolean
+  isUserRestricted: (caveats?: PermissionCaveat[]) => boolean
 }
 
 const useSafePermissions = (): UseSafePermissionsReturnType => {
-  const [permissions, setPermissions] = useState<SafePermissions>({})
+  const [permissions, setPermissions] = usePermissions<SafePermissions>({}, SAFE_PERMISSIONS)
   const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequest | undefined>()
 
-  useEffect(() => {
-    setPermissions(local.getItem(SAFE_PERMISSIONS) || {})
-  }, [])
+  const getPermissions = useCallback(
+    (origin: string) => {
+      return permissions[origin] || []
+    },
+    [permissions],
+  )
 
-  useEffect(() => {
-    if (!!Object.keys(permissions).length) {
-      local.setItem(SAFE_PERMISSIONS, permissions)
-    }
-  }, [permissions])
+  const updatePermission = useCallback(
+    (origin: string, capability: string, selected: boolean) => {
+      setPermissions({
+        ...permissions,
+        [origin]: permissions[origin].map((permission) => {
+          if (permission.parentCapability === capability) {
+            if (selected) {
+              permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
+            } else if (!isUserRestricted(permission.caveats)) {
+              permission.caveats = [
+                ...(permission.caveats || []),
+                {
+                  type: USER_RESTRICTED,
+                  value: true,
+                },
+              ]
+            }
+          }
+
+          return permission
+        }),
+      })
+    },
+    [permissions, setPermissions],
+  )
 
   const confirmPermissionRequest = useCallback(
     (result) => {
@@ -100,14 +123,7 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
 
       return newPermissions
     },
-    [permissions, permissionsRequest],
-  )
-
-  const getPermissions = useCallback(
-    (origin: string) => {
-      return permissions[origin] || []
-    },
-    [permissions],
+    [permissions, setPermissions, permissionsRequest],
   )
 
   const hasPermission = useCallback(
@@ -119,32 +135,6 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
 
   const isUserRestricted = (caveats?: PermissionCaveat[]) =>
     !!caveats?.some((caveat) => caveat.type === USER_RESTRICTED && caveat.value === true)
-
-  const updatePermission = useCallback(
-    (origin: string, capability: string, selected: boolean) => {
-      setPermissions({
-        ...permissions,
-        [origin]: permissions[origin].map((permission) => {
-          if (permission.parentCapability === capability) {
-            if (selected) {
-              permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
-            } else if (!isUserRestricted(permission.caveats)) {
-              permission.caveats = [
-                ...(permission.caveats || []),
-                {
-                  type: USER_RESTRICTED,
-                  value: true,
-                },
-              ]
-            }
-          }
-
-          return permission
-        }),
-      })
-    },
-    [permissions],
-  )
 
   return {
     permissions,
