@@ -15,11 +15,11 @@ const getDescription = (permission: PermissionRequest): string => {
 
 interface PermissionsPromptProps {
   origin: string
+  isOpen: boolean
   requestId: string
+  permissions: PermissionRequest[]
   onCancel: (requestId: string) => void
   onAccept: (origin: string, requestId: string) => void
-  isOpen: boolean
-  permissions: PermissionRequest[]
 }
 
 const PermissionsPrompt = ({

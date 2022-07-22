@@ -13,7 +13,7 @@ type BrowserPermissionsRequestState = {
   request: BrowserPermission[]
 }
 
-type UseBrowserPermissionsProps = {
+type UseBrowserPermissionsReturnType = {
   permissions: BrowserPermissions
   getPermissions: (origin: string) => BrowserPermission[]
   permissionsRequest: BrowserPermissionsRequestState | undefined
@@ -23,7 +23,7 @@ type UseBrowserPermissionsProps = {
   updateBrowserPermission: (origin: string, feature: AllowedFeatures, selected: boolean) => void
 }
 
-const useBrowserPermissions = (): UseBrowserPermissionsProps => {
+const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
   const [permissions, setPermissions] = useState<BrowserPermissions>({})
   const [permissionsRequest, setPermissionsRequest] = useState<BrowserPermissionsRequestState | undefined>()
 

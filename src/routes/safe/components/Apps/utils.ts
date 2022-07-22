@@ -47,7 +47,7 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
-const isPermissionsPropertyValid = (permissions?: AllowedFeatures[]): boolean => {
+const validateRequestedPermissions = (permissions?: AllowedFeatures[]): boolean => {
   if (!permissions) {
     return true
   }
@@ -70,8 +70,8 @@ export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   appInfo.name !== EMPTY_SAFE_APP &&
   // `description` exists
   !!appInfo.description &&
-  // permissions are valid if they are not empty
-  isPermissionsPropertyValid(appInfo.safe_apps_permissions)
+  // `safe_apps_permissions` are valid if we have been listed on the AllowFeatures enum
+  validateRequestedPermissions(appInfo.safe_apps_permissions)
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {

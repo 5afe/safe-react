@@ -4,12 +4,12 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { getAppInfoFromUrl, getEmptySafeApp } from '../utils'
 import { SafeApp } from '../types'
 
-type ReturnType = {
+type UseSafeAppManifestReturnType = {
   safeApp: SafeApp
   isLoading: boolean
 }
 
-const useSafeAppManifest = (appUrl: string): ReturnType => {
+const useSafeAppManifest = (appUrl: string): UseSafeAppManifestReturnType => {
   const [safeApp, setSafeApp] = useState<SafeApp>(() => getEmptySafeApp(appUrl))
   const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
 

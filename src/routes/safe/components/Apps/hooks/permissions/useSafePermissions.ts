@@ -15,7 +15,7 @@ type SafePermissionsRequest = {
   request: PermissionRequest[]
 }
 
-type UseSafePermissionsProps = {
+type UseSafePermissionsReturnType = {
   permissions: SafePermissions
   isUserRestricted: (caveats?: PermissionCaveat[]) => boolean
   getPermissions: (origin: string) => Permission[]
@@ -26,7 +26,7 @@ type UseSafePermissionsProps = {
   updateSafePermission: (origin: string, capability: string, selected: boolean) => void
 }
 
-const useSafePermissions = (): UseSafePermissionsProps => {
+const useSafePermissions = (): UseSafePermissionsReturnType => {
   const [permissions, setPermissions] = useState<SafePermissions>({})
   const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequest | undefined>()
 
