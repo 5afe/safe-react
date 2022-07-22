@@ -17,13 +17,13 @@ type SafePermissionsRequest = {
 
 type UseSafePermissionsReturnType = {
   permissions: SafePermissions
-  isUserRestricted: (caveats?: PermissionCaveat[]) => boolean
   getPermissions: (origin: string) => Permission[]
   permissionsRequest: SafePermissionsRequest | undefined
   setPermissionsRequest: (permissionsRequest?: SafePermissionsRequest) => void
   confirmPermissionRequest: (result: PermissionStatus) => Permission[]
-  hasPermissions: (origin: string, permission: Methods) => boolean
   updateSafePermission: (origin: string, capability: string, selected: boolean) => void
+  isUserRestricted: (caveats?: PermissionCaveat[]) => boolean
+  hasPermission: (origin: string, permission: Methods) => boolean
 }
 
 const useSafePermissions = (): UseSafePermissionsReturnType => {
@@ -96,6 +96,7 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
       }
 
       setPermissions(updatedPermissions)
+      setPermissionsRequest(undefined)
 
       return newPermissions
     },
@@ -109,7 +110,7 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
     [permissions],
   )
 
-  const hasPermissions = useCallback(
+  const hasPermission = useCallback(
     (origin: string, permission: Methods) => {
       return permissions[origin]?.some((p) => p.parentCapability === permission && !isUserRestricted(p.caveats))
     },
@@ -152,7 +153,7 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
     setPermissionsRequest,
     getPermissions,
     confirmPermissionRequest,
-    hasPermissions,
+    hasPermission,
     updateSafePermission,
   }
 }

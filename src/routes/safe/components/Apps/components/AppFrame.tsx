@@ -111,7 +111,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
   const { remoteSafeApps } = useRemoteSafeApps()
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
-  const { confirmPermissionRequest, permissionsRequest, setPermissionsRequest, getPermissions, hasPermissions } =
+  const { confirmPermissionRequest, permissionsRequest, setPermissionsRequest, getPermissions, hasPermission } =
     useSafePermissions()
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
@@ -245,7 +245,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
     })
 
     communicator?.on(Methods.requestAddressBook, async (msg) => {
-      if (hasPermissions(msg.origin, Methods.requestAddressBook)) {
+      if (hasPermission(msg.origin, Methods.requestAddressBook)) {
         return addressBook
       }
 
@@ -322,7 +322,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
     addressBook,
     getPermissions,
     setPermissionsRequest,
-    hasPermissions,
+    hasPermission,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
@@ -354,13 +354,11 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
   const onAcceptPermissionRequest = (origin: string, requestId: RequestId) => {
     const permissions = confirmPermissionRequest(PermissionStatus.GRANTED)
     communicator?.send(permissions, requestId as string)
-    setPermissionsRequest(undefined)
   }
 
   const onRejectPermissionRequest = (requestId: RequestId) => {
     confirmPermissionRequest(PermissionStatus.DENIED)
     communicator?.send('Permissions were rejected', requestId as string, true)
-    setPermissionsRequest(undefined)
   }
 
   useEffect(() => {
