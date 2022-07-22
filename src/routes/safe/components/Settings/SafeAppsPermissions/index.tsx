@@ -23,12 +23,9 @@ const SafeAppsPermissions = (): ReactElement => {
 
   const handleSafePermissionsChange = (origin: string, capability: string, checked: boolean) =>
     updateSafePermission(origin, capability, checked)
+
   const handleBrowserPermissionsChange = (origin: string, feature: AllowedFeatures, checked: boolean) =>
     updateBrowserPermission(origin, feature, checked)
-
-  console.log('SAFE PERMISSIONS:', safePermissions)
-  console.log('BROWSER PERMISSIONS:', browserPermissions)
-  console.log('Domains:', domains)
 
   return (
     <Container>
