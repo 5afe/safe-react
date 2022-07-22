@@ -10,8 +10,12 @@ import { Checkbox, Text, Accordion, AccordionSummary, AccordionDetails } from '@
 import { AllowedFeatures, PermissionStatus } from '../../Apps/types'
 
 const SafeAppsPermissions = (): ReactElement => {
-  const { permissions: safePermissions, updateSafePermission, isUserRestricted } = useSafePermissions()
-  const { permissions: browserPermissions, updateBrowserPermission } = useBrowserPermissions()
+  const {
+    permissions: safePermissions,
+    updatePermission: updateSafePermission,
+    isUserRestricted,
+  } = useSafePermissions()
+  const { permissions: browserPermissions, updatePermission: updateBrowserPermission } = useBrowserPermissions()
 
   const domains = useMemo(() => {
     const safePermissionsSet = new Set(Object.keys(safePermissions))

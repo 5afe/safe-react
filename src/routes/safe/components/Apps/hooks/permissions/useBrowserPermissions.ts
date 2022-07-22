@@ -11,7 +11,7 @@ type BrowserPermissions = { [origin: string]: BrowserPermission[] }
 type UseBrowserPermissionsReturnType = {
   permissions: BrowserPermissions
   getPermissions: (origin: string) => BrowserPermission[]
-  updateBrowserPermission: (origin: string, feature: AllowedFeatures, selected: boolean) => void
+  updatePermission: (origin: string, feature: AllowedFeatures, selected: boolean) => void
   addPermissions: (origin: string, permissions: BrowserPermission[]) => void
   getAllowedFeaturesList: (origin: string) => string
 }
@@ -53,7 +53,7 @@ const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
     [getPermissions],
   )
 
-  const updateBrowserPermission = useCallback(
+  const updatePermission = useCallback(
     (origin: string, feature: AllowedFeatures, selected: boolean) => {
       setPermissions({
         ...permissions,
@@ -74,7 +74,7 @@ const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
     getPermissions,
     addPermissions,
     getAllowedFeaturesList,
-    updateBrowserPermission,
+    updatePermission,
   }
 }
 
