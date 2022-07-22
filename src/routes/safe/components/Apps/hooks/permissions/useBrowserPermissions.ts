@@ -8,16 +8,9 @@ export type BrowserPermission = { feature: AllowedFeatures; status: PermissionSt
 
 type BrowserPermissions = { [origin: string]: BrowserPermission[] }
 
-type BrowserPermissionsRequest = {
-  origin: string
-  request: BrowserPermission[]
-}
-
 type UseBrowserPermissionsReturnType = {
   permissions: BrowserPermissions
   getPermissions: (origin: string) => BrowserPermission[]
-  permissionsRequest: BrowserPermissionsRequest | undefined
-  setPermissionsRequest: (permissionsRequest?: BrowserPermissionsRequest) => void
   updateBrowserPermission: (origin: string, feature: AllowedFeatures, selected: boolean) => void
   addPermissions: (origin: string, permissions: BrowserPermission[]) => void
   getAllowedFeaturesList: (origin: string) => string
@@ -25,7 +18,6 @@ type UseBrowserPermissionsReturnType = {
 
 const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
   const [permissions, setPermissions] = useState<BrowserPermissions>({})
-  const [permissionsRequest, setPermissionsRequest] = useState<BrowserPermissionsRequest | undefined>()
 
   useEffect(() => {
     setPermissions(local.getItem(BROWSER_PERMISSIONS) || {})
@@ -80,8 +72,6 @@ const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
   return {
     permissions,
     getPermissions,
-    permissionsRequest,
-    setPermissionsRequest,
     addPermissions,
     getAllowedFeaturesList,
     updateBrowserPermission,
