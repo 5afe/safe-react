@@ -12,6 +12,7 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
+import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -39,10 +40,9 @@ import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
-import PermissionsPrompt from './PermissionsPrompt'
-import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
-import { useSafeAppManifest } from '../hooks/useSafeAppManifest'
-import { useSafePermissions } from '../hooks/permissions/useSafePermissions'
+import PermissionsPrompt from 'src/routes/safe/components/Apps/components/PermissionsPrompt'
+import { useSafeAppManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppManifest'
+import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useSafePermissions'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -351,13 +351,13 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
     trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
   }
 
-  const onAcceptPermissions = (origin: string, requestId: RequestId) => {
+  const onAcceptPermissionRequest = (origin: string, requestId: RequestId) => {
     const permissions = confirmPermissionRequest(PermissionStatus.GRANTED)
     communicator?.send(permissions, requestId as string)
     setPermissionsRequest(undefined)
   }
 
-  const onRejectPermissions = (requestId: RequestId) => {
+  const onRejectPermissionRequest = (requestId: RequestId) => {
     confirmPermissionRequest(PermissionStatus.DENIED)
     communicator?.send('Permissions were rejected', requestId as string, true)
     setPermissionsRequest(undefined)
@@ -431,8 +431,8 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
           isOpen
           origin={permissionsRequest.origin}
           requestId={permissionsRequest.requestId}
-          onAccept={onAcceptPermissions}
-          onCancel={onRejectPermissions}
+          onAccept={onAcceptPermissionRequest}
+          onCancel={onRejectPermissionRequest}
           permissions={permissionsRequest.request}
         />
       )}
