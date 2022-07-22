@@ -63,74 +63,73 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
     [permissions, setPermissions],
   )
 
-  const confirmPermissionRequest = useCallback(
-    (result) => {
-      if (!permissionsRequest) {
-        return []
-      }
-
-      const newPermissions: Permission[] = [...(permissions[permissionsRequest.origin] || [])]
-
-      permissionsRequest.request.forEach((requestedPermission) => {
-        const capability = Object.keys(requestedPermission)[0]
-        const currentPermission = permissions[permissionsRequest.origin]?.find(
-          (p: Permission) => p.parentCapability === capability,
-        )
-
-        if (!currentPermission) {
-          const newPermission: Permission = {
-            invoker: permissionsRequest.origin,
-            parentCapability: capability,
-            date: new Date().getTime(),
-          }
-
-          if (result === PermissionStatus.DENIED) {
-            newPermission.caveats = [
-              {
-                type: USER_RESTRICTED,
-                value: true,
-              },
-            ]
-          }
-          newPermissions.push(newPermission)
-        } else {
-          newPermissions.map((permission) => {
-            if (permission.parentCapability === capability) {
-              const filteredCaveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
-              if (result === PermissionStatus.GRANTED) {
-                permission.caveats = filteredCaveats
-              } else {
-                permission.caveats = [
-                  ...filteredCaveats,
-                  {
-                    type: USER_RESTRICTED,
-                    value: true,
-                  },
-                ]
-              }
-            }
-          })
-        }
-      })
-
-      const updatedPermissions = {
-        ...permissions,
-        [permissionsRequest.origin]: newPermissions,
-      }
-
-      setPermissions(updatedPermissions)
-      setPermissionsRequest(undefined)
-
-      return newPermissions
-    },
-    [permissions, setPermissions, permissionsRequest],
-  )
-
   const hasPermission = useCallback(
     (origin: string, permission: Methods) => {
       return permissions[origin]?.some((p) => p.parentCapability === permission && !isUserRestricted(p.caveats))
     },
     [permissions],
+  )
+
+  const hasCapability = useCallback(
+    (origin: string, permission: Methods) => {
+      return permissions[origin]?.some((p) => p.parentCapability === permission)
+    },
+    [permissions],
+  )
+
+  const confirmPermissionRequest = useCallback(
+    (result) => {
+      if (!permissionsRequest) return []
+
+      const updatedPermissionsByOrigin = [...(permissions[permissionsRequest.origin] || [])]
+
+      permissionsRequest.request.forEach((requestedPermission) => {
+        const capability = Object.keys(requestedPermission)[0]
+
+        if (hasCapability(permissionsRequest.origin, capability as Methods)) {
+          updatedPermissionsByOrigin.map((permission) => {
+            if (permission.parentCapability === capability) {
+              if (isUserRestricted(permission.caveats)) {
+                if (result === PermissionStatus.GRANTED) {
+                  permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
+                }
+              } else {
+                if (result === PermissionStatus.DENIED) {
+                  permission.caveats?.push({
+                    type: USER_RESTRICTED,
+                    value: true,
+                  })
+                }
+              }
+            }
+          })
+        } else {
+          updatedPermissionsByOrigin.push({
+            invoker: permissionsRequest.origin,
+            parentCapability: capability,
+            date: new Date().getTime(),
+            caveats:
+              result === PermissionStatus.DENIED
+                ? [
+                    {
+                      type: USER_RESTRICTED,
+                      value: true,
+                    },
+                  ]
+                : [],
+          })
+        }
+      })
+
+      setPermissions({
+        ...permissions,
+        [permissionsRequest.origin]: updatedPermissionsByOrigin,
+      })
+      setPermissionsRequest(undefined)
+
+      return updatedPermissionsByOrigin
+    },
+    [permissionsRequest, permissions, setPermissions, hasCapability],
   )
 
   const isUserRestricted = (caveats?: PermissionCaveat[]) =>
