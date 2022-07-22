@@ -6,10 +6,10 @@ import AppsList from 'src/routes/safe/components/Apps/components/AppsList'
 import SecurityFeedbackModal from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal'
 import SafeAppsErrorBoundary from 'src/routes/safe/components/Apps/components/SafeAppsErrorBoundary'
 import SafeAppsLoadError from 'src/routes/safe/components/Apps/components/SafeAppsLoadError'
-import { useSecurityFeedbackModal } from './hooks/useSecurityFeedbackModal'
-import { useSafeAppManifest } from './hooks/useSafeAppManifest'
-import { useAppList } from './hooks/appList/useAppList'
-import { useBrowserPermissions } from './hooks/permissions/useBrowserPermissions'
+import { useSecurityFeedbackModal } from 'src/routes/safe/components/Apps/hooks/useSecurityFeedbackModal'
+import { useSafeAppManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppManifest'
+import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
+import { useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions/useBrowserPermissions'
 
 const Apps = (): React.ReactElement => {
   const history = useHistory()
