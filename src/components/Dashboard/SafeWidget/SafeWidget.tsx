@@ -22,12 +22,15 @@ type SafeWidgetProps = {
 
 export const ROW_HEIGHT = 10
 
-// TODO: REFINE SIZE TYPES (add min width and height)
 type WidgetLayout = {
   column: number
   row: number
   width: number
   height: number
+  minW?: number
+  maxW?: number
+  minH?: number
+  maxH?: number
 }
 
 // TODO: Create different types for iframeWidgetType & componentWidgetType
