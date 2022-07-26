@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
-import { Card } from '@gnosis.pm/safe-react-components'
 import LocalGasStationIcon from '@material-ui/icons/LocalGasStation'
 
 import { black400, black500, extraLargeFontSize, largeFontSize, mediumFontSize } from 'src/theme/variables'
@@ -31,13 +30,11 @@ const GasPriceWidget = ({ data, isLoading }: SafeWidgetComponentProps): ReactEle
 
 export default GasPriceWidget
 
-const WidgetCard = styled(Card)`
-  height: 100%;
-  margin-top: 0;
-  padding: 0;
+const WidgetCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
 
   text-align: center;
   color: ${black500};

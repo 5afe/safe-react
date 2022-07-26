@@ -2,6 +2,8 @@ import axios from 'axios'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { Tooltip, Card } from '@gnosis.pm/safe-react-components'
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 
 import { getChainById } from 'src/config'
 import { currentChainId } from 'src/logic/config/store/selectors'
@@ -11,31 +13,28 @@ import ClaimTokenWidget from 'src/widgets/ClaimTokenWidget'
 import AppFrame from 'src/routes/safe/components/Apps/components/AppFrame'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import OverviewSafeWidget from 'src/widgets/OverviewSafeWidget'
+import { black300 } from 'src/theme/variables'
 
 type SafeWidgetProps = {
   widget: WidgetType
+  isEditWidgetEnabled: boolean
 }
 
-export type WidgetCellType = DesktopCellsType | MobileCellsType
+export const ROW_HEIGHT = 10
 
-// TODO: REFINE SIZE TYPES
-// width: 50px, 150px, 200px ... 500px
-// heigh: 10px, 20px, ... 990px
-export type DesktopCellsType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
-export type MobileCellsType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+// TODO: REFINE SIZE TYPES (add min width and height)
+type WidgetLayout = {
+  column: number
+  row: number
+  width: number
+  height: number
+}
 
 // TODO: Create different types for iframeWidgetType & componentWidgetType
 export type WidgetType = {
-  widgetId: number
+  widgetId: string
   widgetType: string
-  md: {
-    columnCells: DesktopCellsType
-    rowCells: DesktopCellsType
-  }
-  xs: {
-    columnCells: MobileCellsType
-    rowCells: MobileCellsType
-  }
+  widgetLayout: WidgetLayout
   widgetIframeUrl?: string
   widgetEndointUrl?: string
   pollingTime?: number
@@ -58,7 +57,7 @@ const availableWidgets = {
   iframe: AppFrame,
 }
 
-const SafeWidget = ({ widget }: SafeWidgetProps): ReactElement => {
+const SafeWidget = ({ widget, isEditWidgetEnabled }: SafeWidgetProps): ReactElement => {
   const { widgetType, widgetIframeUrl, widgetEndointUrl, pollingTime } = widget
 
   const [data, setData] = useState({})
@@ -137,43 +136,65 @@ const SafeWidget = ({ widget }: SafeWidgetProps): ReactElement => {
   const WidgetComponent = useMemo(() => availableWidgets[widgetType], [widgetType])
 
   return (
-    <Wrapper widgetType={widgetType}>
-      <WidgetComponent
-        widget={widget}
-        safeInfo={safeInfo}
-        data={data || {}}
-        isLoading={isLoading}
-        appUrl={widgetIframeUrl}
-      />
-    </Wrapper>
+    <WidgetCard>
+      {isEditWidgetEnabled && (
+        <WidgetHeader>
+          <Tooltip placement="top" title="Drag & Drop your widget!" backgroundColor="primary" textColor="white" arrow>
+            <DragAndDropIndicatorIcon fontSize="small" />
+          </Tooltip>
+        </WidgetHeader>
+      )}
+      <WidgetBody widgetType={widgetType}>
+        <WidgetComponent
+          widget={widget}
+          safeInfo={safeInfo}
+          data={data || {}}
+          isLoading={isLoading}
+          appUrl={widgetIframeUrl}
+        />
+      </WidgetBody>
+    </WidgetCard>
   )
 }
 
 export default SafeWidget
 
-const Wrapper = styled.div<{ widgetType: string }>`
+const WidgetCard = styled(Card)`
   height: 100%;
-  width: 100%;
+  margin-top: 0;
+  padding: 0;
+  position: relative;
+`
 
+const WidgetHeader = styled.div`
+  position: absolute;
+  padding: 8px;
+  cursor: grab;
+  z-index: 1000;
+`
+
+const DragAndDropIndicatorIcon = styled(DragIndicatorIcon)`
+  color: ${black300};
+`
+
+const WidgetBody = styled.div<{ widgetType: string }>`
+  height: 100%;
   ${({ widgetType }) =>
     widgetType === 'iframe' &&
     `
-    padding: 0;
+      padding: 0;
 
-    && > div {
+      && > div {
         margin: 0;
         height: 100%;
-    }
+      }
 
-    && > div > div {
+      && > div > div {
         border-radius: 8px;
-    } 
+      } 
 
-    && > div > div > iframe {
+      && > div > div > iframe {
         border-radius: 8px;
-        
-    } 
-
-
-  `}
+      } 
+`}
 `

@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Button } from '@gnosis.pm/safe-react-components'
-import { Card } from '@gnosis.pm/safe-react-components'
 
 import { black500, extraLargeFontSize, largeFontSize } from 'src/theme/variables'
 import { SafeWidgetComponentProps } from 'src/components/Dashboard/SafeWidget/SafeWidget'
@@ -33,13 +32,11 @@ const ClaimTokenWidget = ({ data, widget }: SafeWidgetComponentProps): ReactElem
 
 export default ClaimTokenWidget
 
-const WidgetCard = styled(Card)`
-  height: 100%;
-  margin-top: 0;
-  padding: 0;
+const WidgetCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
 
   text-align: center;
   color: ${black500};
