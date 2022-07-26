@@ -25,12 +25,14 @@ export const ROW_HEIGHT = 10
 type WidgetLayout = {
   column: number
   row: number
+
+  minWidth?: number
   width: number
+  maxWidth?: number
+
+  minHeight?: number
   height: number
-  minW?: number
-  maxW?: number
-  minH?: number
-  maxH?: number
+  maxHeight?: number
 }
 
 // TODO: Create different types for iframeWidgetType & componentWidgetType

@@ -36,7 +36,11 @@ const CustomizableDashboard = (): ReactElement => {
           row: layout.y,
           column: layout.x,
           width: layout.w,
+          minWidth: layout.minW,
+          maxWidth: layout.maxW,
+          minHeight: layout.minH,
           height: layout.h,
+          maxHeight: layout.maxH,
         },
       }
     })
@@ -74,14 +78,19 @@ const CustomizableDashboard = (): ReactElement => {
         onLayoutChange={onLayoutChange}
         key={isEditMode}
         rowHeight={ROW_HEIGHT}
-        compactType={'horizontal'}
+        // compactType={'horizontal'}
+        verticalCompact={false}
         layouts={{
           lg: widgets.map((widget) => ({
             i: widget.widgetId,
             x: widget.widgetLayout.column,
             y: widget.widgetLayout.row,
+            minW: widget.widgetLayout.minWidth,
             w: widget.widgetLayout.width,
+            maxW: widget.widgetLayout.maxWidth,
+            minH: widget.widgetLayout.minHeight,
             h: widget.widgetLayout.height,
+            maxH: widget.widgetLayout.maxHeight,
           })),
         }}
         isDraggable={isEditMode}

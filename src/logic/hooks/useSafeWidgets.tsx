@@ -10,9 +10,9 @@ const overviewSafeWidget: WidgetType = {
     column: 0, // x
     row: 0, // y
     width: 6, // w
-    minW: 6,
+    minWidth: 6,
     height: 12, // h
-    minH: 12,
+    minHeight: 12,
   },
 }
 
@@ -27,8 +27,8 @@ const gasPriceWidget: WidgetType = {
     row: 0, // y
     width: 2, // w
     height: 6, // h
-    minW: 2,
-    minH: 6,
+    minWidth: 2,
+    minHeight: 6,
   },
 }
 
@@ -41,8 +41,8 @@ const claimCowTokens: WidgetType = {
     row: 0, // y
     width: 2, // w
     height: 9, // h
-    minW: 2,
-    minH: 9,
+    minWidth: 2,
+    minHeight: 9,
   },
   widgetProps: {
     iconUrl: 'https://cowswap.exchange/static/media/cow_v2.00b93700.svg',
@@ -61,8 +61,8 @@ const claimSafeTokens: WidgetType = {
     row: 0, // y
     width: 2, // w
     height: 9, // h
-    minW: 2,
-    minH: 9,
+    minWidth: 2,
+    minHeight: 9,
   },
   widgetProps: {
     iconUrl:
@@ -82,7 +82,7 @@ const cowSwapWidget: WidgetType = {
     column: 0, // x
     width: 4, // w
     height: 43, // h
-    minH: 43,
+    minHeight: 43,
   },
 }
 
@@ -95,7 +95,7 @@ const uniSwapWidget: WidgetType = {
     column: 4, // x
     width: 4, // w
     height: 24, // h
-    minH: 24,
+    minHeight: 24,
   },
 }
 
@@ -108,7 +108,7 @@ const rampWidget: WidgetType = {
     column: 8, // x
     width: 4, // w
     height: 30, // h
-    minH: 30,
+    minHeight: 30,
   },
 }
 
