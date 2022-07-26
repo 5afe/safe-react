@@ -1,5 +1,6 @@
 import { render, fireEvent, screen, act } from 'src/utils/test-utils'
 import SecurityFeedbackModal from '../index'
+import { AllowedFeatures } from 'src/routes/safe/components/Apps/types'
 
 const pauseForSeconds = async (ms: number) => await new Promise((_) => setTimeout(_, ms))
 
@@ -95,5 +96,15 @@ describe('<SecurityFeedbackModal />', () => {
     fireEvent.click(screen.getByText(/cancel/i))
 
     expect(baseProps.onCancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('should prompt the user for permissions', async () => {
+    // @ts-ignore
+    const features: AllowedFeatures[] = ['camera', 'microphone']
+
+    render(<SecurityFeedbackModal {...baseProps} isPermissionsReviewCompleted={false} features={features} />)
+
+    expect(await screen.findByText('camera')).toBeInTheDocument()
+    expect(await screen.findByText('microphone')).toBeInTheDocument()
   })
 })
