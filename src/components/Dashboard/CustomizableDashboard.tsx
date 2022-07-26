@@ -2,10 +2,10 @@ import { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 import SettingsIcon from '@material-ui/icons/Settings'
 import { IconButton } from '@material-ui/core'
-import RGL, { WidthProvider } from 'react-grid-layout'
+import { Responsive, WidthProvider } from 'react-grid-layout'
 import { Tooltip, Button, Card } from '@gnosis.pm/safe-react-components'
 
-const ReactGridLayout = WidthProvider(RGL)
+const ResponsiveGridLayout = WidthProvider(Responsive)
 
 import { black500, extraLargeFontSize } from 'src/theme/variables'
 import SafeWidget, { ROW_HEIGHT } from './SafeWidget/SafeWidget'
@@ -68,22 +68,22 @@ const CustomizableDashboard = (): ReactElement => {
           </StyledBtn>
         </>
       )}
-      <ReactGridLayout
-        // TODO: Add responsive
-        // breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        // cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+      <ResponsiveGridLayout
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         onLayoutChange={onLayoutChange}
         key={isEditMode}
-        cols={12}
         rowHeight={ROW_HEIGHT}
         compactType={'horizontal'}
-        layout={widgets.map((widget) => ({
-          i: widget.widgetId,
-          x: widget.widgetLayout.column,
-          y: widget.widgetLayout.row,
-          w: widget.widgetLayout.width,
-          h: widget.widgetLayout.height,
-        }))}
+        layouts={{
+          lg: widgets.map((widget) => ({
+            i: widget.widgetId,
+            x: widget.widgetLayout.column,
+            y: widget.widgetLayout.row,
+            w: widget.widgetLayout.width,
+            h: widget.widgetLayout.height,
+          })),
+        }}
         isDraggable={isEditMode}
         isResizable={isEditMode}
       >
@@ -94,7 +94,7 @@ const CustomizableDashboard = (): ReactElement => {
             </div>
           )
         })}
-      </ReactGridLayout>
+      </ResponsiveGridLayout>
     </StyledGridContainer>
   )
 }
