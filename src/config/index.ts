@@ -39,6 +39,21 @@ export const getNetworkLabel = (id: ETHEREUM_NETWORK): string => {
   return cfg ? cfg.network.label : ''
 }
 
+// Returns true if the address points to a GoldToken proxy
+// on a support Celo network.
+export const isGoldTokenAddress = (address: string): boolean => {
+  switch (getNetworkId()) {
+    case ETHEREUM_NETWORK.ALFAJORES:
+      return address.toLowerCase() === '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9'.toLowerCase()
+    case ETHEREUM_NETWORK.MAINNET:
+      return address.toLowerCase() === '0x471EcE3750Da237f93B8E339c536989b8978a438'.toLowerCase()
+    case ETHEREUM_NETWORK.BAKLAVA:
+      return address.toLowerCase() === '0xdDc9bE57f553fe75752D61606B94CBD7e0264eF8'.toLowerCase()
+    default:
+      return false
+  }
+}
+
 export const usesInfuraRPC = false
 
 const getCurrentEnvironment = (): string => {
