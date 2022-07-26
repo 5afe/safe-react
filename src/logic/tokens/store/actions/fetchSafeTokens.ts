@@ -10,6 +10,7 @@ import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
+import { isGoldTokenAddress } from 'src/config'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import BigNumber from 'bignumber.js'
@@ -41,8 +42,9 @@ const extractDataFromResult = (
     tokenBalance: humanReadableValue(balance, Number(decimals)),
   })
 
-  // Extract network token balance from backend balances
-  if (sameAddress(address, ZERO_ADDRESS)) {
+  // Extract network token balance from backend balances.
+  // Treat GoldToken address as Celo balance here.
+  if (sameAddress(address, ZERO_ADDRESS) || isGoldTokenAddress(address)) {
     acc.ethBalance = humanReadableValue(balance, Number(decimals))
   } else {
     acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
