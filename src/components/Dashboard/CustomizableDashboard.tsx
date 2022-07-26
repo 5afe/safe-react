@@ -78,8 +78,7 @@ const CustomizableDashboard = (): ReactElement => {
         onLayoutChange={onLayoutChange}
         key={isEditMode}
         rowHeight={ROW_HEIGHT}
-        // compactType={'horizontal'}
-        verticalCompact={false}
+        compactType={'vertical'}
         layouts={{
           lg: widgets.map((widget) => ({
             i: widget.widgetId,
