@@ -19,6 +19,7 @@ type UseSafePermissionsReturnType = {
   permissions: SafePermissions
   getPermissions: (origin: string) => Permission[]
   updatePermission: (origin: string, capability: string, selected: boolean) => void
+  removePermissions: (origin: string) => void
   permissionsRequest: SafePermissionsRequest | undefined
   setPermissionsRequest: (permissionsRequest?: SafePermissionsRequest) => void
   confirmPermissionRequest: (result: PermissionStatus) => Permission[]
@@ -59,6 +60,14 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
           return permission
         }),
       })
+    },
+    [permissions, setPermissions],
+  )
+
+  const removePermissions = useCallback(
+    (origin: string) => {
+      delete permissions[origin]
+      setPermissions({ ...permissions })
     },
     [permissions, setPermissions],
   )
@@ -138,12 +147,13 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
   return {
     permissions,
     isUserRestricted,
+    getPermissions,
+    updatePermission,
+    removePermissions,
     permissionsRequest,
     setPermissionsRequest,
-    getPermissions,
     confirmPermissionRequest,
     hasPermission,
-    updatePermission,
   }
 }
 

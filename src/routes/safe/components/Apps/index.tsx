@@ -43,7 +43,7 @@ const Apps = (): React.ReactElement => {
           onCancel={goBack}
           onConfirm={onComplete}
           appUrl={url}
-          features={safeAppManifest.safeAppsPermissions}
+          features={safeAppManifest.safeAppsPermissions || []}
           isConsentAccepted={isConsentAccepted}
           isSafeAppInDefaultList={isSafeAppInDefaultList}
           isFirstTimeAccessingApp={isFirstTimeAccessingApp}

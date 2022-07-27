@@ -6,6 +6,7 @@ export type SafeApp = Omit<SafeAppData, 'id'> & {
   disabled?: boolean
   fetchStatus: FETCH_STATUS
   custom?: boolean
+  safeAppsPermissions?: AllowedFeatures[]
 }
 
 export type StoredSafeApp = {
