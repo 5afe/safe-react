@@ -357,8 +357,12 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
   }
 
   const onRejectPermissionRequest = (requestId: RequestId) => {
-    confirmPermissionRequest(PermissionStatus.DENIED)
-    communicator?.send('Permissions were rejected', requestId as string, true)
+    if (requestId) {
+      confirmPermissionRequest(PermissionStatus.DENIED)
+      communicator?.send('Permissions were rejected', requestId as string, true)
+    } else {
+      setPermissionsRequest(undefined)
+    }
   }
 
   useEffect(() => {
@@ -430,7 +434,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
           origin={permissionsRequest.origin}
           requestId={permissionsRequest.requestId}
           onAccept={onAcceptPermissionRequest}
-          onCancel={onRejectPermissionRequest}
+          onReject={onRejectPermissionRequest}
           permissions={permissionsRequest.request}
         />
       )}
